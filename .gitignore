@@ -1,0 +1,24 @@
+# Gradle & Android
+.gradle/
+build/
+**/build/
+local.properties
+*.apk
+*.aab
+*.dex
+*.class
+.idea/
+*.iml
+
+# Xcode & Apple / iOS
+.build/
+DerivedData/
+*.xcuserstate
+project.xcworkspace/
+xcuserdata/
+*.xcframework
+
+# Operating System & Logs
+.DS_Store
+Thumbs.db
+*.log
