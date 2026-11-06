@@ -107,7 +107,8 @@ fn overlay(o: &RuntimeOptions) -> Value {
             // 路由由系统 VPN 框架设置，mihomo 不碰路由表
             tun.insert(s("auto-route"), Value::Bool(false));
             tun.insert(s("auto-detect-interface"), Value::Bool(false));
-            tun.insert(s("dns-hijack"), Value::Sequence(vec![s("any:53")]));
+            // 复用桌面端：dns-hijack 同时劫持 UDP 与 TCP 53
+            zephyr_core::config::tun::ensure_dns_hijack_entries(&mut tun);
         }
         None => {
             tun.insert(s("enable"), Value::Bool(false));
@@ -237,6 +238,8 @@ mod tests {
         assert_eq!(v["tun"]["file-descriptor"].as_i64(), Some(42));
         assert_eq!(v["tun"]["stack"].as_str(), Some("gvisor"));
         assert_eq!(v["tun"]["auto-route"].as_bool(), Some(false));
+        let hj: Vec<&str> = v["tun"]["dns-hijack"].as_sequence().unwrap().iter().filter_map(|x| x.as_str()).collect();
+        assert_eq!(hj, vec!["any:53", "tcp://any:53"]);
         assert_eq!(v["dns"]["enhanced-mode"].as_str(), Some("fake-ip"));
         assert!(v["dns"].get("fallback").is_none(), "空 fallback 删除订阅自带的");
         assert!(v["dns"].get("nameserver-policy").is_some(), "订阅里其它 DNS 设置保留");
