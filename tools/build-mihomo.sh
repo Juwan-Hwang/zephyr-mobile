@@ -37,10 +37,11 @@ ios)
   build iphoneos arm64 arm64 "$OUT/ios"
   build iphonesimulator arm64 arm64 "$OUT/sim-arm64"
   build iphonesimulator amd64 x86_64 "$OUT/sim-x64"
-  mkdir -p "$OUT/sim" "$OUT/headers"
+  # 头文件放子目录，避免与 ZephyrMobileCore.xcframework 的 module.modulemap 在 Products/include 撞车。
+  mkdir -p "$OUT/sim" "$OUT/headers/Zmihomo"
   lipo -create "$OUT/sim-arm64/libzmihomo.a" "$OUT/sim-x64/libzmihomo.a" -output "$OUT/sim/libzmihomo.a"
-  cp "$OUT/ios/libzmihomo.h" "$OUT/headers/zmihomo.h"
-  printf 'module Zmihomo {\n  header "zmihomo.h"\n  export *\n}\n' > "$OUT/headers/module.modulemap"
+  cp "$OUT/ios/libzmihomo.h" "$OUT/headers/Zmihomo/zmihomo.h"
+  printf 'module Zmihomo {\n  header "zmihomo.h"\n  export *\n}\n' > "$OUT/headers/Zmihomo/module.modulemap"
   xcodebuild -create-xcframework -library "$OUT/ios/libzmihomo.a" -headers "$OUT/headers" -library "$OUT/sim/libzmihomo.a" -headers "$OUT/headers" -output "$ROOT/build/ios/Zmihomo.xcframework"
   ;;
 *) echo "用法：$0 android|ios"; exit 2;;
