@@ -71,12 +71,35 @@ pub(crate) struct SubStore {
     pub entries: Vec<Entry>,
 }
 
+/// 脱敏：复用桌面端 `mask_url`（https://sub***com/***）。
 pub fn redact_url(url: &str) -> String {
-    let u = url.trim();
-    let (scheme, rest) = u.split_once("://").unwrap_or(("https", u));
-    let host = rest.split(['/', '?', '#']).next().unwrap_or("");
-    let host = host.rsplit('@').next().unwrap_or(host);
-    format!("{scheme}://{host}/…")
+    zephyr_core::config::merge::mask_url(url.to_string())
+}
+
+/// 正文规整，全部复用桌面端：short-id 加引号 → 非 YAML 时尝试 base64 解码 → 去掉控制面字段。
+/// 返回可安全落盘、之后可交给 mihomo 合并的 YAML。
+pub fn normalize_body(body: &str) -> Result<String, MobileError> {
+    use zephyr_core::config::subscription::{quote_short_id_values, try_decode_base64_content};
+    let has_proxies = |t: &str| serde_yaml::from_str::<serde_yaml::Value>(t).ok().is_some_and(|v| v.get("proxies").is_some_and(|p| p.is_sequence()));
+    let mut text = quote_short_id_values(body);
+    if !has_proxies(&text) {
+        match try_decode_base64_content(body) {
+            Some(d) => text = quote_short_id_values(&d),
+            None => return Err(MobileError::SubscriptionInvalid("不是 Clash/mihomo YAML，也不是 base64 编码的 YAML".into())),
+        }
+    }
+    let mut v: serde_yaml::Value = serde_yaml::from_str(&text).map_err(|e| MobileError::SubscriptionInvalid(e.to_string()))?;
+    let before = serde_yaml::to_string(&v).unwrap_or_default().len();
+    zephyr_core::config::sanitizer::remove_control_plane_keys(&mut v);
+    if serde_yaml::to_string(&v).unwrap_or_default().len() == before {
+        return Ok(text); // 无改动：保留原文（注释、顺序）
+    }
+    serde_yaml::to_string(&v).map_err(|e| MobileError::SubscriptionInvalid(e.to_string()))
+}
+
+/// URL 校验：复用桌面端 `validate_subscription_url_basic`（scheme/host/控制字符/斜杠畸形）。
+pub fn validate_url(url: &str) -> Result<(), MobileError> {
+    zephyr_core::config::subscription::validate_subscription_url_basic(url).map(|_| ()).map_err(MobileError::SubscriptionInvalid)
 }
 
 /// `upload=1; download=2; total=3; expire=1700000000`（expire 单位秒）
@@ -184,7 +207,15 @@ impl SubStore {
     }
 
     pub fn import(&mut self, name: String, url: Option<String>, f: &FetchedSubscription, auto_update_hours: i32) -> Result<Subscription, MobileError> {
-        let (diff, n) = diff_bodies(None, &f.body)?;
+        if let Some(u) = &url {
+            validate_url(u)?;
+        }
+        let name = name.trim().to_string();
+        if !name.is_empty() {
+            zephyr_core::config::subscription::validate_subscription_name(&name).map_err(|e| MobileError::SubscriptionInvalid(e.to_string()))?;
+        }
+        let body = normalize_body(&f.body)?;
+        let (diff, n) = diff_bodies(None, &body)?;
         if n == 0 {
             return Err(MobileError::SubscriptionInvalid("没有可用节点".into()));
         }
@@ -203,7 +234,7 @@ impl SubStore {
             auto_update_hours,
             last_diff: Some(diff),
         };
-        self.write_body(slot, &f.body)?;
+        self.write_body(slot, &body)?;
         self.entries.push(Entry { slot, meta: meta.clone(), full_url: url });
         self.save()?;
         Ok(meta)
@@ -211,18 +242,19 @@ impl SubStore {
 
     pub fn preview(&self, id: &str, f: &FetchedSubscription) -> Result<SubscriptionDiff, MobileError> {
         let e = &self.entries[self.find(id)?];
-        Ok(diff_bodies(self.body(e.slot).as_deref(), &f.body)?.0)
+        Ok(diff_bodies(self.body(e.slot).as_deref(), &normalize_body(&f.body)?)?.0)
     }
 
     pub fn update(&mut self, id: &str, f: &FetchedSubscription) -> Result<SubscriptionDiff, MobileError> {
         let i = self.find(id)?;
         let slot = self.entries[i].slot;
-        let (diff, n) = diff_bodies(self.body(slot).as_deref(), &f.body)?;
+        let body = normalize_body(&f.body)?;
+        let (diff, n) = diff_bodies(self.body(slot).as_deref(), &body)?;
         if n == 0 {
             // 机场偶发返回空列表：拒绝覆盖，保留上次成功的正文
             return Err(MobileError::SubscriptionInvalid("新正文没有可用节点，已保留旧版本".into()));
         }
-        self.write_body(slot, &f.body)?;
+        self.write_body(slot, &body)?;
         let (used, total, expire) = f.userinfo.as_deref().map(parse_userinfo).unwrap_or((None, None, None));
         let m = &mut self.entries[i].meta;
         m.node_count = n;
@@ -282,7 +314,24 @@ mod tests {
     fn userinfo_and_redact() {
         assert_eq!(parse_userinfo("upload=1; download=2; total=10; expire=5"), (Some(3), Some(10), Some(5000)));
         assert_eq!(parse_userinfo("total=10"), (None, Some(10), None));
-        assert_eq!(redact_url("https://user:pw@sub.example.com/api/v1/client/subscribe?token=SECRET"), "https://sub.example.com/…");
+        let r = redact_url("https://user:pw@sub.example.com/api/v1/client/subscribe?token=SECRET");
+        assert!(!r.contains("SECRET") && !r.contains("pw") && !r.contains("subscribe"), "{r}");
+        assert!(validate_url("ftp://x.example/s").is_err());
+        assert!(validate_url("http:/sub").is_err());
+    }
+
+    #[test]
+    fn body_base64_short_id_and_control_plane() {
+        use base64::Engine;
+        let yaml = "proxies:\n  - name: 香港 01\n    server: a.example\n    port: 443\n    type: vless\n    reality-opts:\n      short-id: 34010e92\n";
+        let b64 = base64::engine::general_purpose::STANDARD.encode(yaml);
+        let n = normalize_body(&b64).unwrap();
+        assert!(n.contains("\"34010e92\"") || n.contains("'34010e92'"), "short-id 保持字符串：{n}");
+        assert!(normalize_body("not yaml at all ###").is_err());
+        let evil = format!("{yaml}external-ui: /tmp/x\nexternal-controller-tls: 0.0.0.0:9443\n");
+        let n = normalize_body(&evil).unwrap();
+        assert!(!n.contains("external-controller-tls") && !n.contains("external-ui"), "控制面字段被清掉：{n}");
+        assert!(n.contains("a.example"));
     }
 
     #[test]
@@ -294,7 +343,7 @@ mod tests {
         assert_eq!(sub.node_count, 3);
         assert_eq!(sub.remaining_bytes, Some(9000));
         assert_eq!(sub.expires_at, Some(1_800_000_000_000));
-        assert_eq!(sub.url.as_deref(), Some("https://sub.example.com/…"));
+        assert!(!sub.url.as_deref().unwrap().contains("token"));
         assert_eq!(s.full_url(&sub.id).unwrap().as_deref(), Some("https://sub.example.com/s?token=T"));
 
         let v2 = y(&[("香港 01", "a.example", 443), ("日本 01 改名", "b.example", 443), ("新加坡 01", "d.example", 443), ("新加坡 02", "e.example", 443)], &["DOMAIN,x.com,P", "DOMAIN,y.com,P", "MATCH,P"]);

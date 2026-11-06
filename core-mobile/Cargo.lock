@@ -1930,6 +1930,7 @@ name = "zephyr-mobile-core"
 version = "0.1.0"
 dependencies = [
  "aho-corasick",
+ "base64",
  "memmap2",
  "parking_lot",
  "roaring",

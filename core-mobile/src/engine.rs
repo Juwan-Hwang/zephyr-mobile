@@ -38,8 +38,11 @@ pub struct SubscriptionSource {
 #[derive(Debug, Clone, PartialEq, uniffi::Record)]
 pub struct RankedNode {
     pub row: NodeRow,
+    /// 最近一次延迟；-1 = 超时
     pub latency_ms: i32,
     pub tested_at: i64,
+    /// 桌面端 smart_selector 分数（P90 延迟 + 成功率 + 稳定性，越高越好）
+    pub score: f64,
 }
 
 #[derive(Debug, Clone, PartialEq, uniffi::Record)]
@@ -234,24 +237,45 @@ impl MobileCore {
         ids.iter().map(|&id| c.get(id, now_millis, max_age_millis).map(|x| x.0)).collect()
     }
 
-    /// 查询结果里已测速节点按延迟升序取前 limit 个（超时排最后，未测不出现）。
+    /// 查询结果里已测速节点，用桌面端 smart_selector 打分排序后取前 limit 个（未测/过期不出现）。
+    /// 先按最近延迟预筛 256 个再打分，千万级库里也只对少量节点计算。
     /// 场景候选：query = 地区代码（"JP"）；命令"最快节点"：query = 用户输入。
     pub fn fastest_nodes(&self, query: String, limit: u32, now_millis: i64, max_age_millis: i64) -> Result<Vec<RankedNode>, MobileError> {
+        const PREFILTER: usize = 256;
+        const TIMEOUT_AS_MS: f64 = 5000.0;
         let s = self.store()?;
         let (bm, _) = s.timed_query(&query);
-        let cand: Vec<(u64, i32, i64)> = {
+        let cand: Vec<(u64, Vec<(i32, i64)>)> = {
             let c = self.latency.lock();
-            c.map.iter().filter(|(_, &(_, at))| max_age_millis <= 0 || now_millis - at <= max_age_millis).map(|(&id, &(ms, at))| (id, ms, at)).collect()
+            c.map
+                .iter()
+                .filter(|(_, v)| v.last().is_some_and(|&(_, at)| max_age_millis <= 0 || now_millis - at <= max_age_millis))
+                .map(|(&id, v)| (id, v.clone()))
+                .collect()
         };
         let ids: Vec<u64> = cand.iter().map(|x| x.0).collect();
         let pos = self.positions(&s, &ids);
-        let mut hits: Vec<(i64, u32, i32, i64)> = cand
-            .iter()
-            .filter_map(|&(id, ms, at)| pos.get(&id).filter(|&&p| bm.contains(p)).map(|&p| (LatencyCache::rank_key(ms), p, ms, at)))
+        let mut hits: Vec<(i64, u32, Vec<(i32, i64)>)> = cand
+            .into_iter()
+            .filter_map(|(id, v)| pos.get(&id).filter(|&&p| bm.contains(p)).map(|&p| (LatencyCache::rank_key(v.last().unwrap().0), p, v)))
             .collect();
-        hits.sort_unstable();
-        hits.truncate(limit.min(500) as usize);
-        Ok(hits.into_iter().map(|(_, p, ms, at)| RankedNode { row: s.row(p), latency_ms: ms, tested_at: at }).collect())
+        hits.sort_unstable_by_key(|h| (h.0, h.1));
+        hits.truncate(PREFILTER);
+        let names: Vec<String> = hits.iter().map(|h| h.1.to_string()).collect();
+        let lat: Vec<Vec<f64>> = hits.iter().map(|h| h.2.iter().map(|&(ms, _)| if ms < 0 { TIMEOUT_AS_MS } else { ms as f64 }).collect()).collect();
+        let ok: Vec<Vec<bool>> = hits.iter().map(|h| h.2.iter().map(|&(ms, _)| ms >= 0).collect()).collect();
+        let ranked = zephyr_core::smart_selector::compute_smart_rank(Default::default(), Default::default(), names, lat, ok);
+        let by_pos: FxHashMap<u32, &(i64, u32, Vec<(i32, i64)>)> = hits.iter().map(|h| (h.1, h)).collect();
+        Ok(ranked
+            .into_iter()
+            .take(limit.min(500) as usize)
+            .filter_map(|r| {
+                let p: u32 = r.name.parse().ok()?;
+                let h = by_pos.get(&p)?;
+                let &(ms, at) = h.2.last()?;
+                Some(RankedNode { row: s.row(p), latency_ms: ms, tested_at: at, score: r.score })
+            })
+            .collect())
     }
 
     // ---------- 订阅（contract §7）：平台拉取正文，核心存储/差异/重建 ----------
@@ -293,6 +317,16 @@ impl MobileCore {
         let d = self.subs.lock().update(&id, &fetched)?;
         self.rebuild_from_subscriptions(progress)?;
         Ok(d)
+    }
+
+    /// 嵌入式 mihomo 的运行时配置（zm_start / zm_reload 的输入）：该订阅正文 + Zephyr 设置。
+    pub fn runtime_config(&self, subscription_id: String, options: crate::runtime_config::RuntimeOptions) -> Result<String, MobileError> {
+        let body = {
+            let s = self.subs.lock();
+            let e = &s.entries[s.find(&subscription_id)?];
+            s.body(e.slot).ok_or_else(|| MobileError::SubscriptionNotFound(subscription_id.clone()))?
+        };
+        crate::runtime_config::build_runtime_config(&body, &options)
     }
 
     pub fn delete_subscription(&self, id: String) -> Result<(), MobileError> {
@@ -421,7 +455,21 @@ mod tests {
         samples.push(LatencySample { id: other[0].id, ms: 1, at: 1000 });
         core.record_latencies(samples).unwrap();
         let best = core.fastest_nodes("JP".into(), 3, 1000, 0).unwrap();
-        assert_eq!(best.iter().map(|b| b.latency_ms).collect::<Vec<_>>(), vec![40, 80, 120], "只在查询内、升序");
+        assert_eq!(best.iter().map(|b| b.latency_ms).collect::<Vec<_>>(), vec![40, 80, 120], "只在查询内、按分数");
+        assert!(best[0].score >= best[1].score && best[1].score >= best[2].score);
+        // 稳定性：一直 60 ms 的节点应胜过偶尔 30 ms、经常超时的节点
+        let (a, b) = (rows[3].id, rows[4].id);
+        let mut more = vec![];
+        for k in 0..6 {
+            more.push(LatencySample { id: a, ms: 60, at: 2000 + k });
+            more.push(LatencySample { id: b, ms: if k % 2 == 0 { 30 } else { -1 }, at: 2000 + k });
+        }
+        more.push(LatencySample { id: b, ms: 30, at: 2010 });
+        core.record_latencies(more).unwrap();
+        let r = core.fastest_nodes("JP".into(), 5, 2010, 0).unwrap();
+        let ia = r.iter().position(|x| x.row.id == a).unwrap();
+        let ib = r.iter().position(|x| x.row.id == b).unwrap();
+        assert!(ia < ib, "smart 打分惩罚不稳定：{r:?}");
         let all = core.fastest_nodes("JP".into(), 10, 1000, 0).unwrap();
         assert_eq!(all.last().unwrap().latency_ms, -1, "超时排最后");
         assert!(core.fastest_nodes("JP".into(), 10, 10_000, 100).unwrap().is_empty(), "过期不计");

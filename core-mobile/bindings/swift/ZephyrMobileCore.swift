@@ -868,7 +868,8 @@ public protocol MobileCoreProtocol : AnyObject {
     func dueSubscriptions(nowMillis: Int64)  -> [String]
     
     /**
-     * 查询结果里已测速节点按延迟升序取前 limit 个（超时排最后，未测不出现）。
+     * 查询结果里已测速节点，用桌面端 smart_selector 打分排序后取前 limit 个（未测/过期不出现）。
+     * 先按最近延迟预筛 256 个再打分，千万级库里也只对少量节点计算。
      * 场景候选：query = 地区代码（"JP"）；命令"最快节点"：query = 用户输入。
      */
     func fastestNodes(query: String, limit: UInt32, nowMillis: Int64, maxAgeMillis: Int64) throws  -> [RankedNode]
@@ -925,6 +926,11 @@ public protocol MobileCoreProtocol : AnyObject {
     func recordLatencies(samples: [LatencySample]) throws 
     
     func ruleStats()  -> RuleStats
+    
+    /**
+     * 嵌入式 mihomo 的运行时配置（zm_start / zm_reload 的输入）：该订阅正文 + Zephyr 设置。
+     */
+    func runtimeConfig(subscriptionId: String, options: RuntimeOptions) throws  -> String
     
     /**
      * 平台拉取用的完整 URL（不出现在 Subscription.url 里）。
@@ -1050,7 +1056,8 @@ open func dueSubscriptions(nowMillis: Int64) -> [String] {
 }
     
     /**
-     * 查询结果里已测速节点按延迟升序取前 limit 个（超时排最后，未测不出现）。
+     * 查询结果里已测速节点，用桌面端 smart_selector 打分排序后取前 limit 个（未测/过期不出现）。
+     * 先按最近延迟预筛 256 个再打分，千万级库里也只对少量节点计算。
      * 场景候选：query = 地区代码（"JP"）；命令"最快节点"：query = 用户输入。
      */
 open func fastestNodes(query: String, limit: UInt32, nowMillis: Int64, maxAgeMillis: Int64)throws  -> [RankedNode] {
@@ -1197,6 +1204,18 @@ open func recordLatencies(samples: [LatencySample])throws  {try rustCallWithErro
 open func ruleStats() -> RuleStats {
     return try!  FfiConverterTypeRuleStats.lift(try! rustCall() {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_stats(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * 嵌入式 mihomo 的运行时配置（zm_start / zm_reload 的输入）：该订阅正文 + Zephyr 设置。
+     */
+open func runtimeConfig(subscriptionId: String, options: RuntimeOptions)throws  -> String {
+    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_runtime_config(self.uniffiClonePointer(),
+        FfiConverterString.lower(subscriptionId),
+        FfiConverterTypeRuntimeOptions.lower(options),$0
     )
 })
 }
@@ -1518,6 +1537,88 @@ public func FfiConverterTypeConnectionInfo_lift(_ buf: RustBuffer) throws -> Con
 #endif
 public func FfiConverterTypeConnectionInfo_lower(_ value: ConnectionInfo) -> RustBuffer {
     return FfiConverterTypeConnectionInfo.lower(value)
+}
+
+
+public struct DnsConfig {
+    public var fakeIp: Bool
+    public var nameservers: [String]
+    public var fallback: [String]
+    public var ipv6: Bool
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(fakeIp: Bool, nameservers: [String], fallback: [String], ipv6: Bool) {
+        self.fakeIp = fakeIp
+        self.nameservers = nameservers
+        self.fallback = fallback
+        self.ipv6 = ipv6
+    }
+}
+
+
+
+extension DnsConfig: Equatable, Hashable {
+    public static func ==(lhs: DnsConfig, rhs: DnsConfig) -> Bool {
+        if lhs.fakeIp != rhs.fakeIp {
+            return false
+        }
+        if lhs.nameservers != rhs.nameservers {
+            return false
+        }
+        if lhs.fallback != rhs.fallback {
+            return false
+        }
+        if lhs.ipv6 != rhs.ipv6 {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(fakeIp)
+        hasher.combine(nameservers)
+        hasher.combine(fallback)
+        hasher.combine(ipv6)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeDnsConfig: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> DnsConfig {
+        return
+            try DnsConfig(
+                fakeIp: FfiConverterBool.read(from: &buf), 
+                nameservers: FfiConverterSequenceString.read(from: &buf), 
+                fallback: FfiConverterSequenceString.read(from: &buf), 
+                ipv6: FfiConverterBool.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: DnsConfig, into buf: inout [UInt8]) {
+        FfiConverterBool.write(value.fakeIp, into: &buf)
+        FfiConverterSequenceString.write(value.nameservers, into: &buf)
+        FfiConverterSequenceString.write(value.fallback, into: &buf)
+        FfiConverterBool.write(value.ipv6, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeDnsConfig_lift(_ buf: RustBuffer) throws -> DnsConfig {
+    return try FfiConverterTypeDnsConfig.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeDnsConfig_lower(_ value: DnsConfig) -> RustBuffer {
+    return FfiConverterTypeDnsConfig.lower(value)
 }
 
 
@@ -2538,15 +2639,29 @@ public func FfiConverterTypePolicyGroup_lower(_ value: PolicyGroup) -> RustBuffe
  */
 public struct RankedNode {
     public var row: NodeRow
+    /**
+     * 最近一次延迟；-1 = 超时
+     */
     public var latencyMs: Int32
     public var testedAt: Int64
+    /**
+     * 桌面端 smart_selector 分数（P90 延迟 + 成功率 + 稳定性，越高越好）
+     */
+    public var score: Double
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
-    public init(row: NodeRow, latencyMs: Int32, testedAt: Int64) {
+    public init(row: NodeRow, 
+        /**
+         * 最近一次延迟；-1 = 超时
+         */latencyMs: Int32, testedAt: Int64, 
+        /**
+         * 桌面端 smart_selector 分数（P90 延迟 + 成功率 + 稳定性，越高越好）
+         */score: Double) {
         self.row = row
         self.latencyMs = latencyMs
         self.testedAt = testedAt
+        self.score = score
     }
 }
 
@@ -2563,6 +2678,9 @@ extension RankedNode: Equatable, Hashable {
         if lhs.testedAt != rhs.testedAt {
             return false
         }
+        if lhs.score != rhs.score {
+            return false
+        }
         return true
     }
 
@@ -2570,6 +2688,7 @@ extension RankedNode: Equatable, Hashable {
         hasher.combine(row)
         hasher.combine(latencyMs)
         hasher.combine(testedAt)
+        hasher.combine(score)
     }
 }
 
@@ -2583,7 +2702,8 @@ public struct FfiConverterTypeRankedNode: FfiConverterRustBuffer {
             try RankedNode(
                 row: FfiConverterTypeNodeRow.read(from: &buf), 
                 latencyMs: FfiConverterInt32.read(from: &buf), 
-                testedAt: FfiConverterInt64.read(from: &buf)
+                testedAt: FfiConverterInt64.read(from: &buf), 
+                score: FfiConverterDouble.read(from: &buf)
         )
     }
 
@@ -2591,6 +2711,7 @@ public struct FfiConverterTypeRankedNode: FfiConverterRustBuffer {
         FfiConverterTypeNodeRow.write(value.row, into: &buf)
         FfiConverterInt32.write(value.latencyMs, into: &buf)
         FfiConverterInt64.write(value.testedAt, into: &buf)
+        FfiConverterDouble.write(value.score, into: &buf)
     }
 }
 
@@ -2971,6 +3092,116 @@ public func FfiConverterTypeRuleTrace_lift(_ buf: RustBuffer) throws -> RuleTrac
 #endif
 public func FfiConverterTypeRuleTrace_lower(_ value: RuleTrace) -> RustBuffer {
     return FfiConverterTypeRuleTrace.lower(value)
+}
+
+
+public struct RuntimeOptions {
+    public var dns: DnsConfig
+    public var tun: TunConfig
+    public var mode: ProxyMode
+    /**
+     * external-controller-unix 路径（App Group / 私有目录内）
+     */
+    public var controllerSocket: String
+    /**
+     * iOS 扩展里关掉进程识别（系统不给），Android 可开
+     */
+    public var findProcess: Bool
+    public var logLevel: String
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(dns: DnsConfig, tun: TunConfig, mode: ProxyMode, 
+        /**
+         * external-controller-unix 路径（App Group / 私有目录内）
+         */controllerSocket: String, 
+        /**
+         * iOS 扩展里关掉进程识别（系统不给），Android 可开
+         */findProcess: Bool, logLevel: String) {
+        self.dns = dns
+        self.tun = tun
+        self.mode = mode
+        self.controllerSocket = controllerSocket
+        self.findProcess = findProcess
+        self.logLevel = logLevel
+    }
+}
+
+
+
+extension RuntimeOptions: Equatable, Hashable {
+    public static func ==(lhs: RuntimeOptions, rhs: RuntimeOptions) -> Bool {
+        if lhs.dns != rhs.dns {
+            return false
+        }
+        if lhs.tun != rhs.tun {
+            return false
+        }
+        if lhs.mode != rhs.mode {
+            return false
+        }
+        if lhs.controllerSocket != rhs.controllerSocket {
+            return false
+        }
+        if lhs.findProcess != rhs.findProcess {
+            return false
+        }
+        if lhs.logLevel != rhs.logLevel {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(dns)
+        hasher.combine(tun)
+        hasher.combine(mode)
+        hasher.combine(controllerSocket)
+        hasher.combine(findProcess)
+        hasher.combine(logLevel)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeRuntimeOptions: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> RuntimeOptions {
+        return
+            try RuntimeOptions(
+                dns: FfiConverterTypeDnsConfig.read(from: &buf), 
+                tun: FfiConverterTypeTunConfig.read(from: &buf), 
+                mode: FfiConverterTypeProxyMode.read(from: &buf), 
+                controllerSocket: FfiConverterString.read(from: &buf), 
+                findProcess: FfiConverterBool.read(from: &buf), 
+                logLevel: FfiConverterString.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: RuntimeOptions, into buf: inout [UInt8]) {
+        FfiConverterTypeDnsConfig.write(value.dns, into: &buf)
+        FfiConverterTypeTunConfig.write(value.tun, into: &buf)
+        FfiConverterTypeProxyMode.write(value.mode, into: &buf)
+        FfiConverterString.write(value.controllerSocket, into: &buf)
+        FfiConverterBool.write(value.findProcess, into: &buf)
+        FfiConverterString.write(value.logLevel, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeRuntimeOptions_lift(_ buf: RustBuffer) throws -> RuntimeOptions {
+    return try FfiConverterTypeRuntimeOptions.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeRuntimeOptions_lower(_ value: RuntimeOptions) -> RustBuffer {
+    return FfiConverterTypeRuntimeOptions.lower(value)
 }
 
 
@@ -3355,6 +3586,102 @@ public func FfiConverterTypeSubscriptionsSummary_lift(_ buf: RustBuffer) throws 
 #endif
 public func FfiConverterTypeSubscriptionsSummary_lower(_ value: SubscriptionsSummary) -> RustBuffer {
     return FfiConverterTypeSubscriptionsSummary.lower(value)
+}
+
+
+public struct TunConfig {
+    public var stack: TunStackKind
+    public var mtu: Int32
+    public var ipv6: Bool
+    public var strictRoute: Bool
+    /**
+     * 系统 VPN 框架交来的 TUN fd；None = 不开 TUN（仅本地代理，调试用）
+     */
+    public var fileDescriptor: Int32?
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(stack: TunStackKind, mtu: Int32, ipv6: Bool, strictRoute: Bool, 
+        /**
+         * 系统 VPN 框架交来的 TUN fd；None = 不开 TUN（仅本地代理，调试用）
+         */fileDescriptor: Int32?) {
+        self.stack = stack
+        self.mtu = mtu
+        self.ipv6 = ipv6
+        self.strictRoute = strictRoute
+        self.fileDescriptor = fileDescriptor
+    }
+}
+
+
+
+extension TunConfig: Equatable, Hashable {
+    public static func ==(lhs: TunConfig, rhs: TunConfig) -> Bool {
+        if lhs.stack != rhs.stack {
+            return false
+        }
+        if lhs.mtu != rhs.mtu {
+            return false
+        }
+        if lhs.ipv6 != rhs.ipv6 {
+            return false
+        }
+        if lhs.strictRoute != rhs.strictRoute {
+            return false
+        }
+        if lhs.fileDescriptor != rhs.fileDescriptor {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(stack)
+        hasher.combine(mtu)
+        hasher.combine(ipv6)
+        hasher.combine(strictRoute)
+        hasher.combine(fileDescriptor)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeTunConfig: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> TunConfig {
+        return
+            try TunConfig(
+                stack: FfiConverterTypeTunStackKind.read(from: &buf), 
+                mtu: FfiConverterInt32.read(from: &buf), 
+                ipv6: FfiConverterBool.read(from: &buf), 
+                strictRoute: FfiConverterBool.read(from: &buf), 
+                fileDescriptor: FfiConverterOptionInt32.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: TunConfig, into buf: inout [UInt8]) {
+        FfiConverterTypeTunStackKind.write(value.stack, into: &buf)
+        FfiConverterInt32.write(value.mtu, into: &buf)
+        FfiConverterBool.write(value.ipv6, into: &buf)
+        FfiConverterBool.write(value.strictRoute, into: &buf)
+        FfiConverterOptionInt32.write(value.fileDescriptor, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeTunConfig_lift(_ buf: RustBuffer) throws -> TunConfig {
+    return try FfiConverterTypeTunConfig.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeTunConfig_lower(_ value: TunConfig) -> RustBuffer {
+    return FfiConverterTypeTunConfig.lower(value)
 }
 
 // Note that we don't yet support `indirect` for enums.
@@ -3757,6 +4084,148 @@ extension MobileError: Foundation.LocalizedError {
         String(reflecting: self)
     }
 }
+
+// Note that we don't yet support `indirect` for enums.
+// See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
+
+public enum ProxyMode {
+    
+    case rule
+    case global
+    case direct
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeProxyMode: FfiConverterRustBuffer {
+    typealias SwiftType = ProxyMode
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ProxyMode {
+        let variant: Int32 = try readInt(&buf)
+        switch variant {
+        
+        case 1: return .rule
+        
+        case 2: return .global
+        
+        case 3: return .direct
+        
+        default: throw UniffiInternalError.unexpectedEnumCase
+        }
+    }
+
+    public static func write(_ value: ProxyMode, into buf: inout [UInt8]) {
+        switch value {
+        
+        
+        case .rule:
+            writeInt(&buf, Int32(1))
+        
+        
+        case .global:
+            writeInt(&buf, Int32(2))
+        
+        
+        case .direct:
+            writeInt(&buf, Int32(3))
+        
+        }
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeProxyMode_lift(_ buf: RustBuffer) throws -> ProxyMode {
+    return try FfiConverterTypeProxyMode.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeProxyMode_lower(_ value: ProxyMode) -> RustBuffer {
+    return FfiConverterTypeProxyMode.lower(value)
+}
+
+
+
+extension ProxyMode: Equatable, Hashable {}
+
+
+
+// Note that we don't yet support `indirect` for enums.
+// See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
+
+public enum TunStackKind {
+    
+    case system
+    case gvisor
+    case mixed
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeTunStackKind: FfiConverterRustBuffer {
+    typealias SwiftType = TunStackKind
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> TunStackKind {
+        let variant: Int32 = try readInt(&buf)
+        switch variant {
+        
+        case 1: return .system
+        
+        case 2: return .gvisor
+        
+        case 3: return .mixed
+        
+        default: throw UniffiInternalError.unexpectedEnumCase
+        }
+    }
+
+    public static func write(_ value: TunStackKind, into buf: inout [UInt8]) {
+        switch value {
+        
+        
+        case .system:
+            writeInt(&buf, Int32(1))
+        
+        
+        case .gvisor:
+            writeInt(&buf, Int32(2))
+        
+        
+        case .mixed:
+            writeInt(&buf, Int32(3))
+        
+        }
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeTunStackKind_lift(_ buf: RustBuffer) throws -> TunStackKind {
+    return try FfiConverterTypeTunStackKind.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeTunStackKind_lower(_ value: TunStackKind) -> RustBuffer {
+    return FfiConverterTypeTunStackKind.lower(value)
+}
+
+
+
+extension TunStackKind: Equatable, Hashable {}
+
+
 
 
 
@@ -4484,7 +4953,7 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_due_subscriptions() != 39270) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes() != 4146) {
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes() != 1274) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription() != 45715) {
@@ -4524,6 +4993,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_runtime_config() != 46462) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscription_fetch_url() != 43374) {

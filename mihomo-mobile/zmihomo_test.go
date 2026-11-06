@@ -65,3 +65,25 @@ func TestStartStop(t *testing.T) {
 		t.Fatal("still running")
 	}
 }
+
+// core-mobile 生成的运行时配置能被真 mihomo 接受（CI：先跑 core-mobile 的 emit 测试写出文件）。
+func TestRuntimeConfigFromCore(t *testing.T) {
+	p := os.Getenv("ZM_RUNTIME_CONFIG")
+	if p == "" {
+		t.Skip("ZM_RUNTIME_CONFIG 未设置")
+	}
+	b, err := os.ReadFile(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	dir := t.TempDir()
+	sock := filepath.Join(dir, "ctl.sock")
+	cfg := strings.ReplaceAll(string(b), "/data/zm.sock", sock)
+	if err := start(dir, cfg, sock); err != nil {
+		t.Fatalf("mihomo 拒绝 core-mobile 生成的配置: %v\n%s", err, cfg)
+	}
+	defer stop()
+	if _, err := net.Dial("unix", sock); err != nil {
+		t.Fatalf("控制 socket 未监听: %v", err)
+	}
+}

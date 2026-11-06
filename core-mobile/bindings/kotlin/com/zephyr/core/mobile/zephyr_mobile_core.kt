@@ -811,6 +811,8 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -900,6 +902,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_record_latencies(`ptr`: Pointer,`samples`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_stats(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_runtime_config(`ptr`: Pointer,`subscriptionId`: RustBuffer.ByValue,`options`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_subscription_fetch_url(`ptr`: Pointer,`id`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
@@ -1087,6 +1091,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_runtime_config(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscription_fetch_url(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscriptions(
@@ -1168,7 +1174,7 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_due_subscriptions() != 39270.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes() != 4146.toShort()) {
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes() != 1274.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription() != 45715.toShort()) {
@@ -1208,6 +1214,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_runtime_config() != 46462.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscription_fetch_url() != 43374.toShort()) {
@@ -2138,7 +2147,8 @@ public interface MobileCoreInterface {
     fun `dueSubscriptions`(`nowMillis`: kotlin.Long): List<kotlin.String>
     
     /**
-     * 查询结果里已测速节点按延迟升序取前 limit 个（超时排最后，未测不出现）。
+     * 查询结果里已测速节点，用桌面端 smart_selector 打分排序后取前 limit 个（未测/过期不出现）。
+     * 先按最近延迟预筛 256 个再打分，千万级库里也只对少量节点计算。
      * 场景候选：query = 地区代码（"JP"）；命令"最快节点"：query = 用户输入。
      */
     fun `fastestNodes`(`query`: kotlin.String, `limit`: kotlin.UInt, `nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long): List<RankedNode>
@@ -2195,6 +2205,11 @@ public interface MobileCoreInterface {
     fun `recordLatencies`(`samples`: List<LatencySample>)
     
     fun `ruleStats`(): RuleStats
+    
+    /**
+     * 嵌入式 mihomo 的运行时配置（zm_start / zm_reload 的输入）：该订阅正文 + Zephyr 设置。
+     */
+    fun `runtimeConfig`(`subscriptionId`: kotlin.String, `options`: RuntimeOptions): kotlin.String
     
     /**
      * 平台拉取用的完整 URL（不出现在 Subscription.url 里）。
@@ -2363,7 +2378,8 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
 
     
     /**
-     * 查询结果里已测速节点按延迟升序取前 limit 个（超时排最后，未测不出现）。
+     * 查询结果里已测速节点，用桌面端 smart_selector 打分排序后取前 limit 个（未测/过期不出现）。
+     * 先按最近延迟预筛 256 个再打分，千万级库里也只对少量节点计算。
      * 场景候选：query = 地区代码（"JP"）；命令"最快节点"：query = 用户输入。
      */
     @Throws(MobileException::class)override fun `fastestNodes`(`query`: kotlin.String, `limit`: kotlin.UInt, `nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long): List<RankedNode> {
@@ -2566,6 +2582,22 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_stats(
         it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 嵌入式 mihomo 的运行时配置（zm_start / zm_reload 的输入）：该订阅正文 + Zephyr 设置。
+     */
+    @Throws(MobileException::class)override fun `runtimeConfig`(`subscriptionId`: kotlin.String, `options`: RuntimeOptions): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_runtime_config(
+        it, FfiConverterString.lower(`subscriptionId`),FfiConverterTypeRuntimeOptions.lower(`options`),_status)
 }
     }
     )
@@ -2780,6 +2812,46 @@ public object FfiConverterTypeConnectionInfo: FfiConverterRustBuffer<ConnectionI
             FfiConverterLong.write(value.`downBytes`, buf)
             FfiConverterLong.write(value.`startedAt`, buf)
             FfiConverterString.write(value.`rule`, buf)
+    }
+}
+
+
+
+data class DnsConfig (
+    var `fakeIp`: kotlin.Boolean, 
+    var `nameservers`: List<kotlin.String>, 
+    var `fallback`: List<kotlin.String>, 
+    var `ipv6`: kotlin.Boolean
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeDnsConfig: FfiConverterRustBuffer<DnsConfig> {
+    override fun read(buf: ByteBuffer): DnsConfig {
+        return DnsConfig(
+            FfiConverterBoolean.read(buf),
+            FfiConverterSequenceString.read(buf),
+            FfiConverterSequenceString.read(buf),
+            FfiConverterBoolean.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: DnsConfig) = (
+            FfiConverterBoolean.allocationSize(value.`fakeIp`) +
+            FfiConverterSequenceString.allocationSize(value.`nameservers`) +
+            FfiConverterSequenceString.allocationSize(value.`fallback`) +
+            FfiConverterBoolean.allocationSize(value.`ipv6`)
+    )
+
+    override fun write(value: DnsConfig, buf: ByteBuffer) {
+            FfiConverterBoolean.write(value.`fakeIp`, buf)
+            FfiConverterSequenceString.write(value.`nameservers`, buf)
+            FfiConverterSequenceString.write(value.`fallback`, buf)
+            FfiConverterBoolean.write(value.`ipv6`, buf)
     }
 }
 
@@ -3288,8 +3360,15 @@ public object FfiConverterTypePolicyGroup: FfiConverterRustBuffer<PolicyGroup> {
  */
 data class RankedNode (
     var `row`: NodeRow, 
+    /**
+     * 最近一次延迟；-1 = 超时
+     */
     var `latencyMs`: kotlin.Int, 
-    var `testedAt`: kotlin.Long
+    var `testedAt`: kotlin.Long, 
+    /**
+     * 桌面端 smart_selector 分数（P90 延迟 + 成功率 + 稳定性，越高越好）
+     */
+    var `score`: kotlin.Double
 ) {
     
     companion object
@@ -3304,19 +3383,22 @@ public object FfiConverterTypeRankedNode: FfiConverterRustBuffer<RankedNode> {
             FfiConverterTypeNodeRow.read(buf),
             FfiConverterInt.read(buf),
             FfiConverterLong.read(buf),
+            FfiConverterDouble.read(buf),
         )
     }
 
     override fun allocationSize(value: RankedNode) = (
             FfiConverterTypeNodeRow.allocationSize(value.`row`) +
             FfiConverterInt.allocationSize(value.`latencyMs`) +
-            FfiConverterLong.allocationSize(value.`testedAt`)
+            FfiConverterLong.allocationSize(value.`testedAt`) +
+            FfiConverterDouble.allocationSize(value.`score`)
     )
 
     override fun write(value: RankedNode, buf: ByteBuffer) {
             FfiConverterTypeNodeRow.write(value.`row`, buf)
             FfiConverterInt.write(value.`latencyMs`, buf)
             FfiConverterLong.write(value.`testedAt`, buf)
+            FfiConverterDouble.write(value.`score`, buf)
     }
 }
 
@@ -3495,6 +3577,60 @@ public object FfiConverterTypeRuleTrace: FfiConverterRustBuffer<RuleTrace> {
             FfiConverterOptionalULong.write(value.`ruleNo`, buf)
             FfiConverterString.write(value.`policy`, buf)
             FfiConverterULong.write(value.`tookMicros`, buf)
+    }
+}
+
+
+
+data class RuntimeOptions (
+    var `dns`: DnsConfig, 
+    var `tun`: TunConfig, 
+    var `mode`: ProxyMode, 
+    /**
+     * external-controller-unix 路径（App Group / 私有目录内）
+     */
+    var `controllerSocket`: kotlin.String, 
+    /**
+     * iOS 扩展里关掉进程识别（系统不给），Android 可开
+     */
+    var `findProcess`: kotlin.Boolean, 
+    var `logLevel`: kotlin.String
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeRuntimeOptions: FfiConverterRustBuffer<RuntimeOptions> {
+    override fun read(buf: ByteBuffer): RuntimeOptions {
+        return RuntimeOptions(
+            FfiConverterTypeDnsConfig.read(buf),
+            FfiConverterTypeTunConfig.read(buf),
+            FfiConverterTypeProxyMode.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterBoolean.read(buf),
+            FfiConverterString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: RuntimeOptions) = (
+            FfiConverterTypeDnsConfig.allocationSize(value.`dns`) +
+            FfiConverterTypeTunConfig.allocationSize(value.`tun`) +
+            FfiConverterTypeProxyMode.allocationSize(value.`mode`) +
+            FfiConverterString.allocationSize(value.`controllerSocket`) +
+            FfiConverterBoolean.allocationSize(value.`findProcess`) +
+            FfiConverterString.allocationSize(value.`logLevel`)
+    )
+
+    override fun write(value: RuntimeOptions, buf: ByteBuffer) {
+            FfiConverterTypeDnsConfig.write(value.`dns`, buf)
+            FfiConverterTypeTunConfig.write(value.`tun`, buf)
+            FfiConverterTypeProxyMode.write(value.`mode`, buf)
+            FfiConverterString.write(value.`controllerSocket`, buf)
+            FfiConverterBoolean.write(value.`findProcess`, buf)
+            FfiConverterString.write(value.`logLevel`, buf)
     }
 }
 
@@ -3683,6 +3819,53 @@ public object FfiConverterTypeSubscriptionsSummary: FfiConverterRustBuffer<Subsc
     override fun write(value: SubscriptionsSummary, buf: ByteBuffer) {
             FfiConverterInt.write(value.`count`, buf)
             FfiConverterLong.write(value.`totalNodes`, buf)
+    }
+}
+
+
+
+data class TunConfig (
+    var `stack`: TunStackKind, 
+    var `mtu`: kotlin.Int, 
+    var `ipv6`: kotlin.Boolean, 
+    var `strictRoute`: kotlin.Boolean, 
+    /**
+     * 系统 VPN 框架交来的 TUN fd；None = 不开 TUN（仅本地代理，调试用）
+     */
+    var `fileDescriptor`: kotlin.Int?
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeTunConfig: FfiConverterRustBuffer<TunConfig> {
+    override fun read(buf: ByteBuffer): TunConfig {
+        return TunConfig(
+            FfiConverterTypeTunStackKind.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterBoolean.read(buf),
+            FfiConverterBoolean.read(buf),
+            FfiConverterOptionalInt.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: TunConfig) = (
+            FfiConverterTypeTunStackKind.allocationSize(value.`stack`) +
+            FfiConverterInt.allocationSize(value.`mtu`) +
+            FfiConverterBoolean.allocationSize(value.`ipv6`) +
+            FfiConverterBoolean.allocationSize(value.`strictRoute`) +
+            FfiConverterOptionalInt.allocationSize(value.`fileDescriptor`)
+    )
+
+    override fun write(value: TunConfig, buf: ByteBuffer) {
+            FfiConverterTypeTunStackKind.write(value.`stack`, buf)
+            FfiConverterInt.write(value.`mtu`, buf)
+            FfiConverterBoolean.write(value.`ipv6`, buf)
+            FfiConverterBoolean.write(value.`strictRoute`, buf)
+            FfiConverterOptionalInt.write(value.`fileDescriptor`, buf)
     }
 }
 
@@ -4049,6 +4232,68 @@ public object FfiConverterTypeMobileError : FfiConverterRustBuffer<MobileExcepti
     }
 
 }
+
+
+
+
+enum class ProxyMode {
+    
+    RULE,
+    GLOBAL,
+    DIRECT;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeProxyMode: FfiConverterRustBuffer<ProxyMode> {
+    override fun read(buf: ByteBuffer) = try {
+        ProxyMode.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: ProxyMode) = 4UL
+
+    override fun write(value: ProxyMode, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+
+enum class TunStackKind {
+    
+    SYSTEM,
+    GVISOR,
+    MIXED;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeTunStackKind: FfiConverterRustBuffer<TunStackKind> {
+    override fun read(buf: ByteBuffer) = try {
+        TunStackKind.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: TunStackKind) = 4UL
+
+    override fun write(value: TunStackKind, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
 
 
 

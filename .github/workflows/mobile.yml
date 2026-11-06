@@ -47,9 +47,12 @@ jobs:
         run: tools/gen-bindings.sh --check
       - uses: actions/setup-go@v5
         with: { go-version: '1.27', cache-dependency-path: mihomo-mobile/go.sum }
-      - name: 嵌入式 mihomo 冒烟（启动/重载/停止）
-        working-directory: mihomo-mobile
-        run: go test -count=1 ./...
+      - name: 嵌入式 mihomo 冒烟（启动/重载/停止 + 加载 core-mobile 生成的运行时配置）
+        env:
+          ZM_RUNTIME_CONFIG: ${{ runner.temp }}/rt.yaml
+        run: |
+          (cd core-mobile && cargo test --lib emit_for_mihomo_smoke)
+          cd mihomo-mobile && go test -count=1 ./...
   ios:
     needs: detect
     if: needs.detect.outputs.ios == 'true'
