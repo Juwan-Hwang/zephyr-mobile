@@ -114,18 +114,19 @@ private fun SceneRow(s: Scene, onSwipe: (Boolean) -> Unit, onOpen: () -> Unit) {
             .padding(horizontal = 18.dp, vertical = 18.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Column(Modifier.weight(1f)) {
-            ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight, fontSize = ZTheme.type.headline.fontSize * 1.1f))
+        // 40/60 split keeps both sides on one line up to fontScale 2.0; long names ellipsize instead of wrapping.
+        Column(Modifier.weight(0.4f)) {
+            ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight, fontSize = ZTheme.type.headline.fontSize * 1.1f), maxLines = 1)
             Spacer(Modifier.height(6.dp))
             ZText(
                 when {
                     s.source == SceneSource.SUBSCRIPTION_GROUP -> "订阅分组"
                     else -> "${s.available} 个可用"
                 },
-                style = ZTheme.type.callout, color = c.text3,
+                style = ZTheme.type.callout, color = c.text3, maxLines = 1,
             )
         }
-        Column(horizontalAlignment = Alignment.End) {
+        Column(Modifier.weight(0.6f), horizontalAlignment = Alignment.End) {
             AnimatedContent(
                 targetState = s.selected,
                 transitionSpec = { (slideInHorizontally(ZAnim.slow()) { it / 3 } + fadeIn(ZAnim.standard())) togetherWith fadeOut(ZAnim.micro()) },

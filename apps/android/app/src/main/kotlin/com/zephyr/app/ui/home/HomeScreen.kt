@@ -60,11 +60,35 @@ data class HomeActions(
 
 @Composable
 fun HomeScreen(vm: HomeViewModel, actions: HomeActions) {
-    val c = ZTheme.colors
     val conn by vm.connection.collectAsStateWithLifecycle()
     val scenes by vm.scenes.collectAsStateWithLifecycle()
     val subs by vm.subscriptions.collectAsStateWithLifecycle()
     val ui by vm.ui.collectAsStateWithLifecycle()
+    HomeContent(
+        conn, scenes, subs, ui, actions,
+        HomeCallbacks({ vm.setMode(it) }, { s, f -> vm.cycleRegion(s, f) }, { vm.confirmPending() }, { vm.cancelPending() }, { vm.undo() }),
+    )
+}
+
+/** VM-side callbacks, split out so screenshot tests can render [HomeContent] from plain data. */
+data class HomeCallbacks(
+    val setMode: (ProxyMode) -> Unit,
+    val cycleRegion: (Scene, Boolean) -> Unit,
+    val confirm: () -> Unit,
+    val cancel: () -> Unit,
+    val undo: () -> Unit,
+)
+
+@Composable
+fun HomeContent(
+    conn: com.zephyr.engine.ConnectionState,
+    scenes: List<Scene>,
+    subs: List<com.zephyr.engine.Subscription>,
+    ui: HomeUi,
+    actions: HomeActions,
+    cb: HomeCallbacks,
+) {
+    val c = ZTheme.colors
     val connected = conn.status == ConnectionStatus.CONNECTED
     val list = rememberLazyListState()
 
@@ -74,7 +98,7 @@ fun HomeScreen(vm: HomeViewModel, actions: HomeActions) {
             item("top") { Spacer(Modifier.height(12.dp)); HomeTopBar(conn.status, actions.onSettings) }
             item("status") {
                 Spacer(Modifier.height(24.dp))
-                HomeStatus(conn, ui.now, scenes.size, actions.onToggle, vm::setMode)
+                HomeStatus(conn, ui.now, scenes.size, actions.onToggle, cb.setMode)
             }
             item("traffic") {
                 AnimatedVisibility(connected, enter = expandVertically(ZAnim.slow()) + fadeIn(ZAnim.slow()), exit = shrinkVertically(ZAnim.standard()) + fadeOut(ZAnim.micro())) {
@@ -93,9 +117,9 @@ fun HomeScreen(vm: HomeViewModel, actions: HomeActions) {
             }
             item("scenes") {
                 if (conn.mode == ProxyMode.GLOBAL) {
-                    GlobalModeCard("东京 03", onUseRule = { vm.setMode(ProxyMode.RULE) }, onChangeNode = actions.onChangeGlobalNode)
+                    GlobalModeCard("东京 03", onUseRule = { cb.setMode(ProxyMode.RULE) }, onChangeNode = actions.onChangeGlobalNode)
                 } else {
-                    SceneCard(scenes, ui.pending, vm::cycleRegion, vm::confirmPending, vm::cancelPending, actions.onScene)
+                    SceneCard(scenes, ui.pending, cb.cycleRegion, { cb.confirm() }, cb.cancel, actions.onScene)
                 }
             }
             item("subs-h") {
@@ -125,7 +149,7 @@ fun HomeScreen(vm: HomeViewModel, actions: HomeActions) {
             visible = ui.toast != null,
             message = ui.toast?.message ?: "",
             action = if (ui.toast?.sceneId != null) "撤销" else null,
-            onAction = vm::undo,
+            onAction = cb.undo,
             modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 84.dp),
         )
     }

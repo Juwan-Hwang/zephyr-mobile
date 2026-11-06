@@ -52,3 +52,14 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
 }
+
+// Local-only: run unit/screenshot tests on another JVM (e.g. x86_64 under qemu on aarch64 hosts, where
+// Paparazzi's layoutlib has no native build). `-Pzephyr.testJava=/path/to/java`. CI leaves it unset.
+providers.gradleProperty("zephyr.testJava").orNull?.let { java ->
+    tasks.withType<Test>().configureEach {
+        javaLauncher.unset()
+        executable = java
+        // ByteBuddy (Paparazzi) must self-attach: it can't spawn a helper JVM through qemu.
+        jvmArgs("-Djdk.attach.allowAttachSelf=true", "-XX:+EnableDynamicAgentLoading")
+    }
+}
