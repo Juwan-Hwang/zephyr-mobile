@@ -3,8 +3,21 @@ on:
   push: { branches: [main, 'agent/**'] }
   pull_request:
   workflow_dispatch:
-concurrency: { group: mobile-${{ github.ref }}, cancel-in-progress: true }
+concurrency:
+  group: mobile-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      ios: ${{ steps.d.outputs.ios }}
+      android: ${{ steps.d.outputs.android }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: d
+        run: |
+          echo "ios=$([ -f apps/ios/project.yml ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "android=$([ -f apps/android/settings.gradle.kts ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
   contract:
     runs-on: ubuntu-latest
     steps:
@@ -33,7 +46,8 @@ jobs:
       - name: UniFFI 绑定无漂移
         run: tools/gen-bindings.sh --check
   ios:
-    if: hashFiles('apps/ios/project.yml') != ''
+    needs: detect
+    if: needs.detect.outputs.ios == 'true'
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
@@ -61,7 +75,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with: { name: ios-xcresult, path: apps/ios/build/Test.xcresult }
   android:
-    if: hashFiles('apps/android/settings.gradle.kts') != ''
+    needs: detect
+    if: needs.detect.outputs.android == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
