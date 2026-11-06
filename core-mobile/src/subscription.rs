@@ -60,7 +60,7 @@ pub fn parse_proxies_yaml(yaml: &str, subscription: u16) -> Result<(Vec<NodeInpu
     Ok((out, skipped))
 }
 
-fn normalize_protocol(t: &str) -> String {
+pub(crate) fn normalize_protocol(t: &str) -> String {
     match t.to_ascii_lowercase().as_str() {
         "vless" => "VLESS",
         "vmess" => "VMess",

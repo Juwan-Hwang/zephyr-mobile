@@ -20,6 +20,9 @@ pub enum MobileError {
     /// contract v0.1：subscription_not_found
     #[error("subscription not found: {0}")]
     SubscriptionNotFound(String),
+    /// contract scene_not_found
+    #[error("scene not found: {0}")]
+    SceneNotFound(String),
     /// contract not_running：mihomo 未启动 / 控制 socket 不存在
     #[error("not running: {0}")]
     NotRunning(String),

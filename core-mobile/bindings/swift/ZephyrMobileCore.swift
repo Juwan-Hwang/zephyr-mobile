@@ -850,6 +850,8 @@ public func FfiConverterTypeMihomoClient_lower(_ value: MihomoClient) -> UnsafeM
 
 public protocol MobileCoreProtocol : AnyObject {
     
+    func applySceneChange(sceneId: String, nodeId: UInt64, nowMillis: Int64) throws  -> SceneApply
+    
     /**
      * 按 id 取缓存延迟：None = 未测或超过 max_age_millis（<=0 不过期）；-1 = 超时。顺序与 ids 一致。
      */
@@ -874,6 +876,8 @@ public protocol MobileCoreProtocol : AnyObject {
      */
     func fastestNodes(query: String, limit: UInt32, nowMillis: Int64, maxAgeMillis: Int64) throws  -> [RankedNode]
     
+    func hostOverride(host: String)  -> HostOverride?
+    
     /**
      * 导入并重建节点库。url 可空（剪贴板/文件导入）。
      */
@@ -890,6 +894,13 @@ public protocol MobileCoreProtocol : AnyObject {
      * offset：结果集内节点序号（不含分区头行）。
      */
     func nodeRows(token: UInt64, offset: UInt64, limit: UInt32) throws  -> NodePage
+    
+    /**
+     * 连接轨迹里的覆写（contract §13）。改完需重载；persistent = false 不落盘。
+     */
+    func overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Bool) throws 
+    
+    func previewSceneChange(sceneId: String, nodeId: UInt64) throws  -> ExitChange
     
     /**
      * "更新前显示更改"：不落盘。
@@ -925,12 +936,36 @@ public protocol MobileCoreProtocol : AnyObject {
      */
     func recordLatencies(samples: [LatencySample]) throws 
     
+    /**
+     * 平台测得出口后回填（"198.51.100.7 · 美国"）。
+     */
+    func reportSceneExit(sceneId: String, ip: String, region: String?, testedAt: Int64) throws 
+    
     func ruleStats()  -> RuleStats
     
     /**
      * 嵌入式 mihomo 的运行时配置（zm_start / zm_reload 的输入）：该订阅正文 + Zephyr 设置。
      */
     func runtimeConfig(subscriptionId: String, options: RuntimeOptions) throws  -> String
+    
+    /**
+     * 左右滑动切地区；region 为空时用当前节点所在地区。按 smart 分数排序，最多 50。
+     */
+    func sceneCandidates(sceneId: String, region: String?, nowMillis: Int64) throws  -> [RankedNode]
+    
+    /**
+     * 该 host 走哪个场景（内置应用目录），用于轨迹页"场景"一栏。
+     */
+    func sceneForHost(host: String)  -> String?
+    
+    func scenes(nowMillis: Int64) throws  -> [Scene]
+    
+    /**
+     * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
+     */
+    func setSceneException(sceneId: String, appId: String, nodeId: UInt64?) throws 
+    
+    func storageInfo()  -> StorageInfo
     
     /**
      * 平台拉取用的完整 URL（不出现在 Subscription.url 里）。
@@ -1008,6 +1043,16 @@ public convenience init(dataDir: String)throws  {
     
 
     
+open func applySceneChange(sceneId: String, nodeId: UInt64, nowMillis: Int64)throws  -> SceneApply {
+    return try  FfiConverterTypeSceneApply.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_apply_scene_change(self.uniffiClonePointer(),
+        FfiConverterString.lower(sceneId),
+        FfiConverterUInt64.lower(nodeId),
+        FfiConverterInt64.lower(nowMillis),$0
+    )
+})
+}
+    
     /**
      * 按 id 取缓存延迟：None = 未测或超过 max_age_millis（<=0 不过期）；-1 = 超时。顺序与 ids 一致。
      */
@@ -1071,6 +1116,14 @@ open func fastestNodes(query: String, limit: UInt32, nowMillis: Int64, maxAgeMil
 })
 }
     
+open func hostOverride(host: String) -> HostOverride? {
+    return try!  FfiConverterOptionTypeHostOverride.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_host_override(self.uniffiClonePointer(),
+        FfiConverterString.lower(host),$0
+    )
+})
+}
+    
     /**
      * 导入并重建节点库。url 可空（剪贴板/文件导入）。
      */
@@ -1113,6 +1166,28 @@ open func nodeRows(token: UInt64, offset: UInt64, limit: UInt32)throws  -> NodeP
         FfiConverterUInt64.lower(token),
         FfiConverterUInt64.lower(offset),
         FfiConverterUInt32.lower(limit),$0
+    )
+})
+}
+    
+    /**
+     * 连接轨迹里的覆写（contract §13）。改完需重载；persistent = false 不落盘。
+     */
+open func overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Bool)throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_override_host(self.uniffiClonePointer(),
+        FfiConverterString.lower(host),
+        FfiConverterTypeTraceTarget.lower(target),
+        FfiConverterOptionString.lower(sceneId),
+        FfiConverterBool.lower(persistent),$0
+    )
+}
+}
+    
+open func previewSceneChange(sceneId: String, nodeId: UInt64)throws  -> ExitChange {
+    return try  FfiConverterTypeExitChange.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_scene_change(self.uniffiClonePointer(),
+        FfiConverterString.lower(sceneId),
+        FfiConverterUInt64.lower(nodeId),$0
     )
 })
 }
@@ -1201,6 +1276,19 @@ open func recordLatencies(samples: [LatencySample])throws  {try rustCallWithErro
 }
 }
     
+    /**
+     * 平台测得出口后回填（"198.51.100.7 · 美国"）。
+     */
+open func reportSceneExit(sceneId: String, ip: String, region: String?, testedAt: Int64)throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_exit(self.uniffiClonePointer(),
+        FfiConverterString.lower(sceneId),
+        FfiConverterString.lower(ip),
+        FfiConverterOptionString.lower(region),
+        FfiConverterInt64.lower(testedAt),$0
+    )
+}
+}
+    
 open func ruleStats() -> RuleStats {
     return try!  FfiConverterTypeRuleStats.lift(try! rustCall() {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_stats(self.uniffiClonePointer(),$0
@@ -1216,6 +1304,57 @@ open func runtimeConfig(subscriptionId: String, options: RuntimeOptions)throws  
     uniffi_zephyr_mobile_core_fn_method_mobilecore_runtime_config(self.uniffiClonePointer(),
         FfiConverterString.lower(subscriptionId),
         FfiConverterTypeRuntimeOptions.lower(options),$0
+    )
+})
+}
+    
+    /**
+     * 左右滑动切地区；region 为空时用当前节点所在地区。按 smart 分数排序，最多 50。
+     */
+open func sceneCandidates(sceneId: String, region: String?, nowMillis: Int64)throws  -> [RankedNode] {
+    return try  FfiConverterSequenceTypeRankedNode.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_candidates(self.uniffiClonePointer(),
+        FfiConverterString.lower(sceneId),
+        FfiConverterOptionString.lower(region),
+        FfiConverterInt64.lower(nowMillis),$0
+    )
+})
+}
+    
+    /**
+     * 该 host 走哪个场景（内置应用目录），用于轨迹页"场景"一栏。
+     */
+open func sceneForHost(host: String) -> String? {
+    return try!  FfiConverterOptionString.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_for_host(self.uniffiClonePointer(),
+        FfiConverterString.lower(host),$0
+    )
+})
+}
+    
+open func scenes(nowMillis: Int64)throws  -> [Scene] {
+    return try  FfiConverterSequenceTypeScene.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_scenes(self.uniffiClonePointer(),
+        FfiConverterInt64.lower(nowMillis),$0
+    )
+})
+}
+    
+    /**
+     * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
+     */
+open func setSceneException(sceneId: String, appId: String, nodeId: UInt64?)throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_exception(self.uniffiClonePointer(),
+        FfiConverterString.lower(sceneId),
+        FfiConverterString.lower(appId),
+        FfiConverterOptionUInt64.lower(nodeId),$0
+    )
+}
+}
+    
+open func storageInfo() -> StorageInfo {
+    return try!  FfiConverterTypeStorageInfo.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_storage_info(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -1622,6 +1761,118 @@ public func FfiConverterTypeDnsConfig_lower(_ value: DnsConfig) -> RustBuffer {
 }
 
 
+public struct ExitChange {
+    public var sceneId: String?
+    public var fromRegion: String?
+    public var fromIp: String?
+    public var toRegion: String
+    /**
+     * 新出口 IP 要连上后才知道
+     */
+    public var toIp: String?
+    public var affectedApps: [String]
+    public var unchangedApps: [String]
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(sceneId: String?, fromRegion: String?, fromIp: String?, toRegion: String, 
+        /**
+         * 新出口 IP 要连上后才知道
+         */toIp: String?, affectedApps: [String], unchangedApps: [String]) {
+        self.sceneId = sceneId
+        self.fromRegion = fromRegion
+        self.fromIp = fromIp
+        self.toRegion = toRegion
+        self.toIp = toIp
+        self.affectedApps = affectedApps
+        self.unchangedApps = unchangedApps
+    }
+}
+
+
+
+extension ExitChange: Equatable, Hashable {
+    public static func ==(lhs: ExitChange, rhs: ExitChange) -> Bool {
+        if lhs.sceneId != rhs.sceneId {
+            return false
+        }
+        if lhs.fromRegion != rhs.fromRegion {
+            return false
+        }
+        if lhs.fromIp != rhs.fromIp {
+            return false
+        }
+        if lhs.toRegion != rhs.toRegion {
+            return false
+        }
+        if lhs.toIp != rhs.toIp {
+            return false
+        }
+        if lhs.affectedApps != rhs.affectedApps {
+            return false
+        }
+        if lhs.unchangedApps != rhs.unchangedApps {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(sceneId)
+        hasher.combine(fromRegion)
+        hasher.combine(fromIp)
+        hasher.combine(toRegion)
+        hasher.combine(toIp)
+        hasher.combine(affectedApps)
+        hasher.combine(unchangedApps)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeExitChange: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ExitChange {
+        return
+            try ExitChange(
+                sceneId: FfiConverterOptionString.read(from: &buf), 
+                fromRegion: FfiConverterOptionString.read(from: &buf), 
+                fromIp: FfiConverterOptionString.read(from: &buf), 
+                toRegion: FfiConverterString.read(from: &buf), 
+                toIp: FfiConverterOptionString.read(from: &buf), 
+                affectedApps: FfiConverterSequenceString.read(from: &buf), 
+                unchangedApps: FfiConverterSequenceString.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: ExitChange, into buf: inout [UInt8]) {
+        FfiConverterOptionString.write(value.sceneId, into: &buf)
+        FfiConverterOptionString.write(value.fromRegion, into: &buf)
+        FfiConverterOptionString.write(value.fromIp, into: &buf)
+        FfiConverterString.write(value.toRegion, into: &buf)
+        FfiConverterOptionString.write(value.toIp, into: &buf)
+        FfiConverterSequenceString.write(value.affectedApps, into: &buf)
+        FfiConverterSequenceString.write(value.unchangedApps, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeExitChange_lift(_ buf: RustBuffer) throws -> ExitChange {
+    return try FfiConverterTypeExitChange.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeExitChange_lower(_ value: ExitChange) -> RustBuffer {
+    return FfiConverterTypeExitChange.lower(value)
+}
+
+
 /**
  * 平台拉取结果。
  */
@@ -1886,6 +2137,88 @@ public func FfiConverterTypeHostActivity_lift(_ buf: RustBuffer) throws -> HostA
 #endif
 public func FfiConverterTypeHostActivity_lower(_ value: HostActivity) -> RustBuffer {
     return FfiConverterTypeHostActivity.lower(value)
+}
+
+
+public struct HostOverride {
+    public var host: String
+    public var target: TraceTarget
+    public var sceneId: String?
+    public var persistent: Bool
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(host: String, target: TraceTarget, sceneId: String?, persistent: Bool) {
+        self.host = host
+        self.target = target
+        self.sceneId = sceneId
+        self.persistent = persistent
+    }
+}
+
+
+
+extension HostOverride: Equatable, Hashable {
+    public static func ==(lhs: HostOverride, rhs: HostOverride) -> Bool {
+        if lhs.host != rhs.host {
+            return false
+        }
+        if lhs.target != rhs.target {
+            return false
+        }
+        if lhs.sceneId != rhs.sceneId {
+            return false
+        }
+        if lhs.persistent != rhs.persistent {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(host)
+        hasher.combine(target)
+        hasher.combine(sceneId)
+        hasher.combine(persistent)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeHostOverride: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> HostOverride {
+        return
+            try HostOverride(
+                host: FfiConverterString.read(from: &buf), 
+                target: FfiConverterTypeTraceTarget.read(from: &buf), 
+                sceneId: FfiConverterOptionString.read(from: &buf), 
+                persistent: FfiConverterBool.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: HostOverride, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.host, into: &buf)
+        FfiConverterTypeTraceTarget.write(value.target, into: &buf)
+        FfiConverterOptionString.write(value.sceneId, into: &buf)
+        FfiConverterBool.write(value.persistent, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeHostOverride_lift(_ buf: RustBuffer) throws -> HostOverride {
+    return try FfiConverterTypeHostOverride.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeHostOverride_lower(_ value: HostOverride) -> RustBuffer {
+    return FfiConverterTypeHostOverride.lower(value)
 }
 
 
@@ -3205,6 +3538,431 @@ public func FfiConverterTypeRuntimeOptions_lower(_ value: RuntimeOptions) -> Rus
 }
 
 
+public struct Scene {
+    public var id: String
+    public var kind: SceneKind
+    public var name: String
+    /**
+     * "9 个可用"：所选地区 24 h 内测速成功的节点数（≤ 50）
+     */
+    public var available: Int32
+    public var selected: NodeRow?
+    public var selectedLatencyMs: Int32?
+    public var exitIp: String?
+    public var exitRegion: String?
+    public var source: SceneSource
+    public var testedAt: Int64?
+    public var note: String?
+    public var exceptions: [SceneExceptionView]
+    /**
+     * mihomo 中的组名（MihomoClient.selectInGroup 用）
+     */
+    public var group: String
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(id: String, kind: SceneKind, name: String, 
+        /**
+         * "9 个可用"：所选地区 24 h 内测速成功的节点数（≤ 50）
+         */available: Int32, selected: NodeRow?, selectedLatencyMs: Int32?, exitIp: String?, exitRegion: String?, source: SceneSource, testedAt: Int64?, note: String?, exceptions: [SceneExceptionView], 
+        /**
+         * mihomo 中的组名（MihomoClient.selectInGroup 用）
+         */group: String) {
+        self.id = id
+        self.kind = kind
+        self.name = name
+        self.available = available
+        self.selected = selected
+        self.selectedLatencyMs = selectedLatencyMs
+        self.exitIp = exitIp
+        self.exitRegion = exitRegion
+        self.source = source
+        self.testedAt = testedAt
+        self.note = note
+        self.exceptions = exceptions
+        self.group = group
+    }
+}
+
+
+
+extension Scene: Equatable, Hashable {
+    public static func ==(lhs: Scene, rhs: Scene) -> Bool {
+        if lhs.id != rhs.id {
+            return false
+        }
+        if lhs.kind != rhs.kind {
+            return false
+        }
+        if lhs.name != rhs.name {
+            return false
+        }
+        if lhs.available != rhs.available {
+            return false
+        }
+        if lhs.selected != rhs.selected {
+            return false
+        }
+        if lhs.selectedLatencyMs != rhs.selectedLatencyMs {
+            return false
+        }
+        if lhs.exitIp != rhs.exitIp {
+            return false
+        }
+        if lhs.exitRegion != rhs.exitRegion {
+            return false
+        }
+        if lhs.source != rhs.source {
+            return false
+        }
+        if lhs.testedAt != rhs.testedAt {
+            return false
+        }
+        if lhs.note != rhs.note {
+            return false
+        }
+        if lhs.exceptions != rhs.exceptions {
+            return false
+        }
+        if lhs.group != rhs.group {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(kind)
+        hasher.combine(name)
+        hasher.combine(available)
+        hasher.combine(selected)
+        hasher.combine(selectedLatencyMs)
+        hasher.combine(exitIp)
+        hasher.combine(exitRegion)
+        hasher.combine(source)
+        hasher.combine(testedAt)
+        hasher.combine(note)
+        hasher.combine(exceptions)
+        hasher.combine(group)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeScene: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> Scene {
+        return
+            try Scene(
+                id: FfiConverterString.read(from: &buf), 
+                kind: FfiConverterTypeSceneKind.read(from: &buf), 
+                name: FfiConverterString.read(from: &buf), 
+                available: FfiConverterInt32.read(from: &buf), 
+                selected: FfiConverterOptionTypeNodeRow.read(from: &buf), 
+                selectedLatencyMs: FfiConverterOptionInt32.read(from: &buf), 
+                exitIp: FfiConverterOptionString.read(from: &buf), 
+                exitRegion: FfiConverterOptionString.read(from: &buf), 
+                source: FfiConverterTypeSceneSource.read(from: &buf), 
+                testedAt: FfiConverterOptionInt64.read(from: &buf), 
+                note: FfiConverterOptionString.read(from: &buf), 
+                exceptions: FfiConverterSequenceTypeSceneExceptionView.read(from: &buf), 
+                group: FfiConverterString.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: Scene, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.id, into: &buf)
+        FfiConverterTypeSceneKind.write(value.kind, into: &buf)
+        FfiConverterString.write(value.name, into: &buf)
+        FfiConverterInt32.write(value.available, into: &buf)
+        FfiConverterOptionTypeNodeRow.write(value.selected, into: &buf)
+        FfiConverterOptionInt32.write(value.selectedLatencyMs, into: &buf)
+        FfiConverterOptionString.write(value.exitIp, into: &buf)
+        FfiConverterOptionString.write(value.exitRegion, into: &buf)
+        FfiConverterTypeSceneSource.write(value.source, into: &buf)
+        FfiConverterOptionInt64.write(value.testedAt, into: &buf)
+        FfiConverterOptionString.write(value.note, into: &buf)
+        FfiConverterSequenceTypeSceneExceptionView.write(value.exceptions, into: &buf)
+        FfiConverterString.write(value.group, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeScene_lift(_ buf: RustBuffer) throws -> Scene {
+    return try FfiConverterTypeScene.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeScene_lower(_ value: Scene) -> RustBuffer {
+    return FfiConverterTypeScene.lower(value)
+}
+
+
+/**
+ * applySceneChange 的结果：平台据此决定热切换还是重载。
+ */
+public struct SceneApply {
+    /**
+     * true：新节点不在当前组里，需 runtimeConfig + zm_reload
+     */
+    public var needsReload: Bool
+    public var group: String
+    /**
+     * mihomo 成员名；needs_reload = false 时直接 selectInGroup(group, member)
+     */
+    public var member: String
+    /**
+     * 撤销用：再 apply 这个节点
+     */
+    public var previous: UInt64?
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(
+        /**
+         * true：新节点不在当前组里，需 runtimeConfig + zm_reload
+         */needsReload: Bool, group: String, 
+        /**
+         * mihomo 成员名；needs_reload = false 时直接 selectInGroup(group, member)
+         */member: String, 
+        /**
+         * 撤销用：再 apply 这个节点
+         */previous: UInt64?) {
+        self.needsReload = needsReload
+        self.group = group
+        self.member = member
+        self.previous = previous
+    }
+}
+
+
+
+extension SceneApply: Equatable, Hashable {
+    public static func ==(lhs: SceneApply, rhs: SceneApply) -> Bool {
+        if lhs.needsReload != rhs.needsReload {
+            return false
+        }
+        if lhs.group != rhs.group {
+            return false
+        }
+        if lhs.member != rhs.member {
+            return false
+        }
+        if lhs.previous != rhs.previous {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(needsReload)
+        hasher.combine(group)
+        hasher.combine(member)
+        hasher.combine(previous)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeSceneApply: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SceneApply {
+        return
+            try SceneApply(
+                needsReload: FfiConverterBool.read(from: &buf), 
+                group: FfiConverterString.read(from: &buf), 
+                member: FfiConverterString.read(from: &buf), 
+                previous: FfiConverterOptionUInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: SceneApply, into buf: inout [UInt8]) {
+        FfiConverterBool.write(value.needsReload, into: &buf)
+        FfiConverterString.write(value.group, into: &buf)
+        FfiConverterString.write(value.member, into: &buf)
+        FfiConverterOptionUInt64.write(value.previous, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSceneApply_lift(_ buf: RustBuffer) throws -> SceneApply {
+    return try FfiConverterTypeSceneApply.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSceneApply_lower(_ value: SceneApply) -> RustBuffer {
+    return FfiConverterTypeSceneApply.lower(value)
+}
+
+
+public struct SceneExceptionView {
+    public var appId: String
+    public var app: String
+    public var node: NodeRow?
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(appId: String, app: String, node: NodeRow?) {
+        self.appId = appId
+        self.app = app
+        self.node = node
+    }
+}
+
+
+
+extension SceneExceptionView: Equatable, Hashable {
+    public static func ==(lhs: SceneExceptionView, rhs: SceneExceptionView) -> Bool {
+        if lhs.appId != rhs.appId {
+            return false
+        }
+        if lhs.app != rhs.app {
+            return false
+        }
+        if lhs.node != rhs.node {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(appId)
+        hasher.combine(app)
+        hasher.combine(node)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeSceneExceptionView: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SceneExceptionView {
+        return
+            try SceneExceptionView(
+                appId: FfiConverterString.read(from: &buf), 
+                app: FfiConverterString.read(from: &buf), 
+                node: FfiConverterOptionTypeNodeRow.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: SceneExceptionView, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.appId, into: &buf)
+        FfiConverterString.write(value.app, into: &buf)
+        FfiConverterOptionTypeNodeRow.write(value.node, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSceneExceptionView_lift(_ buf: RustBuffer) throws -> SceneExceptionView {
+    return try FfiConverterTypeSceneExceptionView.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSceneExceptionView_lower(_ value: SceneExceptionView) -> RustBuffer {
+    return FfiConverterTypeSceneExceptionView.lower(value)
+}
+
+
+public struct StorageInfo {
+    public var nodesBytes: Int64
+    public var rulesBytes: Int64
+    public var subscriptionsBytes: Int64
+    public var cacheBytes: Int64
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(nodesBytes: Int64, rulesBytes: Int64, subscriptionsBytes: Int64, cacheBytes: Int64) {
+        self.nodesBytes = nodesBytes
+        self.rulesBytes = rulesBytes
+        self.subscriptionsBytes = subscriptionsBytes
+        self.cacheBytes = cacheBytes
+    }
+}
+
+
+
+extension StorageInfo: Equatable, Hashable {
+    public static func ==(lhs: StorageInfo, rhs: StorageInfo) -> Bool {
+        if lhs.nodesBytes != rhs.nodesBytes {
+            return false
+        }
+        if lhs.rulesBytes != rhs.rulesBytes {
+            return false
+        }
+        if lhs.subscriptionsBytes != rhs.subscriptionsBytes {
+            return false
+        }
+        if lhs.cacheBytes != rhs.cacheBytes {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(nodesBytes)
+        hasher.combine(rulesBytes)
+        hasher.combine(subscriptionsBytes)
+        hasher.combine(cacheBytes)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeStorageInfo: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> StorageInfo {
+        return
+            try StorageInfo(
+                nodesBytes: FfiConverterInt64.read(from: &buf), 
+                rulesBytes: FfiConverterInt64.read(from: &buf), 
+                subscriptionsBytes: FfiConverterInt64.read(from: &buf), 
+                cacheBytes: FfiConverterInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: StorageInfo, into buf: inout [UInt8]) {
+        FfiConverterInt64.write(value.nodesBytes, into: &buf)
+        FfiConverterInt64.write(value.rulesBytes, into: &buf)
+        FfiConverterInt64.write(value.subscriptionsBytes, into: &buf)
+        FfiConverterInt64.write(value.cacheBytes, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeStorageInfo_lift(_ buf: RustBuffer) throws -> StorageInfo {
+    return try FfiConverterTypeStorageInfo.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeStorageInfo_lower(_ value: StorageInfo) -> RustBuffer {
+    return FfiConverterTypeStorageInfo.lower(value)
+}
+
+
 public struct Subscription {
     public var id: String
     public var name: String
@@ -3960,6 +4718,11 @@ public enum MobileError {
     case SubscriptionNotFound(String
     )
     /**
+     * contract scene_not_found
+     */
+    case SceneNotFound(String
+    )
+    /**
      * contract not_running：mihomo 未启动 / 控制 socket 不存在
      */
     case NotRunning(String
@@ -4008,10 +4771,13 @@ public struct FfiConverterTypeMobileError: FfiConverterRustBuffer {
         case 8: return .SubscriptionNotFound(
             try FfiConverterString.read(from: &buf)
             )
-        case 9: return .NotRunning(
+        case 9: return .SceneNotFound(
             try FfiConverterString.read(from: &buf)
             )
-        case 10: return .Cancelled
+        case 10: return .NotRunning(
+            try FfiConverterString.read(from: &buf)
+            )
+        case 11: return .Cancelled
 
          default: throw UniffiInternalError.unexpectedEnumCase
         }
@@ -4064,13 +4830,18 @@ public struct FfiConverterTypeMobileError: FfiConverterRustBuffer {
             FfiConverterString.write(v1, into: &buf)
             
         
-        case let .NotRunning(v1):
+        case let .SceneNotFound(v1):
             writeInt(&buf, Int32(9))
             FfiConverterString.write(v1, into: &buf)
             
         
-        case .Cancelled:
+        case let .NotRunning(v1):
             writeInt(&buf, Int32(10))
+            FfiConverterString.write(v1, into: &buf)
+            
+        
+        case .Cancelled:
+            writeInt(&buf, Int32(11))
         
         }
     }
@@ -4153,6 +4924,226 @@ public func FfiConverterTypeProxyMode_lower(_ value: ProxyMode) -> RustBuffer {
 
 
 extension ProxyMode: Equatable, Hashable {}
+
+
+
+// Note that we don't yet support `indirect` for enums.
+// See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
+
+public enum SceneKind {
+    
+    case ai
+    case video
+    case other
+    case custom
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeSceneKind: FfiConverterRustBuffer {
+    typealias SwiftType = SceneKind
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SceneKind {
+        let variant: Int32 = try readInt(&buf)
+        switch variant {
+        
+        case 1: return .ai
+        
+        case 2: return .video
+        
+        case 3: return .other
+        
+        case 4: return .custom
+        
+        default: throw UniffiInternalError.unexpectedEnumCase
+        }
+    }
+
+    public static func write(_ value: SceneKind, into buf: inout [UInt8]) {
+        switch value {
+        
+        
+        case .ai:
+            writeInt(&buf, Int32(1))
+        
+        
+        case .video:
+            writeInt(&buf, Int32(2))
+        
+        
+        case .other:
+            writeInt(&buf, Int32(3))
+        
+        
+        case .custom:
+            writeInt(&buf, Int32(4))
+        
+        }
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSceneKind_lift(_ buf: RustBuffer) throws -> SceneKind {
+    return try FfiConverterTypeSceneKind.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSceneKind_lower(_ value: SceneKind) -> RustBuffer {
+    return FfiConverterTypeSceneKind.lower(value)
+}
+
+
+
+extension SceneKind: Equatable, Hashable {}
+
+
+
+// Note that we don't yet support `indirect` for enums.
+// See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
+
+public enum SceneSource {
+    
+    case auto
+    case manual
+    case subscriptionGroup
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeSceneSource: FfiConverterRustBuffer {
+    typealias SwiftType = SceneSource
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SceneSource {
+        let variant: Int32 = try readInt(&buf)
+        switch variant {
+        
+        case 1: return .auto
+        
+        case 2: return .manual
+        
+        case 3: return .subscriptionGroup
+        
+        default: throw UniffiInternalError.unexpectedEnumCase
+        }
+    }
+
+    public static func write(_ value: SceneSource, into buf: inout [UInt8]) {
+        switch value {
+        
+        
+        case .auto:
+            writeInt(&buf, Int32(1))
+        
+        
+        case .manual:
+            writeInt(&buf, Int32(2))
+        
+        
+        case .subscriptionGroup:
+            writeInt(&buf, Int32(3))
+        
+        }
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSceneSource_lift(_ buf: RustBuffer) throws -> SceneSource {
+    return try FfiConverterTypeSceneSource.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSceneSource_lower(_ value: SceneSource) -> RustBuffer {
+    return FfiConverterTypeSceneSource.lower(value)
+}
+
+
+
+extension SceneSource: Equatable, Hashable {}
+
+
+
+// Note that we don't yet support `indirect` for enums.
+// See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
+
+public enum TraceTarget {
+    
+    case unchanged
+    case direct
+    case scene
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeTraceTarget: FfiConverterRustBuffer {
+    typealias SwiftType = TraceTarget
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> TraceTarget {
+        let variant: Int32 = try readInt(&buf)
+        switch variant {
+        
+        case 1: return .unchanged
+        
+        case 2: return .direct
+        
+        case 3: return .scene
+        
+        default: throw UniffiInternalError.unexpectedEnumCase
+        }
+    }
+
+    public static func write(_ value: TraceTarget, into buf: inout [UInt8]) {
+        switch value {
+        
+        
+        case .unchanged:
+            writeInt(&buf, Int32(1))
+        
+        
+        case .direct:
+            writeInt(&buf, Int32(2))
+        
+        
+        case .scene:
+            writeInt(&buf, Int32(3))
+        
+        }
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeTraceTarget_lift(_ buf: RustBuffer) throws -> TraceTarget {
+    return try FfiConverterTypeTraceTarget.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeTraceTarget_lower(_ value: TraceTarget) -> RustBuffer {
+    return FfiConverterTypeTraceTarget.lower(value)
+}
+
+
+
+extension TraceTarget: Equatable, Hashable {}
 
 
 
@@ -4486,6 +5477,54 @@ fileprivate struct FfiConverterOptionString: FfiConverterRustBuffer {
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterOptionTypeHostOverride: FfiConverterRustBuffer {
+    typealias SwiftType = HostOverride?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypeHostOverride.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypeHostOverride.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterOptionTypeNodeRow: FfiConverterRustBuffer {
+    typealias SwiftType = NodeRow?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypeNodeRow.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypeNodeRow.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterOptionTypeSubscriptionDiff: FfiConverterRustBuffer {
     typealias SwiftType = SubscriptionDiff?
 
@@ -4809,6 +5848,56 @@ fileprivate struct FfiConverterSequenceTypeRuleLayerInfo: FfiConverterRustBuffer
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterSequenceTypeScene: FfiConverterRustBuffer {
+    typealias SwiftType = [Scene]
+
+    public static func write(_ value: [Scene], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeScene.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [Scene] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [Scene]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeScene.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterSequenceTypeSceneExceptionView: FfiConverterRustBuffer {
+    typealias SwiftType = [SceneExceptionView]
+
+    public static func write(_ value: [SceneExceptionView], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeSceneExceptionView.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [SceneExceptionView] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [SceneExceptionView]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeSceneExceptionView.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterSequenceTypeSubscription: FfiConverterRustBuffer {
     typealias SwiftType = [Subscription]
 
@@ -4941,6 +6030,9 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_version() != 52279) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_apply_scene_change() != 43586) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_cached_latencies() != 41970) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -4956,6 +6048,9 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes() != 1274) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_host_override() != 18746) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription() != 45715) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -4966,6 +6061,12 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_rows() != 21841) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_override_host() != 5360) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_scene_change() != 49107) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_subscription_update() != 23752) {
@@ -4992,10 +6093,28 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_latencies() != 22667) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_exit() != 54284) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_runtime_config() != 46462) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_candidates() != 42848) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_for_host() != 35644) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_scenes() != 51937) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception() != 4651) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_storage_info() != 53541) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscription_fetch_url() != 43374) {

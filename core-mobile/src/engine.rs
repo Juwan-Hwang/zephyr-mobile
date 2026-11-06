@@ -64,21 +64,22 @@ const QUERY_CACHE: usize = 8;
 
 #[derive(uniffi::Object)]
 pub struct MobileCore {
-    dir: PathBuf,
-    store: RwLock<Option<Arc<NodeStore>>>,
-    rules: RwLock<Arc<RuleSet>>,
-    queries: Mutex<VecDeque<(u64, Arc<RoaringBitmap>)>>,
-    next_token: Mutex<u64>,
-    generation: Mutex<u64>,
-    subs: Mutex<SubStore>,
-    latency: Mutex<LatencyCache>,
+    pub(crate) dir: PathBuf,
+    pub(crate) store: RwLock<Option<Arc<NodeStore>>>,
+    pub(crate) rules: RwLock<Arc<RuleSet>>,
+    pub(crate) queries: Mutex<VecDeque<(u64, Arc<RoaringBitmap>)>>,
+    pub(crate) next_token: Mutex<u64>,
+    pub(crate) generation: Mutex<u64>,
+    pub(crate) subs: Mutex<SubStore>,
+    pub(crate) latency: Mutex<LatencyCache>,
     /// (库代际, 指纹 → 行号)：只为测过速的节点建，按需扫描补齐
-    fp_pos: Mutex<(u64, FxHashMap<u64, u32>)>,
+    pub(crate) fp_pos: Mutex<(u64, FxHashMap<u64, u32>)>,
+    pub(crate) scenes: Mutex<crate::scenes::SceneStore>,
 }
 
 impl MobileCore {
     /// 给定指纹集合 → 行号（当前库）。未命中的批量扫描一次补齐；库换代后整表作废。
-    fn positions(&self, store: &NodeStore, ids: &[u64]) -> FxHashMap<u64, u32> {
+    pub(crate) fn positions(&self, store: &NodeStore, ids: &[u64]) -> FxHashMap<u64, u32> {
         let gen = *self.generation.lock();
         let mut g = self.fp_pos.lock();
         if g.0 != gen {
@@ -97,7 +98,7 @@ impl MobileCore {
         ids.iter().filter_map(|id| g.1.get(id).filter(|&&p| p != u32::MAX).map(|&p| (*id, p))).collect()
     }
 
-    fn store(&self) -> Result<Arc<NodeStore>, MobileError> {
+    pub(crate) fn store(&self) -> Result<Arc<NodeStore>, MobileError> {
         self.store.read().clone().ok_or_else(|| MobileError::NotFound("节点库未建立".into()))
     }
     fn swap_store(&self, builder: NodeStoreBuilder, skipped: u64, t0: std::time::Instant) -> Result<BuildReport, MobileError> {
@@ -160,6 +161,7 @@ impl MobileCore {
             subs: Mutex::new(SubStore::open(&dir_for_subs)?),
             latency: Mutex::new(LatencyCache::open(&dir_for_subs)),
             fp_pos: Mutex::new((0, FxHashMap::default())),
+            scenes: Mutex::new(crate::scenes::SceneStore::open(&dir_for_subs)?),
         }))
     }
 
@@ -326,7 +328,8 @@ impl MobileCore {
             let e = &s.entries[s.find(&subscription_id)?];
             s.body(e.slot).ok_or_else(|| MobileError::SubscriptionNotFound(subscription_id.clone()))?
         };
-        crate::runtime_config::build_runtime_config(&body, &options)
+        let plan = self.scene_plan()?;
+        crate::runtime_config::build_runtime_config_with(&body, &options, &plan)
     }
 
     pub fn delete_subscription(&self, id: String) -> Result<(), MobileError> {

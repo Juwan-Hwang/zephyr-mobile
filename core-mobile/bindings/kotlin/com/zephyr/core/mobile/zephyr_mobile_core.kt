@@ -813,6 +813,26 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -867,6 +887,8 @@ internal interface UniffiLib : Library {
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_constructor_mobilecore_new(`dataDir`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Pointer
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_apply_scene_change(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`nodeId`: Long,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_cached_latencies(`ptr`: Pointer,`ids`: RustBuffer.ByValue,`nowMillis`: Long,`maxAgeMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_compile_rule_layer(`ptr`: Pointer,`index`: Int,`name`: RustBuffer.ByValue,`kind`: RustBuffer.ByValue,`note`: RustBuffer.ByValue,`defaultPolicy`: RustBuffer.ByValue,`text`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -877,6 +899,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_fastest_nodes(`ptr`: Pointer,`query`: RustBuffer.ByValue,`limit`: Int,`nowMillis`: Long,`maxAgeMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_host_override(`ptr`: Pointer,`host`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_import_subscription(`ptr`: Pointer,`name`: RustBuffer.ByValue,`url`: RustBuffer.ByValue,`fetched`: RustBuffer.ByValue,`autoUpdateHours`: Int,`progress`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_load_rules(`ptr`: Pointer,`finalPolicy`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -884,6 +908,10 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_node_index(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_node_rows(`ptr`: Pointer,`token`: Long,`offset`: Long,`limit`: Int,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_override_host(`ptr`: Pointer,`host`: RustBuffer.ByValue,`target`: RustBuffer.ByValue,`sceneId`: RustBuffer.ByValue,`persistent`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_scene_change(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`nodeId`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_subscription_update(`ptr`: Pointer,`id`: RustBuffer.ByValue,`fetched`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
@@ -901,9 +929,21 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_record_latencies(`ptr`: Pointer,`samples`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_exit(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`ip`: RustBuffer.ByValue,`region`: RustBuffer.ByValue,`testedAt`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_stats(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_runtime_config(`ptr`: Pointer,`subscriptionId`: RustBuffer.ByValue,`options`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_candidates(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`region`: RustBuffer.ByValue,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_for_host(`ptr`: Pointer,`host`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scenes(`ptr`: Pointer,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_exception(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`appId`: RustBuffer.ByValue,`nodeId`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_storage_info(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_subscription_fetch_url(`ptr`: Pointer,`id`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
@@ -1055,6 +1095,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_version(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_apply_scene_change(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_cached_latencies(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_layer(
@@ -1065,6 +1107,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_host_override(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_load_rules(
@@ -1072,6 +1116,10 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_index(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_rows(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_override_host(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_scene_change(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_subscription_update(
     ): Short
@@ -1089,9 +1137,21 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_latencies(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_exit(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_runtime_config(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_candidates(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_for_host(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scenes(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_storage_info(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscription_fetch_url(
     ): Short
@@ -1162,6 +1222,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_version() != 52279.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_apply_scene_change() != 43586.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_cached_latencies() != 41970.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -1177,6 +1240,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes() != 1274.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_host_override() != 18746.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription() != 45715.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -1187,6 +1253,12 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_rows() != 21841.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_override_host() != 5360.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_scene_change() != 49107.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_subscription_update() != 23752.toShort()) {
@@ -1213,10 +1285,28 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_latencies() != 22667.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_exit() != 54284.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_runtime_config() != 46462.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_candidates() != 42848.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_for_host() != 35644.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_scenes() != 51937.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception() != 4651.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_storage_info() != 53541.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscription_fetch_url() != 43374.toShort()) {
@@ -2129,6 +2219,8 @@ public object FfiConverterTypeMihomoClient: FfiConverter<MihomoClient, Pointer> 
 
 public interface MobileCoreInterface {
     
+    fun `applySceneChange`(`sceneId`: kotlin.String, `nodeId`: kotlin.ULong, `nowMillis`: kotlin.Long): SceneApply
+    
     /**
      * 按 id 取缓存延迟：None = 未测或超过 max_age_millis（<=0 不过期）；-1 = 超时。顺序与 ids 一致。
      */
@@ -2153,6 +2245,8 @@ public interface MobileCoreInterface {
      */
     fun `fastestNodes`(`query`: kotlin.String, `limit`: kotlin.UInt, `nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long): List<RankedNode>
     
+    fun `hostOverride`(`host`: kotlin.String): HostOverride?
+    
     /**
      * 导入并重建节点库。url 可空（剪贴板/文件导入）。
      */
@@ -2169,6 +2263,13 @@ public interface MobileCoreInterface {
      * offset：结果集内节点序号（不含分区头行）。
      */
     fun `nodeRows`(`token`: kotlin.ULong, `offset`: kotlin.ULong, `limit`: kotlin.UInt): NodePage
+    
+    /**
+     * 连接轨迹里的覆写（contract §13）。改完需重载；persistent = false 不落盘。
+     */
+    fun `overrideHost`(`host`: kotlin.String, `target`: TraceTarget, `sceneId`: kotlin.String?, `persistent`: kotlin.Boolean)
+    
+    fun `previewSceneChange`(`sceneId`: kotlin.String, `nodeId`: kotlin.ULong): ExitChange
     
     /**
      * "更新前显示更改"：不落盘。
@@ -2204,12 +2305,36 @@ public interface MobileCoreInterface {
      */
     fun `recordLatencies`(`samples`: List<LatencySample>)
     
+    /**
+     * 平台测得出口后回填（"198.51.100.7 · 美国"）。
+     */
+    fun `reportSceneExit`(`sceneId`: kotlin.String, `ip`: kotlin.String, `region`: kotlin.String?, `testedAt`: kotlin.Long)
+    
     fun `ruleStats`(): RuleStats
     
     /**
      * 嵌入式 mihomo 的运行时配置（zm_start / zm_reload 的输入）：该订阅正文 + Zephyr 设置。
      */
     fun `runtimeConfig`(`subscriptionId`: kotlin.String, `options`: RuntimeOptions): kotlin.String
+    
+    /**
+     * 左右滑动切地区；region 为空时用当前节点所在地区。按 smart 分数排序，最多 50。
+     */
+    fun `sceneCandidates`(`sceneId`: kotlin.String, `region`: kotlin.String?, `nowMillis`: kotlin.Long): List<RankedNode>
+    
+    /**
+     * 该 host 走哪个场景（内置应用目录），用于轨迹页"场景"一栏。
+     */
+    fun `sceneForHost`(`host`: kotlin.String): kotlin.String?
+    
+    fun `scenes`(`nowMillis`: kotlin.Long): List<Scene>
+    
+    /**
+     * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
+     */
+    fun `setSceneException`(`sceneId`: kotlin.String, `appId`: kotlin.String, `nodeId`: kotlin.ULong?)
+    
+    fun `storageInfo`(): StorageInfo
     
     /**
      * 平台拉取用的完整 URL（不出现在 Subscription.url 里）。
@@ -2319,6 +2444,19 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     }
 
     
+    @Throws(MobileException::class)override fun `applySceneChange`(`sceneId`: kotlin.String, `nodeId`: kotlin.ULong, `nowMillis`: kotlin.Long): SceneApply {
+            return FfiConverterTypeSceneApply.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_apply_scene_change(
+        it, FfiConverterString.lower(`sceneId`),FfiConverterULong.lower(`nodeId`),FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    )
+    }
+    
+
+    
     /**
      * 按 id 取缓存延迟：None = 未测或超过 max_age_millis（<=0 不过期）；-1 = 超时。顺序与 ids 一致。
      */override fun `cachedLatencies`(`ids`: List<kotlin.ULong>, `nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long): List<kotlin.Int?> {
@@ -2394,6 +2532,18 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     }
     
 
+    override fun `hostOverride`(`host`: kotlin.String): HostOverride? {
+            return FfiConverterOptionalTypeHostOverride.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_host_override(
+        it, FfiConverterString.lower(`host`),_status)
+}
+    }
+    )
+    }
+    
+
     
     /**
      * 导入并重建节点库。url 可空（剪贴板/文件导入）。
@@ -2449,6 +2599,34 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_node_rows(
         it, FfiConverterULong.lower(`token`),FfiConverterULong.lower(`offset`),FfiConverterUInt.lower(`limit`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 连接轨迹里的覆写（contract §13）。改完需重载；persistent = false 不落盘。
+     */
+    @Throws(MobileException::class)override fun `overrideHost`(`host`: kotlin.String, `target`: TraceTarget, `sceneId`: kotlin.String?, `persistent`: kotlin.Boolean)
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_override_host(
+        it, FfiConverterString.lower(`host`),FfiConverterTypeTraceTarget.lower(`target`),FfiConverterOptionalString.lower(`sceneId`),FfiConverterBoolean.lower(`persistent`),_status)
+}
+    }
+    
+    
+
+    
+    @Throws(MobileException::class)override fun `previewSceneChange`(`sceneId`: kotlin.String, `nodeId`: kotlin.ULong): ExitChange {
+            return FfiConverterTypeExitChange.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_scene_change(
+        it, FfiConverterString.lower(`sceneId`),FfiConverterULong.lower(`nodeId`),_status)
 }
     }
     )
@@ -2576,6 +2754,21 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     
     
 
+    
+    /**
+     * 平台测得出口后回填（"198.51.100.7 · 美国"）。
+     */
+    @Throws(MobileException::class)override fun `reportSceneExit`(`sceneId`: kotlin.String, `ip`: kotlin.String, `region`: kotlin.String?, `testedAt`: kotlin.Long)
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_exit(
+        it, FfiConverterString.lower(`sceneId`),FfiConverterString.lower(`ip`),FfiConverterOptionalString.lower(`region`),FfiConverterLong.lower(`testedAt`),_status)
+}
+    }
+    
+    
+
     override fun `ruleStats`(): RuleStats {
             return FfiConverterTypeRuleStats.lift(
     callWithPointer {
@@ -2598,6 +2791,77 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_runtime_config(
         it, FfiConverterString.lower(`subscriptionId`),FfiConverterTypeRuntimeOptions.lower(`options`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 左右滑动切地区；region 为空时用当前节点所在地区。按 smart 分数排序，最多 50。
+     */
+    @Throws(MobileException::class)override fun `sceneCandidates`(`sceneId`: kotlin.String, `region`: kotlin.String?, `nowMillis`: kotlin.Long): List<RankedNode> {
+            return FfiConverterSequenceTypeRankedNode.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_candidates(
+        it, FfiConverterString.lower(`sceneId`),FfiConverterOptionalString.lower(`region`),FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 该 host 走哪个场景（内置应用目录），用于轨迹页"场景"一栏。
+     */override fun `sceneForHost`(`host`: kotlin.String): kotlin.String? {
+            return FfiConverterOptionalString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_for_host(
+        it, FfiConverterString.lower(`host`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    @Throws(MobileException::class)override fun `scenes`(`nowMillis`: kotlin.Long): List<Scene> {
+            return FfiConverterSequenceTypeScene.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_scenes(
+        it, FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
+     */
+    @Throws(MobileException::class)override fun `setSceneException`(`sceneId`: kotlin.String, `appId`: kotlin.String, `nodeId`: kotlin.ULong?)
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_exception(
+        it, FfiConverterString.lower(`sceneId`),FfiConverterString.lower(`appId`),FfiConverterOptionalULong.lower(`nodeId`),_status)
+}
+    }
+    
+    
+
+    override fun `storageInfo`(): StorageInfo {
+            return FfiConverterTypeStorageInfo.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_storage_info(
+        it, _status)
 }
     }
     )
@@ -2857,6 +3121,61 @@ public object FfiConverterTypeDnsConfig: FfiConverterRustBuffer<DnsConfig> {
 
 
 
+data class ExitChange (
+    var `sceneId`: kotlin.String?, 
+    var `fromRegion`: kotlin.String?, 
+    var `fromIp`: kotlin.String?, 
+    var `toRegion`: kotlin.String, 
+    /**
+     * 新出口 IP 要连上后才知道
+     */
+    var `toIp`: kotlin.String?, 
+    var `affectedApps`: List<kotlin.String>, 
+    var `unchangedApps`: List<kotlin.String>
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeExitChange: FfiConverterRustBuffer<ExitChange> {
+    override fun read(buf: ByteBuffer): ExitChange {
+        return ExitChange(
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterSequenceString.read(buf),
+            FfiConverterSequenceString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ExitChange) = (
+            FfiConverterOptionalString.allocationSize(value.`sceneId`) +
+            FfiConverterOptionalString.allocationSize(value.`fromRegion`) +
+            FfiConverterOptionalString.allocationSize(value.`fromIp`) +
+            FfiConverterString.allocationSize(value.`toRegion`) +
+            FfiConverterOptionalString.allocationSize(value.`toIp`) +
+            FfiConverterSequenceString.allocationSize(value.`affectedApps`) +
+            FfiConverterSequenceString.allocationSize(value.`unchangedApps`)
+    )
+
+    override fun write(value: ExitChange, buf: ByteBuffer) {
+            FfiConverterOptionalString.write(value.`sceneId`, buf)
+            FfiConverterOptionalString.write(value.`fromRegion`, buf)
+            FfiConverterOptionalString.write(value.`fromIp`, buf)
+            FfiConverterString.write(value.`toRegion`, buf)
+            FfiConverterOptionalString.write(value.`toIp`, buf)
+            FfiConverterSequenceString.write(value.`affectedApps`, buf)
+            FfiConverterSequenceString.write(value.`unchangedApps`, buf)
+    }
+}
+
+
+
 /**
  * 平台拉取结果。
  */
@@ -2984,6 +3303,46 @@ public object FfiConverterTypeHostActivity: FfiConverterRustBuffer<HostActivity>
             FfiConverterInt.write(value.`connections`, buf)
             FfiConverterLong.write(value.`totalBytes`, buf)
             FfiConverterLong.write(value.`lastSeenAt`, buf)
+    }
+}
+
+
+
+data class HostOverride (
+    var `host`: kotlin.String, 
+    var `target`: TraceTarget, 
+    var `sceneId`: kotlin.String?, 
+    var `persistent`: kotlin.Boolean
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeHostOverride: FfiConverterRustBuffer<HostOverride> {
+    override fun read(buf: ByteBuffer): HostOverride {
+        return HostOverride(
+            FfiConverterString.read(buf),
+            FfiConverterTypeTraceTarget.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterBoolean.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: HostOverride) = (
+            FfiConverterString.allocationSize(value.`host`) +
+            FfiConverterTypeTraceTarget.allocationSize(value.`target`) +
+            FfiConverterOptionalString.allocationSize(value.`sceneId`) +
+            FfiConverterBoolean.allocationSize(value.`persistent`)
+    )
+
+    override fun write(value: HostOverride, buf: ByteBuffer) {
+            FfiConverterString.write(value.`host`, buf)
+            FfiConverterTypeTraceTarget.write(value.`target`, buf)
+            FfiConverterOptionalString.write(value.`sceneId`, buf)
+            FfiConverterBoolean.write(value.`persistent`, buf)
     }
 }
 
@@ -3636,6 +3995,216 @@ public object FfiConverterTypeRuntimeOptions: FfiConverterRustBuffer<RuntimeOpti
 
 
 
+data class Scene (
+    var `id`: kotlin.String, 
+    var `kind`: SceneKind, 
+    var `name`: kotlin.String, 
+    /**
+     * "9 个可用"：所选地区 24 h 内测速成功的节点数（≤ 50）
+     */
+    var `available`: kotlin.Int, 
+    var `selected`: NodeRow?, 
+    var `selectedLatencyMs`: kotlin.Int?, 
+    var `exitIp`: kotlin.String?, 
+    var `exitRegion`: kotlin.String?, 
+    var `source`: SceneSource, 
+    var `testedAt`: kotlin.Long?, 
+    var `note`: kotlin.String?, 
+    var `exceptions`: List<SceneExceptionView>, 
+    /**
+     * mihomo 中的组名（MihomoClient.selectInGroup 用）
+     */
+    var `group`: kotlin.String
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeScene: FfiConverterRustBuffer<Scene> {
+    override fun read(buf: ByteBuffer): Scene {
+        return Scene(
+            FfiConverterString.read(buf),
+            FfiConverterTypeSceneKind.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterOptionalTypeNodeRow.read(buf),
+            FfiConverterOptionalInt.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterTypeSceneSource.read(buf),
+            FfiConverterOptionalLong.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterSequenceTypeSceneExceptionView.read(buf),
+            FfiConverterString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: Scene) = (
+            FfiConverterString.allocationSize(value.`id`) +
+            FfiConverterTypeSceneKind.allocationSize(value.`kind`) +
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterInt.allocationSize(value.`available`) +
+            FfiConverterOptionalTypeNodeRow.allocationSize(value.`selected`) +
+            FfiConverterOptionalInt.allocationSize(value.`selectedLatencyMs`) +
+            FfiConverterOptionalString.allocationSize(value.`exitIp`) +
+            FfiConverterOptionalString.allocationSize(value.`exitRegion`) +
+            FfiConverterTypeSceneSource.allocationSize(value.`source`) +
+            FfiConverterOptionalLong.allocationSize(value.`testedAt`) +
+            FfiConverterOptionalString.allocationSize(value.`note`) +
+            FfiConverterSequenceTypeSceneExceptionView.allocationSize(value.`exceptions`) +
+            FfiConverterString.allocationSize(value.`group`)
+    )
+
+    override fun write(value: Scene, buf: ByteBuffer) {
+            FfiConverterString.write(value.`id`, buf)
+            FfiConverterTypeSceneKind.write(value.`kind`, buf)
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterInt.write(value.`available`, buf)
+            FfiConverterOptionalTypeNodeRow.write(value.`selected`, buf)
+            FfiConverterOptionalInt.write(value.`selectedLatencyMs`, buf)
+            FfiConverterOptionalString.write(value.`exitIp`, buf)
+            FfiConverterOptionalString.write(value.`exitRegion`, buf)
+            FfiConverterTypeSceneSource.write(value.`source`, buf)
+            FfiConverterOptionalLong.write(value.`testedAt`, buf)
+            FfiConverterOptionalString.write(value.`note`, buf)
+            FfiConverterSequenceTypeSceneExceptionView.write(value.`exceptions`, buf)
+            FfiConverterString.write(value.`group`, buf)
+    }
+}
+
+
+
+/**
+ * applySceneChange 的结果：平台据此决定热切换还是重载。
+ */
+data class SceneApply (
+    /**
+     * true：新节点不在当前组里，需 runtimeConfig + zm_reload
+     */
+    var `needsReload`: kotlin.Boolean, 
+    var `group`: kotlin.String, 
+    /**
+     * mihomo 成员名；needs_reload = false 时直接 selectInGroup(group, member)
+     */
+    var `member`: kotlin.String, 
+    /**
+     * 撤销用：再 apply 这个节点
+     */
+    var `previous`: kotlin.ULong?
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeSceneApply: FfiConverterRustBuffer<SceneApply> {
+    override fun read(buf: ByteBuffer): SceneApply {
+        return SceneApply(
+            FfiConverterBoolean.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterOptionalULong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: SceneApply) = (
+            FfiConverterBoolean.allocationSize(value.`needsReload`) +
+            FfiConverterString.allocationSize(value.`group`) +
+            FfiConverterString.allocationSize(value.`member`) +
+            FfiConverterOptionalULong.allocationSize(value.`previous`)
+    )
+
+    override fun write(value: SceneApply, buf: ByteBuffer) {
+            FfiConverterBoolean.write(value.`needsReload`, buf)
+            FfiConverterString.write(value.`group`, buf)
+            FfiConverterString.write(value.`member`, buf)
+            FfiConverterOptionalULong.write(value.`previous`, buf)
+    }
+}
+
+
+
+data class SceneExceptionView (
+    var `appId`: kotlin.String, 
+    var `app`: kotlin.String, 
+    var `node`: NodeRow?
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeSceneExceptionView: FfiConverterRustBuffer<SceneExceptionView> {
+    override fun read(buf: ByteBuffer): SceneExceptionView {
+        return SceneExceptionView(
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterOptionalTypeNodeRow.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: SceneExceptionView) = (
+            FfiConverterString.allocationSize(value.`appId`) +
+            FfiConverterString.allocationSize(value.`app`) +
+            FfiConverterOptionalTypeNodeRow.allocationSize(value.`node`)
+    )
+
+    override fun write(value: SceneExceptionView, buf: ByteBuffer) {
+            FfiConverterString.write(value.`appId`, buf)
+            FfiConverterString.write(value.`app`, buf)
+            FfiConverterOptionalTypeNodeRow.write(value.`node`, buf)
+    }
+}
+
+
+
+data class StorageInfo (
+    var `nodesBytes`: kotlin.Long, 
+    var `rulesBytes`: kotlin.Long, 
+    var `subscriptionsBytes`: kotlin.Long, 
+    var `cacheBytes`: kotlin.Long
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeStorageInfo: FfiConverterRustBuffer<StorageInfo> {
+    override fun read(buf: ByteBuffer): StorageInfo {
+        return StorageInfo(
+            FfiConverterLong.read(buf),
+            FfiConverterLong.read(buf),
+            FfiConverterLong.read(buf),
+            FfiConverterLong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: StorageInfo) = (
+            FfiConverterLong.allocationSize(value.`nodesBytes`) +
+            FfiConverterLong.allocationSize(value.`rulesBytes`) +
+            FfiConverterLong.allocationSize(value.`subscriptionsBytes`) +
+            FfiConverterLong.allocationSize(value.`cacheBytes`)
+    )
+
+    override fun write(value: StorageInfo, buf: ByteBuffer) {
+            FfiConverterLong.write(value.`nodesBytes`, buf)
+            FfiConverterLong.write(value.`rulesBytes`, buf)
+            FfiConverterLong.write(value.`subscriptionsBytes`, buf)
+            FfiConverterLong.write(value.`cacheBytes`, buf)
+    }
+}
+
+
+
 data class Subscription (
     var `id`: kotlin.String, 
     var `name`: kotlin.String, 
@@ -4056,6 +4625,17 @@ sealed class MobileException: kotlin.Exception() {
     }
     
     /**
+     * contract scene_not_found
+     */
+    class SceneNotFound(
+        
+        val v1: kotlin.String
+        ) : MobileException() {
+        override val message
+            get() = "v1=${ v1 }"
+    }
+    
+    /**
      * contract not_running：mihomo 未启动 / 控制 socket 不存在
      */
     class NotRunning(
@@ -4115,10 +4695,13 @@ public object FfiConverterTypeMobileError : FfiConverterRustBuffer<MobileExcepti
             8 -> MobileException.SubscriptionNotFound(
                 FfiConverterString.read(buf),
                 )
-            9 -> MobileException.NotRunning(
+            9 -> MobileException.SceneNotFound(
                 FfiConverterString.read(buf),
                 )
-            10 -> MobileException.Cancelled()
+            10 -> MobileException.NotRunning(
+                FfiConverterString.read(buf),
+                )
+            11 -> MobileException.Cancelled()
             else -> throw RuntimeException("invalid error enum value, something is very wrong!!")
         }
     }
@@ -4161,6 +4744,11 @@ public object FfiConverterTypeMobileError : FfiConverterRustBuffer<MobileExcepti
                 + FfiConverterString.allocationSize(value.v1)
             )
             is MobileException.SubscriptionNotFound -> (
+                // Add the size for the Int that specifies the variant plus the size needed for all fields
+                4UL
+                + FfiConverterString.allocationSize(value.v1)
+            )
+            is MobileException.SceneNotFound -> (
                 // Add the size for the Int that specifies the variant plus the size needed for all fields
                 4UL
                 + FfiConverterString.allocationSize(value.v1)
@@ -4219,13 +4807,18 @@ public object FfiConverterTypeMobileError : FfiConverterRustBuffer<MobileExcepti
                 FfiConverterString.write(value.v1, buf)
                 Unit
             }
-            is MobileException.NotRunning -> {
+            is MobileException.SceneNotFound -> {
                 buf.putInt(9)
                 FfiConverterString.write(value.v1, buf)
                 Unit
             }
-            is MobileException.Cancelled -> {
+            is MobileException.NotRunning -> {
                 buf.putInt(10)
+                FfiConverterString.write(value.v1, buf)
+                Unit
+            }
+            is MobileException.Cancelled -> {
+                buf.putInt(11)
                 Unit
             }
         }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
@@ -4258,6 +4851,100 @@ public object FfiConverterTypeProxyMode: FfiConverterRustBuffer<ProxyMode> {
     override fun allocationSize(value: ProxyMode) = 4UL
 
     override fun write(value: ProxyMode, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+
+enum class SceneKind {
+    
+    AI,
+    VIDEO,
+    OTHER,
+    CUSTOM;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeSceneKind: FfiConverterRustBuffer<SceneKind> {
+    override fun read(buf: ByteBuffer) = try {
+        SceneKind.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: SceneKind) = 4UL
+
+    override fun write(value: SceneKind, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+
+enum class SceneSource {
+    
+    AUTO,
+    MANUAL,
+    SUBSCRIPTION_GROUP;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeSceneSource: FfiConverterRustBuffer<SceneSource> {
+    override fun read(buf: ByteBuffer) = try {
+        SceneSource.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: SceneSource) = 4UL
+
+    override fun write(value: SceneSource, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+
+enum class TraceTarget {
+    
+    UNCHANGED,
+    DIRECT,
+    SCENE;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeTraceTarget: FfiConverterRustBuffer<TraceTarget> {
+    override fun read(buf: ByteBuffer) = try {
+        TraceTarget.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: TraceTarget) = 4UL
+
+    override fun write(value: TraceTarget, buf: ByteBuffer) {
         buf.putInt(value.ordinal + 1)
     }
 }
@@ -4572,6 +5259,70 @@ public object FfiConverterOptionalString: FfiConverterRustBuffer<kotlin.String?>
         } else {
             buf.put(1)
             FfiConverterString.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeHostOverride: FfiConverterRustBuffer<HostOverride?> {
+    override fun read(buf: ByteBuffer): HostOverride? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeHostOverride.read(buf)
+    }
+
+    override fun allocationSize(value: HostOverride?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeHostOverride.allocationSize(value)
+        }
+    }
+
+    override fun write(value: HostOverride?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeHostOverride.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeNodeRow: FfiConverterRustBuffer<NodeRow?> {
+    override fun read(buf: ByteBuffer): NodeRow? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeNodeRow.read(buf)
+    }
+
+    override fun allocationSize(value: NodeRow?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeNodeRow.allocationSize(value)
+        }
+    }
+
+    override fun write(value: NodeRow?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeNodeRow.write(value, buf)
         }
     }
 }
@@ -4944,6 +5695,62 @@ public object FfiConverterSequenceTypeRuleLayerInfo: FfiConverterRustBuffer<List
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeRuleLayerInfo.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeScene: FfiConverterRustBuffer<List<Scene>> {
+    override fun read(buf: ByteBuffer): List<Scene> {
+        val len = buf.getInt()
+        return List<Scene>(len) {
+            FfiConverterTypeScene.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<Scene>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeScene.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<Scene>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeScene.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeSceneExceptionView: FfiConverterRustBuffer<List<SceneExceptionView>> {
+    override fun read(buf: ByteBuffer): List<SceneExceptionView> {
+        val len = buf.getInt()
+        return List<SceneExceptionView>(len) {
+            FfiConverterTypeSceneExceptionView.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<SceneExceptionView>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeSceneExceptionView.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<SceneExceptionView>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeSceneExceptionView.write(it, buf)
         }
     }
 }

@@ -117,8 +117,71 @@ fn overlay(o: &RuntimeOptions) -> Value {
     Value::Mapping(m)
 }
 
+/// 场景注入计划（由 MobileCore 根据场景/覆写/例外算出）。
+#[derive(Debug, Default, Clone)]
+pub struct ScenePlan {
+    /// 注入的代理定义（name 已改成 member 名）
+    pub proxies: Vec<Value>,
+    /// (组名, 成员)；成员空时放 DIRECT
+    pub groups: Vec<(String, Vec<String>)>,
+    /// 前插规则（覆写 → 例外 → 场景应用）
+    pub rules_front: Vec<String>,
+    /// "其他"场景接管 MATCH
+    pub match_target: Option<String>,
+}
+
+fn apply_plan(m: &mut Mapping, plan: &ScenePlan) {
+    let seq = |m: &mut Mapping, k: &str| -> Vec<Value> {
+        match m.remove(s(k)) {
+            Some(Value::Sequence(v)) => v,
+            _ => vec![],
+        }
+    };
+    let mut proxies = seq(m, "proxies");
+    let mut taken: std::collections::HashSet<String> = proxies.iter().filter_map(|p| p.get("name").and_then(|n| n.as_str()).map(String::from)).collect();
+    for p in &plan.proxies {
+        let n = p.get("name").and_then(|n| n.as_str()).unwrap_or_default().to_string();
+        if taken.insert(n) {
+            proxies.push(p.clone());
+        }
+    }
+    m.insert(s("proxies"), Value::Sequence(proxies));
+
+    let mut groups = seq(m, "proxy-groups");
+    let names: Vec<&str> = plan.groups.iter().map(|g| g.0.as_str()).collect();
+    groups.retain(|g| !g.get("name").and_then(|n| n.as_str()).is_some_and(|n| names.contains(&n)));
+    for (name, members) in plan.groups.iter().rev() {
+        let mut g = Mapping::new();
+        g.insert(s("name"), s(name));
+        g.insert(s("type"), s("select"));
+        let mut ms: Vec<Value> = members.iter().map(|x| s(x)).collect();
+        if ms.is_empty() {
+            ms.push(s("DIRECT"));
+        }
+        g.insert(s("proxies"), Value::Sequence(ms));
+        groups.insert(0, Value::Mapping(g));
+    }
+    m.insert(s("proxy-groups"), Value::Sequence(groups));
+
+    let mut rules = seq(m, "rules");
+    if let Some(t) = &plan.match_target {
+        for r in rules.iter_mut() {
+            if r.as_str().is_some_and(|x| x.trim_start().to_ascii_uppercase().starts_with("MATCH,")) {
+                *r = s(&format!("MATCH,{t}"));
+            }
+        }
+    }
+    let mut front: Vec<Value> = plan.rules_front.iter().map(|x| s(x)).collect();
+    front.append(&mut rules);
+    m.insert(s("rules"), Value::Sequence(front));
+}
+
 /// 订阅正文（已经过 normalize_body）+ Zephyr 设置 → mihomo 运行时 YAML。
 pub fn build_runtime_config(subscription_yaml: &str, o: &RuntimeOptions) -> Result<String, MobileError> {
+    build_runtime_config_with(subscription_yaml, o, &ScenePlan::default())
+}
+
+pub fn build_runtime_config_with(subscription_yaml: &str, o: &RuntimeOptions, plan: &ScenePlan) -> Result<String, MobileError> {
     let mut v: Value = serde_yaml::from_str(subscription_yaml).map_err(|e| MobileError::SubscriptionInvalid(e.to_string()))?;
     if !v.is_mapping() {
         return Err(MobileError::SubscriptionInvalid("配置根不是映射".into()));
@@ -141,6 +204,7 @@ pub fn build_runtime_config(subscription_yaml: &str, o: &RuntimeOptions) -> Resu
     if !m.contains_key(s("rules")) {
         m.insert(s("rules"), Value::Sequence(vec![s("MATCH,DIRECT")]));
     }
+    apply_plan(m, plan);
     serde_yaml::to_string(&v).map_err(|e| MobileError::Invalid(e.to_string()))
 }
 
