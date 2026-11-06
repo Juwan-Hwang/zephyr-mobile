@@ -52,7 +52,8 @@ fun SubscriptionsScreen(onBack: () -> Unit, onImport: () -> Unit) {
     val settings by engine.settings().collectAsState(Settings())
     val summary by produceState(SubscriptionsSummary(0, 0), subs) { value = engine.subscriptionsSummary() }
     val scope = rememberCoroutineScope()
-    val now = remember { System.currentTimeMillis() }
+    val clock = com.zephyr.app.ui.common.LocalNow.current
+    val now = remember { clock() }
     var updating by remember { mutableStateOf(false) }
 
     PageScaffold("资料库", "订阅", onBack, trailing = { ZIconButton(ZIcons.Plus, "添加订阅", onImport, tint = c.accent) }) {

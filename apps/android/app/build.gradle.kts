@@ -15,6 +15,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         // ./gradlew -Pzephyr.demo=true installDebug → starts in the prototype's connected "2:14:07" state.
+        buildConfigField("double", "CORE_SEED", (providers.gradleProperty("zephyr.coreSeed").orNull ?: "0.0"))
         buildConfigField("boolean", "DEMO", (providers.gradleProperty("zephyr.demo").orNull == "true").toString())
     }
     buildTypes {

@@ -110,7 +110,7 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, onBack: () -> Unit) {
                     LazyColumn(
                         state = list,
                         modifier = Modifier.fillMaxSize().semantics { collectionInfo = CollectionInfo(rowCount, 1) },
-                        contentPadding = PaddingValues(bottom = 40.dp, end = 22.dp),
+                        contentPadding = PaddingValues(bottom = 40.dp, end = 34.dp),
                     ) {
                         items(rowCount, key = null, contentType = { i -> if (vm.rowAt(i) is NodeRow.Header) 0 else 1 }) { i ->
                             @Suppress("UNUSED_EXPRESSION") epoch
@@ -144,7 +144,7 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, onBack: () -> Unit) {
 private fun PinnedHeader(vm: NodesViewModel, list: androidx.compose.foundation.lazy.LazyListState) {
     val show by remember { derivedStateOf { list.firstVisibleItemIndex > 0 || list.firstVisibleItemScrollOffset > 20 } }
     val sec by remember { derivedStateOf { vm.sectionAt(list.firstVisibleItemIndex) } }
-    if (show) sec?.let { Box(Modifier.background(ZTheme.colors.bg).padding(end = 22.dp)) { SectionHeaderRow(it) } }
+    if (show) sec?.let { Box(Modifier.background(ZTheme.colors.bg).padding(end = 34.dp)) { SectionHeaderRow(it) } }
 }
 
 @Composable

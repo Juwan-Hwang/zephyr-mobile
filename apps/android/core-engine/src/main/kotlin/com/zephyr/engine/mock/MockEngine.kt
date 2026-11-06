@@ -35,6 +35,10 @@ class MockEngine(
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
     demo: Boolean = false,
     private val latencyScale: Double = 1.0,
+    /** Where CPU-bound queries run. Tests pass Dispatchers.Unconfined so results land in the same frame. */
+    private val compute: kotlinx.coroutines.CoroutineDispatcher = Dispatchers.Default,
+    /** Reported query durations; tests pin it so goldens don't depend on host speed. */
+    private val measure: ((Long) -> Long) = { it },
 ) : ZephyrEngine {
 
     // ── state ────────────────────────────────────────────────────────────────
@@ -187,10 +191,10 @@ class MockEngine(
         return NodeIndex(q.total, q.sections(), testedCount.get())
     }
 
-    override suspend fun queryNodes(query: String): NodeQueryResult = withContext(Dispatchers.Default) {
+    override suspend fun queryNodes(query: String): NodeQueryResult = withContext(compute) {
         val t0 = System.nanoTime()
         val q = NodeQuery.build(query)
-        val took = (System.nanoTime() - t0) / 1_000
+        val took = measure((System.nanoTime() - t0) / 1_000)
         val token = nextToken.getAndIncrement()
         synchronized(queries) { queries[token] = q }
         NodeQueryResult(query, q.total, q.sections(), q.highlights, took, token)
@@ -363,7 +367,7 @@ class MockEngine(
             if (line.level >= minLevel) emit(line)
             delay(scaled(700 + MockCatalog.hsh(5, i) % 900))
         }
-    }.flowOn(Dispatchers.Default)
+    }.flowOn(compute)
 
     override fun settings(): Flow<Settings> = settingsState.asStateFlow()
     override suspend fun updateSettings(patch: Settings) { settingsState.value = patch }

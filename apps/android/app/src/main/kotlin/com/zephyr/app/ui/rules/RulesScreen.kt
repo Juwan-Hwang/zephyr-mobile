@@ -54,7 +54,7 @@ fun RulesScreen(initial: String, onBack: () -> Unit) {
     val stats by produceState<RuleStats?>(null) { value = engine.ruleStats() }
     val trace by produceState<RuleTrace?>(null, q) {
         if (q.isBlank()) { value = null; return@produceState }
-        delay(60)
+        if (q != initial) delay(60) // debounce typing, not the deep-linked first query
         value = runCatching { engine.testRule(q) }.getOrNull()
     }
     PageScaffold(back = "资料库", title = "规则", onBack = onBack) {

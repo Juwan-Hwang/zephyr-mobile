@@ -33,7 +33,7 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
 
     @Test
     fun home() {
-        val e = MockEngine(clock = { NOW }, demo = true)
+        val e = MockEngine(clock = { NOW }, demo = true, compute = kotlinx.coroutines.Dispatchers.Unconfined, measure = { 120L })
         val (conn, scenes, subs, usage, spark) = runBlocking {
             Quint(e.connectionState().first(), e.scenes().first(), e.subscriptions().first(), e.usageToday(), e.recentTraffic(90))
         }
@@ -48,7 +48,7 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
     @Test
     fun homeGlobal() {
         if (accent != ZAccent.BLUE || fontScale != 1f) return
-        val e = MockEngine(clock = { NOW }, demo = true)
+        val e = MockEngine(clock = { NOW }, demo = true, compute = kotlinx.coroutines.Dispatchers.Unconfined, measure = { 120L })
         val (conn, scenes, subs, usage, spark) = runBlocking {
             e.setMode(ProxyMode.GLOBAL)
             Quint(e.connectionState().first(), e.scenes().first(), e.subscriptions().first(), e.usageToday(), e.recentTraffic(90))
@@ -61,7 +61,7 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
 
     companion object {
         /** 2026-11-06 09:41 CST, the prototype's status-bar time. */
-        const val NOW = 1_762_393_260_000L
+        const val NOW = 1_793_929_260_000L
 
         val NO_ACTIONS = HomeActions({}, {}, {}, {}, {}, {}, {}, {})
         val NO_CB = HomeCallbacks({}, { _, _ -> }, {}, {}, {})

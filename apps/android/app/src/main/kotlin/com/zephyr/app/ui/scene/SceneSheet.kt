@@ -59,7 +59,7 @@ fun BoxScope.SceneSheet(scene: Scene?, onDismiss: () -> Unit) {
             ZSettingsRow("检测频率", value = "每天（仅 Wi‑Fi）", chevron = true, onClick = {})
         }
         ZText(
-            "优选结果仅保存在 Zephyr 中，订阅配置保持原样。" + (s.testedAt?.let { " 上次检测 ${ZFormat.ago(it, System.currentTimeMillis())}。" } ?: ""),
+            "优选结果仅保存在 Zephyr 中，订阅配置保持原样。" + (s.testedAt?.let { " 上次检测 ${ZFormat.ago(it, com.zephyr.app.ui.common.LocalNow.current())}。" } ?: ""),
             Modifier.padding(horizontal = 22.dp, vertical = 12.dp), style = ZTheme.type.footnote, color = c.text3,
         )
     }
