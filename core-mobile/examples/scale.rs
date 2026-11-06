@@ -13,15 +13,18 @@ fn main() {
     let scale: f64 = args.get(1).and_then(|s| s.parse().ok()).unwrap_or(1.0);
     let rules_m: f64 = args.get(2).and_then(|s| s.parse().ok()).unwrap_or(10.0);
     let dir = std::env::temp_dir().join("zephyr-scale");
-    let _ = std::fs::remove_dir_all(&dir);
+    let reuse = std::env::var("REUSE").is_ok();
+    if !reuse {
+        let _ = std::fs::remove_dir_all(&dir);
+        let core = MobileCore::new(dir.to_string_lossy().into()).unwrap();
+        let rep = core.rebuild_mock_nodes(scale).unwrap();
+        let size: u64 = std::fs::read_dir(&dir).unwrap().flatten().filter(|e| e.file_name().to_string_lossy().ends_with(".zn")).map(|e| e.metadata().unwrap().len()).sum();
+        println!("nodes: {} built in {} ms, file {:.1} MB ({:.1} B/node), peak-ish rss {:.1} MB", rep.total, rep.took_millis, size as f64 / 1e6, size as f64 / rep.total as f64, rss_mb());
+        if std::env::var("BUILD_ONLY").is_ok() { return; }
+    }
+    let t0 = Instant::now();
     let core = MobileCore::new(dir.to_string_lossy().into()).unwrap();
-
-    let rep = core.rebuild_mock_nodes(scale).unwrap();
-    let size: u64 = std::fs::read_dir(&dir).unwrap().flatten().filter(|e| e.file_name().to_string_lossy().ends_with(".zn")).map(|e| e.metadata().unwrap().len()).sum();
-    println!("nodes: {} built in {} ms, file {:.1} MB ({:.1} B/node)", rep.total, rep.took_millis, size as f64 / 1e6, size as f64 / rep.total as f64);
-    drop(core);
-    let core = MobileCore::new(dir.to_string_lossy().into()).unwrap();
-    println!("rss after reopen: {:.1} MB", rss_mb());
+    println!("open {:.1} ms, rss after open: {:.1} MB", t0.elapsed().as_secs_f64()*1e3, rss_mb());
 
     for q in ["", "jp", "东京", "东京 iplc", "us 家宽", "香港 hkt bgp", "tw hinet 原生", "cn2 gia", "美国 洛杉矶", "zzz"] {
         let t = Instant::now();

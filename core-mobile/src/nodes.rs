@@ -102,8 +102,17 @@ enum IndexKind {
     NameToken = 5,
 }
 
+/// 流式建库：push 时立即压成 24 B 记录 + 名称字节，不保留 NodeInput。
+/// 1310 万节点峰值内存 ≈ 记录 315 MB + 名称 ~330 MB + 去重临时 210 MB（原实现 2.7 GB 会被 OOM 杀掉）。
 pub struct NodeStoreBuilder {
-    nodes: Vec<NodeInput>,
+    records: Vec<[u8; RECORD_SIZE]>,
+    names: Vec<u8>,
+    dict: Vec<String>,
+    dict_ix: HashMap<String, u32>,
+    /// push 顺序的地区表：(dict id, 计数)
+    regions: Vec<(u32, u32)>,
+    region_ix: HashMap<String, u8>,
+    error: Option<MobileError>,
 }
 
 impl Default for NodeStoreBuilder {
@@ -114,123 +123,177 @@ impl Default for NodeStoreBuilder {
 
 impl NodeStoreBuilder {
     pub fn new() -> Self {
-        Self { nodes: Vec::new() }
+        Self::with_capacity(0)
     }
     pub fn with_capacity(n: usize) -> Self {
-        Self { nodes: Vec::with_capacity(n) }
+        let mut b = Self {
+            records: Vec::with_capacity(n),
+            names: Vec::with_capacity(n * 24),
+            dict: Vec::new(),
+            dict_ix: HashMap::new(),
+            regions: Vec::new(),
+            region_ix: HashMap::new(),
+            error: None,
+        };
+        // 标签与协议存 u8：先占低位 id，保证城市/运营商再多也不会把它们挤出 255
+        for t in crate::mock::TAGS.iter().chain(["VLESS", "VMess", "Hy2", "Hysteria", "TUIC", "SS", "SSR", "Trojan", "WireGuard", "AnyTLS", "Snell", "HTTP", "SOCKS5"].iter()) {
+            b.intern(t);
+        }
+        b
+    }
+    fn intern(&mut self, s: &str) -> u32 {
+        if let Some(&i) = self.dict_ix.get(s) {
+            return i;
+        }
+        let i = self.dict.len() as u32;
+        self.dict.push(s.to_string());
+        self.dict_ix.insert(s.to_string(), i);
+        i
     }
     pub fn push(&mut self, n: NodeInput) {
-        self.nodes.push(n);
+        if self.error.is_some() {
+            return;
+        }
+        let rix = match self.region_ix.get(&n.region) {
+            Some(&r) => r,
+            None => {
+                if self.regions.len() >= 255 {
+                    self.error = Some(MobileError::Invalid("超过 255 个地区".into()));
+                    return;
+                }
+                let d = self.intern(&n.region);
+                self.regions.push((d, 0));
+                let r = (self.regions.len() - 1) as u8;
+                self.region_ix.insert(n.region.clone(), r);
+                r
+            }
+        };
+        self.regions[rix as usize].1 += 1;
+        let city = match &n.city { Some(s) if !s.is_empty() => self.intern(s) as u16, _ => u16::MAX };
+        let carrier = match &n.carrier { Some(s) if !s.is_empty() => self.intern(s) as u16, _ => u16::MAX };
+        let tag = match &n.tag { Some(s) if !s.is_empty() => self.intern(s), _ => u8::MAX as u32 };
+        let proto = self.intern(&n.protocol);
+        if tag > u8::MAX as u32 || proto >= u8::MAX as u32 {
+            self.error = Some(MobileError::Invalid("标签或协议种类超过 254".into()));
+            return;
+        }
+        let (tag, proto) = (tag as u8, proto as u8);
+        if self.dict.len() > 250 * 255 {
+            self.error = Some(MobileError::Invalid("属性字典过大".into()));
+            return;
+        }
+        let fp = fingerprint(&n.server, n.port, &n.protocol);
+        let name_off = self.names.len() as u32;
+        let nb = n.name.as_bytes();
+        let name_len = nb.len().min(u16::MAX as usize) as u16;
+        self.names.extend_from_slice(&nb[..name_len as usize]);
+        let mut r = [0u8; RECORD_SIZE];
+        r[0..8].copy_from_slice(&fp.to_le_bytes());
+        r[8..12].copy_from_slice(&name_off.to_le_bytes());
+        r[12..14].copy_from_slice(&name_len.to_le_bytes());
+        r[14..16].copy_from_slice(&n.subscription.to_le_bytes());
+        r[16..18].copy_from_slice(&city.to_le_bytes());
+        r[18..20].copy_from_slice(&carrier.to_le_bytes());
+        r[20] = tag;
+        r[21] = proto;
+        r[22] = n.multiplier_x10;
+        r[23] = rix;
+        self.records.push(r);
     }
     pub fn len(&self) -> usize {
-        self.nodes.len()
+        self.records.len()
     }
     pub fn is_empty(&self) -> bool {
-        self.nodes.is_empty()
+        self.records.is_empty()
     }
 
-    /// 写出到文件。同指纹去重（保留先出现的）。地区按节点数降序排列（与原型一致：大地区在前）。
-    pub fn write(mut self, path: &Path) -> Result<u32, MobileError> {
-        // 去重
-        let mut seen = std::collections::HashSet::with_capacity(self.nodes.len());
-        self.nodes.retain(|n| seen.insert(fingerprint(&n.server, n.port, &n.protocol)));
-        // 地区排序
-        let mut region_count: HashMap<String, u32> = HashMap::new();
-        for n in &self.nodes {
-            *region_count.entry(n.region.clone()).or_default() += 1;
+    /// 写出到文件。同指纹去重（保留先出现的）。地区按节点数降序排列（与原型一致：大地区在前），地区内保持输入顺序。
+    pub fn write(self, path: &Path) -> Result<u32, MobileError> {
+        if let Some(e) = self.error {
+            return Err(e);
         }
-        let mut regions: Vec<(String, u32)> = region_count.into_iter().collect();
-        regions.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
-        if regions.len() > 255 {
-            return Err(MobileError::Invalid("超过 255 个地区".into()));
-        }
-        let region_ix: HashMap<String, u8> = regions.iter().enumerate().map(|(i, (r, _))| (r.clone(), i as u8)).collect();
-        // 稳定排序：地区内保持输入顺序
-        self.nodes.sort_by_key(|n| region_ix[&n.region]);
-
-        // 字典
-        let mut dict: Vec<String> = Vec::new();
-        let mut dict_ix: HashMap<String, u32> = HashMap::new();
-        let mut intern = |s: &str, dict: &mut Vec<String>| -> u32 {
-            if let Some(&i) = dict_ix.get(s) {
-                return i;
+        let NodeStoreBuilder { records, names, dict, mut regions, .. } = self;
+        let n = records.len();
+        // 去重：按 (fp, 下标) 排序，同 fp 的后来者作废
+        let mut dup = vec![false; n];
+        {
+            let mut fps: Vec<(u64, u32)> = records.iter().enumerate().map(|(i, r)| (u64::from_le_bytes(r[0..8].try_into().unwrap()), i as u32)).collect();
+            fps.sort_unstable();
+            for w in fps.windows(2) {
+                if w[0].0 == w[1].0 {
+                    dup[w[1].1 as usize] = true;
+                }
             }
-            let i = dict.len() as u32;
-            dict.push(s.to_string());
-            dict_ix.insert(s.to_string(), i);
-            i
-        };
-        let region_dict: Vec<u32> = regions.iter().map(|(r, _)| intern(r, &mut dict)).collect();
+        }
+        for (i, r) in records.iter().enumerate() {
+            if dup[i] {
+                regions[r[23] as usize].1 -= 1;
+            }
+        }
+        // 地区最终顺序
+        let mut order_r: Vec<usize> = (0..regions.len()).filter(|&i| regions[i].1 > 0).collect();
+        order_r.sort_by(|&a, &b| regions[b].1.cmp(&regions[a].1).then(dict[regions[a].0 as usize].cmp(&dict[regions[b].0 as usize])));
+        let mut final_ix = vec![u8::MAX; regions.len()];
+        let mut starts = Vec::with_capacity(order_r.len());
+        let mut acc = 0u32;
+        for (fi, &ri) in order_r.iter().enumerate() {
+            final_ix[ri] = fi as u8;
+            starts.push(acc);
+            acc += regions[ri].1;
+        }
+        let count = acc;
+        // 计数排序得到写出顺序
+        let mut cursor = starts.clone();
+        let mut perm = vec![0u32; count as usize];
+        for (i, r) in records.iter().enumerate() {
+            if dup[i] {
+                continue;
+            }
+            let f = final_ix[r[23] as usize] as usize;
+            perm[cursor[f] as usize] = i as u32;
+            cursor[f] += 1;
+        }
+        drop(dup);
+        drop(cursor);
 
         let mut index: BTreeMap<(IndexKind, u32), RoaringBitmap> = BTreeMap::new();
         let mut tokens: Vec<String> = Vec::new();
         let mut token_ix: HashMap<String, u32> = HashMap::new();
-        let mut records = Vec::with_capacity(self.nodes.len() * RECORD_SIZE);
-        let mut names: Vec<u8> = Vec::new();
-        let mut starts = vec![0u32; regions.len()];
-        let mut lens = vec![0u32; regions.len()];
-        let mut first = vec![true; regions.len()];
-
-        for (i, n) in self.nodes.iter().enumerate() {
-            let i = i as u32;
-            let rix = region_ix[&n.region] as usize;
-            if first[rix] {
-                starts[rix] = i;
-                first[rix] = false;
-            }
-            lens[rix] += 1;
-            let opt16 = |o: &Option<String>, dict: &mut Vec<String>, intern: &mut dyn FnMut(&str, &mut Vec<String>) -> u32| -> u16 {
-                match o {
-                    Some(s) if !s.is_empty() => intern(s, dict) as u16,
-                    _ => u16::MAX,
-                }
-            };
-            let city = opt16(&n.city, &mut dict, &mut intern);
-            let carrier = opt16(&n.carrier, &mut dict, &mut intern);
-            let tag = match &n.tag {
-                Some(s) if !s.is_empty() => intern(s, &mut dict) as u8,
-                _ => u8::MAX,
-            };
-            let proto = intern(&n.protocol, &mut dict) as u8;
-            if dict.len() > u16::MAX as usize - 1 {
-                return Err(MobileError::Invalid("属性字典过大".into()));
-            }
-            let fp = fingerprint(&n.server, n.port, &n.protocol);
-            let name_off = names.len() as u32;
-            let nb = n.name.as_bytes();
-            let name_len = nb.len().min(u16::MAX as usize) as u16;
-            names.extend_from_slice(&nb[..name_len as usize]);
-
-            records.extend(fp.to_le_bytes());
-            records.extend(name_off.to_le_bytes());
-            records.extend(name_len.to_le_bytes());
-            records.extend(n.subscription.to_le_bytes());
-            records.extend(city.to_le_bytes());
-            records.extend(carrier.to_le_bytes());
-            records.push(tag);
-            records.push(proto);
-            records.push(n.multiplier_x10);
-            records.push(rix as u8);
-
-            index.entry((IndexKind::Region, region_dict[rix])).or_default().insert(i);
+        // 每个属性 key 的位图在顺序插入下最省（尾部追加）
+        for (pos, &src) in perm.iter().enumerate() {
+            let i = pos as u32;
+            let r = &records[src as usize];
+            let rix = final_ix[r[23] as usize] as usize;
+            index.entry((IndexKind::Region, regions[order_r[rix]].0)).or_default().push(i);
+            let city = u16::from_le_bytes([r[16], r[17]]);
+            let carrier = u16::from_le_bytes([r[18], r[19]]);
             if city != u16::MAX {
-                index.entry((IndexKind::City, city as u32)).or_default().insert(i);
+                index.entry((IndexKind::City, city as u32)).or_default().push(i);
             }
             if carrier != u16::MAX {
-                index.entry((IndexKind::Carrier, carrier as u32)).or_default().insert(i);
+                index.entry((IndexKind::Carrier, carrier as u32)).or_default().push(i);
             }
-            if tag != u8::MAX {
-                index.entry((IndexKind::Tag, tag as u32)).or_default().insert(i);
+            if r[20] != u8::MAX {
+                index.entry((IndexKind::Tag, r[20] as u32)).or_default().push(i);
             }
-            index.entry((IndexKind::Protocol, proto as u32)).or_default().insert(i);
-            for t in name_tokens(&n.name) {
-                let id = *token_ix.entry(t.clone()).or_insert_with(|| {
-                    tokens.push(t.clone());
-                    (tokens.len() - 1) as u32
-                });
-                index.entry((IndexKind::NameToken, id)).or_default().insert(i);
+            index.entry((IndexKind::Protocol, r[21] as u32)).or_default().push(i);
+            let off = u32::from_le_bytes(r[8..12].try_into().unwrap()) as usize;
+            let len = u16::from_le_bytes([r[12], r[13]]) as usize;
+            let name = std::str::from_utf8(&names[off..off + len]).unwrap_or("");
+            for t in name_tokens(name) {
+                let id = match token_ix.get(&t) {
+                    Some(&id) => id,
+                    None => {
+                        tokens.push(t.clone());
+                        let id = (tokens.len() - 1) as u32;
+                        token_ix.insert(t, id);
+                        id
+                    }
+                };
+                index.entry((IndexKind::NameToken, id)).or_default().push(i);
             }
         }
+        drop(token_ix);
 
         // 词元字典排序（前缀查找），并重映射 id
         let mut order: Vec<u32> = (0..tokens.len() as u32).collect();
@@ -239,7 +302,6 @@ impl NodeStoreBuilder {
         for (new, &old) in order.iter().enumerate() {
             remap[old as usize] = new as u32;
         }
-        let sorted_tokens: Vec<&String> = order.iter().map(|&o| &tokens[o as usize]).collect();
         let index: BTreeMap<(IndexKind, u32), RoaringBitmap> = index
             .into_iter()
             .map(|((k, key), bm)| if k == IndexKind::NameToken { ((k, remap[key as usize]), bm) } else { ((k, key), bm) })
@@ -247,7 +309,6 @@ impl NodeStoreBuilder {
 
         let f = File::create(path)?;
         let mut w = BufWriter::with_capacity(1 << 20, f);
-        let count = self.nodes.len() as u32;
         w.write_all(MAGIC)?;
         w.write_all(&1u32.to_le_bytes())?;
         w.write_all(&count.to_le_bytes())?;
@@ -255,13 +316,17 @@ impl NodeStoreBuilder {
         for s in &dict {
             write_str(&mut w, s)?;
         }
-        w.write_all(&(regions.len() as u32).to_le_bytes())?;
-        for (i, d) in region_dict.iter().enumerate() {
-            w.write_all(&d.to_le_bytes())?;
-            w.write_all(&starts[i].to_le_bytes())?;
-            w.write_all(&lens[i].to_le_bytes())?;
+        w.write_all(&(order_r.len() as u32).to_le_bytes())?;
+        for (fi, &ri) in order_r.iter().enumerate() {
+            w.write_all(&regions[ri].0.to_le_bytes())?;
+            w.write_all(&starts[fi].to_le_bytes())?;
+            w.write_all(&regions[ri].1.to_le_bytes())?;
         }
-        w.write_all(&records)?;
+        for &src in &perm {
+            let mut r = records[src as usize];
+            r[23] = final_ix[r[23] as usize];
+            w.write_all(&r)?;
+        }
         w.write_all(&(names.len() as u32).to_le_bytes())?;
         w.write_all(&names)?;
         w.write_all(&(index.len() as u32).to_le_bytes())?;
@@ -274,9 +339,9 @@ impl NodeStoreBuilder {
             w.write_all(&(buf.len() as u32).to_le_bytes())?;
             w.write_all(&buf)?;
         }
-        w.write_all(&(sorted_tokens.len() as u32).to_le_bytes())?;
-        for t in sorted_tokens {
-            write_str(&mut w, t)?;
+        w.write_all(&(order.len() as u32).to_le_bytes())?;
+        for &o in &order {
+            write_str(&mut w, &tokens[o as usize])?;
         }
         w.flush()?;
         Ok(count)
