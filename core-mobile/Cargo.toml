@@ -1,0 +1,44 @@
+[package]
+name = "zephyr-mobile-core"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Zephyr 移动端核心扩展：千万级节点存储与检索、规则编译与测试、订阅差异。经 UniFFI 导出给 iOS/Android。只依赖 vendor/zephyr（只读）。"
+
+[lib]
+crate-type = ["lib", "cdylib", "staticlib"]
+name = "zephyr_mobile_core"
+
+[dependencies]
+zephyr-core = { path = "../vendor/zephyr/crates/core", features = ["uniffi"] }
+clash-prism-core = "0.1.5"
+uniffi = { version = "0.28", features = ["cli"] }
+thiserror = "1"
+roaring = "0.10"
+aho-corasick = "1"
+memmap2 = "0.9"
+xxhash-rust = { version = "0.8", features = ["xxh3"] }
+parking_lot = "0.12"
+rustc-hash = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = { package = "serde_yaml_ng", version = "0.10" }
+
+[dev-dependencies]
+base64 = "0.22"
+tempfile = "3"
+
+[features]
+default = []
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+opt-level = 3
+# 不用 panic=abort：UniFFI 需要捕获 panic 转成错误；保留符号供 library 模式生成绑定，打包时再 strip
+strip = "debuginfo"
+
+[[bin]]
+name = "uniffi-bindgen"
+path = "uniffi-bindgen.rs"
+required-features = []

@@ -3,8 +3,21 @@ on:
   push: { branches: [main, 'agent/**'] }
   pull_request:
   workflow_dispatch:
-concurrency: { group: mobile-${{ github.ref }}, cancel-in-progress: true }
+concurrency:
+  group: mobile-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      ios: ${{ steps.d.outputs.ios }}
+      android: ${{ steps.d.outputs.android }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: d
+        run: |
+          echo "ios=$([ -f apps/ios/project.yml ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "android=$([ -f apps/android/settings.gradle.kts ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
   contract:
     runs-on: ubuntu-latest
     steps:
@@ -16,12 +29,46 @@ jobs:
         run: node tokens/build.mjs --check
       - name: fixtures 与原型一致
         run: node tools/gen-mock-fixtures.js && git diff --exit-code contract/fixtures
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: core-mobile }
+      - name: 单测
+        working-directory: core-mobile
+        run: cargo test --lib
+      - name: 全量 1310 万节点对照原型
+        working-directory: core-mobile
+        run: cargo test --release --test full_scale -- --ignored
+      - name: UniFFI 绑定无漂移
+        run: tools/gen-bindings.sh --check
+      - uses: actions/setup-go@v5
+        with: { go-version: '1.27', cache-dependency-path: mihomo-mobile/go.sum }
+      - name: 嵌入式 mihomo 冒烟（启动/重载/停止 + 加载 core-mobile 生成的运行时配置）
+        env:
+          ZM_RUNTIME_CONFIG: ${{ runner.temp }}/rt.yaml
+        run: |
+          (cd core-mobile && cargo test --lib -- --exact scene_api::tests::emit_for_mihomo_smoke_with_scenes)
+          cd mihomo-mobile && go test -count=1 ./...
   ios:
-    if: hashFiles('apps/ios/project.yml') != ''
+    needs: detect
+    if: needs.detect.outputs.ios == 'true'
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: core-mobile }
+      - name: ZephyrMobileCore.xcframework（→ build/ios）
+        run: tools/build-ios-xcframework.sh
+      - uses: actions/setup-go@v5
+        with: { go-version: '1.27', cache-dependency-path: mihomo-mobile/go.sum }
+      - name: Zmihomo.xcframework（→ build/ios）
+        run: tools/build-mihomo.sh ios
       - run: brew install xcodegen
       - name: generate
         working-directory: apps/ios
@@ -40,17 +87,29 @@ jobs:
         uses: actions/upload-artifact@v4
         with: { name: ios-xcresult, path: apps/ios/build/Test.xcresult }
   android:
-    if: hashFiles('apps/android/settings.gradle.kts') != ''
+    needs: detect
+    if: needs.detect.outputs.android == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
       - uses: actions/setup-java@v4
-        with: { distribution: temurin, java-version: 17 }
+        with: { distribution: temurin, java-version: '21' }
       - uses: gradle/actions/setup-gradle@v4
+      - name: Android SDK platform 37
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37.0" "build-tools;37.0.0" >/dev/null || yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37" >/dev/null
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: core-mobile }
+      - name: core-mobile .so（→ core-engine/src/main/jniLibs，不入库）
+        run: cargo install cargo-ndk --locked && ABIS="arm64-v8a x86_64" tools/build-android-libs.sh
+      - uses: actions/setup-go@v5
+        with: { go-version: '1.27', cache-dependency-path: mihomo-mobile/go.sum }
+      - name: libzmihomo.so（→ jniLibs，不入库）
+        run: ABIS="arm64-v8a x86_64" tools/build-mihomo.sh android
       - name: build, unit test, paparazzi verify
         working-directory: apps/android
-        run: ./gradlew --no-daemon assembleDebug testDebugUnitTest verifyPaparazziDebug
+        run: ./gradlew --no-daemon -Pzephyr.rust=true assembleDebug testDebugUnitTest verifyPaparazziDebug
       - if: failure()
         uses: actions/upload-artifact@v4
         with: { name: paparazzi-failures, path: apps/android/**/build/paparazzi/failures }

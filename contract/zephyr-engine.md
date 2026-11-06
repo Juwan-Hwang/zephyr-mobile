@@ -204,6 +204,8 @@ mock 规则：输入像域名/IP → test_rule；匹配地区/城市/运营商/�
 ## 10. ErrorCode
 `not_running, vpn_permission_denied, network_unavailable, subscription_invalid, subscription_fetch_failed, node_not_found, scene_not_found, group_not_found, rule_input_invalid, core_crashed, storage_full, cancelled, internal`
 
+v0.1 追加：`stale_token`（查询句柄已淘汰，UI 重新 queryNodes 即可，不提示用户）、`subscription_not_found`（删除/更新不存在的订阅）。
+
 ## 11. 平台层（不在引擎内）
 - iOS：NEPacketTunnelProvider 里把 tun fd 交给核心（mihomo 以库嵌入，**禁止 Process()**）；App 与扩展经 App Group + Darwin notify 通信；引擎在 App 侧是扩展的代理。
 - Android：VpnService 建 tun，fd 经 `inject_tun_fd` 交核心；前台服务常驻通知；QS Tile 与 Glance 读 `connectionState()`。
@@ -211,3 +213,133 @@ mock 规则：输入像域名/IP → test_rule；匹配地区/城市/运营商/�
 
 ## 12. 版本
 - v0（2026-11-06）首版。后续加字段只追加、不改名；破坏性改动升 v1 并在看板公告。
+- v0.1（2026-11-06 14:20）追加 §13：类型命名、Dns/Tun 设置、stale_token / subscription_not_found、IPv6 规则测试、连接轨迹。
+
+## 13. v0.1 追加（2026-11-06 14:20，只追加不改名）
+采纳 iOS NOTES-K 的命名，两端照此：
+
+```
+// 原匿名类型命名
+enum NetworkKind { wifi, cellular, ethernet, other }
+enum SceneSource { auto, manual, subscription_group }
+enum Accent { blue, green, orange, pink }
+enum Appearance { system, dark, light }
+record SubscriptionsSummary { count: Int32, totalNodes: Int64 }
+record StorageInfo { nodesBytes: Int64, rulesBytes: Int64, freeBytes: Int64 }
+
+// Settings 内未展开的两项
+record DnsSettings { fakeIp: Bool, nameservers: [String], fallback: [String], ipv6: Bool }
+enum TunStack { system, gvisor, mixed }
+record TunSettings { stack: TunStack, mtu: Int32, ipv6: Bool, strictRoute: Bool }
+```
+默认值（Mock 与首次启动一致）：`DnsSettings(fakeIp: true, nameservers: ["https://dns.alidns.com/dns-query", "https://doh.pub/dns-query"], fallback: ["https://1.1.1.1/dns-query"], ipv6: false)`，`TunSettings(stack: gvisor, mtu: 9000, ipv6: false, strictRoute: true)`。iOS NE 默认 gvisor；Android 同。
+
+### 规则测试与 IPv6
+- 输入 IPv6 字面量（含 `[...]`）按 IP 处理：域名层（1–5）跳过，只走 IP 层（IP-CIDR6/GEOIP）与 MATCH。fixtures 无样本；Mock 落到 MATCH 即正确。
+- core-mobile 的 IP 层同时支持 IP-CIDR 与 IP-CIDR6（压平区段 + 二分），`[...]` 包裹的输入同样识别。
+
+### 连接轨迹（原型 trace sheet：规则 → 场景 → 节点 → 出口 + 本次覆写）
+```
+record ConnectionTrace {
+  host: String                 // "claude.ai"
+  lastSeenAt: Int64            // "3 秒前"
+  connections: Int32           // "17 个连接"
+  totalBytes: Int64            // "2.1 MB"
+  rule: String                 // "DOMAIN-SUFFIX,claude.ai"
+  ruleSource: String?          // "Nebula Cloud"（规则集/订阅名；Zephyr 覆写 = "Zephyr 覆写"）
+  scene: String?               // 场景 id，直连 = null
+  sceneSource: String?         // "Zephyr 优选"
+  node: NodeSummary?           // 直连 = null
+  via: String?                 // "US Fixed IP · 固定"
+  exitIp: String?, exitRegion: String?, exitStableDays: Int32?   // "203.0.113.24 美国 · 7 天未变化"
+  override: TraceOverride?     // 当前生效的覆写
+}
+enum TraceTarget { unchanged, direct, scene }     // 分段：不变 / 直连 / 视频 / 其他…（scene 时带 sceneId）
+record TraceOverride { target: TraceTarget, sceneId: String?, persistent: Bool }
+recentHosts(limit: Int32) -> Stream<[ConnectionInfo]>        // "最近连接"，按 host 聚合，最多 limit（≤ 50）
+connectionTrace(host: String) async throws -> ConnectionTrace // host 无记录 → node_not_found
+overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Bool) async throws
+// persistent = false 只影响本次（直到该 host 的连接全部关闭）；true 写入 Zephyr 覆写层（规则第 1 层），订阅更新时保留
+```
+iOS 不提供发起连接的 App，`ConnectionInfo.app` 在 iOS 恒为 null，UI 显示"仅显示域名"说明。
+
+Mock 固定值（与原型 9:41 一致）：最近连接 5 条 —— claude.ai（AI · US-Fixed-01 · 2.1 MB）、nflxvideo.net（视频 · 香港 HKT · 184 MB）、gemini.google.com（AI · 新加坡 02 · 640 KB）、github.com（其他 · TW-Fixed-01 · 12 MB）、qq.com（直连 · 3.4 MB）；claude.ai 的轨迹见上方注释中的原型文案（17 个连接、3 秒前、出口 203.0.113.24 美国 7 天未变化）。
+
+## 14. v0.2 追加（2026-11-06 15:35，core-mobile 已实现，只追加）
+真实实现在 `core-mobile`（UniFFI，`MobileCore` / `MihomoClient`），绑定见 `core-mobile/bindings`。与 §3/§5/§7/§8 的 Stream/async 形态不同：核心是同步调用，平台层自己包成 Stream/async 并放后台线程。B/C 的 MockEngine 继续按 §1–§13 的形态，真实引擎适配层把两者对上。
+
+### 订阅（§7 的真实形态：平台拉取，核心解析）
+```
+record FetchedSubscription { body: String, userinfo: String?, nowMillis: Int64 }   // userinfo = 原样的 subscription-userinfo 头
+subscriptionFetchUrl(id) -> String?          // 平台用它发请求（SSRF/DNS 校验在平台层）
+dueSubscriptions(nowMillis) -> [String]      // 到期需自动更新的 id
+importSubscription(name, url?, fetched, autoUpdateHours, progress?) -> Subscription
+previewSubscriptionUpdate(id, fetched) -> SubscriptionDiff   // 改名不算增删；空列表拒绝覆盖
+updateSubscription(id, fetched, progress?) -> SubscriptionDiff
+deleteSubscription(id); subscriptions(); subscriptionsSummary()
+```
+正文规整、URL/名称校验、URL 脱敏复用桌面 zephyr-core（base64 解码、short-id 加引号、控制面字段清洗）。
+
+### 延迟与优选（§5 补充）
+```
+record LatencySample { id: NodeId, ms: Int32 /* -1 超时 */, at: Int64 }
+record RankedNode { row: NodeRow, latencyMs: Int32, testedAt: Int64, score: Double }   // ⚠ score 为新增字段（破坏性）
+recordLatencies([LatencySample]); cachedLatencies([NodeId], nowMillis, maxAgeMillis) -> [Int32?]
+fastestNodes(query, limit, nowMillis, maxAgeMillis) -> [RankedNode]   // 桌面 smart_selector 打分：P90 + 成功率 + 稳定性
+```
+
+### 运行时配置
+```
+record RuntimeOptions { dns, tun, mode, controllerSocket, findProcess, logLevel }
+runtimeConfig(subscriptionId, RuntimeOptions) -> String   // mihomo YAML，交给 zm_start / zm_reload
+```
+控制入口只有 `external-controller-unix`（无 TCP 端口）；TUN 用系统 fd，auto-route 关。场景组、例外组、覆写规则在这里注入。
+
+### 场景（§3 的真实形态）
+```
+scenes(nowMillis) -> [Scene]        // Scene 增加 group（mihomo 组名）、selectedLatencyMs、exitRegion；selected 可空（未选=不接管流量）
+sceneCandidates(sceneId, region?, nowMillis) -> [RankedNode]   // region 空 = 当前节点地区；≤50，24h 内测过
+previewSceneChange(sceneId, nodeId) -> ExitChange              // toIp 恒 null（连上才知道）
+applySceneChange(sceneId, nodeId, nowMillis) -> SceneApply
+record SceneApply { needsReload: Bool, group: String, member: String, previous: NodeId? }
+  // needsReload=false：MihomoClient.selectInGroup(group, member) 即可（热备成员，零中断）
+  // needsReload=true ：runtimeConfig + zm_reload
+  // 撤销 = applySceneChange(sceneId, previous)
+reportSceneExit(sceneId, ip, region?, testedAt)    // 平台测得出口后回填
+setSceneException(sceneId, appId, nodeId?)         // "Claude：US-Fixed-01"；nodeId=null 删除；需重载
+sceneForHost(host) -> String?
+```
+内置应用目录（appId）：chatgpt、claude、gemini、perplexity、grok（AI）；netflix、youtube、disney、max、primevideo（视频）。
+规则顺序：Zephyr 覆写 → 场景例外 → 场景应用域名 → 订阅规则；"其他"场景选了节点时接管 MATCH。
+
+### 覆写（§13 overrideHost 的真实形态）
+```
+overrideHost(host, target, sceneId?, persistent)   // target=unchanged 即清除；persistent=false 不落盘（进程内有效）；需重载
+hostOverride(host) -> HostOverride?
+```
+
+### MihomoClient（§4、§8、§13 轨迹的数据源，unix socket REST）
+```
+MihomoClient(socketPath)
+version(); policyGroups(); groupMembers(group, offset, limit ≤500); selectInGroup(group, member)
+testGroup(group, url, timeoutMs); activeConnections(limit ≤200); recentHosts(limit); hostTrace(host)
+closeConnection(id); closeAllConnections(); setMode(mode)
+```
+
+### 存储
+`storageInfo() -> StorageInfo { nodesBytes, rulesBytes, subscriptionsBytes, cacheBytes }`（§13 的 freeBytes 由平台层取）。
+
+### 错误码追加
+`not_running`（mihomo 未运行或 socket 不通）。`scene_not_found` 已在 §10。
+
+### 场景自动切换（v0.2 追加）
+```
+record FailoverPolicy { enabled: Bool, threshold: UInt32 /* 默认 3 */, cooldownSecs: UInt64 /* 默认 30 */ }
+failoverPolicy() -> FailoverPolicy; setFailoverPolicy(FailoverPolicy)   // threshold/cooldown 为 0 → invalid
+reportSceneProbe(sceneId, success, nowMillis) -> SceneFailover?
+record SceneFailover { failed: NodeRow, failureCount: UInt32, apply: SceneApply }   // apply.needsReload 恒 false → selectInGroup
+```
+平台对每个已选节点的场景定期探测出口（或连接失败时）上报；返回非空即已切换，UI 提示"AI 出口已自动切换到 xx（撤销）"。
+
+### 规则层 0 由核心保留（v0.2 追加）
+`rules/000.zr` = 第 1 层"Zephyr 覆写"，核心在 overrideHost / setSceneException / 首次 applySceneChange 后自动重编并热加载，内容与 runtimeConfig 前插的规则一致；策略写场景 id（"ai"）或 DIRECT。平台编译自己的层请从索引 1 开始。

@@ -1,0 +1,4 @@
+module zephyr_mobile_coreFFI {
+    header "zephyr_mobile_coreFFI.h"
+    export *
+}

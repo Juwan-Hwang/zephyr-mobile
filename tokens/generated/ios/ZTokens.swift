@@ -41,15 +41,48 @@ public enum ZTokens {
         public static let colorInfo = ZDynamicColor.make(dark: UIColor(red: 0.2196, green: 0.7412, blue: 0.9725, alpha: 1.0), light: UIColor(red: 0.1451, green: 0.3882, blue: 0.9216, alpha: 1.0))
         public static let colorDownload = ZDynamicColor.make(dark: UIColor(red: 0.0392, green: 0.5176, blue: 1.0, alpha: 1.0), light: UIColor(red: 0.0, green: 0.4784, blue: 1.0, alpha: 1.0))
         public static let colorUpload = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.4196, blue: 0.4196, alpha: 1.0), light: UIColor(red: 0.8196, green: 0.2275, blue: 0.2471, alpha: 1.0))
-        /// < 80ms
-        public static let latencyGood = ZDynamicColor.make(dark: UIColor(red: 0.2039, green: 0.7804, blue: 0.349, alpha: 1.0), light: UIColor(red: 0.1216, green: 0.6157, blue: 0.2706, alpha: 1.0))
-        /// 80–199ms
-        public static let latencyFair = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.8, blue: 0.0, alpha: 1.0), light: UIColor(red: 0.702, green: 0.5255, blue: 0.0, alpha: 1.0))
-        /// 200–399ms
-        public static let latencyPoor = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.5843, blue: 0.0, alpha: 1.0), light: UIColor(red: 0.7804, green: 0.4157, blue: 0.0, alpha: 1.0))
-        /// >= 400ms 或超时
-        public static let latencyBad = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.2706, blue: 0.2275, alpha: 1.0), light: UIColor(red: 0.8431, green: 0.0, blue: 0.0824, alpha: 1.0))
-        public static let latencyUnknown = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.4), light: UIColor(red: 0.0941, green: 0.0941, blue: 0.1098, alpha: 0.4))
+        /// < 200ms（= screen.t2）
+        public static let latencyNormal = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.6), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.58))
+        /// >= 200ms（= screen.amber）
+        public static let latencySlow = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.8392, blue: 0.0392, alpha: 1.0), light: UIColor(red: 1.0, green: 0.6235, blue: 0.0392, alpha: 1.0))
+        /// 超时 -1（= screen.red）
+        public static let latencyTimeout = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.2706, blue: 0.2275, alpha: 1.0), light: UIColor(red: 1.0, green: 0.2314, blue: 0.1882, alpha: 1.0))
+        /// 未测（= screen.t3）
+        public static let latencyUnknown = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.4), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.4))
+        public static let screenBg = ZDynamicColor.make(dark: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), light: UIColor(red: 0.949, green: 0.949, blue: 0.9686, alpha: 1.0))
+        /// 卡片
+        public static let screenS1 = ZDynamicColor.make(dark: UIColor(red: 0.0471, green: 0.0471, blue: 0.0549, alpha: 1.0), light: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0))
+        /// 卡片内嵌 / 列表
+        public static let screenS2 = ZDynamicColor.make(dark: UIColor(red: 0.0784, green: 0.0784, blue: 0.0902, alpha: 1.0), light: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0))
+        /// 控件底
+        public static let screenS3 = ZDynamicColor.make(dark: UIColor(red: 0.1137, green: 0.1137, blue: 0.1294, alpha: 1.0), light: UIColor(red: 0.9137, green: 0.9137, blue: 0.9333, alpha: 1.0))
+        /// 按下 / 分段选中
+        public static let screenS4 = ZDynamicColor.make(dark: UIColor(red: 0.149, green: 0.149, blue: 0.1686, alpha: 1.0), light: UIColor(red: 0.8627, green: 0.8627, blue: 0.8824, alpha: 1.0))
+        /// 细分隔线
+        public static let screenHl = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.075), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.07))
+        /// 描边
+        public static let screenHl2 = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.13), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.12))
+        public static let screenT1 = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.95), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.9))
+        public static let screenT2 = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.6), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.58))
+        public static let screenT3 = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.4), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.4))
+        public static let screenT4 = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.2), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.18))
+        public static let screenGreen = ZDynamicColor.make(dark: UIColor(red: 0.1882, green: 0.8196, blue: 0.3451, alpha: 1.0), light: UIColor(red: 0.2039, green: 0.7804, blue: 0.349, alpha: 1.0))
+        public static let screenAmber = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.8392, blue: 0.0392, alpha: 1.0), light: UIColor(red: 1.0, green: 0.6235, blue: 0.0392, alpha: 1.0))
+        public static let screenAmberA = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.8392, blue: 0.0392, alpha: 0.12), light: UIColor(red: 1.0, green: 0.6235, blue: 0.0392, alpha: 0.12))
+        public static let screenRed = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.2706, blue: 0.2275, alpha: 1.0), light: UIColor(red: 1.0, green: 0.2314, blue: 0.1882, alpha: 1.0))
+        /// 上行速率
+        public static let screenUp = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.4196, blue: 0.4196, alpha: 1.0), light: UIColor(red: 1.0, green: 0.3686, blue: 0.3412, alpha: 1.0))
+        /// 浮层/底栏玻璃底色（叠系统模糊）
+        public static let screenGlass = ZDynamicColor.make(dark: UIColor(red: 0.1098, green: 0.1098, blue: 0.1255, alpha: 0.82), light: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.82))
+        /// 指令栏
+        public static let screenCmdBg = ZDynamicColor.make(dark: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.72), light: UIColor(red: 0.949, green: 0.949, blue: 0.9686, alpha: 0.8))
+        /// 列表上下渐隐终点
+        public static let screenFade = ZDynamicColor.make(dark: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), light: UIColor(red: 0.949, green: 0.949, blue: 0.9686, alpha: 1.0))
+        /// 主按钮底（原型深色 #F2F2F2 黑字）
+        public static let screenPrimary = ZDynamicColor.make(dark: UIColor(red: 0.949, green: 0.949, blue: 0.949, alpha: 1.0), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0))
+        public static let screenOnPrimary = ZDynamicColor.make(dark: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), light: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0))
+        /// 行按下
+        public static let screenPressed = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.03), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.03))
     }
 
     /// 静态色板（不随外观变化）。
@@ -150,7 +183,7 @@ public enum ZTokens {
         public static let title = TypeStyle(size: 22, weight: .semibold, lineHeight: 28, relativeTo: .title2)
         public static let large = TypeStyle(size: 34, weight: .bold, lineHeight: 41, relativeTo: .largeTitle)
         /// 速率/延迟大数字：细字重 + 等宽数字
-        public static let metric = TypeStyle(size: 40, weight: .ultraLight, lineHeight: 44, relativeTo: .largeTitle)
+        public static let metric = TypeStyle(size: 40, weight: .thin, lineHeight: 44, relativeTo: .largeTitle)
         public static let metricSm = TypeStyle(size: 22, weight: .light, lineHeight: 26, relativeTo: .title2)
     }
 
@@ -178,7 +211,8 @@ public enum ZTokens {
         public static let tabbarHeight: CGFloat = 56
         public static let pageMargin: CGFloat = 16
         public static let cardGap: CGFloat = 12
-        public static let sheetRadius: CGFloat = 24
+        /// 原型 sheet 圆角 34
+        public static let sheetRadius: CGFloat = 34
         /// 首页 ZConnectButton 直径
         public static let connectButton: CGFloat = 168
         /// 节点页右侧地区索引条
@@ -205,16 +239,12 @@ public enum ZTokens {
     }
 
     public enum LatencyThreshold {
-        public static let good: Int = 80
-        public static let fair: Int = 200
-        public static let poor: Int = 400
+        public static let slow: Int = 200
         /// nil = 未测，-1 = 超时
         public static func color(_ ms: Int?) -> Color {
             guard let ms else { return Colors.latencyUnknown }
-            if ms < 0 || ms >= poor { return Colors.latencyBad }
-            if ms < good { return Colors.latencyGood }
-            if ms < fair { return Colors.latencyFair }
-            return Colors.latencyPoor
+            if ms < 0 { return Colors.latencyTimeout }
+            return ms >= slow ? Colors.latencySlow : Colors.latencyNormal
         }
     }
 }
@@ -247,6 +277,6 @@ public struct ZTypeModifier: ViewModifier {
 
 public extension View {
     func zType(_ style: ZTokens.TypeStyle, monospacedDigits: Bool? = nil) -> some View {
-        modifier(ZTypeModifier(style, monospacedDigits: monospacedDigits ?? (style.weight == .ultraLight || style.weight == .light)))
+        modifier(ZTypeModifier(style, monospacedDigits: monospacedDigits ?? (style.weight == .ultraLight || style.weight == .thin || style.weight == .light)))
     }
 }

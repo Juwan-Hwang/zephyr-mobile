@@ -51,11 +51,32 @@ data class ZColors(
     val colorInfo: Color,
     val colorDownload: Color,
     val colorUpload: Color,
-    val latencyGood: Color,
-    val latencyFair: Color,
-    val latencyPoor: Color,
-    val latencyBad: Color,
+    val latencyNormal: Color,
+    val latencySlow: Color,
+    val latencyTimeout: Color,
     val latencyUnknown: Color,
+    val screenBg: Color,
+    val screenS1: Color,
+    val screenS2: Color,
+    val screenS3: Color,
+    val screenS4: Color,
+    val screenHl: Color,
+    val screenHl2: Color,
+    val screenT1: Color,
+    val screenT2: Color,
+    val screenT3: Color,
+    val screenT4: Color,
+    val screenGreen: Color,
+    val screenAmber: Color,
+    val screenAmberA: Color,
+    val screenRed: Color,
+    val screenUp: Color,
+    val screenGlass: Color,
+    val screenCmdBg: Color,
+    val screenFade: Color,
+    val screenPrimary: Color,
+    val screenOnPrimary: Color,
+    val screenPressed: Color,
     val isDark: Boolean,
 ) {
     companion object {
@@ -94,11 +115,32 @@ data class ZColors(
             colorInfo = Color(0xFF38BDF8),
             colorDownload = Color(0xFF0A84FF),
             colorUpload = Color(0xFFFF6B6B),
-            latencyGood = Color(0xFF34C759),
-            latencyFair = Color(0xFFFFCC00),
-            latencyPoor = Color(0xFFFF9500),
-            latencyBad = Color(0xFFFF453A),
+            latencyNormal = Color(0x99FFFFFF),
+            latencySlow = Color(0xFFFFD60A),
+            latencyTimeout = Color(0xFFFF453A),
             latencyUnknown = Color(0x66FFFFFF),
+            screenBg = Color(0xFF000000),
+            screenS1 = Color(0xFF0C0C0E),
+            screenS2 = Color(0xFF141417),
+            screenS3 = Color(0xFF1D1D21),
+            screenS4 = Color(0xFF26262B),
+            screenHl = Color(0x13FFFFFF),
+            screenHl2 = Color(0x21FFFFFF),
+            screenT1 = Color(0xF2FFFFFF),
+            screenT2 = Color(0x99FFFFFF),
+            screenT3 = Color(0x66FFFFFF),
+            screenT4 = Color(0x33FFFFFF),
+            screenGreen = Color(0xFF30D158),
+            screenAmber = Color(0xFFFFD60A),
+            screenAmberA = Color(0x1FFFD60A),
+            screenRed = Color(0xFFFF453A),
+            screenUp = Color(0xFFFF6B6B),
+            screenGlass = Color(0xD11C1C20),
+            screenCmdBg = Color(0xB8000000),
+            screenFade = Color(0xFF000000),
+            screenPrimary = Color(0xFFF2F2F2),
+            screenOnPrimary = Color(0xFF000000),
+            screenPressed = Color(0x08FFFFFF),
             isDark = true,
         )
         val Light = ZColors(
@@ -136,11 +178,32 @@ data class ZColors(
             colorInfo = Color(0xFF2563EB),
             colorDownload = Color(0xFF007AFF),
             colorUpload = Color(0xFFD13A3F),
-            latencyGood = Color(0xFF1F9D45),
-            latencyFair = Color(0xFFB38600),
-            latencyPoor = Color(0xFFC76A00),
-            latencyBad = Color(0xFFD70015),
-            latencyUnknown = Color(0x6618181C),
+            latencyNormal = Color(0x94000000),
+            latencySlow = Color(0xFFFF9F0A),
+            latencyTimeout = Color(0xFFFF3B30),
+            latencyUnknown = Color(0x66000000),
+            screenBg = Color(0xFFF2F2F7),
+            screenS1 = Color(0xFFFFFFFF),
+            screenS2 = Color(0xFFFFFFFF),
+            screenS3 = Color(0xFFE9E9EE),
+            screenS4 = Color(0xFFDCDCE1),
+            screenHl = Color(0x12000000),
+            screenHl2 = Color(0x1F000000),
+            screenT1 = Color(0xE6000000),
+            screenT2 = Color(0x94000000),
+            screenT3 = Color(0x66000000),
+            screenT4 = Color(0x2E000000),
+            screenGreen = Color(0xFF34C759),
+            screenAmber = Color(0xFFFF9F0A),
+            screenAmberA = Color(0x1FFF9F0A),
+            screenRed = Color(0xFFFF3B30),
+            screenUp = Color(0xFFFF5E57),
+            screenGlass = Color(0xD1FFFFFF),
+            screenCmdBg = Color(0xCCF2F2F7),
+            screenFade = Color(0xFFF2F2F7),
+            screenPrimary = Color(0xFF000000),
+            screenOnPrimary = Color(0xFFFFFFFF),
+            screenPressed = Color(0x08000000),
             isDark = false,
         )
     }
@@ -257,7 +320,8 @@ object ZLayout {
     val tabbarHeight = 56.dp
     val pageMargin = 16.dp
     val cardGap = 12.dp
-    val sheetRadius = 24.dp
+    /** 原型 sheet 圆角 34 */
+    val sheetRadius = 34.dp
     /** 首页 ZConnectButton 直径 */
     val connectButton = 168.dp
     /** 节点页右侧地区索引条 */
@@ -286,15 +350,12 @@ object ZMotion {
 }
 
 object ZLatency {
-    const val good: Int = 80
-    const val fair: Int = 200
-    const val poor: Int = 400
+    const val slow: Int = 200
     /** null = 未测，-1 = 超时 */
     fun color(ms: Int?, c: ZColors): Color = when {
         ms == null -> c.latencyUnknown
-        ms < 0 || ms >= poor -> c.latencyBad
-        ms < good -> c.latencyGood
-        ms < fair -> c.latencyFair
-        else -> c.latencyPoor
+        ms < 0 -> c.latencyTimeout
+        ms >= slow -> c.latencySlow
+        else -> c.latencyNormal
     }
 }
