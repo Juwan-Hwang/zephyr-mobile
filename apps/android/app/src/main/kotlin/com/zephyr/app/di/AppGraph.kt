@@ -6,10 +6,8 @@ import com.zephyr.app.vpn.ConnectionController
 import com.zephyr.app.vpn.Notifications
 import com.zephyr.engine.ZephyrEngine
 import com.zephyr.engine.core.CoreEngine
-import com.zephyr.engine.core.ProfileStore
-import com.zephyr.engine.core.LocalSocketDialer
 import com.zephyr.engine.core.Mihomo
-import com.zephyr.engine.core.MihomoRest
+import com.zephyr.engine.core.RustLive
 import com.zephyr.engine.mock.MockEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,11 +35,10 @@ object AppGraph {
         val core = CoreEngine(
             MockEngine(scope = appScope, demo = demo),
             dataDir = java.io.File(app.filesDir, "core").apply { mkdirs() }.path,
-            profiles = ProfileStore(app.filesDir),
             mockData = BuildConfig.DEBUG,
             live = run {
                 // Same socket TunBridge.Embedded hands to zm_start; only dialled while mihomo runs in-process.
-                val rest = MihomoRest(LocalSocketDialer(java.io.File(app.filesDir, "mihomo/ctl.sock")))
+                val rest by lazy { RustLive(com.zephyr.app.vpn.TunBridge.controllerSocket(app).path) }
                 return@run { if (Mihomo.running) rest else null }
             },
         )

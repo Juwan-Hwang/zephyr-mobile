@@ -48,10 +48,10 @@ class ZephyrVpnService : VpnService() {
         ServiceCompat.startForeground(this, Notifications.ID_ONGOING, first, fgsType())
         scope.launch {
             val s = engine.settings().first()
-            bridge = TunBridge.pick(this@ZephyrVpnService)
+            bridge = TunBridge.pick(this@ZephyrVpnService, engine, s, engine.connectionState().first().mode)
             if (bridge.createsTun && tun == null) {
                 tun = TunBridge.configure(Builder().setSession("Zephyr"), s.tun.mtu, s.tun.ipv6, s.tun.excludedApps, packageName).establish()
-                val err = tun?.let(bridge::attach) ?: "establish() returned null"
+                val err = tun?.let { bridge.attach(it) } ?: "establish() returned null"
                 if (err != null) { android.util.Log.e("Zephyr", "core start failed: $err"); stop(); return@launch }
             }
             runCatching { engine.connect() }.onFailure { stop(); return@launch }

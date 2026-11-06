@@ -41,7 +41,7 @@ class CoreParityTest {
         }
     }
 
-    /** Real import path end-to-end on the host .so: ProfileStore → Rust rebuildNodes + prepareRuntimeConfig. */
+    /** Real import path end-to-end on the host .so: fetch (injected) → core importSubscription → runtimeConfig. */
     @Test
     fun nativeProfileImport() = runBlocking {
         assumeTrue("set -Pzephyr.coreLib to run", lib != null)
@@ -58,20 +58,23 @@ class CoreParityTest {
             rules:
               - MATCH,AI
         """.trimIndent()
-        val store = ProfileStore(dir, fetch = { ProfileStore.Fetched(yaml, "upload=1; download=2; total=3", null) })
-        val core = CoreEngine(MockEngine(clock = { 0L }), java.io.File(dir, "core").apply { mkdirs() }.path, profiles = store)
+        val core = CoreEngine(
+            MockEngine(clock = { 0L }), dir.path, mockData = false,
+            fetcher = { SubscriptionFetcher.Fetched(yaml, "upload=1; download=2; total=3", null) },
+        )
         check(core.isNative)
         val sub = core.importSubscription(com.zephyr.engine.ImportSource.URL, "https://sub.example.com/x?token=t")
         assertEquals(3L, sub.nodeCount, "rust node count")
+        kotlin.test.assertFalse(sub.url!!.contains("token"), "url redacted")
+        assertEquals(sub.id, core.activeSubscription())
         assertEquals(3L, core.nodeIndex().total)
         assertEquals(1L, core.queryNodes("东京").total)
-        val active = store.activeFile.readText()
-        val secret = java.io.File(dir, "profiles/secret").readText()
-        kotlin.test.assertTrue(active.contains("127.0.0.1:"), "controller forced to localhost")
-        kotlin.test.assertTrue(active.contains(secret), "secret injected")
-        val withFd = uniffi.zephyr_core.injectTunFd(active, 42)
-        kotlin.test.assertTrue(withFd.contains("42"), "tun fd injected")
-        println("active.yaml ${active.length} B, tun:\n" + withFd.lines().dropWhile { !it.startsWith("tun:") }.take(8).joinToString("\n"))
+        val cfg = core.runtimeConfig(42, "/tmp/zm.sock", com.zephyr.engine.Settings(), com.zephyr.engine.ProxyMode.RULE)!!
+        kotlin.test.assertTrue(cfg.contains("/tmp/zm.sock"), "unix controller")
+        kotlin.test.assertTrue(Regex("file-descriptor:\\s*42").containsMatchIn(cfg), "tun fd")
+        println("runtime config ${cfg.length} B:\n" + cfg.lines().filter { it.startsWith("tun:") || it.startsWith("  ") }.take(14).joinToString("\n"))
+        core.deleteSubscription(sub.id)
+        assertEquals(null, core.activeSubscription())
     }
 
     companion object {

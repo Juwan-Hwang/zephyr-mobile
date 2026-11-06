@@ -2,7 +2,14 @@ package com.zephyr.engine.core
 
 import com.zephyr.core.mobile.MobileCore
 import com.zephyr.core.mobile.MobileException
-import com.zephyr.core.mobile.SubscriptionSource
+import com.zephyr.core.mobile.DnsConfig
+import com.zephyr.core.mobile.FetchedSubscription
+import com.zephyr.core.mobile.RuntimeOptions
+import com.zephyr.core.mobile.TunConfig
+import com.zephyr.core.mobile.TunStackKind
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.filterNotNull
+import com.zephyr.core.mobile.ProxyMode as CoreMode
 import com.zephyr.engine.ErrorCode
 import com.zephyr.engine.ImportSource
 import com.zephyr.engine.Subscription
@@ -48,10 +55,8 @@ import com.zephyr.core.mobile.RegionSection as CoreSection
 @OptIn(ExperimentalCoroutinesApi::class)
 class CoreEngine(
     private val fallback: ZephyrEngine,
-    dataDir: String? = null,
+    private val dataDir: String? = null,
     private val io: CoroutineDispatcher = Dispatchers.IO,
-    /** Real subscription profiles; null keeps subscriptions on [fallback] (screenshots, tests). */
-    val profiles: ProfileStore? = null,
     /**
      * Whether [fallback]'s synthetic catalogue may stand in for an empty native store. True for debug,
      * screenshots and tests; false in release, where an empty store means "no subscription yet" and the
@@ -59,8 +64,10 @@ class CoreEngine(
      */
     private val mockData: Boolean = true,
     /** mihomo's REST controller while the embedded core runs, else null (VPN off, tests, screenshots). */
-    private val live: () -> MihomoRest? = { null },
+    private val live: () -> LivePort? = { null },
     private val tick: Long = 1_000,
+    private val clock: () -> Long = System::currentTimeMillis,
+    private val fetcher: (String) -> SubscriptionFetcher.Fetched = SubscriptionFetcher::httpFetch,
 ) : ZephyrEngine by fallback {
 
     private val core: MobileCore? = dataDir?.let { dir ->
@@ -96,205 +103,139 @@ class CoreEngine(
         nodesReady = null
     }
 
-    // ── Subscriptions (real profiles once the user imports one) ───────────────────────────────────
-    private fun realSubs(): Boolean = profiles != null && (!mockData || isNative || profiles.subscriptions.value.isNotEmpty())
+    // ── Subscriptions (core-mobile owns parsing/storage; the platform only fetches) ──────────────────
+    private val subsState = kotlinx.coroutines.flow.MutableStateFlow<List<Subscription>?>(null)
+    private val realSubs: Boolean get() = core != null || !mockData
+
+    private suspend fun refreshSubs(): List<Subscription> {
+        val c = core ?: return emptyList<Subscription>().also { subsState.value = it }
+        return withContext(io) { wrap { c.subscriptions() }.map(::sub) }.also { subsState.value = it }
+    }
 
     override fun subscriptions(): Flow<List<Subscription>> =
-        if (realSubs()) profiles!!.subscriptions else fallback.subscriptions()
+        if (!realSubs) fallback.subscriptions()
+        else flow { if (subsState.value == null) refreshSubs(); emitAll(subsState.filterNotNull()) }
 
-    override suspend fun subscriptionsSummary(): SubscriptionsSummary =
-        if (realSubs()) profiles!!.subscriptions.value.let { l -> SubscriptionsSummary(l.size, l.sumOf { it.nodeCount }) }
-        else fallback.subscriptionsSummary()
+    override suspend fun subscriptionsSummary(): SubscriptionsSummary {
+        val c = core ?: return if (mockData) fallback.subscriptionsSummary() else SubscriptionsSummary(0, 0)
+        return withContext(io) { wrap { c.subscriptionsSummary() } }.let { SubscriptionsSummary(it.count.toInt(), it.totalNodes.toLong()) }
+    }
 
     override suspend fun importSubscription(source: ImportSource, payload: String): Subscription {
-        val store = profiles ?: return fallback.importSubscription(source, payload)
-        if (!isNative && source == ImportSource.QR) return fallback.importSubscription(source, payload)
-        val isUrl = payload.trim().let { it.startsWith("http://") || it.startsWith("https://") }
-        if (source == ImportSource.URL && !isUrl) throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "not a subscription link")
+        val c = core ?: return fallback.importSubscription(source, payload)
+        val p = payload.trim()
+        if (p.isEmpty()) throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "empty")
+        val isUrl = p.startsWith("https://") || p.startsWith("http://")
+        if ((source == ImportSource.URL || source == ImportSource.QR) && !isUrl) throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "not a subscription link")
         return withContext(io) {
-            store.import(payload, isUrl) { all ->
-                val c = core
-                if (c == null) all.sumOf { ProfileStore.countProxies(it.second) }
-                else wrap { c.rebuildNodes(all.map { SubscriptionSource(it.first.toUShort(), it.second) }).total.toLong() }.also { nodesReady = null }
-            }
+            val got = if (isUrl) {
+                runCatching { fetcher(p) }.getOrElse { throw ZephyrException(ErrorCode.SUBSCRIPTION_FETCH_FAILED, it.message ?: "fetch failed") }
+            } else SubscriptionFetcher.Fetched(p, null, null)
+            val name = got.fileName?.substringBeforeLast('.')?.takeIf { it.isNotBlank() } ?: defaultName(p, isUrl)
+            val hours = runCatching { fallback.settings().first().autoUpdateHours }.getOrDefault(12)
+            val s = wrap { c.importSubscription(name, if (isUrl) p else null, FetchedSubscription(got.body, got.userInfo, clock()), hours, null) }
+            nodesReady = null
+            if (activeSubscription() == null) setActiveSubscription(s.id)
+            refreshSubs()
+            sub(s)
         }
+    }
+
+    override suspend fun updateSubscription(id: String): SubscriptionDiff {
+        val c = core ?: return fallback.updateSubscription(id)
+        return withContext(io) {
+            val url = wrap { c.subscriptionFetchUrl(id) } ?: throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "local profile")
+            val got = runCatching { fetcher(url) }.getOrElse { throw ZephyrException(ErrorCode.SUBSCRIPTION_FETCH_FAILED, it.message ?: "fetch failed") }
+            val d = wrap { c.updateSubscription(id, FetchedSubscription(got.body, got.userInfo, clock()), null) }
+            nodesReady = null; refreshSubs(); diff(d)
+        }
+    }
+
+    override suspend fun previewUpdate(id: String): SubscriptionDiff {
+        val c = core ?: return fallback.previewUpdate(id)
+        return withContext(io) {
+            val url = wrap { c.subscriptionFetchUrl(id) } ?: throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "local profile")
+            val got = runCatching { fetcher(url) }.getOrElse { throw ZephyrException(ErrorCode.SUBSCRIPTION_FETCH_FAILED, it.message ?: "fetch failed") }
+            diff(wrap { c.previewSubscriptionUpdate(id, FetchedSubscription(got.body, got.userInfo, clock())) })
+        }
+    }
+
+    override suspend fun updateAll(): List<SubscriptionDiff> {
+        val c = core ?: return fallback.updateAll()
+        val ids = withContext(io) { wrap { c.subscriptions() }.filter { it.url != null }.map { it.id } }
+        return ids.mapNotNull { runCatching { updateSubscription(it) }.getOrNull() }
     }
 
     override suspend fun deleteSubscription(id: String) {
-        if (!realSubs()) return fallback.deleteSubscription(id)
-        withContext(io) {
-            profiles!!.delete(id)
-            core?.let { c -> wrap { c.rebuildNodes(profiles.sources().map { SubscriptionSource(it.first.toUShort(), it.second) }) }; nodesReady = null }
-        }
+        val c = core ?: return fallback.deleteSubscription(id)
+        withContext(io) { wrap { c.deleteSubscription(id) } }
+        nodesReady = null
+        val left = refreshSubs()
+        if (activeSubscription() == id) setActiveSubscription(left.firstOrNull()?.id)
     }
 
-    // ── Live mihomo (policy groups, connections, mode, delay) ───────────────────────────────────────
+    // ── Runtime config for the embedded mihomo (TunBridge.Embedded) ─────────────────────────────────
+    private val activeFile: java.io.File? = dataDir?.let { java.io.File(it, "active-subscription") }
+    fun activeSubscription(): String? = activeFile?.takeIf { it.isFile }?.readText()?.trim()?.ifEmpty { null }
+    fun setActiveSubscription(id: String?) {
+        val f = activeFile ?: return
+        if (id == null) f.delete() else { val t = java.io.File(f.parentFile, ".${f.name}.tmp"); t.writeText(id); t.renameTo(f) }
+    }
+
+    /**
+     * mihomo YAML for the active subscription with Zephyr's settings and the system TUN fd, or null when
+     * there is nothing to run (no native core / no subscription). Control plane: unix socket only.
+     */
+    suspend fun runtimeConfig(tunFd: Int?, controllerSocket: String, settings: Settings, mode: ProxyMode): String? {
+        val c = core ?: return null
+        val id = activeSubscription() ?: refreshSubs().firstOrNull()?.id ?: return null
+        val opts = RuntimeOptions(
+            dns = DnsConfig(settings.dns.fakeIp, settings.dns.nameservers, settings.dns.fallback, settings.dns.ipv6),
+            tun = TunConfig(
+                stack = when (settings.tun.stack) { TunStack.SYSTEM -> TunStackKind.SYSTEM; TunStack.GVISOR -> TunStackKind.GVISOR; TunStack.MIXED -> TunStackKind.MIXED },
+                mtu = settings.tun.mtu, ipv6 = settings.tun.ipv6, strictRoute = settings.tun.strictRoute, fileDescriptor = tunFd,
+            ),
+            mode = when (mode) { ProxyMode.RULE -> CoreMode.RULE; ProxyMode.GLOBAL -> CoreMode.GLOBAL; ProxyMode.DIRECT -> CoreMode.DIRECT },
+            controllerSocket = controllerSocket, findProcess = true, logLevel = "warning",
+        )
+        return withContext(io) { wrap { c.runtimeConfig(id, opts) } }
+    }
+
+    private fun sub(s: com.zephyr.core.mobile.Subscription) = Subscription(
+        id = s.id, name = s.name, url = s.url, nodeCount = s.nodeCount, usedBytes = s.usedBytes, totalBytes = s.totalBytes,
+        remainingBytes = s.remainingBytes, expiresAt = s.expiresAt, updatedAt = s.updatedAt, autoUpdateHours = s.autoUpdateHours,
+        lastDiff = s.lastDiff?.let(::diff),
+    )
+
+    private fun diff(d: com.zephyr.core.mobile.SubscriptionDiff) =
+        SubscriptionDiff(d.addedNodes, d.removedNodes, d.ruleChanges, d.overridesKept, d.scenesRetested)
+
+    private fun defaultName(p: String, isUrl: Boolean): String {
+        if (!isUrl) return "本地配置"
+        val host = runCatching { java.net.URI(p).host }.getOrNull() ?: return "新订阅"
+        val parts = host.split('.').filter { it.isNotEmpty() }
+        return (if (parts.size >= 2) parts[parts.size - 2] else parts.firstOrNull() ?: "新订阅").replaceFirstChar { it.uppercase() }
+    }
+
+    // ── Live mihomo (scenes, policy groups, connections, mode, delay) ───────────────────────────────
     private val names = java.util.concurrent.ConcurrentHashMap<Long, String>()
     private val liveLatency = kotlinx.coroutines.flow.MutableSharedFlow<List<LatencyUpdate>>(extraBufferCapacity = 8)
-    @Volatile private var proxyCache: Map<String, MihomoRest.Proxy> = emptyMap()
 
     /** Emits whether the live controller is reachable; re-checked every few ticks. */
     private val liveFlag: Flow<Boolean> = flow { while (true) { emit(live() != null); delay(tick * 2) } }.distinctUntilChanged()
 
     /** [real] while mihomo runs, otherwise [mock] (debug) or [empty] (release). */
-    private fun <T> switching(real: (MihomoRest) -> Flow<T>, mock: () -> Flow<T>, empty: T): Flow<T> =
+    private fun <T> switching(real: (LivePort) -> Flow<T>, mock: () -> Flow<T>, empty: T): Flow<T> =
         liveFlag.flatMapLatest { on -> live()?.takeIf { on }?.let(real) ?: if (mockData) mock() else flowOf(empty) }
 
-    private fun <T> polling(r: MihomoRest, every: Long, read: (MihomoRest) -> T): Flow<T> = flow {
+    private fun <T> polling(r: LivePort, every: Long, read: (LivePort) -> T): Flow<T> = flow {
         while (true) { runCatching { read(r) }.onSuccess { emit(it) }; delay(every) }
     }.flowOn(io)
 
-    private fun proxies(r: MihomoRest): Map<String, MihomoRest.Proxy> = r.proxies().also { proxyCache = it }
-
-    private fun summary(p: MihomoRest.Proxy?, name: String): NodeSummary {
-        val id = MihomoRest.idOf(name).also { names[it] = name }
-        val region = MihomoRest.regionOf(name)
-        return NodeSummary(id = id, name = name, region = region, protocol = p?.type?.uppercase() ?: "", latencyMs = p?.lastDelay?.takeIf { it > 0 })
-    }
-
-    private fun groups(all: Map<String, MihomoRest.Proxy>): List<PolicyGroup> = all.values
-        .filter { it.type in MihomoRest.GROUP_TYPES && it.name != "GLOBAL" }
-        .map { g ->
-            PolicyGroup(
-                name = g.name,
-                type = when (g.type) { "URLTest" -> GroupType.URL_TEST; "Fallback" -> GroupType.FALLBACK; "LoadBalance" -> GroupType.LOAD_BALANCE; "Relay" -> GroupType.RELAY; else -> GroupType.SELECT },
-                selected = g.now, memberCount = g.all.size, testedAt = g.all.mapNotNull { all[it]?.lastTestAt }.maxOrNull(),
-            )
-        }
-
-    // Scenes while live: the profile's selectable groups in config order (GLOBAL.all), kind by name.
-    // Interim until core injects Zephyr's own scene groups into active.yaml (asked A, Issue #1).
-    private fun leaf(all: Map<String, MihomoRest.Proxy>, name: String): String {
-        var cur = name; var hops = 0
-        while (hops++ < 8) { val p = all[cur] ?: break; if (p.type !in MihomoRest.GROUP_TYPES) break; cur = p.now ?: break }
-        return cur
-    }
-
-    private fun liveScenes(all: Map<String, MihomoRest.Proxy>): List<Scene> {
-        val order = all["GLOBAL"]?.all ?: all.keys.sorted()
-        return order.mapNotNull { all[it] }
-            .filter { it.type in MihomoRest.GROUP_TYPES && it.name != "GLOBAL" && it.all.any { m -> !MihomoRest.isBuiltin(m) } }
-            .map { g ->
-                val leafName = leaf(all, g.name)
-                Scene(
-                    id = g.name, kind = sceneKind(g.name), name = g.name,
-                    available = g.all.count { !MihomoRest.isBuiltin(it) },
-                    selected = if (leafName == "DIRECT") NodeSummary(MihomoRest.idOf("DIRECT"), "直连", "CN", protocol = "DIRECT") else summary(all[leafName], leafName),
-                    source = if (g.type == "Selector") SceneSource.SUBSCRIPTION_GROUP else SceneSource.AUTO,
-                    testedAt = g.all.mapNotNull { all[it]?.lastTestAt }.maxOrNull(),
-                )
-            }
-    }
-
-    override fun scenes(): Flow<List<Scene>> =
-        switching({ r -> polling(r, tick * 3) { liveScenes(proxies(it)) }.distinctUntilChanged() }, { fallback.scenes() }, emptyList())
-
-    override suspend fun sceneCandidates(sceneId: String, region: String?): List<NodeSummary> {
-        val r = live() ?: return fallback.sceneCandidates(sceneId, region)
-        val all = withContext(io) { proxies(r) }
-        val g = all[sceneId] ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
-        return g.all.filterNot(MihomoRest::isBuiltin).map { summary(all[it], it) }
-            .filter { region == null || it.region == region }
-            .sortedWith(compareBy(nullsLast()) { it.latencyMs }).take(50)
-    }
-
-    override suspend fun previewSceneChange(sceneId: String, nodeId: NodeId): ExitChange {
-        val r = live() ?: return fallback.previewSceneChange(sceneId, nodeId)
-        val all = withContext(io) { proxies(r) }
-        all[sceneId] ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
-        val to = names[nodeId] ?: throw ZephyrException(ErrorCode.NODE_NOT_FOUND, "$nodeId")
-        return ExitChange(sceneId, MihomoRest.regionOf(leaf(all, sceneId)), null, MihomoRest.regionOf(to), null)
-    }
-
-    override suspend fun applySceneChange(sceneId: String, nodeId: NodeId) {
-        if (live() == null) return fallback.applySceneChange(sceneId, nodeId)
-        selectInGroup(sceneId, nodeId)
-    }
-
-    override suspend fun retestScene(sceneId: String): Scene {
-        val r = live() ?: return fallback.retestScene(sceneId)
-        withContext(io) { liveCall { r.groupDelay(sceneId) } }
-        return liveScenes(withContext(io) { proxies(r) }).firstOrNull { it.id == sceneId } ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
-    }
-
-    override fun policyGroups(): Flow<List<PolicyGroup>> =
-        switching({ r -> polling(r, tick * 3) { groups(proxies(it)) }.distinctUntilChanged() }, { fallback.policyGroups() }, emptyList())
-
-    override suspend fun groupMembers(group: String, offset: Int, limit: Int): NodePage {
-        val r = live() ?: return fallback.groupMembers(group, offset, limit)
-        val all = withContext(io) { proxies(r) }
-        val g = all[group]?.takeIf { it.type in MihomoRest.GROUP_TYPES } ?: throw ZephyrException(ErrorCode.GROUP_NOT_FOUND, group)
-        val rows = g.all.drop(offset).take(limit.coerceIn(0, 500)).map { summary(all[it], it) }
-        return NodePage(rows, offset.toLong(), g.all.size.toLong())
-    }
-
-    override suspend fun selectInGroup(group: String, nodeId: NodeId) {
-        val r = live() ?: return fallback.selectInGroup(group, nodeId)
-        val name = names[nodeId] ?: throw ZephyrException(ErrorCode.NODE_NOT_FOUND, nodeId.toString())
-        withContext(io) { liveCall { r.select(group, name) } }
-    }
-
-    override suspend fun testGroup(group: String) {
-        val r = live() ?: return fallback.testGroup(group)
-        val delays = withContext(io) { liveCall { r.groupDelay(group) } }
-        val members = proxyCache[group]?.all ?: delays.keys.toList()
-        val now = System.currentTimeMillis()
-        liveLatency.tryEmit(members.map { LatencyUpdate(MihomoRest.idOf(it).also { id -> names[id] = it }, delays[it] ?: -1, now) })
-    }
-
-    override fun latencyUpdates(): Flow<List<LatencyUpdate>> = merge(fallback.latencyUpdates(), liveLatency)
-
-    override suspend fun setMode(mode: ProxyMode) {
-        live()?.let { r -> withContext(io) { liveCall { r.setMode(mode.name.lowercase()) } } }
-        fallback.setMode(mode)
-    }
-
-    private fun connInfo(c: MihomoRest.Conn0): ConnectionInfo {
-        val direct = c.chains.isEmpty() || c.chains.first() == "DIRECT"
-        return ConnectionInfo(
-            id = c.id, host = c.host, app = c.process, scene = if (direct) null else c.chains.last(),
-            node = if (direct) "直连" else c.chains.first(), upBytes = c.up, downBytes = c.down, startedAt = c.startMillis,
-        )
-    }
-
-    override fun traffic(): Flow<TrafficSample> = switching({ _ ->
-        flow { while (true) { Mihomo.traffic()?.let { emit(TrafficSample(System.currentTimeMillis(), it.upBps, it.downBps)) }; delay(tick) } }.flowOn(io)
-    }, { fallback.traffic() }, TrafficSample(0, 0, 0))
-
-    override fun activeConnections(): Flow<List<ConnectionInfo>> =
-        switching({ r -> polling(r, tick) { it.connections().map(::connInfo) } }, { fallback.activeConnections() }, emptyList())
-
-    override suspend fun closeConnection(id: String) { live()?.let { r -> withContext(io) { liveCall { r.closeConnection(id) } } } ?: fallback.closeConnection(id) }
-    override suspend fun closeAll() { live()?.let { r -> withContext(io) { liveCall { r.closeAll() } } } ?: fallback.closeAll() }
-
-    override fun recentHosts(limit: Int): Flow<List<ConnectionInfo>> = switching({ r ->
-        polling(r, tick) { rr ->
-            rr.connections().groupBy { it.host }.values
-                .map { cs -> val last = cs.maxBy { it.startMillis }; connInfo(last).copy(upBytes = cs.sumOf { it.up }, downBytes = cs.sumOf { it.down }) }
-                .sortedByDescending { it.startedAt }.take(limit.coerceIn(0, 50))
-        }
-    }, { fallback.recentHosts(limit) }, emptyList())
-
-    override suspend fun connectionTrace(host: String): ConnectionTrace {
-        val r = live() ?: return fallback.connectionTrace(host)
-        val cs = withContext(io) { liveCall { r.connections() } }.filter { it.host == host }
-        if (cs.isEmpty()) throw ZephyrException(ErrorCode.NODE_NOT_FOUND, host)
-        val last = cs.maxBy { it.startMillis }
-        val direct = last.chains.isEmpty() || last.chains.first() == "DIRECT"
-        val nodeName = last.chains.firstOrNull()
-        return ConnectionTrace(
-            host = host, lastSeenAt = last.startMillis, connections = cs.size, totalBytes = cs.sumOf { it.up + it.down },
-            rule = MihomoRest.ruleText(last.rule, last.rulePayload),
-            scene = if (direct) null else last.chains.last(),
-            node = if (direct || nodeName == null) null else summary(proxyCache[nodeName], nodeName),
-            via = last.chains.drop(1).dropLast(1).takeIf { it.isNotEmpty() }?.joinToString(" · "),
-        )
-    }
-
-    override suspend fun overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Boolean) {
-        if (live() == null) return fallback.overrideHost(host, target, sceneId, persistent)
-        // Needs the Zephyr override rule layer in the running config (contract §13); not wired to mihomo yet.
-        throw ZephyrException(ErrorCode.INTERNAL, "override not available yet")
+    private fun summary(name: String, type: String?, latency: Int?): NodeSummary {
+        val id = LiveNames.idOf(name).also { names[it] = name }
+        if (name == "DIRECT") return NodeSummary(id, "直连", "CN", protocol = "DIRECT")
+        return NodeSummary(id = id, name = name, region = LiveNames.regionOf(name), protocol = type?.uppercase() ?: "", latencyMs = latency?.takeIf { it > 0 })
     }
 
     private fun sceneKind(name: String): SceneKind {
@@ -307,10 +248,130 @@ class CoreEngine(
         }
     }
 
-    private inline fun <T> liveCall(block: () -> T): T = try { block() } catch (e: MihomoRest.HttpException) {
-        throw ZephyrException(if (e.status == 404) ErrorCode.GROUP_NOT_FOUND else ErrorCode.INTERNAL, e.message ?: "")
-    } catch (e: java.io.IOException) {
-        throw ZephyrException(ErrorCode.NOT_RUNNING, e.message ?: "controller unreachable")
+    /**
+     * Scenes while live: the profile's groups in config order, kind by name. Interim until core injects
+     * Zephyr's own scene groups into the runtime config (asked A, Issue #1); then only this changes.
+     */
+    private fun liveScenes(r: LivePort): List<Scene> {
+        val groups = r.groups()
+        val byName = groups.associateBy { it.name }
+        fun leaf(start: String?): String? { var cur = start; var hops = 0; while (cur != null && hops++ < 8) { cur = byName[cur]?.selected ?: return cur }; return cur }
+        return groups.map { g ->
+            val l = leaf(g.selected) ?: "DIRECT"
+            Scene(
+                id = g.name, kind = sceneKind(g.name), name = g.name, available = g.memberCount,
+                selected = summary(l, null, null),
+                source = if (g.type == GroupType.SELECT) SceneSource.SUBSCRIPTION_GROUP else SceneSource.AUTO,
+                testedAt = g.testedAt,
+            )
+        }
+    }
+
+    override fun scenes(): Flow<List<Scene>> =
+        switching({ r -> polling(r, tick * 3) { liveScenes(it) }.distinctUntilChanged() }, { fallback.scenes() }, emptyList())
+
+    override suspend fun sceneCandidates(sceneId: String, region: String?): List<NodeSummary> {
+        val r = live() ?: return fallback.sceneCandidates(sceneId, region)
+        return withContext(io) { liveCall(ErrorCode.SCENE_NOT_FOUND) { r.members(sceneId, 0, 500) } }
+            .filterNot { LiveNames.isBuiltin(it.name) }.map { summary(it.name, it.type, it.latencyMs) }
+            .filter { region == null || it.region == region }
+            .sortedWith(compareBy(nullsLast()) { it.latencyMs }).take(50)
+    }
+
+    override suspend fun previewSceneChange(sceneId: String, nodeId: NodeId): ExitChange {
+        val r = live() ?: return fallback.previewSceneChange(sceneId, nodeId)
+        val scene = withContext(io) { liveCall { liveScenes(r) } }.firstOrNull { it.id == sceneId } ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
+        val to = names[nodeId] ?: throw ZephyrException(ErrorCode.NODE_NOT_FOUND, "$nodeId")
+        return ExitChange(sceneId, scene.selected.region, null, LiveNames.regionOf(to), null)
+    }
+
+    override suspend fun applySceneChange(sceneId: String, nodeId: NodeId) {
+        if (live() == null) return fallback.applySceneChange(sceneId, nodeId)
+        selectInGroup(sceneId, nodeId)
+    }
+
+    override suspend fun retestScene(sceneId: String): Scene {
+        val r = live() ?: return fallback.retestScene(sceneId)
+        testGroup(sceneId)
+        return withContext(io) { liveCall { liveScenes(r) } }.firstOrNull { it.id == sceneId } ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
+    }
+
+    override fun policyGroups(): Flow<List<PolicyGroup>> = switching({ r ->
+        polling(r, tick * 3) { p -> p.groups().map { PolicyGroup(it.name, it.type, it.selected, it.memberCount, it.testedAt) } }.distinctUntilChanged()
+    }, { fallback.policyGroups() }, emptyList())
+
+    override suspend fun groupMembers(group: String, offset: Int, limit: Int): NodePage {
+        val r = live() ?: return fallback.groupMembers(group, offset, limit)
+        return withContext(io) {
+            val total = liveCall { r.groups() }.firstOrNull { it.name == group }?.memberCount ?: throw ZephyrException(ErrorCode.GROUP_NOT_FOUND, group)
+            val rows = liveCall(ErrorCode.GROUP_NOT_FOUND) { r.members(group, offset, limit.coerceIn(0, 500)) }.map { summary(it.name, it.type, it.latencyMs) }
+            NodePage(rows, offset.toLong(), total.toLong())
+        }
+    }
+
+    override suspend fun selectInGroup(group: String, nodeId: NodeId) {
+        val r = live() ?: return fallback.selectInGroup(group, nodeId)
+        val name = names[nodeId] ?: throw ZephyrException(ErrorCode.NODE_NOT_FOUND, nodeId.toString())
+        withContext(io) { liveCall(ErrorCode.GROUP_NOT_FOUND) { r.select(group, name) } }
+    }
+
+    override suspend fun testGroup(group: String) {
+        val r = live() ?: return fallback.testGroup(group)
+        val res = withContext(io) { liveCall(ErrorCode.GROUP_NOT_FOUND) { r.test(group, LivePort.TEST_URL, 5_000) } }
+        val now = clock()
+        liveLatency.tryEmit(res.map { LatencyUpdate(LiveNames.idOf(it.name).also { id -> names[id] = it.name }, it.latencyMs ?: -1, now) })
+    }
+
+    override fun latencyUpdates(): Flow<List<LatencyUpdate>> = merge(fallback.latencyUpdates(), liveLatency)
+
+    override suspend fun setMode(mode: ProxyMode) {
+        live()?.let { r -> withContext(io) { liveCall { r.setMode(mode.name.lowercase()) } } }
+        fallback.setMode(mode)
+    }
+
+    override fun traffic(): Flow<TrafficSample> = switching({ _ ->
+        flow { while (true) { Mihomo.traffic()?.let { emit(TrafficSample(clock(), it.upBps, it.downBps)) }; delay(tick) } }.flowOn(io)
+    }, { fallback.traffic() }, TrafficSample(0, 0, 0))
+
+    private fun conn(c: LivePort.Conn) = ConnectionInfo(
+        id = c.id, host = c.host, app = c.app, scene = c.scene, node = if (c.node == "DIRECT") "直连" else c.node,
+        upBytes = c.up, downBytes = c.down, startedAt = c.startedAt,
+    )
+
+    override fun activeConnections(): Flow<List<ConnectionInfo>> =
+        switching({ r -> polling(r, tick) { it.connections(200).map(::conn) } }, { fallback.activeConnections() }, emptyList())
+
+    override suspend fun closeConnection(id: String) { live()?.let { r -> withContext(io) { liveCall { r.close(id) } } } ?: fallback.closeConnection(id) }
+    override suspend fun closeAll() { live()?.let { r -> withContext(io) { liveCall { r.closeAll() } } } ?: fallback.closeAll() }
+
+    override fun recentHosts(limit: Int): Flow<List<ConnectionInfo>> = switching({ r ->
+        polling(r, tick) { p ->
+            p.hosts(limit.coerceIn(0, 50)).map { h ->
+                // ConnectionInfo is the contract's row type for "最近连接"; total bytes go in downBytes.
+                ConnectionInfo(id = h.host, host = h.host, scene = h.scene, node = if (h.node == "DIRECT") "直连" else h.node, upBytes = 0, downBytes = h.totalBytes, startedAt = h.lastSeenAt)
+            }
+        }
+    }, { fallback.recentHosts(limit) }, emptyList())
+
+    override suspend fun connectionTrace(host: String): ConnectionTrace {
+        val r = live() ?: return fallback.connectionTrace(host)
+        val t = withContext(io) { liveCall { r.trace(host) } }
+        val direct = t.node == "DIRECT"
+        return ConnectionTrace(
+            host = t.host, lastSeenAt = t.lastSeenAt, connections = t.connections, totalBytes = t.totalBytes, rule = t.rule,
+            scene = t.scene, node = if (direct) null else summary(t.node, null, null),
+            via = t.chain.drop(1).dropLast(1).takeIf { it.isNotEmpty() }?.joinToString(" · "),
+        )
+    }
+
+    override suspend fun overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Boolean) {
+        if (live() == null) return fallback.overrideHost(host, target, sceneId, persistent)
+        // Needs the Zephyr override rule layer in the runtime config (contract §13); not in core yet.
+        throw ZephyrException(ErrorCode.INTERNAL, "override not available yet")
+    }
+
+    private inline fun <T> liveCall(notFound: ErrorCode = ErrorCode.NODE_NOT_FOUND, block: () -> T): T = try { block() } catch (e: MobileException) {
+        throw ZephyrException(ZephyrError(if (e is MobileException.NotFound) notFound else code(e), e.message ?: e.javaClass.simpleName))
     }
 
     // ── Nodes ──────────────────────────────────────────────────────────────────────────────────────
@@ -380,12 +441,18 @@ class CoreEngine(
     }
 
     private inline fun <T> wrap(block: () -> T): T = try { block() } catch (e: MobileException) {
-        val code = when (e) {
-            is MobileException.NotFound -> ErrorCode.NODE_NOT_FOUND
-            is MobileException.Invalid -> ErrorCode.RULE_INPUT_INVALID
-            else -> ErrorCode.INTERNAL
-        }
-        throw ZephyrException(ZephyrError(code, e.message ?: e.javaClass.simpleName))
+        throw ZephyrException(ZephyrError(code(e), e.message ?: e.javaClass.simpleName))
+    }
+
+    private fun code(e: MobileException) = when (e) {
+        is MobileException.NotFound -> ErrorCode.NODE_NOT_FOUND
+        is MobileException.Invalid, is MobileException.RuleInputInvalid -> ErrorCode.RULE_INPUT_INVALID
+        is MobileException.SubscriptionInvalid -> ErrorCode.SUBSCRIPTION_INVALID
+        is MobileException.SubscriptionNotFound -> ErrorCode.SUBSCRIPTION_NOT_FOUND
+        is MobileException.StaleToken -> ErrorCode.STALE_TOKEN
+        is MobileException.NotRunning -> ErrorCode.NOT_RUNNING
+        is MobileException.Cancelled -> ErrorCode.CANCELLED
+        else -> ErrorCode.INTERNAL
     }
 
     companion object {
