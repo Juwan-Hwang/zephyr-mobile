@@ -21,7 +21,7 @@ struct TraceView: View {
     /// 该域名在"刚才"里的聚合（无活动连接时为 nil）。
     let recent: RecentHost?
     /// 从列表进入时显示"‹ 刚才"返回；深链直达时为 nil。
-    let onBack: (() -> Void)?
+    let onBack: (@MainActor () -> Void)?
 
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -64,8 +64,10 @@ struct TraceView: View {
 
     // MARK: 区块
 
-    private func backButton(_ action: @escaping () -> Void) -> some View {
-        Button(action: action) {
+    private func backButton(_ action: @escaping @MainActor () -> Void) -> some View {
+        Button {
+            action()
+        } label: {
             HStack(spacing: ZTokens.Space.n1) {
                 Image(systemName: "chevron.left").font(.footnote.weight(.semibold))
                 Text(verbatim: "刚才")
