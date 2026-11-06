@@ -47,4 +47,13 @@ enum EngineFactory {
         let engine = MockEngine(seed: environment.seed, clock: clock)
         return Built(engine: engine, now: { clock.now() }, environment: environment)
     }
+
+    /// 启动系统隧道前：真核心时生成 mihomo 配置到 App Group（PacketTunnel 注入 fd 后启动）。Mock 时无事可做。
+    static func prepareTunnel(engine: any ZephyrEngine) async throws {
+        #if canImport(ZephyrCore)
+        guard let core = engine as? CoreEngine else { return }
+        try await core.writeTunnelConfig(to: AppGroup.coreDirectory.appendingPathComponent("config.yaml"),
+                                         controllerSocket: AppGroup.controllerSocketPath)
+        #endif
+    }
 }

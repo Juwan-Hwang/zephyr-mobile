@@ -426,14 +426,42 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         return try await run(.subscriptionInvalid) { try c.runtimeConfig(subscriptionId: subscriptionId, options: options) }
     }
 
+    /// iOS 隧道启动前由 App 调用：当前订阅 + 设置 → mihomo YAML，原子写到 `url`（App Group/core/config.yaml）。
+    /// tun.file-descriptor 写哨兵 -1，由 PacketTunnel 拿到 utun fd 后替换（扩展不链接 Rust 核心，省 NE 内存）。
+    public func writeTunnelConfig(to url: URL, controllerSocket: String) async throws {
+        guard let c = core else { throw ZephyrError(code: .notRunning, message: "core unavailable") }
+        guard let id = await runQuiet({ c.subscriptions() }).first?.id else {
+            throw ZephyrError(code: .subscriptionInvalid, message: "请先添加订阅")
+        }
+        var settingsIterator = fallback.settings().makeAsyncIterator()
+        let s = await settingsIterator.next()
+        var modeIterator = fallback.connectionState().makeAsyncIterator()
+        let mode = await modeIterator.next()?.mode ?? .rule
+        let options = CoreEngine.runtimeOptions(settings: s, mode: mode, controllerSocket: controllerSocket)
+        let yaml = try await run(.subscriptionInvalid) { try c.runtimeConfig(subscriptionId: id, options: options) }
+        try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try Data(yaml.utf8).write(to: url, options: .atomic)
+    }
+
+    static func runtimeOptions(settings s: ZephyrKit.Settings?, mode: ZephyrKit.ProxyMode, controllerSocket: String) -> RuntimeOptions {
+        let dns = s?.dns ?? DnsSettings()
+        let tun = s?.tun ?? TunSettings()
+        let stack: TunStackKind = switch tun.stack { case .system: .system; case .gvisor: .gvisor; case .mixed: .mixed }
+        let coreMode: ProxyMode = switch mode { case .rule: .rule; case .global: .global; case .direct: .direct }
+        return RuntimeOptions(
+            dns: DnsConfig(fakeIp: dns.fakeIp, nameservers: dns.nameservers, fallback: dns.fallback, ipv6: dns.ipv6),
+            tun: TunConfig(stack: stack, mtu: tun.mtu, ipv6: tun.ipv6, strictRoute: tun.strictRoute, fileDescriptor: -1),
+            mode: coreMode, controllerSocket: controllerSocket, findProcess: false, logLevel: "warning")
+    }
+
     // MARK: - §8 连接、日志、设置、存储
 
     public func activeConnections() -> AsyncStream<[ZephyrKit.ConnectionInfo]> { fallback.activeConnections() }
     public func closeConnection(id: String) async throws { try await fallback.closeConnection(id: id) }
     public func closeAll() async throws { try await fallback.closeAll() }
     public func logs(minLevel: LogLevel) -> AsyncStream<LogLine> { fallback.logs(minLevel: minLevel) }
-    public func settings() -> AsyncStream<Settings> { fallback.settings() }
-    public func updateSettings(patch: Settings) async throws { try await fallback.updateSettings(patch: patch) }
+    public func settings() -> AsyncStream<ZephyrKit.Settings> { fallback.settings() }
+    public func updateSettings(patch: ZephyrKit.Settings) async throws { try await fallback.updateSettings(patch: patch) }
 
     public func storage() async -> ZephyrKit.StorageInfo {
         guard let c = core else { return await fallback.storage() }

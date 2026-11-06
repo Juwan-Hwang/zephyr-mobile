@@ -343,3 +343,11 @@ record SceneFailover { failed: NodeRow, failureCount: UInt32, apply: SceneApply 
 
 ### 规则层 0 由核心保留（v0.2 追加）
 `rules/000.zr` = 第 1 层"Zephyr 覆写"，核心在 overrideHost / setSceneException / 首次 applySceneChange 后自动重编并热加载，内容与 runtimeConfig 前插的规则一致；策略写场景 id（"ai"）或 DIRECT。平台编译自己的层请从索引 1 开始。
+
+### §14.x iOS 隧道配置交接（2026-11-07 追加）
+
+- iOS 的 PacketTunnel 不链接 Rust 核心（NE 约 50 MB 内存上限）。App 在 `startVPNTunnel` 之前调用 `runtimeConfig`，`TunConfig.fileDescriptor = -1`，结果原子写到 App Group `core/config.yaml`。
+- 扩展拿到 utun fd 后，把唯一一行 `file-descriptor: -1` 替换为真实 fd，再 `zm_start(home=App Group/core, yaml, ctl=App Group/zm.sock)`。找不到哨兵视为配置缺失（`subscription_invalid`）。
+- 模式切换：扩展改 YAML 顶层 `mode:` 行后 `zm_reload`，不重建 TUN。
+- 订阅更新或场景切换需要重载时，App 先重写 `config.yaml`，再发 `TunnelRequest.reloadConfig`。
+- 实时数据（策略组、连接、延迟）：App 经 `MihomoClient(socketPath: App Group/zm.sock)` 读取。

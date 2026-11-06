@@ -34,7 +34,8 @@ final class AppServices {
     func install(on model: AppModel) {
         ConnectionControl.inProcess = ModelConnectionControl(model: model)
         if environment.usesSystemTunnel {
-            model.beforeConnect = {
+            model.beforeConnect = { [engine] in
+                try await EngineFactory.prepareTunnel(engine: engine)
                 try await TunnelController.shared.setConnected(true)
             }
         }
