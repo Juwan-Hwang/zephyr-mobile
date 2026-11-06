@@ -399,10 +399,13 @@ class CoreEngine(
         return withContext(io) { wrap { c.nodeIndex() }.let { NodeIndex(it.total.toLong(), it.sections.map(::section), tested) } }
     }
 
+    private val queries = java.util.concurrent.ConcurrentHashMap<Long, String>()
+    private val remapped = java.util.concurrent.ConcurrentHashMap<Long, Long>()
+
     override suspend fun queryNodes(query: String): NodeQueryResult {
         val c = nodes() ?: return if (mockData) fallback.queryNodes(query) else NodeQueryResult(query, 0, emptyList(), emptyList(), 0, 0)
         return withContext(io) {
-            wrap { c.queryNodes(query) }.let {
+            wrap { c.queryNodes(query) }.also { queries[it.token.toLong()] = query }.let {
                 NodeQueryResult(it.query, it.total.toLong(), it.sections.map(::section), it.highlights, it.tookMicros.toLong(), it.token.toLong())
             }
         }
@@ -411,7 +414,15 @@ class CoreEngine(
     override suspend fun nodeRows(token: Long, offset: Long, limit: Int): NodePage {
         val c = nodes() ?: return if (mockData) fallback.nodeRows(token, offset, limit) else NodePage(emptyList(), offset, 0)
         return withContext(io) {
-            wrap { c.nodeRows(token.toULong(), offset.toULong(), limit.toUInt()) }.let { p ->
+            val t = remapped[token] ?: token
+            val p = try { c.nodeRows(t.toULong(), offset.toULong(), limit.toUInt()) } catch (e: MobileException.StaleToken) {
+                // Store was rebuilt under the list (subscription update): re-run the same query once, keep scrolling.
+                val q = queries[token] ?: throw ZephyrException(ErrorCode.STALE_TOKEN, e.message ?: "stale")
+                val fresh = wrap { c.queryNodes(q) }.token.toLong()
+                queries[fresh] = q; remapped[token] = fresh
+                wrap { c.nodeRows(fresh.toULong(), offset.toULong(), limit.toUInt()) }
+            } catch (e: MobileException) { wrap { throw e } }
+            p.let { p ->
                 NodePage(p.rows.map(::row), p.offset.toLong(), p.total.toLong())
             }
         }

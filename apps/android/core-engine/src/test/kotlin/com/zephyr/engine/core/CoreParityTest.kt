@@ -78,6 +78,10 @@ class CoreParityTest {
         val scenes = core.scenes().first()
         println("scenes: " + scenes.joinToString { "${it.id}/${it.kind}/${it.name}/${it.selected.name}/${it.available}" })
         kotlin.test.assertTrue(scenes.isNotEmpty(), "core scenes")
+        val oldQ = core.queryNodes("香港")
+        val sub2 = core.importSubscription(com.zephyr.engine.ImportSource.CLIPBOARD, yaml.replace("hk1", "hk2").replace("香港 HKT 01", "香港 HKT 09"))
+        val after = core.nodeRows(oldQ.token, 0, 10) // rebuilt store → stale token → silent requery
+        assertEquals(2L, after.total, "requeried after rebuild")
         val pick = core.queryNodes("东京").let { q -> core.nodeRows(q.token, 0, 1).rows.single() }
         val x = core.previewSceneChange(scenes[0].id, pick.id)
         assertEquals("JP", x.toRegion)
@@ -85,6 +89,8 @@ class CoreParityTest {
         assertEquals("日本 东京 NTT 01", core.scenes().first().first { it.id == scenes[0].id }.selected.name)
         core.overrideHost("claude.ai", com.zephyr.engine.TraceTarget.DIRECT, null, persistent = false)
         core.deleteSubscription(sub.id)
+        assertEquals(sub2.id, core.activeSubscription(), "active falls over to the remaining subscription")
+        core.deleteSubscription(sub2.id)
         assertEquals(null, core.activeSubscription())
     }
 
