@@ -1,0 +1,95 @@
+// 首页"场景"区（原型 #scenesWrap / #globalWrap）。
+//   规则 / 直连模式：场景卡（AI / 视频 / 其他），确认卡插在被切换的场景下方。
+//   全局模式：全局模式卡（原型 12）。
+//   未连接：卡片整体 55% 透明度（原型 `.off-state .rows .row{opacity:.55}`），仍可浏览与切换。
+
+import SwiftUI
+import ZephyrDesign
+import ZephyrKit
+
+struct ScenesSection: View {
+    @Environment(AppModel.self) private var model
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HomeSectionHeader(title: "场景", trailing: model.connection.mode == .global ? nil : model.scenesTestedText)
+            if model.connection.mode == .global {
+                GlobalModeCard()
+            } else if model.scenes.isEmpty {
+                ZCard { Text(verbatim: "添加订阅后，这里会显示 AI、视频等场景。").zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary) }
+                    .padding(.horizontal, HMetrics.cardInset)
+            } else {
+                card
+            }
+        }
+        .animation(ZMotion.slow, value: model.connection.mode)
+    }
+
+    private var card: some View {
+        let firstScrubbable = model.scenes.first(where: Self.isScrubbable)?.id
+        return ZCard(padding: 0, cornerRadius: HMetrics.cardRadius) {
+            VStack(spacing: 0) {
+                ForEach(Array(model.scenes.enumerated()), id: \.element.id) { idx, scene in
+                    if idx > 0 { ZDivider() }
+                    let pending = model.pendingChange?.sceneId == scene.id ? model.pendingChange : nil
+                    SceneRow(scene: scene,
+                             scrubbable: Self.isScrubbable(scene),
+                             showsCoach: scene.id == firstScrubbable && model.isConnected,
+                             isProbing: model.retesting.contains(scene.id),
+                             pendingTarget: pending?.to)
+                    if let pending {
+                        SceneChangeConfirm(change: pending, sceneName: scene.name)
+                            .transition(.opacity.combined(with: .move(edge: .top)))
+                    }
+                }
+            }
+            .animation(ZMotion.slow, value: model.pendingChange)
+        }
+        .opacity(model.isOn ? 1 : 0.55)
+        .padding(.horizontal, HMetrics.cardInset)
+    }
+
+    /// 订阅分组场景不参与 Zephyr 优选，不能左右滑动换地区。
+    static func isScrubbable(_ s: Scene) -> Bool { s.source != .subscriptionGroup }
+}
+
+/// 首页区块标题（原型 `.sec`）：左标题、右说明（可点）。待替换为 D 的 ZSectionHeader。
+struct HomeSectionHeader: View {
+    let title: String
+    var trailing: String?
+    var action: (() -> Void)?
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(verbatim: title)
+                .zType(.footnote).fontWeight(.medium)
+                .foregroundStyle(ZTokens.Colors.textSecondary)
+                .accessibilityAddTraits(.isHeader)
+            Spacer(minLength: ZTokens.Space.n3)
+            if let trailing {
+                if let action {
+                    Button(action: action) {
+                        HStack(spacing: ZTokens.Space.n1) {
+                            Text(verbatim: trailing)
+                            Image(systemName: "chevron.right").font(.caption2)
+                        }
+                        .frame(minHeight: ZTokens.Layout.touchMinIos)
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(ZPressStyle(haptic: .light))
+                    .zType(.footnote)
+                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                } else {
+                    Text(verbatim: trailing).zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary)
+                }
+            }
+        }
+        .padding(.horizontal, HMetrics.homeInset)
+        .padding(.top, HMetrics.sectionTop)
+        .padding(.bottom, ZTokens.Space.n3)
+    }
+}
+
+#Preview("场景") {
+    HPreview(model: .preview()) { ScrollView { ScenesSection() } }
+}
