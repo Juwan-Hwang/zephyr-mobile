@@ -779,6 +779,12 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
+
+
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -805,11 +811,15 @@ internal interface UniffiLib : Library {
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_constructor_mobilecore_new(`dataDir`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Pointer
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_cached_latencies(`ptr`: Pointer,`ids`: RustBuffer.ByValue,`nowMillis`: Long,`maxAgeMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_compile_rule_layer(`ptr`: Pointer,`index`: Int,`name`: RustBuffer.ByValue,`kind`: RustBuffer.ByValue,`note`: RustBuffer.ByValue,`defaultPolicy`: RustBuffer.ByValue,`text`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_delete_subscription(`ptr`: Pointer,`id`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_due_subscriptions(`ptr`: Pointer,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_fastest_nodes(`ptr`: Pointer,`query`: RustBuffer.ByValue,`limit`: Int,`nowMillis`: Long,`maxAgeMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_import_subscription(`ptr`: Pointer,`name`: RustBuffer.ByValue,`url`: RustBuffer.ByValue,`fetched`: RustBuffer.ByValue,`autoUpdateHours`: Int,`progress`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
@@ -833,6 +843,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_nodes_with_progress(`ptr`: Pointer,`sources`: RustBuffer.ByValue,`progress`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_record_latencies(`ptr`: Pointer,`samples`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_stats(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_subscription_fetch_url(`ptr`: Pointer,`id`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -963,11 +975,15 @@ internal interface UniffiLib : Library {
     ): Unit
     fun uniffi_zephyr_mobile_core_checksum_func_core_greeting(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_cached_latencies(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_layer(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_delete_subscription(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_due_subscriptions(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription(
     ): Short
@@ -990,6 +1006,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_nodes(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_nodes_with_progress(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_latencies(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats(
     ): Short
@@ -1027,6 +1045,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_func_core_greeting() != 3481.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_cached_latencies() != 41970.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_layer() != 45440.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -1034,6 +1055,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_due_subscriptions() != 39270.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes() != 4146.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription() != 45715.toShort()) {
@@ -1067,6 +1091,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_nodes_with_progress() != 20747.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_latencies() != 22667.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033.toShort()) {
@@ -1546,6 +1573,11 @@ private class JavaLangRefCleanable(
 public interface MobileCoreInterface {
     
     /**
+     * 按 id 取缓存延迟：None = 未测或超过 max_age_millis（<=0 不过期）；-1 = 超时。顺序与 ids 一致。
+     */
+    fun `cachedLatencies`(`ids`: List<kotlin.ULong>, `nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long): List<kotlin.Int?>
+    
+    /**
      * 编译一层规则（文本为 Clash 规则行或规则集 payload）。index 决定匹配顺序。
      */
     fun `compileRuleLayer`(`index`: kotlin.UInt, `name`: kotlin.String, `kind`: LayerKind, `note`: kotlin.String, `defaultPolicy`: kotlin.String, `text`: kotlin.String): RuleLayerInfo
@@ -1556,6 +1588,12 @@ public interface MobileCoreInterface {
      * 到了自动更新时间的订阅 id（后台任务：逐个拉取后 update_subscription）。
      */
     fun `dueSubscriptions`(`nowMillis`: kotlin.Long): List<kotlin.String>
+    
+    /**
+     * 查询结果里已测速节点按延迟升序取前 limit 个（超时排最后，未测不出现）。
+     * 场景候选：query = 地区代码（"JP"）；命令"最快节点"：query = 用户输入。
+     */
+    fun `fastestNodes`(`query`: kotlin.String, `limit`: kotlin.UInt, `nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long): List<RankedNode>
     
     /**
      * 导入并重建节点库。url 可空（剪贴板/文件导入）。
@@ -1602,6 +1640,11 @@ public interface MobileCoreInterface {
      * 同 rebuild_nodes，带进度与取消（UI 显示"正在建立索引 62%"；回调返回 false 取消，旧库保持不变）。
      */
     fun `rebuildNodesWithProgress`(`sources`: List<SubscriptionSource>, `progress`: BuildProgress): BuildReport
+    
+    /**
+     * 平台/mihomo 测速结果写入（UI 同时直接推送，不必等这里）。
+     */
+    fun `recordLatencies`(`samples`: List<LatencySample>)
     
     fun `ruleStats`(): RuleStats
     
@@ -1714,6 +1757,21 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
 
     
     /**
+     * 按 id 取缓存延迟：None = 未测或超过 max_age_millis（<=0 不过期）；-1 = 超时。顺序与 ids 一致。
+     */override fun `cachedLatencies`(`ids`: List<kotlin.ULong>, `nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long): List<kotlin.Int?> {
+            return FfiConverterSequenceOptionalInt.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_cached_latencies(
+        it, FfiConverterSequenceULong.lower(`ids`),FfiConverterLong.lower(`nowMillis`),FfiConverterLong.lower(`maxAgeMillis`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * 编译一层规则（文本为 Clash 规则行或规则集 payload）。index 决定匹配顺序。
      */
     @Throws(MobileException::class)override fun `compileRuleLayer`(`index`: kotlin.UInt, `name`: kotlin.String, `kind`: LayerKind, `note`: kotlin.String, `defaultPolicy`: kotlin.String, `text`: kotlin.String): RuleLayerInfo {
@@ -1749,6 +1807,23 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_due_subscriptions(
         it, FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 查询结果里已测速节点按延迟升序取前 limit 个（超时排最后，未测不出现）。
+     * 场景候选：query = 地区代码（"JP"）；命令"最快节点"：query = 用户输入。
+     */
+    @Throws(MobileException::class)override fun `fastestNodes`(`query`: kotlin.String, `limit`: kotlin.UInt, `nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long): List<RankedNode> {
+            return FfiConverterSequenceTypeRankedNode.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_fastest_nodes(
+        it, FfiConverterString.lower(`query`),FfiConverterUInt.lower(`limit`),FfiConverterLong.lower(`nowMillis`),FfiConverterLong.lower(`maxAgeMillis`),_status)
 }
     }
     )
@@ -1920,6 +1995,21 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     }
     )
     }
+    
+
+    
+    /**
+     * 平台/mihomo 测速结果写入（UI 同时直接推送，不必等这里）。
+     */
+    @Throws(MobileException::class)override fun `recordLatencies`(`samples`: List<LatencySample>)
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_record_latencies(
+        it, FfiConverterSequenceTypeLatencySample.lower(`samples`),_status)
+}
+    }
+    
     
 
     override fun `ruleStats`(): RuleStats {
@@ -2118,6 +2208,48 @@ public object FfiConverterTypeFetchedSubscription: FfiConverterRustBuffer<Fetche
             FfiConverterString.write(value.`body`, buf)
             FfiConverterOptionalString.write(value.`userinfo`, buf)
             FfiConverterLong.write(value.`nowMillis`, buf)
+    }
+}
+
+
+
+data class LatencySample (
+    var `id`: kotlin.ULong, 
+    /**
+     * 毫秒；-1 = 超时
+     */
+    var `ms`: kotlin.Int, 
+    /**
+     * 毫秒时间戳
+     */
+    var `at`: kotlin.Long
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeLatencySample: FfiConverterRustBuffer<LatencySample> {
+    override fun read(buf: ByteBuffer): LatencySample {
+        return LatencySample(
+            FfiConverterULong.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterLong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: LatencySample) = (
+            FfiConverterULong.allocationSize(value.`id`) +
+            FfiConverterInt.allocationSize(value.`ms`) +
+            FfiConverterLong.allocationSize(value.`at`)
+    )
+
+    override fun write(value: LatencySample, buf: ByteBuffer) {
+            FfiConverterULong.write(value.`id`, buf)
+            FfiConverterInt.write(value.`ms`, buf)
+            FfiConverterLong.write(value.`at`, buf)
     }
 }
 
@@ -2333,6 +2465,45 @@ public object FfiConverterTypeNodeRow: FfiConverterRustBuffer<NodeRow> {
             FfiConverterString.write(value.`protocol`, buf)
             FfiConverterOptionalFloat.write(value.`multiplier`, buf)
             FfiConverterUShort.write(value.`subscription`, buf)
+    }
+}
+
+
+
+/**
+ * 节点 + 延迟（场景候选 / 最快节点）。
+ */
+data class RankedNode (
+    var `row`: NodeRow, 
+    var `latencyMs`: kotlin.Int, 
+    var `testedAt`: kotlin.Long
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeRankedNode: FfiConverterRustBuffer<RankedNode> {
+    override fun read(buf: ByteBuffer): RankedNode {
+        return RankedNode(
+            FfiConverterTypeNodeRow.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterLong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: RankedNode) = (
+            FfiConverterTypeNodeRow.allocationSize(value.`row`) +
+            FfiConverterInt.allocationSize(value.`latencyMs`) +
+            FfiConverterLong.allocationSize(value.`testedAt`)
+    )
+
+    override fun write(value: RankedNode, buf: ByteBuffer) {
+            FfiConverterTypeNodeRow.write(value.`row`, buf)
+            FfiConverterInt.write(value.`latencyMs`, buf)
+            FfiConverterLong.write(value.`testedAt`, buf)
     }
 }
 
@@ -3136,6 +3307,38 @@ public object FfiConverterOptionalUInt: FfiConverterRustBuffer<kotlin.UInt?> {
 /**
  * @suppress
  */
+public object FfiConverterOptionalInt: FfiConverterRustBuffer<kotlin.Int?> {
+    override fun read(buf: ByteBuffer): kotlin.Int? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterInt.read(buf)
+    }
+
+    override fun allocationSize(value: kotlin.Int?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterInt.allocationSize(value)
+        }
+    }
+
+    override fun write(value: kotlin.Int?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterInt.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalULong: FfiConverterRustBuffer<kotlin.ULong?> {
     override fun read(buf: ByteBuffer): kotlin.ULong? {
         if (buf.get().toInt() == 0) {
@@ -3328,6 +3531,34 @@ public object FfiConverterOptionalTypeBuildProgress: FfiConverterRustBuffer<Buil
 /**
  * @suppress
  */
+public object FfiConverterSequenceULong: FfiConverterRustBuffer<List<kotlin.ULong>> {
+    override fun read(buf: ByteBuffer): List<kotlin.ULong> {
+        val len = buf.getInt()
+        return List<kotlin.ULong>(len) {
+            FfiConverterULong.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<kotlin.ULong>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterULong.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<kotlin.ULong>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterULong.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterSequenceString: FfiConverterRustBuffer<List<kotlin.String>> {
     override fun read(buf: ByteBuffer): List<kotlin.String> {
         val len = buf.getInt()
@@ -3356,6 +3587,34 @@ public object FfiConverterSequenceString: FfiConverterRustBuffer<List<kotlin.Str
 /**
  * @suppress
  */
+public object FfiConverterSequenceTypeLatencySample: FfiConverterRustBuffer<List<LatencySample>> {
+    override fun read(buf: ByteBuffer): List<LatencySample> {
+        val len = buf.getInt()
+        return List<LatencySample>(len) {
+            FfiConverterTypeLatencySample.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<LatencySample>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeLatencySample.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<LatencySample>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeLatencySample.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterSequenceTypeNodeRow: FfiConverterRustBuffer<List<NodeRow>> {
     override fun read(buf: ByteBuffer): List<NodeRow> {
         val len = buf.getInt()
@@ -3374,6 +3633,34 @@ public object FfiConverterSequenceTypeNodeRow: FfiConverterRustBuffer<List<NodeR
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeNodeRow.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeRankedNode: FfiConverterRustBuffer<List<RankedNode>> {
+    override fun read(buf: ByteBuffer): List<RankedNode> {
+        val len = buf.getInt()
+        return List<RankedNode>(len) {
+            FfiConverterTypeRankedNode.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<RankedNode>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeRankedNode.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<RankedNode>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeRankedNode.write(it, buf)
         }
     }
 }
@@ -3486,6 +3773,34 @@ public object FfiConverterSequenceTypeSubscriptionSource: FfiConverterRustBuffer
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeSubscriptionSource.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceOptionalInt: FfiConverterRustBuffer<List<kotlin.Int?>> {
+    override fun read(buf: ByteBuffer): List<kotlin.Int?> {
+        val len = buf.getInt()
+        return List<kotlin.Int?>(len) {
+            FfiConverterOptionalInt.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<kotlin.Int?>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterOptionalInt.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<kotlin.Int?>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterOptionalInt.write(it, buf)
         }
     }
 }

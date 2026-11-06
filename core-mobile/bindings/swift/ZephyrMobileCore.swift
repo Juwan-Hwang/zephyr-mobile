@@ -579,6 +579,11 @@ fileprivate struct FfiConverterString: FfiConverter {
 public protocol MobileCoreProtocol : AnyObject {
     
     /**
+     * 按 id 取缓存延迟：None = 未测或超过 max_age_millis（<=0 不过期）；-1 = 超时。顺序与 ids 一致。
+     */
+    func cachedLatencies(ids: [UInt64], nowMillis: Int64, maxAgeMillis: Int64)  -> [Int32?]
+    
+    /**
      * 编译一层规则（文本为 Clash 规则行或规则集 payload）。index 决定匹配顺序。
      */
     func compileRuleLayer(index: UInt32, name: String, kind: LayerKind, note: String, defaultPolicy: String, text: String) throws  -> RuleLayerInfo
@@ -589,6 +594,12 @@ public protocol MobileCoreProtocol : AnyObject {
      * 到了自动更新时间的订阅 id（后台任务：逐个拉取后 update_subscription）。
      */
     func dueSubscriptions(nowMillis: Int64)  -> [String]
+    
+    /**
+     * 查询结果里已测速节点按延迟升序取前 limit 个（超时排最后，未测不出现）。
+     * 场景候选：query = 地区代码（"JP"）；命令"最快节点"：query = 用户输入。
+     */
+    func fastestNodes(query: String, limit: UInt32, nowMillis: Int64, maxAgeMillis: Int64) throws  -> [RankedNode]
     
     /**
      * 导入并重建节点库。url 可空（剪贴板/文件导入）。
@@ -635,6 +646,11 @@ public protocol MobileCoreProtocol : AnyObject {
      * 同 rebuild_nodes，带进度与取消（UI 显示"正在建立索引 62%"；回调返回 false 取消，旧库保持不变）。
      */
     func rebuildNodesWithProgress(sources: [SubscriptionSource], progress: BuildProgress) throws  -> BuildReport
+    
+    /**
+     * 平台/mihomo 测速结果写入（UI 同时直接推送，不必等这里）。
+     */
+    func recordLatencies(samples: [LatencySample]) throws 
     
     func ruleStats()  -> RuleStats
     
@@ -715,6 +731,19 @@ public convenience init(dataDir: String)throws  {
 
     
     /**
+     * 按 id 取缓存延迟：None = 未测或超过 max_age_millis（<=0 不过期）；-1 = 超时。顺序与 ids 一致。
+     */
+open func cachedLatencies(ids: [UInt64], nowMillis: Int64, maxAgeMillis: Int64) -> [Int32?] {
+    return try!  FfiConverterSequenceOptionInt32.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_cached_latencies(self.uniffiClonePointer(),
+        FfiConverterSequenceUInt64.lower(ids),
+        FfiConverterInt64.lower(nowMillis),
+        FfiConverterInt64.lower(maxAgeMillis),$0
+    )
+})
+}
+    
+    /**
      * 编译一层规则（文本为 Clash 规则行或规则集 payload）。index 决定匹配顺序。
      */
 open func compileRuleLayer(index: UInt32, name: String, kind: LayerKind, note: String, defaultPolicy: String, text: String)throws  -> RuleLayerInfo {
@@ -744,6 +773,21 @@ open func dueSubscriptions(nowMillis: Int64) -> [String] {
     return try!  FfiConverterSequenceString.lift(try! rustCall() {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_due_subscriptions(self.uniffiClonePointer(),
         FfiConverterInt64.lower(nowMillis),$0
+    )
+})
+}
+    
+    /**
+     * 查询结果里已测速节点按延迟升序取前 limit 个（超时排最后，未测不出现）。
+     * 场景候选：query = 地区代码（"JP"）；命令"最快节点"：query = 用户输入。
+     */
+open func fastestNodes(query: String, limit: UInt32, nowMillis: Int64, maxAgeMillis: Int64)throws  -> [RankedNode] {
+    return try  FfiConverterSequenceTypeRankedNode.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_fastest_nodes(self.uniffiClonePointer(),
+        FfiConverterString.lower(query),
+        FfiConverterUInt32.lower(limit),
+        FfiConverterInt64.lower(nowMillis),
+        FfiConverterInt64.lower(maxAgeMillis),$0
     )
 })
 }
@@ -866,6 +910,16 @@ open func rebuildNodesWithProgress(sources: [SubscriptionSource], progress: Buil
         FfiConverterCallbackInterfaceBuildProgress.lower(progress),$0
     )
 })
+}
+    
+    /**
+     * 平台/mihomo 测速结果写入（UI 同时直接推送，不必等这里）。
+     */
+open func recordLatencies(samples: [LatencySample])throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_record_latencies(self.uniffiClonePointer(),
+        FfiConverterSequenceTypeLatencySample.lower(samples),$0
+    )
+}
 }
     
 open func ruleStats() -> RuleStats {
@@ -1141,6 +1195,92 @@ public func FfiConverterTypeFetchedSubscription_lift(_ buf: RustBuffer) throws -
 #endif
 public func FfiConverterTypeFetchedSubscription_lower(_ value: FetchedSubscription) -> RustBuffer {
     return FfiConverterTypeFetchedSubscription.lower(value)
+}
+
+
+public struct LatencySample {
+    public var id: UInt64
+    /**
+     * 毫秒；-1 = 超时
+     */
+    public var ms: Int32
+    /**
+     * 毫秒时间戳
+     */
+    public var at: Int64
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(id: UInt64, 
+        /**
+         * 毫秒；-1 = 超时
+         */ms: Int32, 
+        /**
+         * 毫秒时间戳
+         */at: Int64) {
+        self.id = id
+        self.ms = ms
+        self.at = at
+    }
+}
+
+
+
+extension LatencySample: Equatable, Hashable {
+    public static func ==(lhs: LatencySample, rhs: LatencySample) -> Bool {
+        if lhs.id != rhs.id {
+            return false
+        }
+        if lhs.ms != rhs.ms {
+            return false
+        }
+        if lhs.at != rhs.at {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(ms)
+        hasher.combine(at)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeLatencySample: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> LatencySample {
+        return
+            try LatencySample(
+                id: FfiConverterUInt64.read(from: &buf), 
+                ms: FfiConverterInt32.read(from: &buf), 
+                at: FfiConverterInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: LatencySample, into buf: inout [UInt8]) {
+        FfiConverterUInt64.write(value.id, into: &buf)
+        FfiConverterInt32.write(value.ms, into: &buf)
+        FfiConverterInt64.write(value.at, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeLatencySample_lift(_ buf: RustBuffer) throws -> LatencySample {
+    return try FfiConverterTypeLatencySample.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeLatencySample_lower(_ value: LatencySample) -> RustBuffer {
+    return FfiConverterTypeLatencySample.lower(value)
 }
 
 
@@ -1578,6 +1718,83 @@ public func FfiConverterTypeNodeRow_lift(_ buf: RustBuffer) throws -> NodeRow {
 #endif
 public func FfiConverterTypeNodeRow_lower(_ value: NodeRow) -> RustBuffer {
     return FfiConverterTypeNodeRow.lower(value)
+}
+
+
+/**
+ * 节点 + 延迟（场景候选 / 最快节点）。
+ */
+public struct RankedNode {
+    public var row: NodeRow
+    public var latencyMs: Int32
+    public var testedAt: Int64
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(row: NodeRow, latencyMs: Int32, testedAt: Int64) {
+        self.row = row
+        self.latencyMs = latencyMs
+        self.testedAt = testedAt
+    }
+}
+
+
+
+extension RankedNode: Equatable, Hashable {
+    public static func ==(lhs: RankedNode, rhs: RankedNode) -> Bool {
+        if lhs.row != rhs.row {
+            return false
+        }
+        if lhs.latencyMs != rhs.latencyMs {
+            return false
+        }
+        if lhs.testedAt != rhs.testedAt {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(row)
+        hasher.combine(latencyMs)
+        hasher.combine(testedAt)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeRankedNode: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> RankedNode {
+        return
+            try RankedNode(
+                row: FfiConverterTypeNodeRow.read(from: &buf), 
+                latencyMs: FfiConverterInt32.read(from: &buf), 
+                testedAt: FfiConverterInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: RankedNode, into buf: inout [UInt8]) {
+        FfiConverterTypeNodeRow.write(value.row, into: &buf)
+        FfiConverterInt32.write(value.latencyMs, into: &buf)
+        FfiConverterInt64.write(value.testedAt, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeRankedNode_lift(_ buf: RustBuffer) throws -> RankedNode {
+    return try FfiConverterTypeRankedNode.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeRankedNode_lower(_ value: RankedNode) -> RustBuffer {
+    return FfiConverterTypeRankedNode.lower(value)
 }
 
 
@@ -2770,6 +2987,30 @@ fileprivate struct FfiConverterOptionUInt32: FfiConverterRustBuffer {
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterOptionInt32: FfiConverterRustBuffer {
+    typealias SwiftType = Int32?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterInt32.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterInt32.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterOptionUInt64: FfiConverterRustBuffer {
     typealias SwiftType = UInt64?
 
@@ -2914,6 +3155,31 @@ fileprivate struct FfiConverterOptionCallbackInterfaceBuildProgress: FfiConverte
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterSequenceUInt64: FfiConverterRustBuffer {
+    typealias SwiftType = [UInt64]
+
+    public static func write(_ value: [UInt64], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterUInt64.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [UInt64] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [UInt64]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterUInt64.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterSequenceString: FfiConverterRustBuffer {
     typealias SwiftType = [String]
 
@@ -2939,6 +3205,31 @@ fileprivate struct FfiConverterSequenceString: FfiConverterRustBuffer {
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterSequenceTypeLatencySample: FfiConverterRustBuffer {
+    typealias SwiftType = [LatencySample]
+
+    public static func write(_ value: [LatencySample], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeLatencySample.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [LatencySample] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [LatencySample]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeLatencySample.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterSequenceTypeNodeRow: FfiConverterRustBuffer {
     typealias SwiftType = [NodeRow]
 
@@ -2956,6 +3247,31 @@ fileprivate struct FfiConverterSequenceTypeNodeRow: FfiConverterRustBuffer {
         seq.reserveCapacity(Int(len))
         for _ in 0 ..< len {
             seq.append(try FfiConverterTypeNodeRow.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterSequenceTypeRankedNode: FfiConverterRustBuffer {
+    typealias SwiftType = [RankedNode]
+
+    public static func write(_ value: [RankedNode], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeRankedNode.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [RankedNode] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [RankedNode]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeRankedNode.read(from: &buf))
         }
         return seq
     }
@@ -3060,6 +3376,31 @@ fileprivate struct FfiConverterSequenceTypeSubscriptionSource: FfiConverterRustB
         return seq
     }
 }
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterSequenceOptionInt32: FfiConverterRustBuffer {
+    typealias SwiftType = [Int32?]
+
+    public static func write(_ value: [Int32?], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterOptionInt32.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [Int32?] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [Int32?]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterOptionInt32.read(from: &buf))
+        }
+        return seq
+    }
+}
 /**
  * zephyr-core（桌面共用核心）版本探针，确认链接正常。
  */
@@ -3088,6 +3429,9 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_func_core_greeting() != 3481) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_cached_latencies() != 41970) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_layer() != 45440) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -3095,6 +3439,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_due_subscriptions() != 39270) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes() != 4146) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription() != 45715) {
@@ -3128,6 +3475,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_nodes_with_progress() != 20747) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_latencies() != 22667) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033) {
