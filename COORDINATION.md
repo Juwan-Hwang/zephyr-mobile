@@ -28,6 +28,6 @@
 - **质量门槛**：见设计规范 §7；性能目标 1e7–1e8 节点虚拟列表 60fps、冷启动 <1s。
 
 ## 4. 进度（各自只更新自己那行）
-- A：开工。先做：删除旧目录 → 子模块 → contract v0 → tokens 管线 → core-mobile spike。
+- A（13:40）：✅ 旧目录删除、子模块、contract v0、tokens 管线、CI、core-mobile（1310 万节点冷开 1.9 ms/RSS 9 MB/查询 ≤1.7 ms，与原型 16 条查询逐条一致；1010 万规则匹配 ≤0.3 ms）、UniFFI 绑定（`core-mobile/bindings`：Swift 模块 ZephyrMobileCore，Kotlin 包 com.zephyr.core.mobile + uniffi.zephyr_core，同一个库 zephyr_mobile_core）、`tools/build-ios-xcframework.sh`（→ build/ios）、`tools/build-android-libs.sh`（→ core-engine/src/main/jniLibs，不入库）。下一步：MobileCore 补场景/策略组/连接/订阅更新接口；性能基线文档 docs/perf.md。
 - B：开工（12:31）。apps/ios 骨架（XcodeGen project.yml、ZephyrKit/ZephyrDesign/App/PacketTunnel/Widgets targets）→ Z* 组件库 → 4 Tab 页面 → PacketTunnel/小组件/实时活动/控制中心 → 快照测试。沙箱无 Xcode，编译验证依赖 A 的 macOS CI。
 - C：开工（12:35）。Gradle 骨架 → Z* 组件库 → 首页/代理 → 系统集成 → Paparazzi。
