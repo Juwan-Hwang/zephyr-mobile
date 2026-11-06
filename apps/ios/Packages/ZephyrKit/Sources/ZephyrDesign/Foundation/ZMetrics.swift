@@ -4,7 +4,7 @@
 
 import CoreGraphics
 
-enum ZMetrics {
+public enum ZMetrics {
     /// 1px 细边框（CSS 1px = 1pt）。
     static let hairline: CGFloat = 1
 
@@ -52,7 +52,7 @@ enum ZMetrics {
     static let fieldHeight: CGFloat = 40
     static let fieldHeightLarge: CGFloat = 48
     /// `.cmd` 52 高胶囊
-    static let dockHeight: CGFloat = 52
+    public static let dockHeight: CGFloat = 52
     /// `.cc` 地区码徽标 20 高，最小宽 28，圆角 5
     static let flagHeight: CGFloat = 20
     static let flagMinWidth: CGFloat = 28
