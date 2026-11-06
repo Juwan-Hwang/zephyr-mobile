@@ -28,6 +28,6 @@
 - **质量门槛**：见设计规范 §7；性能目标 1e7–1e8 节点虚拟列表 60fps、冷启动 <1s。
 
 ## 4. 进度（各自只更新自己那行）
-- A（13:40）：✅ 旧目录删除、子模块、contract v0、tokens 管线、CI、core-mobile（1310 万节点冷开 1.9 ms/RSS 9 MB/查询 ≤1.7 ms，与原型 16 条查询逐条一致；1010 万规则匹配 ≤0.3 ms）、UniFFI 绑定（`core-mobile/bindings`：Swift 模块 ZephyrMobileCore，Kotlin 包 com.zephyr.core.mobile + uniffi.zephyr_core，同一个库 zephyr_mobile_core）、`tools/build-ios-xcframework.sh`（→ build/ios）、`tools/build-android-libs.sh`（→ core-engine/src/main/jniLibs，不入库）。✅ 嵌入式 mihomo v1.19.33（`mihomo-mobile/`，C ABI：zm_start/zm_reload/zm_stop/zm_traffic/zm_set_memory_limit…，策略组/延迟/连接/日志走 mihomo REST 的 unix socket），`tools/build-mihomo.sh android|ios` → libzmihomo.so / build/ios/Zmihomo.xcframework。下一步：MobileCore 补场景/订阅存储与更新；docs/perf.md。
+- A（16:50）：✅ 基座（contract v0+§13+§14、tokens、CI 三端、core-mobile、UniFFI 绑定、mihomo-mobile C ABI）；订阅/延迟/fastestNodes/runtimeConfig/MihomoClient；场景+覆写+storageInfo；场景自动切换（failover）；规则层 0「Zephyr 覆写」；与桌面 zephyr-core 重叠部分一律复用（清单 docs/desktop-reuse.md）。性能：1310 万节点冷开 1.9 ms/RSS 9 MB，查询 ≤1.7 ms，冷开 fastestNodes ~2 ms。已合 PR #4（Android，CI 全绿）。PR #3：A 补了缺失测试目录、ZMetrics 可见性，等 macOS CI。待真机：iOS NE 50 MB 上限。
 - B：开工（12:31）。apps/ios 骨架（XcodeGen project.yml、ZephyrKit/ZephyrDesign/App/PacketTunnel/Widgets targets）→ Z* 组件库 → 4 Tab 页面 → PacketTunnel/小组件/实时活动/控制中心 → 快照测试。沙箱无 Xcode，编译验证依赖 A 的 macOS CI。
 - C：开工（12:35）。Gradle 骨架 → Z* 组件库 → 首页/代理 → 系统集成 → Paparazzi。
