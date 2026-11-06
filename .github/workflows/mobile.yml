@@ -93,6 +93,8 @@ jobs:
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 17 }
       - uses: gradle/actions/setup-gradle@v4
+      - name: Android SDK platform 37
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37.0" "build-tools;37.0.0" >/dev/null || yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37" >/dev/null
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with: { workspaces: core-mobile }
@@ -104,7 +106,7 @@ jobs:
         run: ABIS="arm64-v8a x86_64" tools/build-mihomo.sh android
       - name: build, unit test, paparazzi verify
         working-directory: apps/android
-        run: ./gradlew --no-daemon assembleDebug testDebugUnitTest verifyPaparazziDebug
+        run: ./gradlew --no-daemon -Pzephyr.rust=true assembleDebug testDebugUnitTest verifyPaparazziDebug
       - if: failure()
         uses: actions/upload-artifact@v4
         with: { name: paparazzi-failures, path: apps/android/**/build/paparazzi/failures }
