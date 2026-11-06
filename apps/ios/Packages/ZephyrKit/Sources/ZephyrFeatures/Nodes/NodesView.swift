@@ -8,6 +8,7 @@ import ZephyrDesign
 import ZephyrKit
 import ZephyrMock
 
+@MainActor
 public struct NodesView: View {
     @State private var model: NodesModel
     @State private var selected: NodeSummary?
@@ -21,9 +22,9 @@ public struct NodesView: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            LPageHeader(title: "节点", number: model.index?.total, unit: "个", subtitle: model.subtitle)
-            LSearchField(prompt: "地区、城市或线路", text: $model.query, info: model.queryInfo)
-                .padding(.horizontal, LStyle.margin)
+            PageHeader(title: "节点", number: model.index.map { ZFormat.count($0.total) }, unit: "个", subtitle: model.subtitle)
+            ZTextField("地区、城市或线路", text: $model.query, trailing: model.query.isEmpty ? nil : model.queryInfo)
+                .padding(.horizontal, PageMetrics.margin)
                 .padding(.top, ZTokens.Space.n5)
             RegionChips(sections: model.chips, selected: model.selectedChip) { model.select(chip: $0) }
                 .padding(.top, ZTokens.Space.n3)
@@ -36,8 +37,8 @@ public struct NodesView: View {
                 .ignoresSafeArea(.container, edges: .bottom)
                 .accessibilityLabel("节点列表")
         }
-        .background(LStyle.pageBackground.ignoresSafeArea())
-        .tint(model.accent.color)
+        .zPageBackground()
+        .zAccent(model.accent)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) { jumpMenu }

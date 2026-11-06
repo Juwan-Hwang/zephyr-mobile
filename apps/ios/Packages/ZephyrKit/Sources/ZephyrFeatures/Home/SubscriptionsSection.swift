@@ -5,13 +5,15 @@ import SwiftUI
 import ZephyrDesign
 import ZephyrKit
 
+@MainActor
 struct SubscriptionsSection: View {
     @Environment(AppModel.self) private var model
     static let featuredCount = 2
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HomeSectionHeader(title: "订阅", trailing: todayText) { model.present(.today) }
+            ZSectionHeader("订阅", trailing: todayText) { model.present(.today) }
+                .homeSectionInsets()
             ZCard(padding: 0, cornerRadius: HMetrics.cardRadius) {
                 VStack(spacing: 0) {
                     let featured = Array(model.subscriptions.prefix(Self.featuredCount))
@@ -46,6 +48,7 @@ struct SubscriptionsSection: View {
     }
 }
 
+@MainActor
 private struct SubscriptionRow: View {
     let sub: Subscription
     let now: Int64
@@ -70,7 +73,7 @@ private struct SubscriptionRow: View {
                     .foregroundStyle(ZTokens.Colors.textPrimary)
                     .lineLimit(1)
                 if let used {
-                    UsageBar(fraction: used, warn: warn)
+                    ZProgressBar(value: used, tone: warn ? .warning : .neutral)
                 }
             }
             VStack(alignment: .trailing, spacing: ZTokens.Space.n1) {
@@ -99,25 +102,6 @@ private struct SubscriptionRow: View {
         if let used { parts.append("已用 \(Int((used * 100).rounded()))%") }
         if let e = sub.expiresAt { parts.append(ZFormat.expiry(e, now: now)) }
         return parts.joined(separator: "，")
-    }
-}
-
-/// 2pt 用量条（原型 `.bar`；警告色 `.bar.warn`）。待替换为 D 的 ZProgressBar。
-struct UsageBar: View {
-    let fraction: Double
-    var warn = false
-
-    var body: some View {
-        GeometryReader { geo in
-            ZStack(alignment: .leading) {
-                Capsule().fill(ZTokens.Colors.borderDefault)
-                Capsule()
-                    .fill(warn ? ZTokens.Colors.colorWarning : ZTokens.Colors.textTertiary)
-                    .frame(width: geo.size.width * fraction)
-            }
-        }
-        .frame(height: HMetrics.barThin)
-        .accessibilityHidden(true)
     }
 }
 

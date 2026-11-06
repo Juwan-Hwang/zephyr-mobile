@@ -14,10 +14,10 @@ import SwiftUI
 import ZephyrDesign
 import ZephyrKit
 
+@MainActor
 struct SceneSheet: View {
     let sceneId: String
     @Environment(AppModel.self) private var model
-    @Environment(\.dismiss) private var dismiss
     @State private var candidates: [NodeSummary] = []
     @State private var loaded = false
     @State private var selecting: NodeId?
@@ -26,14 +26,17 @@ struct SceneSheet: View {
         if let scene = model.scene(id: sceneId) {
             content(scene)
         } else {
-            VStack { SheetHeader(title: "场景") { dismiss() }; Spacer() }
+            ZSheet("场景") {
+                ZEmptyState("场景已不存在", systemImage: "square.stack.3d.up.slash")
+                    .padding(.top, ZTokens.Space.n8)
+            }
         }
     }
 
     private func content(_ scene: Scene) -> some View {
-        ScrollView {
+        // D 的 ZSheet：抓手 + 标题 + "完成"（dismiss）+ 滚动正文。
+        ZSheet(LocalizedStringKey(scene.name)) {
             VStack(alignment: .leading, spacing: 0) {
-                SheetHeader(title: scene.name) { dismiss() }
                 ZBigNumber("\(scene.available)", unit: "个可用节点", size: .hero)
                     .padding(.horizontal, HMetrics.homeInset)
                     .padding(.top, ZTokens.Space.n5)
@@ -69,7 +72,6 @@ struct SceneSheet: View {
                     .padding(.bottom, ZTokens.Space.n8)
             }
         }
-        .scrollIndicators(.hidden)
         .task(id: scene.testedAt) {
             candidates = await model.sceneCandidates(sceneId)
             loaded = true
@@ -165,6 +167,7 @@ struct SceneSheet: View {
 
 private enum SceneSourceChoice: Hashable { case group, pick }
 
+@MainActor
 private struct DetailRow: View {
     let title: String
     let value: String

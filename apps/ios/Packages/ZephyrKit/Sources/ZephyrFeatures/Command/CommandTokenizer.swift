@@ -1,6 +1,6 @@
 // 指令输入的 token 化（仅用于展示：输入框下划线 + "服务 / 地区 / 范围 / 操作"卡片）。
 // 规则移植自原型 index.html 的 parse()（SVC / RGN / ACT 词表）。真正执行什么由引擎的 commandSuggestions 决定。
-// 纯 Swift，便于单测。
+// 纯 Swift，便于单测（Tests/ZephyrFeaturesTests/CommandTokenizerTests.swift）。
 
 import Foundation
 
@@ -49,22 +49,30 @@ enum CommandTokenizer {
         let lower = Array(input.lowercased())
         var out = CommandParse(tokens: [])
 
-        func find(_ key: String) -> Range<Int>? {
-            let k = Array(key)
-            guard !k.isEmpty, k.count <= lower.count else { return nil }
-            for i in 0...(lower.count - k.count) where Array(lower[i..<(i + k.count)]) == k {
-                return i..<(i + k.count)
-            }
-            return nil
-        }
         func isAsciiLetter(_ i: Int) -> Bool {
             guard i >= 0, i < lower.count else { return false }
             return lower[i].isASCII && lower[i].isLetter
         }
+        /// 第一个满足 accept 的出现位置（默认任意位置）。
+        func find(_ key: String, accept: (Range<Int>) -> Bool = { _ in true }) -> Range<Int>? {
+            let k = Array(key)
+            guard !k.isEmpty, k.count <= lower.count else { return nil }
+            for i in 0...(lower.count - k.count) where Array(lower[i..<(i + k.count)]) == k {
+                let r = i..<(i + k.count)
+                if accept(r) { return r }
+            }
+            return nil
+        }
+        /// 两个字母的码（jp / us）必须是独立单词，避免 "gpt" 里的 "pt"、"plus" 里的 "us"；
+        /// 跳过嵌在单词里的出现，继续找后面独立的那一处（"disney plus us" → 美国）。
+        func standalone(_ key: String) -> (Range<Int>) -> Bool {
+            guard key.count <= 2 else { return { _ in true } }
+            return { r in !isAsciiLetter(r.lowerBound - 1) && !isAsciiLetter(r.upperBound) }
+        }
 
         svc: for s in services {
             for k in s.1 {
-                if let r = find(k) {
+                if let r = find(k, accept: standalone(k)) {
                     out.tokens.append(CommandToken(kind: .service, value: s.0, range: r))
                     out.serviceName = s.0; out.sceneId = s.3
                     out.tokens.append(CommandToken(kind: .scope, value: s.2, range: nil))
@@ -74,9 +82,7 @@ enum CommandTokenizer {
         }
         rg: for g in regions {
             for k in g.2 {
-                guard let r = find(k) else { continue }
-                // 两个字母的码（jp / us）必须是独立单词，避免 "gpt" 里的 "pt"、"youtube" 里的 "us"
-                if k.count <= 2, isAsciiLetter(r.lowerBound - 1) || isAsciiLetter(r.upperBound) { continue }
+                guard let r = find(k, accept: standalone(k)) else { continue }
                 out.tokens.append(CommandToken(kind: .region, value: g.0, range: r))
                 out.regionName = g.0; out.regionCode = g.1
                 break rg

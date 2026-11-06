@@ -1,6 +1,7 @@
-// AppModel 的写操作。全部 async、在主线程调用；错误写入 lastError，可撤销的操作给出 UndoToast。
+// AppModel 的写操作。全部 async、在主线程调用；错误写入 lastError，可撤销的操作给出撤销吐司（ZToastItem）。
 
 import Foundation
+import ZephyrDesign
 import ZephyrKit
 
 extension AppModel {
@@ -37,7 +38,7 @@ extension AppModel {
         do {
             let change = try await engine.setGlobalNode(id: node.id)
             globalNode = node
-            toast = UndoToast(message: "已切换至\(node.name)") { [weak self] in
+            showUndo("已切换至\(node.name)") { [weak self] in
                 guard let self, let previous else { return }
                 _ = try? await self.engine.setGlobalNode(id: previous.id)
                 self.globalNode = previous
@@ -107,7 +108,7 @@ extension AppModel {
     public func applySceneChange(sceneId: String, from: NodeSummary, to: NodeSummary) async {
         do {
             try await engine.applySceneChange(sceneId: sceneId, nodeId: to.id)
-            toast = UndoToast(message: "已切换至\(to.name)") { [weak self] in
+            showUndo("已切换至\(to.name)") { [weak self] in
                 guard let self else { return }
                 do { try await self.engine.applySceneChange(sceneId: sceneId, nodeId: from.id) } catch { self.report(error) }
             }
@@ -126,15 +127,16 @@ extension AppModel {
 
     // MARK: 撤销提示
 
-    public func performUndo() async {
-        guard let t = toast else { return }
-        toast = nil
-        await t.undo?()
+    /// 显示带"撤销"的吐司（停留 ZTokens.Motion.undoWindow）。`undo` 为 nil 时只显示文字。
+    /// ZToastItem 的 action 是同步闭包，这里包一层主线程 Task 再执行异步撤销。
+    public func showUndo(_ message: String, undo: (@MainActor @Sendable () async -> Void)? = nil) {
+        guard let undo else { toast = ZToastItem(message); return }
+        toast = ZToastItem(message, actionTitle: "撤销") {
+            Task { @MainActor in await undo() }
+        }
     }
 
-    public func dismissToast(_ id: UUID) {
-        if toast?.id == id { toast = nil }
-    }
+    public func dismissToast() { toast = nil }
 
     // MARK: 错误
 

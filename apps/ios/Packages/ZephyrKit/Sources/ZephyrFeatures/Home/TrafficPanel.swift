@@ -5,6 +5,7 @@ import SwiftUI
 import ZephyrDesign
 import ZephyrKit
 
+@MainActor
 struct TrafficPanel: View {
     @Environment(AppModel.self) private var model
 
@@ -33,6 +34,7 @@ struct TrafficPanel: View {
 }
 
 /// 速率读数：每个样本（1 Hz）重算一次。
+@MainActor
 private struct RateReadout: View {
     let store: TrafficStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion

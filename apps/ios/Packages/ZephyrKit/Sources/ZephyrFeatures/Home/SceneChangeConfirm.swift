@@ -9,6 +9,7 @@ import SwiftUI
 import ZephyrDesign
 import ZephyrKit
 
+@MainActor
 struct SceneChangeConfirm: View {
     let change: PendingSceneChange
     let sceneName: String
@@ -71,6 +72,7 @@ struct SceneChangeConfirm: View {
 }
 
 /// 出口 IP 变化行（等宽）：SG 198.51.100.7 → JP 203.0.113.61。也用于指令预览卡与全局模式。
+@MainActor
 struct ExitIPLine: View {
     let change: ExitChange?
     var fallbackFrom: String = ""
@@ -98,7 +100,7 @@ struct ExitIPLine: View {
 
     private var a11y: String {
         guard let c = change else { return "正在获取出口 IP" }
-        return "出口从 \(HRegionName.zh(c.fromRegion)) \(c.fromIp ?? "") 变为 \(HRegionName.zh(c.toRegion)) \(c.toIp ?? "")"
+        return "出口从 \(HRegionName.name(c.fromRegion)) \(c.fromIp ?? "") 变为 \(HRegionName.name(c.toRegion)) \(c.toIp ?? "")"
     }
 }
 

@@ -10,6 +10,7 @@ import SwiftUI
 import ZephyrDesign
 import ZephyrKit
 
+@MainActor
 struct CommandPreviewCard: View {
     let preview: CommandModel.Preview
     let parse: CommandParse

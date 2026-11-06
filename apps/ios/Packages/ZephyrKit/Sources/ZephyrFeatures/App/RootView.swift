@@ -8,6 +8,7 @@ import UIKit
 import ZephyrDesign
 import ZephyrKit
 
+@MainActor
 public struct RootView: View {
     @State private var model: AppModel
     @Environment(\.scenePhase) private var scenePhase
@@ -23,7 +24,7 @@ public struct RootView: View {
                 .navigationDestination(for: Route.self) { RouteDestination(route: $0) }
         }
         .sheet(item: $model.sheet) { route in
-            SheetHost(route: route)
+            SheetHost(route: route, accent: accent)
         }
         .overlay {
             if model.isCommandPresented {
@@ -55,15 +56,17 @@ public struct RootView: View {
     }
 }
 
-/// 把 SheetRoute 换成具体浮层。
+/// 把 SheetRoute 换成具体浮层。H 的浮层自己画 D 的 ZSheet（抓手 + 标题 + 完成），这里用 `.zSheetPresentation`
+/// 隐藏系统抓手；资料库（L）沿用系统抓手 + 中/大两档。sheet 内容重新注入强调色（sheet 不一定继承自定义环境值）。
+@MainActor
 struct SheetHost: View {
     let route: SheetRoute
+    /// RootView 按设置算出的强调色（sheet 内不依赖继承）。
+    let accent: ZTokens.Accent
 
     var body: some View {
         content
-            .presentationDragIndicator(.visible)
-            .presentationCornerRadius(ZTokens.Layout.sheetRadius)
-            .presentationBackground(ZTokens.Colors.surfaceElevated)
+            .zAccent(accent)
     }
 
     @ViewBuilder
@@ -71,21 +74,22 @@ struct SheetHost: View {
         switch route {
         case .library:
             LibraryDestination()
-                .presentationDetents([.medium, .large])
+                .zSheetPresentation(detents: [.medium, .large])
         case .scene(let id):
             SceneSheet(sceneId: id)
-                .presentationDetents([.large])
-        case .connections(let traceID):
-            ConnectionsSheet(initialTraceID: traceID)
-                .presentationDetents([.large])
+                .zSheetPresentation()
+        case .connections(let host):
+            ActivitySheet(initialHost: host)
+                .zSheetPresentation()
         case .today:
             TodayCardView()
-                .presentationDetents([.large])
+                .zSheetPresentation()
         }
     }
 }
 
 /// 引擎错误：顶部短暂横幅，3 秒后消失。
+@MainActor
 private struct ErrorBanner: View {
     @Environment(AppModel.self) private var model
 

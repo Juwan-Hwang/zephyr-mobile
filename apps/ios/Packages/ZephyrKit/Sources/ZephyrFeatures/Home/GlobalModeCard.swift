@@ -9,6 +9,7 @@ import SwiftUI
 import ZephyrDesign
 import ZephyrKit
 
+@MainActor
 struct GlobalModeCard: View {
     @Environment(AppModel.self) private var model
     @State private var expanded = false
@@ -43,9 +44,9 @@ struct GlobalModeCard: View {
         VStack(alignment: .leading, spacing: ZTokens.Space.n2) {
             if let s = suggestion {
                 HStack(spacing: ZTokens.Space.n3) {
-                    if let cur = model.globalNode { HFlag(region: cur.region) }
+                    if let cur = model.globalNode { ZFlag(cur.region) }
                     Image(systemName: "arrow.right").font(.caption2).foregroundStyle(ZQuaternaryText())
-                    HFlag(region: s.region)
+                    ZFlag(s.region)
                     Text(verbatim: s.name).zType(.footnote).foregroundStyle(ZTokens.Colors.textPrimary)
                     if let ms = s.latencyMs, ms >= 0 {
                         Text(verbatim: ZFormat.latency(ms)).zMono(.small).foregroundStyle(ZTokens.Colors.textTertiary)
