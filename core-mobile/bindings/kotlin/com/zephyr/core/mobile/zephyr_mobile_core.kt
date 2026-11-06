@@ -761,6 +761,24 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -789,13 +807,23 @@ internal interface UniffiLib : Library {
     ): Pointer
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_compile_rule_layer(`ptr`: Pointer,`index`: Int,`name`: RustBuffer.ByValue,`kind`: RustBuffer.ByValue,`note`: RustBuffer.ByValue,`defaultPolicy`: RustBuffer.ByValue,`text`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_delete_subscription(`ptr`: Pointer,`id`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_due_subscriptions(`ptr`: Pointer,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_import_subscription(`ptr`: Pointer,`name`: RustBuffer.ByValue,`url`: RustBuffer.ByValue,`fetched`: RustBuffer.ByValue,`autoUpdateHours`: Int,`progress`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_load_rules(`ptr`: Pointer,`finalPolicy`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_node_index(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_node_rows(`ptr`: Pointer,`token`: Long,`offset`: Long,`limit`: Int,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_subscription_update(`ptr`: Pointer,`id`: RustBuffer.ByValue,`fetched`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_query_nodes(`ptr`: Pointer,`query`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_from_subscriptions(`ptr`: Pointer,`progress`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_mock_nodes(`ptr`: Pointer,`scale`: Double,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
@@ -807,7 +835,15 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_stats(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_subscription_fetch_url(`ptr`: Pointer,`id`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_subscriptions(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_subscriptions_summary(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_test_rule(`ptr`: Pointer,`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_update_subscription(`ptr`: Pointer,`id`: RustBuffer.ByValue,`fetched`: RustBuffer.ByValue,`progress`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_init_callback_vtable_buildprogress(`vtable`: UniffiVTableCallbackInterfaceBuildProgress,
     ): Unit
@@ -929,13 +965,23 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_layer(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_delete_subscription(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_due_subscriptions(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_load_rules(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_index(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_rows(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_subscription_update(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_query_nodes(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_from_subscriptions(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_mock_nodes(
     ): Short
@@ -947,7 +993,15 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscription_fetch_url(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscriptions(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscriptions_summary(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_update_subscription(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_constructor_mobilecore_new(
     ): Short
@@ -976,6 +1030,15 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_layer() != 45440.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_delete_subscription() != 35061.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_due_subscriptions() != 39270.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription() != 45715.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_load_rules() != 40179.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -985,7 +1048,13 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_rows() != 21841.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_subscription_update() != 23752.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_query_nodes() != 48940.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_from_subscriptions() != 24861.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_mock_nodes() != 56758.toShort()) {
@@ -1003,7 +1072,19 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscription_fetch_url() != 43374.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscriptions() != 57975.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscriptions_summary() != 18705.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule() != 8556.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_update_subscription() != 7462.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_constructor_mobilecore_new() != 4167.toShort()) {
@@ -1108,6 +1189,29 @@ public object FfiConverterUInt: FfiConverter<UInt, Int> {
 /**
  * @suppress
  */
+public object FfiConverterInt: FfiConverter<Int, Int> {
+    override fun lift(value: Int): Int {
+        return value
+    }
+
+    override fun read(buf: ByteBuffer): Int {
+        return buf.getInt()
+    }
+
+    override fun lower(value: Int): Int {
+        return value
+    }
+
+    override fun allocationSize(value: Int) = 4UL
+
+    override fun write(value: Int, buf: ByteBuffer) {
+        buf.putInt(value)
+    }
+}
+
+/**
+ * @suppress
+ */
 public object FfiConverterULong: FfiConverter<ULong, Long> {
     override fun lift(value: Long): ULong {
         return value.toULong()
@@ -1125,6 +1229,29 @@ public object FfiConverterULong: FfiConverter<ULong, Long> {
 
     override fun write(value: ULong, buf: ByteBuffer) {
         buf.putLong(value.toLong())
+    }
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterLong: FfiConverter<Long, Long> {
+    override fun lift(value: Long): Long {
+        return value
+    }
+
+    override fun read(buf: ByteBuffer): Long {
+        return buf.getLong()
+    }
+
+    override fun lower(value: Long): Long {
+        return value
+    }
+
+    override fun allocationSize(value: Long) = 8UL
+
+    override fun write(value: Long, buf: ByteBuffer) {
+        buf.putLong(value)
     }
 }
 
@@ -1423,6 +1550,18 @@ public interface MobileCoreInterface {
      */
     fun `compileRuleLayer`(`index`: kotlin.UInt, `name`: kotlin.String, `kind`: LayerKind, `note`: kotlin.String, `defaultPolicy`: kotlin.String, `text`: kotlin.String): RuleLayerInfo
     
+    fun `deleteSubscription`(`id`: kotlin.String)
+    
+    /**
+     * 到了自动更新时间的订阅 id（后台任务：逐个拉取后 update_subscription）。
+     */
+    fun `dueSubscriptions`(`nowMillis`: kotlin.Long): List<kotlin.String>
+    
+    /**
+     * 导入并重建节点库。url 可空（剪贴板/文件导入）。
+     */
+    fun `importSubscription`(`name`: kotlin.String, `url`: kotlin.String?, `fetched`: FetchedSubscription, `autoUpdateHours`: kotlin.Int, `progress`: BuildProgress?): Subscription
+    
     /**
      * 重新加载 rules/ 下全部层（按文件名序），final_policy 为 MATCH 的去向（通常是场景 "other"）。
      */
@@ -1435,7 +1574,17 @@ public interface MobileCoreInterface {
      */
     fun `nodeRows`(`token`: kotlin.ULong, `offset`: kotlin.ULong, `limit`: kotlin.UInt): NodePage
     
+    /**
+     * "更新前显示更改"：不落盘。
+     */
+    fun `previewSubscriptionUpdate`(`id`: kotlin.String, `fetched`: FetchedSubscription): SubscriptionDiff
+    
     fun `queryNodes`(`query`: kotlin.String): NodeQueryResult
+    
+    /**
+     * 由已保存的全部订阅正文重建节点库（启动修复、批量更新后调用一次即可）。
+     */
+    fun `rebuildFromSubscriptions`(`progress`: BuildProgress?): BuildReport
     
     /**
      * 开发/演示：用原型生成器建库。scale=1.0 即 13,109,802 个节点。
@@ -1456,7 +1605,18 @@ public interface MobileCoreInterface {
     
     fun `ruleStats`(): RuleStats
     
+    /**
+     * 平台拉取用的完整 URL（不出现在 Subscription.url 里）。
+     */
+    fun `subscriptionFetchUrl`(`id`: kotlin.String): kotlin.String?
+    
+    fun `subscriptions`(): List<Subscription>
+    
+    fun `subscriptionsSummary`(): SubscriptionsSummary
+    
     fun `testRule`(`input`: kotlin.String): RuleTrace
+    
+    fun `updateSubscription`(`id`: kotlin.String, `fetched`: FetchedSubscription, `progress`: BuildProgress?): SubscriptionDiff
     
     companion object
 }
@@ -1569,6 +1729,49 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     
 
     
+    @Throws(MobileException::class)override fun `deleteSubscription`(`id`: kotlin.String)
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_delete_subscription(
+        it, FfiConverterString.lower(`id`),_status)
+}
+    }
+    
+    
+
+    
+    /**
+     * 到了自动更新时间的订阅 id（后台任务：逐个拉取后 update_subscription）。
+     */override fun `dueSubscriptions`(`nowMillis`: kotlin.Long): List<kotlin.String> {
+            return FfiConverterSequenceString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_due_subscriptions(
+        it, FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 导入并重建节点库。url 可空（剪贴板/文件导入）。
+     */
+    @Throws(MobileException::class)override fun `importSubscription`(`name`: kotlin.String, `url`: kotlin.String?, `fetched`: FetchedSubscription, `autoUpdateHours`: kotlin.Int, `progress`: BuildProgress?): Subscription {
+            return FfiConverterTypeSubscription.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_import_subscription(
+        it, FfiConverterString.lower(`name`),FfiConverterOptionalString.lower(`url`),FfiConverterTypeFetchedSubscription.lower(`fetched`),FfiConverterInt.lower(`autoUpdateHours`),FfiConverterOptionalTypeBuildProgress.lower(`progress`),_status)
+}
+    }
+    )
+    }
+    
+
+    
     /**
      * 重新加载 rules/ 下全部层（按文件名序），final_policy 为 MATCH 的去向（通常是场景 "other"）。
      */
@@ -1614,12 +1817,44 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     
 
     
+    /**
+     * "更新前显示更改"：不落盘。
+     */
+    @Throws(MobileException::class)override fun `previewSubscriptionUpdate`(`id`: kotlin.String, `fetched`: FetchedSubscription): SubscriptionDiff {
+            return FfiConverterTypeSubscriptionDiff.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_subscription_update(
+        it, FfiConverterString.lower(`id`),FfiConverterTypeFetchedSubscription.lower(`fetched`),_status)
+}
+    }
+    )
+    }
+    
+
+    
     @Throws(MobileException::class)override fun `queryNodes`(`query`: kotlin.String): NodeQueryResult {
             return FfiConverterTypeNodeQueryResult.lift(
     callWithPointer {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_query_nodes(
         it, FfiConverterString.lower(`query`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 由已保存的全部订阅正文重建节点库（启动修复、批量更新后调用一次即可）。
+     */
+    @Throws(MobileException::class)override fun `rebuildFromSubscriptions`(`progress`: BuildProgress?): BuildReport {
+            return FfiConverterTypeBuildReport.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_from_subscriptions(
+        it, FfiConverterOptionalTypeBuildProgress.lower(`progress`),_status)
 }
     }
     )
@@ -1700,12 +1935,65 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     
 
     
+    /**
+     * 平台拉取用的完整 URL（不出现在 Subscription.url 里）。
+     */
+    @Throws(MobileException::class)override fun `subscriptionFetchUrl`(`id`: kotlin.String): kotlin.String? {
+            return FfiConverterOptionalString.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_subscription_fetch_url(
+        it, FfiConverterString.lower(`id`),_status)
+}
+    }
+    )
+    }
+    
+
+    override fun `subscriptions`(): List<Subscription> {
+            return FfiConverterSequenceTypeSubscription.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_subscriptions(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `subscriptionsSummary`(): SubscriptionsSummary {
+            return FfiConverterTypeSubscriptionsSummary.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_subscriptions_summary(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
     @Throws(MobileException::class)override fun `testRule`(`input`: kotlin.String): RuleTrace {
             return FfiConverterTypeRuleTrace.lift(
     callWithPointer {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_test_rule(
         it, FfiConverterString.lower(`input`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    @Throws(MobileException::class)override fun `updateSubscription`(`id`: kotlin.String, `fetched`: FetchedSubscription, `progress`: BuildProgress?): SubscriptionDiff {
+            return FfiConverterTypeSubscriptionDiff.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_update_subscription(
+        it, FfiConverterString.lower(`id`),FfiConverterTypeFetchedSubscription.lower(`fetched`),FfiConverterOptionalTypeBuildProgress.lower(`progress`),_status)
 }
     }
     )
@@ -1785,6 +2073,51 @@ public object FfiConverterTypeBuildReport: FfiConverterRustBuffer<BuildReport> {
             FfiConverterULong.write(value.`skipped`, buf)
             FfiConverterTypeNodeDiff.write(value.`diff`, buf)
             FfiConverterULong.write(value.`tookMillis`, buf)
+    }
+}
+
+
+
+/**
+ * 平台拉取结果。
+ */
+data class FetchedSubscription (
+    var `body`: kotlin.String, 
+    /**
+     * 原样的 `subscription-userinfo` 响应头（可为空）
+     */
+    var `userinfo`: kotlin.String?, 
+    /**
+     * 平台当前时间（毫秒），便于测试注入
+     */
+    var `nowMillis`: kotlin.Long
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeFetchedSubscription: FfiConverterRustBuffer<FetchedSubscription> {
+    override fun read(buf: ByteBuffer): FetchedSubscription {
+        return FetchedSubscription(
+            FfiConverterString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterLong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: FetchedSubscription) = (
+            FfiConverterString.allocationSize(value.`body`) +
+            FfiConverterOptionalString.allocationSize(value.`userinfo`) +
+            FfiConverterLong.allocationSize(value.`nowMillis`)
+    )
+
+    override fun write(value: FetchedSubscription, buf: ByteBuffer) {
+            FfiConverterString.write(value.`body`, buf)
+            FfiConverterOptionalString.write(value.`userinfo`, buf)
+            FfiConverterLong.write(value.`nowMillis`, buf)
     }
 }
 
@@ -2183,6 +2516,127 @@ public object FfiConverterTypeRuleTrace: FfiConverterRustBuffer<RuleTrace> {
 
 
 
+data class Subscription (
+    var `id`: kotlin.String, 
+    var `name`: kotlin.String, 
+    /**
+     * 脱敏：只保留 scheme://host/…，查询参数与路径 token 去掉
+     */
+    var `url`: kotlin.String?, 
+    var `nodeCount`: kotlin.Long, 
+    var `usedBytes`: kotlin.Long?, 
+    var `totalBytes`: kotlin.Long?, 
+    var `remainingBytes`: kotlin.Long?, 
+    var `expiresAt`: kotlin.Long?, 
+    var `updatedAt`: kotlin.Long?, 
+    var `autoUpdateHours`: kotlin.Int, 
+    var `lastDiff`: SubscriptionDiff?
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeSubscription: FfiConverterRustBuffer<Subscription> {
+    override fun read(buf: ByteBuffer): Subscription {
+        return Subscription(
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterLong.read(buf),
+            FfiConverterOptionalLong.read(buf),
+            FfiConverterOptionalLong.read(buf),
+            FfiConverterOptionalLong.read(buf),
+            FfiConverterOptionalLong.read(buf),
+            FfiConverterOptionalLong.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterOptionalTypeSubscriptionDiff.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: Subscription) = (
+            FfiConverterString.allocationSize(value.`id`) +
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterOptionalString.allocationSize(value.`url`) +
+            FfiConverterLong.allocationSize(value.`nodeCount`) +
+            FfiConverterOptionalLong.allocationSize(value.`usedBytes`) +
+            FfiConverterOptionalLong.allocationSize(value.`totalBytes`) +
+            FfiConverterOptionalLong.allocationSize(value.`remainingBytes`) +
+            FfiConverterOptionalLong.allocationSize(value.`expiresAt`) +
+            FfiConverterOptionalLong.allocationSize(value.`updatedAt`) +
+            FfiConverterInt.allocationSize(value.`autoUpdateHours`) +
+            FfiConverterOptionalTypeSubscriptionDiff.allocationSize(value.`lastDiff`)
+    )
+
+    override fun write(value: Subscription, buf: ByteBuffer) {
+            FfiConverterString.write(value.`id`, buf)
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterOptionalString.write(value.`url`, buf)
+            FfiConverterLong.write(value.`nodeCount`, buf)
+            FfiConverterOptionalLong.write(value.`usedBytes`, buf)
+            FfiConverterOptionalLong.write(value.`totalBytes`, buf)
+            FfiConverterOptionalLong.write(value.`remainingBytes`, buf)
+            FfiConverterOptionalLong.write(value.`expiresAt`, buf)
+            FfiConverterOptionalLong.write(value.`updatedAt`, buf)
+            FfiConverterInt.write(value.`autoUpdateHours`, buf)
+            FfiConverterOptionalTypeSubscriptionDiff.write(value.`lastDiff`, buf)
+    }
+}
+
+
+
+data class SubscriptionDiff (
+    var `addedNodes`: kotlin.Long, 
+    var `removedNodes`: kotlin.Long, 
+    var `ruleChanges`: kotlin.Long, 
+    /**
+     * Zephyr 覆写层不随订阅更新被冲掉（恒 true，核心保证）
+     */
+    var `overridesKept`: kotlin.Boolean, 
+    /**
+     * 平台层在更新后对受影响场景重测时置 true
+     */
+    var `scenesRetested`: kotlin.Boolean
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeSubscriptionDiff: FfiConverterRustBuffer<SubscriptionDiff> {
+    override fun read(buf: ByteBuffer): SubscriptionDiff {
+        return SubscriptionDiff(
+            FfiConverterLong.read(buf),
+            FfiConverterLong.read(buf),
+            FfiConverterLong.read(buf),
+            FfiConverterBoolean.read(buf),
+            FfiConverterBoolean.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: SubscriptionDiff) = (
+            FfiConverterLong.allocationSize(value.`addedNodes`) +
+            FfiConverterLong.allocationSize(value.`removedNodes`) +
+            FfiConverterLong.allocationSize(value.`ruleChanges`) +
+            FfiConverterBoolean.allocationSize(value.`overridesKept`) +
+            FfiConverterBoolean.allocationSize(value.`scenesRetested`)
+    )
+
+    override fun write(value: SubscriptionDiff, buf: ByteBuffer) {
+            FfiConverterLong.write(value.`addedNodes`, buf)
+            FfiConverterLong.write(value.`removedNodes`, buf)
+            FfiConverterLong.write(value.`ruleChanges`, buf)
+            FfiConverterBoolean.write(value.`overridesKept`, buf)
+            FfiConverterBoolean.write(value.`scenesRetested`, buf)
+    }
+}
+
+
+
 data class SubscriptionSource (
     var `id`: kotlin.UShort, 
     /**
@@ -2213,6 +2667,38 @@ public object FfiConverterTypeSubscriptionSource: FfiConverterRustBuffer<Subscri
     override fun write(value: SubscriptionSource, buf: ByteBuffer) {
             FfiConverterUShort.write(value.`id`, buf)
             FfiConverterString.write(value.`yaml`, buf)
+    }
+}
+
+
+
+data class SubscriptionsSummary (
+    var `count`: kotlin.Int, 
+    var `totalNodes`: kotlin.Long
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeSubscriptionsSummary: FfiConverterRustBuffer<SubscriptionsSummary> {
+    override fun read(buf: ByteBuffer): SubscriptionsSummary {
+        return SubscriptionsSummary(
+            FfiConverterInt.read(buf),
+            FfiConverterLong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: SubscriptionsSummary) = (
+            FfiConverterInt.allocationSize(value.`count`) +
+            FfiConverterLong.allocationSize(value.`totalNodes`)
+    )
+
+    override fun write(value: SubscriptionsSummary, buf: ByteBuffer) {
+            FfiConverterInt.write(value.`count`, buf)
+            FfiConverterLong.write(value.`totalNodes`, buf)
     }
 }
 
@@ -2359,6 +2845,17 @@ sealed class MobileException: kotlin.Exception() {
     }
     
     /**
+     * contract v0.1：subscription_not_found
+     */
+    class SubscriptionNotFound(
+        
+        val v1: kotlin.String
+        ) : MobileException() {
+        override val message
+            get() = "v1=${ v1 }"
+    }
+    
+    /**
      * 进度回调返回 false
      */
     class Cancelled(
@@ -2404,7 +2901,10 @@ public object FfiConverterTypeMobileError : FfiConverterRustBuffer<MobileExcepti
             7 -> MobileException.StaleToken(
                 FfiConverterString.read(buf),
                 )
-            8 -> MobileException.Cancelled()
+            8 -> MobileException.SubscriptionNotFound(
+                FfiConverterString.read(buf),
+                )
+            9 -> MobileException.Cancelled()
             else -> throw RuntimeException("invalid error enum value, something is very wrong!!")
         }
     }
@@ -2442,6 +2942,11 @@ public object FfiConverterTypeMobileError : FfiConverterRustBuffer<MobileExcepti
                 + FfiConverterString.allocationSize(value.v1)
             )
             is MobileException.StaleToken -> (
+                // Add the size for the Int that specifies the variant plus the size needed for all fields
+                4UL
+                + FfiConverterString.allocationSize(value.v1)
+            )
+            is MobileException.SubscriptionNotFound -> (
                 // Add the size for the Int that specifies the variant plus the size needed for all fields
                 4UL
                 + FfiConverterString.allocationSize(value.v1)
@@ -2490,8 +2995,13 @@ public object FfiConverterTypeMobileError : FfiConverterRustBuffer<MobileExcepti
                 FfiConverterString.write(value.v1, buf)
                 Unit
             }
-            is MobileException.Cancelled -> {
+            is MobileException.SubscriptionNotFound -> {
                 buf.putInt(8)
+                FfiConverterString.write(value.v1, buf)
+                Unit
+            }
+            is MobileException.Cancelled -> {
+                buf.putInt(9)
                 Unit
             }
         }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
@@ -2658,6 +3168,38 @@ public object FfiConverterOptionalULong: FfiConverterRustBuffer<kotlin.ULong?> {
 /**
  * @suppress
  */
+public object FfiConverterOptionalLong: FfiConverterRustBuffer<kotlin.Long?> {
+    override fun read(buf: ByteBuffer): kotlin.Long? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterLong.read(buf)
+    }
+
+    override fun allocationSize(value: kotlin.Long?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterLong.allocationSize(value)
+        }
+    }
+
+    override fun write(value: kotlin.Long?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterLong.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalFloat: FfiConverterRustBuffer<kotlin.Float?> {
     override fun read(buf: ByteBuffer): kotlin.Float? {
         if (buf.get().toInt() == 0) {
@@ -2712,6 +3254,70 @@ public object FfiConverterOptionalString: FfiConverterRustBuffer<kotlin.String?>
         } else {
             buf.put(1)
             FfiConverterString.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeSubscriptionDiff: FfiConverterRustBuffer<SubscriptionDiff?> {
+    override fun read(buf: ByteBuffer): SubscriptionDiff? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeSubscriptionDiff.read(buf)
+    }
+
+    override fun allocationSize(value: SubscriptionDiff?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeSubscriptionDiff.allocationSize(value)
+        }
+    }
+
+    override fun write(value: SubscriptionDiff?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeSubscriptionDiff.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeBuildProgress: FfiConverterRustBuffer<BuildProgress?> {
+    override fun read(buf: ByteBuffer): BuildProgress? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeBuildProgress.read(buf)
+    }
+
+    override fun allocationSize(value: BuildProgress?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeBuildProgress.allocationSize(value)
+        }
+    }
+
+    override fun write(value: BuildProgress?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeBuildProgress.write(value, buf)
         }
     }
 }
@@ -2824,6 +3430,34 @@ public object FfiConverterSequenceTypeRuleLayerInfo: FfiConverterRustBuffer<List
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeRuleLayerInfo.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeSubscription: FfiConverterRustBuffer<List<Subscription>> {
+    override fun read(buf: ByteBuffer): List<Subscription> {
+        val len = buf.getInt()
+        return List<Subscription>(len) {
+            FfiConverterTypeSubscription.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<Subscription>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeSubscription.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<Subscription>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeSubscription.write(it, buf)
         }
     }
 }

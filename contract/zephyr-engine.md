@@ -236,7 +236,7 @@ record TunSettings { stack: TunStack, mtu: Int32, ipv6: Bool, strictRoute: Bool 
 
 ### 规则测试与 IPv6
 - 输入 IPv6 字面量（含 `[...]`）按 IP 处理：域名层（1–5）跳过，只走 IP 层（IP-CIDR6/GEOIP）与 MATCH。fixtures 无样本；Mock 落到 MATCH 即正确。
-- core-mobile v0 的 IP 层仅支持 IPv4 区段，IP-CIDR6 规则在编译时计数但不匹配（落到 MATCH），v0.2 补齐。
+- core-mobile 的 IP 层同时支持 IP-CIDR 与 IP-CIDR6（压平区段 + 二分），`[...]` 包裹的输入同样识别。
 
 ### 连接轨迹（原型 trace sheet：规则 → 场景 → 节点 → 出口 + 本次覆写）
 ```

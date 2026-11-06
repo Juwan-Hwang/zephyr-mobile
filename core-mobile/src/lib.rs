@@ -16,6 +16,7 @@ pub mod mock;
 pub mod nodes;
 pub mod regions;
 pub mod rules;
+pub mod subs;
 pub mod subscription;
 
 pub use engine::MobileCore;

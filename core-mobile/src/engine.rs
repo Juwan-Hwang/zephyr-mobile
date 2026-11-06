@@ -3,6 +3,7 @@
 
 use crate::diff::{diff_sorted, NodeDiff};
 use crate::error::MobileError;
+use crate::subs::{FetchedSubscription, SubStore, Subscription, SubscriptionDiff, SubscriptionsSummary};
 use crate::nodes::{BuildPhase, NodeQueryResult, NodeRow, NodeStore, NodeStoreBuilder, RegionSection};
 use crate::rules::{Layer, LayerBuilder, LayerKind, RuleLayerInfo, RuleSet, RuleTrace};
 use parking_lot::{Mutex, RwLock};
@@ -56,6 +57,7 @@ pub struct MobileCore {
     queries: Mutex<VecDeque<(u64, Arc<RoaringBitmap>)>>,
     next_token: Mutex<u64>,
     generation: Mutex<u64>,
+    subs: Mutex<SubStore>,
 }
 
 impl MobileCore {
@@ -109,6 +111,7 @@ impl MobileCore {
     pub fn new(data_dir: String) -> Result<Arc<Self>, MobileError> {
         let dir = PathBuf::from(data_dir);
         std::fs::create_dir_all(dir.join("rules"))?;
+        let dir_for_subs = dir.clone();
         let gen: u64 = std::fs::read_to_string(dir.join("nodes.current")).ok().and_then(|s| s.trim().parse().ok()).unwrap_or(0);
         let store = if gen > 0 { NodeStore::open(&dir.join(format!("nodes.{gen}.zn"))).ok().map(Arc::new) } else { None };
         Ok(Arc::new(Self {
@@ -118,6 +121,7 @@ impl MobileCore {
             queries: Mutex::new(VecDeque::new()),
             next_token: Mutex::new(1),
             generation: Mutex::new(gen),
+            subs: Mutex::new(SubStore::open(&dir_for_subs)?),
         }))
     }
 
@@ -178,6 +182,64 @@ impl MobileCore {
             b.push(x);
         }
         self.swap_store_p(b, 0, t0, &|ph, d, t| progress.on_progress(ph, d, t))
+    }
+
+    // ---------- 订阅（contract §7）：平台拉取正文，核心存储/差异/重建 ----------
+
+    pub fn subscriptions(&self) -> Vec<Subscription> {
+        self.subs.lock().list()
+    }
+
+    pub fn subscriptions_summary(&self) -> SubscriptionsSummary {
+        self.subs.lock().summary()
+    }
+
+    /// 平台拉取用的完整 URL（不出现在 Subscription.url 里）。
+    pub fn subscription_fetch_url(&self, id: String) -> Result<Option<String>, MobileError> {
+        self.subs.lock().full_url(&id)
+    }
+
+    /// 到了自动更新时间的订阅 id（后台任务：逐个拉取后 update_subscription）。
+    pub fn due_subscriptions(&self, now_millis: i64) -> Vec<String> {
+        self.subs.lock().due(now_millis)
+    }
+
+    /// 导入并重建节点库。url 可空（剪贴板/文件导入）。
+    pub fn import_subscription(&self, name: String, url: Option<String>, fetched: FetchedSubscription, auto_update_hours: i32, progress: Option<Box<dyn BuildProgress>>) -> Result<Subscription, MobileError> {
+        let sub = self.subs.lock().import(name, url, &fetched, auto_update_hours)?;
+        if let Err(e) = self.rebuild_from_subscriptions(progress) {
+            let _ = self.subs.lock().delete(&sub.id);
+            return Err(e);
+        }
+        Ok(sub)
+    }
+
+    /// "更新前显示更改"：不落盘。
+    pub fn preview_subscription_update(&self, id: String, fetched: FetchedSubscription) -> Result<SubscriptionDiff, MobileError> {
+        self.subs.lock().preview(&id, &fetched)
+    }
+
+    pub fn update_subscription(&self, id: String, fetched: FetchedSubscription, progress: Option<Box<dyn BuildProgress>>) -> Result<SubscriptionDiff, MobileError> {
+        let d = self.subs.lock().update(&id, &fetched)?;
+        self.rebuild_from_subscriptions(progress)?;
+        Ok(d)
+    }
+
+    pub fn delete_subscription(&self, id: String) -> Result<(), MobileError> {
+        self.subs.lock().delete(&id)?;
+        self.rebuild_from_subscriptions(None).map(|_| ())
+    }
+
+    /// 由已保存的全部订阅正文重建节点库（启动修复、批量更新后调用一次即可）。
+    pub fn rebuild_from_subscriptions(&self, progress: Option<Box<dyn BuildProgress>>) -> Result<BuildReport, MobileError> {
+        let sources: Vec<SubscriptionSource> = {
+            let s = self.subs.lock();
+            s.entries.iter().filter_map(|e| s.body(e.slot).map(|yaml| SubscriptionSource { id: e.slot, yaml })).collect()
+        };
+        match progress {
+            Some(p) => self.rebuild_nodes_with_progress(sources, p),
+            None => self.rebuild_nodes(sources),
+        }
     }
 
     pub fn node_index(&self) -> Result<NodeIndex, MobileError> {
@@ -275,6 +337,36 @@ mod tests {
             assert!(total == 0 || done <= total);
             !(self.cancel_at_index && phase == BuildPhase::Index)
         }
+    }
+
+    #[test]
+    fn subscriptions_drive_node_store() {
+        let d = tempfile::tempdir().unwrap();
+        let core = MobileCore::new(d.path().to_string_lossy().into()).unwrap();
+        let body = |n: usize| {
+            let mut s = String::from("proxies:\n");
+            for i in 0..n {
+                s += &format!("  - {{name: \"香港 {i:02}\", server: h{i}.example, port: 443, type: trojan}}\n");
+            }
+            s
+        };
+        let f = |b: String| FetchedSubscription { body: b, userinfo: None, now_millis: 1 };
+        let a = core.import_subscription("A".into(), None, f(body(30)), 24, None).unwrap();
+        assert_eq!(core.node_index().unwrap().total, 30);
+        let p = core.preview_subscription_update(a.id.clone(), f(body(40))).unwrap();
+        assert_eq!((p.added_nodes, p.removed_nodes), (10, 0));
+        core.update_subscription(a.id.clone(), f(body(40)), None).unwrap();
+        assert_eq!(core.node_index().unwrap().total, 40);
+        assert_eq!(core.query_nodes("香港".into()).unwrap().total, 40);
+        // 重开：订阅与节点库都持久
+        drop(core);
+        let core = MobileCore::new(d.path().to_string_lossy().into()).unwrap();
+        assert_eq!(core.subscriptions_summary().total_nodes, 40);
+        assert_eq!(core.node_index().unwrap().total, 40);
+        core.delete_subscription(a.id).unwrap();
+        assert_eq!(core.node_index().unwrap().total, 0);
+        assert!(core.import_subscription("bad".into(), None, f("proxies: []".into()), 0, None).is_err());
+        assert_eq!(core.subscriptions().len(), 0);
     }
 
     #[test]

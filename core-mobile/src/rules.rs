@@ -646,6 +646,21 @@ mod tests {
     }
 
     #[test]
+    fn ipv6_cidr_and_bracketed_input() {
+        let d = tempfile::tempdir().unwrap();
+        let l = build(d.path(), "ip", LayerKind::Ip, "A", "IP-CIDR6,2001:db8::/32,V6\nIP-CIDR,10.0.0.0/8,V4");
+        let rs = RuleSet { layers: vec![l], final_policy: "other".into() };
+        for input in ["2001:db8::1", "[2001:db8:ffff::2]"] {
+            let t = rs.test(input).unwrap();
+            assert!(t.is_ip);
+            assert_eq!(t.rule, "IP-CIDR6,2001:db8::/32", "{input}");
+            assert_eq!(t.policy, "V6");
+        }
+        let t = rs.test("2001:db9::1").unwrap();
+        assert_eq!((t.rule.as_str(), t.policy.as_str()), ("MATCH", "other"));
+    }
+
+    #[test]
     fn nested_cidr_picks_first_rule() {
         let d = tempfile::tempdir().unwrap();
         let l = build(d.path(), "ip", LayerKind::Ip, "A", "IP-CIDR,10.0.0.0/8,A\nIP-CIDR,10.1.0.0/16,B");

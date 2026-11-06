@@ -431,6 +431,22 @@ fileprivate struct FfiConverterUInt32: FfiConverterPrimitive {
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterInt32: FfiConverterPrimitive {
+    typealias FfiType = Int32
+    typealias SwiftType = Int32
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> Int32 {
+        return try lift(readInt(&buf))
+    }
+
+    public static func write(_ value: Int32, into buf: inout [UInt8]) {
+        writeInt(&buf, lower(value))
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterUInt64: FfiConverterPrimitive {
     typealias FfiType = UInt64
     typealias SwiftType = UInt64
@@ -440,6 +456,22 @@ fileprivate struct FfiConverterUInt64: FfiConverterPrimitive {
     }
 
     public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        writeInt(&buf, lower(value))
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterInt64: FfiConverterPrimitive {
+    typealias FfiType = Int64
+    typealias SwiftType = Int64
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> Int64 {
+        return try lift(readInt(&buf))
+    }
+
+    public static func write(_ value: Int64, into buf: inout [UInt8]) {
         writeInt(&buf, lower(value))
     }
 }
@@ -551,6 +583,18 @@ public protocol MobileCoreProtocol : AnyObject {
      */
     func compileRuleLayer(index: UInt32, name: String, kind: LayerKind, note: String, defaultPolicy: String, text: String) throws  -> RuleLayerInfo
     
+    func deleteSubscription(id: String) throws 
+    
+    /**
+     * 到了自动更新时间的订阅 id（后台任务：逐个拉取后 update_subscription）。
+     */
+    func dueSubscriptions(nowMillis: Int64)  -> [String]
+    
+    /**
+     * 导入并重建节点库。url 可空（剪贴板/文件导入）。
+     */
+    func importSubscription(name: String, url: String?, fetched: FetchedSubscription, autoUpdateHours: Int32, progress: BuildProgress?) throws  -> Subscription
+    
     /**
      * 重新加载 rules/ 下全部层（按文件名序），final_policy 为 MATCH 的去向（通常是场景 "other"）。
      */
@@ -563,7 +607,17 @@ public protocol MobileCoreProtocol : AnyObject {
      */
     func nodeRows(token: UInt64, offset: UInt64, limit: UInt32) throws  -> NodePage
     
+    /**
+     * "更新前显示更改"：不落盘。
+     */
+    func previewSubscriptionUpdate(id: String, fetched: FetchedSubscription) throws  -> SubscriptionDiff
+    
     func queryNodes(query: String) throws  -> NodeQueryResult
+    
+    /**
+     * 由已保存的全部订阅正文重建节点库（启动修复、批量更新后调用一次即可）。
+     */
+    func rebuildFromSubscriptions(progress: BuildProgress?) throws  -> BuildReport
     
     /**
      * 开发/演示：用原型生成器建库。scale=1.0 即 13,109,802 个节点。
@@ -584,7 +638,18 @@ public protocol MobileCoreProtocol : AnyObject {
     
     func ruleStats()  -> RuleStats
     
+    /**
+     * 平台拉取用的完整 URL（不出现在 Subscription.url 里）。
+     */
+    func subscriptionFetchUrl(id: String) throws  -> String?
+    
+    func subscriptions()  -> [Subscription]
+    
+    func subscriptionsSummary()  -> SubscriptionsSummary
+    
     func testRule(input: String) throws  -> RuleTrace
+    
+    func updateSubscription(id: String, fetched: FetchedSubscription, progress: BuildProgress?) throws  -> SubscriptionDiff
     
 }
 
@@ -665,6 +730,39 @@ open func compileRuleLayer(index: UInt32, name: String, kind: LayerKind, note: S
 })
 }
     
+open func deleteSubscription(id: String)throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_delete_subscription(self.uniffiClonePointer(),
+        FfiConverterString.lower(id),$0
+    )
+}
+}
+    
+    /**
+     * 到了自动更新时间的订阅 id（后台任务：逐个拉取后 update_subscription）。
+     */
+open func dueSubscriptions(nowMillis: Int64) -> [String] {
+    return try!  FfiConverterSequenceString.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_due_subscriptions(self.uniffiClonePointer(),
+        FfiConverterInt64.lower(nowMillis),$0
+    )
+})
+}
+    
+    /**
+     * 导入并重建节点库。url 可空（剪贴板/文件导入）。
+     */
+open func importSubscription(name: String, url: String?, fetched: FetchedSubscription, autoUpdateHours: Int32, progress: BuildProgress?)throws  -> Subscription {
+    return try  FfiConverterTypeSubscription.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_import_subscription(self.uniffiClonePointer(),
+        FfiConverterString.lower(name),
+        FfiConverterOptionString.lower(url),
+        FfiConverterTypeFetchedSubscription.lower(fetched),
+        FfiConverterInt32.lower(autoUpdateHours),
+        FfiConverterOptionCallbackInterfaceBuildProgress.lower(progress),$0
+    )
+})
+}
+    
     /**
      * 重新加载 rules/ 下全部层（按文件名序），final_policy 为 MATCH 的去向（通常是场景 "other"）。
      */
@@ -696,10 +794,33 @@ open func nodeRows(token: UInt64, offset: UInt64, limit: UInt32)throws  -> NodeP
 })
 }
     
+    /**
+     * "更新前显示更改"：不落盘。
+     */
+open func previewSubscriptionUpdate(id: String, fetched: FetchedSubscription)throws  -> SubscriptionDiff {
+    return try  FfiConverterTypeSubscriptionDiff.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_subscription_update(self.uniffiClonePointer(),
+        FfiConverterString.lower(id),
+        FfiConverterTypeFetchedSubscription.lower(fetched),$0
+    )
+})
+}
+    
 open func queryNodes(query: String)throws  -> NodeQueryResult {
     return try  FfiConverterTypeNodeQueryResult.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_query_nodes(self.uniffiClonePointer(),
         FfiConverterString.lower(query),$0
+    )
+})
+}
+    
+    /**
+     * 由已保存的全部订阅正文重建节点库（启动修复、批量更新后调用一次即可）。
+     */
+open func rebuildFromSubscriptions(progress: BuildProgress?)throws  -> BuildReport {
+    return try  FfiConverterTypeBuildReport.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_from_subscriptions(self.uniffiClonePointer(),
+        FfiConverterOptionCallbackInterfaceBuildProgress.lower(progress),$0
     )
 })
 }
@@ -754,10 +875,45 @@ open func ruleStats() -> RuleStats {
 })
 }
     
+    /**
+     * 平台拉取用的完整 URL（不出现在 Subscription.url 里）。
+     */
+open func subscriptionFetchUrl(id: String)throws  -> String? {
+    return try  FfiConverterOptionString.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_subscription_fetch_url(self.uniffiClonePointer(),
+        FfiConverterString.lower(id),$0
+    )
+})
+}
+    
+open func subscriptions() -> [Subscription] {
+    return try!  FfiConverterSequenceTypeSubscription.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_subscriptions(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func subscriptionsSummary() -> SubscriptionsSummary {
+    return try!  FfiConverterTypeSubscriptionsSummary.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_subscriptions_summary(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
 open func testRule(input: String)throws  -> RuleTrace {
     return try  FfiConverterTypeRuleTrace.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_test_rule(self.uniffiClonePointer(),
         FfiConverterString.lower(input),$0
+    )
+})
+}
+    
+open func updateSubscription(id: String, fetched: FetchedSubscription, progress: BuildProgress?)throws  -> SubscriptionDiff {
+    return try  FfiConverterTypeSubscriptionDiff.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_update_subscription(self.uniffiClonePointer(),
+        FfiConverterString.lower(id),
+        FfiConverterTypeFetchedSubscription.lower(fetched),
+        FfiConverterOptionCallbackInterfaceBuildProgress.lower(progress),$0
     )
 })
 }
@@ -896,6 +1052,95 @@ public func FfiConverterTypeBuildReport_lift(_ buf: RustBuffer) throws -> BuildR
 #endif
 public func FfiConverterTypeBuildReport_lower(_ value: BuildReport) -> RustBuffer {
     return FfiConverterTypeBuildReport.lower(value)
+}
+
+
+/**
+ * 平台拉取结果。
+ */
+public struct FetchedSubscription {
+    public var body: String
+    /**
+     * 原样的 `subscription-userinfo` 响应头（可为空）
+     */
+    public var userinfo: String?
+    /**
+     * 平台当前时间（毫秒），便于测试注入
+     */
+    public var nowMillis: Int64
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(body: String, 
+        /**
+         * 原样的 `subscription-userinfo` 响应头（可为空）
+         */userinfo: String?, 
+        /**
+         * 平台当前时间（毫秒），便于测试注入
+         */nowMillis: Int64) {
+        self.body = body
+        self.userinfo = userinfo
+        self.nowMillis = nowMillis
+    }
+}
+
+
+
+extension FetchedSubscription: Equatable, Hashable {
+    public static func ==(lhs: FetchedSubscription, rhs: FetchedSubscription) -> Bool {
+        if lhs.body != rhs.body {
+            return false
+        }
+        if lhs.userinfo != rhs.userinfo {
+            return false
+        }
+        if lhs.nowMillis != rhs.nowMillis {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(body)
+        hasher.combine(userinfo)
+        hasher.combine(nowMillis)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeFetchedSubscription: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> FetchedSubscription {
+        return
+            try FetchedSubscription(
+                body: FfiConverterString.read(from: &buf), 
+                userinfo: FfiConverterOptionString.read(from: &buf), 
+                nowMillis: FfiConverterInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: FetchedSubscription, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.body, into: &buf)
+        FfiConverterOptionString.write(value.userinfo, into: &buf)
+        FfiConverterInt64.write(value.nowMillis, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeFetchedSubscription_lift(_ buf: RustBuffer) throws -> FetchedSubscription {
+    return try FfiConverterTypeFetchedSubscription.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeFetchedSubscription_lower(_ value: FetchedSubscription) -> RustBuffer {
+    return FfiConverterTypeFetchedSubscription.lower(value)
 }
 
 
@@ -1700,6 +1945,252 @@ public func FfiConverterTypeRuleTrace_lower(_ value: RuleTrace) -> RustBuffer {
 }
 
 
+public struct Subscription {
+    public var id: String
+    public var name: String
+    /**
+     * 脱敏：只保留 scheme://host/…，查询参数与路径 token 去掉
+     */
+    public var url: String?
+    public var nodeCount: Int64
+    public var usedBytes: Int64?
+    public var totalBytes: Int64?
+    public var remainingBytes: Int64?
+    public var expiresAt: Int64?
+    public var updatedAt: Int64?
+    public var autoUpdateHours: Int32
+    public var lastDiff: SubscriptionDiff?
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(id: String, name: String, 
+        /**
+         * 脱敏：只保留 scheme://host/…，查询参数与路径 token 去掉
+         */url: String?, nodeCount: Int64, usedBytes: Int64?, totalBytes: Int64?, remainingBytes: Int64?, expiresAt: Int64?, updatedAt: Int64?, autoUpdateHours: Int32, lastDiff: SubscriptionDiff?) {
+        self.id = id
+        self.name = name
+        self.url = url
+        self.nodeCount = nodeCount
+        self.usedBytes = usedBytes
+        self.totalBytes = totalBytes
+        self.remainingBytes = remainingBytes
+        self.expiresAt = expiresAt
+        self.updatedAt = updatedAt
+        self.autoUpdateHours = autoUpdateHours
+        self.lastDiff = lastDiff
+    }
+}
+
+
+
+extension Subscription: Equatable, Hashable {
+    public static func ==(lhs: Subscription, rhs: Subscription) -> Bool {
+        if lhs.id != rhs.id {
+            return false
+        }
+        if lhs.name != rhs.name {
+            return false
+        }
+        if lhs.url != rhs.url {
+            return false
+        }
+        if lhs.nodeCount != rhs.nodeCount {
+            return false
+        }
+        if lhs.usedBytes != rhs.usedBytes {
+            return false
+        }
+        if lhs.totalBytes != rhs.totalBytes {
+            return false
+        }
+        if lhs.remainingBytes != rhs.remainingBytes {
+            return false
+        }
+        if lhs.expiresAt != rhs.expiresAt {
+            return false
+        }
+        if lhs.updatedAt != rhs.updatedAt {
+            return false
+        }
+        if lhs.autoUpdateHours != rhs.autoUpdateHours {
+            return false
+        }
+        if lhs.lastDiff != rhs.lastDiff {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(name)
+        hasher.combine(url)
+        hasher.combine(nodeCount)
+        hasher.combine(usedBytes)
+        hasher.combine(totalBytes)
+        hasher.combine(remainingBytes)
+        hasher.combine(expiresAt)
+        hasher.combine(updatedAt)
+        hasher.combine(autoUpdateHours)
+        hasher.combine(lastDiff)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeSubscription: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> Subscription {
+        return
+            try Subscription(
+                id: FfiConverterString.read(from: &buf), 
+                name: FfiConverterString.read(from: &buf), 
+                url: FfiConverterOptionString.read(from: &buf), 
+                nodeCount: FfiConverterInt64.read(from: &buf), 
+                usedBytes: FfiConverterOptionInt64.read(from: &buf), 
+                totalBytes: FfiConverterOptionInt64.read(from: &buf), 
+                remainingBytes: FfiConverterOptionInt64.read(from: &buf), 
+                expiresAt: FfiConverterOptionInt64.read(from: &buf), 
+                updatedAt: FfiConverterOptionInt64.read(from: &buf), 
+                autoUpdateHours: FfiConverterInt32.read(from: &buf), 
+                lastDiff: FfiConverterOptionTypeSubscriptionDiff.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: Subscription, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.id, into: &buf)
+        FfiConverterString.write(value.name, into: &buf)
+        FfiConverterOptionString.write(value.url, into: &buf)
+        FfiConverterInt64.write(value.nodeCount, into: &buf)
+        FfiConverterOptionInt64.write(value.usedBytes, into: &buf)
+        FfiConverterOptionInt64.write(value.totalBytes, into: &buf)
+        FfiConverterOptionInt64.write(value.remainingBytes, into: &buf)
+        FfiConverterOptionInt64.write(value.expiresAt, into: &buf)
+        FfiConverterOptionInt64.write(value.updatedAt, into: &buf)
+        FfiConverterInt32.write(value.autoUpdateHours, into: &buf)
+        FfiConverterOptionTypeSubscriptionDiff.write(value.lastDiff, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSubscription_lift(_ buf: RustBuffer) throws -> Subscription {
+    return try FfiConverterTypeSubscription.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSubscription_lower(_ value: Subscription) -> RustBuffer {
+    return FfiConverterTypeSubscription.lower(value)
+}
+
+
+public struct SubscriptionDiff {
+    public var addedNodes: Int64
+    public var removedNodes: Int64
+    public var ruleChanges: Int64
+    /**
+     * Zephyr 覆写层不随订阅更新被冲掉（恒 true，核心保证）
+     */
+    public var overridesKept: Bool
+    /**
+     * 平台层在更新后对受影响场景重测时置 true
+     */
+    public var scenesRetested: Bool
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(addedNodes: Int64, removedNodes: Int64, ruleChanges: Int64, 
+        /**
+         * Zephyr 覆写层不随订阅更新被冲掉（恒 true，核心保证）
+         */overridesKept: Bool, 
+        /**
+         * 平台层在更新后对受影响场景重测时置 true
+         */scenesRetested: Bool) {
+        self.addedNodes = addedNodes
+        self.removedNodes = removedNodes
+        self.ruleChanges = ruleChanges
+        self.overridesKept = overridesKept
+        self.scenesRetested = scenesRetested
+    }
+}
+
+
+
+extension SubscriptionDiff: Equatable, Hashable {
+    public static func ==(lhs: SubscriptionDiff, rhs: SubscriptionDiff) -> Bool {
+        if lhs.addedNodes != rhs.addedNodes {
+            return false
+        }
+        if lhs.removedNodes != rhs.removedNodes {
+            return false
+        }
+        if lhs.ruleChanges != rhs.ruleChanges {
+            return false
+        }
+        if lhs.overridesKept != rhs.overridesKept {
+            return false
+        }
+        if lhs.scenesRetested != rhs.scenesRetested {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(addedNodes)
+        hasher.combine(removedNodes)
+        hasher.combine(ruleChanges)
+        hasher.combine(overridesKept)
+        hasher.combine(scenesRetested)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeSubscriptionDiff: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SubscriptionDiff {
+        return
+            try SubscriptionDiff(
+                addedNodes: FfiConverterInt64.read(from: &buf), 
+                removedNodes: FfiConverterInt64.read(from: &buf), 
+                ruleChanges: FfiConverterInt64.read(from: &buf), 
+                overridesKept: FfiConverterBool.read(from: &buf), 
+                scenesRetested: FfiConverterBool.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: SubscriptionDiff, into buf: inout [UInt8]) {
+        FfiConverterInt64.write(value.addedNodes, into: &buf)
+        FfiConverterInt64.write(value.removedNodes, into: &buf)
+        FfiConverterInt64.write(value.ruleChanges, into: &buf)
+        FfiConverterBool.write(value.overridesKept, into: &buf)
+        FfiConverterBool.write(value.scenesRetested, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSubscriptionDiff_lift(_ buf: RustBuffer) throws -> SubscriptionDiff {
+    return try FfiConverterTypeSubscriptionDiff.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSubscriptionDiff_lower(_ value: SubscriptionDiff) -> RustBuffer {
+    return FfiConverterTypeSubscriptionDiff.lower(value)
+}
+
+
 public struct SubscriptionSource {
     public var id: UInt16
     /**
@@ -1769,6 +2260,72 @@ public func FfiConverterTypeSubscriptionSource_lift(_ buf: RustBuffer) throws ->
 #endif
 public func FfiConverterTypeSubscriptionSource_lower(_ value: SubscriptionSource) -> RustBuffer {
     return FfiConverterTypeSubscriptionSource.lower(value)
+}
+
+
+public struct SubscriptionsSummary {
+    public var count: Int32
+    public var totalNodes: Int64
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(count: Int32, totalNodes: Int64) {
+        self.count = count
+        self.totalNodes = totalNodes
+    }
+}
+
+
+
+extension SubscriptionsSummary: Equatable, Hashable {
+    public static func ==(lhs: SubscriptionsSummary, rhs: SubscriptionsSummary) -> Bool {
+        if lhs.count != rhs.count {
+            return false
+        }
+        if lhs.totalNodes != rhs.totalNodes {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(count)
+        hasher.combine(totalNodes)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeSubscriptionsSummary: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SubscriptionsSummary {
+        return
+            try SubscriptionsSummary(
+                count: FfiConverterInt32.read(from: &buf), 
+                totalNodes: FfiConverterInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: SubscriptionsSummary, into buf: inout [UInt8]) {
+        FfiConverterInt32.write(value.count, into: &buf)
+        FfiConverterInt64.write(value.totalNodes, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSubscriptionsSummary_lift(_ buf: RustBuffer) throws -> SubscriptionsSummary {
+    return try FfiConverterTypeSubscriptionsSummary.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSubscriptionsSummary_lower(_ value: SubscriptionsSummary) -> RustBuffer {
+    return FfiConverterTypeSubscriptionsSummary.lower(value)
 }
 
 // Note that we don't yet support `indirect` for enums.
@@ -1957,6 +2514,11 @@ public enum MobileError {
     case StaleToken(String
     )
     /**
+     * contract v0.1：subscription_not_found
+     */
+    case SubscriptionNotFound(String
+    )
+    /**
      * 进度回调返回 false
      */
     case Cancelled
@@ -1997,7 +2559,10 @@ public struct FfiConverterTypeMobileError: FfiConverterRustBuffer {
         case 7: return .StaleToken(
             try FfiConverterString.read(from: &buf)
             )
-        case 8: return .Cancelled
+        case 8: return .SubscriptionNotFound(
+            try FfiConverterString.read(from: &buf)
+            )
+        case 9: return .Cancelled
 
          default: throw UniffiInternalError.unexpectedEnumCase
         }
@@ -2045,8 +2610,13 @@ public struct FfiConverterTypeMobileError: FfiConverterRustBuffer {
             FfiConverterString.write(v1, into: &buf)
             
         
-        case .Cancelled:
+        case let .SubscriptionNotFound(v1):
             writeInt(&buf, Int32(8))
+            FfiConverterString.write(v1, into: &buf)
+            
+        
+        case .Cancelled:
+            writeInt(&buf, Int32(9))
         
         }
     }
@@ -2224,6 +2794,30 @@ fileprivate struct FfiConverterOptionUInt64: FfiConverterRustBuffer {
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterOptionInt64: FfiConverterRustBuffer {
+    typealias SwiftType = Int64?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterInt64.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterInt64.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterOptionFloat: FfiConverterRustBuffer {
     typealias SwiftType = Float?
 
@@ -2264,6 +2858,54 @@ fileprivate struct FfiConverterOptionString: FfiConverterRustBuffer {
         switch try readInt(&buf) as Int8 {
         case 0: return nil
         case 1: return try FfiConverterString.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterOptionTypeSubscriptionDiff: FfiConverterRustBuffer {
+    typealias SwiftType = SubscriptionDiff?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypeSubscriptionDiff.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypeSubscriptionDiff.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterOptionCallbackInterfaceBuildProgress: FfiConverterRustBuffer {
+    typealias SwiftType = BuildProgress?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterCallbackInterfaceBuildProgress.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterCallbackInterfaceBuildProgress.read(from: &buf)
         default: throw UniffiInternalError.unexpectedOptionalTag
         }
     }
@@ -2372,6 +3014,31 @@ fileprivate struct FfiConverterSequenceTypeRuleLayerInfo: FfiConverterRustBuffer
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterSequenceTypeSubscription: FfiConverterRustBuffer {
+    typealias SwiftType = [Subscription]
+
+    public static func write(_ value: [Subscription], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeSubscription.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [Subscription] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [Subscription]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeSubscription.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterSequenceTypeSubscriptionSource: FfiConverterRustBuffer {
     typealias SwiftType = [SubscriptionSource]
 
@@ -2424,6 +3091,15 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_layer() != 45440) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_delete_subscription() != 35061) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_due_subscriptions() != 39270) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription() != 45715) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_load_rules() != 40179) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -2433,7 +3109,13 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_rows() != 21841) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_subscription_update() != 23752) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_query_nodes() != 48940) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_from_subscriptions() != 24861) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_mock_nodes() != 56758) {
@@ -2451,7 +3133,19 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscription_fetch_url() != 43374) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscriptions() != 57975) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscriptions_summary() != 18705) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule() != 8556) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_update_subscription() != 7462) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_constructor_mobilecore_new() != 4167) {
