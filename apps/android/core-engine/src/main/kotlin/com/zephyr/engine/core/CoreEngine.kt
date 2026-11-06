@@ -310,7 +310,8 @@ class CoreEngine(
     }
 
     /** A scene's exit died and core switched it to the next hot-standby node (already applied in mihomo). */
-    data class SceneFailoverEvent(val sceneId: String, val sceneName: String, val failed: String, val now: String, val previous: NodeId?)
+    /** [now] = null: the exit is down but the scene is never switched automatically (AI), the user decides. */
+    data class SceneFailoverEvent(val sceneId: String, val sceneName: String, val failed: String, val now: String?, val previous: NodeId?)
     private val failoverEvents = kotlinx.coroutines.flow.MutableSharedFlow<SceneFailoverEvent>(extraBufferCapacity = 8)
     val failovers: kotlinx.coroutines.flow.SharedFlow<SceneFailoverEvent> = failoverEvents
 
@@ -331,6 +332,12 @@ class CoreEngine(
             val sel = groups[sc.group]?.selected ?: continue
             val ok = withContext(io) { runCatching { l.test(sc.group, LivePort.TEST_URL, 5_000) }.getOrNull() }
                 ?.firstOrNull { it.name == sel }?.latencyMs?.let { it > 0 } ?: false
+            if (sc.kind == CoreSceneKind.AI) {
+                // Prototype rule: an AI exit IP only changes after the user confirms ("更改 GPT 和 Gemini 的出口 IP？"),
+                // because AI services flag accounts whose IP jumps. So we never auto-switch AI; we only tell them.
+                if (!ok) { val e = SceneFailoverEvent(sc.id, sc.name, sel, null, null); out += e; failoverEvents.tryEmit(e) }
+                continue
+            }
             val f = withContext(io) { runCatching { c.reportSceneProbe(sc.id, ok, clock()) }.getOrNull() } ?: continue
             withContext(io) { runCatching { l.select(f.apply.group, f.apply.member) } }
             val e = SceneFailoverEvent(sc.id, sc.name, f.failed.name, f.apply.member, f.apply.previous?.toLong())
