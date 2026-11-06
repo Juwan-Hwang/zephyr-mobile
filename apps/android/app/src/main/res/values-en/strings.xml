@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_label">Zephyr status</string>
+    <string name="widget_description">Connection, live speed and scenes</string>
+    <string name="channel_vpn">Connection</string>
+    <string name="channel_vpn_desc">Shows speed and scenes while connected</string>
+    <string name="channel_alerts">Subscription alerts</string>
+    <string name="channel_alerts_desc">Expiry and low data</string>
+    <string name="action_disconnect">Disconnect</string>
+    <string name="action_global">Global</string>
+    <string name="action_rule">Rule</string>
+    <string name="tile_off">Off</string>
+</resources>

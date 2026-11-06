@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Zephyr</string>
+    <string name="widget_label">Zephyr 状态</string>
+    <string name="widget_description">连接状态、实时速率与场景</string>
+    <string name="channel_vpn">连接状态</string>
+    <string name="channel_vpn_desc">已连接时常驻显示速率与场景</string>
+    <string name="channel_alerts">订阅提醒</string>
+    <string name="channel_alerts_desc">订阅到期与流量不足</string>
+    <string name="action_disconnect">断开连接</string>
+    <string name="action_global">全局模式</string>
+    <string name="action_rule">规则模式</string>
+    <string name="tile_off">未连接</string>
+</resources>
