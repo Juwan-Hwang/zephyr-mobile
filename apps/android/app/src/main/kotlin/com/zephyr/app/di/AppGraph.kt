@@ -7,6 +7,9 @@ import com.zephyr.app.vpn.Notifications
 import com.zephyr.engine.ZephyrEngine
 import com.zephyr.engine.core.CoreEngine
 import com.zephyr.engine.core.ProfileStore
+import com.zephyr.engine.core.LocalSocketDialer
+import com.zephyr.engine.core.Mihomo
+import com.zephyr.engine.core.MihomoRest
 import com.zephyr.engine.mock.MockEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +39,11 @@ object AppGraph {
             dataDir = java.io.File(app.filesDir, "core").apply { mkdirs() }.path,
             profiles = ProfileStore(app.filesDir),
             mockData = BuildConfig.DEBUG,
+            live = run {
+                // Same socket TunBridge.Embedded hands to zm_start; only dialled while mihomo runs in-process.
+                val rest = MihomoRest(LocalSocketDialer(java.io.File(app.filesDir, "mihomo/ctl.sock")))
+                return@run { if (Mihomo.running) rest else null }
+            },
         )
         engine = core
         if (BuildConfig.DEBUG && BuildConfig.CORE_SEED > 0.0) appScope.launch { runCatching { core.seedMockNodes(BuildConfig.CORE_SEED) } }

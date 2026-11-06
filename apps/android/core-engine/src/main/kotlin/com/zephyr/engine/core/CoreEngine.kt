@@ -22,7 +22,17 @@ import com.zephyr.engine.ZephyrException
 import com.zephyr.engine.mock.MockCatalog
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.merge
+import com.zephyr.engine.*
 import kotlinx.coroutines.withContext
 import com.zephyr.core.mobile.LayerKind as CoreLayerKind
 import com.zephyr.core.mobile.NodeRow as CoreRow
@@ -35,6 +45,7 @@ import com.zephyr.core.mobile.RegionSection as CoreSection
  *
  * Threading: UniFFI calls are blocking FFI; they run on [io] so the main thread never touches JNA.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class CoreEngine(
     private val fallback: ZephyrEngine,
     dataDir: String? = null,
@@ -47,6 +58,9 @@ class CoreEngine(
      * UI shows its empty state instead of fake nodes.
      */
     private val mockData: Boolean = true,
+    /** mihomo's REST controller while the embedded core runs, else null (VPN off, tests, screenshots). */
+    private val live: () -> MihomoRest? = { null },
+    private val tick: Long = 1_000,
 ) : ZephyrEngine by fallback {
 
     private val core: MobileCore? = dataDir?.let { dir ->
@@ -85,7 +99,7 @@ class CoreEngine(
     // ── Subscriptions (real profiles once the user imports one) ───────────────────────────────────
     private fun realSubs(): Boolean = profiles != null && (!mockData || isNative || profiles.subscriptions.value.isNotEmpty())
 
-    override fun subscriptions(): kotlinx.coroutines.flow.Flow<List<Subscription>> =
+    override fun subscriptions(): Flow<List<Subscription>> =
         if (realSubs()) profiles!!.subscriptions else fallback.subscriptions()
 
     override suspend fun subscriptionsSummary(): SubscriptionsSummary =
@@ -112,6 +126,191 @@ class CoreEngine(
             profiles!!.delete(id)
             core?.let { c -> wrap { c.rebuildNodes(profiles.sources().map { SubscriptionSource(it.first.toUShort(), it.second) }) }; nodesReady = null }
         }
+    }
+
+    // ── Live mihomo (policy groups, connections, mode, delay) ───────────────────────────────────────
+    private val names = java.util.concurrent.ConcurrentHashMap<Long, String>()
+    private val liveLatency = kotlinx.coroutines.flow.MutableSharedFlow<List<LatencyUpdate>>(extraBufferCapacity = 8)
+    @Volatile private var proxyCache: Map<String, MihomoRest.Proxy> = emptyMap()
+
+    /** Emits whether the live controller is reachable; re-checked every few ticks. */
+    private val liveFlag: Flow<Boolean> = flow { while (true) { emit(live() != null); delay(tick * 2) } }.distinctUntilChanged()
+
+    /** [real] while mihomo runs, otherwise [mock] (debug) or [empty] (release). */
+    private fun <T> switching(real: (MihomoRest) -> Flow<T>, mock: () -> Flow<T>, empty: T): Flow<T> =
+        liveFlag.flatMapLatest { on -> live()?.takeIf { on }?.let(real) ?: if (mockData) mock() else flowOf(empty) }
+
+    private fun <T> polling(r: MihomoRest, every: Long, read: (MihomoRest) -> T): Flow<T> = flow {
+        while (true) { runCatching { read(r) }.onSuccess { emit(it) }; delay(every) }
+    }.flowOn(io)
+
+    private fun proxies(r: MihomoRest): Map<String, MihomoRest.Proxy> = r.proxies().also { proxyCache = it }
+
+    private fun summary(p: MihomoRest.Proxy?, name: String): NodeSummary {
+        val id = MihomoRest.idOf(name).also { names[it] = name }
+        val region = MihomoRest.regionOf(name)
+        return NodeSummary(id = id, name = name, region = region, protocol = p?.type?.uppercase() ?: "", latencyMs = p?.lastDelay?.takeIf { it > 0 })
+    }
+
+    private fun groups(all: Map<String, MihomoRest.Proxy>): List<PolicyGroup> = all.values
+        .filter { it.type in MihomoRest.GROUP_TYPES && it.name != "GLOBAL" }
+        .map { g ->
+            PolicyGroup(
+                name = g.name,
+                type = when (g.type) { "URLTest" -> GroupType.URL_TEST; "Fallback" -> GroupType.FALLBACK; "LoadBalance" -> GroupType.LOAD_BALANCE; "Relay" -> GroupType.RELAY; else -> GroupType.SELECT },
+                selected = g.now, memberCount = g.all.size, testedAt = g.all.mapNotNull { all[it]?.lastTestAt }.maxOrNull(),
+            )
+        }
+
+    // Scenes while live: the profile's selectable groups in config order (GLOBAL.all), kind by name.
+    // Interim until core injects Zephyr's own scene groups into active.yaml (asked A, Issue #1).
+    private fun leaf(all: Map<String, MihomoRest.Proxy>, name: String): String {
+        var cur = name; var hops = 0
+        while (hops++ < 8) { val p = all[cur] ?: break; if (p.type !in MihomoRest.GROUP_TYPES) break; cur = p.now ?: break }
+        return cur
+    }
+
+    private fun liveScenes(all: Map<String, MihomoRest.Proxy>): List<Scene> {
+        val order = all["GLOBAL"]?.all ?: all.keys.sorted()
+        return order.mapNotNull { all[it] }
+            .filter { it.type in MihomoRest.GROUP_TYPES && it.name != "GLOBAL" && it.all.any { m -> !MihomoRest.isBuiltin(m) } }
+            .map { g ->
+                val leafName = leaf(all, g.name)
+                Scene(
+                    id = g.name, kind = sceneKind(g.name), name = g.name,
+                    available = g.all.count { !MihomoRest.isBuiltin(it) },
+                    selected = if (leafName == "DIRECT") NodeSummary(MihomoRest.idOf("DIRECT"), "直连", "CN", protocol = "DIRECT") else summary(all[leafName], leafName),
+                    source = if (g.type == "Selector") SceneSource.SUBSCRIPTION_GROUP else SceneSource.AUTO,
+                    testedAt = g.all.mapNotNull { all[it]?.lastTestAt }.maxOrNull(),
+                )
+            }
+    }
+
+    override fun scenes(): Flow<List<Scene>> =
+        switching({ r -> polling(r, tick * 3) { liveScenes(proxies(it)) }.distinctUntilChanged() }, { fallback.scenes() }, emptyList())
+
+    override suspend fun sceneCandidates(sceneId: String, region: String?): List<NodeSummary> {
+        val r = live() ?: return fallback.sceneCandidates(sceneId, region)
+        val all = withContext(io) { proxies(r) }
+        val g = all[sceneId] ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
+        return g.all.filterNot(MihomoRest::isBuiltin).map { summary(all[it], it) }
+            .filter { region == null || it.region == region }
+            .sortedWith(compareBy(nullsLast()) { it.latencyMs }).take(50)
+    }
+
+    override suspend fun previewSceneChange(sceneId: String, nodeId: NodeId): ExitChange {
+        val r = live() ?: return fallback.previewSceneChange(sceneId, nodeId)
+        val all = withContext(io) { proxies(r) }
+        all[sceneId] ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
+        val to = names[nodeId] ?: throw ZephyrException(ErrorCode.NODE_NOT_FOUND, "$nodeId")
+        return ExitChange(sceneId, MihomoRest.regionOf(leaf(all, sceneId)), null, MihomoRest.regionOf(to), null)
+    }
+
+    override suspend fun applySceneChange(sceneId: String, nodeId: NodeId) {
+        if (live() == null) return fallback.applySceneChange(sceneId, nodeId)
+        selectInGroup(sceneId, nodeId)
+    }
+
+    override suspend fun retestScene(sceneId: String): Scene {
+        val r = live() ?: return fallback.retestScene(sceneId)
+        withContext(io) { liveCall { r.groupDelay(sceneId) } }
+        return liveScenes(withContext(io) { proxies(r) }).firstOrNull { it.id == sceneId } ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
+    }
+
+    override fun policyGroups(): Flow<List<PolicyGroup>> =
+        switching({ r -> polling(r, tick * 3) { groups(proxies(it)) }.distinctUntilChanged() }, { fallback.policyGroups() }, emptyList())
+
+    override suspend fun groupMembers(group: String, offset: Int, limit: Int): NodePage {
+        val r = live() ?: return fallback.groupMembers(group, offset, limit)
+        val all = withContext(io) { proxies(r) }
+        val g = all[group]?.takeIf { it.type in MihomoRest.GROUP_TYPES } ?: throw ZephyrException(ErrorCode.GROUP_NOT_FOUND, group)
+        val rows = g.all.drop(offset).take(limit.coerceIn(0, 500)).map { summary(all[it], it) }
+        return NodePage(rows, offset.toLong(), g.all.size.toLong())
+    }
+
+    override suspend fun selectInGroup(group: String, nodeId: NodeId) {
+        val r = live() ?: return fallback.selectInGroup(group, nodeId)
+        val name = names[nodeId] ?: throw ZephyrException(ErrorCode.NODE_NOT_FOUND, nodeId.toString())
+        withContext(io) { liveCall { r.select(group, name) } }
+    }
+
+    override suspend fun testGroup(group: String) {
+        val r = live() ?: return fallback.testGroup(group)
+        val delays = withContext(io) { liveCall { r.groupDelay(group) } }
+        val members = proxyCache[group]?.all ?: delays.keys.toList()
+        val now = System.currentTimeMillis()
+        liveLatency.tryEmit(members.map { LatencyUpdate(MihomoRest.idOf(it).also { id -> names[id] = it }, delays[it] ?: -1, now) })
+    }
+
+    override fun latencyUpdates(): Flow<List<LatencyUpdate>> = merge(fallback.latencyUpdates(), liveLatency)
+
+    override suspend fun setMode(mode: ProxyMode) {
+        live()?.let { r -> withContext(io) { liveCall { r.setMode(mode.name.lowercase()) } } }
+        fallback.setMode(mode)
+    }
+
+    private fun connInfo(c: MihomoRest.Conn0): ConnectionInfo {
+        val direct = c.chains.isEmpty() || c.chains.first() == "DIRECT"
+        return ConnectionInfo(
+            id = c.id, host = c.host, app = c.process, scene = if (direct) null else c.chains.last(),
+            node = if (direct) "直连" else c.chains.first(), upBytes = c.up, downBytes = c.down, startedAt = c.startMillis,
+        )
+    }
+
+    override fun traffic(): Flow<TrafficSample> = switching({ _ ->
+        flow { while (true) { Mihomo.traffic()?.let { emit(TrafficSample(System.currentTimeMillis(), it.upBps, it.downBps)) }; delay(tick) } }.flowOn(io)
+    }, { fallback.traffic() }, TrafficSample(0, 0, 0))
+
+    override fun activeConnections(): Flow<List<ConnectionInfo>> =
+        switching({ r -> polling(r, tick) { it.connections().map(::connInfo) } }, { fallback.activeConnections() }, emptyList())
+
+    override suspend fun closeConnection(id: String) { live()?.let { r -> withContext(io) { liveCall { r.closeConnection(id) } } } ?: fallback.closeConnection(id) }
+    override suspend fun closeAll() { live()?.let { r -> withContext(io) { liveCall { r.closeAll() } } } ?: fallback.closeAll() }
+
+    override fun recentHosts(limit: Int): Flow<List<ConnectionInfo>> = switching({ r ->
+        polling(r, tick) { rr ->
+            rr.connections().groupBy { it.host }.values
+                .map { cs -> val last = cs.maxBy { it.startMillis }; connInfo(last).copy(upBytes = cs.sumOf { it.up }, downBytes = cs.sumOf { it.down }) }
+                .sortedByDescending { it.startedAt }.take(limit.coerceIn(0, 50))
+        }
+    }, { fallback.recentHosts(limit) }, emptyList())
+
+    override suspend fun connectionTrace(host: String): ConnectionTrace {
+        val r = live() ?: return fallback.connectionTrace(host)
+        val cs = withContext(io) { liveCall { r.connections() } }.filter { it.host == host }
+        if (cs.isEmpty()) throw ZephyrException(ErrorCode.NODE_NOT_FOUND, host)
+        val last = cs.maxBy { it.startMillis }
+        val direct = last.chains.isEmpty() || last.chains.first() == "DIRECT"
+        val nodeName = last.chains.firstOrNull()
+        return ConnectionTrace(
+            host = host, lastSeenAt = last.startMillis, connections = cs.size, totalBytes = cs.sumOf { it.up + it.down },
+            rule = MihomoRest.ruleText(last.rule, last.rulePayload),
+            scene = if (direct) null else last.chains.last(),
+            node = if (direct || nodeName == null) null else summary(proxyCache[nodeName], nodeName),
+            via = last.chains.drop(1).dropLast(1).takeIf { it.isNotEmpty() }?.joinToString(" · "),
+        )
+    }
+
+    override suspend fun overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Boolean) {
+        if (live() == null) return fallback.overrideHost(host, target, sceneId, persistent)
+        // Needs the Zephyr override rule layer in the running config (contract §13); not wired to mihomo yet.
+        throw ZephyrException(ErrorCode.INTERNAL, "override not available yet")
+    }
+
+    private fun sceneKind(name: String): SceneKind {
+        val n = name.lowercase()
+        return when {
+            listOf("ai", "openai", "chatgpt", "gpt", "claude", "gemini", "copilot").any { k -> Regex("(^|[^a-z])$k([^a-z]|$)").containsMatchIn(n) } -> SceneKind.AI
+            listOf("视频", "流媒体", "媒体", "netflix", "youtube", "disney", "stream", "media", "video").any { n.contains(it) } -> SceneKind.VIDEO
+            listOf("其他", "其它", "漏网", "final", "other", "fallback").any { n.contains(it) } -> SceneKind.OTHER
+            else -> SceneKind.CUSTOM
+        }
+    }
+
+    private inline fun <T> liveCall(block: () -> T): T = try { block() } catch (e: MihomoRest.HttpException) {
+        throw ZephyrException(if (e.status == 404) ErrorCode.GROUP_NOT_FOUND else ErrorCode.INTERNAL, e.message ?: "")
+    } catch (e: java.io.IOException) {
+        throw ZephyrException(ErrorCode.NOT_RUNNING, e.message ?: "controller unreachable")
     }
 
     // ── Nodes ──────────────────────────────────────────────────────────────────────────────────────
