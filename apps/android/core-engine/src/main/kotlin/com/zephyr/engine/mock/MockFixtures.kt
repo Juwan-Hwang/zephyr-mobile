@@ -122,6 +122,24 @@ internal object MockConnections {
         C("i.ytimg.com", "视频", "香港 HKT", 22_000_000, 300_000),
     )
 
+    /** contract §13 fixed traces (prototype 9:41). */
+    fun trace(host: String, now: Long): ConnectionTrace? {
+        val i = BASE.indexOfFirst { it.host == host }.takeIf { it in 0..4 } ?: return null
+        val c = BASE[i]
+        return if (host == "claude.ai") ConnectionTrace(
+            host = host, lastSeenAt = now - 3_000, connections = 17, totalBytes = 2_100_000,
+            rule = "DOMAIN-SUFFIX,claude.ai", ruleSource = "Nebula Cloud", scene = "ai", sceneSource = "Zephyr 优选",
+            node = NodeSummary(id = -101, name = "US-Fixed-01", region = "US", protocol = "VLESS", latencyMs = 162),
+            via = "US Fixed IP · 固定", exitIp = "203.0.113.24", exitRegion = "美国", exitStableDays = 7,
+        ) else ConnectionTrace(
+            host = host, lastSeenAt = now - (i + 1) * 3_000L, connections = 3 + i * 2, totalBytes = c.down + c.up,
+            rule = if (c.scene == null) "GEOSITE,cn" else "DOMAIN-SUFFIX,$host", ruleSource = if (c.scene == null) "geosite:cn" else "Nebula Cloud",
+            scene = when (c.scene) { "AI" -> "ai"; "视频" -> "video"; "其他" -> "other"; else -> null },
+            sceneSource = c.scene?.let { "Zephyr 优选" },
+            node = c.scene?.let { NodeSummary(id = -102L - i, name = c.node, region = if (c.node.startsWith("TW")) "TW" else if (c.node.contains("香港")) "HK" else "SG", protocol = "VLESS") },
+        )
+    }
+
     fun at(start: Long, t: Long): List<ConnectionInfo> = BASE.mapIndexed { i, c ->
         val grow = 1.0 + t * (0.01 + i * 0.002)
         ConnectionInfo(
