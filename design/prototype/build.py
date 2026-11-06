@@ -1,0 +1,16 @@
+s=open('index.v5.html').read()
+c=open('pages.css').read();h=open('pages.html').read();j=open('pages.js').read()
+def R(a,b):
+    global s
+    assert a in s,a[:60]; s=s.replace(a,b,1)
+R('</style>',c+'</style>')
+R('    <div class="veil" id="veil"></div>',h+'    <div class="veil" id="veil"></div>')
+R('/* ---------- chapters',j+'\n/* ---------- chapters')
+R('<button class="lc"><b class="num">512</b><span>节点</span></button>','<button class="lc"><b class="num">1,311 万</b><span>节点</span></button>')
+R('<button class="lc"><b class="num">2</b><span>订阅</span></button>','<button class="lc"><b class="num">214</b><span>订阅</span></button>')
+R('<button class="lc"><b class="num">1,284</b><span>规则</span></button>','<button class="lc"><b class="num">1.04 亿</b><span>规则</span></button>')
+R("['18','浅色外观','light'],['19','大字体','xl']];","['18','浅色外观','light'],['19','大字体','xl'],['20','节点','nodes'],['21','搜索节点','nodes-q'],['22','规则','rules'],['23','规则：已拦截','rules-ad'],['24','订阅','subs'],['25','设置','settings']];")
+R("  if(['ob1','ob2','lock','hs','and'].includes(id)){","  dev.classList.remove('osui');closeSheets(true);\n  if(id==='nodes'){openNodes('');return;}if(id==='nodes-q'){openNodes('东京 IPLC');return;}\n  if(id==='rules'){openRules('chat.openai.com');return;}if(id==='rules-ad'){openRules('ads.doubleclick.net');return;}\n  if(id==='subs'||id==='settings'){show(id);return;}\n  if(['ob1','ob2','lock','hs','and'].includes(id)){")
+R("  dev.classList.toggle('light',id==='light');dev.classList.toggle('xl',id==='xl');","  const LIGHT=id==='light'||id.endsWith('.light'),XL=id==='xl'||id.endsWith('.xl');id=id.replace(/\\.(light|xl)$/,'');\n  dev.classList.toggle('light',LIGHT);dev.classList.toggle('xl',XL);")
+s=s.replace('.connecting .sw{background:rgba(48,209,88,.45)}','')
+open('index.html','w').write(s)

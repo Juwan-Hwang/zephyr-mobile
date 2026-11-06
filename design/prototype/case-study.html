@@ -1,0 +1,133 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Zephyr Mobile 设计案例</title><style>
+@page{margin:0}
+*{box-sizing:border-box}
+body{margin:0;background:#050506;color:rgba(255,255,255,.94);font-family:Inter,"Noto Sans SC",sans-serif;-webkit-font-smoothing:antialiased}
+.w{width:1440px;padding:0 120px}
+section{padding:120px 0;border-top:1px solid rgba(255,255,255,.08)}
+section:first-child{border:0}
+.lab{font:12px "JetBrains Mono";letter-spacing:.06em;color:#0A84FF}
+h1{font:200 88px/1.02 Inter,"Noto Sans SC";letter-spacing:-.045em;margin:40px 0 0}
+h2{font:300 48px/1.1 Inter,"Noto Sans SC";letter-spacing:-.03em;margin:18px 0 0}
+p{font-size:18px;line-height:1.75;color:rgba(255,255,255,.55);max-width:760px;margin:22px 0 0}
+.ph{border-radius:40px;box-shadow:0 0 0 1px #222,0 0 0 8px #0b0b0c,0 0 0 9px #2a2a2c;display:block}
+.row{display:flex;gap:32px;margin-top:64px;align-items:flex-start}
+.cap{margin-top:26px;width:276px}.cap b{display:block;font:400 17px Inter,"Noto Sans SC"}.cap span{display:block;font-size:14px;color:rgba(255,255,255,.45);margin-top:8px;line-height:1.65}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:64px;border-top:1px solid rgba(255,255,255,.1)}
+.stats div{padding:28px 24px 0 0}.stats b{display:block;font:200 56px/1 Inter;letter-spacing:-.04em}.stats span{display:block;font-size:14px;color:rgba(255,255,255,.45);margin-top:12px;line-height:1.5}
+.bars{margin-top:56px;max-width:900px}
+.bar{display:grid;grid-template-columns:200px 1fr 60px;align-items:center;gap:20px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:15px}
+.bar i{display:block;height:4px;border-radius:2px;background:rgba(255,255,255,.75)}
+.bar em{font:13px "JetBrains Mono";font-style:normal;color:rgba(255,255,255,.5);text-align:right}
+.pr{display:grid;grid-template-columns:repeat(5,1fr);gap:28px;margin-top:64px}
+.pr div{border-top:1px solid rgba(255,255,255,.2);padding-top:22px}.pr small{font:12px "JetBrains Mono";color:#0A84FF}.pr b{display:block;font:400 20px/1.35 Inter,"Noto Sans SC";margin-top:14px}.pr span{display:block;font-size:14px;line-height:1.65;color:rgba(255,255,255,.45);margin-top:10px}
+.ls{margin-top:48px;max-width:980px}.ls div{display:grid;grid-template-columns:260px 1fr;gap:24px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:15.5px;line-height:1.6}.ls div b{font-weight:400}.ls div span{color:rgba(255,255,255,.5)}
+.note{font-size:13px;color:rgba(255,255,255,.35);margin-top:40px}
+</style></head><body><div class="w">
+
+<section style="padding-top:140px">
+<div style="display:flex;align-items:center;gap:16px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="45 65 625 142" style="height:44px;display:block"><g><path fill="#FFF" d="M206.08 56.99 L47.45 56.99 A1.45 1.45 0 0 0 46.01 58.44 A164.00 164.00 0 0 0 67.30 137.82 A1.35 1.35 0 0 0 69.14 138.31 L206.61 58.95 A1.05 1.05 0 0 0 206.08 56.99 Z M49.92 199.01 L208.55 199.01 A1.45 1.45 0 0 0 209.99 197.56 A164.00 164.00 0 0 0 188.70 118.18 A1.35 1.35 0 0 0 186.86 117.69 L49.39 197.05 A1.05 1.05 0 0 0 49.92 199.01 Z" transform="translate(4.89 14.65) scale(0.8856)"/></g><path fill="#FFF" d="M218.92 177.41 A0.91 0.91 0 0 0 219.83 178.32 L298.65 178.32 A0.91 0.91 0 0 0 299.56 177.41 L299.56 163.62 A0.91 0.91 0 0 0 298.65 162.71 L244.46 162.71 A0.49 0.49 0 0 1 244.06 161.93 L299.13 86.96 A0.77 0.77 0 0 0 299.28 86.51 L299.28 78.60 A0.91 0.91 0 0 0 298.37 77.69 L220.39 77.69 A0.91 0.91 0 0 0 219.48 78.60 L219.48 92.39 A0.91 0.91 0 0 0 220.39 93.30 L274.29 93.30 A0.49 0.49 0 0 1 274.69 94.08 L219.07 169.04 A0.77 0.77 0 0 0 218.92 169.50 Z M343.95 179.41 C359.80 179.41 371.73 171.22 375.46 158.02 L359.83 158.02 C357.66 163.06 351.61 165.81 344.17 165.87 C333.08 165.81 326.52 157.34 326.58 146.80 L326.58 146.54 L377.12 146.54 L377.12 142.23 C377.12 119.94 364.32 105.04 343.62 105.04 C322.62 105.04 309.08 120.29 309.08 142.29 C309.08 164.71 322.62 179.41 343.95 179.41 Z M326.67 134.99 C327.22 126.24 333.69 118.58 343.62 118.58 C352.99 118.58 360.16 125.27 360.49 134.99 L326.67 134.99 Z M389.43 205.85 A0.91 0.91 0 0 0 390.34 206.76 L406.29 206.76 A0.91 0.91 0 0 0 407.20 205.85 L407.20 167.25 L407.55 167.25 C411.51 174.97 419.36 179.35 429.01 179.35 C446.44 179.35 458.95 165.68 458.95 142.16 C458.95 118.29 446.02 105.04 429.07 105.04 C419.36 105.04 411.79 109.61 407.55 117.62 L407.06 117.62 L407.06 107.04 A0.91 0.91 0 0 0 406.15 106.13 L390.34 106.13 A0.91 0.91 0 0 0 389.43 107.04 L389.44 205.84 Z M406.45 142.16 C406.45 128.27 413.21 119.52 423.89 119.52 C434.12 119.52 440.91 127.53 440.91 142.16 C440.91 156.93 434.12 164.78 423.89 164.78 C413.21 164.78 406.45 156.03 406.45 142.16 Z M489.45 135.93 C489.45 124.25 496.63 118.84 505.59 118.84 C514.89 118.84 520.69 124.44 520.62 134.92 L520.62 177.41 A0.91 0.91 0 0 0 521.53 178.32 L537.50 178.32 A0.91 0.91 0 0 0 538.41 177.41 L538.41 132.19 C538.41 113.99 526.77 103.81 511.61 103.81 C500.32 103.81 492.80 109.48 489.52 117.55 L489.03 117.55 L489.03 78.61 A0.91 0.91 0 0 0 488.12 77.69 L472.60 77.69 A0.91 0.91 0 0 0 471.69 78.61 L471.69 177.41 A0.91 0.91 0 0 0 472.60 178.32 L488.54 178.32 A0.91 0.91 0 0 0 489.45 177.41 L489.45 135.93 Z M565.53 205.53 A0.91 0.91 0 0 0 566.39 206.75 L583.14 206.75 A0.91 0.91 0 0 0 583.99 206.16 L620.28 107.36 A0.91 0.91 0 0 0 619.43 106.14 L602.68 106.14 A0.91 0.91 0 0 0 601.82 106.73 L584.11 154.95 A0.28 0.28 0 0 1 583.84 155.14 L583.76 155.14 A0.28 0.28 0 0 1 583.50 154.95 L566.14 106.74 A0.91 0.91 0 0 0 565.28 106.14 L548.40 106.14 A0.91 0.91 0 0 0 547.54 107.36 L574.50 180.74 A0.56 0.56 0 0 1 574.50 181.13 Z M628.85 177.41 A0.91 0.91 0 0 0 629.76 178.32 L645.70 178.32 A0.91 0.91 0 0 0 646.61 177.41 L646.61 137.17 C646.61 126.37 653.11 120.90 661.12 120.90 C664.25 120.90 667.81 121.38 669.39 121.93 L669.39 105.65 C668.01 105.30 665.95 105.04 663.70 105.04 C655.10 105.04 649.15 109.89 646.48 118.64 L645.94 118.64 L645.94 107.04 A0.91 0.91 0 0 0 645.03 106.13 L629.76 106.13 A0.91 0.91 0 0 0 628.85 107.04 L628.85 177.41 Z"/></svg><span style="font:300 44px Inter;opacity:.45;letter-spacing:-.02em">Mobile</span></div>
+<h1>一千三百万个节点，<br>一只手就能用。</h1>
+<p>Zephyr 是一款 Mihomo 桌面客户端。这份案例是它的 iOS 与 Android 版本的前端设计：从用户调研到 25 个可交互状态，覆盖首页、指令、节点、规则、锁屏、小组件和通知。</p>
+<div class="row"><img class="ph" style="width:276px" src="shots/home.png"><img class="ph" style="width:276px" src="shots/nodes.png"><img class="ph" style="width:276px" src="shots/rules.png"><img class="ph" style="width:276px" src="shots/today.png"></div>
+</section>
+
+<section>
+<div class="lab">01 · 问题</div>
+<h2>用户在等，<br>而上一次尝试不够好。</h2>
+<p>桌面用户一直在问移动版。上一版原生尝试用的是系统默认组件和一套分叉的颜色，看起来不像 Zephyr。这一次从头设计交互，只保留桌面版的气质：克制、精确、专业。</p>
+</section>
+
+<section>
+<div class="lab">02 · 调研</div>
+<h2>先读完四千条差评和好评。</h2>
+<p>覆盖 9 款主流代理客户端的应用商店评论，以及 GitHub issues 和中文论坛讨论。低星评论按主题归类，作为后续每个设计决定的依据。</p>
+<div class="stats"><div><b>4,469</b><span>条评论，去重后<br>iOS 与 Google Play</span></div><div><b>1,780</b><span>条低星评论<br>逐条归类</span></div><div><b>9</b><span>款客户端<br>Shadowrocket、Surge、Stash 等</span></div><div><b>3</b><span>个来源<br>商店、GitHub、论坛</span></div></div>
+<div class="bars">
+<div class="bar">更新后变坏<i style="width:100%"></i><em>24%</em></div>
+<div class="bar">断连与后台掉线<i style="width:87.5%"></i><em>21%</em></div>
+<div class="bar">协议与配置不兼容<i style="width:83%"></i><em>20%</em></div>
+<div class="bar">价格与付费墙<i style="width:71%"></i><em>17%</em></div>
+<div class="bar">首次设置与导入<i style="width:37.5%"></i><em>9%</em></div>
+<div class="bar">节点选择<i style="width:29%"></i><em>7%</em></div>
+<div class="bar">界面不清晰<i style="width:25%"></i><em>6%</em></div>
+<div class="bar">测速不准<i style="width:21%"></i><em>5%</em></div>
+<div class="bar">耗电<i style="width:17%"></i><em>4%</em></div>
+</div>
+<div class="note">低星评论中各主题占比。一条评论可属于多个主题。</div>
+</section>
+
+<section>
+<div class="lab">03 · 原则</div>
+<h2>五条不能破的规则。</h2>
+<div class="pr">
+<div><small>01</small><b>不改用户的配置</b><span>场景只是订阅里已有策略组的展示层。缺组时，经用户同意才写入覆写层。</span></div>
+<div><small>02</small><b>换出口 IP 先确认</b><span>写明 IP 从哪里变到哪里。AI 服务对 IP 跳变最敏感。</span></div>
+<div><small>03</small><b>失败就说出来</b><span>AI 流量断了直接失败，不悄悄退回其他节点。</span></div>
+<div><small>04</small><b>只测需要的</b><span>延迟只测可见节点和场景池。带宽只测前 3 名，仅 Wi‑Fi。</span></div>
+<div><small>05</small><b>只渲染看得见的</b><span>一千万行和十行用同样多的内存。</span></div>
+</div>
+</section>
+
+<section>
+<div class="lab">04 · 日常</div>
+<h2>打开就是答案。</h2>
+<p>首页只回答三件事：连上没有、网速多少、每类流量从哪里出去。按服务分场景，而不是按节点列表。</p>
+<div class="row">
+<div><img class="ph" style="width:276px" src="shots/home.png"><div class="cap"><b>首页</b><span>开关、实时速度、三个场景。点速度看最近连接。</span></div></div>
+<div><img class="ph" style="width:276px" src="shots/scrub.png"><div class="cap"><b>切换地区</b><span>在场景行上滑动换地区。松手前显示出口 IP 变化，确认后可撤销。</span></div></div>
+<div><img class="ph" style="width:276px" src="shots/cmd.png"><div class="cap"><b>指令</b><span>“Gemini 走日本”。本地解析，不联网，不用 AI。先预览，再应用。</span></div></div>
+<div><img class="ph" style="width:276px" src="shots/trace.png"><div class="cap"><b>连接轨迹</b><span>一条请求走了哪条规则、哪个场景、哪个出口。</span></div></div>
+</div>
+</section>
+
+<section>
+<div class="lab">05 · 规模</div>
+<h2>千万级节点，亿级规则。</h2>
+<p>节点列表只渲染可见的十几行；右侧索引直接跳到地区；搜索走索引，不逐个扫描。规则编译成只读索引，放在磁盘上按需读取。输入一个域名，就能看到它命中第几层、哪条规则、从哪个 IP 出去。</p>
+<div class="stats"><div><b>13.1M</b><span>个节点<br>来自 214 个订阅</span></div><div><b>103.6M</b><span>条规则<br>7 层</span></div><div><b>0.3 ms</b><span>搜索“东京 IPLC”<br>220,412 个结果</span></div><div><b>≈ 16</b><span>行同时渲染<br>与总数无关</span></div></div>
+<div class="row">
+<div><img class="ph" style="width:276px" src="shots/nodes.png"><div class="cap"><b>节点</b><span>按地区分组，标题固定在顶部。停下来才测可见行的延迟。</span></div></div>
+<div><img class="ph" style="width:276px" src="shots/nodes-q.png"><div class="cap"><b>搜索</b><span>地区、城市、运营商、线路任意组合。</span></div></div>
+<div><img class="ph" style="width:276px" src="shots/rules.png"><div class="cap"><b>规则</b><span>匹配顺序从上到下。命中的层高亮。</span></div></div>
+<div><img class="ph" style="width:276px" src="shots/subs.png"><div class="cap"><b>订阅</b><span>更新后列出增减。覆写保持不变。</span></div></div>
+</div>
+<div class="note">原型中的数据由索引即时生成，计时为浏览器内实测，不代表真机性能。</div>
+</section>
+
+<section>
+<div class="lab">06 · 系统</div>
+<h2>不打开 App 也够用。</h2>
+<p>调研里，控制中心和小组件是很多人每天的主入口。锁屏、主屏、通知栏只放状态和一个动作，不放装饰。</p>
+<div class="row">
+<div><img class="ph" style="width:276px" src="shots/lock.png"><div class="cap"><b>锁屏与灵动岛</b><span>实时活动显示速度与当前出口。</span></div></div>
+<div><img class="ph" style="width:276px" src="shots/hs.png"><div class="cap"><b>小组件</b><span>小、中、大三种尺寸。</span></div></div>
+<div><img class="ph" style="width:276px" src="shots/and.png"><div class="cap"><b>Android</b><span>常驻通知与快捷开关。</span></div></div>
+
+</div>
+</section>
+
+<section>
+<div class="lab">07 · 适配</div>
+<h2>浅色、大字体、失败状态。</h2>
+<div class="row">
+<div><img class="ph" style="width:276px" src="shots/light.png"><div class="cap"><b>浅色外观</b><span>同一套层级，换一组颜色。</span></div></div>
+<div><img class="ph" style="width:276px" src="shots/xl.png"><div class="cap"><b>大字体</b><span>场景行改为上下排列。</span></div></div>
+<div><img class="ph" style="width:276px" src="shots/zero.png"><div class="cap"><b>服务不可用</b><span>池里没有可用节点时，直接说明，不自动切换。</span></div></div>
+<div><img class="ph" style="width:276px" src="shots/ob1.png"><div class="cap"><b>第一次打开</b><span>粘贴链接、扫码、从电脑上的 Zephyr 或文件导入。</span></div></div>
+</div>
+</section>
+
+<section>
+<div class="lab">08 · 还需要真机</div>
+<h2>原型证明不了的部分。</h2>
+<div class="ls">
+<div><b>iOS 扩展内存</b><span>NetworkExtension 上限约 50 MB。亿级规则用磁盘映射是否计入，需真机测量。</span></div>
+<div><b>mihomo 作为库嵌入</b><span>gomobile 或 c-archive 编译，iOS 与 Android 各做一次 spike。</span></div>
+<div><b>滚动与启动</b><span>目标：冷启动小于 1 秒，千万行列表 60 fps，点击响应小于 100 ms。</span></div>
+<div><b>触感与动画</b><span>弹簧动画、触感反馈、Dynamic Type、iPad 布局只能在原生里调。</span></div>
+<div><b>检测准确度</b><span>AI 服务可用性与流媒体片库判定，需要在真实节点上校准。</span></div>
+</div>
+<div class="note" style="margin-top:80px">Zephyr Mobile · 设计案例 · 2026 年 11 月 · 原型数据全部为虚构</div>
+</section>
+
+</div></body></html>

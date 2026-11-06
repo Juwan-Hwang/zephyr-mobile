@@ -1,0 +1,35 @@
+import asyncio,time
+from playwright.async_api import async_playwright
+U='file:///workspace/projects/d8290f90-c800-4100-8bf6-1b7482fdf18c/design/prototype/index.html'
+async def m():
+  async with async_playwright() as p:
+    b=await p.chromium.launch();pg=await b.new_page(viewport={'width':1100,'height':1000})
+    errs=[];pg.on('pageerror',lambda e:errs.append(str(e)))
+    await pg.goto(U+'?s=lib&embed=1');await pg.wait_for_timeout(800)
+    await pg.click('#libSheet .lc >> nth=0');await pg.wait_for_timeout(600)
+    print('nodes visible',await pg.eval_on_selector('#nodes','e=>!e.classList.contains("off")'))
+    box=await pg.locator('#vl').bounding_box()
+    await pg.mouse.move(box['x']+150,box['y']+200)
+    t=time.time()
+    for i in range(60): await pg.mouse.wheel(0,40000)
+    await pg.wait_for_timeout(300)
+    print('after wheel',await pg.inner_text('#vpos'),await pg.inner_text('#vpin'), round(time.time()-t,2),'s')
+    r=await pg.locator('#rail').bounding_box()
+    await pg.mouse.click(r['x']+15,r['y']+r['height']*0.97)
+    await pg.wait_for_timeout(200)
+    print('rail end',await pg.inner_text('#vpos'),(await pg.inner_text('#vpin')).replace('\n',' '))
+    await pg.wait_for_timeout(1500)
+    print('test',await pg.inner_text('#vtest'))
+    await pg.fill('#nq','香港 家宽');await pg.wait_for_timeout(200)
+    print('q',await pg.inner_text('#ntm'))
+    await pg.fill('#nq','火星');await pg.wait_for_timeout(200)
+    print('empty',await pg.is_visible('#vempty'))
+    await pg.click('#nodes [data-back]');await pg.wait_for_timeout(500)
+    print('back lib',await pg.eval_on_selector('#libSheet','e=>e.classList.contains("show")'))
+    await pg.click('#libSheet .lc >> nth=2');await pg.wait_for_timeout(400)
+    for q in ['netflix.com','www.baidu.com','1.1.1.1','github.com','example.org']:
+      await pg.fill('#rq',q);await pg.wait_for_timeout(100)
+      print(q,'->',(await pg.inner_text('#chain')).replace('\n',' | ')[:150])
+    print('ERRS',errs)
+    await b.close()
+asyncio.run(m())

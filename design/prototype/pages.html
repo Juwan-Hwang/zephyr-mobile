@@ -1,0 +1,92 @@
+    <!-- ===== nodes ===== -->
+    <section class="scr pg off" id="nodes">
+      <div class="nav"><button class="back" data-back><svg viewBox="0 0 12 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2L2 10l8 8"/></svg>资料库</button>
+        <div class="nact"><button class="ibtn" aria-label="排序"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 6h12M6 10h8M8.5 14h3"/></svg></button></div></div>
+      <div class="pgh"><h1>节点</h1><div class="ct"><b class="num" id="nTotal">0</b><span>个</span></div><div class="sub3" id="nSub"></div></div>
+      <div class="fs" id="nfs"><svg width="16" height="16" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7.5" cy="7.5" r="5"/><path d="M11.2 11.2L15 15" stroke-linecap="round"/></svg><input id="nq" placeholder="地区、城市或线路" autocomplete="off" spellcheck="false"><span class="tm" id="ntm"></span><button class="x" id="nx">×</button></div>
+      <div class="chips" id="nchips"></div>
+      <div class="vl" id="vl">
+        <div class="vpin" id="vpin"></div>
+        <div id="vrows"></div>
+        <div class="vrail" id="rail"></div>
+        <div class="bub" id="bub"><b id="bubT">JP</b><span id="bubS"></span></div>
+        <div class="vempty" id="vempty"><b>无结果</b><span id="vemptyS"></span></div>
+        <div class="vfoot"><span id="vpos"></span><span id="vtest"></span></div>
+      </div>
+    </section>
+
+    <!-- ===== rules ===== -->
+    <section class="scr pg off" id="rules">
+      <div class="nav"><button class="back" data-back><svg viewBox="0 0 12 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2L2 10l8 8"/></svg>资料库</button>
+        <div class="nact"><button class="ibtn" aria-label="添加"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg></button></div></div>
+      <div class="pscroll">
+        <div class="pgh"><h1>规则</h1><div class="ct"><b class="num" id="rTotal">0</b><span>条</span></div><div class="sub2">7 层 · 已编译 · 磁盘占用 1.9 GB</div></div>
+        <div class="rt">
+          <div class="fs" id="rfs"><svg width="16" height="16" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7.5" cy="7.5" r="5"/><path d="M11.2 11.2L15 15" stroke-linecap="round"/></svg><input id="rq" value="chat.openai.com" placeholder="测试域名或 IP" autocomplete="off" spellcheck="false"><button class="x" id="rx">×</button></div>
+          <div class="chain" id="chain"></div>
+        </div>
+        <div class="sec"><span>匹配顺序</span><span>从上到下</span></div>
+        <div class="grp" id="layers"></div>
+        <div class="ft">规则集在设备上编译为只读索引，按需从磁盘读取。订阅更新时，覆写保持不变。</div>
+      </div>
+    </section>
+
+    <!-- ===== subscriptions ===== -->
+    <section class="scr pg off" id="subs">
+      <div class="nav"><button class="back" data-back><svg viewBox="0 0 12 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2L2 10l8 8"/></svg>资料库</button>
+        <div class="nact"><button class="ibtn" aria-label="添加"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg></button></div></div>
+      <div class="pscroll">
+        <div class="pgh"><h1>订阅</h1><div class="ct"><b class="num">214</b><span>个 · 每 12 小时更新</span></div></div>
+        <div class="diff">
+          <div class="h">Nebula Cloud 已更新<span>2 小时前</span></div>
+          <div class="rw"><div><b class="g num">+1,204</b>节点</div><div><b class="r num">−318</b>节点</div><div><b class="num">0</b>规则变更</div></div>
+          <div class="ok"><i></i>覆写已保留 · 场景池已重新检测</div>
+        </div>
+        <div class="sec"><span>流量</span><span>本月</span></div>
+        <div class="grp">
+          <div class="gr"><div class="tx"><b>Nebula Cloud</b><small>8,204 个节点 · 26 天后到期</small><div class="meter"><i style="width:57%"></i></div></div><div class="n">86.4 GB<br><span style="color:var(--t3);font-size:11px">剩余</span></div></div>
+          <div class="gr"><div class="tx"><b>Orbit</b><small>3,118 个节点 · 11月9日到期</small><div class="meter"><i style="width:88%;background:var(--amber)"></i></div></div><div class="n">12.0 GB<br><span style="color:var(--t3);font-size:11px">剩余</span></div></div>
+          <div class="gr"><div class="tx"><b>其他 212 个</b><small>13,098,480 个节点</small></div><span class="chev">›</span></div>
+        </div>
+        <div class="sec"><span>更新</span></div>
+        <div class="grp">
+          <div class="gr"><div class="tx"><b>自动更新</b></div><span class="vv">每 12 小时</span><span class="chev">›</span></div>
+          <div class="gr"><div class="tx"><b>仅在 Wi‑Fi 下更新</b></div><div class="sw2"></div></div>
+          <div class="gr"><div class="tx"><b>更新前显示更改</b></div><div class="sw2 off"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== settings ===== -->
+    <section class="scr pg off" id="settings">
+      <div class="nav"><button class="back" data-back><svg viewBox="0 0 12 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2L2 10l8 8"/></svg>资料库</button><div></div></div>
+      <div class="pscroll">
+        <div class="pgh"><h1>设置</h1></div>
+        <div class="sec"><span>连接</span></div>
+        <div class="grp">
+          <div class="gr"><div class="tx"><b>按需连接</b></div><div class="sw2"></div></div>
+          <div class="gr"><div class="tx"><b>受信任的 Wi‑Fi</b><small>连接后自动断开</small></div><span class="vv">家</span><span class="chev">›</span></div>
+          <div class="gr"><div class="tx"><b>本地代理端口</b><small>127.0.0.1:7890 · 需要密码</small></div><span class="vv">关</span><span class="chev">›</span></div>
+        </div>
+        <div class="sec"><span>检测</span></div>
+        <div class="grp">
+          <div class="gr"><div class="tx"><b>仅在 Wi‑Fi 下测速</b></div><div class="sw2"></div></div>
+          <div class="gr"><div class="tx"><b>结果保留</b></div><span class="vv">24 小时</span><span class="chev">›</span></div>
+        </div>
+        <div class="sec"><span>存储</span></div>
+        <div class="grp">
+          <div class="gr"><div class="tx"><b>节点与规则</b><div class="meter"><i style="width:31%;background:var(--blue)"></i><i style="width:46%;background:var(--t3)"></i></div><small>节点 0.6 GB · 规则 1.9 GB · 可用 3.1 GB</small></div></div>
+        </div>
+        <div class="sec"><span>外观</span></div>
+        <div class="grp">
+          <div class="gr"><div class="tx"><b>外观</b></div><span class="vv">跟随系统</span><span class="chev">›</span></div>
+          <div class="gr"><div class="tx"><b>应用图标</b></div><span class="vv">深色</span><span class="chev">›</span></div>
+        </div>
+        <div class="sec"><span>隐私</span></div>
+        <div class="grp">
+          <div class="gr"><div class="tx"><b>共享诊断数据</b></div><div class="sw2 off"></div></div>
+        </div>
+        <div class="ft">订阅、节点与流量数据仅保存在此设备上。</div>
+        <div class="ft" style="text-align:center;padding-top:28px;font:11.5px var(--mono)">Zephyr 1.0 (1)</div>
+      </div>
+    </section>
