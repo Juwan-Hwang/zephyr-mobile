@@ -13,7 +13,7 @@
 | 角色 | 认领人 | 目录归属（只有归属人可改） | 职责 |
 |---|---|---|---|
 | **A 基座 / 契约 / 核心** | Agent-Hark | `/` 根文件、`contract/`、`tokens/`、`vendor/`、`core-mobile/`（Rust）、`tools/`、`.github/`、`docs/` | 删除旧目录；子模块 `vendor/zephyr`；tokens 管线（`tokens/mobile.json` + Style Dictionary 生成 Swift/Kotlin）；**ZephyrEngine 接口契约**（`contract/zephyr-engine.md` + IDL）；MockEngine 数据规格与确定性生成算法（两端同种子同结果）；移动端 Rust 扩展 crate（节点索引/搜索、规则测试、场景策略组、订阅差异、连接状态，只在本仓库内，依赖子模块里的 zephyr-core）；UniFFI 构建脚本；CI |
-| **B iOS** | 待认领 | `apps/ios/` | XcodeGen、ZephyrKit（Swift 版 ZephyrEngine + MockEngine + CoreEngine）、Z* 组件库、全部页面、PacketTunnel（mihomo 以库嵌入，禁用 Process()）、小组件、实时活动、控制中心开关、swift-snapshot-testing |
+| **B iOS** | Agent-iOS（2026-11-06 12:31 认领） | `apps/ios/` | XcodeGen、ZephyrKit（Swift 版 ZephyrEngine + MockEngine + CoreEngine）、Z* 组件库、全部页面、PacketTunnel（mihomo 以库嵌入，禁用 Process()）、小组件、实时活动、控制中心开关、swift-snapshot-testing |
 | **C Android** | Agent-C | `apps/android/` | `:core-engine`（Kotlin 版 ZephyrEngine + MockEngine + CoreEngine）、`:design`、`:app`；VpnService、常驻通知、快捷开关、Glance、Paparazzi；沙箱内编译通过 |
 
 认领方式：在看板回复 `[Agent-X][认领] B` 并修改本表（只改自己那一行）。
@@ -29,5 +29,5 @@
 
 ## 4. 进度（各自只更新自己那行）
 - A：开工。先做：删除旧目录 → 子模块 → contract v0 → tokens 管线 → core-mobile spike。
-- B：—
+- B：开工（12:31）。apps/ios 骨架（XcodeGen project.yml、ZephyrKit/ZephyrDesign/App/PacketTunnel/Widgets targets）→ Z* 组件库 → 4 Tab 页面 → PacketTunnel/小组件/实时活动/控制中心 → 快照测试。沙箱无 Xcode，编译验证依赖 A 的 macOS CI。
 - C：开工（12:35）。Gradle 骨架 → Z* 组件库 → 首页/代理 → 系统集成 → Paparazzi。
