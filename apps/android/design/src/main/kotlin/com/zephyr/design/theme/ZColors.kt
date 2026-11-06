@@ -45,60 +45,36 @@ data class ZThemeColors(
     }
 
     companion object {
-        val dark = ZThemeColors(
-            isDark = true,
-            bg = Color(0xFF000000),
-            surface1 = Color(0xFF0C0C0E),
-            surface2 = Color(0xFF141417),
-            surface3 = Color(0xFF1D1D21),
-            surface4 = Color(0xFF26262B),
-            hairline = Color(0x13FFFFFF),        // .075
-            hairlineStrong = Color(0x21FFFFFF),  // .13
-            text1 = Color(0xF2FFFFFF),           // .95
-            text2 = Color(0x99FFFFFF),           // .60
-            text3 = Color(0x66FFFFFF),           // .40
-            text4 = Color(0x33FFFFFF),           // .20
-            accent = Color(0xFF0A84FF),
-            accentSoft = Color(0x290A84FF),
-            onAccent = Color.White,
-            connected = Color(0xFF30D158),
-            warning = Color(0xFFFFD60A),
-            warningSoft = Color(0x1FFFD60A),
-            danger = Color(0xFFFF453A),
-            download = Color(0xFF0A84FF),
-            upload = Color(0xFFFF6B6B),
-            glass = Color(0xD11C1C20),           // rgba(28,28,32,.82)
-            scrim = Color(0x99000000),
-            onPrimaryButton = Color(0xFF000000),
-            primaryButton = Color(0xFFF2F2F2),
-        )
+        /** Single source of truth: tokens/mobile.json `screen.*` (A's pipeline). Only derived alphas are computed here. */
+        val dark = from(com.zephyr.design.tokens.ZColors.Dark)
+        val light = from(com.zephyr.design.tokens.ZColors.Light)
 
-        val light = ZThemeColors(
-            isDark = false,
-            bg = Color(0xFFF2F2F7),
-            surface1 = Color(0xFFFFFFFF),
-            surface2 = Color(0xFFFFFFFF),
-            surface3 = Color(0xFFE9E9EE),
-            surface4 = Color(0xFFDCDCE1),
-            hairline = Color(0x12000000),        // .07
-            hairlineStrong = Color(0x1F000000),  // .12
-            text1 = Color(0xE6000000),           // .90
-            text2 = Color(0x94000000),           // .58
-            text3 = Color(0x66000000),           // .40
-            text4 = Color(0x2E000000),           // .18
-            accent = Color(0xFF007AFF),
-            accentSoft = Color(0x29007AFF),
+        private fun from(t: com.zephyr.design.tokens.ZColors) = ZThemeColors(
+            isDark = t.isDark,
+            bg = t.screenBg,
+            surface1 = t.screenS1,
+            surface2 = t.screenS2,
+            surface3 = t.screenS3,
+            surface4 = t.screenS4,
+            hairline = t.screenHl,
+            hairlineStrong = t.screenHl2,
+            text1 = t.screenT1,
+            text2 = t.screenT2,
+            text3 = t.screenT3,
+            text4 = t.screenT4,
+            accent = if (t.isDark) ZAccent.BLUE.darkVariant() else ZAccent.BLUE.color,
+            accentSoft = (if (t.isDark) ZAccent.BLUE.darkVariant() else ZAccent.BLUE.color).copy(alpha = 0.16f),
             onAccent = Color.White,
-            connected = Color(0xFF34C759),
-            warning = Color(0xFFFF9F0A),
-            warningSoft = Color(0x1FFF9F0A),
-            danger = Color(0xFFFF3B30),
-            download = Color(0xFF007AFF),
-            upload = Color(0xFFFF5E57),
-            glass = Color(0xD1FFFFFF),
-            scrim = Color(0x52000000),
-            onPrimaryButton = Color(0xFFFFFFFF),
-            primaryButton = Color(0xFF111114),
+            connected = t.screenGreen,
+            warning = t.screenAmber,
+            warningSoft = t.screenAmberA,
+            danger = t.screenRed,
+            download = t.colorDownload,
+            upload = t.screenUp,
+            glass = t.screenGlass,
+            scrim = t.screenCmdBg,
+            onPrimaryButton = t.screenOnPrimary,
+            primaryButton = t.screenPrimary,
         )
     }
 }
@@ -111,11 +87,10 @@ fun ZAccent.darkVariant(): Color = when (this) {
     ZAccent.PINK -> Color(0xFFFF375F)
 }
 
-/** Latency → colour bucket used by pills and node rows. */
+/** Latency colour per tokens: quiet below [com.zephyr.design.tokens.ZLatency.slow], amber at/above, red only on timeout. */
 fun ZThemeColors.latency(ms: Int?): Color = when {
     ms == null -> text3
     ms < 0 -> danger
-    ms <= 200 -> text2
-    ms <= 500 -> warning
-    else -> danger
+    ms >= com.zephyr.design.tokens.ZLatency.slow -> warning
+    else -> text2
 }

@@ -40,7 +40,7 @@ data class ZShapes(
     val control: RoundedCornerShape = RoundedCornerShape(10.dp),
     val surface: RoundedCornerShape = RoundedCornerShape(16.dp),
     val card: RoundedCornerShape = RoundedCornerShape(24.dp),
-    val sheet: RoundedCornerShape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+    val sheet: RoundedCornerShape = RoundedCornerShape(topStart = com.zephyr.design.tokens.ZLayout.sheetRadius, topEnd = com.zephyr.design.tokens.ZLayout.sheetRadius),
     val pill: RoundedCornerShape = RoundedCornerShape(50),
 )
 
