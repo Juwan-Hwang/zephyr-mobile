@@ -100,7 +100,7 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean) {
                         ),
                     )
                 }
-                composable<Nodes> { e -> NodesScreen(viewModel { NodesViewModel() }, e.toRoute<Nodes>().query) { nav.popBackStack() } }
+                composable<Nodes> { e -> NodesScreen(viewModel { NodesViewModel() }, e.toRoute<Nodes>().query, onBack = { nav.popBackStack() }, onImport = { import = true }) }
                 composable<Rules> { e -> RulesScreen(e.toRoute<Rules>().query) { nav.popBackStack() } }
                 composable<Subs> { SubscriptionsScreen(onBack = { nav.popBackStack() }, onImport = { import = true }) }
                 composable<SettingsRoute> { e -> SettingsScreen(e.toRoute<SettingsRoute>().back) { nav.popBackStack() } }

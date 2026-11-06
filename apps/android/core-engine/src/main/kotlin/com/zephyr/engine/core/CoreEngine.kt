@@ -41,6 +41,12 @@ class CoreEngine(
     private val io: CoroutineDispatcher = Dispatchers.IO,
     /** Real subscription profiles; null keeps subscriptions on [fallback] (screenshots, tests). */
     val profiles: ProfileStore? = null,
+    /**
+     * Whether [fallback]'s synthetic catalogue may stand in for an empty native store. True for debug,
+     * screenshots and tests; false in release, where an empty store means "no subscription yet" and the
+     * UI shows its empty state instead of fake nodes.
+     */
+    private val mockData: Boolean = true,
 ) : ZephyrEngine by fallback {
 
     private val core: MobileCore? = dataDir?.let { dir ->
@@ -77,7 +83,7 @@ class CoreEngine(
     }
 
     // ── Subscriptions (real profiles once the user imports one) ───────────────────────────────────
-    private fun realSubs(): Boolean = profiles != null && (isNative || profiles.subscriptions.value.isNotEmpty())
+    private fun realSubs(): Boolean = profiles != null && (!mockData || isNative || profiles.subscriptions.value.isNotEmpty())
 
     override fun subscriptions(): kotlinx.coroutines.flow.Flow<List<Subscription>> =
         if (realSubs()) profiles!!.subscriptions else fallback.subscriptions()
@@ -110,13 +116,13 @@ class CoreEngine(
 
     // ── Nodes ──────────────────────────────────────────────────────────────────────────────────────
     override suspend fun nodeIndex(): NodeIndex {
-        val c = nodes() ?: return fallback.nodeIndex()
+        val c = nodes() ?: return if (mockData) fallback.nodeIndex() else NodeIndex(0, emptyList(), 0)
         val tested = fallback.nodeIndex().testedCount
         return withContext(io) { wrap { c.nodeIndex() }.let { NodeIndex(it.total.toLong(), it.sections.map(::section), tested) } }
     }
 
     override suspend fun queryNodes(query: String): NodeQueryResult {
-        val c = nodes() ?: return fallback.queryNodes(query)
+        val c = nodes() ?: return if (mockData) fallback.queryNodes(query) else NodeQueryResult(query, 0, emptyList(), emptyList(), 0, 0)
         return withContext(io) {
             wrap { c.queryNodes(query) }.let {
                 NodeQueryResult(it.query, it.total.toLong(), it.sections.map(::section), it.highlights, it.tookMicros.toLong(), it.token.toLong())
@@ -125,7 +131,7 @@ class CoreEngine(
     }
 
     override suspend fun nodeRows(token: Long, offset: Long, limit: Int): NodePage {
-        val c = nodes() ?: return fallback.nodeRows(token, offset, limit)
+        val c = nodes() ?: return if (mockData) fallback.nodeRows(token, offset, limit) else NodePage(emptyList(), offset, 0)
         return withContext(io) {
             wrap { c.nodeRows(token.toULong(), offset.toULong(), limit.toUInt()) }.let { p ->
                 NodePage(p.rows.map(::row), p.offset.toLong(), p.total.toLong())
@@ -135,7 +141,7 @@ class CoreEngine(
 
     // ── Rules ──────────────────────────────────────────────────────────────────────────────────────
     override suspend fun ruleStats(): RuleStats {
-        val c = rules() ?: return fallback.ruleStats()
+        val c = rules() ?: return if (mockData) fallback.ruleStats() else RuleStats(0, emptyList(), compiled = false, diskBytes = 0)
         return withContext(io) {
             c.ruleStats().let { s ->
                 RuleStats(

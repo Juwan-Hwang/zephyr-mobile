@@ -61,7 +61,7 @@ private val CHIPS = listOf("US" to 3_118_402L, "JP" to 2_204_117L, "HK" to 1_906
 
 /** Node library (prototype `nodes`): 13,109,802 rows, fixed row height, region rail, index search. */
 @Composable
-fun NodesScreen(vm: NodesViewModel, initialQuery: String, onBack: () -> Unit) {
+fun NodesScreen(vm: NodesViewModel, initialQuery: String, onBack: () -> Unit, onImport: () -> Unit = {}) {
     val c = ZTheme.colors
     val ui by vm.ui.collectAsStateWithLifecycle()
     LaunchedEffect(initialQuery) { vm.setQuery(initialQuery, immediate = true) }
@@ -103,7 +103,9 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, onBack: () -> Unit) {
             }
             Spacer(Modifier.height(10.dp))
             Box(Modifier.weight(1f).fillMaxWidth()) {
-                if (result != null && rowCount == 0) {
+                if (result != null && rowCount == 0 && ui.query.isBlank()) {
+                    ZEmptyState("还没有节点", Modifier.align(Alignment.Center), message = "导入订阅后，节点会出现在这里", action = "导入订阅", onAction = onImport)
+                } else if (result != null && rowCount == 0) {
                     ZEmptyState("无结果", Modifier.align(Alignment.Center), message = "没有与“${ui.query.trim()}”匹配的节点")
                 } else {
                     val epoch by vm.pageEpoch

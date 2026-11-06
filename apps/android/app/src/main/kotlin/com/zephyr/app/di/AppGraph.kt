@@ -35,6 +35,7 @@ object AppGraph {
             MockEngine(scope = appScope, demo = demo),
             dataDir = java.io.File(app.filesDir, "core").apply { mkdirs() }.path,
             profiles = ProfileStore(app.filesDir),
+            mockData = BuildConfig.DEBUG,
         )
         engine = core
         if (BuildConfig.DEBUG && BuildConfig.CORE_SEED > 0.0) appScope.launch { runCatching { core.seedMockNodes(BuildConfig.CORE_SEED) } }
