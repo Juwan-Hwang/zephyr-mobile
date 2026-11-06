@@ -56,6 +56,10 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
 
     init {
         viewModelScope.launch { _ui.update { it.copy(usage = engine.usageToday()) } }
+        // Core switched a dead scene exit to a hot standby: say so, offer the undo (contract §14 场景自动切换).
+        (engine as? com.zephyr.engine.core.CoreEngine)?.let { core ->
+            viewModelScope.launch { core.failovers.collect { f -> showToast("${f.sceneName} 出口已自动切换到 ${f.now}", f.sceneId, f.previous) } }
+        }
         // 1 Hz clock for uptime; cheap and avoids per-frame recomposition.
         viewModelScope.launch { while (true) { _ui.update { it.copy(now = System.currentTimeMillis()) }; delay(1_000) } }
         viewModelScope.launch {

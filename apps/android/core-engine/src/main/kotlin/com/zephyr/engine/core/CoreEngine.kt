@@ -170,6 +170,19 @@ class CoreEngine(
         return ids.mapNotNull { runCatching { updateSubscription(it) }.getOrNull() }
     }
 
+    /**
+     * Background refresh: updates every subscription whose auto-update interval has elapsed. When the
+     * active one changed while the core runs, the runtime config is rebuilt and hot-reloaded.
+     * Returns the ids that updated; failures are left for the next run (core keeps them due).
+     */
+    suspend fun updateDue(): List<String> {
+        val c = core ?: return emptyList()
+        val due = withContext(io) { wrap { c.dueSubscriptions(clock()) } }
+        val done = due.filter { runCatching { updateSubscription(it) }.isSuccess }
+        if (activeSubscription() in done) runCatching { reloadIfRunning() }
+        return done
+    }
+
     override suspend fun deleteSubscription(id: String) {
         val c = core ?: return fallback.deleteSubscription(id)
         withContext(io) { wrap { c.deleteSubscription(id) } }
@@ -294,6 +307,37 @@ class CoreEngine(
         live()?.let { l -> runCatching { withContext(io) { l.test(group, LivePort.TEST_URL, 5_000) } } }
         scenesBump.value++
         return withContext(io) { wrap { c.scenes(clock()) } }.firstOrNull { it.id == sceneId }?.let(::scene) ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
+    }
+
+    /** A scene's exit died and core switched it to the next hot-standby node (already applied in mihomo). */
+    data class SceneFailoverEvent(val sceneId: String, val sceneName: String, val failed: String, val now: String, val previous: NodeId?)
+    private val failoverEvents = kotlinx.coroutines.flow.MutableSharedFlow<SceneFailoverEvent>(extraBufferCapacity = 8)
+    val failovers: kotlinx.coroutines.flow.SharedFlow<SceneFailoverEvent> = failoverEvents
+
+    /**
+     * One probe round (contract §14 场景自动切换): for every scene that owns traffic, test its mihomo group and
+     * report whether the currently selected member answered. Name-agnostic: success is read off the group's own
+     * `selected` member, so cross-subscription renames don't matter. Core decides (threshold/cooldown) and
+     * returns a hot-standby switch, which we apply with selectInGroup — no reload, no dropped connections.
+     */
+    suspend fun probeScenes(): List<SceneFailoverEvent> {
+        val c = nodes() ?: return emptyList()
+        val l = live() ?: return emptyList()
+        val scenes = withContext(io) { wrap { c.scenes(clock()) } }.filter { it.selected != null }
+        if (scenes.isEmpty()) return emptyList()
+        val groups = withContext(io) { runCatching { l.groups() }.getOrDefault(emptyList()) }.associateBy { it.name }
+        val out = mutableListOf<SceneFailoverEvent>()
+        for (sc in scenes) {
+            val sel = groups[sc.group]?.selected ?: continue
+            val ok = withContext(io) { runCatching { l.test(sc.group, LivePort.TEST_URL, 5_000) }.getOrNull() }
+                ?.firstOrNull { it.name == sel }?.latencyMs?.let { it > 0 } ?: false
+            val f = withContext(io) { runCatching { c.reportSceneProbe(sc.id, ok, clock()) }.getOrNull() } ?: continue
+            withContext(io) { runCatching { l.select(f.apply.group, f.apply.member) } }
+            val e = SceneFailoverEvent(sc.id, sc.name, f.failed.name, f.apply.member, f.apply.previous?.toLong())
+            out += e; failoverEvents.tryEmit(e)
+        }
+        if (out.isNotEmpty()) scenesBump.value++
+        return out
     }
 
     private val unselected = NodeSummary(id = -1, name = "未选择", region = "", protocol = "")

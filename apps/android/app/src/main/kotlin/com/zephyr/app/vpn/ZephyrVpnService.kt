@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
  * and mirrors state to the QS tile and widget.
  */
 class ZephyrVpnService : VpnService() {
+    private var prober: kotlinx.coroutines.Job? = null
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private var tun: ParcelFileDescriptor? = null
     private var watcher: Job? = null
@@ -73,6 +74,11 @@ class ZephyrVpnService : VpnService() {
             }
         }
         scope.launch { ZephyrTileService.requestRefresh(this@ZephyrVpnService); ZephyrWidget.refreshAll(this@ZephyrVpnService) }
+        (engine as? com.zephyr.engine.core.CoreEngine)?.let { core ->
+            prober?.cancel()
+            // Scene exits are probed once a minute while connected; core's failover tracker decides when to switch.
+            prober = scope.launch { while (true) { kotlinx.coroutines.delay(PROBE_EVERY_MS); runCatching { core.probeScenes() } } }
+        }
     }
 
     private suspend fun toggleMode() {
@@ -81,6 +87,7 @@ class ZephyrVpnService : VpnService() {
     }
 
     private suspend fun stop() {
+        prober?.cancel(); prober = null
         watcher?.cancel()
         runCatching { engine.disconnect() }
         bridge.detach()
@@ -109,6 +116,7 @@ class ZephyrVpnService : VpnService() {
         if (Build.VERSION.SDK_INT >= 34) ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE else 0
 
     companion object {
+        private const val PROBE_EVERY_MS = 60_000L
         const val ACTION_CONNECT = "com.zephyr.app.CONNECT"
         const val ACTION_DISCONNECT = "com.zephyr.app.DISCONNECT"
         const val ACTION_TOGGLE_MODE = "com.zephyr.app.TOGGLE_MODE"
