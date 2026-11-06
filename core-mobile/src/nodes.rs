@@ -651,6 +651,21 @@ impl NodeStore {
         within.iter().find(|&i| u64::from_le_bytes(self.rec(i)[0..8].try_into().unwrap()) == id)
     }
 
+    /// 顺序扫描全部记录，返回 wanted 中存在的 (指纹, 行号)。只在测速节点首次排序时发生（1310 万行 × 24 B 顺序读，耗时待真机测）。
+    pub fn scan_fingerprints(&self, wanted: &rustc_hash::FxHashSet<u64>) -> Vec<(u64, u32)> {
+        let mut out = Vec::new();
+        for i in 0..self.count {
+            let fp = u64::from_le_bytes(self.rec(i)[0..8].try_into().unwrap());
+            if wanted.contains(&fp) {
+                out.push((fp, i));
+                if out.len() == wanted.len() {
+                    break;
+                }
+            }
+        }
+        out
+    }
+
     pub fn fingerprints_sorted(&self) -> Vec<u64> {
         let mut v: Vec<u64> = (0..self.count).map(|i| u64::from_le_bytes(self.rec(i)[0..8].try_into().unwrap())).collect();
         v.sort_unstable();

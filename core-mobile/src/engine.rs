@@ -3,6 +3,8 @@
 
 use crate::diff::{diff_sorted, NodeDiff};
 use crate::error::MobileError;
+use crate::latency::{LatencyCache, LatencySample};
+use rustc_hash::FxHashMap;
 use crate::subs::{FetchedSubscription, SubStore, Subscription, SubscriptionDiff, SubscriptionsSummary};
 use crate::nodes::{BuildPhase, NodeQueryResult, NodeRow, NodeStore, NodeStoreBuilder, RegionSection};
 use crate::rules::{Layer, LayerBuilder, LayerKind, RuleLayerInfo, RuleSet, RuleTrace};
@@ -32,6 +34,14 @@ pub struct SubscriptionSource {
     pub yaml: String,
 }
 
+/// 节点 + 延迟（场景候选 / 最快节点）。
+#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+pub struct RankedNode {
+    pub row: NodeRow,
+    pub latency_ms: i32,
+    pub tested_at: i64,
+}
+
 #[derive(Debug, Clone, PartialEq, uniffi::Record)]
 pub struct BuildReport {
     pub total: u64,
@@ -58,9 +68,32 @@ pub struct MobileCore {
     next_token: Mutex<u64>,
     generation: Mutex<u64>,
     subs: Mutex<SubStore>,
+    latency: Mutex<LatencyCache>,
+    /// (库代际, 指纹 → 行号)：只为测过速的节点建，按需扫描补齐
+    fp_pos: Mutex<(u64, FxHashMap<u64, u32>)>,
 }
 
 impl MobileCore {
+    /// 给定指纹集合 → 行号（当前库）。未命中的批量扫描一次补齐；库换代后整表作废。
+    fn positions(&self, store: &NodeStore, ids: &[u64]) -> FxHashMap<u64, u32> {
+        let gen = *self.generation.lock();
+        let mut g = self.fp_pos.lock();
+        if g.0 != gen {
+            *g = (gen, FxHashMap::default());
+        }
+        let missing: rustc_hash::FxHashSet<u64> = ids.iter().copied().filter(|id| !g.1.contains_key(id)).collect();
+        if !missing.is_empty() {
+            for (fp, pos) in store.scan_fingerprints(&missing) {
+                g.1.insert(fp, pos);
+            }
+            // 扫过仍未找到的记为不存在，避免反复全表扫
+            for id in missing {
+                g.1.entry(id).or_insert(u32::MAX);
+            }
+        }
+        ids.iter().filter_map(|id| g.1.get(id).filter(|&&p| p != u32::MAX).map(|&p| (*id, p))).collect()
+    }
+
     fn store(&self) -> Result<Arc<NodeStore>, MobileError> {
         self.store.read().clone().ok_or_else(|| MobileError::NotFound("节点库未建立".into()))
     }
@@ -122,6 +155,8 @@ impl MobileCore {
             next_token: Mutex::new(1),
             generation: Mutex::new(gen),
             subs: Mutex::new(SubStore::open(&dir_for_subs)?),
+            latency: Mutex::new(LatencyCache::open(&dir_for_subs)),
+            fp_pos: Mutex::new((0, FxHashMap::default())),
         }))
     }
 
@@ -182,6 +217,41 @@ impl MobileCore {
             b.push(x);
         }
         self.swap_store_p(b, 0, t0, &|ph, d, t| progress.on_progress(ph, d, t))
+    }
+
+    // ---------- 延迟缓存（contract §5 latencyUpdates 的落地值） ----------
+
+    /// 平台/mihomo 测速结果写入（UI 同时直接推送，不必等这里）。
+    pub fn record_latencies(&self, samples: Vec<LatencySample>) -> Result<(), MobileError> {
+        let mut c = self.latency.lock();
+        c.record(&samples);
+        c.flush()
+    }
+
+    /// 按 id 取缓存延迟：None = 未测或超过 max_age_millis（<=0 不过期）；-1 = 超时。顺序与 ids 一致。
+    pub fn cached_latencies(&self, ids: Vec<u64>, now_millis: i64, max_age_millis: i64) -> Vec<Option<i32>> {
+        let c = self.latency.lock();
+        ids.iter().map(|&id| c.get(id, now_millis, max_age_millis).map(|x| x.0)).collect()
+    }
+
+    /// 查询结果里已测速节点按延迟升序取前 limit 个（超时排最后，未测不出现）。
+    /// 场景候选：query = 地区代码（"JP"）；命令"最快节点"：query = 用户输入。
+    pub fn fastest_nodes(&self, query: String, limit: u32, now_millis: i64, max_age_millis: i64) -> Result<Vec<RankedNode>, MobileError> {
+        let s = self.store()?;
+        let (bm, _) = s.timed_query(&query);
+        let cand: Vec<(u64, i32, i64)> = {
+            let c = self.latency.lock();
+            c.map.iter().filter(|(_, &(_, at))| max_age_millis <= 0 || now_millis - at <= max_age_millis).map(|(&id, &(ms, at))| (id, ms, at)).collect()
+        };
+        let ids: Vec<u64> = cand.iter().map(|x| x.0).collect();
+        let pos = self.positions(&s, &ids);
+        let mut hits: Vec<(i64, u32, i32, i64)> = cand
+            .iter()
+            .filter_map(|&(id, ms, at)| pos.get(&id).filter(|&&p| bm.contains(p)).map(|&p| (LatencyCache::rank_key(ms), p, ms, at)))
+            .collect();
+        hits.sort_unstable();
+        hits.truncate(limit.min(500) as usize);
+        Ok(hits.into_iter().map(|(_, p, ms, at)| RankedNode { row: s.row(p), latency_ms: ms, tested_at: at }).collect())
     }
 
     // ---------- 订阅（contract §7）：平台拉取正文，核心存储/差异/重建 ----------
@@ -337,6 +407,29 @@ mod tests {
             assert!(total == 0 || done <= total);
             !(self.cancel_at_index && phase == BuildPhase::Index)
         }
+    }
+
+    #[test]
+    fn fastest_nodes_rank_by_cached_latency() {
+        let d = tempfile::tempdir().unwrap();
+        let core = MobileCore::new(d.path().to_string_lossy().into()).unwrap();
+        core.rebuild_mock_nodes(0.001).unwrap();
+        let q = core.query_nodes("JP".into()).unwrap();
+        let rows = core.node_rows(q.token, 0, 5).unwrap().rows;
+        let other = core.node_rows(core.query_nodes("US".into()).unwrap().token, 0, 1).unwrap().rows;
+        let mut samples: Vec<LatencySample> = rows.iter().enumerate().map(|(k, r)| LatencySample { id: r.id, ms: [300, 40, -1, 120, 80][k], at: 1000 }).collect();
+        samples.push(LatencySample { id: other[0].id, ms: 1, at: 1000 });
+        core.record_latencies(samples).unwrap();
+        let best = core.fastest_nodes("JP".into(), 3, 1000, 0).unwrap();
+        assert_eq!(best.iter().map(|b| b.latency_ms).collect::<Vec<_>>(), vec![40, 80, 120], "只在查询内、升序");
+        let all = core.fastest_nodes("JP".into(), 10, 1000, 0).unwrap();
+        assert_eq!(all.last().unwrap().latency_ms, -1, "超时排最后");
+        assert!(core.fastest_nodes("JP".into(), 10, 10_000, 100).unwrap().is_empty(), "过期不计");
+        assert_eq!(core.cached_latencies(vec![rows[1].id, 42], 1000, 0), vec![Some(40), None]);
+        // 重开后缓存仍在
+        drop(core);
+        let core = MobileCore::new(d.path().to_string_lossy().into()).unwrap();
+        assert_eq!(core.fastest_nodes("JP".into(), 1, 1000, 0).unwrap()[0].latency_ms, 40);
     }
 
     #[test]

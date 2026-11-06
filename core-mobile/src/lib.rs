@@ -12,6 +12,7 @@ uniffi::setup_scaffolding!("zephyr_mobile_core");
 pub mod diff;
 pub mod engine;
 pub mod error;
+pub mod latency;
 pub mod mock;
 pub mod nodes;
 pub mod regions;
