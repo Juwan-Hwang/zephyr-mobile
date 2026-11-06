@@ -1,0 +1,3 @@
+[submodule "vendor/zephyr"]
+	path = vendor/zephyr
+	url = https://github.com/Juwan-Hwang/Zephyr.git

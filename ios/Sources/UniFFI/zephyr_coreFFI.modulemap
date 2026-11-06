@@ -1,4 +1,0 @@
-module zephyr_coreFFI {
-    header "zephyr_coreFFI.h"
-    export *
-}
