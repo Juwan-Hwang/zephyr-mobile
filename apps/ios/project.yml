@@ -371,6 +371,8 @@ schemes:
       targets:
         - name: ZephyrTests
           parallelizable: true
+        - name: ZephyrCoreTests
+          parallelizable: false
         - name: ZephyrSnapshotTests
           parallelizable: false
         - package: ZephyrKit/ZephyrKitTests
