@@ -785,6 +785,32 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -805,6 +831,34 @@ internal interface UniffiLib : Library {
         }
     }
 
+    fun uniffi_zephyr_mobile_core_fn_clone_mihomoclient(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+    ): Pointer
+    fun uniffi_zephyr_mobile_core_fn_free_mihomoclient(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
+    fun uniffi_zephyr_mobile_core_fn_constructor_mihomoclient_new(`socketPath`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): Pointer
+    fun uniffi_zephyr_mobile_core_fn_method_mihomoclient_active_connections(`ptr`: Pointer,`limit`: Int,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mihomoclient_close_all_connections(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mihomoclient_close_connection(`ptr`: Pointer,`id`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mihomoclient_group_members(`ptr`: Pointer,`group`: RustBuffer.ByValue,`offset`: Int,`limit`: Int,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mihomoclient_host_trace(`ptr`: Pointer,`host`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mihomoclient_policy_groups(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mihomoclient_recent_hosts(`ptr`: Pointer,`limit`: Int,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mihomoclient_select_in_group(`ptr`: Pointer,`group`: RustBuffer.ByValue,`member`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mihomoclient_set_mode(`ptr`: Pointer,`mode`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mihomoclient_test_group(`ptr`: Pointer,`group`: RustBuffer.ByValue,`url`: RustBuffer.ByValue,`timeoutMs`: Int,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mihomoclient_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_clone_mobilecore(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): Pointer
     fun uniffi_zephyr_mobile_core_fn_free_mobilecore(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -975,6 +1029,28 @@ internal interface UniffiLib : Library {
     ): Unit
     fun uniffi_zephyr_mobile_core_checksum_func_core_greeting(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_active_connections(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_close_all_connections(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_close_connection(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_group_members(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_host_trace(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_policy_groups(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_recent_hosts(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_select_in_group(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_set_mode(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_test_group(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_version(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_cached_latencies(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_layer(
@@ -1021,6 +1097,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_update_subscription(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_constructor_mihomoclient_new(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_constructor_mobilecore_new(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_buildprogress_on_progress(
@@ -1043,6 +1121,39 @@ private fun uniffiCheckContractApiVersion(lib: UniffiLib) {
 @Suppress("UNUSED_PARAMETER")
 private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_func_core_greeting() != 3481.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_active_connections() != 8862.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_close_all_connections() != 61646.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_close_connection() != 31803.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_group_members() != 53514.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_host_trace() != 9078.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_policy_groups() != 45489.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_recent_hosts() != 3573.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_select_in_group() != 300.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_set_mode() != 26213.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_test_group() != 37978.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_version() != 52279.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_cached_latencies() != 41970.toShort()) {
@@ -1112,6 +1223,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_update_subscription() != 7462.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_constructor_mihomoclient_new() != 36552.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_constructor_mobilecore_new() != 4167.toShort()) {
@@ -1570,6 +1684,440 @@ private class JavaLangRefCleanable(
 ) : UniffiCleaner.Cleanable {
     override fun clean() = cleanable.clean()
 }
+public interface MihomoClientInterface {
+    
+    /**
+     * 活动连接（contract §8：最多 200 条最新）。
+     */
+    fun `activeConnections`(`limit`: kotlin.UInt): List<ConnectionInfo>
+    
+    fun `closeAllConnections`()
+    
+    fun `closeConnection`(`id`: kotlin.String)
+    
+    /**
+     * 组成员分页（contract §4 limit ≤ 500）。
+     */
+    fun `groupMembers`(`group`: kotlin.String, `offset`: kotlin.UInt, `limit`: kotlin.UInt): List<GroupMember>
+    
+    /**
+     * 连接轨迹（contract §13）。host 当前无连接 → NotFound。
+     */
+    fun `hostTrace`(`host`: kotlin.String): HostTrace
+    
+    /**
+     * 策略组，按配置文件顺序（GLOBAL 组里的顺序；没有则按名称）。
+     */
+    fun `policyGroups`(): List<PolicyGroup>
+    
+    /**
+     * "最近连接"：按 host 聚合，最近活跃在前。
+     */
+    fun `recentHosts`(`limit`: kotlin.UInt): List<HostActivity>
+    
+    fun `selectInGroup`(`group`: kotlin.String, `member`: kotlin.String)
+    
+    /**
+     * 模式切换（rule / global / direct）。
+     */
+    fun `setMode`(`mode`: kotlin.String)
+    
+    /**
+     * 只测该组；返回 (成员, 毫秒)，超时 = -1。
+     */
+    fun `testGroup`(`group`: kotlin.String, `url`: kotlin.String, `timeoutMs`: kotlin.UInt): List<GroupMember>
+    
+    fun `version`(): kotlin.String
+    
+    companion object
+}
+
+open class MihomoClient: Disposable, AutoCloseable, MihomoClientInterface {
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+    /**
+     * socket：zm_start 时传入的 external-controller-unix 路径。
+     */
+    constructor(`socketPath`: kotlin.String) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_constructor_mihomoclient_new(
+        FfiConverterString.lower(`socketPath`),_status)
+}
+    )
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_free_mihomoclient(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_clone_mihomoclient(pointer!!, status)
+        }
+    }
+
+    
+    /**
+     * 活动连接（contract §8：最多 200 条最新）。
+     */
+    @Throws(MobileException::class)override fun `activeConnections`(`limit`: kotlin.UInt): List<ConnectionInfo> {
+            return FfiConverterSequenceTypeConnectionInfo.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mihomoclient_active_connections(
+        it, FfiConverterUInt.lower(`limit`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    @Throws(MobileException::class)override fun `closeAllConnections`()
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mihomoclient_close_all_connections(
+        it, _status)
+}
+    }
+    
+    
+
+    
+    @Throws(MobileException::class)override fun `closeConnection`(`id`: kotlin.String)
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mihomoclient_close_connection(
+        it, FfiConverterString.lower(`id`),_status)
+}
+    }
+    
+    
+
+    
+    /**
+     * 组成员分页（contract §4 limit ≤ 500）。
+     */
+    @Throws(MobileException::class)override fun `groupMembers`(`group`: kotlin.String, `offset`: kotlin.UInt, `limit`: kotlin.UInt): List<GroupMember> {
+            return FfiConverterSequenceTypeGroupMember.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mihomoclient_group_members(
+        it, FfiConverterString.lower(`group`),FfiConverterUInt.lower(`offset`),FfiConverterUInt.lower(`limit`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 连接轨迹（contract §13）。host 当前无连接 → NotFound。
+     */
+    @Throws(MobileException::class)override fun `hostTrace`(`host`: kotlin.String): HostTrace {
+            return FfiConverterTypeHostTrace.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mihomoclient_host_trace(
+        it, FfiConverterString.lower(`host`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 策略组，按配置文件顺序（GLOBAL 组里的顺序；没有则按名称）。
+     */
+    @Throws(MobileException::class)override fun `policyGroups`(): List<PolicyGroup> {
+            return FfiConverterSequenceTypePolicyGroup.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mihomoclient_policy_groups(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * "最近连接"：按 host 聚合，最近活跃在前。
+     */
+    @Throws(MobileException::class)override fun `recentHosts`(`limit`: kotlin.UInt): List<HostActivity> {
+            return FfiConverterSequenceTypeHostActivity.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mihomoclient_recent_hosts(
+        it, FfiConverterUInt.lower(`limit`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    @Throws(MobileException::class)override fun `selectInGroup`(`group`: kotlin.String, `member`: kotlin.String)
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mihomoclient_select_in_group(
+        it, FfiConverterString.lower(`group`),FfiConverterString.lower(`member`),_status)
+}
+    }
+    
+    
+
+    
+    /**
+     * 模式切换（rule / global / direct）。
+     */
+    @Throws(MobileException::class)override fun `setMode`(`mode`: kotlin.String)
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mihomoclient_set_mode(
+        it, FfiConverterString.lower(`mode`),_status)
+}
+    }
+    
+    
+
+    
+    /**
+     * 只测该组；返回 (成员, 毫秒)，超时 = -1。
+     */
+    @Throws(MobileException::class)override fun `testGroup`(`group`: kotlin.String, `url`: kotlin.String, `timeoutMs`: kotlin.UInt): List<GroupMember> {
+            return FfiConverterSequenceTypeGroupMember.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mihomoclient_test_group(
+        it, FfiConverterString.lower(`group`),FfiConverterString.lower(`url`),FfiConverterUInt.lower(`timeoutMs`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    @Throws(MobileException::class)override fun `version`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mihomoclient_version(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    
+    companion object
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMihomoClient: FfiConverter<MihomoClient, Pointer> {
+
+    override fun lower(value: MihomoClient): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): MihomoClient {
+        return MihomoClient(value)
+    }
+
+    override fun read(buf: ByteBuffer): MihomoClient {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: MihomoClient) = 8UL
+
+    override fun write(value: MihomoClient, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
 public interface MobileCoreInterface {
     
     /**
@@ -2168,6 +2716,75 @@ public object FfiConverterTypeBuildReport: FfiConverterRustBuffer<BuildReport> {
 
 
 
+data class ConnectionInfo (
+    var `id`: kotlin.String, 
+    var `host`: kotlin.String, 
+    /**
+     * iOS 恒为 None
+     */
+    var `app`: kotlin.String?, 
+    /**
+     * 命中的顶层策略组（场景）
+     */
+    var `scene`: kotlin.String?, 
+    /**
+     * 实际出口节点；直连 = "DIRECT"
+     */
+    var `node`: kotlin.String, 
+    var `upBytes`: kotlin.Long, 
+    var `downBytes`: kotlin.Long, 
+    var `startedAt`: kotlin.Long, 
+    var `rule`: kotlin.String
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeConnectionInfo: FfiConverterRustBuffer<ConnectionInfo> {
+    override fun read(buf: ByteBuffer): ConnectionInfo {
+        return ConnectionInfo(
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterLong.read(buf),
+            FfiConverterLong.read(buf),
+            FfiConverterLong.read(buf),
+            FfiConverterString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ConnectionInfo) = (
+            FfiConverterString.allocationSize(value.`id`) +
+            FfiConverterString.allocationSize(value.`host`) +
+            FfiConverterOptionalString.allocationSize(value.`app`) +
+            FfiConverterOptionalString.allocationSize(value.`scene`) +
+            FfiConverterString.allocationSize(value.`node`) +
+            FfiConverterLong.allocationSize(value.`upBytes`) +
+            FfiConverterLong.allocationSize(value.`downBytes`) +
+            FfiConverterLong.allocationSize(value.`startedAt`) +
+            FfiConverterString.allocationSize(value.`rule`)
+    )
+
+    override fun write(value: ConnectionInfo, buf: ByteBuffer) {
+            FfiConverterString.write(value.`id`, buf)
+            FfiConverterString.write(value.`host`, buf)
+            FfiConverterOptionalString.write(value.`app`, buf)
+            FfiConverterOptionalString.write(value.`scene`, buf)
+            FfiConverterString.write(value.`node`, buf)
+            FfiConverterLong.write(value.`upBytes`, buf)
+            FfiConverterLong.write(value.`downBytes`, buf)
+            FfiConverterLong.write(value.`startedAt`, buf)
+            FfiConverterString.write(value.`rule`, buf)
+    }
+}
+
+
+
 /**
  * 平台拉取结果。
  */
@@ -2208,6 +2825,155 @@ public object FfiConverterTypeFetchedSubscription: FfiConverterRustBuffer<Fetche
             FfiConverterString.write(value.`body`, buf)
             FfiConverterOptionalString.write(value.`userinfo`, buf)
             FfiConverterLong.write(value.`nowMillis`, buf)
+    }
+}
+
+
+
+data class GroupMember (
+    var `name`: kotlin.String, 
+    var `proxyType`: kotlin.String, 
+    /**
+     * 最近一次延迟；-1 = 超时；None = 未测
+     */
+    var `latencyMs`: kotlin.Int?
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeGroupMember: FfiConverterRustBuffer<GroupMember> {
+    override fun read(buf: ByteBuffer): GroupMember {
+        return GroupMember(
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterOptionalInt.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: GroupMember) = (
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterString.allocationSize(value.`proxyType`) +
+            FfiConverterOptionalInt.allocationSize(value.`latencyMs`)
+    )
+
+    override fun write(value: GroupMember, buf: ByteBuffer) {
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterString.write(value.`proxyType`, buf)
+            FfiConverterOptionalInt.write(value.`latencyMs`, buf)
+    }
+}
+
+
+
+data class HostActivity (
+    var `host`: kotlin.String, 
+    var `scene`: kotlin.String?, 
+    var `node`: kotlin.String, 
+    var `connections`: kotlin.Int, 
+    var `totalBytes`: kotlin.Long, 
+    var `lastSeenAt`: kotlin.Long
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeHostActivity: FfiConverterRustBuffer<HostActivity> {
+    override fun read(buf: ByteBuffer): HostActivity {
+        return HostActivity(
+            FfiConverterString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterLong.read(buf),
+            FfiConverterLong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: HostActivity) = (
+            FfiConverterString.allocationSize(value.`host`) +
+            FfiConverterOptionalString.allocationSize(value.`scene`) +
+            FfiConverterString.allocationSize(value.`node`) +
+            FfiConverterInt.allocationSize(value.`connections`) +
+            FfiConverterLong.allocationSize(value.`totalBytes`) +
+            FfiConverterLong.allocationSize(value.`lastSeenAt`)
+    )
+
+    override fun write(value: HostActivity, buf: ByteBuffer) {
+            FfiConverterString.write(value.`host`, buf)
+            FfiConverterOptionalString.write(value.`scene`, buf)
+            FfiConverterString.write(value.`node`, buf)
+            FfiConverterInt.write(value.`connections`, buf)
+            FfiConverterLong.write(value.`totalBytes`, buf)
+            FfiConverterLong.write(value.`lastSeenAt`, buf)
+    }
+}
+
+
+
+data class HostTrace (
+    var `host`: kotlin.String, 
+    var `lastSeenAt`: kotlin.Long, 
+    var `connections`: kotlin.Int, 
+    var `totalBytes`: kotlin.Long, 
+    /**
+     * "DOMAIN-SUFFIX,claude.ai"
+     */
+    var `rule`: kotlin.String, 
+    /**
+     * 策略链，自顶层组到出口节点（["AI", "US Fixed IP", "US-Fixed-01"]）
+     */
+    var `chain`: List<kotlin.String>, 
+    var `scene`: kotlin.String?, 
+    var `node`: kotlin.String
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeHostTrace: FfiConverterRustBuffer<HostTrace> {
+    override fun read(buf: ByteBuffer): HostTrace {
+        return HostTrace(
+            FfiConverterString.read(buf),
+            FfiConverterLong.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterLong.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterSequenceString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: HostTrace) = (
+            FfiConverterString.allocationSize(value.`host`) +
+            FfiConverterLong.allocationSize(value.`lastSeenAt`) +
+            FfiConverterInt.allocationSize(value.`connections`) +
+            FfiConverterLong.allocationSize(value.`totalBytes`) +
+            FfiConverterString.allocationSize(value.`rule`) +
+            FfiConverterSequenceString.allocationSize(value.`chain`) +
+            FfiConverterOptionalString.allocationSize(value.`scene`) +
+            FfiConverterString.allocationSize(value.`node`)
+    )
+
+    override fun write(value: HostTrace, buf: ByteBuffer) {
+            FfiConverterString.write(value.`host`, buf)
+            FfiConverterLong.write(value.`lastSeenAt`, buf)
+            FfiConverterInt.write(value.`connections`, buf)
+            FfiConverterLong.write(value.`totalBytes`, buf)
+            FfiConverterString.write(value.`rule`, buf)
+            FfiConverterSequenceString.write(value.`chain`, buf)
+            FfiConverterOptionalString.write(value.`scene`, buf)
+            FfiConverterString.write(value.`node`, buf)
     }
 }
 
@@ -2465,6 +3231,53 @@ public object FfiConverterTypeNodeRow: FfiConverterRustBuffer<NodeRow> {
             FfiConverterString.write(value.`protocol`, buf)
             FfiConverterOptionalFloat.write(value.`multiplier`, buf)
             FfiConverterUShort.write(value.`subscription`, buf)
+    }
+}
+
+
+
+data class PolicyGroup (
+    var `name`: kotlin.String, 
+    var `groupType`: GroupType, 
+    var `selected`: kotlin.String?, 
+    var `memberCount`: kotlin.Int, 
+    /**
+     * 组内最近一次测速时间（毫秒），来自成员 history
+     */
+    var `testedAt`: kotlin.Long?
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypePolicyGroup: FfiConverterRustBuffer<PolicyGroup> {
+    override fun read(buf: ByteBuffer): PolicyGroup {
+        return PolicyGroup(
+            FfiConverterString.read(buf),
+            FfiConverterTypeGroupType.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterOptionalLong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: PolicyGroup) = (
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterTypeGroupType.allocationSize(value.`groupType`) +
+            FfiConverterOptionalString.allocationSize(value.`selected`) +
+            FfiConverterInt.allocationSize(value.`memberCount`) +
+            FfiConverterOptionalLong.allocationSize(value.`testedAt`)
+    )
+
+    override fun write(value: PolicyGroup, buf: ByteBuffer) {
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterTypeGroupType.write(value.`groupType`, buf)
+            FfiConverterOptionalString.write(value.`selected`, buf)
+            FfiConverterInt.write(value.`memberCount`, buf)
+            FfiConverterOptionalLong.write(value.`testedAt`, buf)
     }
 }
 
@@ -2921,6 +3734,39 @@ public object FfiConverterTypeBuildPhase: FfiConverterRustBuffer<BuildPhase> {
 
 
 
+enum class GroupType {
+    
+    SELECT,
+    URL_TEST,
+    FALLBACK,
+    LOAD_BALANCE,
+    RELAY;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeGroupType: FfiConverterRustBuffer<GroupType> {
+    override fun read(buf: ByteBuffer) = try {
+        GroupType.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: GroupType) = 4UL
+
+    override fun write(value: GroupType, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+
 enum class LayerKind {
     
     OVERRIDE,
@@ -3027,6 +3873,17 @@ sealed class MobileException: kotlin.Exception() {
     }
     
     /**
+     * contract not_running：mihomo 未启动 / 控制 socket 不存在
+     */
+    class NotRunning(
+        
+        val v1: kotlin.String
+        ) : MobileException() {
+        override val message
+            get() = "v1=${ v1 }"
+    }
+    
+    /**
      * 进度回调返回 false
      */
     class Cancelled(
@@ -3075,7 +3932,10 @@ public object FfiConverterTypeMobileError : FfiConverterRustBuffer<MobileExcepti
             8 -> MobileException.SubscriptionNotFound(
                 FfiConverterString.read(buf),
                 )
-            9 -> MobileException.Cancelled()
+            9 -> MobileException.NotRunning(
+                FfiConverterString.read(buf),
+                )
+            10 -> MobileException.Cancelled()
             else -> throw RuntimeException("invalid error enum value, something is very wrong!!")
         }
     }
@@ -3118,6 +3978,11 @@ public object FfiConverterTypeMobileError : FfiConverterRustBuffer<MobileExcepti
                 + FfiConverterString.allocationSize(value.v1)
             )
             is MobileException.SubscriptionNotFound -> (
+                // Add the size for the Int that specifies the variant plus the size needed for all fields
+                4UL
+                + FfiConverterString.allocationSize(value.v1)
+            )
+            is MobileException.NotRunning -> (
                 // Add the size for the Int that specifies the variant plus the size needed for all fields
                 4UL
                 + FfiConverterString.allocationSize(value.v1)
@@ -3171,8 +4036,13 @@ public object FfiConverterTypeMobileError : FfiConverterRustBuffer<MobileExcepti
                 FfiConverterString.write(value.v1, buf)
                 Unit
             }
-            is MobileException.Cancelled -> {
+            is MobileException.NotRunning -> {
                 buf.putInt(9)
+                FfiConverterString.write(value.v1, buf)
+                Unit
+            }
+            is MobileException.Cancelled -> {
+                buf.putInt(10)
                 Unit
             }
         }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
@@ -3587,6 +4457,90 @@ public object FfiConverterSequenceString: FfiConverterRustBuffer<List<kotlin.Str
 /**
  * @suppress
  */
+public object FfiConverterSequenceTypeConnectionInfo: FfiConverterRustBuffer<List<ConnectionInfo>> {
+    override fun read(buf: ByteBuffer): List<ConnectionInfo> {
+        val len = buf.getInt()
+        return List<ConnectionInfo>(len) {
+            FfiConverterTypeConnectionInfo.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<ConnectionInfo>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeConnectionInfo.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<ConnectionInfo>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeConnectionInfo.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeGroupMember: FfiConverterRustBuffer<List<GroupMember>> {
+    override fun read(buf: ByteBuffer): List<GroupMember> {
+        val len = buf.getInt()
+        return List<GroupMember>(len) {
+            FfiConverterTypeGroupMember.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<GroupMember>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeGroupMember.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<GroupMember>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeGroupMember.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeHostActivity: FfiConverterRustBuffer<List<HostActivity>> {
+    override fun read(buf: ByteBuffer): List<HostActivity> {
+        val len = buf.getInt()
+        return List<HostActivity>(len) {
+            FfiConverterTypeHostActivity.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<HostActivity>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeHostActivity.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<HostActivity>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeHostActivity.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterSequenceTypeLatencySample: FfiConverterRustBuffer<List<LatencySample>> {
     override fun read(buf: ByteBuffer): List<LatencySample> {
         val len = buf.getInt()
@@ -3633,6 +4587,34 @@ public object FfiConverterSequenceTypeNodeRow: FfiConverterRustBuffer<List<NodeR
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeNodeRow.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypePolicyGroup: FfiConverterRustBuffer<List<PolicyGroup>> {
+    override fun read(buf: ByteBuffer): List<PolicyGroup> {
+        val len = buf.getInt()
+        return List<PolicyGroup>(len) {
+            FfiConverterTypePolicyGroup.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<PolicyGroup>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypePolicyGroup.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<PolicyGroup>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypePolicyGroup.write(it, buf)
         }
     }
 }

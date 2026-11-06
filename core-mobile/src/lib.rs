@@ -13,6 +13,7 @@ pub mod diff;
 pub mod engine;
 pub mod error;
 pub mod latency;
+pub mod mihomo;
 pub mod mock;
 pub mod nodes;
 pub mod regions;

@@ -1,7 +1,11 @@
 package main
 
 import (
+	"context"
+	"io"
 	"net"
+	"net/http"
+	"strings"
 	"os"
 	"path/filepath"
 	"testing"
@@ -37,6 +41,21 @@ func TestStartStop(t *testing.T) {
 			t.Fatal("controller socket missing")
 		}
 		time.Sleep(50 * time.Millisecond)
+	}
+	// REST over unix socket：core-mobile 的 MihomoClient 走的就是这条路
+	cl := &http.Client{Transport: &http.Transport{DialContext: func(ctx context.Context, _, _ string) (net.Conn, error) {
+		return net.Dial("unix", sock)
+	}}}
+	for _, path := range []string{"/version", "/proxies", "/connections"} {
+		resp, err := cl.Get("http://mihomo" + path)
+		if err != nil {
+			t.Fatalf("%s: %v", path, err)
+		}
+		b, _ := io.ReadAll(resp.Body)
+		resp.Body.Close()
+		if resp.StatusCode != 200 || !strings.HasPrefix(strings.TrimSpace(string(b)), "{") {
+			t.Fatalf("%s: %d %s", path, resp.StatusCode, b)
+		}
 	}
 	if err := reload(cfg); err != nil {
 		t.Fatal(err)

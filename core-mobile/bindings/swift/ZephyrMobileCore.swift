@@ -576,6 +576,278 @@ fileprivate struct FfiConverterString: FfiConverter {
 
 
 
+public protocol MihomoClientProtocol : AnyObject {
+    
+    /**
+     * 活动连接（contract §8：最多 200 条最新）。
+     */
+    func activeConnections(limit: UInt32) throws  -> [ConnectionInfo]
+    
+    func closeAllConnections() throws 
+    
+    func closeConnection(id: String) throws 
+    
+    /**
+     * 组成员分页（contract §4 limit ≤ 500）。
+     */
+    func groupMembers(group: String, offset: UInt32, limit: UInt32) throws  -> [GroupMember]
+    
+    /**
+     * 连接轨迹（contract §13）。host 当前无连接 → NotFound。
+     */
+    func hostTrace(host: String) throws  -> HostTrace
+    
+    /**
+     * 策略组，按配置文件顺序（GLOBAL 组里的顺序；没有则按名称）。
+     */
+    func policyGroups() throws  -> [PolicyGroup]
+    
+    /**
+     * "最近连接"：按 host 聚合，最近活跃在前。
+     */
+    func recentHosts(limit: UInt32) throws  -> [HostActivity]
+    
+    func selectInGroup(group: String, member: String) throws 
+    
+    /**
+     * 模式切换（rule / global / direct）。
+     */
+    func setMode(mode: String) throws 
+    
+    /**
+     * 只测该组；返回 (成员, 毫秒)，超时 = -1。
+     */
+    func testGroup(group: String, url: String, timeoutMs: UInt32) throws  -> [GroupMember]
+    
+    func version() throws  -> String
+    
+}
+
+open class MihomoClient:
+    MihomoClientProtocol {
+    fileprivate let pointer: UnsafeMutableRawPointer!
+
+    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public struct NoPointer {
+        public init() {}
+    }
+
+    // TODO: We'd like this to be `private` but for Swifty reasons,
+    // we can't implement `FfiConverter` without making this `required` and we can't
+    // make it `required` without making it `public`.
+    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
+        self.pointer = pointer
+    }
+
+    // This constructor can be used to instantiate a fake object.
+    // - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
+    //
+    // - Warning:
+    //     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public init(noPointer: NoPointer) {
+        self.pointer = nil
+    }
+
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
+        return try! rustCall { uniffi_zephyr_mobile_core_fn_clone_mihomoclient(self.pointer, $0) }
+    }
+    /**
+     * socket：zm_start 时传入的 external-controller-unix 路径。
+     */
+public convenience init(socketPath: String) {
+    let pointer =
+        try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_constructor_mihomoclient_new(
+        FfiConverterString.lower(socketPath),$0
+    )
+}
+    self.init(unsafeFromRawPointer: pointer)
+}
+
+    deinit {
+        guard let pointer = pointer else {
+            return
+        }
+
+        try! rustCall { uniffi_zephyr_mobile_core_fn_free_mihomoclient(pointer, $0) }
+    }
+
+    
+
+    
+    /**
+     * 活动连接（contract §8：最多 200 条最新）。
+     */
+open func activeConnections(limit: UInt32)throws  -> [ConnectionInfo] {
+    return try  FfiConverterSequenceTypeConnectionInfo.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mihomoclient_active_connections(self.uniffiClonePointer(),
+        FfiConverterUInt32.lower(limit),$0
+    )
+})
+}
+    
+open func closeAllConnections()throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mihomoclient_close_all_connections(self.uniffiClonePointer(),$0
+    )
+}
+}
+    
+open func closeConnection(id: String)throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mihomoclient_close_connection(self.uniffiClonePointer(),
+        FfiConverterString.lower(id),$0
+    )
+}
+}
+    
+    /**
+     * 组成员分页（contract §4 limit ≤ 500）。
+     */
+open func groupMembers(group: String, offset: UInt32, limit: UInt32)throws  -> [GroupMember] {
+    return try  FfiConverterSequenceTypeGroupMember.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mihomoclient_group_members(self.uniffiClonePointer(),
+        FfiConverterString.lower(group),
+        FfiConverterUInt32.lower(offset),
+        FfiConverterUInt32.lower(limit),$0
+    )
+})
+}
+    
+    /**
+     * 连接轨迹（contract §13）。host 当前无连接 → NotFound。
+     */
+open func hostTrace(host: String)throws  -> HostTrace {
+    return try  FfiConverterTypeHostTrace.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mihomoclient_host_trace(self.uniffiClonePointer(),
+        FfiConverterString.lower(host),$0
+    )
+})
+}
+    
+    /**
+     * 策略组，按配置文件顺序（GLOBAL 组里的顺序；没有则按名称）。
+     */
+open func policyGroups()throws  -> [PolicyGroup] {
+    return try  FfiConverterSequenceTypePolicyGroup.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mihomoclient_policy_groups(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * "最近连接"：按 host 聚合，最近活跃在前。
+     */
+open func recentHosts(limit: UInt32)throws  -> [HostActivity] {
+    return try  FfiConverterSequenceTypeHostActivity.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mihomoclient_recent_hosts(self.uniffiClonePointer(),
+        FfiConverterUInt32.lower(limit),$0
+    )
+})
+}
+    
+open func selectInGroup(group: String, member: String)throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mihomoclient_select_in_group(self.uniffiClonePointer(),
+        FfiConverterString.lower(group),
+        FfiConverterString.lower(member),$0
+    )
+}
+}
+    
+    /**
+     * 模式切换（rule / global / direct）。
+     */
+open func setMode(mode: String)throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mihomoclient_set_mode(self.uniffiClonePointer(),
+        FfiConverterString.lower(mode),$0
+    )
+}
+}
+    
+    /**
+     * 只测该组；返回 (成员, 毫秒)，超时 = -1。
+     */
+open func testGroup(group: String, url: String, timeoutMs: UInt32)throws  -> [GroupMember] {
+    return try  FfiConverterSequenceTypeGroupMember.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mihomoclient_test_group(self.uniffiClonePointer(),
+        FfiConverterString.lower(group),
+        FfiConverterString.lower(url),
+        FfiConverterUInt32.lower(timeoutMs),$0
+    )
+})
+}
+    
+open func version()throws  -> String {
+    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mihomoclient_version(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeMihomoClient: FfiConverter {
+
+    typealias FfiType = UnsafeMutableRawPointer
+    typealias SwiftType = MihomoClient
+
+    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> MihomoClient {
+        return MihomoClient(unsafeFromRawPointer: pointer)
+    }
+
+    public static func lower(_ value: MihomoClient) -> UnsafeMutableRawPointer {
+        return value.uniffiClonePointer()
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> MihomoClient {
+        let v: UInt64 = try readInt(&buf)
+        // The Rust code won't compile if a pointer won't fit in a UInt64.
+        // We have to go via `UInt` because that's the thing that's the size of a pointer.
+        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
+        if (ptr == nil) {
+            throw UniffiInternalError.unexpectedNullPointer
+        }
+        return try lift(ptr!)
+    }
+
+    public static func write(_ value: MihomoClient, into buf: inout [UInt8]) {
+        // This fiddling is because `Int` is the thing that's the same size as a pointer.
+        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
+        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
+    }
+}
+
+
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeMihomoClient_lift(_ pointer: UnsafeMutableRawPointer) throws -> MihomoClient {
+    return try FfiConverterTypeMihomoClient.lift(pointer)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeMihomoClient_lower(_ value: MihomoClient) -> UnsafeMutableRawPointer {
+    return FfiConverterTypeMihomoClient.lower(value)
+}
+
+
+
+
 public protocol MobileCoreProtocol : AnyObject {
     
     /**
@@ -1109,6 +1381,146 @@ public func FfiConverterTypeBuildReport_lower(_ value: BuildReport) -> RustBuffe
 }
 
 
+public struct ConnectionInfo {
+    public var id: String
+    public var host: String
+    /**
+     * iOS 恒为 None
+     */
+    public var app: String?
+    /**
+     * 命中的顶层策略组（场景）
+     */
+    public var scene: String?
+    /**
+     * 实际出口节点；直连 = "DIRECT"
+     */
+    public var node: String
+    public var upBytes: Int64
+    public var downBytes: Int64
+    public var startedAt: Int64
+    public var rule: String
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(id: String, host: String, 
+        /**
+         * iOS 恒为 None
+         */app: String?, 
+        /**
+         * 命中的顶层策略组（场景）
+         */scene: String?, 
+        /**
+         * 实际出口节点；直连 = "DIRECT"
+         */node: String, upBytes: Int64, downBytes: Int64, startedAt: Int64, rule: String) {
+        self.id = id
+        self.host = host
+        self.app = app
+        self.scene = scene
+        self.node = node
+        self.upBytes = upBytes
+        self.downBytes = downBytes
+        self.startedAt = startedAt
+        self.rule = rule
+    }
+}
+
+
+
+extension ConnectionInfo: Equatable, Hashable {
+    public static func ==(lhs: ConnectionInfo, rhs: ConnectionInfo) -> Bool {
+        if lhs.id != rhs.id {
+            return false
+        }
+        if lhs.host != rhs.host {
+            return false
+        }
+        if lhs.app != rhs.app {
+            return false
+        }
+        if lhs.scene != rhs.scene {
+            return false
+        }
+        if lhs.node != rhs.node {
+            return false
+        }
+        if lhs.upBytes != rhs.upBytes {
+            return false
+        }
+        if lhs.downBytes != rhs.downBytes {
+            return false
+        }
+        if lhs.startedAt != rhs.startedAt {
+            return false
+        }
+        if lhs.rule != rhs.rule {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(host)
+        hasher.combine(app)
+        hasher.combine(scene)
+        hasher.combine(node)
+        hasher.combine(upBytes)
+        hasher.combine(downBytes)
+        hasher.combine(startedAt)
+        hasher.combine(rule)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeConnectionInfo: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ConnectionInfo {
+        return
+            try ConnectionInfo(
+                id: FfiConverterString.read(from: &buf), 
+                host: FfiConverterString.read(from: &buf), 
+                app: FfiConverterOptionString.read(from: &buf), 
+                scene: FfiConverterOptionString.read(from: &buf), 
+                node: FfiConverterString.read(from: &buf), 
+                upBytes: FfiConverterInt64.read(from: &buf), 
+                downBytes: FfiConverterInt64.read(from: &buf), 
+                startedAt: FfiConverterInt64.read(from: &buf), 
+                rule: FfiConverterString.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: ConnectionInfo, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.id, into: &buf)
+        FfiConverterString.write(value.host, into: &buf)
+        FfiConverterOptionString.write(value.app, into: &buf)
+        FfiConverterOptionString.write(value.scene, into: &buf)
+        FfiConverterString.write(value.node, into: &buf)
+        FfiConverterInt64.write(value.upBytes, into: &buf)
+        FfiConverterInt64.write(value.downBytes, into: &buf)
+        FfiConverterInt64.write(value.startedAt, into: &buf)
+        FfiConverterString.write(value.rule, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeConnectionInfo_lift(_ buf: RustBuffer) throws -> ConnectionInfo {
+    return try FfiConverterTypeConnectionInfo.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeConnectionInfo_lower(_ value: ConnectionInfo) -> RustBuffer {
+    return FfiConverterTypeConnectionInfo.lower(value)
+}
+
+
 /**
  * 平台拉取结果。
  */
@@ -1195,6 +1607,310 @@ public func FfiConverterTypeFetchedSubscription_lift(_ buf: RustBuffer) throws -
 #endif
 public func FfiConverterTypeFetchedSubscription_lower(_ value: FetchedSubscription) -> RustBuffer {
     return FfiConverterTypeFetchedSubscription.lower(value)
+}
+
+
+public struct GroupMember {
+    public var name: String
+    public var proxyType: String
+    /**
+     * 最近一次延迟；-1 = 超时；None = 未测
+     */
+    public var latencyMs: Int32?
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(name: String, proxyType: String, 
+        /**
+         * 最近一次延迟；-1 = 超时；None = 未测
+         */latencyMs: Int32?) {
+        self.name = name
+        self.proxyType = proxyType
+        self.latencyMs = latencyMs
+    }
+}
+
+
+
+extension GroupMember: Equatable, Hashable {
+    public static func ==(lhs: GroupMember, rhs: GroupMember) -> Bool {
+        if lhs.name != rhs.name {
+            return false
+        }
+        if lhs.proxyType != rhs.proxyType {
+            return false
+        }
+        if lhs.latencyMs != rhs.latencyMs {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(proxyType)
+        hasher.combine(latencyMs)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeGroupMember: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> GroupMember {
+        return
+            try GroupMember(
+                name: FfiConverterString.read(from: &buf), 
+                proxyType: FfiConverterString.read(from: &buf), 
+                latencyMs: FfiConverterOptionInt32.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: GroupMember, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.name, into: &buf)
+        FfiConverterString.write(value.proxyType, into: &buf)
+        FfiConverterOptionInt32.write(value.latencyMs, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeGroupMember_lift(_ buf: RustBuffer) throws -> GroupMember {
+    return try FfiConverterTypeGroupMember.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeGroupMember_lower(_ value: GroupMember) -> RustBuffer {
+    return FfiConverterTypeGroupMember.lower(value)
+}
+
+
+public struct HostActivity {
+    public var host: String
+    public var scene: String?
+    public var node: String
+    public var connections: Int32
+    public var totalBytes: Int64
+    public var lastSeenAt: Int64
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(host: String, scene: String?, node: String, connections: Int32, totalBytes: Int64, lastSeenAt: Int64) {
+        self.host = host
+        self.scene = scene
+        self.node = node
+        self.connections = connections
+        self.totalBytes = totalBytes
+        self.lastSeenAt = lastSeenAt
+    }
+}
+
+
+
+extension HostActivity: Equatable, Hashable {
+    public static func ==(lhs: HostActivity, rhs: HostActivity) -> Bool {
+        if lhs.host != rhs.host {
+            return false
+        }
+        if lhs.scene != rhs.scene {
+            return false
+        }
+        if lhs.node != rhs.node {
+            return false
+        }
+        if lhs.connections != rhs.connections {
+            return false
+        }
+        if lhs.totalBytes != rhs.totalBytes {
+            return false
+        }
+        if lhs.lastSeenAt != rhs.lastSeenAt {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(host)
+        hasher.combine(scene)
+        hasher.combine(node)
+        hasher.combine(connections)
+        hasher.combine(totalBytes)
+        hasher.combine(lastSeenAt)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeHostActivity: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> HostActivity {
+        return
+            try HostActivity(
+                host: FfiConverterString.read(from: &buf), 
+                scene: FfiConverterOptionString.read(from: &buf), 
+                node: FfiConverterString.read(from: &buf), 
+                connections: FfiConverterInt32.read(from: &buf), 
+                totalBytes: FfiConverterInt64.read(from: &buf), 
+                lastSeenAt: FfiConverterInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: HostActivity, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.host, into: &buf)
+        FfiConverterOptionString.write(value.scene, into: &buf)
+        FfiConverterString.write(value.node, into: &buf)
+        FfiConverterInt32.write(value.connections, into: &buf)
+        FfiConverterInt64.write(value.totalBytes, into: &buf)
+        FfiConverterInt64.write(value.lastSeenAt, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeHostActivity_lift(_ buf: RustBuffer) throws -> HostActivity {
+    return try FfiConverterTypeHostActivity.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeHostActivity_lower(_ value: HostActivity) -> RustBuffer {
+    return FfiConverterTypeHostActivity.lower(value)
+}
+
+
+public struct HostTrace {
+    public var host: String
+    public var lastSeenAt: Int64
+    public var connections: Int32
+    public var totalBytes: Int64
+    /**
+     * "DOMAIN-SUFFIX,claude.ai"
+     */
+    public var rule: String
+    /**
+     * 策略链，自顶层组到出口节点（["AI", "US Fixed IP", "US-Fixed-01"]）
+     */
+    public var chain: [String]
+    public var scene: String?
+    public var node: String
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(host: String, lastSeenAt: Int64, connections: Int32, totalBytes: Int64, 
+        /**
+         * "DOMAIN-SUFFIX,claude.ai"
+         */rule: String, 
+        /**
+         * 策略链，自顶层组到出口节点（["AI", "US Fixed IP", "US-Fixed-01"]）
+         */chain: [String], scene: String?, node: String) {
+        self.host = host
+        self.lastSeenAt = lastSeenAt
+        self.connections = connections
+        self.totalBytes = totalBytes
+        self.rule = rule
+        self.chain = chain
+        self.scene = scene
+        self.node = node
+    }
+}
+
+
+
+extension HostTrace: Equatable, Hashable {
+    public static func ==(lhs: HostTrace, rhs: HostTrace) -> Bool {
+        if lhs.host != rhs.host {
+            return false
+        }
+        if lhs.lastSeenAt != rhs.lastSeenAt {
+            return false
+        }
+        if lhs.connections != rhs.connections {
+            return false
+        }
+        if lhs.totalBytes != rhs.totalBytes {
+            return false
+        }
+        if lhs.rule != rhs.rule {
+            return false
+        }
+        if lhs.chain != rhs.chain {
+            return false
+        }
+        if lhs.scene != rhs.scene {
+            return false
+        }
+        if lhs.node != rhs.node {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(host)
+        hasher.combine(lastSeenAt)
+        hasher.combine(connections)
+        hasher.combine(totalBytes)
+        hasher.combine(rule)
+        hasher.combine(chain)
+        hasher.combine(scene)
+        hasher.combine(node)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeHostTrace: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> HostTrace {
+        return
+            try HostTrace(
+                host: FfiConverterString.read(from: &buf), 
+                lastSeenAt: FfiConverterInt64.read(from: &buf), 
+                connections: FfiConverterInt32.read(from: &buf), 
+                totalBytes: FfiConverterInt64.read(from: &buf), 
+                rule: FfiConverterString.read(from: &buf), 
+                chain: FfiConverterSequenceString.read(from: &buf), 
+                scene: FfiConverterOptionString.read(from: &buf), 
+                node: FfiConverterString.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: HostTrace, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.host, into: &buf)
+        FfiConverterInt64.write(value.lastSeenAt, into: &buf)
+        FfiConverterInt32.write(value.connections, into: &buf)
+        FfiConverterInt64.write(value.totalBytes, into: &buf)
+        FfiConverterString.write(value.rule, into: &buf)
+        FfiConverterSequenceString.write(value.chain, into: &buf)
+        FfiConverterOptionString.write(value.scene, into: &buf)
+        FfiConverterString.write(value.node, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeHostTrace_lift(_ buf: RustBuffer) throws -> HostTrace {
+    return try FfiConverterTypeHostTrace.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeHostTrace_lower(_ value: HostTrace) -> RustBuffer {
+    return FfiConverterTypeHostTrace.lower(value)
 }
 
 
@@ -1718,6 +2434,102 @@ public func FfiConverterTypeNodeRow_lift(_ buf: RustBuffer) throws -> NodeRow {
 #endif
 public func FfiConverterTypeNodeRow_lower(_ value: NodeRow) -> RustBuffer {
     return FfiConverterTypeNodeRow.lower(value)
+}
+
+
+public struct PolicyGroup {
+    public var name: String
+    public var groupType: GroupType
+    public var selected: String?
+    public var memberCount: Int32
+    /**
+     * 组内最近一次测速时间（毫秒），来自成员 history
+     */
+    public var testedAt: Int64?
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(name: String, groupType: GroupType, selected: String?, memberCount: Int32, 
+        /**
+         * 组内最近一次测速时间（毫秒），来自成员 history
+         */testedAt: Int64?) {
+        self.name = name
+        self.groupType = groupType
+        self.selected = selected
+        self.memberCount = memberCount
+        self.testedAt = testedAt
+    }
+}
+
+
+
+extension PolicyGroup: Equatable, Hashable {
+    public static func ==(lhs: PolicyGroup, rhs: PolicyGroup) -> Bool {
+        if lhs.name != rhs.name {
+            return false
+        }
+        if lhs.groupType != rhs.groupType {
+            return false
+        }
+        if lhs.selected != rhs.selected {
+            return false
+        }
+        if lhs.memberCount != rhs.memberCount {
+            return false
+        }
+        if lhs.testedAt != rhs.testedAt {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(groupType)
+        hasher.combine(selected)
+        hasher.combine(memberCount)
+        hasher.combine(testedAt)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypePolicyGroup: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> PolicyGroup {
+        return
+            try PolicyGroup(
+                name: FfiConverterString.read(from: &buf), 
+                groupType: FfiConverterTypeGroupType.read(from: &buf), 
+                selected: FfiConverterOptionString.read(from: &buf), 
+                memberCount: FfiConverterInt32.read(from: &buf), 
+                testedAt: FfiConverterOptionInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: PolicyGroup, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.name, into: &buf)
+        FfiConverterTypeGroupType.write(value.groupType, into: &buf)
+        FfiConverterOptionString.write(value.selected, into: &buf)
+        FfiConverterInt32.write(value.memberCount, into: &buf)
+        FfiConverterOptionInt64.write(value.testedAt, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypePolicyGroup_lift(_ buf: RustBuffer) throws -> PolicyGroup {
+    return try FfiConverterTypePolicyGroup.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypePolicyGroup_lower(_ value: PolicyGroup) -> RustBuffer {
+    return FfiConverterTypePolicyGroup.lower(value)
 }
 
 
@@ -2633,6 +3445,91 @@ extension BuildPhase: Equatable, Hashable {}
 // Note that we don't yet support `indirect` for enums.
 // See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
 
+public enum GroupType {
+    
+    case select
+    case urlTest
+    case fallback
+    case loadBalance
+    case relay
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeGroupType: FfiConverterRustBuffer {
+    typealias SwiftType = GroupType
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> GroupType {
+        let variant: Int32 = try readInt(&buf)
+        switch variant {
+        
+        case 1: return .select
+        
+        case 2: return .urlTest
+        
+        case 3: return .fallback
+        
+        case 4: return .loadBalance
+        
+        case 5: return .relay
+        
+        default: throw UniffiInternalError.unexpectedEnumCase
+        }
+    }
+
+    public static func write(_ value: GroupType, into buf: inout [UInt8]) {
+        switch value {
+        
+        
+        case .select:
+            writeInt(&buf, Int32(1))
+        
+        
+        case .urlTest:
+            writeInt(&buf, Int32(2))
+        
+        
+        case .fallback:
+            writeInt(&buf, Int32(3))
+        
+        
+        case .loadBalance:
+            writeInt(&buf, Int32(4))
+        
+        
+        case .relay:
+            writeInt(&buf, Int32(5))
+        
+        }
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeGroupType_lift(_ buf: RustBuffer) throws -> GroupType {
+    return try FfiConverterTypeGroupType.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeGroupType_lower(_ value: GroupType) -> RustBuffer {
+    return FfiConverterTypeGroupType.lower(value)
+}
+
+
+
+extension GroupType: Equatable, Hashable {}
+
+
+
+// Note that we don't yet support `indirect` for enums.
+// See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
+
 public enum LayerKind {
     
     case override
@@ -2736,6 +3633,11 @@ public enum MobileError {
     case SubscriptionNotFound(String
     )
     /**
+     * contract not_running：mihomo 未启动 / 控制 socket 不存在
+     */
+    case NotRunning(String
+    )
+    /**
      * 进度回调返回 false
      */
     case Cancelled
@@ -2779,7 +3681,10 @@ public struct FfiConverterTypeMobileError: FfiConverterRustBuffer {
         case 8: return .SubscriptionNotFound(
             try FfiConverterString.read(from: &buf)
             )
-        case 9: return .Cancelled
+        case 9: return .NotRunning(
+            try FfiConverterString.read(from: &buf)
+            )
+        case 10: return .Cancelled
 
          default: throw UniffiInternalError.unexpectedEnumCase
         }
@@ -2832,8 +3737,13 @@ public struct FfiConverterTypeMobileError: FfiConverterRustBuffer {
             FfiConverterString.write(v1, into: &buf)
             
         
-        case .Cancelled:
+        case let .NotRunning(v1):
             writeInt(&buf, Int32(9))
+            FfiConverterString.write(v1, into: &buf)
+            
+        
+        case .Cancelled:
+            writeInt(&buf, Int32(10))
         
         }
     }
@@ -3205,6 +4115,81 @@ fileprivate struct FfiConverterSequenceString: FfiConverterRustBuffer {
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterSequenceTypeConnectionInfo: FfiConverterRustBuffer {
+    typealias SwiftType = [ConnectionInfo]
+
+    public static func write(_ value: [ConnectionInfo], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeConnectionInfo.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [ConnectionInfo] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [ConnectionInfo]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeConnectionInfo.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterSequenceTypeGroupMember: FfiConverterRustBuffer {
+    typealias SwiftType = [GroupMember]
+
+    public static func write(_ value: [GroupMember], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeGroupMember.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [GroupMember] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [GroupMember]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeGroupMember.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterSequenceTypeHostActivity: FfiConverterRustBuffer {
+    typealias SwiftType = [HostActivity]
+
+    public static func write(_ value: [HostActivity], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeHostActivity.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [HostActivity] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [HostActivity]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeHostActivity.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterSequenceTypeLatencySample: FfiConverterRustBuffer {
     typealias SwiftType = [LatencySample]
 
@@ -3247,6 +4232,31 @@ fileprivate struct FfiConverterSequenceTypeNodeRow: FfiConverterRustBuffer {
         seq.reserveCapacity(Int(len))
         for _ in 0 ..< len {
             seq.append(try FfiConverterTypeNodeRow.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterSequenceTypePolicyGroup: FfiConverterRustBuffer {
+    typealias SwiftType = [PolicyGroup]
+
+    public static func write(_ value: [PolicyGroup], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypePolicyGroup.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [PolicyGroup] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [PolicyGroup]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypePolicyGroup.read(from: &buf))
         }
         return seq
     }
@@ -3429,6 +4439,39 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_func_core_greeting() != 3481) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_active_connections() != 8862) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_close_all_connections() != 61646) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_close_connection() != 31803) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_group_members() != 53514) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_host_trace() != 9078) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_policy_groups() != 45489) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_recent_hosts() != 3573) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_select_in_group() != 300) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_set_mode() != 26213) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_test_group() != 37978) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_version() != 52279) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_cached_latencies() != 41970) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -3496,6 +4539,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_update_subscription() != 7462) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_constructor_mihomoclient_new() != 36552) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_constructor_mobilecore_new() != 4167) {
