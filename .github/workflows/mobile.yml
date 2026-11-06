@@ -1,0 +1,53 @@
+name: mobile
+on:
+  push: { branches: [main, 'agent/**'] }
+  pull_request:
+  workflow_dispatch:
+concurrency: { group: mobile-${{ github.ref }}, cancel-in-progress: true }
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: fixtures 与原型一致
+        run: node tools/gen-mock-fixtures.js && git diff --exit-code contract/fixtures
+  ios:
+    if: hashFiles('apps/ios/project.yml') != ''
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+      - run: brew install xcodegen
+      - name: generate
+        working-directory: apps/ios
+        run: xcodegen generate
+      - name: build & test
+        working-directory: apps/ios
+        run: |
+          set -o pipefail
+          PROJ=$(ls -d *.xcodeproj | head -1)
+          SCHEME=${IOS_SCHEME:-Zephyr}
+          xcodebuild -project "$PROJ" -scheme "$SCHEME" \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -resultBundlePath build/Test.xcresult \
+            CODE_SIGNING_ALLOWED=NO test | xcbeautify || exit 1
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with: { name: ios-xcresult, path: apps/ios/build/Test.xcresult }
+  android:
+    if: hashFiles('apps/android/settings.gradle.kts') != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 17 }
+      - uses: gradle/actions/setup-gradle@v4
+      - name: build, unit test, paparazzi verify
+        working-directory: apps/android
+        run: ./gradlew --no-daemon assembleDebug testDebugUnitTest verifyPaparazziDebug
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with: { name: paparazzi-failures, path: apps/android/**/build/paparazzi/failures }
