@@ -23,7 +23,7 @@ public final class AppModel {
 
     // MARK: 引擎状态（只读）
     public internal(set) var connection = ConnectionState(status: .disconnected, mode: .rule)
-    public internal(set) var scenes: [Scene] = []
+    public internal(set) var scenes: [ZephyrKit.Scene] = []
     public internal(set) var subscriptions: [Subscription] = []
     public internal(set) var usage: UsageSummary?
     /// 设置（强调色 / 外观在 RootView 统一应用）。
@@ -78,7 +78,7 @@ public final class AppModel {
         return "\(ZFormat.relative(t, now: now()))检测"
     }
 
-    public func scene(id: String) -> Scene? { scenes.first { $0.id == id } }
+    public func scene(id: String) -> ZephyrKit.Scene? { scenes.first { $0.id == id } }
 }
 
 // MARK: - 辅助类型
