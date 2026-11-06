@@ -351,3 +351,9 @@ record SceneFailover { failed: NodeRow, failureCount: UInt32, apply: SceneApply 
 - 模式切换：扩展改 YAML 顶层 `mode:` 行后 `zm_reload`，不重建 TUN。
 - 订阅更新或场景切换需要重载时，App 先重写 `config.yaml`，再发 `TunnelRequest.reloadConfig`。
 - 实时数据（策略组、连接、延迟）：App 经 `MihomoClient(socketPath: App Group/zm.sock)` 读取。
+
+### §14.y 场景自动切换不碰 AI（2026-11-07 追加）
+
+- `reportSceneProbe` 对 kind=AI 的场景恒返回 null，照常接受上报但不自动更换出口。依据：原型 index.html 672–675，AI 出口 IP 只能在用户确认后更改。
+- 应用例外（如 Claude 固定出口）不属于场景的 `selected`，任何自动逻辑都不修改。
+- 平台对 AI 场景只提示「出口无响应，出口 IP 不会自动更换」。视频、其他、自定义场景照旧在热备内切换。

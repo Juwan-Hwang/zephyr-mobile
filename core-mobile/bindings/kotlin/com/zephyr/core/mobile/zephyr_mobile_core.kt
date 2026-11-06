@@ -1309,7 +1309,7 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_exit() != 54284.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_probe() != 58755.toShort()) {
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_probe() != 17449.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033.toShort()) {
@@ -2344,6 +2344,9 @@ public interface MobileCoreInterface {
     /**
      * 平台对场景当前出口做健康探测（或连接失败）后上报。达到阈值且不在冷却期时，
      * 自动换到热备里最优的节点并返回动作；否则 None。
+     *
+     * AI 场景永不自动切换（原型 index.html 672–675：AI 出口 IP 只能在用户确认后更改；
+     * 应用例外如 Claude 固定出口也不被任何自动逻辑改动）：照常计数，但恒返回 None，平台只提示。
      */
     fun `reportSceneProbe`(`sceneId`: kotlin.String, `success`: kotlin.Boolean, `nowMillis`: kotlin.Long): SceneFailover?
     
@@ -2826,6 +2829,9 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     /**
      * 平台对场景当前出口做健康探测（或连接失败）后上报。达到阈值且不在冷却期时，
      * 自动换到热备里最优的节点并返回动作；否则 None。
+     *
+     * AI 场景永不自动切换（原型 index.html 672–675：AI 出口 IP 只能在用户确认后更改；
+     * 应用例外如 Claude 固定出口也不被任何自动逻辑改动）：照常计数，但恒返回 None，平台只提示。
      */
     @Throws(MobileException::class)override fun `reportSceneProbe`(`sceneId`: kotlin.String, `success`: kotlin.Boolean, `nowMillis`: kotlin.Long): SceneFailover? {
             return FfiConverterOptionalTypeSceneFailover.lift(
