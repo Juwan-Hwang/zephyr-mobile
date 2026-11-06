@@ -35,6 +35,10 @@ class MockEngine(
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
     demo: Boolean = false,
     private val latencyScale: Double = 1.0,
+    /** Where CPU-bound queries run. Tests pass Dispatchers.Unconfined so results land in the same frame. */
+    private val compute: kotlinx.coroutines.CoroutineDispatcher = Dispatchers.Default,
+    /** Reported query durations; tests pin it so goldens don't depend on host speed. */
+    private val measure: ((Long) -> Long) = { it },
 ) : ZephyrEngine {
 
     // ── state ────────────────────────────────────────────────────────────────
@@ -187,10 +191,10 @@ class MockEngine(
         return NodeIndex(q.total, q.sections(), testedCount.get())
     }
 
-    override suspend fun queryNodes(query: String): NodeQueryResult = withContext(Dispatchers.Default) {
+    override suspend fun queryNodes(query: String): NodeQueryResult = withContext(compute) {
         val t0 = System.nanoTime()
         val q = NodeQuery.build(query)
-        val took = (System.nanoTime() - t0) / 1_000
+        val took = measure((System.nanoTime() - t0) / 1_000)
         val token = nextToken.getAndIncrement()
         synchronized(queries) { queries[token] = q }
         NodeQueryResult(query, q.total, q.sections(), q.highlights, took, token)
@@ -353,6 +357,25 @@ class MockEngine(
         }
     }
 
+    override fun recentHosts(limit: Int): Flow<List<ConnectionInfo>> = flow {
+        val start = clock()
+        while (currentCoroutineContextActive()) {
+            emit(MockConnections.at(start, (clock() - start) / 1000).take(minOf(limit, 5).coerceAtLeast(0)))
+            delay(1_000)
+        }
+    }
+
+    private val overrides = java.util.concurrent.ConcurrentHashMap<String, TraceOverride>()
+
+    override suspend fun connectionTrace(host: String): ConnectionTrace =
+        MockConnections.trace(host, clock())?.copy(override = overrides[host])
+            ?: throw ZephyrException(ZephyrError(ErrorCode.NODE_NOT_FOUND, host))
+
+    override suspend fun overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Boolean) {
+        if (MockConnections.trace(host, clock()) == null) throw ZephyrException(ZephyrError(ErrorCode.NODE_NOT_FOUND, host))
+        if (target == TraceTarget.UNCHANGED) overrides.remove(host) else overrides[host] = TraceOverride(target, sceneId, persistent)
+    }
+
     override suspend fun closeConnection(id: String) = Unit
     override suspend fun closeAll() = Unit
 
@@ -363,7 +386,7 @@ class MockEngine(
             if (line.level >= minLevel) emit(line)
             delay(scaled(700 + MockCatalog.hsh(5, i) % 900))
         }
-    }.flowOn(Dispatchers.Default)
+    }.flowOn(compute)
 
     override fun settings(): Flow<Settings> = settingsState.asStateFlow()
     override suspend fun updateSettings(patch: Settings) { settingsState.value = patch }

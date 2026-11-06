@@ -1,0 +1,10 @@
+.gradle/
+local.properties
+build/
+.kotlin/
+*.iml
+.idea/
+captures/
+
+# native libs built by tools/build-android-libs.sh and tools/build-mihomo.sh
+**/src/main/jniLibs/
