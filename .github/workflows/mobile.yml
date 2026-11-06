@@ -45,6 +45,11 @@ jobs:
         run: cargo test --release --test full_scale -- --ignored
       - name: UniFFI 绑定无漂移
         run: tools/gen-bindings.sh --check
+      - uses: actions/setup-go@v5
+        with: { go-version: '1.27', cache-dependency-path: mihomo-mobile/go.sum }
+      - name: 嵌入式 mihomo 冒烟（启动/重载/停止）
+        working-directory: mihomo-mobile
+        run: go test -count=1 ./...
   ios:
     needs: detect
     if: needs.detect.outputs.ios == 'true'
@@ -57,6 +62,10 @@ jobs:
         with: { workspaces: core-mobile }
       - name: ZephyrMobileCore.xcframework（→ build/ios）
         run: tools/build-ios-xcframework.sh
+      - uses: actions/setup-go@v5
+        with: { go-version: '1.27', cache-dependency-path: mihomo-mobile/go.sum }
+      - name: Zmihomo.xcframework（→ build/ios）
+        run: tools/build-mihomo.sh ios
       - run: brew install xcodegen
       - name: generate
         working-directory: apps/ios
@@ -89,6 +98,10 @@ jobs:
         with: { workspaces: core-mobile }
       - name: core-mobile .so（→ core-engine/src/main/jniLibs，不入库）
         run: cargo install cargo-ndk --locked && ABIS="arm64-v8a x86_64" tools/build-android-libs.sh
+      - uses: actions/setup-go@v5
+        with: { go-version: '1.27', cache-dependency-path: mihomo-mobile/go.sum }
+      - name: libzmihomo.so（→ jniLibs，不入库）
+        run: ABIS="arm64-v8a x86_64" tools/build-mihomo.sh android
       - name: build, unit test, paparazzi verify
         working-directory: apps/android
         run: ./gradlew --no-daemon assembleDebug testDebugUnitTest verifyPaparazziDebug
