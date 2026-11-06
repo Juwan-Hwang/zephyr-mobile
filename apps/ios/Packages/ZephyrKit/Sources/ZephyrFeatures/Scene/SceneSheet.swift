@@ -1,0 +1,191 @@
+// 场景详情（原型 06，截图 scene.png）：
+//   AI                                   完成
+//   9 个可用节点
+//   检测自 … 个候选 · 2 小时前检测
+//   [订阅分组 | Zephyr 优选]
+//   漏斗
+//   候选列表（点选切换，触感）
+//   例外 / 检测频率 / 重新检测
+//
+// 契约 v0 只有 sceneCandidates（≤ 50）与 Scene.available；"检测自 2 个订阅中的 512 个节点"和
+// 按服务的漏斗需要契约补充（见 NOTES-H.md），这里用候选数据推出能确定的三级漏斗。
+
+import SwiftUI
+import ZephyrDesign
+import ZephyrKit
+
+struct SceneSheet: View {
+    let sceneId: String
+    @Environment(AppModel.self) private var model
+    @Environment(\.dismiss) private var dismiss
+    @State private var candidates: [NodeSummary] = []
+    @State private var loaded = false
+    @State private var selecting: NodeId?
+
+    var body: some View {
+        if let scene = model.scene(id: sceneId) {
+            content(scene)
+        } else {
+            VStack { SheetHeader(title: "场景") { dismiss() }; Spacer() }
+        }
+    }
+
+    private func content(_ scene: Scene) -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                SheetHeader(title: scene.name) { dismiss() }
+                ZBigNumber("\(scene.available)", unit: "个可用节点", size: .hero)
+                    .padding(.horizontal, HMetrics.homeInset)
+                    .padding(.top, ZTokens.Space.n5)
+                Text(verbatim: lede(scene))
+                    .zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary)
+                    .padding(.horizontal, HMetrics.homeInset)
+                    .padding(.top, ZTokens.Space.n3)
+
+                ZSegmented([ZSegment(SceneSourceChoice.group, title: "订阅分组"),
+                            ZSegment(SceneSourceChoice.pick, title: "Zephyr 优选")],
+                           selection: .constant(scene.source == .subscriptionGroup ? .group : .pick),
+                           label: "节点来源")
+                    .disabled(true)   // 契约 v0 无 setSceneSource；见 NOTES-H.md
+                    .padding(.horizontal, HMetrics.homeInset)
+                    .padding(.top, ZTokens.Space.n6)
+
+                if scene.source != .subscriptionGroup, loaded {
+                    SceneFunnel(steps: funnel(scene))
+                        .padding(.horizontal, HMetrics.homeInset)
+                        .padding(.top, ZTokens.Space.n6)
+                }
+
+                candidateList(scene)
+                    .padding(.top, ZTokens.Space.n6)
+
+                detailList(scene)
+                    .padding(.top, ZTokens.Space.n6)
+
+                Text(verbatim: "优选结果仅保存在 Zephyr 中，订阅配置保持原样。")
+                    .zType(.caption).foregroundStyle(ZTokens.Colors.textTertiary)
+                    .padding(.horizontal, HMetrics.homeInset + ZTokens.Space.n1)
+                    .padding(.top, ZTokens.Space.n3)
+                    .padding(.bottom, ZTokens.Space.n8)
+            }
+        }
+        .scrollIndicators(.hidden)
+        .task(id: scene.testedAt) {
+            candidates = await model.sceneCandidates(sceneId)
+            loaded = true
+        }
+        .sensoryFeedback(.selection, trigger: scene.selected.id)
+    }
+
+    // MARK: 区块
+
+    private func candidateList(_ scene: Scene) -> some View {
+        ZCard(padding: 0, cornerRadius: HMetrics.cardRadius) {
+            LazyVStack(spacing: 0) {
+                if !loaded {
+                    ForEach(0..<6, id: \.self) { i in
+                        if i > 0 { ZDivider() }
+                        SceneCandidateRow(node: NodeSummary(id: 0, name: "占位节点 00", region: "XX", protocol: ""),
+                                          isSelected: false, pinnedFor: nil)
+                            .redacted(reason: .placeholder)
+                    }
+                }
+                ForEach(Array(candidates.enumerated()), id: \.element.id) { i, node in
+                    if i > 0 { ZDivider() }
+                    Button {
+                        select(node, in: scene)
+                    } label: {
+                        SceneCandidateRow(node: node,
+                                          isSelected: node.id == (selecting ?? scene.selected.id),
+                                          pinnedFor: scene.exceptions.first { $0.node.id == node.id }?.app)
+                    }
+                    .buttonStyle(ZRowButtonStyle(haptic: .none))
+                }
+            }
+        }
+        .padding(.horizontal, HMetrics.cardInset)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(Text(verbatim: "候选节点"))
+    }
+
+    private func detailList(_ scene: Scene) -> some View {
+        ZCard(padding: 0, cornerRadius: HMetrics.cardRadius) {
+            VStack(spacing: 0) {
+                ForEach(Array(scene.exceptions.enumerated()), id: \.offset) { _, ex in
+                    DetailRow(title: ex.app, value: "\(ex.node.name)（固定）")
+                    ZDivider()
+                }
+                DetailRow(title: "检测频率", value: model.settings?.testOnWifiOnly == false ? "每天" : "每天（仅 Wi‑Fi）")
+                ZDivider()
+                Button {
+                    Task { await model.retest(sceneId: scene.id) }
+                } label: {
+                    HStack {
+                        Text(verbatim: model.retesting.contains(scene.id) ? "检测中…" : "重新检测")
+                            .zType(.body).foregroundStyle(ZAccentStyle())
+                        Spacer()
+                        if model.retesting.contains(scene.id) { ProgressView() }
+                    }
+                    .padding(.vertical, ZTokens.Space.n4)
+                    .padding(.horizontal, ZTokens.Space.n5)
+                }
+                .buttonStyle(ZRowButtonStyle())
+                .disabled(model.retesting.contains(scene.id))
+            }
+        }
+        .padding(.horizontal, HMetrics.cardInset)
+    }
+
+    // MARK: 逻辑
+
+    private func select(_ node: NodeSummary, in scene: Scene) {
+        guard node.id != scene.selected.id else { return }
+        selecting = node.id
+        Task {
+            await model.applySceneChange(sceneId: scene.id, from: scene.selected, to: node)
+            selecting = nil
+        }
+    }
+
+    private func lede(_ scene: Scene) -> String {
+        var parts: [String] = []
+        if loaded, !candidates.isEmpty { parts.append("检测自 \(candidates.count) 个候选节点") }
+        if let t = scene.testedAt { parts.append("\(ZFormat.relative(t, now: model.now()))检测") }
+        return parts.isEmpty ? " " : parts.joined(separator: " · ")
+    }
+
+    /// 由候选推出的三级漏斗：候选 → 延迟低于 300 ms → 全部可访问（Scene.available）。
+    private func funnel(_ scene: Scene) -> [FunnelStep] {
+        let fast = candidates.filter { ($0.latencyMs ?? .max) >= 0 && ($0.latencyMs ?? .max) < 300 }.count
+        return [FunnelStep(count: candidates.count, label: "全部候选"),
+                FunnelStep(count: fast, label: "延迟低于 300 ms"),
+                FunnelStep(count: Int(scene.available), label: "全部可访问")]
+    }
+}
+
+private enum SceneSourceChoice: Hashable { case group, pick }
+
+private struct DetailRow: View {
+    let title: String
+    let value: String
+    var body: some View {
+        HStack(spacing: ZTokens.Space.n3) {
+            Text(verbatim: title).zType(.body).foregroundStyle(ZTokens.Colors.textPrimary)
+            Spacer(minLength: ZTokens.Space.n3)
+            Text(verbatim: value).zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary)
+                .multilineTextAlignment(.trailing)
+        }
+        .padding(.vertical, ZTokens.Space.n4)
+        .padding(.horizontal, ZTokens.Space.n5)
+        .accessibilityElement(children: .combine)
+    }
+}
+
+#Preview("场景详情") {
+    HPreview(model: .preview()) { SceneSheet(sceneId: "ai") }
+}
+
+#Preview("场景详情 · AX5") {
+    HPreview(model: .preview()) { SceneSheet(sceneId: "ai") }
+        .dynamicTypeSize(.accessibility5)
+}
