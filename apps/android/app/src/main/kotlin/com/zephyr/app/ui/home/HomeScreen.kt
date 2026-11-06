@@ -56,6 +56,7 @@ data class HomeActions(
     val onSubscriptions: () -> Unit,
     val onScene: (Scene) -> Unit,
     val onChangeGlobalNode: () -> Unit,
+    val onActivity: () -> Unit = {},
 )
 
 @Composable
@@ -104,7 +105,7 @@ fun HomeContent(
                 AnimatedVisibility(connected, enter = expandVertically(ZAnim.slow()) + fadeIn(ZAnim.slow()), exit = shrinkVertically(ZAnim.standard()) + fadeOut(ZAnim.micro())) {
                     Column {
                         Spacer(Modifier.height(36.dp))
-                        ZTrafficStat(ui.traffic.downBps, ui.traffic.upBps, Modifier.padding(horizontal = 22.dp))
+                        ZTrafficStat(ui.traffic.downBps, ui.traffic.upBps, Modifier.padding(horizontal = 22.dp).zPressable(label = "最近连接", onClick = actions.onActivity))
                         ZSparkline(ui.spark, Modifier.fillMaxWidth().height(72.dp), description = "最近 90 秒下载速率")
                     }
                 }

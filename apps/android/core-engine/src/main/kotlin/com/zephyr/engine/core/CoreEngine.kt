@@ -2,7 +2,11 @@ package com.zephyr.engine.core
 
 import com.zephyr.core.mobile.MobileCore
 import com.zephyr.core.mobile.MobileException
+import com.zephyr.core.mobile.SubscriptionSource
 import com.zephyr.engine.ErrorCode
+import com.zephyr.engine.ImportSource
+import com.zephyr.engine.Subscription
+import com.zephyr.engine.SubscriptionsSummary
 import com.zephyr.engine.LayerKind
 import com.zephyr.engine.NodeIndex
 import com.zephyr.engine.NodePage
@@ -35,6 +39,8 @@ class CoreEngine(
     private val fallback: ZephyrEngine,
     dataDir: String? = null,
     private val io: CoroutineDispatcher = Dispatchers.IO,
+    /** Real subscription profiles; null keeps subscriptions on [fallback] (screenshots, tests). */
+    val profiles: ProfileStore? = null,
 ) : ZephyrEngine by fallback {
 
     private val core: MobileCore? = dataDir?.let { dir ->
@@ -68,6 +74,38 @@ class CoreEngine(
         val c = core ?: return
         withContext(io) { wrap { c.rebuildMockNodes(scale) } }
         nodesReady = null
+    }
+
+    // ── Subscriptions (real profiles once the user imports one) ───────────────────────────────────
+    private fun realSubs(): Boolean = profiles != null && (isNative || profiles.subscriptions.value.isNotEmpty())
+
+    override fun subscriptions(): kotlinx.coroutines.flow.Flow<List<Subscription>> =
+        if (realSubs()) profiles!!.subscriptions else fallback.subscriptions()
+
+    override suspend fun subscriptionsSummary(): SubscriptionsSummary =
+        if (realSubs()) profiles!!.subscriptions.value.let { l -> SubscriptionsSummary(l.size, l.sumOf { it.nodeCount }) }
+        else fallback.subscriptionsSummary()
+
+    override suspend fun importSubscription(source: ImportSource, payload: String): Subscription {
+        val store = profiles ?: return fallback.importSubscription(source, payload)
+        if (!isNative && source == ImportSource.QR) return fallback.importSubscription(source, payload)
+        val isUrl = payload.trim().let { it.startsWith("http://") || it.startsWith("https://") }
+        if (source == ImportSource.URL && !isUrl) throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "not a subscription link")
+        return withContext(io) {
+            store.import(payload, isUrl) { all ->
+                val c = core
+                if (c == null) all.sumOf { ProfileStore.countProxies(it.second) }
+                else wrap { c.rebuildNodes(all.map { SubscriptionSource(it.first.toUShort(), it.second) }).total.toLong() }.also { nodesReady = null }
+            }
+        }
+    }
+
+    override suspend fun deleteSubscription(id: String) {
+        if (!realSubs()) return fallback.deleteSubscription(id)
+        withContext(io) {
+            profiles!!.delete(id)
+            core?.let { c -> wrap { c.rebuildNodes(profiles.sources().map { SubscriptionSource(it.first.toUShort(), it.second) }) }; nodesReady = null }
+        }
     }
 
     // ── Nodes ──────────────────────────────────────────────────────────────────────────────────────

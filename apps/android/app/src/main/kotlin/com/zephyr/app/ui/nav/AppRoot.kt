@@ -26,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.zephyr.app.di.AppGraph
 import com.zephyr.app.ui.activity.ActivitySheet
+import com.zephyr.app.ui.activity.TraceSheet
 import com.zephyr.app.ui.command.CommandOverlay
 import com.zephyr.app.ui.home.HomeActions
 import com.zephyr.app.ui.home.HomeScreen
@@ -70,6 +71,7 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean) {
         var library by remember { mutableStateOf(false) }
         var scene by remember { mutableStateOf<Scene?>(null) }
         var activity by remember { mutableStateOf(false) }
+        var traceHost by remember { mutableStateOf<String?>(null) }
         var command by remember { mutableStateOf(false) }
         var import by remember { mutableStateOf(false) }
         val home: HomeViewModel = viewModel { HomeViewModel() }
@@ -94,6 +96,7 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean) {
                             onSubscriptions = { nav.navigate(Subs) },
                             onScene = { scene = it },
                             onChangeGlobalNode = { nav.navigate(Nodes()) },
+                            onActivity = { activity = true },
                         ),
                     )
                 }
@@ -121,7 +124,8 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean) {
                 }
             }
             SceneSheet(scene) { scene = null }
-            ActivitySheet(activity) { activity = false }
+            ActivitySheet(activity, { activity = false }) { traceHost = it }
+            TraceSheet(traceHost) { traceHost = null }
             ImportSheet(import, { import = false }) { import = false }
             CommandOverlay(command, { command = false }) { s ->
                 command = false

@@ -3,7 +3,10 @@ package com.zephyr.app.screenshot
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.android.resources.NightMode
+import androidx.compose.foundation.layout.fillMaxSize
 import com.zephyr.app.di.AppGraph
+import com.zephyr.app.ui.activity.ActivitySheet
+import com.zephyr.app.ui.activity.TraceSheet
 import com.zephyr.app.ui.nodes.NodesScreen
 import com.zephyr.app.ui.nodes.NodesViewModel
 import com.zephyr.app.ui.rules.RulesScreen
@@ -38,6 +41,11 @@ class PagesScreenshotTest(private val dark: Boolean) {
     @Test fun rules() = paparazzi.snapshot { ZephyrTheme(dark = dark) { androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) { RulesScreen("chat.openai.com", onBack = {}) } } }
     @Test fun subscriptions() = paparazzi.snapshot { ZephyrTheme(dark = dark) { androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) { SubscriptionsScreen(onBack = {}, onImport = {}) } } }
     @Test fun settings() = paparazzi.snapshot { ZephyrTheme(dark = dark) { androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) { SettingsScreen("资料库", onBack = {}) } } }
+
+    @Test fun activity() = paparazzi.snapshot { ZephyrTheme(dark = dark) { androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) {
+        androidx.compose.foundation.layout.Box(androidx.compose.ui.Modifier.fillMaxSize()) { ActivitySheet(true, {}, {}) } } } }
+    @Test fun trace() = paparazzi.snapshot { ZephyrTheme(dark = dark) { androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) {
+        androidx.compose.foundation.layout.Box(androidx.compose.ui.Modifier.fillMaxSize()) { TraceSheet("claude.ai") {} } } } }
 
     companion object {
         @JvmStatic @Parameterized.Parameters(name = "dark={0}")

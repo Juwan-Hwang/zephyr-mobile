@@ -297,16 +297,23 @@ enum class Appearance {
 
 @Serializable
 data class DnsSettings(
-    val enhancedMode: String = "fake-ip",
+    val fakeIp: Boolean = true,
     val nameservers: List<String> = listOf("https://dns.alidns.com/dns-query", "https://doh.pub/dns-query"),
     val fallback: List<String> = listOf("https://1.1.1.1/dns-query"),
+    val ipv6: Boolean = false,
 )
+
+/** contract §13. */
+@Serializable
+enum class TunStack { @SerialName("system") SYSTEM, @SerialName("gvisor") GVISOR, @SerialName("mixed") MIXED }
 
 @Serializable
 data class TunSettings(
-    val stack: String = "mixed",
+    val stack: TunStack = TunStack.GVISOR,
     val mtu: Int = 9000,
-    val ipv6: Boolean = true,
+    val ipv6: Boolean = false,
+    val strictRoute: Boolean = true,
+    /** Android-only extension (per-app VPN exclusion); not in the shared contract. */
     val excludedApps: List<String> = emptyList(),
 )
 
@@ -352,4 +359,30 @@ data class CommandSuggestion(
     val title: String,
     val subtitle: String? = null,
     val payload: String,
+)
+
+
+// ── 13. v0.1: connection trace (prototype trace sheet) ─────────────────────────
+@Serializable
+enum class TraceTarget { @SerialName("unchanged") UNCHANGED, @SerialName("direct") DIRECT, @SerialName("scene") SCENE }
+
+@Serializable
+data class TraceOverride(val target: TraceTarget, val sceneId: String? = null, val persistent: Boolean)
+
+@Serializable
+data class ConnectionTrace(
+    val host: String,
+    val lastSeenAt: Long,
+    val connections: Int,
+    val totalBytes: Long,
+    val rule: String,
+    val ruleSource: String? = null,
+    val scene: String? = null,
+    val sceneSource: String? = null,
+    val node: NodeSummary? = null,
+    val via: String? = null,
+    val exitIp: String? = null,
+    val exitRegion: String? = null,
+    val exitStableDays: Int? = null,
+    val override: TraceOverride? = null,
 )

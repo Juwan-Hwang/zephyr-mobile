@@ -357,6 +357,25 @@ class MockEngine(
         }
     }
 
+    override fun recentHosts(limit: Int): Flow<List<ConnectionInfo>> = flow {
+        val start = clock()
+        while (currentCoroutineContextActive()) {
+            emit(MockConnections.at(start, (clock() - start) / 1000).take(minOf(limit, 5).coerceAtLeast(0)))
+            delay(1_000)
+        }
+    }
+
+    private val overrides = java.util.concurrent.ConcurrentHashMap<String, TraceOverride>()
+
+    override suspend fun connectionTrace(host: String): ConnectionTrace =
+        MockConnections.trace(host, clock())?.copy(override = overrides[host])
+            ?: throw ZephyrException(ZephyrError(ErrorCode.NODE_NOT_FOUND, host))
+
+    override suspend fun overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Boolean) {
+        if (MockConnections.trace(host, clock()) == null) throw ZephyrException(ZephyrError(ErrorCode.NODE_NOT_FOUND, host))
+        if (target == TraceTarget.UNCHANGED) overrides.remove(host) else overrides[host] = TraceOverride(target, sceneId, persistent)
+    }
+
     override suspend fun closeConnection(id: String) = Unit
     override suspend fun closeAll() = Unit
 

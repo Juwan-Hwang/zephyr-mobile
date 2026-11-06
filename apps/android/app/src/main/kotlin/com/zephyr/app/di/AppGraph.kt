@@ -6,6 +6,7 @@ import com.zephyr.app.vpn.ConnectionController
 import com.zephyr.app.vpn.Notifications
 import com.zephyr.engine.ZephyrEngine
 import com.zephyr.engine.core.CoreEngine
+import com.zephyr.engine.core.ProfileStore
 import com.zephyr.engine.mock.MockEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +31,11 @@ object AppGraph {
         if (ready) return
         val app = context.applicationContext
         // Rust core (if its .so is packaged) for nodes/rules; MockEngine for the rest of the contract.
-        val core = CoreEngine(MockEngine(scope = appScope, demo = demo), dataDir = java.io.File(app.filesDir, "core").apply { mkdirs() }.path)
+        val core = CoreEngine(
+            MockEngine(scope = appScope, demo = demo),
+            dataDir = java.io.File(app.filesDir, "core").apply { mkdirs() }.path,
+            profiles = ProfileStore(app.filesDir),
+        )
         engine = core
         if (BuildConfig.DEBUG && BuildConfig.CORE_SEED > 0.0) appScope.launch { runCatching { core.seedMockNodes(BuildConfig.CORE_SEED) } }
         settings = SettingsStore(app, engine, appScope)

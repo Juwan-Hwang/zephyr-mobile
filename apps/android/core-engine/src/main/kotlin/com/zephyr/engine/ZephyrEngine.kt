@@ -62,6 +62,11 @@ interface ZephyrEngine {
     fun activeConnections(): Flow<List<ConnectionInfo>>
     suspend fun closeConnection(id: String)
     suspend fun closeAll()
+
+    // v0.1 (§13): per-host aggregation and trace
+    fun recentHosts(limit: Int): Flow<List<ConnectionInfo>>
+    suspend fun connectionTrace(host: String): ConnectionTrace
+    suspend fun overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Boolean)
     fun logs(minLevel: LogLevel): Flow<LogLine>
     fun settings(): Flow<Settings>
     suspend fun updateSettings(patch: Settings)
@@ -85,6 +90,8 @@ enum class ErrorCode {
     @SerialName("core_crashed") CORE_CRASHED,
     @SerialName("storage_full") STORAGE_FULL,
     @SerialName("cancelled") CANCELLED,
+    @SerialName("stale_token") STALE_TOKEN,
+    @SerialName("subscription_not_found") SUBSCRIPTION_NOT_FOUND,
     @SerialName("internal") INTERNAL,
 }
 
