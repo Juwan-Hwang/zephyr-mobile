@@ -3,7 +3,8 @@
 // 与 Android CoreEngine（apps/android/core-engine/.../CoreEngine.kt）同构：
 //  - 核心有数据时走 MobileCore；没有数据或核心加载失败时，按 `mockData` 回落 MockEngine（Debug/演示）或给空状态（Release）。
 //  - 平台只负责 HTTP 拉取订阅正文（URLSession），解析、清洗、存储、建库都在核心里。
-//  - 连接、流量、策略组、连接列表等实时数据属于 PacketTunnel 里的 mihomo，App 进程暂时转发给 fallback（见 TODO）。
+//  - 连接、流量、策略组、连接列表等实时数据属于 PacketTunnel 里的 mihomo：有 `TunnelPort`（真机）时经它与
+//    MihomoClient 读取（CoreEngine+Live.swift），否则转发 fallback（模拟器、单测）。
 //  - UniFFI 调用是阻塞 FFI：一律放到 `work` 串行队列以外的并发队列执行，主线程不碰。
 //
 // 命名：本模块里不带前缀的 Scene/Subscription/NodePage… 是 UniFFI 生成的核心类型（本模块声明优先于导入）；
@@ -30,6 +31,11 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     private var remapped: [UInt64: UInt64] = [:]
     private var subsWatchers: [UUID: AsyncStream<[ZephyrKit.Subscription]>.Continuation] = [:]
     private var sceneWatchers: [UUID: AsyncStream<[ZephyrKit.Scene]>.Continuation] = [:]
+    private var samples: [TrafficSample] = []
+    private var members: [NodeId: String] = [:]
+
+    /// 真机的系统隧道；nil = 模拟器 / 单测，实时数据走 fallback。
+    let tunnel: (any TunnelPort)?
 
     /// 核心是否已加载（不代表已有数据）。
     public var isNative: Bool { core != nil }
@@ -50,7 +56,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
                 fallback: (any ZephyrEngine)? = nil,
                 mockData: Bool = false,
                 clock: @escaping @Sendable () -> Int64 = { ZFormat.nowMillis() },
-                fetcher: (@Sendable (URL) async throws -> FetchedBody)? = nil) {
+                fetcher: (@Sendable (URL) async throws -> FetchedBody)? = nil,
+                tunnel: (any TunnelPort)? = nil) {
         let dir = dataDir ?? CoreEngine.defaultDataDir()
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         self.core = try? MobileCore(dataDir: dir.path)
@@ -58,7 +65,24 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         self.mockData = mockData
         self.clock = clock
         self.fetcher = fetcher ?? CoreEngine.httpFetch
+        self.tunnel = tunnel
     }
+
+    func now() -> Int64 { clock() }
+
+    /// 最近 300 s 的流量样本（recentTraffic 用）。
+    func remember(_ s: TrafficSample) {
+        locked {
+            samples.append(s)
+            if samples.count > 300 { samples.removeFirst(samples.count - 300) }
+        }
+    }
+
+    func rememberMembers(_ pairs: [(NodeId, String)]) {
+        locked { for (id, name) in pairs { members[id] = name } }
+    }
+
+    func memberName(_ id: NodeId) -> String? { locked { members[id] } }
 
     public static func defaultDataDir() -> URL {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
@@ -121,16 +145,35 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
 
     // MARK: - §1 连接与模式（VPN 生命周期属 PacketTunnel；此处转发）
 
-    public func connectionState() -> AsyncStream<ConnectionState> { fallback.connectionState() }
-    public func connect() async throws { try await fallback.connect() }
-    public func disconnect() async throws { try await fallback.disconnect() }
-    public func setMode(mode: ZephyrKit.ProxyMode) async throws { try await fallback.setMode(mode: mode) }
+    public func connectionState() -> AsyncStream<ConnectionState> {
+        if let t = tunnel { return t.states() }
+        return fallback.connectionState()
+    }
+    public func connect() async throws {
+        if let t = tunnel { return try await liveConnect(t) }
+        try await fallback.connect()
+    }
+    public func disconnect() async throws {
+        if let t = tunnel { return try await t.stop() }
+        try await fallback.disconnect()
+    }
+    public func setMode(mode: ZephyrKit.ProxyMode) async throws {
+        if let t = tunnel { return try await t.setMode(mode) }
+        try await fallback.setMode(mode: mode)
+    }
     public func setGlobalNode(id: NodeId) async throws -> ZephyrKit.ExitChange { try await fallback.setGlobalNode(id: id) }
 
     // MARK: - §2 流量与用量
 
-    public func traffic() -> AsyncStream<TrafficSample> { fallback.traffic() }
-    public func recentTraffic(seconds: Int32) -> [TrafficSample] { fallback.recentTraffic(seconds: seconds) }
+    public func traffic() -> AsyncStream<TrafficSample> {
+        if let t = tunnel { return liveTraffic(t) }
+        return fallback.traffic()
+    }
+    public func recentTraffic(seconds: Int32) -> [TrafficSample] {
+        guard tunnel != nil else { return fallback.recentTraffic(seconds: seconds) }
+        let since = clock() - Int64(seconds) * 1000
+        return locked { samples.filter { $0.at >= since } }
+    }
     public func usageToday() async -> UsageSummary { await fallback.usageToday() }
 
     // MARK: - §3 场景
@@ -184,9 +227,16 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     public func applySceneChange(sceneId: String, nodeId: NodeId) async throws {
         guard let c = await nodes() else { return try await fallback.applySceneChange(sceneId: sceneId, nodeId: nodeId) }
         let now = clock()
-        // TODO(A/B)：隧道运行中时把 SceneApply（group/member 或 needsReload）经 App Group 通知 PacketTunnel 热切换。
-        _ = try await run(.sceneNotFound) { try c.applySceneChange(sceneId: sceneId, nodeId: nodeId, nowMillis: now) }
+        let apply = try await run(.sceneNotFound) { try c.applySceneChange(sceneId: sceneId, nodeId: nodeId, nowMillis: now) }
         await bumpScenes()
+        // 隧道运行中：成员在组内 → 控制口热切换；否则重写配置并让扩展热重载（契约 §14.x）。
+        if let t = tunnel {
+            if apply.needsReload {
+                await reloadTunnelIfRunning(t)
+            } else {
+                try? await mihomo(t.controllerSocketPath) { try $0.selectInGroup(group: apply.group, member: apply.member) }
+            }
+        }
     }
 
     public func retestScene(sceneId: String) async throws -> ZephyrKit.Scene {
@@ -200,12 +250,22 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
 
     // MARK: - §4 策略组（mihomo 实时数据，在 PacketTunnel）
 
-    public func policyGroups() -> AsyncStream<[ZephyrKit.PolicyGroup]> { mockData ? fallback.policyGroups() : CoreEngine.just([]) }
-    public func groupMembers(group: String, offset: Int32, limit: Int32) async throws -> ZephyrKit.NodePage {
-        try await fallback.groupMembers(group: group, offset: offset, limit: limit)
+    public func policyGroups() -> AsyncStream<[ZephyrKit.PolicyGroup]> {
+        if let t = tunnel { return livePolicyGroups(t) }
+        return mockData ? fallback.policyGroups() : CoreEngine.just([])
     }
-    public func selectInGroup(group: String, nodeId: NodeId) async throws { try await fallback.selectInGroup(group: group, nodeId: nodeId) }
-    public func testGroup(group: String) async throws { try await fallback.testGroup(group: group) }
+    public func groupMembers(group: String, offset: Int32, limit: Int32) async throws -> ZephyrKit.NodePage {
+        if let t = tunnel { return try await liveGroupMembers(t, group: group, offset: offset, limit: limit) }
+        return try await fallback.groupMembers(group: group, offset: offset, limit: limit)
+    }
+    public func selectInGroup(group: String, nodeId: NodeId) async throws {
+        if let t = tunnel { return try await liveSelect(t, group: group, nodeId: nodeId) }
+        try await fallback.selectInGroup(group: group, nodeId: nodeId)
+    }
+    public func testGroup(group: String) async throws {
+        if let t = tunnel { return try await liveTestGroup(t, group: group) }
+        try await fallback.testGroup(group: group)
+    }
 
     // MARK: - §5 节点库
 
@@ -347,6 +407,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         invalidateNodes()
         await publishSubs()
         await bumpScenes()
+        if let t = tunnel { await reloadTunnelIfRunning(t) }
         return CoreEngine.diff(d)
     }
 
@@ -435,7 +496,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         }
         var settingsIterator = fallback.settings().makeAsyncIterator()
         let s = await settingsIterator.next()
-        var modeIterator = fallback.connectionState().makeAsyncIterator()
+        var modeIterator = connectionState().makeAsyncIterator()
         let mode = await modeIterator.next()?.mode ?? .rule
         let options = CoreEngine.runtimeOptions(settings: s, mode: mode, controllerSocket: controllerSocket)
         let yaml = try await run(.subscriptionInvalid) { try c.runtimeConfig(subscriptionId: id, options: options) }
@@ -456,9 +517,18 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
 
     // MARK: - §8 连接、日志、设置、存储
 
-    public func activeConnections() -> AsyncStream<[ZephyrKit.ConnectionInfo]> { fallback.activeConnections() }
-    public func closeConnection(id: String) async throws { try await fallback.closeConnection(id: id) }
-    public func closeAll() async throws { try await fallback.closeAll() }
+    public func activeConnections() -> AsyncStream<[ZephyrKit.ConnectionInfo]> {
+        if let t = tunnel { return liveConnections(t) }
+        return fallback.activeConnections()
+    }
+    public func closeConnection(id: String) async throws {
+        if let t = tunnel { return try await liveClose(t, id: id) }
+        try await fallback.closeConnection(id: id)
+    }
+    public func closeAll() async throws {
+        if let t = tunnel { return try await liveClose(t, id: nil) }
+        try await fallback.closeAll()
+    }
     public func logs(minLevel: LogLevel) -> AsyncStream<LogLine> { fallback.logs(minLevel: minLevel) }
     public func settings() -> AsyncStream<ZephyrKit.Settings> { fallback.settings() }
     public func updateSettings(patch: ZephyrKit.Settings) async throws { try await fallback.updateSettings(patch: patch) }

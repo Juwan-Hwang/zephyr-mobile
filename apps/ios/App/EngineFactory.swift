@@ -32,7 +32,9 @@ enum EngineFactory {
             #else
             let mockData = false
             #endif
-            let engine = CoreEngine(fallback: MockEngine(seed: environment.seed, clock: .live), mockData: mockData)
+            // 真机：连接 / 流量 / 策略组 / 连接列表经系统隧道与 mihomo 控制口（SystemTunnelPort + MihomoClient）。
+            let tunnel: (any TunnelPort)? = environment.usesSystemTunnel ? SystemTunnelPort() : nil
+            let engine = CoreEngine(fallback: MockEngine(seed: environment.seed, clock: .live), mockData: mockData, tunnel: tunnel)
             if engine.isNative {
                 return Built(engine: engine, now: { ZFormat.nowMillis() }, environment: environment)
             }
@@ -46,14 +48,5 @@ enum EngineFactory {
         let clock: MockClock = environment.frozenClock ? .frozen941 : .live
         let engine = MockEngine(seed: environment.seed, clock: clock)
         return Built(engine: engine, now: { clock.now() }, environment: environment)
-    }
-
-    /// 启动系统隧道前：真核心时生成 mihomo 配置到 App Group（PacketTunnel 注入 fd 后启动）。Mock 时无事可做。
-    static func prepareTunnel(engine: any ZephyrEngine) async throws {
-        #if canImport(ZephyrCore)
-        guard let core = engine as? CoreEngine else { return }
-        try await core.writeTunnelConfig(to: AppGroup.coreDirectory.appendingPathComponent("config.yaml"),
-                                         controllerSocket: AppGroup.controllerSocketPath)
-        #endif
     }
 }

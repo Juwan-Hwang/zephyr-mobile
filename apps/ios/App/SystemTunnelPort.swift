@@ -1,0 +1,79 @@
+// SystemTunnelPort —— CoreEngine 的 TunnelPort 真机实现：NETunnelProviderManager（TunnelController）+ provider message。
+//
+// 状态：NEVPNStatusDidChange → ConnectionState；模式与错误码取 App Group 的 SharedState（扩展写）。
+// 速率：provider message `.traffic`（扩展 1 Hz 采样 mihomo）。模拟器不支持 Packet Tunnel，不会创建本类型。
+
+#if canImport(ZephyrCore)
+import Foundation
+import NetworkExtension
+import ZephyrCore
+import ZephyrKit
+
+final class SystemTunnelPort: TunnelPort, @unchecked Sendable {
+    private let controller = TunnelController.shared
+
+    var controllerSocketPath: String { AppGroup.controllerSocketPath }
+    var configURL: URL { AppGroup.coreDirectory.appendingPathComponent("config.yaml") }
+
+    func states() -> AsyncStream<ConnectionState> {
+        AsyncStream(bufferingPolicy: .bufferingNewest(1)) { k in
+            let token = NotificationCenter.default.addObserver(forName: .NEVPNStatusDidChange, object: nil, queue: nil) { note in
+                guard let conn = note.object as? NEVPNConnection else { return }
+                k.yield(Self.state(conn.status, since: conn.connectedDate))
+            }
+            let task = Task {
+                let manager = try? await self.controller.existingManager()
+                k.yield(Self.state(manager?.connection.status ?? .disconnected, since: manager?.connection.connectedDate))
+            }
+            k.onTermination = { _ in
+                task.cancel()
+                NotificationCenter.default.removeObserver(token)
+            }
+        }
+    }
+
+    func start() async throws {
+        do { try await controller.setConnected(true) } catch {
+            throw ZephyrError(code: .vpnPermissionDenied, message: "\(error)")
+        }
+    }
+
+    func stop() async throws { try await controller.setConnected(false) }
+
+    func setMode(_ mode: ZephyrKit.ProxyMode) async throws {
+        try await controller.setMode(SharedState.Mode(rawValue: mode.rawValue) ?? .rule)
+    }
+
+    func rate() async -> (up: Int64, down: Int64)? {
+        guard let r = try? await controller.request(.traffic), r.status == .connected else { return nil }
+        return (r.upBps, r.downBps)
+    }
+
+    func reloadConfig() async throws {
+        guard let r = try await controller.request(.reloadConfig) else { return }   // 未连接：下次启动读新配置
+        if r.result != .ok {
+            throw ZephyrError(code: r.errorCode == "subscription_invalid" ? .subscriptionInvalid : .coreCrashed, message: "reload")
+        }
+    }
+
+    // MARK: 映射
+
+    static func state(_ s: NEVPNStatus, since: Date?) -> ConnectionState {
+        let shared = SharedStore.shared.read()
+        let mode = ZephyrKit.ProxyMode(rawValue: shared.tunnel.mode.rawValue) ?? .rule
+        let status: ConnectionStatus = switch s {
+        case .connected: .connected
+        case .connecting, .reasserting: .connecting
+        case .disconnecting: .disconnecting
+        case .invalid, .disconnected: shared.connection.status == .failed ? .failed : .disconnected
+        @unknown default: .disconnected
+        }
+        var error: ZephyrError?
+        if status == .failed, let code = shared.connection.errorCode, let c = ErrorCode(rawValue: code) {
+            error = ZephyrError(code: c, message: "")
+        }
+        let millis = since.map { Int64($0.timeIntervalSince1970 * 1000) }
+        return ConnectionState(status: status, mode: mode, since: status == .connected ? millis : nil, error: error)
+    }
+}
+#endif
