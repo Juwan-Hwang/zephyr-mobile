@@ -1,0 +1,4891 @@
+{
+ "generator": "design/prototype/pages.js",
+ "total": 13109802,
+ "regions": [
+  {
+   "index": 0,
+   "code": "US",
+   "name": "美国",
+   "count": 3118402,
+   "cities": [
+    "洛杉矶",
+    "圣何塞",
+    "西雅图",
+    "纽约",
+    "达拉斯"
+   ],
+   "baseLatency": 152,
+   "carriers": [
+    "CN2 GIA",
+    "Cogent",
+    "Zenlayer",
+    "HE"
+   ]
+  },
+  {
+   "index": 1,
+   "code": "JP",
+   "name": "日本",
+   "count": 2204117,
+   "cities": [
+    "东京",
+    "大阪"
+   ],
+   "baseLatency": 58,
+   "carriers": [
+    "NTT",
+    "IIJ",
+    "KDDI",
+    "SoftBank"
+   ]
+  },
+  {
+   "index": 2,
+   "code": "HK",
+   "name": "香港",
+   "count": 1906551,
+   "cities": [
+    "香港"
+   ],
+   "baseLatency": 34,
+   "carriers": [
+    "HKT",
+    "HKBN",
+    "PCCW",
+    "CMI"
+   ]
+  },
+  {
+   "index": 3,
+   "code": "SG",
+   "name": "新加坡",
+   "count": 1512880,
+   "cities": [
+    "新加坡"
+   ],
+   "baseLatency": 63,
+   "carriers": [
+    "Akari",
+    "SingTel",
+    "StarHub"
+   ]
+  },
+  {
+   "index": 4,
+   "code": "TW",
+   "name": "台湾",
+   "count": 1288406,
+   "cities": [
+    "台北",
+    "台中"
+   ],
+   "baseLatency": 41,
+   "carriers": [
+    "HiNet",
+    "Seednet",
+    "So-net"
+   ]
+  },
+  {
+   "index": 5,
+   "code": "KR",
+   "name": "韩国",
+   "count": 702315,
+   "cities": [
+    "首尔",
+    "春川"
+   ],
+   "baseLatency": 69,
+   "carriers": [
+    "KT",
+    "SK",
+    "LG U+"
+   ]
+  },
+  {
+   "index": 6,
+   "code": "DE",
+   "name": "德国",
+   "count": 488210,
+   "cities": [
+    "法兰克福",
+    "柏林"
+   ],
+   "baseLatency": 204,
+   "carriers": [
+    "Hetzner",
+    "DTAG"
+   ]
+  },
+  {
+   "index": 7,
+   "code": "GB",
+   "name": "英国",
+   "count": 455903,
+   "cities": [
+    "伦敦",
+    "曼彻斯特"
+   ],
+   "baseLatency": 218,
+   "carriers": [
+    "BT",
+    "Vultr"
+   ]
+  },
+  {
+   "index": 8,
+   "code": "NL",
+   "name": "荷兰",
+   "count": 301442,
+   "cities": [
+    "阿姆斯特丹"
+   ],
+   "baseLatency": 226,
+   "carriers": [
+    "KPN",
+    "Leaseweb"
+   ]
+  },
+  {
+   "index": 9,
+   "code": "FR",
+   "name": "法国",
+   "count": 254118,
+   "cities": [
+    "巴黎"
+   ],
+   "baseLatency": 231,
+   "carriers": [
+    "OVH",
+    "Orange"
+   ]
+  },
+  {
+   "index": 10,
+   "code": "CA",
+   "name": "加拿大",
+   "count": 239770,
+   "cities": [
+    "多伦多",
+    "温哥华"
+   ],
+   "baseLatency": 171,
+   "carriers": [
+    "Bell",
+    "Rogers"
+   ]
+  },
+  {
+   "index": 11,
+   "code": "AU",
+   "name": "澳大利亚",
+   "count": 214906,
+   "cities": [
+    "悉尼"
+   ],
+   "baseLatency": 139,
+   "carriers": [
+    "Telstra",
+    "Optus"
+   ]
+  },
+  {
+   "index": 12,
+   "code": "IN",
+   "name": "印度",
+   "count": 198331,
+   "cities": [
+    "孟买"
+   ],
+   "baseLatency": 118,
+   "carriers": [
+    "Jio",
+    "Airtel"
+   ]
+  },
+  {
+   "index": 13,
+   "code": "BR",
+   "name": "巴西",
+   "count": 126004,
+   "cities": [
+    "圣保罗"
+   ],
+   "baseLatency": 301,
+   "carriers": [
+    "Vivo",
+    "Claro"
+   ]
+  },
+  {
+   "index": 14,
+   "code": "TR",
+   "name": "土耳其",
+   "count": 98447,
+   "cities": [
+    "伊斯坦布尔"
+   ],
+   "baseLatency": 246,
+   "carriers": [
+    "Türk Telekom"
+   ]
+  }
+ ],
+ "tags": [
+  "IPLC",
+  "IEPL",
+  "BGP",
+  "家宽",
+  "原生"
+ ],
+ "protocols": [
+  "VLESS",
+  "Hy2",
+  "TUIC",
+  "SS",
+  "Trojan"
+ ],
+ "nodes": [
+  {
+   "id": 0,
+   "region": 0,
+   "index": 0,
+   "name": "洛杉矶 CN2 GIA IPLC 01",
+   "tag": "IPLC",
+   "protocol": "TUIC",
+   "carrier": "CN2 GIA",
+   "city": "洛杉矶",
+   "hash": 0,
+   "cachedLatency": 152
+  },
+  {
+   "id": 1,
+   "region": 0,
+   "index": 1,
+   "name": "圣何塞 CN2 GIA BGP 01",
+   "tag": "BGP",
+   "protocol": "TUIC",
+   "carrier": "CN2 GIA",
+   "city": "圣何塞",
+   "hash": 1561565218,
+   "cachedLatency": null
+  },
+  {
+   "id": 2,
+   "region": 0,
+   "index": 2,
+   "name": "西雅图 CN2 GIA 原生 01 ×2",
+   "tag": "原生",
+   "protocol": "TUIC",
+   "carrier": "CN2 GIA",
+   "city": "西雅图",
+   "hash": 3573156908,
+   "cachedLatency": 164
+  },
+  {
+   "id": 3,
+   "region": 0,
+   "index": 3,
+   "name": "纽约 CN2 GIA IEPL 01 ×1.5",
+   "tag": "IEPL",
+   "protocol": "Hy2",
+   "carrier": "CN2 GIA",
+   "city": "纽约",
+   "hash": 251002245,
+   "cachedLatency": null
+  },
+  {
+   "id": 4,
+   "region": 0,
+   "index": 4,
+   "name": "达拉斯 CN2 GIA 家宽 01",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "CN2 GIA",
+   "city": "达拉斯",
+   "hash": 803495200,
+   "cachedLatency": 170
+  },
+  {
+   "id": 5,
+   "region": 0,
+   "index": 5,
+   "name": "洛杉矶 Cogent IPLC 01",
+   "tag": "IPLC",
+   "protocol": "SS",
+   "carrier": "Cogent",
+   "city": "洛杉矶",
+   "hash": 3606434738,
+   "cachedLatency": null
+  },
+  {
+   "id": 9,
+   "region": 0,
+   "index": 9,
+   "name": "达拉斯 Cogent 家宽 01",
+   "tag": "家宽",
+   "protocol": "TUIC",
+   "carrier": "Cogent",
+   "city": "达拉斯",
+   "hash": 2474171979,
+   "cachedLatency": null
+  },
+  {
+   "id": 10,
+   "region": 0,
+   "index": 10,
+   "name": "洛杉矶 Zenlayer IPLC 01",
+   "tag": "IPLC",
+   "protocol": "VLESS",
+   "carrier": "Zenlayer",
+   "city": "洛杉矶",
+   "hash": 869469277,
+   "cachedLatency": null
+  },
+  {
+   "id": 63,
+   "region": 0,
+   "index": 63,
+   "name": "纽约 CN2 GIA IEPL 04",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "CN2 GIA",
+   "city": "纽约",
+   "hash": 468157972,
+   "cachedLatency": null
+  },
+  {
+   "id": 64,
+   "region": 0,
+   "index": 64,
+   "name": "达拉斯 CN2 GIA 家宽 04",
+   "tag": "家宽",
+   "protocol": "VLESS",
+   "carrier": "CN2 GIA",
+   "city": "达拉斯",
+   "hash": 1474502952,
+   "cachedLatency": null
+  },
+  {
+   "id": 99,
+   "region": 0,
+   "index": 99,
+   "name": "达拉斯 HE 家宽 05",
+   "tag": "家宽",
+   "protocol": "VLESS",
+   "carrier": "HE",
+   "city": "达拉斯",
+   "hash": 1203568884,
+   "cachedLatency": 180
+  },
+  {
+   "id": 320,
+   "region": 0,
+   "index": 320,
+   "name": "洛杉矶 CN2 GIA IPLC 17",
+   "tag": "IPLC",
+   "protocol": "VLESS",
+   "carrier": "CN2 GIA",
+   "city": "洛杉矶",
+   "hash": 2547891800,
+   "cachedLatency": null
+  },
+  {
+   "id": 321,
+   "region": 0,
+   "index": 321,
+   "name": "圣何塞 CN2 GIA BGP 17",
+   "tag": "BGP",
+   "protocol": "SS",
+   "carrier": "CN2 GIA",
+   "city": "圣何塞",
+   "hash": 968830037,
+   "cachedLatency": null
+  },
+  {
+   "id": 999,
+   "region": 0,
+   "index": 999,
+   "name": "达拉斯 HE 家宽 50",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "HE",
+   "city": "达拉斯",
+   "hash": 3641477266,
+   "cachedLatency": null
+  },
+  {
+   "id": 1234,
+   "region": 0,
+   "index": 1234,
+   "name": "达拉斯 Zenlayer 家宽 62",
+   "tag": "家宽",
+   "protocol": "Hy2",
+   "carrier": "Zenlayer",
+   "city": "达拉斯",
+   "hash": 1249915542,
+   "cachedLatency": null
+  },
+  {
+   "id": 65535,
+   "region": 0,
+   "index": 65535,
+   "name": "洛杉矶 HE IPLC 13 ×2",
+   "tag": "IPLC",
+   "protocol": "Trojan",
+   "carrier": "HE",
+   "city": "洛杉矶",
+   "hash": 1139073107,
+   "cachedLatency": null
+  },
+  {
+   "id": 100000,
+   "region": 0,
+   "index": 100000,
+   "name": "洛杉矶 CN2 GIA IPLC 09 ×2",
+   "tag": "IPLC",
+   "protocol": "Trojan",
+   "carrier": "CN2 GIA",
+   "city": "洛杉矶",
+   "hash": 3100184751,
+   "cachedLatency": null
+  },
+  {
+   "id": 999999,
+   "region": 0,
+   "index": 999999,
+   "name": "达拉斯 HE 家宽 16",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "HE",
+   "city": "达拉斯",
+   "hash": 4247828006,
+   "cachedLatency": null
+  },
+  {
+   "id": 1906550,
+   "region": 0,
+   "index": 1906550,
+   "name": "洛杉矶 Zenlayer IPLC 32 ×2",
+   "tag": "IPLC",
+   "protocol": "VLESS",
+   "carrier": "Zenlayer",
+   "city": "洛杉矶",
+   "hash": 4254039247,
+   "cachedLatency": null
+  },
+  {
+   "id": 3118401,
+   "region": 0,
+   "index": 3118401,
+   "name": "圣何塞 CN2 GIA BGP 17",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "CN2 GIA",
+   "city": "圣何塞",
+   "hash": 1004371970,
+   "cachedLatency": null
+  },
+  {
+   "id": 100000000,
+   "region": 1,
+   "index": 0,
+   "name": "东京 NTT IEPL 01",
+   "tag": "IEPL",
+   "protocol": "SS",
+   "carrier": "NTT",
+   "city": "东京",
+   "hash": 3193062826,
+   "cachedLatency": null
+  },
+  {
+   "id": 100000001,
+   "region": 1,
+   "index": 1,
+   "name": "大阪 NTT 家宽 01",
+   "tag": "家宽",
+   "protocol": "Hy2",
+   "carrier": "NTT",
+   "city": "大阪",
+   "hash": 2125426368,
+   "cachedLatency": null
+  },
+  {
+   "id": 100000002,
+   "region": 1,
+   "index": 2,
+   "name": "东京 NTT IPLC 01",
+   "tag": "IPLC",
+   "protocol": "VLESS",
+   "carrier": "NTT",
+   "city": "东京",
+   "hash": 2612431712,
+   "cachedLatency": 76
+  },
+  {
+   "id": 100000003,
+   "region": 1,
+   "index": 3,
+   "name": "大阪 NTT BGP 01 ×2",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "NTT",
+   "city": "大阪",
+   "hash": 2819420741,
+   "cachedLatency": null
+  },
+  {
+   "id": 100000004,
+   "region": 1,
+   "index": 4,
+   "name": "东京 NTT 原生 01",
+   "tag": "原生",
+   "protocol": "VLESS",
+   "carrier": "NTT",
+   "city": "东京",
+   "hash": 2074866227,
+   "cachedLatency": null
+  },
+  {
+   "id": 100000005,
+   "region": 1,
+   "index": 5,
+   "name": "大阪 IIJ IEPL 01 ×2",
+   "tag": "IEPL",
+   "protocol": "TUIC",
+   "carrier": "IIJ",
+   "city": "大阪",
+   "hash": 4169747280,
+   "cachedLatency": null
+  },
+  {
+   "id": 100000009,
+   "region": 1,
+   "index": 9,
+   "name": "大阪 IIJ 原生 01",
+   "tag": "原生",
+   "protocol": "Trojan",
+   "carrier": "IIJ",
+   "city": "大阪",
+   "hash": 3377116099,
+   "cachedLatency": null
+  },
+  {
+   "id": 100000010,
+   "region": 1,
+   "index": 10,
+   "name": "东京 KDDI IEPL 01",
+   "tag": "IEPL",
+   "protocol": "SS",
+   "carrier": "KDDI",
+   "city": "东京",
+   "hash": 3864364647,
+   "cachedLatency": 86
+  },
+  {
+   "id": 100000063,
+   "region": 1,
+   "index": 63,
+   "name": "大阪 NTT BGP 04",
+   "tag": "BGP",
+   "protocol": "SS",
+   "carrier": "NTT",
+   "city": "大阪",
+   "hash": 2119145144,
+   "cachedLatency": null
+  },
+  {
+   "id": 100000064,
+   "region": 1,
+   "index": 64,
+   "name": "东京 NTT 原生 04",
+   "tag": "原生",
+   "protocol": "TUIC",
+   "carrier": "NTT",
+   "city": "东京",
+   "hash": 2943957913,
+   "cachedLatency": null
+  },
+  {
+   "id": 100000099,
+   "region": 1,
+   "index": 99,
+   "name": "大阪 SoftBank 原生 05",
+   "tag": "原生",
+   "protocol": "VLESS",
+   "carrier": "SoftBank",
+   "city": "大阪",
+   "hash": 2503717660,
+   "cachedLatency": null
+  },
+  {
+   "id": 100000320,
+   "region": 1,
+   "index": 320,
+   "name": "东京 NTT IEPL 17",
+   "tag": "IEPL",
+   "protocol": "TUIC",
+   "carrier": "NTT",
+   "city": "东京",
+   "hash": 4017412474,
+   "cachedLatency": null
+  },
+  {
+   "id": 100000321,
+   "region": 1,
+   "index": 321,
+   "name": "大阪 NTT 家宽 17 ×0.5",
+   "tag": "家宽",
+   "protocol": "SS",
+   "carrier": "NTT",
+   "city": "大阪",
+   "hash": 346730651,
+   "cachedLatency": null
+  },
+  {
+   "id": 100000999,
+   "region": 1,
+   "index": 999,
+   "name": "大阪 SoftBank 原生 50 ×0.5",
+   "tag": "原生",
+   "protocol": "SS",
+   "carrier": "SoftBank",
+   "city": "大阪",
+   "hash": 1359386425,
+   "cachedLatency": 82
+  },
+  {
+   "id": 100001234,
+   "region": 1,
+   "index": 1234,
+   "name": "东京 KDDI 原生 62",
+   "tag": "原生",
+   "protocol": "Trojan",
+   "carrier": "KDDI",
+   "city": "东京",
+   "hash": 288921710,
+   "cachedLatency": 90
+  },
+  {
+   "id": 100065535,
+   "region": 1,
+   "index": 65535,
+   "name": "大阪 SoftBank IEPL 13",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "SoftBank",
+   "city": "大阪",
+   "hash": 4151572103,
+   "cachedLatency": null
+  },
+  {
+   "id": 100100000,
+   "region": 1,
+   "index": 100000,
+   "name": "东京 NTT IEPL 09",
+   "tag": "IEPL",
+   "protocol": "Hy2",
+   "carrier": "NTT",
+   "city": "东京",
+   "hash": 1800381077,
+   "cachedLatency": 59
+  },
+  {
+   "id": 100999999,
+   "region": 1,
+   "index": 999999,
+   "name": "大阪 SoftBank 原生 16",
+   "tag": "原生",
+   "protocol": "TUIC",
+   "carrier": "SoftBank",
+   "city": "大阪",
+   "hash": 1206877703,
+   "cachedLatency": null
+  },
+  {
+   "id": 101906550,
+   "region": 1,
+   "index": 1906550,
+   "name": "东京 KDDI IEPL 32",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "KDDI",
+   "city": "东京",
+   "hash": 2953655025,
+   "cachedLatency": 65
+  },
+  {
+   "id": 102204116,
+   "region": 1,
+   "index": 2204116,
+   "name": "东京 SoftBank 家宽 62",
+   "tag": "家宽",
+   "protocol": "VLESS",
+   "carrier": "SoftBank",
+   "city": "东京",
+   "hash": 1115027880,
+   "cachedLatency": null
+  },
+  {
+   "id": 200000000,
+   "region": 2,
+   "index": 0,
+   "name": "香港 HKT BGP 01 ×0.5",
+   "tag": "BGP",
+   "protocol": "Trojan",
+   "carrier": "HKT",
+   "city": "香港",
+   "hash": 2091682645,
+   "cachedLatency": null
+  },
+  {
+   "id": 200000001,
+   "region": 2,
+   "index": 1,
+   "name": "香港 HKT 原生 01 ×0.5",
+   "tag": "原生",
+   "protocol": "SS",
+   "carrier": "HKT",
+   "city": "香港",
+   "hash": 3425310744,
+   "cachedLatency": null
+  },
+  {
+   "id": 200000002,
+   "region": 2,
+   "index": 2,
+   "name": "香港 HKT IEPL 01",
+   "tag": "IEPL",
+   "protocol": "TUIC",
+   "carrier": "HKT",
+   "city": "香港",
+   "hash": 406044711,
+   "cachedLatency": null
+  },
+  {
+   "id": 200000003,
+   "region": 2,
+   "index": 3,
+   "name": "香港 HKT 家宽 01",
+   "tag": "家宽",
+   "protocol": "SS",
+   "carrier": "HKT",
+   "city": "香港",
+   "hash": 1717721620,
+   "cachedLatency": null
+  },
+  {
+   "id": 200000004,
+   "region": 2,
+   "index": 4,
+   "name": "香港 HKT IPLC 01",
+   "tag": "IPLC",
+   "protocol": "Hy2",
+   "carrier": "HKT",
+   "city": "香港",
+   "hash": 3176501976,
+   "cachedLatency": null
+  },
+  {
+   "id": 200000005,
+   "region": 2,
+   "index": 5,
+   "name": "香港 HKBN BGP 01",
+   "tag": "BGP",
+   "protocol": "SS",
+   "carrier": "HKBN",
+   "city": "香港",
+   "hash": 1005746150,
+   "cachedLatency": 48
+  },
+  {
+   "id": 200000009,
+   "region": 2,
+   "index": 9,
+   "name": "香港 HKBN IPLC 01",
+   "tag": "IPLC",
+   "protocol": "Hy2",
+   "carrier": "HKBN",
+   "city": "香港",
+   "hash": 382492957,
+   "cachedLatency": 52
+  },
+  {
+   "id": 200000010,
+   "region": 2,
+   "index": 10,
+   "name": "香港 PCCW BGP 01",
+   "tag": "BGP",
+   "protocol": "SS",
+   "carrier": "PCCW",
+   "city": "香港",
+   "hash": 1997230328,
+   "cachedLatency": null
+  },
+  {
+   "id": 200000063,
+   "region": 2,
+   "index": 63,
+   "name": "香港 HKT 家宽 04",
+   "tag": "家宽",
+   "protocol": "SS",
+   "carrier": "HKT",
+   "city": "香港",
+   "hash": 1496666296,
+   "cachedLatency": null
+  },
+  {
+   "id": 200000064,
+   "region": 2,
+   "index": 64,
+   "name": "香港 HKT IPLC 04",
+   "tag": "IPLC",
+   "protocol": "SS",
+   "carrier": "HKT",
+   "city": "香港",
+   "hash": 4244371890,
+   "cachedLatency": 63
+  },
+  {
+   "id": 200000099,
+   "region": 2,
+   "index": 99,
+   "name": "香港 CMI IPLC 05",
+   "tag": "IPLC",
+   "protocol": "VLESS",
+   "carrier": "CMI",
+   "city": "香港",
+   "hash": 187323371,
+   "cachedLatency": null
+  },
+  {
+   "id": 200000320,
+   "region": 2,
+   "index": 320,
+   "name": "香港 HKT BGP 17 ×2",
+   "tag": "BGP",
+   "protocol": "SS",
+   "carrier": "HKT",
+   "city": "香港",
+   "hash": 1700640842,
+   "cachedLatency": null
+  },
+  {
+   "id": 200000321,
+   "region": 2,
+   "index": 321,
+   "name": "香港 HKT 原生 17",
+   "tag": "原生",
+   "protocol": "Trojan",
+   "carrier": "HKT",
+   "city": "香港",
+   "hash": 3341553317,
+   "cachedLatency": null
+  },
+  {
+   "id": 200000999,
+   "region": 2,
+   "index": 999,
+   "name": "香港 CMI IPLC 50",
+   "tag": "IPLC",
+   "protocol": "VLESS",
+   "carrier": "CMI",
+   "city": "香港",
+   "hash": 2460548449,
+   "cachedLatency": null
+  },
+  {
+   "id": 200001234,
+   "region": 2,
+   "index": 1234,
+   "name": "香港 PCCW IPLC 62",
+   "tag": "IPLC",
+   "protocol": "SS",
+   "carrier": "PCCW",
+   "city": "香港",
+   "hash": 3850702370,
+   "cachedLatency": null
+  },
+  {
+   "id": 200065535,
+   "region": 2,
+   "index": 65535,
+   "name": "香港 CMI BGP 13",
+   "tag": "BGP",
+   "protocol": "TUIC",
+   "carrier": "CMI",
+   "city": "香港",
+   "hash": 280035714,
+   "cachedLatency": 64
+  },
+  {
+   "id": 200100000,
+   "region": 2,
+   "index": 100000,
+   "name": "香港 HKT BGP 09",
+   "tag": "BGP",
+   "protocol": "TUIC",
+   "carrier": "HKT",
+   "city": "香港",
+   "hash": 500036979,
+   "cachedLatency": 69
+  },
+  {
+   "id": 200999999,
+   "region": 2,
+   "index": 999999,
+   "name": "香港 CMI IPLC 16",
+   "tag": "IPLC",
+   "protocol": "Hy2",
+   "carrier": "CMI",
+   "city": "香港",
+   "hash": 3861965608,
+   "cachedLatency": null
+  },
+  {
+   "id": 201906550,
+   "region": 2,
+   "index": 1906550,
+   "name": "香港 PCCW BGP 32",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "PCCW",
+   "city": "香港",
+   "hash": 1536642953,
+   "cachedLatency": null
+  },
+  {
+   "id": 201906550,
+   "region": 2,
+   "index": 1906550,
+   "name": "香港 PCCW BGP 32",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "PCCW",
+   "city": "香港",
+   "hash": 1536642953,
+   "cachedLatency": null
+  },
+  {
+   "id": 300000000,
+   "region": 3,
+   "index": 0,
+   "name": "新加坡 Akari 家宽 01 ×1.5",
+   "tag": "家宽",
+   "protocol": "TUIC",
+   "carrier": "Akari",
+   "city": "新加坡",
+   "hash": 990313852,
+   "cachedLatency": 72
+  },
+  {
+   "id": 300000001,
+   "region": 3,
+   "index": 1,
+   "name": "新加坡 Akari IPLC 01 ×2",
+   "tag": "IPLC",
+   "protocol": "Hy2",
+   "carrier": "Akari",
+   "city": "新加坡",
+   "hash": 3988834891,
+   "cachedLatency": null
+  },
+  {
+   "id": 300000002,
+   "region": 3,
+   "index": 2,
+   "name": "新加坡 Akari BGP 01 ×2",
+   "tag": "BGP",
+   "protocol": "TUIC",
+   "carrier": "Akari",
+   "city": "新加坡",
+   "hash": 3740162989,
+   "cachedLatency": 70
+  },
+  {
+   "id": 300000003,
+   "region": 3,
+   "index": 3,
+   "name": "新加坡 Akari 原生 01",
+   "tag": "原生",
+   "protocol": "Hy2",
+   "carrier": "Akari",
+   "city": "新加坡",
+   "hash": 4063549484,
+   "cachedLatency": null
+  },
+  {
+   "id": 300000004,
+   "region": 3,
+   "index": 4,
+   "name": "新加坡 Akari IEPL 01 ×1.5",
+   "tag": "IEPL",
+   "protocol": "SS",
+   "carrier": "Akari",
+   "city": "新加坡",
+   "hash": 4107950635,
+   "cachedLatency": null
+  },
+  {
+   "id": 300000005,
+   "region": 3,
+   "index": 5,
+   "name": "新加坡 SingTel 家宽 01",
+   "tag": "家宽",
+   "protocol": "SS",
+   "carrier": "SingTel",
+   "city": "新加坡",
+   "hash": 774966845,
+   "cachedLatency": null
+  },
+  {
+   "id": 300000009,
+   "region": 3,
+   "index": 9,
+   "name": "新加坡 SingTel IEPL 01",
+   "tag": "IEPL",
+   "protocol": "TUIC",
+   "carrier": "SingTel",
+   "city": "新加坡",
+   "hash": 1285549978,
+   "cachedLatency": null
+  },
+  {
+   "id": 300000010,
+   "region": 3,
+   "index": 10,
+   "name": "新加坡 StarHub 家宽 01 ×2",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "StarHub",
+   "city": "新加坡",
+   "hash": 696796832,
+   "cachedLatency": null
+  },
+  {
+   "id": 300000063,
+   "region": 3,
+   "index": 63,
+   "name": "新加坡 Akari 原生 05",
+   "tag": "原生",
+   "protocol": "Hy2",
+   "carrier": "Akari",
+   "city": "新加坡",
+   "hash": 424471272,
+   "cachedLatency": null
+  },
+  {
+   "id": 300000064,
+   "region": 3,
+   "index": 64,
+   "name": "新加坡 Akari IEPL 05",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "Akari",
+   "city": "新加坡",
+   "hash": 1080243360,
+   "cachedLatency": null
+  },
+  {
+   "id": 300000099,
+   "region": 3,
+   "index": 99,
+   "name": "新加坡 SingTel IEPL 07",
+   "tag": "IEPL",
+   "protocol": "TUIC",
+   "carrier": "SingTel",
+   "city": "新加坡",
+   "hash": 1487613405,
+   "cachedLatency": null
+  },
+  {
+   "id": 300000320,
+   "region": 3,
+   "index": 320,
+   "name": "新加坡 SingTel 家宽 22 ×0.5",
+   "tag": "家宽",
+   "protocol": "TUIC",
+   "carrier": "SingTel",
+   "city": "新加坡",
+   "hash": 2831608328,
+   "cachedLatency": null
+  },
+  {
+   "id": 300000321,
+   "region": 3,
+   "index": 321,
+   "name": "新加坡 SingTel IPLC 22 ×1.5",
+   "tag": "IPLC",
+   "protocol": "Trojan",
+   "carrier": "SingTel",
+   "city": "新加坡",
+   "hash": 1589520891,
+   "cachedLatency": 66
+  },
+  {
+   "id": 300000999,
+   "region": 3,
+   "index": 999,
+   "name": "新加坡 SingTel IEPL 03 ×0.5",
+   "tag": "IEPL",
+   "protocol": "SS",
+   "carrier": "SingTel",
+   "city": "新加坡",
+   "hash": 3562148430,
+   "cachedLatency": null
+  },
+  {
+   "id": 300001234,
+   "region": 3,
+   "index": 1234,
+   "name": "新加坡 Akari IEPL 19",
+   "tag": "IEPL",
+   "protocol": "VLESS",
+   "carrier": "Akari",
+   "city": "新加坡",
+   "hash": 3567549002,
+   "cachedLatency": null
+  },
+  {
+   "id": 300065535,
+   "region": 3,
+   "index": 65535,
+   "name": "新加坡 Akari 家宽 18",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "Akari",
+   "city": "新加坡",
+   "hash": 1381719609,
+   "cachedLatency": null
+  },
+  {
+   "id": 300100000,
+   "region": 3,
+   "index": 100000,
+   "name": "新加坡 StarHub 家宽 11",
+   "tag": "家宽",
+   "protocol": "SS",
+   "carrier": "StarHub",
+   "city": "新加坡",
+   "hash": 3494625069,
+   "cachedLatency": 70
+  },
+  {
+   "id": 300999999,
+   "region": 3,
+   "index": 999999,
+   "name": "新加坡 SingTel IEPL 43 ×2",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "SingTel",
+   "city": "新加坡",
+   "hash": 2732054441,
+   "cachedLatency": null
+  },
+  {
+   "id": 301512879,
+   "region": 3,
+   "index": 1512879,
+   "name": "新加坡 SingTel IEPL 59",
+   "tag": "IEPL",
+   "protocol": "Hy2",
+   "carrier": "SingTel",
+   "city": "新加坡",
+   "hash": 1606281265,
+   "cachedLatency": null
+  },
+  {
+   "id": 400000000,
+   "region": 4,
+   "index": 0,
+   "name": "台北 HiNet 原生 01 ×0.5",
+   "tag": "原生",
+   "protocol": "VLESS",
+   "carrier": "HiNet",
+   "city": "台北",
+   "hash": 4183365290,
+   "cachedLatency": null
+  },
+  {
+   "id": 400000001,
+   "region": 4,
+   "index": 1,
+   "name": "台中 HiNet IEPL 01 ×0.5",
+   "tag": "IEPL",
+   "protocol": "TUIC",
+   "carrier": "HiNet",
+   "city": "台中",
+   "hash": 655409602,
+   "cachedLatency": 42
+  },
+  {
+   "id": 400000002,
+   "region": 4,
+   "index": 2,
+   "name": "台北 HiNet 家宽 01 ×0.5",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "HiNet",
+   "city": "台北",
+   "hash": 3006735608,
+   "cachedLatency": null
+  },
+  {
+   "id": 400000003,
+   "region": 4,
+   "index": 3,
+   "name": "台中 HiNet IPLC 01",
+   "tag": "IPLC",
+   "protocol": "Trojan",
+   "carrier": "HiNet",
+   "city": "台中",
+   "hash": 2962130069,
+   "cachedLatency": null
+  },
+  {
+   "id": 400000004,
+   "region": 4,
+   "index": 4,
+   "name": "台北 HiNet BGP 01 ×2",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "HiNet",
+   "city": "台北",
+   "hash": 3058990971,
+   "cachedLatency": null
+  },
+  {
+   "id": 400000005,
+   "region": 4,
+   "index": 5,
+   "name": "台中 Seednet 原生 01",
+   "tag": "原生",
+   "protocol": "VLESS",
+   "carrier": "Seednet",
+   "city": "台中",
+   "hash": 1905661369,
+   "cachedLatency": null
+  },
+  {
+   "id": 400000009,
+   "region": 4,
+   "index": 9,
+   "name": "台中 Seednet BGP 01 ×0.5",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "Seednet",
+   "city": "台中",
+   "hash": 2585377190,
+   "cachedLatency": 48
+  },
+  {
+   "id": 400000010,
+   "region": 4,
+   "index": 10,
+   "name": "台北 So-net 原生 01",
+   "tag": "原生",
+   "protocol": "VLESS",
+   "carrier": "So-net",
+   "city": "台北",
+   "hash": 4258592245,
+   "cachedLatency": null
+  },
+  {
+   "id": 400000063,
+   "region": 4,
+   "index": 63,
+   "name": "台中 HiNet IPLC 03 ×2",
+   "tag": "IPLC",
+   "protocol": "Hy2",
+   "carrier": "HiNet",
+   "city": "台中",
+   "hash": 4096849160,
+   "cachedLatency": null
+  },
+  {
+   "id": 400000064,
+   "region": 4,
+   "index": 64,
+   "name": "台北 HiNet BGP 03",
+   "tag": "BGP",
+   "protocol": "TUIC",
+   "carrier": "HiNet",
+   "city": "台北",
+   "hash": 1585460702,
+   "cachedLatency": 50
+  },
+  {
+   "id": 400000099,
+   "region": 4,
+   "index": 99,
+   "name": "台中 Seednet BGP 04",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "Seednet",
+   "city": "台中",
+   "hash": 2787964711,
+   "cachedLatency": null
+  },
+  {
+   "id": 400000320,
+   "region": 4,
+   "index": 320,
+   "name": "台北 Seednet 原生 11",
+   "tag": "原生",
+   "protocol": "VLESS",
+   "carrier": "Seednet",
+   "city": "台北",
+   "hash": 4131666928,
+   "cachedLatency": null
+  },
+  {
+   "id": 400000321,
+   "region": 4,
+   "index": 321,
+   "name": "台中 Seednet IEPL 11",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "Seednet",
+   "city": "台中",
+   "hash": 289175457,
+   "cachedLatency": null
+  },
+  {
+   "id": 400000999,
+   "region": 4,
+   "index": 999,
+   "name": "台中 Seednet BGP 34 ×1.5",
+   "tag": "BGP",
+   "protocol": "SS",
+   "carrier": "Seednet",
+   "city": "台中",
+   "hash": 3986066267,
+   "cachedLatency": null
+  },
+  {
+   "id": 400001234,
+   "region": 4,
+   "index": 1234,
+   "name": "台北 HiNet BGP 42",
+   "tag": "BGP",
+   "protocol": "Trojan",
+   "carrier": "HiNet",
+   "city": "台北",
+   "hash": 2833885318,
+   "cachedLatency": 44
+  },
+  {
+   "id": 400065535,
+   "region": 4,
+   "index": 65535,
+   "name": "台中 HiNet 原生 09 ×2",
+   "tag": "原生",
+   "protocol": "TUIC",
+   "carrier": "HiNet",
+   "city": "台中",
+   "hash": 2483467760,
+   "cachedLatency": null
+  },
+  {
+   "id": 400100000,
+   "region": 4,
+   "index": 100000,
+   "name": "台北 So-net 原生 06 ×1.5",
+   "tag": "原生",
+   "protocol": "SS",
+   "carrier": "So-net",
+   "city": "台北",
+   "hash": 2194229511,
+   "cachedLatency": 52
+  },
+  {
+   "id": 400999999,
+   "region": 4,
+   "index": 999999,
+   "name": "台中 Seednet BGP 54 ×2",
+   "tag": "BGP",
+   "protocol": "TUIC",
+   "carrier": "Seednet",
+   "city": "台中",
+   "hash": 1092571778,
+   "cachedLatency": 77
+  },
+  {
+   "id": 401288405,
+   "region": 4,
+   "index": 1288405,
+   "name": "台中 So-net 原生 03 ×1.5",
+   "tag": "原生",
+   "protocol": "Trojan",
+   "carrier": "So-net",
+   "city": "台中",
+   "hash": 2716202182,
+   "cachedLatency": 70
+  },
+  {
+   "id": 500000000,
+   "region": 5,
+   "index": 0,
+   "name": "首尔 KT IPLC 01",
+   "tag": "IPLC",
+   "protocol": "SS",
+   "carrier": "KT",
+   "city": "首尔",
+   "hash": 3081973447,
+   "cachedLatency": null
+  },
+  {
+   "id": 500000001,
+   "region": 5,
+   "index": 1,
+   "name": "春川 KT BGP 01",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "KT",
+   "city": "春川",
+   "hash": 1219453217,
+   "cachedLatency": null
+  },
+  {
+   "id": 500000002,
+   "region": 5,
+   "index": 2,
+   "name": "首尔 KT 原生 01",
+   "tag": "原生",
+   "protocol": "VLESS",
+   "carrier": "KT",
+   "city": "首尔",
+   "hash": 1367334268,
+   "cachedLatency": null
+  },
+  {
+   "id": 500000003,
+   "region": 5,
+   "index": 3,
+   "name": "春川 KT IEPL 01",
+   "tag": "IEPL",
+   "protocol": "TUIC",
+   "carrier": "KT",
+   "city": "春川",
+   "hash": 1235051605,
+   "cachedLatency": null
+  },
+  {
+   "id": 500000004,
+   "region": 5,
+   "index": 4,
+   "name": "首尔 KT 家宽 01",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "KT",
+   "city": "首尔",
+   "hash": 34917368,
+   "cachedLatency": 93
+  },
+  {
+   "id": 500000005,
+   "region": 5,
+   "index": 5,
+   "name": "春川 SK IPLC 01 ×0.5",
+   "tag": "IPLC",
+   "protocol": "VLESS",
+   "carrier": "SK",
+   "city": "春川",
+   "hash": 3825322023,
+   "cachedLatency": null
+  },
+  {
+   "id": 500000009,
+   "region": 5,
+   "index": 9,
+   "name": "春川 SK 家宽 01 ×2",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "SK",
+   "city": "春川",
+   "hash": 3488113208,
+   "cachedLatency": null
+  },
+  {
+   "id": 500000010,
+   "region": 5,
+   "index": 10,
+   "name": "首尔 LG U+ IPLC 01",
+   "tag": "IPLC",
+   "protocol": "TUIC",
+   "carrier": "LG U+",
+   "city": "首尔",
+   "hash": 2958475023,
+   "cachedLatency": null
+  },
+  {
+   "id": 500000063,
+   "region": 5,
+   "index": 63,
+   "name": "春川 KT IEPL 03",
+   "tag": "IEPL",
+   "protocol": "VLESS",
+   "carrier": "KT",
+   "city": "春川",
+   "hash": 2569525351,
+   "cachedLatency": null
+  },
+  {
+   "id": 500000064,
+   "region": 5,
+   "index": 64,
+   "name": "首尔 KT 家宽 03 ×0.5",
+   "tag": "家宽",
+   "protocol": "SS",
+   "carrier": "KT",
+   "city": "首尔",
+   "hash": 3055080692,
+   "cachedLatency": null
+  },
+  {
+   "id": 500000099,
+   "region": 5,
+   "index": 99,
+   "name": "春川 SK 家宽 04",
+   "tag": "家宽",
+   "protocol": "SS",
+   "carrier": "SK",
+   "city": "春川",
+   "hash": 1820495583,
+   "cachedLatency": null
+  },
+  {
+   "id": 500000320,
+   "region": 5,
+   "index": 320,
+   "name": "首尔 SK IPLC 11 ×0.5",
+   "tag": "IPLC",
+   "protocol": "VLESS",
+   "carrier": "SK",
+   "city": "首尔",
+   "hash": 628240859,
+   "cachedLatency": null
+  },
+  {
+   "id": 500000321,
+   "region": 5,
+   "index": 321,
+   "name": "春川 SK BGP 11",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "SK",
+   "city": "春川",
+   "hash": 3283828102,
+   "cachedLatency": null
+  },
+  {
+   "id": 500000999,
+   "region": 5,
+   "index": 999,
+   "name": "春川 SK 家宽 34",
+   "tag": "家宽",
+   "protocol": "Hy2",
+   "carrier": "SK",
+   "city": "春川",
+   "hash": 792414572,
+   "cachedLatency": null
+  },
+  {
+   "id": 500001234,
+   "region": 5,
+   "index": 1234,
+   "name": "首尔 KT 家宽 42 ×1.5",
+   "tag": "家宽",
+   "protocol": "SS",
+   "carrier": "KT",
+   "city": "首尔",
+   "hash": 1194700982,
+   "cachedLatency": 96
+  },
+  {
+   "id": 500065535,
+   "region": 5,
+   "index": 65535,
+   "name": "春川 KT IPLC 09 ×2",
+   "tag": "IPLC",
+   "protocol": "TUIC",
+   "carrier": "KT",
+   "city": "春川",
+   "hash": 3927729240,
+   "cachedLatency": null
+  },
+  {
+   "id": 500100000,
+   "region": 5,
+   "index": 100000,
+   "name": "首尔 LG U+ IPLC 06",
+   "tag": "IPLC",
+   "protocol": "VLESS",
+   "carrier": "LG U+",
+   "city": "首尔",
+   "hash": 894184442,
+   "cachedLatency": null
+  },
+  {
+   "id": 500702314,
+   "region": 5,
+   "index": 702314,
+   "name": "首尔 LG U+ 家宽 51",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "LG U+",
+   "city": "首尔",
+   "hash": 2088676378,
+   "cachedLatency": null
+  },
+  {
+   "id": 600000000,
+   "region": 6,
+   "index": 0,
+   "name": "法兰克福 Hetzner IEPL 01 ×1.5",
+   "tag": "IEPL",
+   "protocol": "Hy2",
+   "carrier": "Hetzner",
+   "city": "法兰克福",
+   "hash": 1980627704,
+   "cachedLatency": 222
+  },
+  {
+   "id": 600000001,
+   "region": 6,
+   "index": 1,
+   "name": "柏林 Hetzner 家宽 01",
+   "tag": "家宽",
+   "protocol": "VLESS",
+   "carrier": "Hetzner",
+   "city": "柏林",
+   "hash": 2519315319,
+   "cachedLatency": null
+  },
+  {
+   "id": 600000002,
+   "region": 6,
+   "index": 2,
+   "name": "法兰克福 Hetzner IPLC 01 ×0.5",
+   "tag": "IPLC",
+   "protocol": "TUIC",
+   "carrier": "Hetzner",
+   "city": "法兰克福",
+   "hash": 4134445099,
+   "cachedLatency": null
+  },
+  {
+   "id": 600000003,
+   "region": 6,
+   "index": 3,
+   "name": "柏林 Hetzner BGP 01",
+   "tag": "BGP",
+   "protocol": "Trojan",
+   "carrier": "Hetzner",
+   "city": "柏林",
+   "hash": 811627212,
+   "cachedLatency": 226
+  },
+  {
+   "id": 600000004,
+   "region": 6,
+   "index": 4,
+   "name": "法兰克福 Hetzner 原生 01",
+   "tag": "原生",
+   "protocol": "Trojan",
+   "carrier": "Hetzner",
+   "city": "法兰克福",
+   "hash": 1136605614,
+   "cachedLatency": 228
+  },
+  {
+   "id": 600000005,
+   "region": 6,
+   "index": 5,
+   "name": "柏林 DTAG IEPL 01",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "DTAG",
+   "city": "柏林",
+   "hash": 661469703,
+   "cachedLatency": null
+  },
+  {
+   "id": 600000009,
+   "region": 6,
+   "index": 9,
+   "name": "柏林 DTAG 原生 01",
+   "tag": "原生",
+   "protocol": "Hy2",
+   "carrier": "DTAG",
+   "city": "柏林",
+   "hash": 493686896,
+   "cachedLatency": null
+  },
+  {
+   "id": 600000010,
+   "region": 6,
+   "index": 10,
+   "name": "法兰克福 Hetzner IEPL 02",
+   "tag": "IEPL",
+   "protocol": "TUIC",
+   "carrier": "Hetzner",
+   "city": "法兰克福",
+   "hash": 3796622229,
+   "cachedLatency": null
+  },
+  {
+   "id": 600000063,
+   "region": 6,
+   "index": 63,
+   "name": "柏林 Hetzner BGP 07",
+   "tag": "BGP",
+   "protocol": "Hy2",
+   "carrier": "Hetzner",
+   "city": "柏林",
+   "hash": 1268870833,
+   "cachedLatency": null
+  },
+  {
+   "id": 600000064,
+   "region": 6,
+   "index": 64,
+   "name": "法兰克福 Hetzner 原生 07",
+   "tag": "原生",
+   "protocol": "Trojan",
+   "carrier": "Hetzner",
+   "city": "法兰克福",
+   "hash": 60644636,
+   "cachedLatency": null
+  },
+  {
+   "id": 600000099,
+   "region": 6,
+   "index": 99,
+   "name": "柏林 DTAG 原生 10",
+   "tag": "原生",
+   "protocol": "VLESS",
+   "carrier": "DTAG",
+   "city": "柏林",
+   "hash": 3120830633,
+   "cachedLatency": null
+  },
+  {
+   "id": 600000320,
+   "region": 6,
+   "index": 320,
+   "name": "法兰克福 Hetzner IEPL 33",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "Hetzner",
+   "city": "法兰克福",
+   "hash": 1928425357,
+   "cachedLatency": 213
+  },
+  {
+   "id": 600000321,
+   "region": 6,
+   "index": 321,
+   "name": "柏林 Hetzner 家宽 33 ×2",
+   "tag": "家宽",
+   "protocol": "TUIC",
+   "carrier": "Hetzner",
+   "city": "柏林",
+   "hash": 2662113754,
+   "cachedLatency": null
+  },
+  {
+   "id": 600000999,
+   "region": 6,
+   "index": 999,
+   "name": "柏林 DTAG 原生 36",
+   "tag": "原生",
+   "protocol": "SS",
+   "carrier": "DTAG",
+   "city": "柏林",
+   "hash": 1893858997,
+   "cachedLatency": null
+  },
+  {
+   "id": 600001234,
+   "region": 6,
+   "index": 1234,
+   "name": "法兰克福 Hetzner 原生 60",
+   "tag": "原生",
+   "protocol": "Hy2",
+   "carrier": "Hetzner",
+   "city": "法兰克福",
+   "hash": 461456771,
+   "cachedLatency": null
+  },
+  {
+   "id": 600065535,
+   "region": 6,
+   "index": 65535,
+   "name": "柏林 DTAG IEPL 26 ×0.5",
+   "tag": "IEPL",
+   "protocol": "SS",
+   "carrier": "DTAG",
+   "city": "柏林",
+   "hash": 734143345,
+   "cachedLatency": 205
+  },
+  {
+   "id": 600100000,
+   "region": 6,
+   "index": 100000,
+   "name": "法兰克福 Hetzner IEPL 17",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "Hetzner",
+   "city": "法兰克福",
+   "hash": 3888815570,
+   "cachedLatency": 223
+  },
+  {
+   "id": 600488209,
+   "region": 6,
+   "index": 488209,
+   "name": "柏林 DTAG 原生 53",
+   "tag": "原生",
+   "protocol": "Trojan",
+   "carrier": "DTAG",
+   "city": "柏林",
+   "hash": 4004751052,
+   "cachedLatency": null
+  },
+  {
+   "id": 700000000,
+   "region": 7,
+   "index": 0,
+   "name": "伦敦 BT BGP 01 ×0.5",
+   "tag": "BGP",
+   "protocol": "Trojan",
+   "carrier": "BT",
+   "city": "伦敦",
+   "hash": 879207057,
+   "cachedLatency": null
+  },
+  {
+   "id": 700000001,
+   "region": 7,
+   "index": 1,
+   "name": "曼彻斯特 BT 原生 01",
+   "tag": "原生",
+   "protocol": "Trojan",
+   "carrier": "BT",
+   "city": "曼彻斯特",
+   "hash": 1500954297,
+   "cachedLatency": null
+  },
+  {
+   "id": 700000002,
+   "region": 7,
+   "index": 2,
+   "name": "伦敦 BT IEPL 01 ×0.5",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "BT",
+   "city": "伦敦",
+   "hash": 2495023377,
+   "cachedLatency": 227
+  },
+  {
+   "id": 700000003,
+   "region": 7,
+   "index": 3,
+   "name": "曼彻斯特 BT 家宽 01",
+   "tag": "家宽",
+   "protocol": "VLESS",
+   "carrier": "BT",
+   "city": "曼彻斯特",
+   "hash": 3835281581,
+   "cachedLatency": null
+  },
+  {
+   "id": 700000004,
+   "region": 7,
+   "index": 4,
+   "name": "伦敦 BT IPLC 01",
+   "tag": "IPLC",
+   "protocol": "TUIC",
+   "carrier": "BT",
+   "city": "伦敦",
+   "hash": 2068411109,
+   "cachedLatency": null
+  },
+  {
+   "id": 700000005,
+   "region": 7,
+   "index": 5,
+   "name": "曼彻斯特 Vultr BGP 01",
+   "tag": "BGP",
+   "protocol": "Hy2",
+   "carrier": "Vultr",
+   "city": "曼彻斯特",
+   "hash": 2019967798,
+   "cachedLatency": 228
+  },
+  {
+   "id": 700000009,
+   "region": 7,
+   "index": 9,
+   "name": "曼彻斯特 Vultr IPLC 01",
+   "tag": "IPLC",
+   "protocol": "Hy2",
+   "carrier": "Vultr",
+   "city": "曼彻斯特",
+   "hash": 923336847,
+   "cachedLatency": null
+  },
+  {
+   "id": 700000010,
+   "region": 7,
+   "index": 10,
+   "name": "伦敦 BT BGP 02 ×2",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "BT",
+   "city": "伦敦",
+   "hash": 2496154235,
+   "cachedLatency": null
+  },
+  {
+   "id": 700000063,
+   "region": 7,
+   "index": 63,
+   "name": "曼彻斯特 BT 家宽 07",
+   "tag": "家宽",
+   "protocol": "TUIC",
+   "carrier": "BT",
+   "city": "曼彻斯特",
+   "hash": 874736699,
+   "cachedLatency": 233
+  },
+  {
+   "id": 700000064,
+   "region": 7,
+   "index": 64,
+   "name": "伦敦 BT IPLC 07 ×2",
+   "tag": "IPLC",
+   "protocol": "VLESS",
+   "carrier": "BT",
+   "city": "伦敦",
+   "hash": 1191207775,
+   "cachedLatency": null
+  },
+  {
+   "id": 700000099,
+   "region": 7,
+   "index": 99,
+   "name": "曼彻斯特 Vultr IPLC 10 ×0.5",
+   "tag": "IPLC",
+   "protocol": "Trojan",
+   "carrier": "Vultr",
+   "city": "曼彻斯特",
+   "hash": 804112155,
+   "cachedLatency": 253
+  },
+  {
+   "id": 700000320,
+   "region": 7,
+   "index": 320,
+   "name": "伦敦 BT BGP 33",
+   "tag": "BGP",
+   "protocol": "TUIC",
+   "carrier": "BT",
+   "city": "伦敦",
+   "hash": 3059590065,
+   "cachedLatency": null
+  },
+  {
+   "id": 700000321,
+   "region": 7,
+   "index": 321,
+   "name": "曼彻斯特 BT 原生 33 ×2",
+   "tag": "原生",
+   "protocol": "Hy2",
+   "carrier": "BT",
+   "city": "曼彻斯特",
+   "hash": 1361772418,
+   "cachedLatency": null
+  },
+  {
+   "id": 700000999,
+   "region": 7,
+   "index": 999,
+   "name": "曼彻斯特 Vultr IPLC 36",
+   "tag": "IPLC",
+   "protocol": "SS",
+   "carrier": "Vultr",
+   "city": "曼彻斯特",
+   "hash": 734701264,
+   "cachedLatency": 252
+  },
+  {
+   "id": 700001234,
+   "region": 7,
+   "index": 1234,
+   "name": "伦敦 BT IPLC 60",
+   "tag": "IPLC",
+   "protocol": "VLESS",
+   "carrier": "BT",
+   "city": "伦敦",
+   "hash": 3794818306,
+   "cachedLatency": null
+  },
+  {
+   "id": 700065535,
+   "region": 7,
+   "index": 65535,
+   "name": "曼彻斯特 Vultr BGP 26 ×2",
+   "tag": "BGP",
+   "protocol": "Trojan",
+   "carrier": "Vultr",
+   "city": "曼彻斯特",
+   "hash": 1835576589,
+   "cachedLatency": 221
+  },
+  {
+   "id": 700100000,
+   "region": 7,
+   "index": 100000,
+   "name": "伦敦 BT BGP 17",
+   "tag": "BGP",
+   "protocol": "Hy2",
+   "carrier": "BT",
+   "city": "伦敦",
+   "hash": 2588481414,
+   "cachedLatency": 223
+  },
+  {
+   "id": 700455902,
+   "region": 7,
+   "index": 455902,
+   "name": "伦敦 BT IEPL 23",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "BT",
+   "city": "伦敦",
+   "hash": 754849444,
+   "cachedLatency": null
+  },
+  {
+   "id": 800000000,
+   "region": 8,
+   "index": 0,
+   "name": "阿姆斯特丹 KPN 家宽 01",
+   "tag": "家宽",
+   "protocol": "TUIC",
+   "carrier": "KPN",
+   "city": "阿姆斯特丹",
+   "hash": 4072287573,
+   "cachedLatency": 237
+  },
+  {
+   "id": 800000001,
+   "region": 8,
+   "index": 1,
+   "name": "阿姆斯特丹 KPN IPLC 01 ×0.5",
+   "tag": "IPLC",
+   "protocol": "Hy2",
+   "carrier": "KPN",
+   "city": "阿姆斯特丹",
+   "hash": 2461686791,
+   "cachedLatency": null
+  },
+  {
+   "id": 800000002,
+   "region": 8,
+   "index": 2,
+   "name": "阿姆斯特丹 KPN BGP 01 ×2",
+   "tag": "BGP",
+   "protocol": "TUIC",
+   "carrier": "KPN",
+   "city": "阿姆斯特丹",
+   "hash": 1761540860,
+   "cachedLatency": 242
+  },
+  {
+   "id": 800000003,
+   "region": 8,
+   "index": 3,
+   "name": "阿姆斯特丹 KPN 原生 01 ×1.5",
+   "tag": "原生",
+   "protocol": "SS",
+   "carrier": "KPN",
+   "city": "阿姆斯特丹",
+   "hash": 1603444210,
+   "cachedLatency": null
+  },
+  {
+   "id": 800000004,
+   "region": 8,
+   "index": 4,
+   "name": "阿姆斯特丹 KPN IEPL 01",
+   "tag": "IEPL",
+   "protocol": "SS",
+   "carrier": "KPN",
+   "city": "阿姆斯特丹",
+   "hash": 3965069275,
+   "cachedLatency": 243
+  },
+  {
+   "id": 800000005,
+   "region": 8,
+   "index": 5,
+   "name": "阿姆斯特丹 Leaseweb 家宽 01",
+   "tag": "家宽",
+   "protocol": "VLESS",
+   "carrier": "Leaseweb",
+   "city": "阿姆斯特丹",
+   "hash": 3150923557,
+   "cachedLatency": 231
+  },
+  {
+   "id": 800000009,
+   "region": 8,
+   "index": 9,
+   "name": "阿姆斯特丹 Leaseweb IEPL 01",
+   "tag": "IEPL",
+   "protocol": "TUIC",
+   "carrier": "Leaseweb",
+   "city": "阿姆斯特丹",
+   "hash": 2223813349,
+   "cachedLatency": null
+  },
+  {
+   "id": 800000010,
+   "region": 8,
+   "index": 10,
+   "name": "阿姆斯特丹 KPN 家宽 02",
+   "tag": "家宽",
+   "protocol": "VLESS",
+   "carrier": "KPN",
+   "city": "阿姆斯特丹",
+   "hash": 1763030038,
+   "cachedLatency": 244
+  },
+  {
+   "id": 800000063,
+   "region": 8,
+   "index": 63,
+   "name": "阿姆斯特丹 KPN 原生 07",
+   "tag": "原生",
+   "protocol": "TUIC",
+   "carrier": "KPN",
+   "city": "阿姆斯特丹",
+   "hash": 3869628993,
+   "cachedLatency": null
+  },
+  {
+   "id": 800000064,
+   "region": 8,
+   "index": 64,
+   "name": "阿姆斯特丹 KPN IEPL 07 ×0.5",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "KPN",
+   "city": "阿姆斯特丹",
+   "hash": 1696648307,
+   "cachedLatency": 250
+  },
+  {
+   "id": 800000099,
+   "region": 8,
+   "index": 99,
+   "name": "阿姆斯特丹 Leaseweb IEPL 10",
+   "tag": "IEPL",
+   "protocol": "SS",
+   "carrier": "Leaseweb",
+   "city": "阿姆斯特丹",
+   "hash": 2104458545,
+   "cachedLatency": 262
+  },
+  {
+   "id": 800000320,
+   "region": 8,
+   "index": 320,
+   "name": "阿姆斯特丹 KPN 家宽 33",
+   "tag": "家宽",
+   "protocol": "Hy2",
+   "carrier": "KPN",
+   "city": "阿姆斯特丹",
+   "hash": 1195118777,
+   "cachedLatency": null
+  },
+  {
+   "id": 800000321,
+   "region": 8,
+   "index": 321,
+   "name": "阿姆斯特丹 KPN IPLC 33 ×1.5",
+   "tag": "IPLC",
+   "protocol": "SS",
+   "carrier": "KPN",
+   "city": "阿姆斯特丹",
+   "hash": 61375918,
+   "cachedLatency": null
+  },
+  {
+   "id": 800000999,
+   "region": 8,
+   "index": 999,
+   "name": "阿姆斯特丹 Leaseweb IEPL 36",
+   "tag": "IEPL",
+   "protocol": "VLESS",
+   "carrier": "Leaseweb",
+   "city": "阿姆斯特丹",
+   "hash": 1836526298,
+   "cachedLatency": 259
+  },
+  {
+   "id": 800001234,
+   "region": 8,
+   "index": 1234,
+   "name": "阿姆斯特丹 KPN IEPL 60 ×2",
+   "tag": "IEPL",
+   "protocol": "SS",
+   "carrier": "KPN",
+   "city": "阿姆斯特丹",
+   "hash": 3739914334,
+   "cachedLatency": 255
+  },
+  {
+   "id": 800065535,
+   "region": 8,
+   "index": 65535,
+   "name": "阿姆斯特丹 Leaseweb 家宽 26",
+   "tag": "家宽",
+   "protocol": "SS",
+   "carrier": "Leaseweb",
+   "city": "阿姆斯特丹",
+   "hash": 2259470459,
+   "cachedLatency": null
+  },
+  {
+   "id": 800100000,
+   "region": 8,
+   "index": 100000,
+   "name": "阿姆斯特丹 KPN 家宽 17",
+   "tag": "家宽",
+   "protocol": "SS",
+   "carrier": "KPN",
+   "city": "阿姆斯特丹",
+   "hash": 1288670846,
+   "cachedLatency": 255
+  },
+  {
+   "id": 800301441,
+   "region": 8,
+   "index": 301441,
+   "name": "阿姆斯特丹 KPN IPLC 01",
+   "tag": "IPLC",
+   "protocol": "Hy2",
+   "carrier": "KPN",
+   "city": "阿姆斯特丹",
+   "hash": 2478162467,
+   "cachedLatency": 262
+  },
+  {
+   "id": 900000000,
+   "region": 9,
+   "index": 0,
+   "name": "巴黎 OVH 原生 01",
+   "tag": "原生",
+   "protocol": "Trojan",
+   "carrier": "OVH",
+   "city": "巴黎",
+   "hash": 2970675044,
+   "cachedLatency": null
+  },
+  {
+   "id": 900000001,
+   "region": 9,
+   "index": 1,
+   "name": "巴黎 OVH IEPL 01",
+   "tag": "IEPL",
+   "protocol": "Hy2",
+   "carrier": "OVH",
+   "city": "巴黎",
+   "hash": 3025950243,
+   "cachedLatency": null
+  },
+  {
+   "id": 900000002,
+   "region": 9,
+   "index": 2,
+   "name": "巴黎 OVH 家宽 01",
+   "tag": "家宽",
+   "protocol": "SS",
+   "carrier": "OVH",
+   "city": "巴黎",
+   "hash": 800200097,
+   "cachedLatency": null
+  },
+  {
+   "id": 900000003,
+   "region": 9,
+   "index": 3,
+   "name": "巴黎 OVH IPLC 01",
+   "tag": "IPLC",
+   "protocol": "Hy2",
+   "carrier": "OVH",
+   "city": "巴黎",
+   "hash": 4171451508,
+   "cachedLatency": null
+  },
+  {
+   "id": 900000004,
+   "region": 9,
+   "index": 4,
+   "name": "巴黎 OVH BGP 01 ×1.5",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "OVH",
+   "city": "巴黎",
+   "hash": 3879278411,
+   "cachedLatency": null
+  },
+  {
+   "id": 900000005,
+   "region": 9,
+   "index": 5,
+   "name": "巴黎 Orange 原生 01",
+   "tag": "原生",
+   "protocol": "TUIC",
+   "carrier": "Orange",
+   "city": "巴黎",
+   "hash": 3714264898,
+   "cachedLatency": null
+  },
+  {
+   "id": 900000009,
+   "region": 9,
+   "index": 9,
+   "name": "巴黎 Orange BGP 01 ×1.5",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "Orange",
+   "city": "巴黎",
+   "hash": 3126630486,
+   "cachedLatency": 255
+  },
+  {
+   "id": 900000010,
+   "region": 9,
+   "index": 10,
+   "name": "巴黎 OVH 原生 02 ×0.5",
+   "tag": "原生",
+   "protocol": "Trojan",
+   "carrier": "OVH",
+   "city": "巴黎",
+   "hash": 3175517393,
+   "cachedLatency": null
+  },
+  {
+   "id": 900000063,
+   "region": 9,
+   "index": 63,
+   "name": "巴黎 OVH IPLC 07",
+   "tag": "IPLC",
+   "protocol": "Hy2",
+   "carrier": "OVH",
+   "city": "巴黎",
+   "hash": 2341138518,
+   "cachedLatency": null
+  },
+  {
+   "id": 900000064,
+   "region": 9,
+   "index": 64,
+   "name": "巴黎 OVH BGP 07",
+   "tag": "BGP",
+   "protocol": "Trojan",
+   "carrier": "OVH",
+   "city": "巴黎",
+   "hash": 3166396983,
+   "cachedLatency": 262
+  },
+  {
+   "id": 900000099,
+   "region": 9,
+   "index": 99,
+   "name": "巴黎 Orange BGP 10",
+   "tag": "BGP",
+   "protocol": "Trojan",
+   "carrier": "Orange",
+   "city": "巴黎",
+   "hash": 3404342095,
+   "cachedLatency": 261
+  },
+  {
+   "id": 900000320,
+   "region": 9,
+   "index": 320,
+   "name": "巴黎 OVH 原生 33",
+   "tag": "原生",
+   "protocol": "Trojan",
+   "carrier": "OVH",
+   "city": "巴黎",
+   "hash": 2665233753,
+   "cachedLatency": null
+  },
+  {
+   "id": 900000321,
+   "region": 9,
+   "index": 321,
+   "name": "巴黎 OVH IEPL 33",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "OVH",
+   "city": "巴黎",
+   "hash": 3734321549,
+   "cachedLatency": 247
+  },
+  {
+   "id": 900000999,
+   "region": 9,
+   "index": 999,
+   "name": "巴黎 Orange BGP 36",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "Orange",
+   "city": "巴黎",
+   "hash": 670429015,
+   "cachedLatency": null
+  },
+  {
+   "id": 900001234,
+   "region": 9,
+   "index": 1234,
+   "name": "巴黎 OVH BGP 60",
+   "tag": "BGP",
+   "protocol": "TUIC",
+   "carrier": "OVH",
+   "city": "巴黎",
+   "hash": 2779201398,
+   "cachedLatency": null
+  },
+  {
+   "id": 900065535,
+   "region": 9,
+   "index": 65535,
+   "name": "巴黎 Orange 原生 26",
+   "tag": "原生",
+   "protocol": "Hy2",
+   "carrier": "Orange",
+   "city": "巴黎",
+   "hash": 4154991777,
+   "cachedLatency": 233
+  },
+  {
+   "id": 900100000,
+   "region": 9,
+   "index": 100000,
+   "name": "巴黎 OVH 原生 17",
+   "tag": "原生",
+   "protocol": "VLESS",
+   "carrier": "OVH",
+   "city": "巴黎",
+   "hash": 2701088232,
+   "cachedLatency": null
+  },
+  {
+   "id": 900254117,
+   "region": 9,
+   "index": 254117,
+   "name": "巴黎 Orange 家宽 04",
+   "tag": "家宽",
+   "protocol": "TUIC",
+   "carrier": "Orange",
+   "city": "巴黎",
+   "hash": 12910087,
+   "cachedLatency": null
+  },
+  {
+   "id": 1000000000,
+   "region": 10,
+   "index": 0,
+   "name": "多伦多 Bell IPLC 01",
+   "tag": "IPLC",
+   "protocol": "Hy2",
+   "carrier": "Bell",
+   "city": "多伦多",
+   "hash": 1869503887,
+   "cachedLatency": null
+  },
+  {
+   "id": 1000000001,
+   "region": 10,
+   "index": 1,
+   "name": "温哥华 Bell BGP 01",
+   "tag": "BGP",
+   "protocol": "Trojan",
+   "carrier": "Bell",
+   "city": "温哥华",
+   "hash": 31054861,
+   "cachedLatency": 192
+  },
+  {
+   "id": 1000000002,
+   "region": 10,
+   "index": 2,
+   "name": "多伦多 Bell 原生 01 ×0.5",
+   "tag": "原生",
+   "protocol": "SS",
+   "carrier": "Bell",
+   "city": "多伦多",
+   "hash": 2888921767,
+   "cachedLatency": null
+  },
+  {
+   "id": 1000000003,
+   "region": 10,
+   "index": 3,
+   "name": "温哥华 Bell IEPL 01 ×1.5",
+   "tag": "IEPL",
+   "protocol": "SS",
+   "carrier": "Bell",
+   "city": "温哥华",
+   "hash": 3069835141,
+   "cachedLatency": null
+  },
+  {
+   "id": 1000000004,
+   "region": 10,
+   "index": 4,
+   "name": "多伦多 Bell 家宽 01 ×2",
+   "tag": "家宽",
+   "protocol": "TUIC",
+   "carrier": "Bell",
+   "city": "多伦多",
+   "hash": 686239888,
+   "cachedLatency": null
+  },
+  {
+   "id": 1000000005,
+   "region": 10,
+   "index": 5,
+   "name": "温哥华 Rogers IPLC 01 ×1.5",
+   "tag": "IPLC",
+   "protocol": "Trojan",
+   "carrier": "Rogers",
+   "city": "温哥华",
+   "hash": 1906478283,
+   "cachedLatency": null
+  },
+  {
+   "id": 1000000009,
+   "region": 10,
+   "index": 9,
+   "name": "温哥华 Rogers 家宽 01",
+   "tag": "家宽",
+   "protocol": "TUIC",
+   "carrier": "Rogers",
+   "city": "温哥华",
+   "hash": 131667642,
+   "cachedLatency": null
+  },
+  {
+   "id": 1000000010,
+   "region": 10,
+   "index": 10,
+   "name": "多伦多 Bell IPLC 02 ×0.5",
+   "tag": "IPLC",
+   "protocol": "TUIC",
+   "carrier": "Bell",
+   "city": "多伦多",
+   "hash": 1308357979,
+   "cachedLatency": null
+  },
+  {
+   "id": 1000000063,
+   "region": 10,
+   "index": 63,
+   "name": "温哥华 Bell IEPL 07",
+   "tag": "IEPL",
+   "protocol": "SS",
+   "carrier": "Bell",
+   "city": "温哥华",
+   "hash": 1719325571,
+   "cachedLatency": null
+  },
+  {
+   "id": 1000000064,
+   "region": 10,
+   "index": 64,
+   "name": "多伦多 Bell 家宽 07 ×1.5",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "Bell",
+   "city": "多伦多",
+   "hash": 2884629199,
+   "cachedLatency": 183
+  },
+  {
+   "id": 1000000099,
+   "region": 10,
+   "index": 99,
+   "name": "温哥华 Rogers 家宽 10",
+   "tag": "家宽",
+   "protocol": "TUIC",
+   "carrier": "Rogers",
+   "city": "温哥华",
+   "hash": 4026974217,
+   "cachedLatency": 171
+  },
+  {
+   "id": 1000000320,
+   "region": 10,
+   "index": 320,
+   "name": "多伦多 Bell IPLC 33 ×2",
+   "tag": "IPLC",
+   "protocol": "Hy2",
+   "carrier": "Bell",
+   "city": "多伦多",
+   "hash": 3286992922,
+   "cachedLatency": null
+  },
+  {
+   "id": 1000000321,
+   "region": 10,
+   "index": 321,
+   "name": "温哥华 Bell BGP 33",
+   "tag": "BGP",
+   "protocol": "Hy2",
+   "carrier": "Bell",
+   "city": "温哥华",
+   "hash": 2434230179,
+   "cachedLatency": null
+  },
+  {
+   "id": 1000000999,
+   "region": 10,
+   "index": 999,
+   "name": "温哥华 Rogers 家宽 36",
+   "tag": "家宽",
+   "protocol": "SS",
+   "carrier": "Rogers",
+   "city": "温哥华",
+   "hash": 1771984178,
+   "cachedLatency": null
+  },
+  {
+   "id": 1000001234,
+   "region": 10,
+   "index": 1234,
+   "name": "多伦多 Bell 家宽 60",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "Bell",
+   "city": "多伦多",
+   "hash": 2045767050,
+   "cachedLatency": null
+  },
+  {
+   "id": 1000065535,
+   "region": 10,
+   "index": 65535,
+   "name": "温哥华 Rogers IPLC 26",
+   "tag": "IPLC",
+   "protocol": "TUIC",
+   "carrier": "Rogers",
+   "city": "温哥华",
+   "hash": 1640102609,
+   "cachedLatency": 191
+  },
+  {
+   "id": 1000100000,
+   "region": 10,
+   "index": 100000,
+   "name": "多伦多 Bell IPLC 17 ×1.5",
+   "tag": "IPLC",
+   "protocol": "TUIC",
+   "carrier": "Bell",
+   "city": "多伦多",
+   "hash": 1400434608,
+   "cachedLatency": 171
+  },
+  {
+   "id": 1000239769,
+   "region": 10,
+   "index": 239769,
+   "name": "温哥华 Rogers 家宽 41",
+   "tag": "家宽",
+   "protocol": "SS",
+   "carrier": "Rogers",
+   "city": "温哥华",
+   "hash": 2778630799,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100000000,
+   "region": 11,
+   "index": 0,
+   "name": "悉尼 Telstra IEPL 01 ×1.5",
+   "tag": "IEPL",
+   "protocol": "VLESS",
+   "carrier": "Telstra",
+   "city": "悉尼",
+   "hash": 767931355,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100000001,
+   "region": 11,
+   "index": 1,
+   "name": "悉尼 Telstra 家宽 01 ×2",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "Telstra",
+   "city": "悉尼",
+   "hash": 594929177,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100000002,
+   "region": 11,
+   "index": 2,
+   "name": "悉尼 Telstra IPLC 01 ×1.5",
+   "tag": "IPLC",
+   "protocol": "VLESS",
+   "carrier": "Telstra",
+   "city": "悉尼",
+   "hash": 1927948669,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100000003,
+   "region": 11,
+   "index": 3,
+   "name": "悉尼 Telstra BGP 01",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "Telstra",
+   "city": "悉尼",
+   "hash": 2476792284,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100000004,
+   "region": 11,
+   "index": 4,
+   "name": "悉尼 Telstra 原生 01",
+   "tag": "原生",
+   "protocol": "TUIC",
+   "carrier": "Telstra",
+   "city": "悉尼",
+   "hash": 1618018195,
+   "cachedLatency": 157
+  },
+  {
+   "id": 1100000005,
+   "region": 11,
+   "index": 5,
+   "name": "悉尼 Optus IEPL 01",
+   "tag": "IEPL",
+   "protocol": "SS",
+   "carrier": "Optus",
+   "city": "悉尼",
+   "hash": 2791422210,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100000009,
+   "region": 11,
+   "index": 9,
+   "name": "悉尼 Optus 原生 01",
+   "tag": "原生",
+   "protocol": "Hy2",
+   "carrier": "Optus",
+   "city": "悉尼",
+   "hash": 1034432800,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100000010,
+   "region": 11,
+   "index": 10,
+   "name": "悉尼 Telstra IEPL 02",
+   "tag": "IEPL",
+   "protocol": "Hy2",
+   "carrier": "Telstra",
+   "city": "悉尼",
+   "hash": 7978765,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100000063,
+   "region": 11,
+   "index": 63,
+   "name": "悉尼 Telstra BGP 07 ×0.5",
+   "tag": "BGP",
+   "protocol": "Trojan",
+   "carrier": "Telstra",
+   "city": "悉尼",
+   "hash": 646927266,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100000064,
+   "region": 11,
+   "index": 64,
+   "name": "悉尼 Telstra 原生 07",
+   "tag": "原生",
+   "protocol": "VLESS",
+   "carrier": "Telstra",
+   "city": "悉尼",
+   "hash": 4014521487,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100000099,
+   "region": 11,
+   "index": 99,
+   "name": "悉尼 Optus 原生 10 ×2",
+   "tag": "原生",
+   "protocol": "TUIC",
+   "carrier": "Optus",
+   "city": "悉尼",
+   "hash": 1031860690,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100000320,
+   "region": 11,
+   "index": 320,
+   "name": "悉尼 Telstra IEPL 33 ×0.5",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "Telstra",
+   "city": "悉尼",
+   "hash": 122849880,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100000321,
+   "region": 11,
+   "index": 321,
+   "name": "悉尼 Telstra 家宽 33",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "Telstra",
+   "city": "悉尼",
+   "hash": 1811709084,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100000999,
+   "region": 11,
+   "index": 999,
+   "name": "悉尼 Optus 原生 36",
+   "tag": "原生",
+   "protocol": "TUIC",
+   "carrier": "Optus",
+   "city": "悉尼",
+   "hash": 2873112808,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100001234,
+   "region": 11,
+   "index": 1234,
+   "name": "悉尼 Telstra 原生 60",
+   "tag": "原生",
+   "protocol": "SS",
+   "carrier": "Telstra",
+   "city": "悉尼",
+   "hash": 406224289,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100065535,
+   "region": 11,
+   "index": 65535,
+   "name": "悉尼 Optus IEPL 26 ×1.5",
+   "tag": "IEPL",
+   "protocol": "Hy2",
+   "carrier": "Optus",
+   "city": "悉尼",
+   "hash": 2741905142,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100100000,
+   "region": 11,
+   "index": 100000,
+   "name": "悉尼 Telstra IEPL 17",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "Telstra",
+   "city": "悉尼",
+   "hash": 100317528,
+   "cachedLatency": null
+  },
+  {
+   "id": 1100214905,
+   "region": 11,
+   "index": 214905,
+   "name": "悉尼 Optus IEPL 51",
+   "tag": "IEPL",
+   "protocol": "VLESS",
+   "carrier": "Optus",
+   "city": "悉尼",
+   "hash": 3266217185,
+   "cachedLatency": 144
+  },
+  {
+   "id": 1200000000,
+   "region": 12,
+   "index": 0,
+   "name": "孟买 Jio BGP 01",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "Jio",
+   "city": "孟买",
+   "hash": 3961255408,
+   "cachedLatency": 154
+  },
+  {
+   "id": 1200000001,
+   "region": 12,
+   "index": 1,
+   "name": "孟买 Jio 原生 01",
+   "tag": "原生",
+   "protocol": "VLESS",
+   "carrier": "Jio",
+   "city": "孟买",
+   "hash": 1555937135,
+   "cachedLatency": null
+  },
+  {
+   "id": 1200000002,
+   "region": 12,
+   "index": 2,
+   "name": "孟买 Jio IEPL 01",
+   "tag": "IEPL",
+   "protocol": "VLESS",
+   "carrier": "Jio",
+   "city": "孟买",
+   "hash": 1194456875,
+   "cachedLatency": null
+  },
+  {
+   "id": 1200000003,
+   "region": 12,
+   "index": 3,
+   "name": "孟买 Jio 家宽 01",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "Jio",
+   "city": "孟买",
+   "hash": 1375302602,
+   "cachedLatency": null
+  },
+  {
+   "id": 1200000004,
+   "region": 12,
+   "index": 4,
+   "name": "孟买 Jio IPLC 01",
+   "tag": "IPLC",
+   "protocol": "Trojan",
+   "carrier": "Jio",
+   "city": "孟买",
+   "hash": 1925080274,
+   "cachedLatency": null
+  },
+  {
+   "id": 1200000005,
+   "region": 12,
+   "index": 5,
+   "name": "孟买 Airtel BGP 01",
+   "tag": "BGP",
+   "protocol": "Hy2",
+   "carrier": "Airtel",
+   "city": "孟买",
+   "hash": 3752338315,
+   "cachedLatency": 120
+  },
+  {
+   "id": 1200000009,
+   "region": 12,
+   "index": 9,
+   "name": "孟买 Airtel IPLC 01 ×0.5",
+   "tag": "IPLC",
+   "protocol": "TUIC",
+   "carrier": "Airtel",
+   "city": "孟买",
+   "hash": 2335040264,
+   "cachedLatency": null
+  },
+  {
+   "id": 1200000010,
+   "region": 12,
+   "index": 10,
+   "name": "孟买 Jio BGP 02",
+   "tag": "BGP",
+   "protocol": "Hy2",
+   "carrier": "Jio",
+   "city": "孟买",
+   "hash": 3569707867,
+   "cachedLatency": 118
+  },
+  {
+   "id": 1200000063,
+   "region": 12,
+   "index": 63,
+   "name": "孟买 Jio 家宽 07 ×0.5",
+   "tag": "家宽",
+   "protocol": "VLESS",
+   "carrier": "Jio",
+   "city": "孟买",
+   "hash": 24743990,
+   "cachedLatency": null
+  },
+  {
+   "id": 1200000064,
+   "region": 12,
+   "index": 64,
+   "name": "孟买 Jio IPLC 07 ×1.5",
+   "tag": "IPLC",
+   "protocol": "Trojan",
+   "carrier": "Jio",
+   "city": "孟买",
+   "hash": 225524378,
+   "cachedLatency": 135
+  },
+  {
+   "id": 1200000099,
+   "region": 12,
+   "index": 99,
+   "name": "孟买 Airtel IPLC 10",
+   "tag": "IPLC",
+   "protocol": "VLESS",
+   "carrier": "Airtel",
+   "city": "孟买",
+   "hash": 2332337078,
+   "cachedLatency": null
+  },
+  {
+   "id": 1200000320,
+   "region": 12,
+   "index": 320,
+   "name": "孟买 Jio BGP 33",
+   "tag": "BGP",
+   "protocol": "SS",
+   "carrier": "Jio",
+   "city": "孟买",
+   "hash": 1422927920,
+   "cachedLatency": null
+  },
+  {
+   "id": 1200000321,
+   "region": 12,
+   "index": 321,
+   "name": "孟买 Jio 原生 33",
+   "tag": "原生",
+   "protocol": "Trojan",
+   "carrier": "Jio",
+   "city": "孟买",
+   "hash": 511686260,
+   "cachedLatency": null
+  },
+  {
+   "id": 1200000999,
+   "region": 12,
+   "index": 999,
+   "name": "孟买 Airtel IPLC 36",
+   "tag": "IPLC",
+   "protocol": "TUIC",
+   "carrier": "Airtel",
+   "city": "孟买",
+   "hash": 3297033656,
+   "cachedLatency": null
+  },
+  {
+   "id": 1200001234,
+   "region": 12,
+   "index": 1234,
+   "name": "孟买 Jio IPLC 60",
+   "tag": "IPLC",
+   "protocol": "Hy2",
+   "carrier": "Jio",
+   "city": "孟买",
+   "hash": 3968313503,
+   "cachedLatency": 129
+  },
+  {
+   "id": 1200065535,
+   "region": 12,
+   "index": 65535,
+   "name": "孟买 Airtel BGP 26",
+   "tag": "BGP",
+   "protocol": "TUIC",
+   "carrier": "Airtel",
+   "city": "孟买",
+   "hash": 3843337732,
+   "cachedLatency": null
+  },
+  {
+   "id": 1200100000,
+   "region": 12,
+   "index": 100000,
+   "name": "孟买 Jio BGP 17",
+   "tag": "BGP",
+   "protocol": "Hy2",
+   "carrier": "Jio",
+   "city": "孟买",
+   "hash": 3095362400,
+   "cachedLatency": null
+  },
+  {
+   "id": 1200198330,
+   "region": 12,
+   "index": 198330,
+   "name": "孟买 Jio BGP 58",
+   "tag": "BGP",
+   "protocol": "SS",
+   "carrier": "Jio",
+   "city": "孟买",
+   "hash": 1116367588,
+   "cachedLatency": null
+  },
+  {
+   "id": 1300000000,
+   "region": 13,
+   "index": 0,
+   "name": "圣保罗 Vivo 家宽 01 ×2",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "Vivo",
+   "city": "圣保罗",
+   "hash": 2859540361,
+   "cachedLatency": null
+  },
+  {
+   "id": 1300000001,
+   "region": 13,
+   "index": 1,
+   "name": "圣保罗 Vivo IPLC 01",
+   "tag": "IPLC",
+   "protocol": "TUIC",
+   "carrier": "Vivo",
+   "city": "圣保罗",
+   "hash": 2119798595,
+   "cachedLatency": 335
+  },
+  {
+   "id": 1300000002,
+   "region": 13,
+   "index": 2,
+   "name": "圣保罗 Vivo BGP 01",
+   "tag": "BGP",
+   "protocol": "Hy2",
+   "carrier": "Vivo",
+   "city": "圣保罗",
+   "hash": 685224297,
+   "cachedLatency": null
+  },
+  {
+   "id": 1300000003,
+   "region": 13,
+   "index": 3,
+   "name": "圣保罗 Vivo 原生 01",
+   "tag": "原生",
+   "protocol": "Trojan",
+   "carrier": "Vivo",
+   "city": "圣保罗",
+   "hash": 1979722824,
+   "cachedLatency": 311
+  },
+  {
+   "id": 1300000004,
+   "region": 13,
+   "index": 4,
+   "name": "圣保罗 Vivo IEPL 01",
+   "tag": "IEPL",
+   "protocol": "VLESS",
+   "carrier": "Vivo",
+   "city": "圣保罗",
+   "hash": 3196390049,
+   "cachedLatency": null
+  },
+  {
+   "id": 1300000005,
+   "region": 13,
+   "index": 5,
+   "name": "圣保罗 Claro 家宽 01 ×0.5",
+   "tag": "家宽",
+   "protocol": "SS",
+   "carrier": "Claro",
+   "city": "圣保罗",
+   "hash": 191141214,
+   "cachedLatency": 329
+  },
+  {
+   "id": 1300000009,
+   "region": 13,
+   "index": 9,
+   "name": "圣保罗 Claro IEPL 01",
+   "tag": "IEPL",
+   "protocol": "VLESS",
+   "carrier": "Claro",
+   "city": "圣保罗",
+   "hash": 3237767571,
+   "cachedLatency": null
+  },
+  {
+   "id": 1300000010,
+   "region": 13,
+   "index": 10,
+   "name": "圣保罗 Vivo 家宽 02 ×1.5",
+   "tag": "家宽",
+   "protocol": "VLESS",
+   "carrier": "Vivo",
+   "city": "圣保罗",
+   "hash": 2269631857,
+   "cachedLatency": null
+  },
+  {
+   "id": 1300000063,
+   "region": 13,
+   "index": 63,
+   "name": "圣保罗 Vivo 原生 07",
+   "tag": "原生",
+   "protocol": "TUIC",
+   "carrier": "Vivo",
+   "city": "圣保罗",
+   "hash": 2791336941,
+   "cachedLatency": null
+  },
+  {
+   "id": 1300000064,
+   "region": 13,
+   "index": 64,
+   "name": "圣保罗 Vivo IEPL 07 ×2",
+   "tag": "IEPL",
+   "protocol": "SS",
+   "carrier": "Vivo",
+   "city": "圣保罗",
+   "hash": 1695079224,
+   "cachedLatency": null
+  },
+  {
+   "id": 1300000099,
+   "region": 13,
+   "index": 99,
+   "name": "圣保罗 Claro IEPL 10 ×1.5",
+   "tag": "IEPL",
+   "protocol": "VLESS",
+   "carrier": "Claro",
+   "city": "圣保罗",
+   "hash": 3836924055,
+   "cachedLatency": null
+  },
+  {
+   "id": 1300000320,
+   "region": 13,
+   "index": 320,
+   "name": "圣保罗 Vivo 家宽 33 ×2",
+   "tag": "家宽",
+   "protocol": "TUIC",
+   "carrier": "Vivo",
+   "city": "圣保罗",
+   "hash": 3571377209,
+   "cachedLatency": null
+  },
+  {
+   "id": 1300000321,
+   "region": 13,
+   "index": 321,
+   "name": "圣保罗 Vivo IPLC 33 ×1.5",
+   "tag": "IPLC",
+   "protocol": "Trojan",
+   "carrier": "Vivo",
+   "city": "圣保罗",
+   "hash": 3506036812,
+   "cachedLatency": null
+  },
+  {
+   "id": 1300000999,
+   "region": 13,
+   "index": 999,
+   "name": "圣保罗 Claro IEPL 36",
+   "tag": "IEPL",
+   "protocol": "Hy2",
+   "carrier": "Claro",
+   "city": "圣保罗",
+   "hash": 103470018,
+   "cachedLatency": null
+  },
+  {
+   "id": 1300001234,
+   "region": 13,
+   "index": 1234,
+   "name": "圣保罗 Vivo IEPL 60 ×0.5",
+   "tag": "IEPL",
+   "protocol": "Trojan",
+   "carrier": "Vivo",
+   "city": "圣保罗",
+   "hash": 3685176526,
+   "cachedLatency": null
+  },
+  {
+   "id": 1300065535,
+   "region": 13,
+   "index": 65535,
+   "name": "圣保罗 Claro 家宽 26",
+   "tag": "家宽",
+   "protocol": "Trojan",
+   "carrier": "Claro",
+   "city": "圣保罗",
+   "hash": 766409793,
+   "cachedLatency": null
+  },
+  {
+   "id": 1300100000,
+   "region": 13,
+   "index": 100000,
+   "name": "圣保罗 Vivo 家宽 17",
+   "tag": "家宽",
+   "protocol": "VLESS",
+   "carrier": "Vivo",
+   "city": "圣保罗",
+   "hash": 1794739464,
+   "cachedLatency": 301
+  },
+  {
+   "id": 1300126003,
+   "region": 13,
+   "index": 126003,
+   "name": "圣保罗 Vivo 原生 57",
+   "tag": "原生",
+   "protocol": "SS",
+   "carrier": "Vivo",
+   "city": "圣保罗",
+   "hash": 1458250122,
+   "cachedLatency": null
+  },
+  {
+   "id": 1400000000,
+   "region": 14,
+   "index": 0,
+   "name": "伊斯坦布尔 Türk Telekom 原生 01",
+   "tag": "原生",
+   "protocol": "SS",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 1758414114,
+   "cachedLatency": null
+  },
+  {
+   "id": 1400000001,
+   "region": 14,
+   "index": 1,
+   "name": "伊斯坦布尔 Türk Telekom IEPL 01 ×2",
+   "tag": "IEPL",
+   "protocol": "VLESS",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 3420194229,
+   "cachedLatency": 278
+  },
+  {
+   "id": 1400000002,
+   "region": 14,
+   "index": 2,
+   "name": "伊斯坦布尔 Türk Telekom 家宽 01",
+   "tag": "家宽",
+   "protocol": "SS",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 3452230334,
+   "cachedLatency": null
+  },
+  {
+   "id": 1400000003,
+   "region": 14,
+   "index": 3,
+   "name": "伊斯坦布尔 Türk Telekom IPLC 01",
+   "tag": "IPLC",
+   "protocol": "Trojan",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 1048044635,
+   "cachedLatency": 271
+  },
+  {
+   "id": 1400000004,
+   "region": 14,
+   "index": 4,
+   "name": "伊斯坦布尔 Türk Telekom BGP 01",
+   "tag": "BGP",
+   "protocol": "TUIC",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 2941671702,
+   "cachedLatency": 268
+  },
+  {
+   "id": 1400000005,
+   "region": 14,
+   "index": 5,
+   "name": "伊斯坦布尔 Türk Telekom 原生 02 ×1.5",
+   "tag": "原生",
+   "protocol": "Trojan",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 1152190006,
+   "cachedLatency": 262
+  },
+  {
+   "id": 1400000009,
+   "region": 14,
+   "index": 9,
+   "name": "伊斯坦布尔 Türk Telekom BGP 02 ×0.5",
+   "tag": "BGP",
+   "protocol": "Hy2",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 242892741,
+   "cachedLatency": null
+  },
+  {
+   "id": 1400000010,
+   "region": 14,
+   "index": 10,
+   "name": "伊斯坦布尔 Türk Telekom 原生 03",
+   "tag": "原生",
+   "protocol": "SS",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 1991606045,
+   "cachedLatency": 261
+  },
+  {
+   "id": 1400000063,
+   "region": 14,
+   "index": 63,
+   "name": "伊斯坦布尔 Türk Telekom IPLC 13",
+   "tag": "IPLC",
+   "protocol": "VLESS",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 1491582427,
+   "cachedLatency": null
+  },
+  {
+   "id": 1400000064,
+   "region": 14,
+   "index": 64,
+   "name": "伊斯坦布尔 Türk Telekom BGP 13 ×2",
+   "tag": "BGP",
+   "protocol": "Trojan",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 2995668320,
+   "cachedLatency": null
+  },
+  {
+   "id": 1400000099,
+   "region": 14,
+   "index": 99,
+   "name": "伊斯坦布尔 Türk Telekom BGP 20",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 842285729,
+   "cachedLatency": null
+  },
+  {
+   "id": 1400000320,
+   "region": 14,
+   "index": 320,
+   "name": "伊斯坦布尔 Türk Telekom 原生 01",
+   "tag": "原生",
+   "protocol": "Trojan",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 576270867,
+   "cachedLatency": null
+  },
+  {
+   "id": 1400000321,
+   "region": 14,
+   "index": 321,
+   "name": "伊斯坦布尔 Türk Telekom IEPL 01",
+   "tag": "IEPL",
+   "protocol": "VLESS",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 2884617396,
+   "cachedLatency": 258
+  },
+  {
+   "id": 1400000999,
+   "region": 14,
+   "index": 999,
+   "name": "伊斯坦布尔 Türk Telekom BGP 08",
+   "tag": "BGP",
+   "protocol": "SS",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 526967358,
+   "cachedLatency": null
+  },
+  {
+   "id": 1400001234,
+   "region": 14,
+   "index": 1234,
+   "name": "伊斯坦布尔 Türk Telekom BGP 55 ×2",
+   "tag": "BGP",
+   "protocol": "VLESS",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 2004620890,
+   "cachedLatency": null
+  },
+  {
+   "id": 1400065535,
+   "region": 14,
+   "index": 65535,
+   "name": "伊斯坦布尔 Türk Telekom 原生 52 ×0.5",
+   "tag": "原生",
+   "protocol": "SS",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 1867784344,
+   "cachedLatency": null
+  },
+  {
+   "id": 1400098446,
+   "region": 14,
+   "index": 98446,
+   "name": "伊斯坦布尔 Türk Telekom IEPL 42",
+   "tag": "IEPL",
+   "protocol": "SS",
+   "carrier": "Türk Telekom",
+   "city": "伊斯坦布尔",
+   "hash": 700629010,
+   "cachedLatency": null
+  }
+ ],
+ "queries": [
+  {
+   "query": "",
+   "total": 13109802,
+   "sections": [
+    {
+     "region": "US",
+     "count": 3118402
+    },
+    {
+     "region": "JP",
+     "count": 2204117
+    },
+    {
+     "region": "HK",
+     "count": 1906551
+    },
+    {
+     "region": "SG",
+     "count": 1512880
+    },
+    {
+     "region": "TW",
+     "count": 1288406
+    },
+    {
+     "region": "KR",
+     "count": 702315
+    },
+    {
+     "region": "DE",
+     "count": 488210
+    },
+    {
+     "region": "GB",
+     "count": 455903
+    },
+    {
+     "region": "NL",
+     "count": 301442
+    },
+    {
+     "region": "FR",
+     "count": 254118
+    },
+    {
+     "region": "CA",
+     "count": 239770
+    },
+    {
+     "region": "AU",
+     "count": 214906
+    },
+    {
+     "region": "IN",
+     "count": 198331
+    },
+    {
+     "region": "BR",
+     "count": 126004
+    },
+    {
+     "region": "TR",
+     "count": 98447
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "US"
+    },
+    {
+     "id": 0,
+     "name": "洛杉矶 CN2 GIA IPLC 01"
+    },
+    {
+     "id": 1,
+     "name": "圣何塞 CN2 GIA BGP 01"
+    },
+    {
+     "id": 2,
+     "name": "西雅图 CN2 GIA 原生 01 ×2"
+    },
+    {
+     "id": 3,
+     "name": "纽约 CN2 GIA IEPL 01 ×1.5"
+    },
+    {
+     "id": 4,
+     "name": "达拉斯 CN2 GIA 家宽 01"
+    },
+    {
+     "id": 5,
+     "name": "洛杉矶 Cogent IPLC 01"
+    },
+    {
+     "id": 6,
+     "name": "圣何塞 Cogent BGP 01"
+    },
+    {
+     "id": 7,
+     "name": "西雅图 Cogent 原生 01 ×1.5"
+    },
+    {
+     "id": 8,
+     "name": "纽约 Cogent IEPL 01"
+    },
+    {
+     "id": 9,
+     "name": "达拉斯 Cogent 家宽 01"
+    },
+    {
+     "id": 10,
+     "name": "洛杉矶 Zenlayer IPLC 01"
+    }
+   ]
+  },
+  {
+   "query": "jp",
+   "total": 2204117,
+   "sections": [
+    {
+     "region": "JP",
+     "count": 2204117
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "JP"
+    },
+    {
+     "id": 100000000,
+     "name": "东京 NTT IEPL 01"
+    },
+    {
+     "id": 100000001,
+     "name": "大阪 NTT 家宽 01"
+    },
+    {
+     "id": 100000002,
+     "name": "东京 NTT IPLC 01"
+    },
+    {
+     "id": 100000003,
+     "name": "大阪 NTT BGP 01 ×2"
+    },
+    {
+     "id": 100000004,
+     "name": "东京 NTT 原生 01"
+    },
+    {
+     "id": 100000005,
+     "name": "大阪 IIJ IEPL 01 ×2"
+    },
+    {
+     "id": 100000006,
+     "name": "东京 IIJ 家宽 01 ×0.5"
+    },
+    {
+     "id": 100000007,
+     "name": "大阪 IIJ IPLC 01 ×1.5"
+    },
+    {
+     "id": 100000008,
+     "name": "东京 IIJ BGP 01"
+    },
+    {
+     "id": 100000009,
+     "name": "大阪 IIJ 原生 01"
+    },
+    {
+     "id": 100000010,
+     "name": "东京 KDDI IEPL 01"
+    }
+   ]
+  },
+  {
+   "query": "日本",
+   "total": 2204117,
+   "sections": [
+    {
+     "region": "JP",
+     "count": 2204117
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "JP"
+    },
+    {
+     "id": 100000000,
+     "name": "东京 NTT IEPL 01"
+    },
+    {
+     "id": 100000001,
+     "name": "大阪 NTT 家宽 01"
+    },
+    {
+     "id": 100000002,
+     "name": "东京 NTT IPLC 01"
+    },
+    {
+     "id": 100000003,
+     "name": "大阪 NTT BGP 01 ×2"
+    },
+    {
+     "id": 100000004,
+     "name": "东京 NTT 原生 01"
+    },
+    {
+     "id": 100000005,
+     "name": "大阪 IIJ IEPL 01 ×2"
+    },
+    {
+     "id": 100000006,
+     "name": "东京 IIJ 家宽 01 ×0.5"
+    },
+    {
+     "id": 100000007,
+     "name": "大阪 IIJ IPLC 01 ×1.5"
+    },
+    {
+     "id": 100000008,
+     "name": "东京 IIJ BGP 01"
+    },
+    {
+     "id": 100000009,
+     "name": "大阪 IIJ 原生 01"
+    },
+    {
+     "id": 100000010,
+     "name": "东京 KDDI IEPL 01"
+    }
+   ]
+  },
+  {
+   "query": "东京",
+   "total": 1102059,
+   "sections": [
+    {
+     "region": "JP",
+     "count": 1102059
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "JP"
+    },
+    {
+     "id": 100000000,
+     "name": "东京 NTT IEPL 01"
+    },
+    {
+     "id": 100000002,
+     "name": "东京 NTT IPLC 01"
+    },
+    {
+     "id": 100000004,
+     "name": "东京 NTT 原生 01"
+    },
+    {
+     "id": 100000006,
+     "name": "东京 IIJ 家宽 01 ×0.5"
+    },
+    {
+     "id": 100000008,
+     "name": "东京 IIJ BGP 01"
+    },
+    {
+     "id": 100000010,
+     "name": "东京 KDDI IEPL 01"
+    },
+    {
+     "id": 100000012,
+     "name": "东京 KDDI IPLC 01"
+    },
+    {
+     "id": 100000014,
+     "name": "东京 KDDI 原生 01 ×2"
+    },
+    {
+     "id": 100000016,
+     "name": "东京 SoftBank 家宽 01"
+    },
+    {
+     "id": 100000018,
+     "name": "东京 SoftBank BGP 01 ×1.5"
+    },
+    {
+     "id": 100000020,
+     "name": "东京 NTT IEPL 02"
+    }
+   ]
+  },
+  {
+   "query": "ntt",
+   "total": 551030,
+   "sections": [
+    {
+     "region": "JP",
+     "count": 551030
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "JP"
+    },
+    {
+     "id": 100000000,
+     "name": "东京 NTT IEPL 01"
+    },
+    {
+     "id": 100000001,
+     "name": "大阪 NTT 家宽 01"
+    },
+    {
+     "id": 100000002,
+     "name": "东京 NTT IPLC 01"
+    },
+    {
+     "id": 100000003,
+     "name": "大阪 NTT BGP 01 ×2"
+    },
+    {
+     "id": 100000004,
+     "name": "东京 NTT 原生 01"
+    },
+    {
+     "id": 100000020,
+     "name": "东京 NTT IEPL 02"
+    },
+    {
+     "id": 100000021,
+     "name": "大阪 NTT 家宽 02"
+    },
+    {
+     "id": 100000022,
+     "name": "东京 NTT IPLC 02"
+    },
+    {
+     "id": 100000023,
+     "name": "大阪 NTT BGP 02 ×1.5"
+    },
+    {
+     "id": 100000024,
+     "name": "东京 NTT 原生 02"
+    },
+    {
+     "id": 100000040,
+     "name": "东京 NTT IEPL 03 ×2"
+    }
+   ]
+  },
+  {
+   "query": "iplc",
+   "total": 2621959,
+   "sections": [
+    {
+     "region": "US",
+     "count": 623681
+    },
+    {
+     "region": "JP",
+     "count": 440823
+    },
+    {
+     "region": "HK",
+     "count": 381310
+    },
+    {
+     "region": "SG",
+     "count": 302576
+    },
+    {
+     "region": "TW",
+     "count": 257681
+    },
+    {
+     "region": "KR",
+     "count": 140463
+    },
+    {
+     "region": "DE",
+     "count": 97642
+    },
+    {
+     "region": "GB",
+     "count": 91180
+    },
+    {
+     "region": "NL",
+     "count": 60289
+    },
+    {
+     "region": "FR",
+     "count": 50823
+    },
+    {
+     "region": "CA",
+     "count": 47954
+    },
+    {
+     "region": "AU",
+     "count": 42981
+    },
+    {
+     "region": "IN",
+     "count": 39666
+    },
+    {
+     "region": "BR",
+     "count": 25201
+    },
+    {
+     "region": "TR",
+     "count": 19689
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "US"
+    },
+    {
+     "id": 0,
+     "name": "洛杉矶 CN2 GIA IPLC 01"
+    },
+    {
+     "id": 5,
+     "name": "洛杉矶 Cogent IPLC 01"
+    },
+    {
+     "id": 10,
+     "name": "洛杉矶 Zenlayer IPLC 01"
+    },
+    {
+     "id": 15,
+     "name": "洛杉矶 HE IPLC 01 ×2"
+    },
+    {
+     "id": 20,
+     "name": "洛杉矶 CN2 GIA IPLC 02"
+    },
+    {
+     "id": 25,
+     "name": "洛杉矶 Cogent IPLC 02"
+    },
+    {
+     "id": 30,
+     "name": "洛杉矶 Zenlayer IPLC 02"
+    },
+    {
+     "id": 35,
+     "name": "洛杉矶 HE IPLC 02"
+    },
+    {
+     "id": 40,
+     "name": "洛杉矶 CN2 GIA IPLC 03"
+    },
+    {
+     "id": 45,
+     "name": "洛杉矶 Cogent IPLC 03"
+    },
+    {
+     "id": 50,
+     "name": "洛杉矶 Zenlayer IPLC 03"
+    }
+   ]
+  },
+  {
+   "query": "东京 iplc",
+   "total": 220412,
+   "sections": [
+    {
+     "region": "JP",
+     "count": 220412
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "JP"
+    },
+    {
+     "id": 100000002,
+     "name": "东京 NTT IPLC 01"
+    },
+    {
+     "id": 100000012,
+     "name": "东京 KDDI IPLC 01"
+    },
+    {
+     "id": 100000022,
+     "name": "东京 NTT IPLC 02"
+    },
+    {
+     "id": 100000032,
+     "name": "东京 KDDI IPLC 02 ×2"
+    },
+    {
+     "id": 100000042,
+     "name": "东京 NTT IPLC 03 ×2"
+    },
+    {
+     "id": 100000052,
+     "name": "东京 KDDI IPLC 03 ×1.5"
+    },
+    {
+     "id": 100000062,
+     "name": "东京 NTT IPLC 04"
+    },
+    {
+     "id": 100000072,
+     "name": "东京 KDDI IPLC 04"
+    },
+    {
+     "id": 100000082,
+     "name": "东京 NTT IPLC 05"
+    },
+    {
+     "id": 100000092,
+     "name": "东京 KDDI IPLC 05 ×2"
+    },
+    {
+     "id": 100000102,
+     "name": "东京 NTT IPLC 06"
+    }
+   ]
+  },
+  {
+   "query": "us 家宽",
+   "total": 623680,
+   "sections": [
+    {
+     "region": "US",
+     "count": 623680
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "US"
+    },
+    {
+     "id": 4,
+     "name": "达拉斯 CN2 GIA 家宽 01"
+    },
+    {
+     "id": 9,
+     "name": "达拉斯 Cogent 家宽 01"
+    },
+    {
+     "id": 14,
+     "name": "达拉斯 Zenlayer 家宽 01"
+    },
+    {
+     "id": 19,
+     "name": "达拉斯 HE 家宽 01"
+    },
+    {
+     "id": 24,
+     "name": "达拉斯 CN2 GIA 家宽 02"
+    },
+    {
+     "id": 29,
+     "name": "达拉斯 Cogent 家宽 02"
+    },
+    {
+     "id": 34,
+     "name": "达拉斯 Zenlayer 家宽 02"
+    },
+    {
+     "id": 39,
+     "name": "达拉斯 HE 家宽 02"
+    },
+    {
+     "id": 44,
+     "name": "达拉斯 CN2 GIA 家宽 03"
+    },
+    {
+     "id": 49,
+     "name": "达拉斯 Cogent 家宽 03"
+    },
+    {
+     "id": 54,
+     "name": "达拉斯 Zenlayer 家宽 03"
+    }
+   ]
+  },
+  {
+   "query": "hkt",
+   "total": 476640,
+   "sections": [
+    {
+     "region": "HK",
+     "count": 476640
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "HK"
+    },
+    {
+     "id": 200000000,
+     "name": "香港 HKT BGP 01 ×0.5"
+    },
+    {
+     "id": 200000001,
+     "name": "香港 HKT 原生 01 ×0.5"
+    },
+    {
+     "id": 200000002,
+     "name": "香港 HKT IEPL 01"
+    },
+    {
+     "id": 200000003,
+     "name": "香港 HKT 家宽 01"
+    },
+    {
+     "id": 200000004,
+     "name": "香港 HKT IPLC 01"
+    },
+    {
+     "id": 200000020,
+     "name": "香港 HKT BGP 02"
+    },
+    {
+     "id": 200000021,
+     "name": "香港 HKT 原生 02 ×1.5"
+    },
+    {
+     "id": 200000022,
+     "name": "香港 HKT IEPL 02"
+    },
+    {
+     "id": 200000023,
+     "name": "香港 HKT 家宽 02"
+    },
+    {
+     "id": 200000024,
+     "name": "香港 HKT IPLC 02"
+    },
+    {
+     "id": 200000040,
+     "name": "香港 HKT BGP 03"
+    }
+   ]
+  },
+  {
+   "query": "香港 hkt bgp",
+   "total": 95328,
+   "sections": [
+    {
+     "region": "HK",
+     "count": 95328
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "HK"
+    },
+    {
+     "id": 200000000,
+     "name": "香港 HKT BGP 01 ×0.5"
+    },
+    {
+     "id": 200000020,
+     "name": "香港 HKT BGP 02"
+    },
+    {
+     "id": 200000040,
+     "name": "香港 HKT BGP 03"
+    },
+    {
+     "id": 200000060,
+     "name": "香港 HKT BGP 04"
+    },
+    {
+     "id": 200000080,
+     "name": "香港 HKT BGP 05"
+    },
+    {
+     "id": 200000100,
+     "name": "香港 HKT BGP 06"
+    },
+    {
+     "id": 200000120,
+     "name": "香港 HKT BGP 07 ×2"
+    },
+    {
+     "id": 200000140,
+     "name": "香港 HKT BGP 08 ×1.5"
+    },
+    {
+     "id": 200000160,
+     "name": "香港 HKT BGP 09 ×0.5"
+    },
+    {
+     "id": 200000180,
+     "name": "香港 HKT BGP 10 ×2"
+    },
+    {
+     "id": 200000200,
+     "name": "香港 HKT BGP 11"
+    }
+   ]
+  },
+  {
+   "query": "ip",
+   "total": 2621959,
+   "sections": [
+    {
+     "region": "US",
+     "count": 623681
+    },
+    {
+     "region": "JP",
+     "count": 440823
+    },
+    {
+     "region": "HK",
+     "count": 381310
+    },
+    {
+     "region": "SG",
+     "count": 302576
+    },
+    {
+     "region": "TW",
+     "count": 257681
+    },
+    {
+     "region": "KR",
+     "count": 140463
+    },
+    {
+     "region": "DE",
+     "count": 97642
+    },
+    {
+     "region": "GB",
+     "count": 91180
+    },
+    {
+     "region": "NL",
+     "count": 60289
+    },
+    {
+     "region": "FR",
+     "count": 50823
+    },
+    {
+     "region": "CA",
+     "count": 47954
+    },
+    {
+     "region": "AU",
+     "count": 42981
+    },
+    {
+     "region": "IN",
+     "count": 39666
+    },
+    {
+     "region": "BR",
+     "count": 25201
+    },
+    {
+     "region": "TR",
+     "count": 19689
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "US"
+    },
+    {
+     "id": 0,
+     "name": "洛杉矶 CN2 GIA IPLC 01"
+    },
+    {
+     "id": 5,
+     "name": "洛杉矶 Cogent IPLC 01"
+    },
+    {
+     "id": 10,
+     "name": "洛杉矶 Zenlayer IPLC 01"
+    },
+    {
+     "id": 15,
+     "name": "洛杉矶 HE IPLC 01 ×2"
+    },
+    {
+     "id": 20,
+     "name": "洛杉矶 CN2 GIA IPLC 02"
+    },
+    {
+     "id": 25,
+     "name": "洛杉矶 Cogent IPLC 02"
+    },
+    {
+     "id": 30,
+     "name": "洛杉矶 Zenlayer IPLC 02"
+    },
+    {
+     "id": 35,
+     "name": "洛杉矶 HE IPLC 02"
+    },
+    {
+     "id": 40,
+     "name": "洛杉矶 CN2 GIA IPLC 03"
+    },
+    {
+     "id": 45,
+     "name": "洛杉矶 Cogent IPLC 03"
+    },
+    {
+     "id": 50,
+     "name": "洛杉矶 Zenlayer IPLC 03"
+    }
+   ]
+  },
+  {
+   "query": "zzz",
+   "total": 13109802,
+   "sections": [
+    {
+     "region": "US",
+     "count": 3118402
+    },
+    {
+     "region": "JP",
+     "count": 2204117
+    },
+    {
+     "region": "HK",
+     "count": 1906551
+    },
+    {
+     "region": "SG",
+     "count": 1512880
+    },
+    {
+     "region": "TW",
+     "count": 1288406
+    },
+    {
+     "region": "KR",
+     "count": 702315
+    },
+    {
+     "region": "DE",
+     "count": 488210
+    },
+    {
+     "region": "GB",
+     "count": 455903
+    },
+    {
+     "region": "NL",
+     "count": 301442
+    },
+    {
+     "region": "FR",
+     "count": 254118
+    },
+    {
+     "region": "CA",
+     "count": 239770
+    },
+    {
+     "region": "AU",
+     "count": 214906
+    },
+    {
+     "region": "IN",
+     "count": 198331
+    },
+    {
+     "region": "BR",
+     "count": 126004
+    },
+    {
+     "region": "TR",
+     "count": 98447
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "US"
+    },
+    {
+     "id": 0,
+     "name": "洛杉矶 CN2 GIA IPLC 01"
+    },
+    {
+     "id": 1,
+     "name": "圣何塞 CN2 GIA BGP 01"
+    },
+    {
+     "id": 2,
+     "name": "西雅图 CN2 GIA 原生 01 ×2"
+    },
+    {
+     "id": 3,
+     "name": "纽约 CN2 GIA IEPL 01 ×1.5"
+    },
+    {
+     "id": 4,
+     "name": "达拉斯 CN2 GIA 家宽 01"
+    },
+    {
+     "id": 5,
+     "name": "洛杉矶 Cogent IPLC 01"
+    },
+    {
+     "id": 6,
+     "name": "圣何塞 Cogent BGP 01"
+    },
+    {
+     "id": 7,
+     "name": "西雅图 Cogent 原生 01 ×1.5"
+    },
+    {
+     "id": 8,
+     "name": "纽约 Cogent IEPL 01"
+    },
+    {
+     "id": 9,
+     "name": "达拉斯 Cogent 家宽 01"
+    },
+    {
+     "id": 10,
+     "name": "洛杉矶 Zenlayer IPLC 01"
+    }
+   ]
+  },
+  {
+   "query": "新加坡",
+   "total": 1512880,
+   "sections": [
+    {
+     "region": "SG",
+     "count": 1512880
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "SG"
+    },
+    {
+     "id": 300000000,
+     "name": "新加坡 Akari 家宽 01 ×1.5"
+    },
+    {
+     "id": 300000001,
+     "name": "新加坡 Akari IPLC 01 ×2"
+    },
+    {
+     "id": 300000002,
+     "name": "新加坡 Akari BGP 01 ×2"
+    },
+    {
+     "id": 300000003,
+     "name": "新加坡 Akari 原生 01"
+    },
+    {
+     "id": 300000004,
+     "name": "新加坡 Akari IEPL 01 ×1.5"
+    },
+    {
+     "id": 300000005,
+     "name": "新加坡 SingTel 家宽 01"
+    },
+    {
+     "id": 300000006,
+     "name": "新加坡 SingTel IPLC 01"
+    },
+    {
+     "id": 300000007,
+     "name": "新加坡 SingTel BGP 01"
+    },
+    {
+     "id": 300000008,
+     "name": "新加坡 SingTel 原生 01"
+    },
+    {
+     "id": 300000009,
+     "name": "新加坡 SingTel IEPL 01"
+    },
+    {
+     "id": 300000010,
+     "name": "新加坡 StarHub 家宽 01 ×2"
+    }
+   ]
+  },
+  {
+   "query": "cn2 gia",
+   "total": 779602,
+   "sections": [
+    {
+     "region": "US",
+     "count": 779602
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "US"
+    },
+    {
+     "id": 0,
+     "name": "洛杉矶 CN2 GIA IPLC 01"
+    },
+    {
+     "id": 1,
+     "name": "圣何塞 CN2 GIA BGP 01"
+    },
+    {
+     "id": 2,
+     "name": "西雅图 CN2 GIA 原生 01 ×2"
+    },
+    {
+     "id": 3,
+     "name": "纽约 CN2 GIA IEPL 01 ×1.5"
+    },
+    {
+     "id": 4,
+     "name": "达拉斯 CN2 GIA 家宽 01"
+    },
+    {
+     "id": 20,
+     "name": "洛杉矶 CN2 GIA IPLC 02"
+    },
+    {
+     "id": 21,
+     "name": "圣何塞 CN2 GIA BGP 02 ×1.5"
+    },
+    {
+     "id": 22,
+     "name": "西雅图 CN2 GIA 原生 02 ×0.5"
+    },
+    {
+     "id": 23,
+     "name": "纽约 CN2 GIA IEPL 02 ×2"
+    },
+    {
+     "id": 24,
+     "name": "达拉斯 CN2 GIA 家宽 02"
+    },
+    {
+     "id": 40,
+     "name": "洛杉矶 CN2 GIA IPLC 03"
+    }
+   ]
+  },
+  {
+   "query": "tw hinet 原生",
+   "total": 85894,
+   "sections": [
+    {
+     "region": "TW",
+     "count": 85894
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "TW"
+    },
+    {
+     "id": 400000000,
+     "name": "台北 HiNet 原生 01 ×0.5"
+    },
+    {
+     "id": 400000015,
+     "name": "台中 HiNet 原生 01"
+    },
+    {
+     "id": 400000030,
+     "name": "台北 HiNet 原生 02"
+    },
+    {
+     "id": 400000045,
+     "name": "台中 HiNet 原生 02 ×1.5"
+    },
+    {
+     "id": 400000060,
+     "name": "台北 HiNet 原生 03"
+    },
+    {
+     "id": 400000075,
+     "name": "台中 HiNet 原生 03"
+    },
+    {
+     "id": 400000090,
+     "name": "台北 HiNet 原生 04"
+    },
+    {
+     "id": 400000105,
+     "name": "台中 HiNet 原生 04 ×2"
+    },
+    {
+     "id": 400000120,
+     "name": "台北 HiNet 原生 05 ×0.5"
+    },
+    {
+     "id": 400000135,
+     "name": "台中 HiNet 原生 05"
+    },
+    {
+     "id": 400000150,
+     "name": "台北 HiNet 原生 06 ×1.5"
+    }
+   ]
+  },
+  {
+   "query": "美国 洛杉矶",
+   "total": 623681,
+   "sections": [
+    {
+     "region": "US",
+     "count": 623681
+    }
+   ],
+   "firstRows": [
+    {
+     "header": "US"
+    },
+    {
+     "id": 0,
+     "name": "洛杉矶 CN2 GIA IPLC 01"
+    },
+    {
+     "id": 5,
+     "name": "洛杉矶 Cogent IPLC 01"
+    },
+    {
+     "id": 10,
+     "name": "洛杉矶 Zenlayer IPLC 01"
+    },
+    {
+     "id": 15,
+     "name": "洛杉矶 HE IPLC 01 ×2"
+    },
+    {
+     "id": 20,
+     "name": "洛杉矶 CN2 GIA IPLC 02"
+    },
+    {
+     "id": 25,
+     "name": "洛杉矶 Cogent IPLC 02"
+    },
+    {
+     "id": 30,
+     "name": "洛杉矶 Zenlayer IPLC 02"
+    },
+    {
+     "id": 35,
+     "name": "洛杉矶 HE IPLC 02"
+    },
+    {
+     "id": 40,
+     "name": "洛杉矶 CN2 GIA IPLC 03"
+    },
+    {
+     "id": 45,
+     "name": "洛杉矶 Cogent IPLC 03"
+    },
+    {
+     "id": 50,
+     "name": "洛杉矶 Zenlayer IPLC 03"
+    }
+   ]
+  }
+ ],
+ "rules": {
+  "layers": [
+   {
+    "index": 0,
+    "kind": "覆写",
+    "name": "Zephyr 覆写",
+    "count": 14,
+    "note": "在订阅之上"
+   },
+   {
+    "index": 1,
+    "kind": "订阅",
+    "name": "Nebula Cloud",
+    "count": 1284,
+    "note": "订阅规则"
+   },
+   {
+    "index": 2,
+    "kind": "域名",
+    "name": "OpenAI",
+    "count": 312,
+    "note": "规则集 · 每天更新"
+   },
+   {
+    "index": 3,
+    "kind": "域名",
+    "name": "广告与跟踪",
+    "count": 61204113,
+    "note": "规则集 · 每天更新"
+   },
+   {
+    "index": 4,
+    "kind": "域名",
+    "name": "威胁情报",
+    "count": 33481790,
+    "note": "规则集 · 每小时更新"
+   },
+   {
+    "index": 5,
+    "kind": "域名",
+    "name": "geosite:cn",
+    "count": 8912004,
+    "note": "规则集 · 每周更新"
+   },
+   {
+    "index": 6,
+    "kind": "IP",
+    "name": "geoip:cn",
+    "count": 7214,
+    "note": "规则集 · 每周更新"
+   }
+  ],
+  "total": 103606731,
+  "tests": [
+   {
+    "input": "github.com",
+    "layerIndex": 0,
+    "rule": "DOMAIN-SUFFIX,github.com",
+    "ruleNo": 2,
+    "policy": "DIRECT"
+   },
+   {
+    "input": "api.github.com",
+    "layerIndex": 0,
+    "rule": "DOMAIN-SUFFIX,github.com",
+    "ruleNo": 2,
+    "policy": "DIRECT"
+   },
+   {
+    "input": "netflix.com",
+    "layerIndex": 1,
+    "rule": "DOMAIN-SUFFIX,netflix.com",
+    "ruleNo": 318,
+    "policy": "V"
+   },
+   {
+    "input": "chatgpt.com",
+    "layerIndex": 2,
+    "rule": "DOMAIN-SUFFIX,chatgpt.com",
+    "ruleNo": 41,
+    "policy": "AI"
+   },
+   {
+    "input": "claude.ai",
+    "layerIndex": 2,
+    "rule": "DOMAIN-SUFFIX,claude.ai",
+    "ruleNo": 41,
+    "policy": "AI"
+   },
+   {
+    "input": "doubleclick.net",
+    "layerIndex": 3,
+    "rule": "DOMAIN-KEYWORD,doubleclick",
+    "ruleNo": 18204451,
+    "policy": "REJECT"
+   },
+   {
+    "input": "ads.example.com",
+    "layerIndex": 3,
+    "rule": "DOMAIN-KEYWORD,ads",
+    "ruleNo": 18204451,
+    "policy": "REJECT"
+   },
+   {
+    "input": "malware-test.com",
+    "layerIndex": 4,
+    "rule": "DOMAIN,malware-test.com",
+    "ruleNo": 2201833,
+    "policy": "REJECT"
+   },
+   {
+    "input": "baidu.com",
+    "layerIndex": 5,
+    "rule": "DOMAIN-SUFFIX,baidu.com",
+    "ruleNo": 1120458,
+    "policy": "DIRECT"
+   },
+   {
+    "input": "example.cn",
+    "layerIndex": 5,
+    "rule": "DOMAIN-SUFFIX,example.cn",
+    "ruleNo": 1120458,
+    "policy": "DIRECT"
+   },
+   {
+    "input": "36.1.2.3",
+    "layerIndex": 6,
+    "rule": "IP-CIDR,36.1.0.0/16",
+    "ruleNo": 3302,
+    "policy": "DIRECT"
+   },
+   {
+    "input": "8.8.8.8",
+    "layerIndex": null,
+    "rule": "MATCH",
+    "ruleNo": null,
+    "policy": "O"
+   },
+   {
+    "input": "example.org",
+    "layerIndex": null,
+    "rule": "MATCH",
+    "ruleNo": null,
+    "policy": "O"
+   }
+  ]
+ }
+}
