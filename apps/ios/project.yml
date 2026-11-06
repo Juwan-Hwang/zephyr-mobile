@@ -137,6 +137,8 @@ targets:
         product: ZephyrDesign
       - package: ZephyrKit
         product: ZephyrFeatures
+      - target: ZephyrCore
+        embed: false
       - target: PacketTunnel
         embed: true
       - target: ZephyrWidgets
@@ -144,6 +146,34 @@ targets:
       - sdk: NetworkExtension.framework
       - sdk: ActivityKit.framework
       - sdk: WidgetKit.framework
+
+  # ───────────────────────── ZephyrCore ─────────────────────────
+  # Rust core-mobile（UniFFI）+ CoreEngine。静态框架；xcframework 由 tools/build-ios-xcframework.sh 生成到 build/ios（CI 在 xcodegen 之前构建）。
+  ZephyrCore:
+    type: framework
+    platform: iOS
+    sources:
+      - path: Core
+        excludes:
+          - "**/*.md"
+      - path: ../../core-mobile/bindings/swift/ZephyrMobileCore.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.core
+        PRODUCT_NAME: ZephyrCore
+        MACH_O_TYPE: staticlib
+        GENERATE_INFOPLIST_FILE: YES
+        SKIP_INSTALL: YES
+        DEFINES_MODULE: YES
+        # UniFFI 生成代码不按 Swift 6 严格并发写，单独放宽到 minimal，避免警告淹没日志。
+        SWIFT_STRICT_CONCURRENCY: minimal
+    dependencies:
+      - framework: ../../build/ios/ZephyrMobileCore.xcframework
+        embed: false
+      - package: ZephyrKit
+        product: ZephyrKit
+      - package: ZephyrKit
+        product: ZephyrMock
 
   # ───────────────────────── PacketTunnel ─────────────────────────
   # NE 扩展内存上限约 50 MB：不链接任何 SwiftUI / ZephyrDesign / ZephyrFeatures。
@@ -260,6 +290,29 @@ targets:
     dependencies:
       - sdk: NetworkExtension.framework
 
+  # 真 Rust 核心端到端（模拟器）。不托管：直接编译 CoreEngine + UniFFI 绑定。
+  ZephyrCoreTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: CoreTests
+      - path: Core
+        excludes:
+          - "**/*.md"
+      - path: ../../core-mobile/bindings/swift/ZephyrMobileCore.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.core-tests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_STRICT_CONCURRENCY: minimal
+    dependencies:
+      - framework: ../../build/ios/ZephyrMobileCore.xcframework
+        embed: false
+      - package: ZephyrKit
+        product: ZephyrKit
+      - package: ZephyrKit
+        product: ZephyrMock
+
   ZephyrSnapshotTests:
     type: bundle.unit-test
     platform: iOS
@@ -302,6 +355,7 @@ schemes:
         PacketTunnel: all
         ZephyrWidgets: all
         ZephyrTests: [test]
+        ZephyrCoreTests: [test]
         ZephyrSnapshotTests: [test]
     run:
       config: Debug

@@ -1,14 +1,14 @@
 // EngineFactory —— 依赖注入的唯一位置。
 //
 // MockEngine：Debug、模拟器、测试、Preview（确定性数据，移植原型 pages.js）。
-// CoreEngine：Release 真机。编译条件 ZEPHYR_CORE_ENGINE（project.yml 的 Release 配置已置位）且
-//             ZephyrCore 模块可导入时才启用；否则回落 MockEngine 并打日志——保证 CI 与当前包结构下能构建。
+// CoreEngine：Release 默认（或 -ZephyrEngine core）。ZephyrCore 是 project.yml 里的静态框架（Rust core-mobile + UniFFI），
+//             Debug 下 core 环境用 MockEngine 兜底空库（mockData），Release 空库即空状态。
 
 import Foundation
 import os
 import ZephyrKit
 import ZephyrMock
-#if ZEPHYR_CORE_ENGINE && canImport(ZephyrCore)
+#if canImport(ZephyrCore)
 import ZephyrCore
 #endif
 
@@ -26,10 +26,18 @@ enum EngineFactory {
     static func make(_ requested: LaunchEnvironment) -> Built {
         var environment = requested
         if environment.engine == .core {
-            #if ZEPHYR_CORE_ENGINE && canImport(ZephyrCore)
-            // CoreEngine 的初始化签名由 K/A 定义（ZephyrCore 尚未加入 Package.swift）；到位后在此对齐。
-            let engine = CoreEngine()
-            return Built(engine: engine, now: { ZFormat.nowMillis() }, environment: environment)
+            #if canImport(ZephyrCore)
+            #if DEBUG
+            let mockData = true
+            #else
+            let mockData = false
+            #endif
+            let engine = CoreEngine(fallback: MockEngine(seed: environment.seed, clock: .live), mockData: mockData)
+            if engine.isNative {
+                return Built(engine: engine, now: { ZFormat.nowMillis() }, environment: environment)
+            }
+            log.error("Rust 核心加载失败，回落 MockEngine")
+            environment.engine = .mock
             #else
             log.warning("CoreEngine 不可用（未链接 ZephyrCore），回落 MockEngine")
             environment.engine = .mock

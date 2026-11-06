@@ -57,6 +57,7 @@ jobs:
     needs: detect
     if: needs.detect.outputs.ios == 'true'
     runs-on: macos-15
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
@@ -71,6 +72,7 @@ jobs:
         run: tools/build-mihomo.sh ios
       - run: brew install xcodegen
       - name: generate
+        timeout-minutes: 5
         working-directory: apps/ios
         run: xcodegen generate
       - name: build & test
