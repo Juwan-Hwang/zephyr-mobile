@@ -12,5 +12,6 @@
 | TUN dns-hijack | 复用 | tun::ensure_dns_hijack_entries（UDP + TCP 53） |
 | TUN fd 注入 | **不复用** | 桌面 inject_tun_fd 写的是 `tun.fd`，mihomo v1.19.33 只认 `file-descriptor`（config/config.go:319），且它打开 auto-route；移动端路由由 VpnService / NEPacketTunnelProvider 设置，auto-route 必须关 |
 | SSRF / DNS 校验、拉取 | 平台层 | validate_public_host_addrs*、fetch_util 依赖桌面网络栈；iOS/Android 在 Swift/Kotlin 拉取前做 |
+| 场景自动切换 | 复用 | 策略与校验 failover::validate_failover_policy；计数与冷却 clash-prism-core FailoverTracker；"切到哪"（热备里分数最高）自写 |
 | updater、process | 不适用 | 桌面二进制下载、子进程（iOS 禁止） |
 | 节点库、规则引擎、延迟缓存、场景、覆写、MihomoClient、订阅存储与差异 | 自写 | 桌面端没有千万级或移动端对应实现 |

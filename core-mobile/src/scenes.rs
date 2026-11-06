@@ -99,6 +99,7 @@ struct Disk {
     overrides: Vec<HostOverride>,
 }
 
+#[derive(Clone)]
 pub(crate) struct SceneStore {
     path: PathBuf,
     pub scenes: Vec<SceneRec>,

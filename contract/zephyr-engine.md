@@ -331,3 +331,15 @@ closeConnection(id); closeAllConnections(); setMode(mode)
 
 ### 错误码追加
 `not_running`（mihomo 未运行或 socket 不通）。`scene_not_found` 已在 §10。
+
+### 场景自动切换（v0.2 追加）
+```
+record FailoverPolicy { enabled: Bool, threshold: UInt32 /* 默认 3 */, cooldownSecs: UInt64 /* 默认 30 */ }
+failoverPolicy() -> FailoverPolicy; setFailoverPolicy(FailoverPolicy)   // threshold/cooldown 为 0 → invalid
+reportSceneProbe(sceneId, success, nowMillis) -> SceneFailover?
+record SceneFailover { failed: NodeRow, failureCount: UInt32, apply: SceneApply }   // apply.needsReload 恒 false → selectInGroup
+```
+平台对每个已选节点的场景定期探测出口（或连接失败时）上报；返回非空即已切换，UI 提示"AI 出口已自动切换到 xx（撤销）"。
+
+### 规则层 0 由核心保留（v0.2 追加）
+`rules/000.zr` = 第 1 层"Zephyr 覆写"，核心在 overrideHost / setSceneException / 首次 applySceneChange 后自动重编并热加载，内容与 runtimeConfig 前插的规则一致；策略写场景 id（"ai"）或 DIRECT。平台编译自己的层请从索引 1 开始。

@@ -75,6 +75,8 @@ pub struct MobileCore {
     /// (库代际, 指纹 → 行号)：只为测过速的节点建，按需扫描补齐
     pub(crate) fp_pos: Mutex<(u64, FxHashMap<u64, u32>)>,
     pub(crate) scenes: Mutex<crate::scenes::SceneStore>,
+    /// 场景自动切换：复用桌面端 failover 策略（clash-prism-core FailoverTracker），每场景一个
+    pub(crate) failover: Mutex<crate::failover::FailoverState>,
 }
 
 impl MobileCore {
@@ -94,6 +96,7 @@ impl MobileCore {
             for id in missing {
                 g.1.entry(id).or_insert(u32::MAX);
             }
+            save_positions(&self.dir, gen, &g.1);
         }
         ids.iter().filter_map(|id| g.1.get(id).filter(|&&p| p != u32::MAX).map(|&p| (*id, p))).collect()
     }
@@ -131,8 +134,40 @@ impl MobileCore {
             }
         }
         let _ = std::fs::write(self.dir.join("nodes.current"), gen.to_string());
+        // 预热：测过速/场景引用的节点在建库阶段就算好行号并落盘，首页冷开不再全表扫描（1310 万行约 2 s）
+        let mut warm: Vec<u64> = self.latency.lock().map.keys().copied().collect();
+        warm.extend(self.scenes.lock().referenced_nodes());
+        if !warm.is_empty() {
+            self.positions(&new, &warm);
+        }
         Ok(BuildReport { total: new.total(), skipped, diff, took_millis: t0.elapsed().as_millis() as u64 })
     }
+}
+
+const POS_MAGIC: &[u8; 8] = b"ZPOS\0\0\0\x01";
+
+/// 指纹→行号缓存落盘：[magic][gen u64][(fp u64, pos u32)…]
+fn save_positions(dir: &std::path::Path, gen: u64, m: &FxHashMap<u64, u32>) {
+    let mut b = Vec::with_capacity(16 + m.len() * 12);
+    b.extend_from_slice(POS_MAGIC);
+    b.extend_from_slice(&gen.to_le_bytes());
+    for (fp, p) in m {
+        b.extend_from_slice(&fp.to_le_bytes());
+        b.extend_from_slice(&p.to_le_bytes());
+    }
+    let tmp = dir.join("positions.tmp");
+    if std::fs::write(&tmp, b).is_ok() {
+        let _ = std::fs::rename(tmp, dir.join("positions.bin"));
+    }
+}
+
+fn load_positions(dir: &std::path::Path, gen: u64) -> (u64, FxHashMap<u64, u32>) {
+    let Ok(b) = std::fs::read(dir.join("positions.bin")) else { return (0, FxHashMap::default()) };
+    if b.len() < 16 || &b[..8] != POS_MAGIC || u64::from_le_bytes(b[8..16].try_into().unwrap()) != gen || gen == 0 {
+        return (0, FxHashMap::default());
+    }
+    let m = b[16..].chunks_exact(12).map(|c| (u64::from_le_bytes(c[..8].try_into().unwrap()), u32::from_le_bytes(c[8..].try_into().unwrap()))).collect();
+    (gen, m)
 }
 
 /// 建库进度回调（平台实现）。返回 false = 取消。会在后台线程调用。
@@ -160,8 +195,9 @@ impl MobileCore {
             generation: Mutex::new(gen),
             subs: Mutex::new(SubStore::open(&dir_for_subs)?),
             latency: Mutex::new(LatencyCache::open(&dir_for_subs)),
-            fp_pos: Mutex::new((0, FxHashMap::default())),
+            fp_pos: Mutex::new(load_positions(&dir_for_subs, gen)),
             scenes: Mutex::new(crate::scenes::SceneStore::open(&dir_for_subs)?),
+            failover: Mutex::new(crate::failover::FailoverState::open(&dir_for_subs)),
         }))
     }
 
@@ -227,10 +263,19 @@ impl MobileCore {
     // ---------- 延迟缓存（contract §5 latencyUpdates 的落地值） ----------
 
     /// 平台/mihomo 测速结果写入（UI 同时直接推送，不必等这里）。
+    /// 在后台线程调用：新出现的节点会在这里一次性补齐行号（1310 万行全表扫描约 2 s），
+    /// 这样随后的 fastestNodes / scenes 在主线程上始终是毫秒级。
     pub fn record_latencies(&self, samples: Vec<LatencySample>) -> Result<(), MobileError> {
-        let mut c = self.latency.lock();
-        c.record(&samples);
-        c.flush()
+        {
+            let mut c = self.latency.lock();
+            c.record(&samples);
+            c.flush()?;
+        }
+        if let Ok(st) = self.store() {
+            let ids: Vec<u64> = samples.iter().map(|s| s.id).collect();
+            self.positions(&st, &ids);
+        }
+        Ok(())
     }
 
     /// 按 id 取缓存延迟：None = 未测或超过 max_age_millis（<=0 不过期）；-1 = 超时。顺序与 ids 一致。

@@ -11,6 +11,7 @@ name = "zephyr_mobile_core"
 
 [dependencies]
 zephyr-core = { path = "../vendor/zephyr/crates/core", features = ["uniffi"] }
+clash-prism-core = "0.1.5"
 uniffi = { version = "0.28", features = ["cli"] }
 thiserror = "1"
 roaring = "0.10"

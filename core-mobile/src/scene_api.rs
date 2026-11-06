@@ -96,6 +96,10 @@ impl MobileCore {
         Ok(pos.into_iter().map(|(id, p)| (id, st.row(p))).collect())
     }
 
+    pub(crate) fn rows_by_id_pub(&self, ids: &[u64]) -> Result<rustc_hash::FxHashMap<u64, NodeRow>, MobileError> {
+        self.rows_by_id(ids)
+    }
+
     fn row_by_id(&self, id: u64) -> Result<NodeRow, MobileError> {
         self.rows_by_id(&[id])?.remove(&id).ok_or_else(|| MobileError::NotFound(format!("node {id:x}")))
     }
@@ -131,7 +135,8 @@ impl MobileCore {
 
     /// 由场景、例外、覆写算出注入计划（runtime_config 内部用）。
     pub(crate) fn scene_plan(&self) -> Result<ScenePlan, MobileError> {
-        let sc = self.scenes.lock();
+        // 先复制再放锁：下面要取 subs 锁，而订阅更新路径是 subs → scenes，避免锁序反转
+        let sc = self.scenes.lock().clone();
         let ids = sc.referenced_nodes();
         let mut plan = ScenePlan::default();
         let rows = if ids.is_empty() { Default::default() } else { self.rows_by_id(&ids).unwrap_or_default() };
@@ -199,6 +204,37 @@ impl MobileCore {
     }
 }
 
+impl MobileCore {
+    /// 规则页第 1 层"Zephyr 覆写"与真实路由保持一致：由覆写、例外、场景应用域名生成，
+    /// 写入 rules/000.zr（索引 0 由核心保留）并热加载。策略写场景 id（"ai"）或 DIRECT。
+    pub(crate) fn sync_override_layer(&self) -> Result<(), MobileError> {
+        let sc = self.scenes.lock().clone();
+        let mut text = String::new();
+        for o in &sc.overrides {
+            let p = match o.target {
+                TraceTarget::Direct => "DIRECT".to_string(),
+                TraceTarget::Scene => match o.scene_id.clone() { Some(x) => x, None => continue },
+                TraceTarget::Unchanged => continue,
+            };
+            text += &format!("DOMAIN-SUFFIX,{},{p}\n", o.host);
+        }
+        for s in sc.scenes.iter().filter(|s| s.selected.is_some()) {
+            let ex: Vec<&str> = s.exceptions.iter().map(|e| e.0.as_str()).collect();
+            for a in scenes::APPS.iter().filter(|a| a.kind == s.kind) {
+                if s.kind == SceneKind::Ai || s.kind == SceneKind::Video || ex.contains(&a.id) {
+                    for d in a.domains {
+                        text += &format!("DOMAIN-SUFFIX,{d},{}\n", s.id);
+                    }
+                }
+            }
+        }
+        self.compile_rule_layer(0, "Zephyr 覆写".into(), crate::rules::LayerKind::Override, "订阅更新时保留".into(), "DIRECT".into(), text)?;
+        let fin = self.rules.read().final_policy.clone();
+        self.load_rules(fin)?;
+        Ok(())
+    }
+}
+
 #[uniffi::export]
 impl MobileCore {
     pub fn scenes(&self, now_millis: i64) -> Result<Vec<Scene>, MobileError> {
@@ -223,7 +259,7 @@ impl MobileCore {
 
     pub fn preview_scene_change(&self, scene_id: String, node_id: u64) -> Result<ExitChange, MobileError> {
         let to = self.row_by_id(node_id)?;
-        let sc = self.scenes.lock();
+        let sc = self.scenes.lock().clone();
         let s = sc.get(&scene_id)?;
         let from_region = s.exit_region.clone().or_else(|| s.selected.and_then(|id| self.row_by_id(id).ok()).map(|r| r.region));
         let (affected, unchanged) = sc.apps_split(s);
@@ -251,6 +287,10 @@ impl MobileCore {
         s.exit_region = None;
         let group = scenes::group_name(s);
         sc.save()?;
+        drop(sc);
+        if previous.is_none() {
+            self.sync_override_layer()?;
+        }
         Ok(SceneApply { needs_reload: !hot, group, member: member_name(&to), previous })
     }
 
@@ -278,12 +318,15 @@ impl MobileCore {
         if let Some(n) = node_id {
             s.exceptions.push((app_id, n));
         }
-        sc.save()
+        sc.save()?;
+        drop(sc);
+        self.sync_override_layer()
     }
 
     /// 连接轨迹里的覆写（contract §13）。改完需重载；persistent = false 不落盘。
     pub fn override_host(&self, host: String, target: TraceTarget, scene_id: Option<String>, persistent: bool) -> Result<(), MobileError> {
-        self.scenes.lock().set_override(HostOverride { host, target, scene_id, persistent })
+        self.scenes.lock().set_override(HostOverride { host, target, scene_id, persistent })?;
+        self.sync_override_layer()
     }
 
     pub fn host_override(&self, host: String) -> Option<HostOverride> {
@@ -312,7 +355,7 @@ impl MobileCore {
 }
 
 #[cfg(test)]
-mod tests {
+pub(crate) mod tests {
     use super::*;
     use crate::latency::LatencySample;
     use crate::runtime_config::*;
@@ -330,7 +373,7 @@ mod tests {
         }
     }
 
-    pub(crate) fn setup() -> (tempfile::TempDir, std::sync::Arc<MobileCore>, String, Vec<NodeRow>) {
+    pub fn setup() -> (tempfile::TempDir, std::sync::Arc<MobileCore>, String, Vec<NodeRow>) {
         let d = tempfile::tempdir().unwrap();
         let core = MobileCore::new(d.path().to_string_lossy().into()).unwrap();
         let mut a = String::from("proxies:\n");
@@ -401,6 +444,12 @@ mod tests {
         assert_eq!(core.preview_scene_change("ai".into(), standby_id).unwrap().unchanged_apps, vec!["Claude"]);
         assert_eq!(core.scene_for_host("api.openai.com".into()).as_deref(), Some("ai"));
         assert_eq!(core.scene_for_host("example.org".into()), None);
+        // 规则页第 1 层与真实路由一致
+        let st = core.rule_stats();
+        assert_eq!(st.layers[0].name, "Zephyr 覆写");
+        let t = core.test_rule("api.openai.com".into()).unwrap();
+        assert_eq!((t.layer_index, t.policy.as_str()), (Some(0), "ai"));
+        assert_eq!(core.test_rule("www.example.org".into()).unwrap().policy, "DIRECT");
 
         // "其他"接管 MATCH
         core.apply_scene_change("other".into(), standby_id, 1000).unwrap();

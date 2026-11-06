@@ -1931,6 +1931,7 @@ version = "0.1.0"
 dependencies = [
  "aho-corasick",
  "base64",
+ "clash-prism-core",
  "memmap2",
  "parking_lot",
  "roaring",

@@ -833,6 +833,12 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
+
+
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -897,6 +903,8 @@ internal interface UniffiLib : Library {
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_due_subscriptions(`ptr`: Pointer,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_failover_policy(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_fastest_nodes(`ptr`: Pointer,`query`: RustBuffer.ByValue,`limit`: Int,`nowMillis`: Long,`maxAgeMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_host_override(`ptr`: Pointer,`host`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -931,6 +939,8 @@ internal interface UniffiLib : Library {
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_exit(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`ip`: RustBuffer.ByValue,`region`: RustBuffer.ByValue,`testedAt`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_probe(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`success`: Byte,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_stats(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_runtime_config(`ptr`: Pointer,`subscriptionId`: RustBuffer.ByValue,`options`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -941,6 +951,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scenes(`ptr`: Pointer,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_failover_policy(`ptr`: Pointer,`policy`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_exception(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`appId`: RustBuffer.ByValue,`nodeId`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_storage_info(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -1105,6 +1117,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_due_subscriptions(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_failover_policy(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_host_override(
@@ -1139,6 +1153,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_exit(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_probe(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_runtime_config(
@@ -1148,6 +1164,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_for_host(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scenes(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_failover_policy(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception(
     ): Short
@@ -1237,6 +1255,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_due_subscriptions() != 39270.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_failover_policy() != 44998.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes() != 1274.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -1282,10 +1303,13 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_nodes_with_progress() != 20747.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_latencies() != 22667.toShort()) {
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_latencies() != 29104.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_exit() != 54284.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_probe() != 58755.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033.toShort()) {
@@ -1301,6 +1325,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_scenes() != 51937.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_failover_policy() != 8372.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception() != 4651.toShort()) {
@@ -2238,6 +2265,8 @@ public interface MobileCoreInterface {
      */
     fun `dueSubscriptions`(`nowMillis`: kotlin.Long): List<kotlin.String>
     
+    fun `failoverPolicy`(): FailoverPolicy
+    
     /**
      * 查询结果里已测速节点，用桌面端 smart_selector 打分排序后取前 limit 个（未测/过期不出现）。
      * 先按最近延迟预筛 256 个再打分，千万级库里也只对少量节点计算。
@@ -2302,6 +2331,8 @@ public interface MobileCoreInterface {
     
     /**
      * 平台/mihomo 测速结果写入（UI 同时直接推送，不必等这里）。
+     * 在后台线程调用：新出现的节点会在这里一次性补齐行号（1310 万行全表扫描约 2 s），
+     * 这样随后的 fastestNodes / scenes 在主线程上始终是毫秒级。
      */
     fun `recordLatencies`(`samples`: List<LatencySample>)
     
@@ -2309,6 +2340,12 @@ public interface MobileCoreInterface {
      * 平台测得出口后回填（"198.51.100.7 · 美国"）。
      */
     fun `reportSceneExit`(`sceneId`: kotlin.String, `ip`: kotlin.String, `region`: kotlin.String?, `testedAt`: kotlin.Long)
+    
+    /**
+     * 平台对场景当前出口做健康探测（或连接失败）后上报。达到阈值且不在冷却期时，
+     * 自动换到热备里最优的节点并返回动作；否则 None。
+     */
+    fun `reportSceneProbe`(`sceneId`: kotlin.String, `success`: kotlin.Boolean, `nowMillis`: kotlin.Long): SceneFailover?
     
     fun `ruleStats`(): RuleStats
     
@@ -2328,6 +2365,8 @@ public interface MobileCoreInterface {
     fun `sceneForHost`(`host`: kotlin.String): kotlin.String?
     
     fun `scenes`(`nowMillis`: kotlin.Long): List<Scene>
+    
+    fun `setFailoverPolicy`(`policy`: FailoverPolicy)
     
     /**
      * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
@@ -2508,6 +2547,18 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_due_subscriptions(
         it, FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    )
+    }
+    
+
+    override fun `failoverPolicy`(): FailoverPolicy {
+            return FfiConverterTypeFailoverPolicy.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_failover_policy(
+        it, _status)
 }
     }
     )
@@ -2742,6 +2793,8 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     
     /**
      * 平台/mihomo 测速结果写入（UI 同时直接推送，不必等这里）。
+     * 在后台线程调用：新出现的节点会在这里一次性补齐行号（1310 万行全表扫描约 2 s），
+     * 这样随后的 fastestNodes / scenes 在主线程上始终是毫秒级。
      */
     @Throws(MobileException::class)override fun `recordLatencies`(`samples`: List<LatencySample>)
         = 
@@ -2767,6 +2820,23 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
 }
     }
     
+    
+
+    
+    /**
+     * 平台对场景当前出口做健康探测（或连接失败）后上报。达到阈值且不在冷却期时，
+     * 自动换到热备里最优的节点并返回动作；否则 None。
+     */
+    @Throws(MobileException::class)override fun `reportSceneProbe`(`sceneId`: kotlin.String, `success`: kotlin.Boolean, `nowMillis`: kotlin.Long): SceneFailover? {
+            return FfiConverterOptionalTypeSceneFailover.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_probe(
+        it, FfiConverterString.lower(`sceneId`),FfiConverterBoolean.lower(`success`),FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    )
+    }
     
 
     override fun `ruleStats`(): RuleStats {
@@ -2839,6 +2909,18 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     }
     )
     }
+    
+
+    
+    @Throws(MobileException::class)override fun `setFailoverPolicy`(`policy`: FailoverPolicy)
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_set_failover_policy(
+        it, FfiConverterTypeFailoverPolicy.lower(`policy`),_status)
+}
+    }
+    
     
 
     
@@ -3171,6 +3253,48 @@ public object FfiConverterTypeExitChange: FfiConverterRustBuffer<ExitChange> {
             FfiConverterOptionalString.write(value.`toIp`, buf)
             FfiConverterSequenceString.write(value.`affectedApps`, buf)
             FfiConverterSequenceString.write(value.`unchangedApps`, buf)
+    }
+}
+
+
+
+data class FailoverPolicy (
+    var `enabled`: kotlin.Boolean, 
+    /**
+     * 连续失败多少次切换（默认 3）
+     */
+    var `threshold`: kotlin.UInt, 
+    /**
+     * 冷却秒数（默认 30）
+     */
+    var `cooldownSecs`: kotlin.ULong
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeFailoverPolicy: FfiConverterRustBuffer<FailoverPolicy> {
+    override fun read(buf: ByteBuffer): FailoverPolicy {
+        return FailoverPolicy(
+            FfiConverterBoolean.read(buf),
+            FfiConverterUInt.read(buf),
+            FfiConverterULong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: FailoverPolicy) = (
+            FfiConverterBoolean.allocationSize(value.`enabled`) +
+            FfiConverterUInt.allocationSize(value.`threshold`) +
+            FfiConverterULong.allocationSize(value.`cooldownSecs`)
+    )
+
+    override fun write(value: FailoverPolicy, buf: ByteBuffer) {
+            FfiConverterBoolean.write(value.`enabled`, buf)
+            FfiConverterUInt.write(value.`threshold`, buf)
+            FfiConverterULong.write(value.`cooldownSecs`, buf)
     }
 }
 
@@ -4160,6 +4284,45 @@ public object FfiConverterTypeSceneExceptionView: FfiConverterRustBuffer<SceneEx
             FfiConverterString.write(value.`appId`, buf)
             FfiConverterString.write(value.`app`, buf)
             FfiConverterOptionalTypeNodeRow.write(value.`node`, buf)
+    }
+}
+
+
+
+data class SceneFailover (
+    var `failed`: NodeRow, 
+    var `failureCount`: kotlin.UInt, 
+    /**
+     * 已写入场景；needs_reload 恒 false（只在热备里选），平台直接 selectInGroup
+     */
+    var `apply`: SceneApply
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeSceneFailover: FfiConverterRustBuffer<SceneFailover> {
+    override fun read(buf: ByteBuffer): SceneFailover {
+        return SceneFailover(
+            FfiConverterTypeNodeRow.read(buf),
+            FfiConverterUInt.read(buf),
+            FfiConverterTypeSceneApply.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: SceneFailover) = (
+            FfiConverterTypeNodeRow.allocationSize(value.`failed`) +
+            FfiConverterUInt.allocationSize(value.`failureCount`) +
+            FfiConverterTypeSceneApply.allocationSize(value.`apply`)
+    )
+
+    override fun write(value: SceneFailover, buf: ByteBuffer) {
+            FfiConverterTypeNodeRow.write(value.`failed`, buf)
+            FfiConverterUInt.write(value.`failureCount`, buf)
+            FfiConverterTypeSceneApply.write(value.`apply`, buf)
     }
 }
 
@@ -5323,6 +5486,38 @@ public object FfiConverterOptionalTypeNodeRow: FfiConverterRustBuffer<NodeRow?> 
         } else {
             buf.put(1)
             FfiConverterTypeNodeRow.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeSceneFailover: FfiConverterRustBuffer<SceneFailover?> {
+    override fun read(buf: ByteBuffer): SceneFailover? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeSceneFailover.read(buf)
+    }
+
+    override fun allocationSize(value: SceneFailover?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeSceneFailover.allocationSize(value)
+        }
+    }
+
+    override fun write(value: SceneFailover?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeSceneFailover.write(value, buf)
         }
     }
 }
