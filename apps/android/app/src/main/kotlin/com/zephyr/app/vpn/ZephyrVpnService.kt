@@ -31,7 +31,7 @@ class ZephyrVpnService : VpnService() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private var tun: ParcelFileDescriptor? = null
     private var watcher: Job? = null
-    private val bridge: TunBridge = TunBridge.Simulated
+    private var bridge: TunBridge = TunBridge.Simulated
     private val engine get() = AppGraph.engine
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -48,9 +48,11 @@ class ZephyrVpnService : VpnService() {
         ServiceCompat.startForeground(this, Notifications.ID_ONGOING, first, fgsType())
         scope.launch {
             val s = engine.settings().first()
+            bridge = TunBridge.pick(this@ZephyrVpnService)
             if (bridge.createsTun && tun == null) {
                 tun = TunBridge.configure(Builder().setSession("Zephyr"), s.tun.mtu, s.tun.ipv6, s.tun.excludedApps, packageName).establish()
-                tun?.let(bridge::attach)
+                val err = tun?.let(bridge::attach) ?: "establish() returned null"
+                if (err != null) { android.util.Log.e("Zephyr", "core start failed: $err"); stop(); return@launch }
             }
             runCatching { engine.connect() }.onFailure { stop(); return@launch }
             watch()
@@ -90,6 +92,12 @@ class ZephyrVpnService : VpnService() {
     }
 
     override fun onRevoke() { scope.launch { stop() } }
+
+    /** Low-memory signal: return Go heap to the OS before the LMK picks the VPN process. */
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        if (level >= TRIM_MEMORY_RUNNING_LOW) com.zephyr.engine.core.Mihomo.trimMemory()
+    }
 
     override fun onDestroy() {
         scope.cancel()
