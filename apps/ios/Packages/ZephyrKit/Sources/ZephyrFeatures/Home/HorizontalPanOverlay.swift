@@ -7,6 +7,7 @@
 import SwiftUI
 import UIKit
 
+@MainActor
 struct HorizontalPanOverlay: UIViewRepresentable {
     var onTap: @MainActor () -> Void
     var onBegan: @MainActor () -> Void

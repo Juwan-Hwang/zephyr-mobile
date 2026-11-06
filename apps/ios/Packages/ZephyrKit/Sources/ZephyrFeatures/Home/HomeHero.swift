@@ -7,6 +7,7 @@ import SwiftUI
 import ZephyrDesign
 import ZephyrKit
 
+@MainActor
 struct HomeHero: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dynamicTypeSize) private var dynamicType
@@ -20,7 +21,7 @@ struct HomeHero: View {
             layout {
                 stateText
                 if !dynamicType.isAccessibilitySize { Spacer(minLength: ZTokens.Space.n4) }
-                HConnectSwitch(status: model.connection.status) {
+                ZConnectButton(phase: model.connection.status.connectPhase) {
                     Task { await model.toggleConnection() }
                 }
             }
@@ -79,6 +80,7 @@ struct HomeHero: View {
 }
 
 /// 模式菜单：系统 Menu + Picker，三个模式。
+@MainActor
 private struct ModeMenu: View {
     @Environment(AppModel.self) private var model
 
@@ -112,6 +114,7 @@ private struct ModeMenu: View {
 }
 
 /// 连接时长：每秒刷新，只重算这一行文字。
+@MainActor
 struct ConnectionDuration: View {
     let since: Int64
     @Environment(AppModel.self) private var model
@@ -130,6 +133,18 @@ struct ConnectionDuration: View {
         let s = ms / 1000
         let h = s / 3600, m = (s % 3600) / 60
         return h > 0 ? "\(h) 小时 \(m) 分钟" : "\(m) 分钟"
+    }
+}
+
+extension ConnectionStatus {
+    /// 引擎状态 → D 的 ZConnectButton 相位（失败 = 关）。
+    var connectPhase: ZConnectPhase {
+        switch self {
+        case .disconnected, .failed: .off
+        case .connecting: .connecting
+        case .connected: .on
+        case .disconnecting: .disconnecting
+        }
     }
 }
 

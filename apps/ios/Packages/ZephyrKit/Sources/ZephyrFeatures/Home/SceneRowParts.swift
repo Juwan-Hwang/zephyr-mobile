@@ -5,6 +5,7 @@ import ZephyrDesign
 
 /// 检测中：2pt 轨道上来回移动的强调色片段。契约 v0 没有检测进度（tested/total），所以是不确定进度；
 /// 契约补上后改为确定进度（见 NOTES-H.md）。Reduce Motion 下静止显示 30%。
+@MainActor
 struct ProbeBar: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var phase: CGFloat = 0
@@ -31,6 +32,7 @@ struct ProbeBar: View {
 }
 
 /// 一次性引导提示：强调色小字，轻微左右晃动（Reduce Motion 下静止）。
+@MainActor
 struct CoachHint: View {
     let text: String
     @Environment(\.accessibilityReduceMotion) private var reduceMotion

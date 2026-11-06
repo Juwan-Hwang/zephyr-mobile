@@ -17,7 +17,7 @@ struct RegionChips: View {
                     chip(code: s.region, title: s.region, count: CompactCount.chip(s.count))
                 }
             }
-            .padding(.horizontal, LStyle.margin)
+            .padding(.horizontal, PageMetrics.margin)
             .padding(.vertical, ZTokens.Space.n1)
         }
         .scrollClipDisabled()
@@ -30,12 +30,11 @@ struct RegionChips: View {
                 Text(title).zType(.footnote)
                 if let count {
                     Text(count)
-                        .font(.caption2.monospacedDigit())
-                        .monospaced()
+                        .zMono(.micro)
                         .opacity(0.6)
                 }
             }
-            .foregroundStyle(on ? LStyle.pageBackground : ZTokens.Colors.textSecondary)
+            .foregroundStyle(on ? ZPage.background : ZTokens.Colors.textSecondary)
             .padding(.horizontal, ZTokens.Space.n4)
             .frame(minHeight: ZTokens.Space.n7 - 2)
             .background {
@@ -60,5 +59,6 @@ struct RegionChips: View {
         RegionSection(region: "JP", name: "日本", count: 2_204_117, rowOffset: 3_118_403),
         RegionSection(region: "HK", name: "香港", count: 1_906_551, rowOffset: 5_322_521),
     ], selected: "JP", onSelect: { _ in })
-    .background(LStyle.pageBackground)
+    .zPageBackground()
+    .preferredColorScheme(.dark)
 }

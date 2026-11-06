@@ -17,41 +17,34 @@ struct NodeDetailSheet: View {
             ScrollView {
                 VStack(spacing: 0) {
                     HStack(spacing: ZTokens.Space.n3) {
-                        Text(node.region)
-                            .font(.caption.weight(.semibold))
-                            .monospaced()
-                            .padding(.horizontal, ZTokens.Space.n2)
-                            .padding(.vertical, 2)
-                            .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(ZTokens.Colors.borderDefault))
-                            .foregroundStyle(ZTokens.Colors.textSecondary)
-                        Text(node.name)
+                        ZFlag(node.region)
+                        Text(verbatim: node.name)
                             .zType(.title)
                             .foregroundStyle(ZTokens.Colors.textPrimary)
                         Spacer(minLength: 0)
                     }
-                    .padding(.horizontal, LStyle.titleInset)
+                    .padding(.horizontal, PageMetrics.titleInset)
                     .padding(.top, ZTokens.Space.n4)
                     .accessibilityElement(children: .combine)
 
-                    VStack(spacing: 0) {
-                        LRow("协议", value: node.protocol)
-                        LDivider()
-                        LRow("延迟", value: ZFormat.latency(node.latencyMs))
-                        LDivider()
-                        LRow("服务器", value: detail.map { "\($0.server):\($0.port)" } ?? "—")
-                        LDivider()
-                        LRow("订阅", value: detail?.subscription ?? "—")
+                    ZSettingsGroup {
+                        ZSettingsRow("协议", accessory: .value(node.protocol))
+                        ZDivider()
+                        ZSettingsRow("延迟", accessory: .value(ZFormat.latency(node.latencyMs)))
+                        ZDivider()
+                        ZSettingsRow("服务器", accessory: .value(detail.map { "\($0.server):\($0.port)" } ?? "—"))
+                        ZDivider()
+                        ZSettingsRow("订阅", accessory: .value(detail?.subscription ?? "—"))
                         if let tag = node.tag {
-                            LDivider()
-                            LRow("线路", value: [node.carrier, tag].compactMap { $0 }.joined(separator: " · "))
+                            ZDivider()
+                            ZSettingsRow("线路", accessory: .value([node.carrier, tag].compactMap { $0 }.joined(separator: " · ")))
                         }
                     }
-                    .lCard()
-                    .padding(.horizontal, LStyle.margin)
+                    .padding(.horizontal, PageMetrics.margin)
                     .padding(.top, ZTokens.Space.n5)
                 }
             }
-            .background(LStyle.pageBackground)
+            .zPageBackground()
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("测速") { onTest(); dismiss() }

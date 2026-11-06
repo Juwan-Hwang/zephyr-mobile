@@ -18,14 +18,14 @@ struct PasteLinkSheet: View {
         NavigationStack {
             VStack(alignment: .leading, spacing: ZTokens.Space.n4) {
                 TextField("https://", text: $link, axis: .vertical)
-                    .font(.body.monospaced())
+                    .zMono(.large)
                     .lineLimit(1...4)
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
                     .keyboardType(.URL)
                     .focused($focused)
                     .padding(ZTokens.Space.n4)
-                    .lCard(radius: ZTokens.Radius.surface)
+                    .zSurface(.raised, cornerRadius: ZTokens.Radius.surface)
                 PasteButton(payloadType: String.self) { strings in
                     guard let s = strings.first else { return }
                     Task { @MainActor in
@@ -45,8 +45,8 @@ struct PasteLinkSheet: View {
                     .foregroundStyle(ZTokens.Colors.textTertiary)
                 Spacer()
             }
-            .padding(LStyle.margin)
-            .background(LStyle.pageBackground)
+            .padding(PageMetrics.margin)
+            .zPageBackground()
             .navigationTitle("粘贴链接")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

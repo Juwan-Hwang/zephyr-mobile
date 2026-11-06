@@ -6,6 +6,7 @@ import ZephyrDesign
 import ZephyrKit
 import ZephyrMock
 
+@MainActor
 public struct RulesView: View {
     @State private var model: RulesModel
     @State private var adding = false
@@ -19,54 +20,54 @@ public struct RulesView: View {
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                LPageHeader(title: "规则", number: model.stats?.total, unit: "条", subtitle: model.subtitle)
-                RuleTestCard(input: $model.input, steps: model.steps, took: model.tookText, invalid: model.invalid)
-                    .padding(.horizontal, LStyle.margin)
-                    .padding(.top, ZTokens.Space.n5)
-                LSectionHeader("匹配顺序", trailing: "从上到下")
-                layers
-                Text("规则集在设备上编译为只读索引，按需从磁盘读取。订阅更新时，覆写保持不变。")
-                    .lFootnoteStyle()
+                PageHeader(title: "规则", number: model.stats.map { ZFormat.count($0.total) }, unit: "条",
+                           subtitle: model.subtitle)
+                VStack(alignment: .leading, spacing: 0) {
+                    RuleTestCard(input: $model.input, steps: model.steps, took: model.tookText, invalid: model.invalid)
+                        .padding(.top, ZTokens.Space.n5)
+                    ZSectionHeader("匹配顺序", trailing: "从上到下")
+                    layers
+                }
+                .padding(.horizontal, PageMetrics.margin)
+                PageFootnote("规则集在设备上编译为只读索引，按需从磁盘读取。订阅更新时，覆写保持不变。")
             }
-            .padding(.bottom, ZTokens.Space.n8)
+            .padding(.bottom, PageMetrics.bottomInset)
         }
         .scrollDismissesKeyboard(.interactively)
-        .background(LStyle.pageBackground.ignoresSafeArea())
-        .lAccent(from: model.engine)
+        .zPageBackground()
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button { adding = true } label: {
-                    Image(systemName: "plus").font(.body.weight(.medium))
+                    Image(systemName: "plus")
+                        .font(.body.weight(.medium))
+                        .frame(minWidth: ZTokens.Layout.touchMinIos, minHeight: ZTokens.Layout.touchMinIos)
                 }
-                .accessibilityLabel("添加覆写")
+                .accessibilityLabel(Text(verbatim: "添加覆写"))
             }
         }
         .sheet(isPresented: $adding) { RuleAddSheet() }
         .task { await model.start() }
         .onChange(of: model.input) { model.runTest() }
+        .pageAccent(engine: model.engine)
     }
 
     @ViewBuilder private var layers: some View {
         if let stats = model.stats {
-            VStack(spacing: 0) {
-                ForEach(Array(stats.layers.enumerated()), id: \.element.id) { i, layer in
-                    if i > 0 { LDivider() }
-                    RuleLayerRow(ordinal: i + 1, name: layer.name, note: layer.note, kind: layer.kind,
-                                 count: ZFormat.count(layer.count), isHit: model.hitRow == i)
+            ZCard(padding: 0, cornerRadius: ZTokens.Radius.md + ZTokens.Space.n1 / 2) {
+                VStack(spacing: 0) {
+                    ForEach(Array(stats.layers.enumerated()), id: \.element.id) { i, layer in
+                        if i > 0 { ZDivider() }
+                        RuleLayerRow(ordinal: i + 1, name: layer.name, note: layer.note, kind: layer.kind,
+                                     count: ZFormat.count(layer.count), isHit: model.hitRow == i)
+                    }
+                    ZDivider()
+                    RuleLayerRow(ordinal: stats.layers.count + 1, name: "其余流量", note: "MATCH", kind: nil,
+                                 count: "其他", isHit: model.hitRow == stats.layers.count)
                 }
-                LDivider()
-                RuleLayerRow(ordinal: stats.layers.count + 1, name: "其余流量", note: "MATCH", kind: nil,
-                             count: "其他", isHit: model.hitRow == stats.layers.count)
             }
-            .lCard()
-            .padding(.horizontal, LStyle.margin)
         } else {
-            RoundedRectangle(cornerRadius: LStyle.cardRadius, style: .continuous)
-                .fill(ZTokens.Colors.bgMuted)
-                .frame(height: LStyle.rowMinHeight * 8)
-                .padding(.horizontal, LStyle.margin)
-                .redacted(reason: .placeholder)
+            ZSkeleton(height: (ZTokens.Layout.touchMinIos + ZTokens.Space.n4) * 8, cornerRadius: ZTokens.Radius.md)
         }
     }
 }

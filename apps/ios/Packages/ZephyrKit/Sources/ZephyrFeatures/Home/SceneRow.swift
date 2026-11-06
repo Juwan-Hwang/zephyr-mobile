@@ -9,6 +9,7 @@ import SwiftUI
 import ZephyrDesign
 import ZephyrKit
 
+@MainActor
 struct SceneRow: View {
     let scene: Scene
     let scrubbable: Bool
@@ -91,7 +92,7 @@ struct SceneRow: View {
     private var trailing: some View {
         VStack(alignment: .trailing, spacing: ZTokens.Space.n1) {
             HStack(spacing: ZTokens.Space.n3) {
-                HFlag(region: shown.region, ticking: ticking)
+                ZFlag(shown.region, isHighlighted: ticking)
                 Text(verbatim: shown.name)
                     .zType(.headline).fontWeight(.regular)
                     .foregroundStyle(ZTokens.Colors.textPrimary)
@@ -189,7 +190,7 @@ struct SceneRow: View {
         if isProbing { parts.append("检测中") }
         else if scene.source == .subscriptionGroup { parts.append("订阅分组") }
         else { parts.append(scene.available > 0 ? "\(scene.available) 个可用" : "暂无可用节点") }
-        parts.append("\(HRegionName.zh(shown.region)) \(shown.name)")
+        parts.append("\(HRegionName.name(shown.region)) \(shown.name)")
         if let ex = scene.exceptions.first { parts.append("\(ex.app) 固定使用 \(ex.node.name)") }
         if let note = scene.note { parts.append(note) }
         return parts.joined(separator: "，")
@@ -197,6 +198,7 @@ struct SceneRow: View {
 }
 
 /// 仅在 enabled 时挂 VoiceOver 可调整操作。
+@MainActor
 private struct AdjustableIf: ViewModifier {
     let enabled: Bool
     let adjust: (Int) -> Void
