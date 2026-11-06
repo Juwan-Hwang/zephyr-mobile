@@ -1,0 +1,49 @@
+{
+  "$description": "移动端增补层：只放手机特有的值，不覆盖桌面 token。桌面来源 vendor/zephyr/packages/tokens/src/*.json（只读）。value = 深色默认，lightValue = 浅色覆盖。",
+  "touch": {
+    "min-ios":     { "value": "44px", "comment": "HIG 最小触控" },
+    "min-android": { "value": "48px", "comment": "Material 最小触控" }
+  },
+  "type": {
+    "caption":   { "size": { "value": "12px" }, "weight": { "value": "400" }, "line": { "value": "16px" } },
+    "footnote":  { "size": { "value": "13px" }, "weight": { "value": "400" }, "line": { "value": "18px" } },
+    "button":    { "size": { "value": "15px" }, "weight": { "value": "600" }, "line": { "value": "20px" }, "comment": "桌面按钮 10px 全大写，手机改 15pt 正常大小写" },
+    "body":      { "size": { "value": "16px" }, "weight": { "value": "400" }, "line": { "value": "22px" } },
+    "headline":  { "size": { "value": "17px" }, "weight": { "value": "600" }, "line": { "value": "22px" } },
+    "title":     { "size": { "value": "22px" }, "weight": { "value": "600" }, "line": { "value": "28px" } },
+    "large":     { "size": { "value": "34px" }, "weight": { "value": "700" }, "line": { "value": "41px" } },
+    "metric":    { "size": { "value": "40px" }, "weight": { "value": "200" }, "line": { "value": "44px" }, "comment": "速率/延迟大数字：细字重 + 等宽数字" },
+    "metric-sm": { "size": { "value": "22px" }, "weight": { "value": "300" }, "line": { "value": "26px" } }
+  },
+  "layout": {
+    "row-height":       { "value": "52px", "comment": "节点虚拟列表固定行高（与原型 RH=52 一致，10^8 行必须固定）" },
+    "section-header":   { "value": "32px" },
+    "tabbar-height":    { "value": "56px" },
+    "page-margin":      { "value": "16px" },
+    "card-gap":         { "value": "12px" },
+    "sheet-radius":     { "value": "24px" },
+    "connect-button":   { "value": "168px", "comment": "首页 ZConnectButton 直径" },
+    "index-rail-width": { "value": "20px", "comment": "节点页右侧地区索引条" }
+  },
+  "motion": {
+    "spring-response": { "value": "0.42", "comment": "SwiftUI spring(response:) / Compose stiffness 换算见生成代码" },
+    "spring-damping":  { "value": "0.82" },
+    "press-scale":     { "value": "0.97" },
+    "settle-delay":    { "value": "400ms", "comment": "滚动停止后测可见行延迟" },
+    "undo-window":     { "value": "4s",    "comment": "\"已换到 东京 03 · 撤销\" 吐司停留" }
+  },
+  "latency": {
+    "good":    { "value": "#34C759", "lightValue": "#1F9D45", "comment": "< 80ms" },
+    "fair":    { "value": "#FFCC00", "lightValue": "#B38600", "comment": "80–199ms" },
+    "poor":    { "value": "#FF9500", "lightValue": "#C76A00", "comment": "200–399ms" },
+    "bad":     { "value": "#FF453A", "lightValue": "#D70015", "comment": ">= 400ms 或超时" },
+    "unknown": { "value": "rgba(255, 255, 255, 0.4)", "lightValue": "rgba(24, 24, 28, 0.4)" },
+    "threshold-good": { "value": "80" },
+    "threshold-fair": { "value": "200" },
+    "threshold-poor": { "value": "400" }
+  },
+  "glow": {
+    "connect": { "value": "28px", "comment": "已连接时强调色光晕半径" },
+    "alpha":   { "value": "0.35" }
+  }
+}
