@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.zephyr.design"
-    compileSdk = 36
+    compileSdk = 37
     defaultConfig { minSdk = 28 }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

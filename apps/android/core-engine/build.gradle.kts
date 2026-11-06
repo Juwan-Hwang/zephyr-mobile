@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.zephyr.engine"
-    compileSdk = 36
+    compileSdk = 37
     defaultConfig {
         minSdk = 28
         consumerProguardFiles("consumer-rules.pro")

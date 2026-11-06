@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.zephyr.app"
-    compileSdk = 36
+    compileSdk = 37
     defaultConfig {
         applicationId = "com.zephyr.app"
         minSdk = 28
