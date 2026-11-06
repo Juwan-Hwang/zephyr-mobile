@@ -1,77 +1,116 @@
-// ZephyrEngine — iOS 侧的引擎协议。
-//
-// 这是 Swift 版契约；语言无关的权威版本由 A 维护在 contract/。两者不一致时以 contract/ 为准，
-// iOS 跟进（在 #1 看板说明）。在 contract v0 发布前，本文件就是 iOS 的草案。
-//
-// 设计原则
-//  - 规模：节点 1e7–1e8、规则 1e8。协议里绝不返回“全部节点/全部规则”，只返回计数 + 窗口（分页）。
-//  - 线程：所有方法 async 且 Sendable，可在任意线程调用；实现方自己保证内部并发安全。
-//  - 实时数据（流量、连接状态）走 AsyncStream，UI 侧按帧节流。
-//  - 两个实现：MockEngine（ZephyrMock，按原型生成）与 CoreEngine（ZephyrCore，包装 UniFFI）。
+// ZephyrEngine —— contract/zephyr-engine.md v0 的 Swift 形态。
+// 方法名、参数标签照抄契约；Stream = AsyncStream；全部方法线程安全，可在任意线程调用。
+// 实现：ZephyrMock.MockEngine（确定性数据）、ZephyrCore.CoreEngine（UniFFI，仅 Apple 平台）。
 
 import Foundation
 
 public protocol ZephyrEngine: AnyObject, Sendable {
 
-    // MARK: 连接
-    /// 当前连接状态快照。
-    func connectionState() async -> ConnectionState
-    /// 连接状态变化流（立刻先推一次当前值）。
-    func connectionStates() -> AsyncStream<ConnectionState>
+    // MARK: §1 连接与模式
+    /// 立即发当前值，之后变化即发。
+    func connectionState() -> AsyncStream<ConnectionState>
+    /// 平台层先启动 VPN/NE，再调此方法。
     func connect() async throws
     func disconnect() async throws
-    func setMode(_ mode: ProxyMode) async throws
+    func setMode(mode: ProxyMode) async throws
+    func setGlobalNode(id: NodeId) async throws -> ExitChange
 
-    // MARK: 流量
-    /// 实时速率，约 1 Hz。立刻先推一次。
-    func trafficSamples() -> AsyncStream<TrafficSample>
-    /// 最近 N 秒的速率历史（首页曲线冷启动用）。
-    func trafficHistory(seconds: Int) async -> [TrafficSample]
-    /// 今日用量汇总（首页“今日”、今日卡片、小组件）。
-    func todayUsage() async -> DailyUsage
+    // MARK: §2 流量与用量
+    /// 1 Hz；未连接时不发。
+    func traffic() -> AsyncStream<TrafficSample>
+    /// 迷你曲线回填，最多 300。
+    func recentTraffic(seconds: Int32) -> [TrafficSample]
+    func usageToday() async -> UsageSummary
 
-    // MARK: 场景与策略组
-    func scenes() async -> [Scene]
-    func sceneDetail(id: Scene.ID) async throws -> SceneDetail
-    func selectNode(sceneID: Scene.ID, nodeID: NodeID) async throws
-    func setSceneStrategy(sceneID: Scene.ID, strategy: SceneStrategy) async throws
-    /// 重新检测场景池（只测场景候选，不做全量测速）。
-    func retestScene(id: Scene.ID) async throws
+    // MARK: §3 场景
+    func scenes() -> AsyncStream<[Scene]>
+    /// 按延迟排序，最多 50。
+    func sceneCandidates(sceneId: String, region: String?) async throws -> [NodeSummary]
+    func previewSceneChange(sceneId: String, nodeId: NodeId) async throws -> ExitChange
+    /// UI 支持"撤销"：再 apply 旧节点。
+    func applySceneChange(sceneId: String, nodeId: NodeId) async throws
+    func retestScene(sceneId: String) async throws -> Scene
 
-    // MARK: 节点（索引 + 窗口）
-    /// 节点库总览：总数、订阅数、地区分桶。
-    func nodeLibrary() async -> NodeLibrarySummary
-    /// 用查询构建一个结果集，返回句柄。查询走索引，绝不全表扫描。
-    func queryNodes(_ query: NodeQuery) async throws -> NodeResultSet
-    /// 读结果集的一个窗口：[range.lowerBound, range.upperBound) 行（行 = 地区头 或 节点）。
-    func rows(in set: NodeResultSet, range: Range<Int>) async throws -> [NodeListRow]
-    /// 只返回缓存的延迟；没有缓存就是 nil。
-    func cachedLatency(_ ids: [NodeID]) async -> [NodeID: Latency]
-    /// 按需测速（可见行停止滚动 400ms 后调用）。结果逐个推回。
-    func testLatency(_ ids: [NodeID]) -> AsyncStream<(NodeID, Latency)>
+    // MARK: §4 策略组
+    func policyGroups() -> AsyncStream<[PolicyGroup]>
+    /// limit ≤ 500
+    func groupMembers(group: String, offset: Int32, limit: Int32) async throws -> NodePage
+    func selectInGroup(group: String, nodeId: NodeId) async throws
+    /// 只测该组，结果经 latencyUpdates 推送。
+    func testGroup(group: String) async throws
 
-    // MARK: 规则
-    func ruleLibrary() async -> RuleLibrarySummary
-    /// 规则测试：域名或 IP → 命中链（层 → 规则 → 场景 → 出口）。
-    func testRule(_ input: String) async throws -> RuleTrace
+    // MARK: §5 节点库
+    func nodeIndex() async -> NodeIndex
+    /// "" = 全部；绝不扫全表。
+    func queryNodes(query: String) async throws -> NodeQueryResult
+    /// offset 为节点序号（不含分区头），limit ≤ 500。
+    func nodeRows(token: Int64, offset: Int64, limit: Int32) async throws -> NodePage
+    func node(id: NodeId) async throws -> NodeDetail
+    /// 只测可见行（UI 停止滚动 400ms 后调用），≤ 100 个。
+    func testLatency(ids: [NodeId]) async
+    func latencyUpdates() -> AsyncStream<[LatencyUpdate]>
 
-    // MARK: 订阅
-    func subscriptions() async -> SubscriptionSummary
-    func importSubscription(_ source: ImportSource) async throws -> Subscription
-    func updateSubscription(id: Subscription.ID) async throws -> SubscriptionDiff
-    func removeSubscription(id: Subscription.ID) async throws
+    // MARK: §6 规则
+    func ruleStats() async -> RuleStats
+    /// 域名或 IPv4/IPv6；O(len)。
+    func testRule(input: String) async throws -> RuleTrace
 
-    // MARK: 连接记录
-    func recentConnections(limit: Int) async -> [ConnectionRecord]
-    func connectionTrace(id: ConnectionRecord.ID) async throws -> ConnectionTrace
-    func setOverride(for host: String, target: ConnectionOverride, always: Bool) async throws
+    // MARK: §7 订阅与配置
+    func subscriptions() -> AsyncStream<[Subscription]>
+    func subscriptionsSummary() async -> SubscriptionsSummary
+    /// file 时 payload = 文件内容。
+    func importSubscription(source: ImportSource, payload: String) async throws -> Subscription
+    func previewUpdate(id: String) async throws -> SubscriptionDiff
+    func updateSubscription(id: String) async throws -> SubscriptionDiff
+    func updateAll() async throws -> [SubscriptionDiff]
+    func deleteSubscription(id: String) async throws
 
-    // MARK: 指令（搜索栏里的自然语言指令）
-    func parseCommand(_ text: String) async -> CommandPlan?
-    func apply(_ plan: CommandPlan) async throws
+    // MARK: §8 连接、日志、设置
+    /// 最多 200 条最新。
+    func activeConnections() -> AsyncStream<[ConnectionInfo]>
+    func closeConnection(id: String) async throws
+    func closeAll() async throws
+    func logs(minLevel: LogLevel) -> AsyncStream<LogLine>
+    func settings() -> AsyncStream<Settings>
+    /// 全量写回。
+    func updateSettings(patch: Settings) async throws
+    func storage() async -> StorageInfo
 
-    // MARK: 设置
-    func settings() async -> EngineSettings
-    func update(_ settings: EngineSettings) async throws
-    func storageUsage() async -> StorageUsage
+    // MARK: §9 命令搜索
+    /// ≤ 8 条；空输入给"建议"。
+    func commandSuggestions(input: String) async -> [CommandSuggestion]
+}
+
+// MARK: - 虚拟列表辅助（契约 §5 UI 约定）
+
+public extension NodeQueryResult {
+    /// 虚拟列表总行数 = total + sections.count（每个分区一行头）。
+    var rowCount: Int64 { total + Int64(sections.count) }
+}
+
+/// 虚拟列表行号 → 分区头 / 节点序号。
+public enum NodeListRow: Sendable, Hashable {
+    /// 分区头：分区下标。
+    case header(section: Int)
+    /// 节点：分区下标、分区内序号、全局节点序号（nodeRows 的 offset）。
+    case node(section: Int, indexInSection: Int64, ordinal: Int64)
+}
+
+public extension Array where Element == RegionSection {
+    /// 行号 → (分区, 序号)，用 rowOffset 二分。row 越界返回 nil。
+    func locate(row: Int64) -> NodeListRow? {
+        guard !isEmpty, row >= 0 else { return nil }
+        var lo = 0, hi = count - 1
+        while lo < hi {
+            let m = (lo + hi + 1) >> 1
+            if self[m].rowOffset <= row { lo = m } else { hi = m - 1 }
+        }
+        let s = self[lo]
+        let k = row - s.rowOffset
+        if k == 0 { return .header(section: lo) }
+        guard k - 1 < s.count else { return nil }
+        // 节点序号 = rowOffset - 之前的头行数(lo) - 本头行(1) + k
+        let ordinal = s.rowOffset - Int64(lo) + (k - 1)
+        return .node(section: lo, indexInSection: k - 1, ordinal: ordinal)
+    }
 }

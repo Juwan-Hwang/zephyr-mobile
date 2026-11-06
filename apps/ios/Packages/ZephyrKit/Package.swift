@@ -8,22 +8,32 @@
 //  ZephyrFeatures  SwiftUI：全部页面与 AppModel（仅 Apple 平台）。
 import PackageDescription
 
+// Linux（CI / 沙箱）只有纯 Swift 目标：ZephyrKit、ZephyrMock 及其测试。SwiftUI 目标仅在 Apple 平台加入。
+var products: [Product] = [
+    .library(name: "ZephyrKit", targets: ["ZephyrKit"]),
+    .library(name: "ZephyrMock", targets: ["ZephyrMock"]),
+]
+var targets: [Target] = [
+    .target(name: "ZephyrKit"),
+    .target(name: "ZephyrMock", dependencies: ["ZephyrKit"]),
+    .testTarget(name: "ZephyrKitTests", dependencies: ["ZephyrKit"]),
+    .testTarget(name: "ZephyrMockTests", dependencies: ["ZephyrMock"]),
+]
+#if !os(Linux)
+products += [
+    .library(name: "ZephyrDesign", targets: ["ZephyrDesign"]),
+    .library(name: "ZephyrFeatures", targets: ["ZephyrFeatures"]),
+]
+targets += [
+    .target(name: "ZephyrDesign", dependencies: ["ZephyrKit"], resources: [.process("Resources")]),
+    .target(name: "ZephyrFeatures", dependencies: ["ZephyrKit", "ZephyrMock", "ZephyrDesign"]),
+]
+#endif
+
 let package = Package(
     name: "ZephyrKit",
     defaultLocalization: "zh-Hans",
     platforms: [.iOS(.v17), .macOS(.v14)],
-    products: [
-        .library(name: "ZephyrKit", targets: ["ZephyrKit"]),
-        .library(name: "ZephyrMock", targets: ["ZephyrMock"]),
-        .library(name: "ZephyrDesign", targets: ["ZephyrDesign"]),
-        .library(name: "ZephyrFeatures", targets: ["ZephyrFeatures"]),
-    ],
-    targets: [
-        .target(name: "ZephyrKit"),
-        .target(name: "ZephyrMock", dependencies: ["ZephyrKit"]),
-        .target(name: "ZephyrDesign", dependencies: ["ZephyrKit"], resources: [.process("Resources")]),
-        .target(name: "ZephyrFeatures", dependencies: ["ZephyrKit", "ZephyrMock", "ZephyrDesign"]),
-        .testTarget(name: "ZephyrKitTests", dependencies: ["ZephyrKit"]),
-        .testTarget(name: "ZephyrMockTests", dependencies: ["ZephyrMock"]),
-    ]
+    products: products,
+    targets: targets
 )
