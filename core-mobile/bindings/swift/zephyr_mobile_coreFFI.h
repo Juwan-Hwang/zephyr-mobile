@@ -251,6 +251,21 @@ typedef void (*UniffiForeignFutureCompleteVoid)(uint64_t, UniffiForeignFutureStr
     );
 
 #endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_BUILD_PROGRESS_METHOD0
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_BUILD_PROGRESS_METHOD0
+typedef void (*UniffiCallbackInterfaceBuildProgressMethod0)(uint64_t, RustBuffer, uint64_t, uint64_t, int8_t* _Nonnull, 
+        RustCallStatus *_Nonnull uniffiCallStatus
+    );
+
+#endif
+#ifndef UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_BUILD_PROGRESS
+#define UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_BUILD_PROGRESS
+typedef struct UniffiVTableCallbackInterfaceBuildProgress {
+    UniffiCallbackInterfaceBuildProgressMethod0 _Nonnull onProgress;
+    UniffiCallbackInterfaceFree _Nonnull uniffiFree;
+} UniffiVTableCallbackInterfaceBuildProgress;
+
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_CLONE_MOBILECORE
 #define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_CLONE_MOBILECORE
 void*_Nonnull uniffi_zephyr_mobile_core_fn_clone_mobilecore(void*_Nonnull ptr, RustCallStatus *_Nonnull out_status
@@ -296,9 +311,19 @@ RustBuffer uniffi_zephyr_mobile_core_fn_method_mobilecore_query_nodes(void*_Nonn
 RustBuffer uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_mock_nodes(void*_Nonnull ptr, double scale, RustCallStatus *_Nonnull out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_REBUILD_MOCK_NODES_WITH_PROGRESS
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_REBUILD_MOCK_NODES_WITH_PROGRESS
+RustBuffer uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_mock_nodes_with_progress(void*_Nonnull ptr, double scale, uint64_t progress, RustCallStatus *_Nonnull out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_REBUILD_NODES
 #define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_REBUILD_NODES
 RustBuffer uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_nodes(void*_Nonnull ptr, RustBuffer sources, RustCallStatus *_Nonnull out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_REBUILD_NODES_WITH_PROGRESS
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_REBUILD_NODES_WITH_PROGRESS
+RustBuffer uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_nodes_with_progress(void*_Nonnull ptr, RustBuffer sources, uint64_t progress, RustCallStatus *_Nonnull out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_RULE_STATS
@@ -309,6 +334,11 @@ RustBuffer uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_stats(void*_Nonnu
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_TEST_RULE
 #define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_TEST_RULE
 RustBuffer uniffi_zephyr_mobile_core_fn_method_mobilecore_test_rule(void*_Nonnull ptr, RustBuffer input, RustCallStatus *_Nonnull out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_INIT_CALLBACK_VTABLE_BUILDPROGRESS
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_INIT_CALLBACK_VTABLE_BUILDPROGRESS
+void uniffi_zephyr_mobile_core_fn_init_callback_vtable_buildprogress(UniffiVTableCallbackInterfaceBuildProgress* _Nonnull vtable
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_FUNC_CORE_GREETING
@@ -639,9 +669,21 @@ uint16_t uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_mock_nodes
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_MOBILECORE_REBUILD_MOCK_NODES_WITH_PROGRESS
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_MOBILECORE_REBUILD_MOCK_NODES_WITH_PROGRESS
+uint16_t uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_mock_nodes_with_progress(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_MOBILECORE_REBUILD_NODES
 #define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_MOBILECORE_REBUILD_NODES
 uint16_t uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_nodes(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_MOBILECORE_REBUILD_NODES_WITH_PROGRESS
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_MOBILECORE_REBUILD_NODES_WITH_PROGRESS
+uint16_t uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_nodes_with_progress(void
     
 );
 #endif
@@ -660,6 +702,12 @@ uint16_t uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_CONSTRUCTOR_MOBILECORE_NEW
 #define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_CONSTRUCTOR_MOBILECORE_NEW
 uint16_t uniffi_zephyr_mobile_core_checksum_constructor_mobilecore_new(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_BUILDPROGRESS_ON_PROGRESS
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_BUILDPROGRESS_ON_PROGRESS
+uint16_t uniffi_zephyr_mobile_core_checksum_method_buildprogress_on_progress(void
     
 );
 #endif

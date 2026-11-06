@@ -570,10 +570,17 @@ public protocol MobileCoreProtocol : AnyObject {
      */
     func rebuildMockNodes(scale: Double) throws  -> BuildReport
     
+    func rebuildMockNodesWithProgress(scale: Double, progress: BuildProgress) throws  -> BuildReport
+    
     /**
      * 由全部订阅重建节点库，返回与旧库的差异（"+1,204 节点 −318 节点"）。
      */
     func rebuildNodes(sources: [SubscriptionSource]) throws  -> BuildReport
+    
+    /**
+     * 同 rebuild_nodes，带进度与取消（UI 显示"正在建立索引 62%"；回调返回 false 取消，旧库保持不变）。
+     */
+    func rebuildNodesWithProgress(sources: [SubscriptionSource], progress: BuildProgress) throws  -> BuildReport
     
     func ruleStats()  -> RuleStats
     
@@ -708,6 +715,15 @@ open func rebuildMockNodes(scale: Double)throws  -> BuildReport {
 })
 }
     
+open func rebuildMockNodesWithProgress(scale: Double, progress: BuildProgress)throws  -> BuildReport {
+    return try  FfiConverterTypeBuildReport.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_mock_nodes_with_progress(self.uniffiClonePointer(),
+        FfiConverterDouble.lower(scale),
+        FfiConverterCallbackInterfaceBuildProgress.lower(progress),$0
+    )
+})
+}
+    
     /**
      * 由全部订阅重建节点库，返回与旧库的差异（"+1,204 节点 −318 节点"）。
      */
@@ -715,6 +731,18 @@ open func rebuildNodes(sources: [SubscriptionSource])throws  -> BuildReport {
     return try  FfiConverterTypeBuildReport.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_nodes(self.uniffiClonePointer(),
         FfiConverterSequenceTypeSubscriptionSource.lower(sources),$0
+    )
+})
+}
+    
+    /**
+     * 同 rebuild_nodes，带进度与取消（UI 显示"正在建立索引 62%"；回调返回 false 取消，旧库保持不变）。
+     */
+open func rebuildNodesWithProgress(sources: [SubscriptionSource], progress: BuildProgress)throws  -> BuildReport {
+    return try  FfiConverterTypeBuildReport.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_nodes_with_progress(self.uniffiClonePointer(),
+        FfiConverterSequenceTypeSubscriptionSource.lower(sources),
+        FfiConverterCallbackInterfaceBuildProgress.lower(progress),$0
     )
 })
 }
@@ -1745,6 +1773,91 @@ public func FfiConverterTypeSubscriptionSource_lower(_ value: SubscriptionSource
 
 // Note that we don't yet support `indirect` for enums.
 // See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
+/**
+ * 流式建库：push 时立即压成 24 B 记录 + 名称字节，不保留 NodeInput。
+ * 1310 万节点峰值内存 ≈ 记录 315 MB + 名称 ~330 MB + 去重临时 210 MB（原实现 2.7 GB 会被 OOM 杀掉）。
+ * 建库阶段（进度回调用）。
+ */
+
+public enum BuildPhase {
+    
+    /**
+     * 解析订阅 / 生成节点；total = 0 表示总数未知
+     */
+    case parse
+    /**
+     * 建倒排索引
+     */
+    case index
+    /**
+     * 写文件
+     */
+    case write
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeBuildPhase: FfiConverterRustBuffer {
+    typealias SwiftType = BuildPhase
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> BuildPhase {
+        let variant: Int32 = try readInt(&buf)
+        switch variant {
+        
+        case 1: return .parse
+        
+        case 2: return .index
+        
+        case 3: return .write
+        
+        default: throw UniffiInternalError.unexpectedEnumCase
+        }
+    }
+
+    public static func write(_ value: BuildPhase, into buf: inout [UInt8]) {
+        switch value {
+        
+        
+        case .parse:
+            writeInt(&buf, Int32(1))
+        
+        
+        case .index:
+            writeInt(&buf, Int32(2))
+        
+        
+        case .write:
+            writeInt(&buf, Int32(3))
+        
+        }
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeBuildPhase_lift(_ buf: RustBuffer) throws -> BuildPhase {
+    return try FfiConverterTypeBuildPhase.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeBuildPhase_lower(_ value: BuildPhase) -> RustBuffer {
+    return FfiConverterTypeBuildPhase.lower(value)
+}
+
+
+
+extension BuildPhase: Equatable, Hashable {}
+
+
+
+// Note that we don't yet support `indirect` for enums.
+// See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
 
 public enum LayerKind {
     
@@ -1838,6 +1951,15 @@ public enum MobileError {
     )
     case SubscriptionInvalid(String
     )
+    /**
+     * contract v0.1：查询句柄已淘汰
+     */
+    case StaleToken(String
+    )
+    /**
+     * 进度回调返回 false
+     */
+    case Cancelled
 }
 
 
@@ -1872,6 +1994,10 @@ public struct FfiConverterTypeMobileError: FfiConverterRustBuffer {
         case 6: return .SubscriptionInvalid(
             try FfiConverterString.read(from: &buf)
             )
+        case 7: return .StaleToken(
+            try FfiConverterString.read(from: &buf)
+            )
+        case 8: return .Cancelled
 
          default: throw UniffiInternalError.unexpectedEnumCase
         }
@@ -1913,6 +2039,15 @@ public struct FfiConverterTypeMobileError: FfiConverterRustBuffer {
             writeInt(&buf, Int32(6))
             FfiConverterString.write(v1, into: &buf)
             
+        
+        case let .StaleToken(v1):
+            writeInt(&buf, Int32(7))
+            FfiConverterString.write(v1, into: &buf)
+            
+        
+        case .Cancelled:
+            writeInt(&buf, Int32(8))
+        
         }
     }
 }
@@ -1923,6 +2058,118 @@ extension MobileError: Equatable, Hashable {}
 extension MobileError: Foundation.LocalizedError {
     public var errorDescription: String? {
         String(reflecting: self)
+    }
+}
+
+
+
+
+/**
+ * 建库进度回调（平台实现）。返回 false = 取消。会在后台线程调用。
+ */
+public protocol BuildProgress : AnyObject {
+    
+    func onProgress(phase: BuildPhase, done: UInt64, total: UInt64)  -> Bool
+    
+}
+
+// Magic number for the Rust proxy to call using the same mechanism as every other method,
+// to free the callback once it's dropped by Rust.
+private let IDX_CALLBACK_FREE: Int32 = 0
+// Callback return codes
+private let UNIFFI_CALLBACK_SUCCESS: Int32 = 0
+private let UNIFFI_CALLBACK_ERROR: Int32 = 1
+private let UNIFFI_CALLBACK_UNEXPECTED_ERROR: Int32 = 2
+
+// Put the implementation in a struct so we don't pollute the top-level namespace
+fileprivate struct UniffiCallbackInterfaceBuildProgress {
+
+    // Create the VTable using a series of closures.
+    // Swift automatically converts these into C callback functions.
+    static var vtable: UniffiVTableCallbackInterfaceBuildProgress = UniffiVTableCallbackInterfaceBuildProgress(
+        onProgress: { (
+            uniffiHandle: UInt64,
+            phase: RustBuffer,
+            done: UInt64,
+            total: UInt64,
+            uniffiOutReturn: UnsafeMutablePointer<Int8>,
+            uniffiCallStatus: UnsafeMutablePointer<RustCallStatus>
+        ) in
+            let makeCall = {
+                () throws -> Bool in
+                guard let uniffiObj = try? FfiConverterCallbackInterfaceBuildProgress.handleMap.get(handle: uniffiHandle) else {
+                    throw UniffiInternalError.unexpectedStaleHandle
+                }
+                return uniffiObj.onProgress(
+                     phase: try FfiConverterTypeBuildPhase.lift(phase),
+                     done: try FfiConverterUInt64.lift(done),
+                     total: try FfiConverterUInt64.lift(total)
+                )
+            }
+
+            
+            let writeReturn = { uniffiOutReturn.pointee = FfiConverterBool.lower($0) }
+            uniffiTraitInterfaceCall(
+                callStatus: uniffiCallStatus,
+                makeCall: makeCall,
+                writeReturn: writeReturn
+            )
+        },
+        uniffiFree: { (uniffiHandle: UInt64) -> () in
+            let result = try? FfiConverterCallbackInterfaceBuildProgress.handleMap.remove(handle: uniffiHandle)
+            if result == nil {
+                print("Uniffi callback interface BuildProgress: handle missing in uniffiFree")
+            }
+        }
+    )
+}
+
+private func uniffiCallbackInitBuildProgress() {
+    uniffi_zephyr_mobile_core_fn_init_callback_vtable_buildprogress(&UniffiCallbackInterfaceBuildProgress.vtable)
+}
+
+// FfiConverter protocol for callback interfaces
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterCallbackInterfaceBuildProgress {
+    fileprivate static var handleMap = UniffiHandleMap<BuildProgress>()
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+extension FfiConverterCallbackInterfaceBuildProgress : FfiConverter {
+    typealias SwiftType = BuildProgress
+    typealias FfiType = UInt64
+
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public static func lift(_ handle: UInt64) throws -> SwiftType {
+        try handleMap.get(handle: handle)
+    }
+
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        let handle: UInt64 = try readInt(&buf)
+        return try lift(handle)
+    }
+
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public static func lower(_ v: SwiftType) -> UInt64 {
+        return handleMap.insert(obj: v)
+    }
+
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public static func write(_ v: SwiftType, into buf: inout [UInt8]) {
+        writeInt(&buf, lower(v))
     }
 }
 
@@ -2192,7 +2439,13 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_mock_nodes() != 56758) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_mock_nodes_with_progress() != 6448) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_nodes() != 39735) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_nodes_with_progress() != 20747) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033) {
@@ -2204,7 +2457,11 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_constructor_mobilecore_new() != 4167) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_buildprogress_on_progress() != 45870) {
+        return InitializationResult.apiChecksumMismatch
+    }
 
+    uniffiCallbackInitBuildProgress()
     return InitializationResult.ok
 }()
 

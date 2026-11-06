@@ -38,13 +38,31 @@ pub struct NodeInput {
 }
 
 pub fn fingerprint(server: &str, port: u16, protocol: &str) -> u64 {
-    let mut buf = Vec::with_capacity(server.len() + protocol.len() + 8);
-    buf.extend(server.trim().to_ascii_lowercase().as_bytes());
-    buf.push(0);
-    buf.extend(port.to_le_bytes());
-    buf.push(0);
-    buf.extend(protocol.trim().to_ascii_lowercase().as_bytes());
-    xxhash_rust::xxh3::xxh3_64(&buf)
+    // 小写 + 去空白后哈希；常见长度走栈缓冲，零分配（建库热点）
+    let (s, p) = (server.trim(), protocol.trim());
+    let n = s.len() + p.len() + 4;
+    let mut stack = [0u8; 256];
+    let mut heap;
+    let buf: &mut [u8] = if n <= stack.len() {
+        &mut stack[..n]
+    } else {
+        heap = vec![0u8; n];
+        &mut heap[..]
+    };
+    let mut k = 0;
+    for &b in s.as_bytes() {
+        buf[k] = b.to_ascii_lowercase();
+        k += 1;
+    }
+    buf[k] = 0;
+    buf[k + 1..k + 3].copy_from_slice(&port.to_le_bytes());
+    buf[k + 3] = 0;
+    k += 4;
+    for &b in p.as_bytes() {
+        buf[k] = b.to_ascii_lowercase();
+        k += 1;
+    }
+    xxhash_rust::xxh3::xxh3_64(&buf[..k])
 }
 
 /// 一行查询结果。
@@ -104,14 +122,25 @@ enum IndexKind {
 
 /// 流式建库：push 时立即压成 24 B 记录 + 名称字节，不保留 NodeInput。
 /// 1310 万节点峰值内存 ≈ 记录 315 MB + 名称 ~330 MB + 去重临时 210 MB（原实现 2.7 GB 会被 OOM 杀掉）。
+/// 建库阶段（进度回调用）。
+#[derive(Debug, Clone, Copy, PartialEq, Eq, uniffi::Enum)]
+pub enum BuildPhase {
+    /// 解析订阅 / 生成节点；total = 0 表示总数未知
+    Parse,
+    /// 建倒排索引
+    Index,
+    /// 写文件
+    Write,
+}
+
 pub struct NodeStoreBuilder {
     records: Vec<[u8; RECORD_SIZE]>,
     names: Vec<u8>,
     dict: Vec<String>,
-    dict_ix: HashMap<String, u32>,
+    dict_ix: rustc_hash::FxHashMap<String, u32>,
     /// push 顺序的地区表：(dict id, 计数)
     regions: Vec<(u32, u32)>,
-    region_ix: HashMap<String, u8>,
+    region_ix: rustc_hash::FxHashMap<String, u8>,
     error: Option<MobileError>,
 }
 
@@ -130,9 +159,9 @@ impl NodeStoreBuilder {
             records: Vec::with_capacity(n),
             names: Vec::with_capacity(n * 24),
             dict: Vec::new(),
-            dict_ix: HashMap::new(),
+            dict_ix: Default::default(),
             regions: Vec::new(),
-            region_ix: HashMap::new(),
+            region_ix: Default::default(),
             error: None,
         };
         // 标签与协议存 u8：先占低位 id，保证城市/运营商再多也不会把它们挤出 255
@@ -209,10 +238,18 @@ impl NodeStoreBuilder {
 
     /// 写出到文件。同指纹去重（保留先出现的）。地区按节点数降序排列（与原型一致：大地区在前），地区内保持输入顺序。
     pub fn write(self, path: &Path) -> Result<u32, MobileError> {
+        self.write_with_progress(path, &|_, _, _| true)
+    }
+
+    /// progress(phase, done, total) 返回 false 取消（MobileError::Cancelled）。phase：Index / Write。
+    pub fn write_with_progress(self, path: &Path, progress: &dyn Fn(BuildPhase, u64, u64) -> bool) -> Result<u32, MobileError> {
         if let Some(e) = self.error {
             return Err(e);
         }
         let NodeStoreBuilder { records, names, dict, mut regions, .. } = self;
+        let prof = std::env::var_os("ZM_PROFILE").is_some();
+        let t0 = Instant::now();
+        let lap = |what: &str| if prof { eprintln!("  write.{what}: {:?}", t0.elapsed()) };
         let n = records.len();
         // 去重：按 (fp, 下标) 排序，同 fp 的后来者作废
         let mut dup = vec![false; n];
@@ -255,45 +292,87 @@ impl NodeStoreBuilder {
         }
         drop(dup);
         drop(cursor);
+        lap("dedup+order");
 
-        let mut index: BTreeMap<(IndexKind, u32), RoaringBitmap> = BTreeMap::new();
+        // 稠密数组代替 BTreeMap：每节点 5+ 次查找是建库热点（2.6M 节点 4.9 s → 见 docs/perf.md）
+        let nd = dict.len();
+        let mut attr: [Vec<Option<BmAcc>>; 5] = std::array::from_fn(|_| (0..nd).map(|_| None).collect());
         let mut tokens: Vec<String> = Vec::new();
-        let mut token_ix: HashMap<String, u32> = HashMap::new();
-        // 每个属性 key 的位图在顺序插入下最省（尾部追加）
+        let mut tok_bm: Vec<BmAcc> = Vec::new();
+        let mut token_ix: rustc_hash::FxHashMap<String, u32> = Default::default();
+        // 原始片段 → 词元 id（None = 过滤掉）。名称高度重复，缓存命中后零分配。
+        let mut raw_cache: rustc_hash::FxHashMap<&str, Option<u32>> = Default::default();
+        let mut ids: Vec<u32> = Vec::with_capacity(8);
+        fn put(v: &mut [Option<BmAcc>], k: usize, i: u32) {
+            v[k].get_or_insert_with(BmAcc::default).push(i);
+        }
+        let total = perm.len() as u64;
         for (pos, &src) in perm.iter().enumerate() {
+            if pos & 0xFFFF == 0 && !progress(BuildPhase::Index, pos as u64, total) {
+                return Err(MobileError::Cancelled);
+            }
             let i = pos as u32;
             let r = &records[src as usize];
             let rix = final_ix[r[23] as usize] as usize;
-            index.entry((IndexKind::Region, regions[order_r[rix]].0)).or_default().push(i);
+            put(&mut attr[IndexKind::Region as usize], regions[order_r[rix]].0 as usize, i);
             let city = u16::from_le_bytes([r[16], r[17]]);
             let carrier = u16::from_le_bytes([r[18], r[19]]);
             if city != u16::MAX {
-                index.entry((IndexKind::City, city as u32)).or_default().push(i);
+                put(&mut attr[IndexKind::City as usize], city as usize, i);
             }
             if carrier != u16::MAX {
-                index.entry((IndexKind::Carrier, carrier as u32)).or_default().push(i);
+                put(&mut attr[IndexKind::Carrier as usize], carrier as usize, i);
             }
             if r[20] != u8::MAX {
-                index.entry((IndexKind::Tag, r[20] as u32)).or_default().push(i);
+                put(&mut attr[IndexKind::Tag as usize], r[20] as usize, i);
             }
-            index.entry((IndexKind::Protocol, r[21] as u32)).or_default().push(i);
+            put(&mut attr[IndexKind::Protocol as usize], r[21] as usize, i);
             let off = u32::from_le_bytes(r[8..12].try_into().unwrap()) as usize;
             let len = u16::from_le_bytes([r[12], r[13]]) as usize;
             let name = std::str::from_utf8(&names[off..off + len]).unwrap_or("");
-            for t in name_tokens(name) {
-                let id = match token_ix.get(&t) {
-                    Some(&id) => id,
+            ids.clear();
+            for raw in name.split(is_token_sep) {
+                let id = match raw_cache.get(raw) {
+                    Some(&x) => x,
                     None => {
-                        tokens.push(t.clone());
-                        let id = (tokens.len() - 1) as u32;
-                        token_ix.insert(t, id);
-                        id
+                        let x = normalize_token(raw).map(|t| match token_ix.get(&t) {
+                            Some(&id) => id,
+                            None => {
+                                tokens.push(t.clone());
+                                tok_bm.push(BmAcc::default());
+                                let id = (tokens.len() - 1) as u32;
+                                token_ix.insert(t, id);
+                                id
+                            }
+                        });
+                        raw_cache.insert(raw, x);
+                        x
                     }
                 };
-                index.entry((IndexKind::NameToken, id)).or_default().push(i);
+                if let Some(id) = id {
+                    ids.push(id);
+                }
+            }
+            ids.sort_unstable();
+            ids.dedup();
+            for &id in &ids {
+                tok_bm[id as usize].push(i);
             }
         }
         drop(token_ix);
+        drop(raw_cache);
+        lap("index");
+        let mut index: BTreeMap<(IndexKind, u32), RoaringBitmap> = BTreeMap::new();
+        for (k, kind) in [IndexKind::Region, IndexKind::City, IndexKind::Carrier, IndexKind::Tag, IndexKind::Protocol].into_iter().enumerate() {
+            for (key, bm) in std::mem::take(&mut attr[k]).into_iter().enumerate() {
+                if let Some(bm) = bm {
+                    index.insert((kind, key as u32), bm.finish());
+                }
+            }
+        }
+        for (id, bm) in tok_bm.into_iter().enumerate() {
+            index.insert((IndexKind::NameToken, id as u32), bm.finish());
+        }
 
         // 词元字典排序（前缀查找），并重映射 id
         let mut order: Vec<u32> = (0..tokens.len() as u32).collect();
@@ -307,6 +386,10 @@ impl NodeStoreBuilder {
             .map(|((k, key), bm)| if k == IndexKind::NameToken { ((k, remap[key as usize]), bm) } else { ((k, key), bm) })
             .collect();
 
+        lap("assemble");
+        if !progress(BuildPhase::Write, 0, 1) {
+            return Err(MobileError::Cancelled);
+        }
         let f = File::create(path)?;
         let mut w = BufWriter::with_capacity(1 << 20, f);
         w.write_all(MAGIC)?;
@@ -344,6 +427,8 @@ impl NodeStoreBuilder {
             write_str(&mut w, &tokens[o as usize])?;
         }
         w.flush()?;
+        lap("io");
+        progress(BuildPhase::Write, 1, 1);
         Ok(count)
     }
 }
@@ -356,12 +441,45 @@ fn write_str(w: &mut impl Write, s: &str) -> std::io::Result<()> {
 }
 
 /// 名称切词：按空白与常见分隔符切，小写；去掉纯数字序号与倍率记号。
+/// 递增写入的位图累加器：攒一批再 append（roaring 逐个 push ≈150 ns，批量 append 快 15 倍以上）。
+#[derive(Default)]
+struct BmAcc {
+    bm: RoaringBitmap,
+    buf: Vec<u32>,
+}
+impl BmAcc {
+    #[inline]
+    fn push(&mut self, i: u32) {
+        self.buf.push(i);
+        if self.buf.len() >= 4096 {
+            self.flush();
+        }
+    }
+    fn flush(&mut self) {
+        if !self.buf.is_empty() {
+            let _ = self.bm.append(self.buf.drain(..));
+        }
+    }
+    fn finish(mut self) -> RoaringBitmap {
+        self.flush();
+        self.bm
+    }
+}
+
+fn is_token_sep(c: char) -> bool {
+    c.is_whitespace() || "|-_/·,()[]【】".contains(c)
+}
+
+fn normalize_token(raw: &str) -> Option<String> {
+    let t = raw.trim();
+    if t.is_empty() || t.starts_with('×') || t.chars().all(|c| c.is_ascii_digit()) {
+        return None;
+    }
+    Some(t.to_lowercase())
+}
+
 pub fn name_tokens(name: &str) -> Vec<String> {
-    let mut out: Vec<String> = name
-        .split(|c: char| c.is_whitespace() || "|-_/·,()[]【】".contains(c))
-        .map(|t| t.trim().to_lowercase())
-        .filter(|t| !t.is_empty() && !t.starts_with('×') && !t.chars().all(|c| c.is_ascii_digit()))
-        .collect();
+    let mut out: Vec<String> = name.split(is_token_sep).filter_map(normalize_token).collect();
     out.sort();
     out.dedup();
     out

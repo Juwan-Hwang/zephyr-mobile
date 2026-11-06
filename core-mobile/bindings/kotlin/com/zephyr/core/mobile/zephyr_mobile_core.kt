@@ -654,6 +654,31 @@ internal open class UniffiForeignFutureStructVoid(
 internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
     fun callback(`callbackData`: Long,`result`: UniffiForeignFutureStructVoid.UniffiByValue,)
 }
+internal interface UniffiCallbackInterfaceBuildProgressMethod0 : com.sun.jna.Callback {
+    fun callback(`uniffiHandle`: Long,`phase`: RustBuffer.ByValue,`done`: Long,`total`: Long,`uniffiOutReturn`: ByteByReference,uniffiCallStatus: UniffiRustCallStatus,)
+}
+@Structure.FieldOrder("onProgress", "uniffiFree")
+internal open class UniffiVTableCallbackInterfaceBuildProgress(
+    @JvmField internal var `onProgress`: UniffiCallbackInterfaceBuildProgressMethod0? = null,
+    @JvmField internal var `uniffiFree`: UniffiCallbackInterfaceFree? = null,
+) : Structure() {
+    class UniffiByValue(
+        `onProgress`: UniffiCallbackInterfaceBuildProgressMethod0? = null,
+        `uniffiFree`: UniffiCallbackInterfaceFree? = null,
+    ): UniffiVTableCallbackInterfaceBuildProgress(`onProgress`,`uniffiFree`,), Structure.ByValue
+
+   internal fun uniffiSetValue(other: UniffiVTableCallbackInterfaceBuildProgress) {
+        `onProgress` = other.`onProgress`
+        `uniffiFree` = other.`uniffiFree`
+    }
+
+}
+
+
+
+
+
+
 
 
 
@@ -746,6 +771,7 @@ internal interface UniffiLib : Library {
             .also { lib: UniffiLib ->
                 uniffiCheckContractApiVersion(lib)
                 uniffiCheckApiChecksums(lib)
+                uniffiCallbackInterfaceBuildProgress.register(lib)
                 }
         }
         
@@ -773,12 +799,18 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_mock_nodes(`ptr`: Pointer,`scale`: Double,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_mock_nodes_with_progress(`ptr`: Pointer,`scale`: Double,`progress`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_nodes(`ptr`: Pointer,`sources`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_nodes_with_progress(`ptr`: Pointer,`sources`: RustBuffer.ByValue,`progress`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_stats(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_test_rule(`ptr`: Pointer,`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_init_callback_vtable_buildprogress(`vtable`: UniffiVTableCallbackInterfaceBuildProgress,
+    ): Unit
     fun uniffi_zephyr_mobile_core_fn_func_core_greeting(uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun ffi_zephyr_mobile_core_rustbuffer_alloc(`size`: Long,uniffi_out_err: UniffiRustCallStatus, 
@@ -907,13 +939,19 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_mock_nodes(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_mock_nodes_with_progress(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_nodes(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_nodes_with_progress(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_constructor_mobilecore_new(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_buildprogress_on_progress(
     ): Short
     fun ffi_zephyr_mobile_core_uniffi_contract_version(
     ): Int
@@ -953,7 +991,13 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_mock_nodes() != 56758.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_mock_nodes_with_progress() != 6448.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_nodes() != 39735.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_nodes_with_progress() != 20747.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033.toShort()) {
@@ -963,6 +1007,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_constructor_mobilecore_new() != 4167.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_buildprogress_on_progress() != 45870.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
 }
@@ -1395,10 +1442,17 @@ public interface MobileCoreInterface {
      */
     fun `rebuildMockNodes`(`scale`: kotlin.Double): BuildReport
     
+    fun `rebuildMockNodesWithProgress`(`scale`: kotlin.Double, `progress`: BuildProgress): BuildReport
+    
     /**
      * 由全部订阅重建节点库，返回与旧库的差异（"+1,204 节点 −318 节点"）。
      */
     fun `rebuildNodes`(`sources`: List<SubscriptionSource>): BuildReport
+    
+    /**
+     * 同 rebuild_nodes，带进度与取消（UI 显示"正在建立索引 62%"；回调返回 false 取消，旧库保持不变）。
+     */
+    fun `rebuildNodesWithProgress`(`sources`: List<SubscriptionSource>, `progress`: BuildProgress): BuildReport
     
     fun `ruleStats`(): RuleStats
     
@@ -1589,6 +1643,19 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     
 
     
+    @Throws(MobileException::class)override fun `rebuildMockNodesWithProgress`(`scale`: kotlin.Double, `progress`: BuildProgress): BuildReport {
+            return FfiConverterTypeBuildReport.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_mock_nodes_with_progress(
+        it, FfiConverterDouble.lower(`scale`),FfiConverterTypeBuildProgress.lower(`progress`),_status)
+}
+    }
+    )
+    }
+    
+
+    
     /**
      * 由全部订阅重建节点库，返回与旧库的差异（"+1,204 节点 −318 节点"）。
      */
@@ -1598,6 +1665,22 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_nodes(
         it, FfiConverterSequenceTypeSubscriptionSource.lower(`sources`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 同 rebuild_nodes，带进度与取消（UI 显示"正在建立索引 62%"；回调返回 false 取消，旧库保持不变）。
+     */
+    @Throws(MobileException::class)override fun `rebuildNodesWithProgress`(`sources`: List<SubscriptionSource>, `progress`: BuildProgress): BuildReport {
+            return FfiConverterTypeBuildReport.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_rebuild_nodes_with_progress(
+        it, FfiConverterSequenceTypeSubscriptionSource.lower(`sources`),FfiConverterTypeBuildProgress.lower(`progress`),_status)
 }
     }
     )
@@ -2135,6 +2218,51 @@ public object FfiConverterTypeSubscriptionSource: FfiConverterRustBuffer<Subscri
 
 
 
+/**
+ * 流式建库：push 时立即压成 24 B 记录 + 名称字节，不保留 NodeInput。
+ * 1310 万节点峰值内存 ≈ 记录 315 MB + 名称 ~330 MB + 去重临时 210 MB（原实现 2.7 GB 会被 OOM 杀掉）。
+ * 建库阶段（进度回调用）。
+ */
+
+enum class BuildPhase {
+    
+    /**
+     * 解析订阅 / 生成节点；total = 0 表示总数未知
+     */
+    PARSE,
+    /**
+     * 建倒排索引
+     */
+    INDEX,
+    /**
+     * 写文件
+     */
+    WRITE;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeBuildPhase: FfiConverterRustBuffer<BuildPhase> {
+    override fun read(buf: ByteBuffer) = try {
+        BuildPhase.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: BuildPhase) = 4UL
+
+    override fun write(value: BuildPhase, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
 
 enum class LayerKind {
     
@@ -2219,6 +2347,26 @@ sealed class MobileException: kotlin.Exception() {
             get() = "v1=${ v1 }"
     }
     
+    /**
+     * contract v0.1：查询句柄已淘汰
+     */
+    class StaleToken(
+        
+        val v1: kotlin.String
+        ) : MobileException() {
+        override val message
+            get() = "v1=${ v1 }"
+    }
+    
+    /**
+     * 进度回调返回 false
+     */
+    class Cancelled(
+        ) : MobileException() {
+        override val message
+            get() = ""
+    }
+    
 
     companion object ErrorHandler : UniffiRustCallStatusErrorHandler<MobileException> {
         override fun lift(error_buf: RustBuffer.ByValue): MobileException = FfiConverterTypeMobileError.lift(error_buf)
@@ -2253,6 +2401,10 @@ public object FfiConverterTypeMobileError : FfiConverterRustBuffer<MobileExcepti
             6 -> MobileException.SubscriptionInvalid(
                 FfiConverterString.read(buf),
                 )
+            7 -> MobileException.StaleToken(
+                FfiConverterString.read(buf),
+                )
+            8 -> MobileException.Cancelled()
             else -> throw RuntimeException("invalid error enum value, something is very wrong!!")
         }
     }
@@ -2289,6 +2441,15 @@ public object FfiConverterTypeMobileError : FfiConverterRustBuffer<MobileExcepti
                 4UL
                 + FfiConverterString.allocationSize(value.v1)
             )
+            is MobileException.StaleToken -> (
+                // Add the size for the Int that specifies the variant plus the size needed for all fields
+                4UL
+                + FfiConverterString.allocationSize(value.v1)
+            )
+            is MobileException.Cancelled -> (
+                // Add the size for the Int that specifies the variant plus the size needed for all fields
+                4UL
+            )
         }
     }
 
@@ -2324,10 +2485,108 @@ public object FfiConverterTypeMobileError : FfiConverterRustBuffer<MobileExcepti
                 FfiConverterString.write(value.v1, buf)
                 Unit
             }
+            is MobileException.StaleToken -> {
+                buf.putInt(7)
+                FfiConverterString.write(value.v1, buf)
+                Unit
+            }
+            is MobileException.Cancelled -> {
+                buf.putInt(8)
+                Unit
+            }
         }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
     }
 
 }
+
+
+
+
+
+/**
+ * 建库进度回调（平台实现）。返回 false = 取消。会在后台线程调用。
+ */
+public interface BuildProgress {
+    
+    fun `onProgress`(`phase`: BuildPhase, `done`: kotlin.ULong, `total`: kotlin.ULong): kotlin.Boolean
+    
+    companion object
+}
+
+// Magic number for the Rust proxy to call using the same mechanism as every other method,
+// to free the callback once it's dropped by Rust.
+internal const val IDX_CALLBACK_FREE = 0
+// Callback return codes
+internal const val UNIFFI_CALLBACK_SUCCESS = 0
+internal const val UNIFFI_CALLBACK_ERROR = 1
+internal const val UNIFFI_CALLBACK_UNEXPECTED_ERROR = 2
+
+/**
+ * @suppress
+ */
+public abstract class FfiConverterCallbackInterface<CallbackInterface: Any>: FfiConverter<CallbackInterface, Long> {
+    internal val handleMap = UniffiHandleMap<CallbackInterface>()
+
+    internal fun drop(handle: Long) {
+        handleMap.remove(handle)
+    }
+
+    override fun lift(value: Long): CallbackInterface {
+        return handleMap.get(value)
+    }
+
+    override fun read(buf: ByteBuffer) = lift(buf.getLong())
+
+    override fun lower(value: CallbackInterface) = handleMap.insert(value)
+
+    override fun allocationSize(value: CallbackInterface) = 8UL
+
+    override fun write(value: CallbackInterface, buf: ByteBuffer) {
+        buf.putLong(lower(value))
+    }
+}
+
+// Put the implementation in an object so we don't pollute the top-level namespace
+internal object uniffiCallbackInterfaceBuildProgress {
+    internal object `onProgress`: UniffiCallbackInterfaceBuildProgressMethod0 {
+        override fun callback(`uniffiHandle`: Long,`phase`: RustBuffer.ByValue,`done`: Long,`total`: Long,`uniffiOutReturn`: ByteByReference,uniffiCallStatus: UniffiRustCallStatus,) {
+            val uniffiObj = FfiConverterTypeBuildProgress.handleMap.get(uniffiHandle)
+            val makeCall = { ->
+                uniffiObj.`onProgress`(
+                    FfiConverterTypeBuildPhase.lift(`phase`),
+                    FfiConverterULong.lift(`done`),
+                    FfiConverterULong.lift(`total`),
+                )
+            }
+            val writeReturn = { value: kotlin.Boolean -> uniffiOutReturn.setValue(FfiConverterBoolean.lower(value)) }
+            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
+        }
+    }
+
+    internal object uniffiFree: UniffiCallbackInterfaceFree {
+        override fun callback(handle: Long) {
+            FfiConverterTypeBuildProgress.handleMap.remove(handle)
+        }
+    }
+
+    internal var vtable = UniffiVTableCallbackInterfaceBuildProgress.UniffiByValue(
+        `onProgress`,
+        uniffiFree,
+    )
+
+    // Registers the foreign callback with the Rust side.
+    // This method is generated for each callback interface.
+    internal fun register(lib: UniffiLib) {
+        lib.uniffi_zephyr_mobile_core_fn_init_callback_vtable_buildprogress(vtable)
+    }
+}
+
+/**
+ * The ffiConverter which transforms the Callbacks in to handles to pass to Rust.
+ *
+ * @suppress
+ */
+public object FfiConverterTypeBuildProgress: FfiConverterCallbackInterface<BuildProgress>()
 
 
 

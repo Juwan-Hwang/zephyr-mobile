@@ -18,6 +18,7 @@ aho-corasick = "1"
 memmap2 = "0.9"
 xxhash-rust = { version = "0.8", features = ["xxh3"] }
 parking_lot = "0.12"
+rustc-hash = "2"
 serde = { version = "1", features = ["derive"] }
 serde_yaml = { package = "serde_yaml_ng", version = "0.10" }
 

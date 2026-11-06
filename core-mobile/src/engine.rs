@@ -3,7 +3,7 @@
 
 use crate::diff::{diff_sorted, NodeDiff};
 use crate::error::MobileError;
-use crate::nodes::{NodeQueryResult, NodeRow, NodeStore, NodeStoreBuilder, RegionSection};
+use crate::nodes::{BuildPhase, NodeQueryResult, NodeRow, NodeStore, NodeStoreBuilder, RegionSection};
 use crate::rules::{Layer, LayerBuilder, LayerKind, RuleLayerInfo, RuleSet, RuleTrace};
 use parking_lot::{Mutex, RwLock};
 use roaring::RoaringBitmap;
@@ -63,13 +63,19 @@ impl MobileCore {
         self.store.read().clone().ok_or_else(|| MobileError::NotFound("节点库未建立".into()))
     }
     fn swap_store(&self, builder: NodeStoreBuilder, skipped: u64, t0: std::time::Instant) -> Result<BuildReport, MobileError> {
+        self.swap_store_p(builder, skipped, t0, &|_, _, _| true)
+    }
+    fn swap_store_p(&self, builder: NodeStoreBuilder, skipped: u64, t0: std::time::Instant, progress: &dyn Fn(BuildPhase, u64, u64) -> bool) -> Result<BuildReport, MobileError> {
         let gen = {
             let mut g = self.generation.lock();
             *g += 1;
             *g
         };
         let path = self.dir.join(format!("nodes.{gen}.zn"));
-        builder.write(&path)?;
+        if let Err(e) = builder.write_with_progress(&path, progress) {
+            let _ = std::fs::remove_file(&path);
+            return Err(e);
+        }
         let new = Arc::new(NodeStore::open(&path)?);
         let old = self.store.read().clone();
         let diff = match &old {
@@ -88,6 +94,12 @@ impl MobileCore {
         let _ = std::fs::write(self.dir.join("nodes.current"), gen.to_string());
         Ok(BuildReport { total: new.total(), skipped, diff, took_millis: t0.elapsed().as_millis() as u64 })
     }
+}
+
+/// 建库进度回调（平台实现）。返回 false = 取消。会在后台线程调用。
+#[uniffi::export(callback_interface)]
+pub trait BuildProgress: Send + Sync {
+    fn on_progress(&self, phase: BuildPhase, done: u64, total: u64) -> bool;
 }
 
 #[uniffi::export]
@@ -135,6 +147,39 @@ impl MobileCore {
         self.swap_store(b, 0, t0)
     }
 
+    /// 同 rebuild_nodes，带进度与取消（UI 显示"正在建立索引 62%"；回调返回 false 取消，旧库保持不变）。
+    pub fn rebuild_nodes_with_progress(&self, sources: Vec<SubscriptionSource>, progress: Box<dyn BuildProgress>) -> Result<BuildReport, MobileError> {
+        let t0 = std::time::Instant::now();
+        let mut b = NodeStoreBuilder::new();
+        let mut skipped = 0;
+        let n = sources.len() as u64;
+        for (k, s) in sources.into_iter().enumerate() {
+            if !progress.on_progress(BuildPhase::Parse, k as u64, n) {
+                return Err(MobileError::Cancelled);
+            }
+            let (nodes, sk) = crate::subscription::parse_proxies_yaml(&s.yaml, s.id)?;
+            skipped += sk;
+            for x in nodes {
+                b.push(x);
+            }
+        }
+        self.swap_store_p(b, skipped, t0, &|ph, d, t| progress.on_progress(ph, d, t))
+    }
+
+    pub fn rebuild_mock_nodes_with_progress(&self, scale: f64, progress: Box<dyn BuildProgress>) -> Result<BuildReport, MobileError> {
+        let t0 = std::time::Instant::now();
+        let scale = scale.clamp(0.000_01, 1.0);
+        let total = (crate::mock::total() as f64 * scale) as u64;
+        let mut b = NodeStoreBuilder::with_capacity(total as usize);
+        for (k, x) in crate::mock::nodes(scale).enumerate() {
+            if k & 0xFFFF == 0 && !progress.on_progress(BuildPhase::Parse, k as u64, total) {
+                return Err(MobileError::Cancelled);
+            }
+            b.push(x);
+        }
+        self.swap_store_p(b, 0, t0, &|ph, d, t| progress.on_progress(ph, d, t))
+    }
+
     pub fn node_index(&self) -> Result<NodeIndex, MobileError> {
         let s = self.store()?;
         let mut row = 0;
@@ -171,7 +216,7 @@ impl MobileCore {
     pub fn node_rows(&self, token: u64, offset: u64, limit: u32) -> Result<NodePage, MobileError> {
         let s = self.store()?;
         let bm = self.queries.lock().iter().find(|(t, _)| *t == token).map(|(_, b)| b.clone());
-        let bm = bm.ok_or_else(|| MobileError::NotFound(format!("查询句柄 {token} 已过期")))?;
+        let bm = bm.ok_or_else(|| MobileError::StaleToken(format!("查询句柄 {token} 已过期")))?;
         Ok(NodePage { rows: s.page(&bm, offset, limit), offset, total: bm.len() })
     }
 
@@ -218,6 +263,37 @@ pub fn core_greeting() -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::atomic::{AtomicU64, Ordering};
+
+    struct P {
+        calls: Arc<AtomicU64>,
+        cancel_at_index: bool,
+    }
+    impl BuildProgress for P {
+        fn on_progress(&self, phase: BuildPhase, done: u64, total: u64) -> bool {
+            self.calls.fetch_add(1, Ordering::Relaxed);
+            assert!(total == 0 || done <= total);
+            !(self.cancel_at_index && phase == BuildPhase::Index)
+        }
+    }
+
+    #[test]
+    fn progress_and_cancel_keep_old_store() {
+        let d = tempfile::tempdir().unwrap();
+        let core = MobileCore::new(d.path().to_string_lossy().into()).unwrap();
+        let calls = Arc::new(AtomicU64::new(0));
+        let r = core.rebuild_mock_nodes_with_progress(0.01, Box::new(P { calls: calls.clone(), cancel_at_index: false })).unwrap();
+        assert!(calls.load(Ordering::Relaxed) >= 4);
+        let before = core.node_index().unwrap().total;
+        assert_eq!(before, r.total);
+        let e = core.rebuild_mock_nodes_with_progress(0.02, Box::new(P { calls: calls.clone(), cancel_at_index: true })).unwrap_err();
+        assert!(matches!(e, MobileError::Cancelled));
+        assert_eq!(core.node_index().unwrap().total, before, "取消后旧库不变");
+        let zn = std::fs::read_dir(d.path()).unwrap().flatten().filter(|e| e.file_name().to_string_lossy().ends_with(".zn")).count();
+        assert_eq!(zn, 1, "取消不留半成品文件");
+        // 句柄过期 → StaleToken
+        assert!(matches!(core.node_rows(987654, 0, 10).unwrap_err(), MobileError::StaleToken(_)));
+    }
 
     #[test]
     fn end_to_end_mock_store() {
