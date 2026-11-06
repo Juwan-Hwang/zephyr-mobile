@@ -75,6 +75,8 @@ pub struct MobileCore {
     /// (库代际, 指纹 → 行号)：只为测过速的节点建，按需扫描补齐
     pub(crate) fp_pos: Mutex<(u64, FxHashMap<u64, u32>)>,
     pub(crate) scenes: Mutex<crate::scenes::SceneStore>,
+    /// 场景自动切换：复用桌面端 failover 策略（clash-prism-core FailoverTracker），每场景一个
+    pub(crate) failover: Mutex<crate::failover::FailoverState>,
 }
 
 impl MobileCore {
@@ -195,6 +197,7 @@ impl MobileCore {
             latency: Mutex::new(LatencyCache::open(&dir_for_subs)),
             fp_pos: Mutex::new(load_positions(&dir_for_subs, gen)),
             scenes: Mutex::new(crate::scenes::SceneStore::open(&dir_for_subs)?),
+            failover: Mutex::new(crate::failover::FailoverState::open(&dir_for_subs)),
         }))
     }
 

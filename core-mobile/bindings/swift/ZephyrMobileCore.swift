@@ -869,6 +869,8 @@ public protocol MobileCoreProtocol : AnyObject {
      */
     func dueSubscriptions(nowMillis: Int64)  -> [String]
     
+    func failoverPolicy()  -> FailoverPolicy
+    
     /**
      * 查询结果里已测速节点，用桌面端 smart_selector 打分排序后取前 limit 个（未测/过期不出现）。
      * 先按最近延迟预筛 256 个再打分，千万级库里也只对少量节点计算。
@@ -933,6 +935,8 @@ public protocol MobileCoreProtocol : AnyObject {
     
     /**
      * 平台/mihomo 测速结果写入（UI 同时直接推送，不必等这里）。
+     * 在后台线程调用：新出现的节点会在这里一次性补齐行号（1310 万行全表扫描约 2 s），
+     * 这样随后的 fastestNodes / scenes 在主线程上始终是毫秒级。
      */
     func recordLatencies(samples: [LatencySample]) throws 
     
@@ -940,6 +944,12 @@ public protocol MobileCoreProtocol : AnyObject {
      * 平台测得出口后回填（"198.51.100.7 · 美国"）。
      */
     func reportSceneExit(sceneId: String, ip: String, region: String?, testedAt: Int64) throws 
+    
+    /**
+     * 平台对场景当前出口做健康探测（或连接失败）后上报。达到阈值且不在冷却期时，
+     * 自动换到热备里最优的节点并返回动作；否则 None。
+     */
+    func reportSceneProbe(sceneId: String, success: Bool, nowMillis: Int64) throws  -> SceneFailover?
     
     func ruleStats()  -> RuleStats
     
@@ -959,6 +969,8 @@ public protocol MobileCoreProtocol : AnyObject {
     func sceneForHost(host: String)  -> String?
     
     func scenes(nowMillis: Int64) throws  -> [Scene]
+    
+    func setFailoverPolicy(policy: FailoverPolicy) throws 
     
     /**
      * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
@@ -1096,6 +1108,13 @@ open func dueSubscriptions(nowMillis: Int64) -> [String] {
     return try!  FfiConverterSequenceString.lift(try! rustCall() {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_due_subscriptions(self.uniffiClonePointer(),
         FfiConverterInt64.lower(nowMillis),$0
+    )
+})
+}
+    
+open func failoverPolicy() -> FailoverPolicy {
+    return try!  FfiConverterTypeFailoverPolicy.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_failover_policy(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -1268,6 +1287,8 @@ open func rebuildNodesWithProgress(sources: [SubscriptionSource], progress: Buil
     
     /**
      * 平台/mihomo 测速结果写入（UI 同时直接推送，不必等这里）。
+     * 在后台线程调用：新出现的节点会在这里一次性补齐行号（1310 万行全表扫描约 2 s），
+     * 这样随后的 fastestNodes / scenes 在主线程上始终是毫秒级。
      */
 open func recordLatencies(samples: [LatencySample])throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_record_latencies(self.uniffiClonePointer(),
@@ -1287,6 +1308,20 @@ open func reportSceneExit(sceneId: String, ip: String, region: String?, testedAt
         FfiConverterInt64.lower(testedAt),$0
     )
 }
+}
+    
+    /**
+     * 平台对场景当前出口做健康探测（或连接失败）后上报。达到阈值且不在冷却期时，
+     * 自动换到热备里最优的节点并返回动作；否则 None。
+     */
+open func reportSceneProbe(sceneId: String, success: Bool, nowMillis: Int64)throws  -> SceneFailover? {
+    return try  FfiConverterOptionTypeSceneFailover.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_probe(self.uniffiClonePointer(),
+        FfiConverterString.lower(sceneId),
+        FfiConverterBool.lower(success),
+        FfiConverterInt64.lower(nowMillis),$0
+    )
+})
 }
     
 open func ruleStats() -> RuleStats {
@@ -1338,6 +1373,13 @@ open func scenes(nowMillis: Int64)throws  -> [Scene] {
         FfiConverterInt64.lower(nowMillis),$0
     )
 })
+}
+    
+open func setFailoverPolicy(policy: FailoverPolicy)throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_set_failover_policy(self.uniffiClonePointer(),
+        FfiConverterTypeFailoverPolicy.lower(policy),$0
+    )
+}
 }
     
     /**
@@ -1870,6 +1912,92 @@ public func FfiConverterTypeExitChange_lift(_ buf: RustBuffer) throws -> ExitCha
 #endif
 public func FfiConverterTypeExitChange_lower(_ value: ExitChange) -> RustBuffer {
     return FfiConverterTypeExitChange.lower(value)
+}
+
+
+public struct FailoverPolicy {
+    public var enabled: Bool
+    /**
+     * 连续失败多少次切换（默认 3）
+     */
+    public var threshold: UInt32
+    /**
+     * 冷却秒数（默认 30）
+     */
+    public var cooldownSecs: UInt64
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(enabled: Bool, 
+        /**
+         * 连续失败多少次切换（默认 3）
+         */threshold: UInt32, 
+        /**
+         * 冷却秒数（默认 30）
+         */cooldownSecs: UInt64) {
+        self.enabled = enabled
+        self.threshold = threshold
+        self.cooldownSecs = cooldownSecs
+    }
+}
+
+
+
+extension FailoverPolicy: Equatable, Hashable {
+    public static func ==(lhs: FailoverPolicy, rhs: FailoverPolicy) -> Bool {
+        if lhs.enabled != rhs.enabled {
+            return false
+        }
+        if lhs.threshold != rhs.threshold {
+            return false
+        }
+        if lhs.cooldownSecs != rhs.cooldownSecs {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(enabled)
+        hasher.combine(threshold)
+        hasher.combine(cooldownSecs)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeFailoverPolicy: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> FailoverPolicy {
+        return
+            try FailoverPolicy(
+                enabled: FfiConverterBool.read(from: &buf), 
+                threshold: FfiConverterUInt32.read(from: &buf), 
+                cooldownSecs: FfiConverterUInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: FailoverPolicy, into buf: inout [UInt8]) {
+        FfiConverterBool.write(value.enabled, into: &buf)
+        FfiConverterUInt32.write(value.threshold, into: &buf)
+        FfiConverterUInt64.write(value.cooldownSecs, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeFailoverPolicy_lift(_ buf: RustBuffer) throws -> FailoverPolicy {
+    return try FfiConverterTypeFailoverPolicy.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeFailoverPolicy_lower(_ value: FailoverPolicy) -> RustBuffer {
+    return FfiConverterTypeFailoverPolicy.lower(value)
 }
 
 
@@ -3881,6 +4009,86 @@ public func FfiConverterTypeSceneExceptionView_lower(_ value: SceneExceptionView
 }
 
 
+public struct SceneFailover {
+    public var failed: NodeRow
+    public var failureCount: UInt32
+    /**
+     * 已写入场景；needs_reload 恒 false（只在热备里选），平台直接 selectInGroup
+     */
+    public var apply: SceneApply
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(failed: NodeRow, failureCount: UInt32, 
+        /**
+         * 已写入场景；needs_reload 恒 false（只在热备里选），平台直接 selectInGroup
+         */apply: SceneApply) {
+        self.failed = failed
+        self.failureCount = failureCount
+        self.apply = apply
+    }
+}
+
+
+
+extension SceneFailover: Equatable, Hashable {
+    public static func ==(lhs: SceneFailover, rhs: SceneFailover) -> Bool {
+        if lhs.failed != rhs.failed {
+            return false
+        }
+        if lhs.failureCount != rhs.failureCount {
+            return false
+        }
+        if lhs.apply != rhs.apply {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(failed)
+        hasher.combine(failureCount)
+        hasher.combine(apply)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeSceneFailover: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SceneFailover {
+        return
+            try SceneFailover(
+                failed: FfiConverterTypeNodeRow.read(from: &buf), 
+                failureCount: FfiConverterUInt32.read(from: &buf), 
+                apply: FfiConverterTypeSceneApply.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: SceneFailover, into buf: inout [UInt8]) {
+        FfiConverterTypeNodeRow.write(value.failed, into: &buf)
+        FfiConverterUInt32.write(value.failureCount, into: &buf)
+        FfiConverterTypeSceneApply.write(value.apply, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSceneFailover_lift(_ buf: RustBuffer) throws -> SceneFailover {
+    return try FfiConverterTypeSceneFailover.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSceneFailover_lower(_ value: SceneFailover) -> RustBuffer {
+    return FfiConverterTypeSceneFailover.lower(value)
+}
+
+
 public struct StorageInfo {
     public var nodesBytes: Int64
     public var rulesBytes: Int64
@@ -5525,6 +5733,30 @@ fileprivate struct FfiConverterOptionTypeNodeRow: FfiConverterRustBuffer {
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterOptionTypeSceneFailover: FfiConverterRustBuffer {
+    typealias SwiftType = SceneFailover?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypeSceneFailover.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypeSceneFailover.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterOptionTypeSubscriptionDiff: FfiConverterRustBuffer {
     typealias SwiftType = SubscriptionDiff?
 
@@ -6045,6 +6277,9 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_due_subscriptions() != 39270) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_failover_policy() != 44998) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes() != 1274) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -6090,10 +6325,13 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_nodes_with_progress() != 20747) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_latencies() != 22667) {
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_latencies() != 29104) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_exit() != 54284) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_probe() != 58755) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033) {
@@ -6109,6 +6347,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_scenes() != 51937) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_failover_policy() != 8372) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception() != 4651) {

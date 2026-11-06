@@ -19,6 +19,7 @@ pub mod nodes;
 pub mod regions;
 pub mod rules;
 pub mod runtime_config;
+pub mod failover;
 pub mod scene_api;
 pub mod scenes;
 pub mod subs;

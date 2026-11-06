@@ -96,6 +96,10 @@ impl MobileCore {
         Ok(pos.into_iter().map(|(id, p)| (id, st.row(p))).collect())
     }
 
+    pub(crate) fn rows_by_id_pub(&self, ids: &[u64]) -> Result<rustc_hash::FxHashMap<u64, NodeRow>, MobileError> {
+        self.rows_by_id(ids)
+    }
+
     fn row_by_id(&self, id: u64) -> Result<NodeRow, MobileError> {
         self.rows_by_id(&[id])?.remove(&id).ok_or_else(|| MobileError::NotFound(format!("node {id:x}")))
     }
@@ -313,7 +317,7 @@ impl MobileCore {
 }
 
 #[cfg(test)]
-mod tests {
+pub(crate) mod tests {
     use super::*;
     use crate::latency::LatencySample;
     use crate::runtime_config::*;
@@ -331,7 +335,7 @@ mod tests {
         }
     }
 
-    pub(crate) fn setup() -> (tempfile::TempDir, std::sync::Arc<MobileCore>, String, Vec<NodeRow>) {
+    pub fn setup() -> (tempfile::TempDir, std::sync::Arc<MobileCore>, String, Vec<NodeRow>) {
         let d = tempfile::tempdir().unwrap();
         let core = MobileCore::new(d.path().to_string_lossy().into()).unwrap();
         let mut a = String::from("proxies:\n");
