@@ -37,6 +37,9 @@ enum AppGroup {
         return url
     }
 
+    /// mihomo external-controller-unix（扩展监听，App 读策略组/连接）。sun_path 上限 104 字节。
+    static var controllerSocketPath: String { containerURL.appendingPathComponent("zm.sock").path }
+
     /// 是否拿到了真正的 App Group 容器（false = 无签名回退）。
     static var isShared: Bool {
         FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier) != nil

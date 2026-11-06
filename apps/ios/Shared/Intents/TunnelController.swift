@@ -91,6 +91,13 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
         return manager
     }
 
+    /// 已存在的 Zephyr VPN 配置（不创建、不弹授权）；没有则 nil。
+    func existingManager() async throws -> NETunnelProviderManager? {
+        try await NETunnelProviderManager.loadAllFromPreferences().first {
+            ($0.protocolConfiguration as? NETunnelProviderProtocol)?.providerBundleIdentifier == Self.providerBundleIdentifier
+        }
+    }
+
     private func activeSession() async throws -> NETunnelProviderSession? {
         let managers = try await NETunnelProviderManager.loadAllFromPreferences()
         guard let manager = managers.first(where: {

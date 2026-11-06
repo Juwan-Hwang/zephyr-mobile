@@ -74,10 +74,16 @@ impl MobileCore {
 
     /// 平台对场景当前出口做健康探测（或连接失败）后上报。达到阈值且不在冷却期时，
     /// 自动换到热备里最优的节点并返回动作；否则 None。
+    ///
+    /// AI 场景永不自动切换（原型 index.html 672–675：AI 出口 IP 只能在用户确认后更改；
+    /// 应用例外如 Claude 固定出口也不被任何自动逻辑改动）：照常计数，但恒返回 None，平台只提示。
     pub fn report_scene_probe(&self, scene_id: String, success: bool, now_millis: i64) -> Result<Option<SceneFailover>, MobileError> {
         let (selected, standby) = {
             let sc = self.scenes.lock();
             let s = sc.get(&scene_id)?;
+            if s.kind == crate::scenes::SceneKind::Ai {
+                return Ok(None);
+            }
             match s.selected {
                 Some(id) => (id, s.standby.clone()),
                 None => return Ok(None),
@@ -112,18 +118,31 @@ mod tests {
         assert!(core.set_failover_policy(FailoverPolicy { enabled: true, threshold: 0, cooldown_secs: 30 }).is_err(), "桌面端校验生效");
         core.set_failover_policy(FailoverPolicy { enabled: true, threshold: 2, cooldown_secs: 30 }).unwrap();
         assert_eq!(core.failover_policy().threshold, 2);
-        core.apply_scene_change("ai".into(), rows[0].id, 1000).unwrap();
-        assert!(core.report_scene_probe("ai".into(), false, 1000).unwrap().is_none());
-        let f = core.report_scene_probe("ai".into(), false, 1000).unwrap().expect("第 2 次失败切换");
+        core.apply_scene_change("video".into(), rows[0].id, 1000).unwrap();
+        assert!(core.report_scene_probe("video".into(), false, 1000).unwrap().is_none());
+        let f = core.report_scene_probe("video".into(), false, 1000).unwrap().expect("第 2 次失败切换");
         assert_eq!(f.failed.id, rows[0].id);
         assert!(!f.apply.needs_reload);
         assert_eq!(f.apply.previous, Some(rows[0].id));
-        let now = core.scenes(1000).unwrap()[0].selected.clone().unwrap();
+        let now = core.scenes(1000).unwrap().into_iter().find(|s| s.id == "video").unwrap().selected.unwrap();
         assert_ne!(now.id, rows[0].id);
         // 冷却期内新节点连续失败不再切
-        core.report_scene_probe("ai".into(), false, 1000).unwrap();
-        assert!(core.report_scene_probe("ai".into(), false, 1000).unwrap().is_none());
-        // 未选节点的场景不处理
+        core.report_scene_probe("video".into(), false, 1000).unwrap();
         assert!(core.report_scene_probe("video".into(), false, 1000).unwrap().is_none());
+        // 未选节点的场景不处理
+        assert!(core.report_scene_probe("other".into(), false, 1000).unwrap().is_none());
+    }
+
+    #[test]
+    fn ai_scene_never_auto_switches() {
+        let (_d, core, _sub, rows) = crate::scene_api::tests::setup();
+        core.set_failover_policy(FailoverPolicy { enabled: true, threshold: 1, cooldown_secs: 1 }).unwrap();
+        core.apply_scene_change("ai".into(), rows[0].id, 1000).unwrap();
+        core.set_scene_exception("ai".into(), "claude".into(), Some(rows[1].id)).unwrap();
+        for _ in 0..5 {
+            assert!(core.report_scene_probe("ai".into(), false, 1000).unwrap().is_none(), "AI 出口只在用户确认后更改");
+        }
+        let ai = core.scenes(1000).unwrap().into_iter().find(|s| s.id == "ai").unwrap();
+        assert_eq!(ai.selected.unwrap().id, rows[0].id);
     }
 }

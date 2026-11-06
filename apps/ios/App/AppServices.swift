@@ -1,7 +1,7 @@
 // AppServices —— App 进程里的平台服务，生命周期 = App。
 //
 //  - 把 AppModel 注册为 App Intents 的执行者（ConnectionControl.inProcess）。
-//  - 系统 VPN：真机 CoreEngine 时，AppModel.beforeConnect 先经 TunnelController 启动 NEPacketTunnel。
+//  - 系统 VPN：真机 CoreEngine 的 connect() 经 SystemTunnelPort 写配置并启动 NEPacketTunnel。
 //  - SharedStatePublisher：引擎流 → App Group 摘要 → 小组件 / 控制中心 reload。
 //  - LiveActivityController：连接期间维持实时活动 + 灵动岛。
 //  - PendingCommand：模拟器上扩展（控制中心 / 小组件）投递的命令。
@@ -33,11 +33,7 @@ final class AppServices {
     /// 在 RootView 出现之前调用：注入连接前钩子与 Intent 执行者。
     func install(on model: AppModel) {
         ConnectionControl.inProcess = ModelConnectionControl(model: model)
-        if environment.usesSystemTunnel {
-            model.beforeConnect = {
-                try await TunnelController.shared.setConnected(true)
-            }
-        }
+        // 真机 CoreEngine 自己经 SystemTunnelPort 生成配置并启动 NEPacketTunnel，无需 beforeConnect。
     }
 
     /// RootView 的 .task 里调用；幂等。

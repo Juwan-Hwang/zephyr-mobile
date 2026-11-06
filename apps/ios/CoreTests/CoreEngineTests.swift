@@ -80,6 +80,27 @@ final class CoreEngineTests: XCTestCase {
         XCTAssertEqual(page.rows.count, 2, "旧 token 自动换新继续翻页")
     }
 
+    func testWritesTunnelConfigWithFDSentinel() async throws {
+        let e = engine()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        let url = dir.appendingPathComponent("tunnel/config.yaml")
+        try await e.writeTunnelConfig(to: url, controllerSocket: "/tmp/zm.sock")
+        let yaml = try String(contentsOf: url, encoding: .utf8)
+        XCTAssertTrue(yaml.contains("file-descriptor: -1"), "PacketTunnel 依赖该哨兵文本")
+        XCTAssertTrue(yaml.contains("external-controller-unix: /tmp/zm.sock"))
+        XCTAssertTrue(yaml.contains("hk1.example"))
+    }
+
+    func testTunnelConfigNeedsSubscription() async {
+        let e = engine()
+        do {
+            try await e.writeTunnelConfig(to: dir.appendingPathComponent("c.yaml"), controllerSocket: "/tmp/zm.sock")
+            XCTFail("无订阅应失败")
+        } catch let err as ZephyrError {
+            XCTAssertEqual(err.code, .subscriptionInvalid)
+        } catch { XCTFail("\(error)") }
+    }
+
     func testRejectsNonLinkFromQR() async {
         let e = engine()
         do {

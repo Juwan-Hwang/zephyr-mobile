@@ -1,16 +1,17 @@
 // ZephyrPacketTunnelProvider —— Zephyr 的 NEPacketTunnelProvider。
 //
 // 启动：读 TunnelConfiguration → setTunnelNetworkSettings（IPv4/IPv6 默认路由、DNS、MTU）
-//       → 取 utun fd（TunFileDescriptor）→ MihomoBridge.start(config, fd)。mihomo 以静态库在本进程运行，禁止 Process()。
+//       → 取 utun fd（TunFileDescriptor）→ 把 App 生成的配置里的 fd 哨兵换成真实 fd → MihomoBridge.start。
+//       mihomo 以静态库在本进程运行，禁止 Process()。控制口 external-controller-unix 在 App Group（App 读策略组/连接）。
 // 状态：写 SharedState.connection / rate（SharedStore 原子写 + Darwin 通知），App、小组件、控制中心据此刷新。
 // 消息：handleAppMessage 支持 TunnelRequest（status / traffic / setMode / reloadConfig）。
 //
 // 内存预算（jetsam 上限约 50 MB，超出即被杀、VPN 断开）：
 //   - 本进程只链接 NetworkExtension + Foundation，不链接 SwiftUI / ZephyrDesign / ZephyrFeatures。
-//   - Go 运行时软上限 30 MB（mihomo_set_memory_limit），给 Swift、NE 框架、包缓冲留余量。
+//   - Go 运行时软上限 30 MB（zm_set_memory_limit），给 Swift、NE 框架、包缓冲留余量。
 //   - 配置 / 编译后的规则集 / GeoIP 一律由核心 mmap 只读映射（文件背书的干净页，可被系统回收，不计 dirty footprint）；
 //     Swift 侧需要窥探配置时用 MappedFile，绝不 Data(contentsOf:) 整份读入。
-//   - 收到内存压力（DispatchSource.memoryPressure）立即 mihomo_free_os_memory()。
+//   - 收到内存压力（DispatchSource.memoryPressure）立即 zm_free_os_memory()。
 //   - 流量轮询 1 Hz，只保留一个最新值；共享文件每 5 秒最多写一次。
 
 import Foundation
@@ -87,10 +88,16 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
             guard let fd = TunFileDescriptor.resolve(from: self.packetFlow) else {
                 return self.fail(.tunUnavailable, completionHandler)
             }
+            guard let yaml = String(data: mapped.prefix(mapped.count), encoding: .utf8),
+                  let runnable = MihomoBridge.injectingTunFD(yaml, fd: fd) else {
+                return self.fail(.configMissing, completionHandler)
+            }
             do {
                 self.bridge.setMemoryLimit(bytes: Self.goMemoryLimitBytes)
-                self.bridge.setMode(config.mode.rawValue)
-                try self.bridge.start(configPath: config.configURL.path, tunFD: fd)
+                let withMode = MihomoBridge.settingMode(runnable, config.mode.rawValue)
+                try self.bridge.start(homeDir: AppGroup.coreDirectory.path, config: withMode,
+                                      controllerSocket: AppGroup.controllerSocketPath)
+                self.logger.info("mihomo started: \(self.bridge.version, privacy: .public)")
             } catch {
                 return self.fail(.coreFailed(String(describing: error)), completionHandler)
             }
@@ -133,14 +140,27 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
         case .status, .traffic:
             completionHandler?(TunnelMessageCodec.encode(response(.ok)))
         case .setMode(let newMode):
-            bridge.setMode(newMode.rawValue)
+            do { try bridge.setMode(newMode.rawValue) } catch {
+                var r = response(.failed); r.errorCode = "core_crashed"
+                completionHandler?(TunnelMessageCodec.encode(r))
+                return
+            }
             setState { $0.mode = newMode }
             try? store.update { $0.connection.mode = newMode; $0.tunnel.mode = newMode }
             completionHandler?(TunnelMessageCodec.encode(response(.ok)))
         case .reloadConfig:
+            // App 重新生成了配置（订阅更新 / 场景切换需重载）：重新注入当前 fd 后热重载。
             let config = TunnelConfiguration.load(store: store)
+            guard let fd = TunFileDescriptor.resolve(from: packetFlow),
+                  let mapped = try? MappedFile(url: config.configURL),
+                  let yaml = String(data: mapped.prefix(mapped.count), encoding: .utf8),
+                  let runnable = MihomoBridge.injectingTunFD(yaml, fd: fd) else {
+                var r = response(.failed); r.errorCode = "subscription_invalid"
+                completionHandler?(TunnelMessageCodec.encode(r))
+                return
+            }
             do {
-                try bridge.reload(configPath: config.configURL.path)
+                try bridge.reload(config: MihomoBridge.settingMode(runnable, currentMode.rawValue))
                 completionHandler?(TunnelMessageCodec.encode(response(.ok)))
             } catch {
                 var r = response(.failed); r.errorCode = "core_crashed"

@@ -32,7 +32,9 @@ enum EngineFactory {
             #else
             let mockData = false
             #endif
-            let engine = CoreEngine(fallback: MockEngine(seed: environment.seed, clock: .live), mockData: mockData)
+            // 真机：连接 / 流量 / 策略组 / 连接列表经系统隧道与 mihomo 控制口（SystemTunnelPort + MihomoClient）。
+            let tunnel: (any TunnelPort)? = environment.usesSystemTunnel ? SystemTunnelPort() : nil
+            let engine = CoreEngine(fallback: MockEngine(seed: environment.seed, clock: .live), mockData: mockData, tunnel: tunnel)
             if engine.isNative {
                 return Built(engine: engine, now: { ZFormat.nowMillis() }, environment: environment)
             }

@@ -191,10 +191,6 @@ targets:
         excludes:
           - "**/*.md"
           - "**/*.h"
-      # C 头文件只作为桥接头引用，不进任何 build phase。
-      - path: PacketTunnel/MihomoBridge/include
-        group: PacketTunnel/MihomoBridge
-        buildPhase: none
       - path: Shared/Core
         group: Shared
     info:
@@ -216,14 +212,14 @@ targets:
         INFOPLIST_FILE: PacketTunnel/Info.plist
         APPLICATION_EXTENSION_API_ONLY: YES
         SKIP_INSTALL: YES
-        SWIFT_OBJC_BRIDGING_HEADER: $(SRCROOT)/PacketTunnel/MihomoBridge/include/PacketTunnel-Bridging-Header.h
         LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks"
-        # 接入真 mihomo 时（A 提供 Mihomo.xcframework 后）：
-        #   1. 在下方 dependencies 加 `- framework: Vendor/Mihomo.xcframework`（embed: false，静态库）
-        #   2. 这里改为 SWIFT_ACTIVE_COMPILATION_CONDITIONS: "MIHOMO_LINKED $(inherited)"
-        #   3. OTHER_LDFLAGS 加 -lresolv（Go 运行时需要）
-        OTHER_LDFLAGS: "$(inherited)"
+        # 真 mihomo：Zmihomo.xcframework（tools/build-mihomo.sh ios → build/ios，Go c-archive 静态库）。
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "MIHOMO_LINKED $(inherited)"
+        # Go 运行时需要 libresolv；crypto/x509 等走 Security / CoreFoundation。
+        OTHER_LDFLAGS: "$(inherited) -lresolv -framework Security -framework CoreFoundation"
     dependencies:
+      - framework: ../../build/ios/Zmihomo.xcframework
+        embed: false
       - sdk: NetworkExtension.framework
 
   # ───────────────────────── Widgets ─────────────────────────

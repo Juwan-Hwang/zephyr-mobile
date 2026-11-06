@@ -948,6 +948,9 @@ public protocol MobileCoreProtocol : AnyObject {
     /**
      * 平台对场景当前出口做健康探测（或连接失败）后上报。达到阈值且不在冷却期时，
      * 自动换到热备里最优的节点并返回动作；否则 None。
+     *
+     * AI 场景永不自动切换（原型 index.html 672–675：AI 出口 IP 只能在用户确认后更改；
+     * 应用例外如 Claude 固定出口也不被任何自动逻辑改动）：照常计数，但恒返回 None，平台只提示。
      */
     func reportSceneProbe(sceneId: String, success: Bool, nowMillis: Int64) throws  -> SceneFailover?
     
@@ -1313,6 +1316,9 @@ open func reportSceneExit(sceneId: String, ip: String, region: String?, testedAt
     /**
      * 平台对场景当前出口做健康探测（或连接失败）后上报。达到阈值且不在冷却期时，
      * 自动换到热备里最优的节点并返回动作；否则 None。
+     *
+     * AI 场景永不自动切换（原型 index.html 672–675：AI 出口 IP 只能在用户确认后更改；
+     * 应用例外如 Claude 固定出口也不被任何自动逻辑改动）：照常计数，但恒返回 None，平台只提示。
      */
 open func reportSceneProbe(sceneId: String, success: Bool, nowMillis: Int64)throws  -> SceneFailover? {
     return try  FfiConverterOptionTypeSceneFailover.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
@@ -6331,7 +6337,7 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_exit() != 54284) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_probe() != 58755) {
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_probe() != 17449) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033) {
