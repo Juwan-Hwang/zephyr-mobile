@@ -19,38 +19,29 @@ enum HMetrics {
     static let rowHorizontal: CGFloat = 16
     /// 左右滑动切换地区：每 42pt 跨一个地区（原型 Math.round(dx/42)）
     static let scrubStep: CGFloat = 42
-    /// 地区码徽标 20 高、最小宽 28、圆角 5（`.cc`）
-    static let flagHeight: CGFloat = 20
-    static let flagMinWidth: CGFloat = 28
-    static let flagRadius: CGFloat = 5
-    /// 连接开关 66×40，旋钮 34，内边距 3（`.sw`）
-    static let switchWidth: CGFloat = 66
-    static let switchHeight: CGFloat = 40
-    static let switchKnob: CGFloat = 34
-    static let switchKnobPressed: CGFloat = 40
-    static let switchInset: CGFloat = 3
     /// 底部指令栏 52 高、距底 28（`.dock` / `.cmd`）
     static let dockHeight: CGFloat = 52
     static let dockBottom: CGFloat = 12
-    /// 吐司 52 高、圆角 18、进度条 2（`.toast`）
-    static let toastHeight: CGFloat = 52
-    static let toastRadius: CGFloat = 18
-    static let toastDrain: CGFloat = 2
     /// 细进度条 2（`.bar`）
     static let barThin: CGFloat = 2
     /// 检测中进度条宽 96（原型 scan：`.bar` width 96px）
     static let probeBarWidth: CGFloat = 96
     /// 指令输入框 56 高（`.cin`）
     static let commandFieldHeight: CGFloat = 56
-    /// 轨迹节点圆点 11、描边 1.5（`.step .dot`）
+    /// 轨迹节点圆点 11（`.step .dot`，与 ZChainStep regular 一致；流动光点按它定位）
     static let traceDot: CGFloat = 11
-    static let traceDotStroke: CGFloat = 1.5
     /// 漏斗条 6 高（`.fr .bar2`）
     static let funnelBar: CGFloat = 6
     /// 今日卡片圆角 32（`.tdy .card`）
     static let todayCardRadius: CGFloat = 32
-    /// 今日卡片宽高比（原型 346×500）
-    static let todayCardAspect: CGFloat = 346.0 / 500.0
+    /// 今日卡片尺寸（原型 346×500）：页面内按宽高比缩放，导出图片按原尺寸 ×3
+    static let todayCardSize = CGSize(width: 346, height: 500)
+    static let todayCardAspect: CGFloat = todayCardSize.width / todayCardSize.height
+    static let todayExportScale: CGFloat = 3
+    /// 今日卡片品牌字标高 14（`.cft .wmk`）
+    static let todayLockupHeight: CGFloat = 14
+    /// 主题选择胶囊高 32（`.pals button`）
+    static let paletteChipHeight: CGFloat = 32
     /// 主题色样圆点 20（`.pals i`）
     static let swatch: CGFloat = 20
     /// 1px 细线

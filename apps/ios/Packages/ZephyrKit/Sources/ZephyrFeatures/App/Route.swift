@@ -24,7 +24,7 @@ public enum SheetRoute: Hashable, Identifiable, Sendable {
     case library
     /// 场景详情（原型 06）。
     case scene(id: String)
-    /// 最近连接（原型 08）。`traceID` 非 nil 时直接打开该条的轨迹（原型 09）。
+    /// 最近连接（原型 08）。`traceID` 非 nil 时直接打开该域名的连接轨迹（原型 09）；值为域名（如 "claude.ai"）。
     case connections(traceID: String?)
     /// 今日卡片（原型 14）。
     case today

@@ -74,6 +74,8 @@ targets:
     type: application
     platform: iOS
     sources:
+      # App/Localizable.xcstrings（String Catalog）随 App 目录进 Resources；XcodeGen ≥ 2.38 识别 .xcstrings。
+      # SWIFT_EMIT_LOC_STRINGS=YES：构建时把 App / Shared/Intents 里的中文文案抽取进该目录。
       - path: App
         excludes:
           - "**/*.md"
@@ -101,7 +103,11 @@ targets:
         UIStatusBarStyle: UIStatusBarStyleDefault
         NSSupportsLiveActivities: true
         NSSupportsLiveActivitiesFrequentUpdates: false
-        NSCameraUsageDescription: 扫描订阅二维码时需要使用相机。
+        # 资料库 → 添加订阅 → 扫码（ZephyrFeatures/Subscriptions/QRScannerView）。缺这个键，首次调用相机会直接崩溃。
+        NSCameraUsageDescription: 扫描订阅二维码
+        # 资料库 → 本地端口：局域网设备通过 mixed-port 共享代理；iOS 14+ 访问局域网需要说明文案。
+        # 今日卡片 →「存储图像」（PhotoKit 仅添加）。
+        NSPhotoLibraryAddUsageDescription: 将今日卡片保存到照片
         NSLocalNetworkUsageDescription: 用于局域网设备通过本地端口共享代理。
         ZephyrAppGroup: $(ZEPHYR_APP_GROUP)
         CFBundleURLTypes:
@@ -313,9 +319,11 @@ targets:
     type: bundle.unit-test
     platform: iOS
     sources:
+      # 参考图在 SnapshotTests/__Snapshots__/<测试文件名>/，不进 bundle（测试按源码路径读写）。
       - path: SnapshotTests
         excludes:
           - "__Snapshots__/**"
+          - "**/__Snapshots__/**"
           - "**/*.md"
       # 小组件视图与实时活动视图也在这里做快照（它们不依赖 WidgetKit 运行时）。
       - path: Widgets/Views
@@ -330,6 +338,8 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.snapshot-tests
         GENERATE_INFOPLIST_FILE: YES
+        # L2 页面（订阅 / 设置 / 资料库 / 引导）合入后删掉 Cases/L2PagesSnapshotTests.swift 里的 #if，
+        # 或临时在这里加 SWIFT_ACTIVE_COMPILATION_CONDITIONS: "ZEPHYR_L2_PAGES $(inherited)"。
     dependencies:
       - package: ZephyrKit
         product: ZephyrKit
@@ -373,6 +383,7 @@ schemes:
           parallelizable: false
         - package: ZephyrKit/ZephyrKitTests
         - package: ZephyrKit/ZephyrMockTests
+        - package: ZephyrKit/ZephyrFeaturesTests
       environmentVariables:
         # 快照：缺参考图时录制且不失败（首跑 CI）；SNAPSHOT_RECORD=all 强制重录。
         SNAPSHOT_RECORD: missing

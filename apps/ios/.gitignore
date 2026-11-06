@@ -1,0 +1,36 @@
+# Zephyr iOS —— 生成物与本地状态（工程由 XcodeGen 从 project.yml 生成，不入库）
+
+# XcodeGen 生成的工程 / 工作区
+*.xcodeproj
+*.xcworkspace
+
+# XcodeGen 按 project.yml 的 info.properties 生成的 Info.plist（改键请改 project.yml）
+App/Info.plist
+PacketTunnel/Info.plist
+Widgets/Info.plist
+
+# 构建产物
+build/
+DerivedData/
+*.xcresult
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# SwiftPM
+.build/
+.swiftpm/
+Packages/**/.build/
+Packages/**/.swiftpm/
+
+# 快照：失败时的对比图（SNAPSHOT_ARTIFACTS，默认在 /tmp，以防有人指到仓库里）
+SnapshotTests/__Failures__/
+
+# Xcode 用户状态
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.moved-aside
+
+# 系统
+.DS_Store

@@ -4,6 +4,7 @@ import SwiftUI
 import ZephyrDesign
 import ZephyrKit
 
+@MainActor
 struct HomeHeader: View {
     @Environment(AppModel.self) private var model
     @ScaledMetric(relativeTo: .subheadline) private var lockupHeight: CGFloat = ZTokens.FontSize.sm

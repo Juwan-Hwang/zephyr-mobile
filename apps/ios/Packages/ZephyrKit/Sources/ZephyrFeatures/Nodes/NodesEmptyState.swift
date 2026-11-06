@@ -25,5 +25,6 @@ struct NodesEmptyState: View {
 
 #Preview {
     NodesEmptyState(query: "火星")
-        .background(LStyle.pageBackground)
+        .zPageBackground()
+        .preferredColorScheme(.dark)
 }

@@ -10,6 +10,7 @@ struct FunnelStep: Hashable, Identifiable {
     var id: String { label }
 }
 
+@MainActor
 struct SceneFunnel: View {
     let steps: [FunnelStep]
     @Environment(\.accessibilityReduceMotion) private var reduceMotion

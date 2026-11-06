@@ -7,12 +7,14 @@ import SwiftUI
 import ZephyrDesign
 import ZephyrKit
 
+@MainActor
 struct ScenesSection: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HomeSectionHeader(title: "场景", trailing: model.connection.mode == .global ? nil : model.scenesTestedText)
+            ZSectionHeader("场景", trailing: model.connection.mode == .global ? nil : model.scenesTestedText)
+                .homeSectionInsets()
             if model.connection.mode == .global {
                 GlobalModeCard()
             } else if model.scenes.isEmpty {
@@ -53,40 +55,11 @@ struct ScenesSection: View {
     static func isScrubbable(_ s: Scene) -> Bool { s.source != .subscriptionGroup }
 }
 
-/// 首页区块标题（原型 `.sec`）：左标题、右说明（可点）。待替换为 D 的 ZSectionHeader。
-struct HomeSectionHeader: View {
-    let title: String
-    var trailing: String?
-    var action: (() -> Void)?
-
-    var body: some View {
-        HStack(alignment: .firstTextBaseline) {
-            Text(verbatim: title)
-                .zType(.footnote).fontWeight(.medium)
-                .foregroundStyle(ZTokens.Colors.textSecondary)
-                .accessibilityAddTraits(.isHeader)
-            Spacer(minLength: ZTokens.Space.n3)
-            if let trailing {
-                if let action {
-                    Button(action: action) {
-                        HStack(spacing: ZTokens.Space.n1) {
-                            Text(verbatim: trailing)
-                            Image(systemName: "chevron.right").font(.caption2)
-                        }
-                        .frame(minHeight: ZTokens.Layout.touchMinIos)
-                        .contentShape(Rectangle())
-                    }
-                    .buttonStyle(ZPressStyle(haptic: .light))
-                    .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
-                } else {
-                    Text(verbatim: trailing).zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary)
-                }
-            }
-        }
-        .padding(.horizontal, HMetrics.homeInset)
-        .padding(.top, HMetrics.sectionTop)
-        .padding(.bottom, ZTokens.Space.n3)
+extension View {
+    /// ZSectionHeader 自带左右 n2、上 n6；首页按原型 `.sec` 对齐到 22 / 上 30。
+    func homeSectionInsets() -> some View {
+        padding(.horizontal, HMetrics.homeInset - ZTokens.Space.n2)
+            .padding(.top, HMetrics.sectionTop - ZTokens.Space.n6)
     }
 }
 

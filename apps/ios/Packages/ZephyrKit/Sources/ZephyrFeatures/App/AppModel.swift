@@ -8,6 +8,7 @@
 import Foundation
 import Observation
 import SwiftUI
+import ZephyrDesign
 import ZephyrKit
 
 @MainActor
@@ -48,8 +49,9 @@ public final class AppModel {
     public var isCommandPresented = false
     /// 打开指令层时预填的文字（深链 zephyr://command?q=…）。
     public var commandPrefill = ""
-    /// 带"撤销"的提示（原型 toast：已切换至东京 03 · 撤销）。
-    public var toast: UndoToast?
+    /// 带"撤销"的提示（原型 toast：已切换至东京 03 · 撤销）。HomeView 用 D 的 `.zToast($model.toast)` 展示；
+    /// 写操作用 `showUndo(_:undo:)` 生成，不要直接拼 ZToastItem。
+    public var toast: ZToastItem?
 
     /// 连接前钩子：App 层注入（启动 NEPacketTunnel、请求 VPN 授权）。抛错即中止连接。
     @ObservationIgnored public var beforeConnect: (@MainActor () async throws -> Void)?
@@ -89,15 +91,4 @@ public struct PendingSceneChange: Hashable, Sendable {
     public var from: NodeSummary
     public var to: NodeSummary
     public var exit: ExitChange?
-}
-
-/// 带撤销的提示。`undo` 为 nil 时只显示文字。
-public struct UndoToast: Identifiable, Equatable {
-    public let id = UUID()
-    public var message: String
-    public var undo: (@MainActor () async -> Void)?
-    public init(message: String, undo: (@MainActor () async -> Void)? = nil) {
-        self.message = message; self.undo = undo
-    }
-    public static func == (a: UndoToast, b: UndoToast) -> Bool { a.id == b.id }
 }

@@ -4,6 +4,7 @@ import SwiftUI
 import ZephyrDesign
 import ZephyrKit
 
+@MainActor
 struct SceneCandidateRow: View {
     let node: NodeSummary
     let isSelected: Bool
@@ -12,7 +13,7 @@ struct SceneCandidateRow: View {
 
     var body: some View {
         HStack(spacing: ZTokens.Space.n4) {
-            HFlag(region: node.region)
+            ZFlag(node.region)
             Text(verbatim: node.name)
                 .zType(.body)
                 .foregroundStyle(isSelected ? ZTokens.Colors.textPrimary : ZTokens.Colors.textSecondary)
@@ -45,7 +46,7 @@ struct SceneCandidateRow: View {
     }
 
     private var a11y: String {
-        var s = "\(HRegionName.zh(node.region)) \(node.name)，\(ZFormat.latency(node.latencyMs))"
+        var s = "\(HRegionName.name(node.region)) \(node.name)，\(ZFormat.latency(node.latencyMs))"
         if let pinnedFor { s += "，\(pinnedFor) 固定" }
         return s
     }

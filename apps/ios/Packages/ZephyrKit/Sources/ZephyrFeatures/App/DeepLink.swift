@@ -4,7 +4,7 @@
 //   zephyr://connect | disconnect | toggle
 //   zephyr://mode/rule | global | direct
 //   zephyr://scene/<id>                   场景详情
-//   zephyr://connections[/<id>]           最近连接 / 某条的轨迹
+//   zephyr://connections[/<host>]         最近连接 / 某个域名的连接轨迹
 //   zephyr://command?q=<text>             打开指令并预填
 //   zephyr://today                        今日卡片
 //   zephyr://library                      资料库
@@ -66,7 +66,7 @@ public enum DeepLink: Hashable, Sendable {
         case .disconnect: c.host = "disconnect"
         case .toggle: c.host = "toggle"
         case .mode(let m): c.host = "mode"; c.path = "/\(m)"
-        case .command(let t): c.host = "command"; if !t.isEmpty { c.queryItems = [.init(name: "q", value: t)] }
+        case .command(let t): c.host = "command"; if !t.isEmpty { c.percentEncodedQueryItems = [Self.q(t)] }
         case .sheet(let s):
             switch s {
             case .library: c.host = "library"
@@ -76,12 +76,24 @@ public enum DeepLink: Hashable, Sendable {
             }
         case .push(let r):
             switch r {
-            case .nodes(let q): c.host = "nodes"; if !q.isEmpty { c.queryItems = [.init(name: "q", value: q)] }
-            case .rules(let q): c.host = "rules"; if let q { c.queryItems = [.init(name: "q", value: q)] }
+            case .nodes(let q): c.host = "nodes"; if !q.isEmpty { c.percentEncodedQueryItems = [Self.q(q)] }
+            case .rules(let q): c.host = "rules"; if let q { c.percentEncodedQueryItems = [Self.q(q)] }
             case .subscriptions: c.host = "subscriptions"
             case .settings: c.host = "settings"
             }
         }
         return c.url ?? URL(string: "zephyr://home")!
+    }
+
+    /// `queryItems` 不会转义 `&`、`=`、`+`（它们在 query 里合法），"a&b=c" 会被读回成 "a"。
+    /// 这里先按严格字符集转义，再用 percentEncodedQueryItems 原样放入。
+    private static let queryValueAllowed: CharacterSet = {
+        var s = CharacterSet.urlQueryAllowed
+        s.remove(charactersIn: "&=+?#")
+        return s
+    }()
+
+    private static func q(_ value: String) -> URLQueryItem {
+        URLQueryItem(name: "q", value: value.addingPercentEncoding(withAllowedCharacters: queryValueAllowed) ?? value)
     }
 }

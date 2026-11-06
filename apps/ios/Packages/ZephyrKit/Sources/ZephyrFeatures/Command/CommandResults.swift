@@ -4,6 +4,7 @@ import SwiftUI
 import ZephyrDesign
 import ZephyrKit
 
+@MainActor
 struct CommandResults: View {
     let model: CommandModel
     let onRun: (CommandSuggestion) -> Void
@@ -65,6 +66,7 @@ struct CommandResults: View {
 }
 
 /// 指令卡片（原型 `.parse .pc`）：小标题 + 值，依次淡入。
+@MainActor
 private struct TokenChips: View {
     let tokens: [CommandToken]
 
@@ -91,6 +93,7 @@ private struct TokenChips: View {
     }
 }
 
+@MainActor
 private struct SuggestionRow: View {
     let s: CommandSuggestion
 

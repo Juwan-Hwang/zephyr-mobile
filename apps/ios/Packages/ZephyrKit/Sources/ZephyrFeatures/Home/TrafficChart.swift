@@ -10,6 +10,7 @@ import SwiftUI
 import ZephyrDesign
 import ZephyrKit
 
+@MainActor
 struct TrafficChart: View {
     let store: TrafficStore
     let isOn: Bool

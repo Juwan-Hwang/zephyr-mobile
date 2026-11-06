@@ -22,6 +22,7 @@ extension AppModel {
 }
 
 /// 页面级 Preview 容器：注入 AppModel、启动订阅、深色页面底。
+@MainActor
 struct HPreview<Content: View>: View {
     @State var model: AppModel
     var scheme: ColorScheme = .dark

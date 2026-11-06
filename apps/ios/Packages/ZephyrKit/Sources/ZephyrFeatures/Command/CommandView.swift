@@ -9,6 +9,7 @@ import SwiftUI
 import ZephyrDesign
 import ZephyrKit
 
+@MainActor
 struct CommandView: View {
     let prefill: String
     @Environment(AppModel.self) private var app
@@ -78,6 +79,7 @@ struct CommandView: View {
 }
 
 /// 输入框：透明 TextField 叠一层带下划线的镜像文字（原型 `.fld .mir`），光标用强调色。
+@MainActor
 private struct CommandField: View {
     @Bindable var model: CommandModel
     var focused: FocusState<Bool>.Binding
