@@ -157,7 +157,6 @@ targets:
         excludes:
           - "**/*.md"
       - path: ../../core-mobile/bindings/swift/ZephyrMobileCore.swift
-        group: Core/Bindings
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.core
@@ -298,11 +297,9 @@ targets:
     sources:
       - path: CoreTests
       - path: Core
-        group: Core
         excludes:
           - "**/*.md"
       - path: ../../core-mobile/bindings/swift/ZephyrMobileCore.swift
-        group: Core/Bindings
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.core-tests
