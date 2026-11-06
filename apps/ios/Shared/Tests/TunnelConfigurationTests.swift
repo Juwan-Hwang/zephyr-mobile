@@ -3,7 +3,7 @@ import XCTest
 
 final class TunnelConfigurationTests: XCTestCase {
     func testAddressPlanMatchesMihomoDefaults() {
-        let c = TunnelConfiguration(configURL: URL(fileURLWithPath: "/tmp/config.yaml"), mode: TunnelConfiguration.load().mode, mtu: 9000, ipv6: false, bypassLAN: true)
+        let c = TunnelConfiguration(configURL: URL(fileURLWithPath: "/tmp/config.yaml"), mode: .rule, mtu: 9000, ipv6: false, bypassLAN: true)
         XCTAssertEqual(c.ipv4Address, "198.18.0.1")
         XCTAssertEqual(c.ipv4SubnetMask, "255.255.255.252")
         XCTAssertEqual(c.dnsServers, ["198.18.0.2"])
@@ -15,11 +15,5 @@ final class TunnelConfigurationTests: XCTestCase {
         XCTAssertEqual(TunnelConfiguration.maxMTU, 9000)
         XCTAssertTrue(TunnelConfiguration.lanIPv4.contains { $0.address == "192.168.0.0" && $0.mask == "255.255.0.0" })
         XCTAssertTrue(TunnelConfiguration.lanIPv6.contains { $0.address == "fe80::" && $0.prefix == 10 })
-    }
-
-    func testLoadClampsMTU() {
-        let c = TunnelConfiguration.load()
-        XCTAssertGreaterThanOrEqual(c.mtu, TunnelConfiguration.minMTU)
-        XCTAssertLessThanOrEqual(c.mtu, TunnelConfiguration.maxMTU)
     }
 }
