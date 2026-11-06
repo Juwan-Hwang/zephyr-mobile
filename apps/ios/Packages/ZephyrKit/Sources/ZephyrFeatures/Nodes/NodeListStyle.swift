@@ -105,7 +105,7 @@ struct NodeListStyle {
         case .none: return ("—", textQuaternary)
         case .testing: return ("···", textQuaternary)
         case .value(let ms) where ms < 0: return ("超时", danger)
-        case .value(let ms): return ("\(ms) ms", ms > ZTokens.LatencyThreshold.fair ? warning : textSecondary)
+        case .value(let ms): return ("\(ms) ms", ms > ZTokens.LatencyThreshold.slow ? warning : textSecondary)
         }
     }
 }

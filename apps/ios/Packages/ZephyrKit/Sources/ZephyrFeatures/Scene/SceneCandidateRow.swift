@@ -41,7 +41,7 @@ struct SceneCandidateRow: View {
 
     private var latencyColor: Color {
         guard let ms = node.latencyMs else { return ZTokens.Colors.textTertiary }
-        return ms < 0 || ms >= ZTokens.LatencyThreshold.fair ? ZTokens.LatencyThreshold.color(Int(ms)) : ZTokens.Colors.textTertiary
+        return ms < 0 || ms >= ZTokens.LatencyThreshold.slow ? ZTokens.LatencyThreshold.color(Int(ms)) : ZTokens.Colors.textTertiary
     }
 
     private var a11y: String {
