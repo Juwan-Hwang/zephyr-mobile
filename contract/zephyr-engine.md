@@ -264,3 +264,70 @@ overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Bo
 iOS 不提供发起连接的 App，`ConnectionInfo.app` 在 iOS 恒为 null，UI 显示"仅显示域名"说明。
 
 Mock 固定值（与原型 9:41 一致）：最近连接 5 条 —— claude.ai（AI · US-Fixed-01 · 2.1 MB）、nflxvideo.net（视频 · 香港 HKT · 184 MB）、gemini.google.com（AI · 新加坡 02 · 640 KB）、github.com（其他 · TW-Fixed-01 · 12 MB）、qq.com（直连 · 3.4 MB）；claude.ai 的轨迹见上方注释中的原型文案（17 个连接、3 秒前、出口 203.0.113.24 美国 7 天未变化）。
+
+## 14. v0.2 追加（2026-11-06 15:35，core-mobile 已实现，只追加）
+真实实现在 `core-mobile`（UniFFI，`MobileCore` / `MihomoClient`），绑定见 `core-mobile/bindings`。与 §3/§5/§7/§8 的 Stream/async 形态不同：核心是同步调用，平台层自己包成 Stream/async 并放后台线程。B/C 的 MockEngine 继续按 §1–§13 的形态，真实引擎适配层把两者对上。
+
+### 订阅（§7 的真实形态：平台拉取，核心解析）
+```
+record FetchedSubscription { body: String, userinfo: String?, nowMillis: Int64 }   // userinfo = 原样的 subscription-userinfo 头
+subscriptionFetchUrl(id) -> String?          // 平台用它发请求（SSRF/DNS 校验在平台层）
+dueSubscriptions(nowMillis) -> [String]      // 到期需自动更新的 id
+importSubscription(name, url?, fetched, autoUpdateHours, progress?) -> Subscription
+previewSubscriptionUpdate(id, fetched) -> SubscriptionDiff   // 改名不算增删；空列表拒绝覆盖
+updateSubscription(id, fetched, progress?) -> SubscriptionDiff
+deleteSubscription(id); subscriptions(); subscriptionsSummary()
+```
+正文规整、URL/名称校验、URL 脱敏复用桌面 zephyr-core（base64 解码、short-id 加引号、控制面字段清洗）。
+
+### 延迟与优选（§5 补充）
+```
+record LatencySample { id: NodeId, ms: Int32 /* -1 超时 */, at: Int64 }
+record RankedNode { row: NodeRow, latencyMs: Int32, testedAt: Int64, score: Double }   // ⚠ score 为新增字段（破坏性）
+recordLatencies([LatencySample]); cachedLatencies([NodeId], nowMillis, maxAgeMillis) -> [Int32?]
+fastestNodes(query, limit, nowMillis, maxAgeMillis) -> [RankedNode]   // 桌面 smart_selector 打分：P90 + 成功率 + 稳定性
+```
+
+### 运行时配置
+```
+record RuntimeOptions { dns, tun, mode, controllerSocket, findProcess, logLevel }
+runtimeConfig(subscriptionId, RuntimeOptions) -> String   // mihomo YAML，交给 zm_start / zm_reload
+```
+控制入口只有 `external-controller-unix`（无 TCP 端口）；TUN 用系统 fd，auto-route 关。场景组、例外组、覆写规则在这里注入。
+
+### 场景（§3 的真实形态）
+```
+scenes(nowMillis) -> [Scene]        // Scene 增加 group（mihomo 组名）、selectedLatencyMs、exitRegion；selected 可空（未选=不接管流量）
+sceneCandidates(sceneId, region?, nowMillis) -> [RankedNode]   // region 空 = 当前节点地区；≤50，24h 内测过
+previewSceneChange(sceneId, nodeId) -> ExitChange              // toIp 恒 null（连上才知道）
+applySceneChange(sceneId, nodeId, nowMillis) -> SceneApply
+record SceneApply { needsReload: Bool, group: String, member: String, previous: NodeId? }
+  // needsReload=false：MihomoClient.selectInGroup(group, member) 即可（热备成员，零中断）
+  // needsReload=true ：runtimeConfig + zm_reload
+  // 撤销 = applySceneChange(sceneId, previous)
+reportSceneExit(sceneId, ip, region?, testedAt)    // 平台测得出口后回填
+setSceneException(sceneId, appId, nodeId?)         // "Claude：US-Fixed-01"；nodeId=null 删除；需重载
+sceneForHost(host) -> String?
+```
+内置应用目录（appId）：chatgpt、claude、gemini、perplexity、grok（AI）；netflix、youtube、disney、max、primevideo（视频）。
+规则顺序：Zephyr 覆写 → 场景例外 → 场景应用域名 → 订阅规则；"其他"场景选了节点时接管 MATCH。
+
+### 覆写（§13 overrideHost 的真实形态）
+```
+overrideHost(host, target, sceneId?, persistent)   // target=unchanged 即清除；persistent=false 不落盘（进程内有效）；需重载
+hostOverride(host) -> HostOverride?
+```
+
+### MihomoClient（§4、§8、§13 轨迹的数据源，unix socket REST）
+```
+MihomoClient(socketPath)
+version(); policyGroups(); groupMembers(group, offset, limit ≤500); selectInGroup(group, member)
+testGroup(group, url, timeoutMs); activeConnections(limit ≤200); recentHosts(limit); hostTrace(host)
+closeConnection(id); closeAllConnections(); setMode(mode)
+```
+
+### 存储
+`storageInfo() -> StorageInfo { nodesBytes, rulesBytes, subscriptionsBytes, cacheBytes }`（§13 的 freeBytes 由平台层取）。
+
+### 错误码追加
+`not_running`（mihomo 未运行或 socket 不通）。`scene_not_found` 已在 §10。
