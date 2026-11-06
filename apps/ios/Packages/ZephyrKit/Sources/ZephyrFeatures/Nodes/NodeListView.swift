@@ -21,7 +21,7 @@ final class NodeListView: UIView, UICollectionViewDataSource, UICollectionViewDe
 
     let store: NodeRowStore
     var rowMap = NodeRowMap.empty
-    var window = VirtualScrollWindow(rowCount: 0, rowHeight: ZTokens.Layout.rowHeight)
+    var scrollWindow = VirtualScrollWindow(rowCount: 0, rowHeight: ZTokens.Layout.rowHeight)
     var style: NodeListStyle
     var accent: Color = ZTokens.Accent.blue.color
     var reduceMotion = false
@@ -74,7 +74,7 @@ final class NodeListView: UIView, UICollectionViewDataSource, UICollectionViewDe
         guard generation != appliedGeneration else { return }
         appliedGeneration = generation
         self.rowMap = rowMap
-        window.reset(rowCount: rowMap.rowCount)
+        scrollWindow.reset(rowCount: rowMap.rowCount)
         collectionView.reloadData()
         isAdjusting = true
         collectionView.setContentOffset(.zero, animated: false)   // 同时打断进行中的惯性
@@ -102,11 +102,11 @@ final class NodeListView: UIView, UICollectionViewDataSource, UICollectionViewDe
         if !rowMap.isEmpty, case .node = rowMap.row(at: row) { isNodeRow = true }
         let pinnedOffset = isNodeRow ? Double(NodeListStyle.pinnedHeight) : 0
         isAdjusting = true
-        if let fast = window.physicalOffsetInWindow(row: row, viewport: vp) {
+        if let fast = scrollWindow.physicalOffsetInWindow(row: row, viewport: vp) {
             // 快路径：目标在当前窗口内，只改偏移（索引条拖动的常态）。
             collectionView.setContentOffset(CGPoint(x: 0, y: max(0, fast - pinnedOffset)), animated: false)
         } else {
-            let y = window.jump(toRow: row, viewport: vp)
+            let y = scrollWindow.jump(toRow: row, viewport: vp)
             collectionView.reloadData()
             collectionView.setContentOffset(CGPoint(x: 0, y: max(0, y - pinnedOffset)), animated: false)
         }
@@ -131,8 +131,8 @@ final class NodeListView: UIView, UICollectionViewDataSource, UICollectionViewDe
         footer.set(tested: store.testedCount)
         rail.setCodes(rowMap.sections.map(\.region), style: style)
         if heightChanged {
-            let keep = window.firstVisibleRow(physical: Double(collectionView.contentOffset.y))
-            let y = window.setRowHeight(Double(style.rowHeight), keepingRow: keep, viewport: Double(viewportHeight))
+            let keep = scrollWindow.firstVisibleRow(physical: Double(collectionView.contentOffset.y))
+            let y = scrollWindow.setRowHeight(Double(style.rowHeight), keepingRow: keep, viewport: Double(viewportHeight))
             layout.rowHeight = style.rowHeight
             isAdjusting = true
             collectionView.reloadData()
@@ -180,11 +180,11 @@ final class NodeListView: UIView, UICollectionViewDataSource, UICollectionViewDe
     func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        window.physicalRowCount
+        scrollWindow.physicalRowCount
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let row = window.logicalRow(forItem: indexPath.item)
+        let row = scrollWindow.logicalRow(forItem: indexPath.item)
         switch rowMap.row(at: row) {
         case .header(let s):
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NodeHeaderCell.reuseID, for: indexPath) as! NodeHeaderCell
@@ -205,13 +205,13 @@ final class NodeListView: UIView, UICollectionViewDataSource, UICollectionViewDe
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: false)
-        guard case .node(_, let ordinal, _) = rowMap.row(at: window.logicalRow(forItem: indexPath.item)),
+        guard case .node(_, let ordinal, _) = rowMap.row(at: scrollWindow.logicalRow(forItem: indexPath.item)),
               let node = store.node(atOrdinal: ordinal) else { return }
         onSelect?(node)
     }
 
     func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        if case .node = rowMap.row(at: window.logicalRow(forItem: indexPath.item)) { return true }
+        if case .node = rowMap.row(at: scrollWindow.logicalRow(forItem: indexPath.item)) { return true }
         return false
     }
 
@@ -220,7 +220,7 @@ final class NodeListView: UIView, UICollectionViewDataSource, UICollectionViewDe
     /// 遍历可见 cell（≤ 20 个）直接重配，不走 reload。
     func reconfigureVisible(where match: ((Int64) -> Bool)? = nil) {
         for ip in collectionView.indexPathsForVisibleItems {
-            let row = window.logicalRow(forItem: ip.item)
+            let row = scrollWindow.logicalRow(forItem: ip.item)
             switch rowMap.row(at: row) {
             case .node(_, let ordinal, _):
                 guard match?(ordinal) ?? true, let cell = collectionView.cellForItem(at: ip) as? NodeCell else { continue }
@@ -242,7 +242,7 @@ final class NodeListView: UIView, UICollectionViewDataSource, UICollectionViewDe
     private func latencyChanged(_ ids: Set<NodeId>) {
         for ip in collectionView.indexPathsForVisibleItems {
             guard let cell = collectionView.cellForItem(at: ip) as? NodeCell, let id = cell.nodeId, ids.contains(id),
-                  case .node(_, let ordinal, _) = rowMap.row(at: window.logicalRow(forItem: ip.item)),
+                  case .node(_, let ordinal, _) = rowMap.row(at: scrollWindow.logicalRow(forItem: ip.item)),
                   let node = store.node(atOrdinal: ordinal) else { continue }
             cell.setLatency(store.latencyState(for: node), style: style)
         }

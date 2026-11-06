@@ -24,7 +24,7 @@ extension NodeListView {
 
     /// 点状态栏回顶部：物理顶部未必是逻辑顶部，改为自己跳。
     func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
-        if window.baseRow == 0 { return true }
+        if scrollWindow.baseRow == 0 { return true }
         jump(toRow: 0)
         return false
     }
@@ -34,7 +34,7 @@ extension NodeListView {
     /// 直接改 contentOffset 不会打断拖动或惯性（Apple StreetScroller 同款做法）。
     func recenterIfNeeded() {
         let y = collectionView.contentOffset.y
-        let k = window.recenterIfNeeded(physical: Double(y), viewport: Double(viewportHeight))
+        let k = scrollWindow.recenterIfNeeded(physical: Double(y), viewport: Double(viewportHeight))
         guard k != 0 else { return }
         isAdjusting = true
         let newY = y - CGFloat(k) * style.rowHeight
@@ -56,19 +56,19 @@ extension NodeListView {
         }
         let y = Double(collectionView.contentOffset.y)
         let rh = Double(style.rowHeight)
-        let first = window.firstVisibleRow(physical: y)
+        let first = scrollWindow.firstVisibleRow(physical: y)
         let s = rowMap.sectionIndex(forRow: first)
         let sec = rowMap.sections[s]
 
         // 原型：vOff > 0.5 行才显示置顶头。
-        let showPinned = window.virtualOffset(physical: y) > rh * 0.5
+        let showPinned = scrollWindow.virtualOffset(physical: y) > rh * 0.5
         pinned.isHidden = !showPinned
         if showPinned {
             pinned.show(code: sec.region, name: sec.name, count: ZFormat.count(sec.count), style: style)
             // 下一个分区头顶上来时把置顶头推上去。
             var push: CGFloat = 0
             if s + 1 < rowMap.sections.count {
-                let nextTop = Double(rowMap.sections[s + 1].headerRow - window.baseRow) * rh - y
+                let nextTop = Double(rowMap.sections[s + 1].headerRow - scrollWindow.baseRow) * rh - y
                 let h = Double(NodeListStyle.pinnedHeight)
                 if nextTop < h { push = CGFloat(min(0, nextTop - h)) }
             }
@@ -83,7 +83,7 @@ extension NodeListView {
 
     func requestVisiblePages() {
         guard !rowMap.isEmpty else { return }
-        let rows = window.visibleRows(physical: Double(collectionView.contentOffset.y), viewport: Double(collectionView.bounds.height))
+        let rows = scrollWindow.visibleRows(physical: Double(collectionView.contentOffset.y), viewport: Double(collectionView.bounds.height))
         guard !rows.isEmpty else { return }
         let lo = ordinal(atOrAfter: rows.lowerBound)
         let hi = ordinal(atOrAfter: rows.upperBound - 1) + 1
@@ -128,7 +128,7 @@ extension NodeListView {
         var nodes: [NodeSummary] = []
         let sorted = collectionView.indexPathsForVisibleItems.sorted { $0.item < $1.item }
         for ip in sorted {
-            guard case .node(_, let o, _) = rowMap.row(at: window.logicalRow(forItem: ip.item)),
+            guard case .node(_, let o, _) = rowMap.row(at: scrollWindow.logicalRow(forItem: ip.item)),
                   let n = store.node(atOrdinal: o) else { continue }
             nodes.append(n)
         }
@@ -158,7 +158,7 @@ extension NodeListView {
     /// VoiceOver：上下轻扫切换分区。
     func stepSection(_ delta: Int) {
         guard !rowMap.sections.isEmpty else { return }
-        let first = window.firstVisibleRow(physical: Double(collectionView.contentOffset.y))
+        let first = scrollWindow.firstVisibleRow(physical: Double(collectionView.contentOffset.y))
         let s = rowMap.sectionIndex(forRow: first)
         let target = min(rowMap.sections.count - 1, max(0, s + delta))
         jump(toRow: rowMap.sections[target].headerRow)
@@ -166,7 +166,7 @@ extension NodeListView {
 
     func currentSectionDescription() -> String {
         guard !rowMap.sections.isEmpty else { return "" }
-        let first = window.firstVisibleRow(physical: Double(collectionView.contentOffset.y))
+        let first = scrollWindow.firstVisibleRow(physical: Double(collectionView.contentOffset.y))
         let sec = rowMap.sections[rowMap.sectionIndex(forRow: first)]
         return "\(sec.name)，\(ZFormat.count(sec.count)) 个"
     }
