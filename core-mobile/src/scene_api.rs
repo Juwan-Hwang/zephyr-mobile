@@ -131,7 +131,8 @@ impl MobileCore {
 
     /// 由场景、例外、覆写算出注入计划（runtime_config 内部用）。
     pub(crate) fn scene_plan(&self) -> Result<ScenePlan, MobileError> {
-        let sc = self.scenes.lock();
+        // 先复制再放锁：下面要取 subs 锁，而订阅更新路径是 subs → scenes，避免锁序反转
+        let sc = self.scenes.lock().clone();
         let ids = sc.referenced_nodes();
         let mut plan = ScenePlan::default();
         let rows = if ids.is_empty() { Default::default() } else { self.rows_by_id(&ids).unwrap_or_default() };
@@ -223,7 +224,7 @@ impl MobileCore {
 
     pub fn preview_scene_change(&self, scene_id: String, node_id: u64) -> Result<ExitChange, MobileError> {
         let to = self.row_by_id(node_id)?;
-        let sc = self.scenes.lock();
+        let sc = self.scenes.lock().clone();
         let s = sc.get(&scene_id)?;
         let from_region = s.exit_region.clone().or_else(|| s.selected.and_then(|id| self.row_by_id(id).ok()).map(|r| r.region));
         let (affected, unchanged) = sc.apps_split(s);
