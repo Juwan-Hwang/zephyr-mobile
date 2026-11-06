@@ -16,12 +16,33 @@ jobs:
         run: node tokens/build.mjs --check
       - name: fixtures 与原型一致
         run: node tools/gen-mock-fixtures.js && git diff --exit-code contract/fixtures
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: core-mobile }
+      - name: 单测
+        working-directory: core-mobile
+        run: cargo test --lib
+      - name: 全量 1310 万节点对照原型
+        working-directory: core-mobile
+        run: cargo test --release --test full_scale -- --ignored
+      - name: UniFFI 绑定无漂移
+        run: tools/gen-bindings.sh --check
   ios:
     if: hashFiles('apps/ios/project.yml') != ''
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: core-mobile }
+      - name: ZephyrMobileCore.xcframework（→ build/ios）
+        run: tools/build-ios-xcframework.sh
       - run: brew install xcodegen
       - name: generate
         working-directory: apps/ios
@@ -48,6 +69,11 @@ jobs:
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 17 }
       - uses: gradle/actions/setup-gradle@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: core-mobile }
+      - name: core-mobile .so（→ core-engine/src/main/jniLibs，不入库）
+        run: cargo install cargo-ndk --locked && ABIS="arm64-v8a x86_64" tools/build-android-libs.sh
       - name: build, unit test, paparazzi verify
         working-directory: apps/android
         run: ./gradlew --no-daemon assembleDebug testDebugUnitTest verifyPaparazziDebug

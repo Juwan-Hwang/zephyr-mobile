@@ -2,3 +2,5 @@ target/
 *.zn
 *.zr
 .DS_Store
+build/
+apps/android/core-engine/src/main/jniLibs/
