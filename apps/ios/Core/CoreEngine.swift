@@ -213,7 +213,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         guard let c = await nodes() else {
             return mockData ? await fallback.nodeIndex() : ZephyrKit.NodeIndex(total: 0, sections: [], testedCount: 0)
         }
-        guard let i = try? await run({ try c.nodeIndex() }) else { return ZephyrKit.NodeIndex(total: 0, sections: [], testedCount: 0) }
+        guard let i = try? await run(.nodeNotFound, { try c.nodeIndex() }) else { return ZephyrKit.NodeIndex(total: 0, sections: [], testedCount: 0) }
         return ZephyrKit.NodeIndex(total: Int64(i.total), sections: i.sections.map(CoreEngine.section), testedCount: 0)
     }
 
