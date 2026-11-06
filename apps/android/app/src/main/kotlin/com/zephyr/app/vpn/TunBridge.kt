@@ -10,6 +10,7 @@ import com.zephyr.engine.core.CoreEngine
 import com.zephyr.engine.core.Mihomo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.first
 import java.io.File
 
 /**
@@ -43,9 +44,15 @@ interface TunBridge {
             } catch (t: Throwable) { return t.message ?: "runtime config failed" }
             Mihomo.setMemoryLimit(MEMORY_LIMIT)
             sock.delete() // stale socket from a crashed run would make the listener fail
-            return withContext(Dispatchers.IO) { Mihomo.start(sock.parentFile!!.path, cfg, sock.path) }
+            val err = withContext(Dispatchers.IO) { Mihomo.start(sock.parentFile!!.path, cfg, sock.path) }
+            if (err == null) engine.reloader = {
+                // Scene/exception/override changes that need new groups or rules: same fd, fresh config.
+                val s = engine.settings().first(); val m = engine.connectionState().first().mode
+                engine.runtimeConfig(fd.fd, sock.path, s, m)?.let { withContext(Dispatchers.IO) { Mihomo.reload(it) } } ?: "no active subscription"
+            }
+            return err
         }
-        override fun detach() { Mihomo.stop(); Mihomo.trimMemory() }
+        override fun detach() { engine.reloader = null; Mihomo.stop(); Mihomo.trimMemory() }
     }
 
     companion object {

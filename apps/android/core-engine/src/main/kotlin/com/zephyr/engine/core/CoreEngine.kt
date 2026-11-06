@@ -8,6 +8,10 @@ import com.zephyr.core.mobile.RuntimeOptions
 import com.zephyr.core.mobile.TunConfig
 import com.zephyr.core.mobile.TunStackKind
 import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.map
+import com.zephyr.core.mobile.SceneKind as CoreSceneKind
+import com.zephyr.core.mobile.SceneSource as CoreSceneSource
+import com.zephyr.core.mobile.TraceTarget as CoreTraceTarget
 import kotlinx.coroutines.flow.filterNotNull
 import com.zephyr.core.mobile.ProxyMode as CoreMode
 import com.zephyr.engine.ErrorCode
@@ -238,62 +242,75 @@ class CoreEngine(
         return NodeSummary(id = id, name = name, region = LiveNames.regionOf(name), protocol = type?.uppercase() ?: "", latencyMs = latency?.takeIf { it > 0 })
     }
 
-    private fun sceneKind(name: String): SceneKind {
-        val n = name.lowercase()
-        return when {
-            listOf("ai", "openai", "chatgpt", "gpt", "claude", "gemini", "copilot").any { k -> Regex("(^|[^a-z])$k([^a-z]|$)").containsMatchIn(n) } -> SceneKind.AI
-            listOf("视频", "流媒体", "媒体", "netflix", "youtube", "disney", "stream", "media", "video").any { n.contains(it) } -> SceneKind.VIDEO
-            listOf("其他", "其它", "漏网", "final", "other", "fallback").any { n.contains(it) } -> SceneKind.OTHER
-            else -> SceneKind.CUSTOM
-        }
-    }
+    // ── Scenes (core-mobile owns pools, selection, exceptions; mihomo hot-switches) ─────────────────
+    private val scenesBump = kotlinx.coroutines.flow.MutableStateFlow(0)
 
     /**
-     * Scenes while live: the profile's groups in config order, kind by name. Interim until core injects
-     * Zephyr's own scene groups into the runtime config (asked A, Issue #1); then only this changes.
+     * Set by the VPN layer while the embedded core runs: rebuilds the runtime config with the live tun fd
+     * and calls `zm_reload`. Needed when a scene change / exception / override alters the config.
      */
-    private fun liveScenes(r: LivePort): List<Scene> {
-        val groups = r.groups()
-        val byName = groups.associateBy { it.name }
-        fun leaf(start: String?): String? { var cur = start; var hops = 0; while (cur != null && hops++ < 8) { cur = byName[cur]?.selected ?: return cur }; return cur }
-        return groups.map { g ->
-            val l = leaf(g.selected) ?: "DIRECT"
-            Scene(
-                id = g.name, kind = sceneKind(g.name), name = g.name, available = g.memberCount,
-                selected = summary(l, null, null),
-                source = if (g.type == GroupType.SELECT) SceneSource.SUBSCRIPTION_GROUP else SceneSource.AUTO,
-                testedAt = g.testedAt,
-            )
-        }
+    @Volatile var reloader: (suspend () -> String?)? = null
+
+    private suspend fun reloadIfRunning() {
+        val r = reloader ?: return
+        r()?.let { throw ZephyrException(ErrorCode.CORE_CRASHED, it) }
     }
 
-    override fun scenes(): Flow<List<Scene>> =
-        switching({ r -> polling(r, tick * 3) { liveScenes(it) }.distinctUntilChanged() }, { fallback.scenes() }, emptyList())
+    override fun scenes(): Flow<List<Scene>> = flow {
+        val c = nodes()
+        if (c == null) { emitAll(if (mockData) fallback.scenes() else flowOf(emptyList())); return@flow }
+        // Re-read on every bump (apply/retest) and on a slow tick (selection, exits and latencies move underneath).
+        emitAll(merge(scenesBump, flow { while (true) { delay(tick * 5); emit(0) } }).map {
+            withContext(io) { wrap { c.scenes(clock()) } }.map(::scene)
+        }.distinctUntilChanged())
+    }
 
     override suspend fun sceneCandidates(sceneId: String, region: String?): List<NodeSummary> {
-        val r = live() ?: return fallback.sceneCandidates(sceneId, region)
-        return withContext(io) { liveCall(ErrorCode.SCENE_NOT_FOUND) { r.members(sceneId, 0, 500) } }
-            .filterNot { LiveNames.isBuiltin(it.name) }.map { summary(it.name, it.type, it.latencyMs) }
-            .filter { region == null || it.region == region }
-            .sortedWith(compareBy(nullsLast()) { it.latencyMs }).take(50)
+        val c = nodes() ?: return if (mockData) fallback.sceneCandidates(sceneId, region) else emptyList()
+        return withContext(io) { sceneCall { c.sceneCandidates(sceneId, region, clock()) } }.map { row(it.row).copy(latencyMs = it.latencyMs.takeIf { ms -> ms > 0 }) }
     }
 
     override suspend fun previewSceneChange(sceneId: String, nodeId: NodeId): ExitChange {
-        val r = live() ?: return fallback.previewSceneChange(sceneId, nodeId)
-        val scene = withContext(io) { liveCall { liveScenes(r) } }.firstOrNull { it.id == sceneId } ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
-        val to = names[nodeId] ?: throw ZephyrException(ErrorCode.NODE_NOT_FOUND, "$nodeId")
-        return ExitChange(sceneId, scene.selected.region, null, LiveNames.regionOf(to), null)
+        val c = nodes() ?: return fallback.previewSceneChange(sceneId, nodeId)
+        val x = withContext(io) { sceneCall { c.previewSceneChange(sceneId, nodeId.toULong()) } }
+        return ExitChange(x.sceneId, x.fromRegion ?: "", x.fromIp, x.toRegion, x.toIp, x.affectedApps, x.unchangedApps)
     }
 
     override suspend fun applySceneChange(sceneId: String, nodeId: NodeId) {
-        if (live() == null) return fallback.applySceneChange(sceneId, nodeId)
-        selectInGroup(sceneId, nodeId)
+        val c = nodes() ?: return fallback.applySceneChange(sceneId, nodeId)
+        val a = withContext(io) { sceneCall { c.applySceneChange(sceneId, nodeId.toULong(), clock()) } }
+        val l = live()
+        when {
+            l == null -> Unit // not running: the next start picks it up from the runtime config
+            !a.needsReload -> withContext(io) { liveCall(ErrorCode.SCENE_NOT_FOUND) { l.select(a.group, a.member) } }
+            else -> reloadIfRunning()
+        }
+        scenesBump.value++
     }
 
     override suspend fun retestScene(sceneId: String): Scene {
-        val r = live() ?: return fallback.retestScene(sceneId)
-        testGroup(sceneId)
-        return withContext(io) { liveCall { liveScenes(r) } }.firstOrNull { it.id == sceneId } ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
+        val c = nodes() ?: return fallback.retestScene(sceneId)
+        val group = withContext(io) { wrap { c.scenes(clock()) } }.firstOrNull { it.id == sceneId }?.group ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
+        live()?.let { l -> runCatching { withContext(io) { l.test(group, LivePort.TEST_URL, 5_000) } } }
+        scenesBump.value++
+        return withContext(io) { wrap { c.scenes(clock()) } }.firstOrNull { it.id == sceneId }?.let(::scene) ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
+    }
+
+    private val unselected = NodeSummary(id = -1, name = "未选择", region = "", protocol = "")
+
+    private fun scene(s: com.zephyr.core.mobile.Scene) = Scene(
+        id = s.id,
+        kind = when (s.kind) { CoreSceneKind.AI -> SceneKind.AI; CoreSceneKind.VIDEO -> SceneKind.VIDEO; CoreSceneKind.OTHER -> SceneKind.OTHER; CoreSceneKind.CUSTOM -> SceneKind.CUSTOM },
+        name = s.name, available = s.available,
+        selected = s.selected?.let { row(it).copy(latencyMs = s.selectedLatencyMs?.takeIf { ms -> ms > 0 }) } ?: unselected,
+        exitIp = s.exitIp,
+        source = when (s.source) { CoreSceneSource.AUTO -> SceneSource.AUTO; CoreSceneSource.MANUAL -> SceneSource.MANUAL; CoreSceneSource.SUBSCRIPTION_GROUP -> SceneSource.SUBSCRIPTION_GROUP },
+        testedAt = s.testedAt, note = s.note,
+        exceptions = s.exceptions.mapNotNull { e -> e.node?.let { SceneException(e.app, row(it)) } },
+    )
+
+    private inline fun <T> sceneCall(block: () -> T): T = try { block() } catch (e: MobileException) {
+        throw ZephyrException(ZephyrError(if (e is MobileException.NotFound) ErrorCode.SCENE_NOT_FOUND else code(e), e.message ?: e.javaClass.simpleName))
     }
 
     override fun policyGroups(): Flow<List<PolicyGroup>> = switching({ r ->
@@ -365,9 +382,10 @@ class CoreEngine(
     }
 
     override suspend fun overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Boolean) {
-        if (live() == null) return fallback.overrideHost(host, target, sceneId, persistent)
-        // Needs the Zephyr override rule layer in the runtime config (contract §13); not in core yet.
-        throw ZephyrException(ErrorCode.INTERNAL, "override not available yet")
+        val c = core ?: return fallback.overrideHost(host, target, sceneId, persistent)
+        val t = when (target) { TraceTarget.UNCHANGED -> CoreTraceTarget.UNCHANGED; TraceTarget.DIRECT -> CoreTraceTarget.DIRECT; TraceTarget.SCENE -> CoreTraceTarget.SCENE }
+        withContext(io) { sceneCall { c.overrideHost(host, t, sceneId, persistent) } }
+        reloadIfRunning()
     }
 
     private inline fun <T> liveCall(notFound: ErrorCode = ErrorCode.NODE_NOT_FOUND, block: () -> T): T = try { block() } catch (e: MobileException) {

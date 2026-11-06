@@ -3,7 +3,6 @@ package com.zephyr.engine.core
 import com.zephyr.engine.ErrorCode
 import com.zephyr.engine.GroupType
 import com.zephyr.engine.ProxyMode
-import com.zephyr.engine.SceneKind
 import com.zephyr.engine.ZephyrException
 import com.zephyr.engine.mock.MockEngine
 import kotlinx.coroutines.flow.first
@@ -50,19 +49,6 @@ class CoreEngineLiveTest {
     @Test fun mapsLiveCore() = runBlocking {
         val f = Fake()
         val e = CoreEngine(MockEngine(clock = { 0L }), live = { f }, tick = 10, mockData = false, clock = { 9_000L })
-
-        val scenes = e.scenes().first()
-        assertEquals(listOf("AI", "视频", "HK-Auto"), scenes.map { it.name })
-        assertEquals(SceneKind.AI, scenes[0].kind); assertEquals(SceneKind.VIDEO, scenes[1].kind)
-        assertEquals("香港 HKT 02", scenes[1].selected.name) // follows 视频 → HK-Auto → leaf
-        assertEquals("HK", scenes[1].selected.region)
-
-        val cands = e.sceneCandidates("AI", null)
-        assertEquals(listOf("US 洛杉矶 01", "香港 HKT 02"), cands.map { it.name }) // DIRECT out; timeout last
-        assertNull(cands[1].latencyMs)
-        assertEquals("HK", e.previewSceneChange("AI", cands[1].id).toRegion)
-        e.applySceneChange("AI", cands[1].id)
-        assertTrue("select AI=香港 HKT 02" in f.calls)
 
         val page = e.groupMembers("AI", 0, 50)
         assertEquals(3L, page.total); assertEquals("直连", page.rows[2].name)

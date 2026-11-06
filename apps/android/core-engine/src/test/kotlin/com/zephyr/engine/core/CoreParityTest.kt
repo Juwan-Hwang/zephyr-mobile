@@ -1,6 +1,7 @@
 package com.zephyr.engine.core
 
 import com.zephyr.engine.mock.MockEngine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assume.assumeTrue
 import org.junit.Test
@@ -73,6 +74,16 @@ class CoreParityTest {
         kotlin.test.assertTrue(cfg.contains("/tmp/zm.sock"), "unix controller")
         kotlin.test.assertTrue(Regex("file-descriptor:\\s*42").containsMatchIn(cfg), "tun fd")
         println("runtime config ${cfg.length} B:\n" + cfg.lines().filter { it.startsWith("tun:") || it.startsWith("  ") }.take(14).joinToString("\n"))
+        kotlin.test.assertTrue(Regex("(?m)^proxy-groups:").containsMatchIn(cfg), "groups")
+        val scenes = core.scenes().first()
+        println("scenes: " + scenes.joinToString { "${it.id}/${it.kind}/${it.name}/${it.selected.name}/${it.available}" })
+        kotlin.test.assertTrue(scenes.isNotEmpty(), "core scenes")
+        val pick = core.queryNodes("东京").let { q -> core.nodeRows(q.token, 0, 1).rows.single() }
+        val x = core.previewSceneChange(scenes[0].id, pick.id)
+        assertEquals("JP", x.toRegion)
+        core.applySceneChange(scenes[0].id, pick.id)
+        assertEquals("日本 东京 NTT 01", core.scenes().first().first { it.id == scenes[0].id }.selected.name)
+        core.overrideHost("claude.ai", com.zephyr.engine.TraceTarget.DIRECT, null, persistent = false)
         core.deleteSubscription(sub.id)
         assertEquals(null, core.activeSubscription())
     }
