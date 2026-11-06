@@ -91,8 +91,8 @@ struct NodeListStyle {
             separator: r(ZTokens.Colors.borderSubtle),
             badgeBorder: r(ZTokens.Colors.borderDefault),
             accent: r(accent),
-            warning: r(ZTokens.Colors.latencyFair),
-            danger: r(ZTokens.Colors.latencyBad),
+            warning: r(ZTokens.Colors.latencySlow),
+            danger: r(ZTokens.Colors.latencyTimeout),
             background: .systemGroupedBackground.resolvedColor(with: traits),
             bubbleBackground: r(ZTokens.Colors.bgElevated),
             skeleton: r(ZTokens.Colors.bgMuted)

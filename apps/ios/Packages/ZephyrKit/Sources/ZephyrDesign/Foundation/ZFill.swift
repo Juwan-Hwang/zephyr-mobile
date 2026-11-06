@@ -39,7 +39,7 @@ public struct ZQuaternaryText: ShapeStyle, Sendable {
 
 /// 开关“开”的颜色（原型 --green #30D158 / 浅色 #34C759，等于 latencyGood）。
 public enum ZSwitchColor {
-    public static var on: Color { ZTokens.Colors.latencyGood }
+    public static var on: Color { ZTokens.Colors.screenGreen }
     /// 开关“关”轨道（原型 --s4）。
     public static var off: Color { ZTokens.Colors.borderStrong }
 }
