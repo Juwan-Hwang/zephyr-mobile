@@ -19,6 +19,7 @@ struct SceneRow: View {
     let pendingTarget: NodeSummary?
 
     @Environment(AppModel.self) private var model
+    @Environment(\.dynamicTypeSize) private var typeSize
     @AppStorage("home.scrubCoachSeen") private var coachSeen = false
     @State private var scrubIndex: Int?
     @State private var startIndex = 0
@@ -33,10 +34,14 @@ struct SceneRow: View {
     }
 
     var body: some View {
-        HStack(alignment: .center, spacing: ZTokens.Space.n4) {
+        // 大字体（原型 19 xl.png）：左右两栏改为上下堆叠，节点名与锁定说明不再截断。
+        let stacked = typeSize >= .xxxLarge
+        let layout = stacked ? AnyLayout(VStackLayout(alignment: .leading, spacing: ZTokens.Space.n2))
+                             : AnyLayout(HStackLayout(alignment: .center, spacing: ZTokens.Space.n4))
+        layout {
             leading
-            Spacer(minLength: ZTokens.Space.n3)
-            trailing
+            if !stacked { Spacer(minLength: ZTokens.Space.n3) }
+            trailing(stacked: stacked)
         }
         .padding(.vertical, HMetrics.rowVertical)
         .padding(.horizontal, HMetrics.rowHorizontal)
@@ -96,14 +101,14 @@ struct SceneRow: View {
         }
     }
 
-    private var trailing: some View {
-        VStack(alignment: .trailing, spacing: ZTokens.Space.n1) {
+    private func trailing(stacked: Bool) -> some View {
+        VStack(alignment: stacked ? .leading : .trailing, spacing: ZTokens.Space.n1) {
             HStack(spacing: ZTokens.Space.n3) {
                 ZFlag(shown.region, isHighlighted: ticking)
                 Text(verbatim: shown.name)
                     .zType(.headline).fontWeight(.regular)
                     .foregroundStyle(ZTokens.Colors.screenT1)
-                    .lineLimit(1)
+                    .lineLimit(stacked ? nil : 1)
                     .contentTransition(.opacity)
             }
             if let ex = scene.exceptions.first {
@@ -115,12 +120,12 @@ struct SceneRow: View {
                 }
                 .zType(.caption)
                 .foregroundStyle(ZTokens.Colors.screenT3)
-                .lineLimit(1)
+                .lineLimit(stacked ? nil : 1)
             } else if let note = scene.note {
-                Text(verbatim: note).zType(.caption).foregroundStyle(ZTokens.Colors.screenT3).lineLimit(1)
+                Text(verbatim: note).zType(.caption).foregroundStyle(ZTokens.Colors.screenT3).lineLimit(stacked ? nil : 1)
             }
         }
-        .multilineTextAlignment(.trailing)
+        .multilineTextAlignment(stacked ? .leading : .trailing)
     }
 
     // MARK: 滑动

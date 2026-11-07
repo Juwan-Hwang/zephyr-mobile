@@ -41,6 +41,14 @@ struct RateBlock: View {
                     .zType(.footnote)
                     .foregroundStyle(ZTokens.Colors.screenT2)
                     .lineLimit(1)
+                // 速率是上次时间线生成时的瞬时值（最长约 15 分钟前），标出它的年龄（REVIEW W-P1-2）。
+                if let at = state.rate.at {
+                    (Text(at, style: .relative) + Text("前"))
+                        .font(.caption2)
+                        .foregroundStyle(ZTokens.Colors.screenT3)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                }
             } else {
                 Text(state.connection.status.title)
                     .zType(.title)

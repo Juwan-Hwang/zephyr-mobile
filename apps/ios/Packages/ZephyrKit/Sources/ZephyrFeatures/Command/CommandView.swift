@@ -14,7 +14,7 @@ struct CommandView: View {
     let prefill: String
     @Environment(AppModel.self) private var app
     @State private var model: CommandModel?
-    @FocusState private var focused: Bool
+    @State private var focused = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var appeared = false
 
@@ -78,13 +78,14 @@ struct CommandView: View {
     }
 }
 
-/// 输入框：透明 TextField 叠一层带下划线的镜像文字（原型 `.fld .mir`），光标用强调色。
+/// 输入框：UITextField 属性文字下划线（原型 `.fld .mir`），光标用强调色。
 @MainActor
 private struct CommandField: View {
     @Bindable var model: CommandModel
-    var focused: FocusState<Bool>.Binding
+    @Binding var focused: Bool
     let onSubmit: () -> Void
     let onCancel: () -> Void
+    @Environment(\.zAccent) private var accent
     @ScaledMetric(relativeTo: .body) private var height = HMetrics.commandFieldHeight
 
     var body: some View {
@@ -92,22 +93,10 @@ private struct CommandField: View {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(ZTokens.Colors.screenT3)
                 .accessibilityHidden(true)
-            ZStack(alignment: .leading) {
-                mirror
-                    .lineLimit(1)
-                    .accessibilityHidden(true)
-                TextField(text: $model.input, prompt: Text(verbatim: "搜索或输入指令").foregroundStyle(ZTokens.Colors.screenT3)) {
-                    Text(verbatim: "指令")
-                }
-                .foregroundStyle(model.input.isEmpty ? AnyShapeStyle(ZTokens.Colors.screenT1) : AnyShapeStyle(Color.clear))
-                .tint(ZAccentStyle())
-                .focused(focused)
-                .submitLabel(.go)
-                .onSubmit(onSubmit)
-                .autocorrectionDisabled()
-                .textInputAutocapitalization(.never)
-            }
-            .zType(.headline).fontWeight(.regular)
+            CommandTextField(text: $model.input, isFocused: $focused, marks: marks, tint: accent.color,
+                             placeholder: "搜索或输入指令", onSubmit: onSubmit)
+                .frame(maxWidth: .infinity)
+                .frame(height: height)
             Button(action: onCancel) {
                 Text(verbatim: "取消").zType(.body).foregroundStyle(ZAccentStyle())
                     .frame(minHeight: ZTokens.Layout.touchMinIos)
@@ -120,20 +109,9 @@ private struct CommandField: View {
         .padding(.horizontal, HMetrics.cardInset)
     }
 
-    /// 镜像文字：识别出的片段加 2pt 下划线（服务 = 强调色、地区 = 成功色、操作 = 警告色）。
-    private var mirror: Text {
-        let chars = Array(model.input)
-        guard !chars.isEmpty else { return Text(verbatim: "") }
-        let marks = model.parse.tokens.compactMap { t in t.range.map { ($0, t.kind) } }.sorted { $0.0.lowerBound < $1.0.lowerBound }
-        var out = Text(verbatim: "")
-        var i = 0
-        for (r, kind) in marks where r.lowerBound >= i && r.upperBound <= chars.count {
-            out = out + Text(verbatim: String(chars[i..<r.lowerBound]))
-            out = out + Text(verbatim: String(chars[r])).underline(true, color: color(kind))
-            i = r.upperBound
-        }
-        out = out + Text(verbatim: String(chars[i...]))
-        return out.foregroundColor(ZTokens.Colors.screenT1)
+    /// 识别出的片段加下划线（服务 = 强调色、地区 = 成功色、操作 = 警告色）。
+    private var marks: [CommandMark] {
+        model.parse.tokens.compactMap { t in t.range.map { CommandMark(range: $0, color: color(t.kind)) } }
     }
 
     private func color(_ k: CommandToken.Kind) -> Color {

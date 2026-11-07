@@ -15,12 +15,23 @@ extension AppModel {
 
     /// 推入一个页面（会先收起浮层与指令层）。L 的页面也用它互相跳转。
     public func push(_ route: Route) {
+        // 从资料库 sheet 里推入的页面，返回时回到资料库；其他入口不带这个语义。
+        if sheet == .library { returnsToLibrary = true }
+        else if path.isEmpty { returnsToLibrary = false }
         isCommandPresented = false
         sheet = nil
         path.append(route)
     }
 
+    /// 路径回到根（用户点了返回）时，若来自资料库则重新打开它。
+    public func pathDidChange() {
+        guard path.isEmpty, returnsToLibrary else { return }
+        returnsToLibrary = false
+        if sheet == nil { sheet = .library }
+    }
+
     public func popToHome() {
+        returnsToLibrary = false
         isCommandPresented = false
         sheet = nil
         path.removeAll()
@@ -55,9 +66,11 @@ extension AppModel {
         case .mode(let raw):
             if let m = ProxyMode(rawValue: raw) { Task { await setMode(m) } }
         case .sheet(let s):
+            returnsToLibrary = false
             path.removeAll()
             present(s)
         case .command(let q):
+            returnsToLibrary = false
             path.removeAll()
             openCommand(prefill: q)
         case .push(let r):

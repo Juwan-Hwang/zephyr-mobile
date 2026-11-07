@@ -45,6 +45,8 @@ public final class AppModel {
     // MARK: 导航
     /// NavigationStack 路径（节点 / 规则 / 订阅 / 设置，L 的页面）。
     public var path: [Route] = []
+    /// 页面是从资料库进入的：返回首页后重新打开资料库，返回按钮标题为“资料库”（原型 nodes/rules/subs/settings.png）。
+    public var returnsToLibrary = false
     /// 当前浮层。
     public var sheet: SheetRoute?
     /// 指令全屏层是否展开（原型 07）。
