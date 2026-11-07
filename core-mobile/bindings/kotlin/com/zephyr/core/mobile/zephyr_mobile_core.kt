@@ -863,6 +863,8 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -1009,6 +1011,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_subscriptions_summary(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_sync_subscription_rules(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_test_rule(`ptr`: Pointer,`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_tested_count(`ptr`: Pointer,`nowMillis`: Long,`maxAgeMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
@@ -1247,6 +1251,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscriptions_summary(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_sync_subscription_rules(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_tested_count(
@@ -1448,6 +1454,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscriptions_summary() != 18705.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_sync_subscription_rules() != 47083.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule() != 8556.toShort()) {
@@ -2548,6 +2557,12 @@ public interface MobileCoreInterface {
     
     fun `subscriptionsSummary`(): SubscriptionsSummary
     
+    /**
+     * 规则页第 2 层"订阅规则"：生效订阅（列表第一个，与运行配置一致）的 rules 编译进 rules/001.zr，
+     * MATCH 的去向作为最终策略；没有订阅时删除该层、最终策略回到 DIRECT。随后热加载全部层。
+     */
+    fun `syncSubscriptionRules`()
+    
     fun `testRule`(`input`: kotlin.String): RuleTrace
     
     /**
@@ -3332,6 +3347,22 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     }
     )
     }
+    
+
+    
+    /**
+     * 规则页第 2 层"订阅规则"：生效订阅（列表第一个，与运行配置一致）的 rules 编译进 rules/001.zr，
+     * MATCH 的去向作为最终策略；没有订阅时删除该层、最终策略回到 DIRECT。随后热加载全部层。
+     */
+    @Throws(MobileException::class)override fun `syncSubscriptionRules`()
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_sync_subscription_rules(
+        it, _status)
+}
+    }
+    
     
 
     

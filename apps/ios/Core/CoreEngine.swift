@@ -142,9 +142,10 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
 
     private func rules() async -> MobileCore? {
         guard let c = core else { return nil }
-        if let ready = locked({ rulesReady }) { return ready ? c : nil }
+        if locked({ rulesReady }) == true { return c }
+        // 只缓存"已就绪"：导入订阅后核心会编译订阅规则层，之后必须能看到。
         let ok = await runQuiet { c.ruleStats().total > 0 }
-        locked { rulesReady = ok }
+        if ok { locked { rulesReady = true } }
         return ok ? c : nil
     }
 
@@ -469,7 +470,9 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     }
 
     public func testRule(input: String) async throws -> ZephyrKit.RuleTrace {
-        guard let c = await rules() else { return try await fallback.testRule(input: input) }
+        guard let core else { return try await fallback.testRule(input: input) }
+        if mockData, await rules() == nil { return try await fallback.testRule(input: input) }
+        let c = core
         let t = try await run(.ruleInputInvalid) { try c.testRule(input: input) }
         let scene = (try? await readScenes())?.first { $0.id == t.policy || $0.name.caseInsensitiveCompare(t.policy) == .orderedSame }
         return ZephyrKit.RuleTrace(input: t.input, isIp: t.isIp, layerIndex: t.layerIndex.map { Int32($0) }, rule: t.rule,

@@ -521,6 +521,20 @@ pub(crate) mod tests {
     }
 
     #[test]
+    fn subscription_rules_become_layer() {
+        let (_d, core, sub, _rows) = setup();
+        let t = core.test_rule("www.google.com".into()).unwrap();
+        assert_eq!((t.layer_index, t.policy.as_str()), (Some(1), "节点选择"));
+        let t = core.test_rule("example.org".into()).unwrap();
+        assert_eq!((t.layer_index, t.rule.as_str(), t.policy.as_str()), (None, "MATCH", "节点选择"));
+        let st = core.rule_stats();
+        assert!(st.layers.iter().any(|l| l.name == "订阅规则" && l.count == 1), "{:?}", st.layers);
+        core.delete_subscription(sub).unwrap();
+        // 剩下的 B 订阅没有 rules：层为空，最终策略回 DIRECT
+        assert_eq!(core.test_rule("www.google.com".into()).unwrap().policy, "DIRECT");
+    }
+
+    #[test]
     fn global_node_lands_in_config() {
         let (_d, core, sub, rows) = setup();
         let p = core.preview_global_change(rows[2].id).unwrap();

@@ -268,7 +268,7 @@ final class CoreEngineLiveTests: XCTestCase {
         XCTAssertTrue(empty.contains { $0.kind == .openPage && $0.subtitle == "1 个订阅" })
         let host = await e.commandSuggestions(input: "example.com")
         XCTAssertEqual(host.first?.kind, .testRule)
-        XCTAssertTrue(host.first?.subtitle?.hasSuffix("→ 直连") == true, "\(host)")
+        XCTAssertEqual(host.first?.subtitle, "第 2 层 → 直连", "\(host)")
         let mode = await e.commandSuggestions(input: "全局")
         XCTAssertTrue(mode.contains { $0.kind == .switchMode && $0.payload == "global" })
         let hk = await e.commandSuggestions(input: "香港")
