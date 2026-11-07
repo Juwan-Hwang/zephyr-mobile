@@ -9,7 +9,8 @@
 ## 修复进度（B 维护）
 
 - 2026-11-07 PR agent/ios/review-q1：✅ P0-1、P0-2（组件与全仓颜色改 screen.*，sheet 内卡片自动用 s2）、D-P1-1、D-P1-2、H-P1-1、H-P1-4、H-P1-8、H-P1-9、L-P1-3、L-P1-4、W-P1-1、L-P1-2、H-P1-7（部分：导出去抖 + PNG 离主线程）、H-P1-3（可横滑行）；顺带 D-P2-1/2、D-P2-4（触感）、H-P2-5、W-P2-1/2/4。
-- 待做 P1：H-P1-2、H-P1-5（需契约 Scene.services）、H-P1-6、L-P1-1、W-P1-2。
+- 2026-11-08 PR agent/ios/review-q1b：✅ H-P1-2（场景行 ≥xxxLarge 堆叠）、L-P1-1（从资料库进入的页面返回时重开资料库，返回标题“资料库”）、W-P1-2（小组件速率下标注“x前”，偏离设计的说明见 NOTES-X）。
+- 同 PR 另修 H-P1-6（指令框改 UITextField 属性下划线，拼音组合期间不回写）。待做 P1：仅 H-P1-5（需契约 Scene.services）；真机验证待做（拼音、光标）。
 
 ## 总览
 

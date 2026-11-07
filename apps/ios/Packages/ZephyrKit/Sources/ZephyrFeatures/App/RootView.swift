@@ -23,6 +23,9 @@ public struct RootView: View {
         @Bindable var model = model
         NavigationStack(path: $model.path) {
             HomeView()
+                // 首页隐藏了导航栏，但标题决定下一页返回按钮的文字：从资料库进入时显示“资料库”。
+                .navigationTitle(model.returnsToLibrary ? "资料库" : "Zephyr")
+                .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(for: Route.self) { RouteDestination(route: $0) }
         }
         .sheet(item: $model.sheet) { route in
@@ -44,6 +47,7 @@ public struct RootView: View {
             // 已有订阅的用户（升级安装、在别处导入）不再看引导。
             if !empty { onboardingDone = true }
         }
+        .onChange(of: model.path.isEmpty) { _, empty in if empty { model.pathDidChange() } }
         .animation(ZMotion.slow, value: model.isCommandPresented)
         .environment(model)
         .zAccent(accent)
