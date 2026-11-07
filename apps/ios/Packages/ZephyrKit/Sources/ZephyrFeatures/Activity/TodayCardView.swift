@@ -46,7 +46,7 @@ struct TodayCardView: View {
                     .padding(.top, ZTokens.Space.n6)
                 Text(verbatim: footnote)
                     .zType(.caption)
-                    .foregroundStyle(saveState == .failed ? ZTokens.Colors.textDanger : ZTokens.Colors.textTertiary)
+                    .foregroundStyle(saveState == .failed ? ZTokens.Colors.screenRed : ZTokens.Colors.screenT3)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, HMetrics.homeInset)
                     .padding(.top, ZTokens.Space.n4)
@@ -82,10 +82,10 @@ struct TodayCardView: View {
                         .foregroundStyle(ZPage.background)
                         .frame(maxWidth: .infinity, minHeight: ZTokens.Layout.touchMinIos)
                         .padding(.vertical, ZTokens.Space.n1)
-                        .background(Capsule(style: .continuous).fill(ZTokens.Colors.textPrimary))
+                        .background(Capsule(style: .continuous).fill(ZTokens.Colors.screenT1))
                         .contentShape(Capsule(style: .continuous))
                 }
-                .buttonStyle(ZPressStyle(haptic: .medium))
+                .buttonStyle(ZPressStyle(haptic: .none))
             } else {
                 ZButton("分享", size: .large, fullWidth: true, isLoading: true) {}
             }
@@ -161,10 +161,10 @@ struct TodayThemePicker: View {
                     HStack(spacing: ZTokens.Space.n2) {
                         Circle().fill(t.background)
                             .frame(width: swatch, height: swatch)
-                            .overlay { Circle().strokeBorder(ZTokens.Colors.borderStrong, lineWidth: HMetrics.hairline) }
+                            .overlay { Circle().strokeBorder(ZTokens.Colors.screenT4, lineWidth: HMetrics.hairline) }
                         Text(verbatim: t.title)
                             .zType(.footnote)
-                            .foregroundStyle(on ? ZTokens.Colors.textPrimary : ZTokens.Colors.textSecondary)
+                            .foregroundStyle(on ? ZTokens.Colors.screenT1 : ZTokens.Colors.screenT2)
                     }
                     .padding(.leading, ZTokens.Space.n2)
                     .padding(.trailing, ZTokens.Space.n4)
@@ -172,7 +172,7 @@ struct TodayThemePicker: View {
                     .background(Capsule(style: .continuous).fill(on ? AnyShapeStyle(ZCardFill()) : AnyShapeStyle(Color.clear)))
                     .overlay {
                         Capsule(style: .continuous)
-                            .strokeBorder(on ? ZTokens.Colors.borderStrong : ZTokens.Colors.borderPrimary, lineWidth: HMetrics.hairline)
+                            .strokeBorder(on ? ZTokens.Colors.screenT4 : ZTokens.Colors.screenHl2, lineWidth: HMetrics.hairline)
                     }
                     .frame(minHeight: ZTokens.Layout.touchMinIos)
                     .contentShape(Rectangle())

@@ -1,7 +1,7 @@
 // Sheet 样式（原型 `.sheet`：顶部抓手 36×5、标题 17/500 + 右侧 “完成”、正文可滚动、顶部 1px 细边框）。
 // 两部分：
 //   ZSheet { … }                 sheet 内部的版式（抓手 + 标题栏 + 内容）
-//   .zSheet(isPresented:) { … }  呈现：detents、圆角 ZTokens.Layout.sheetRadius、背景 surfaceElevated、强调色透传
+//   .zSheet(isPresented:) { … }  呈现：detents、圆角 ZTokens.Layout.sheetRadius、背景 screen.s1、强调色透传
 // “完成”默认调用 `dismiss`。
 
 import SwiftUI
@@ -49,10 +49,7 @@ public struct ZSheet<Accessory: View, Content: View>: View {
                 content.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
         }
-        .overlay(alignment: .top) {
-            Rectangle().fill(ZTokens.Colors.borderPrimary).frame(height: ZMetrics.hairline)
-                .accessibilityHidden(true)
-        }
+        .environment(\.zInSheet, true)
     }
 
     private var header: some View {
@@ -60,7 +57,7 @@ public struct ZSheet<Accessory: View, Content: View>: View {
             Text(title)
                 .zType(.headline)
                 .fontWeight(.medium)
-                .foregroundStyle(ZTokens.Colors.textPrimary)
+                .foregroundStyle(ZTokens.Colors.screenT1)
                 .accessibilityAddTraits(.isHeader)
             Spacer(minLength: ZTokens.Space.n3)
             accessory
@@ -69,16 +66,16 @@ public struct ZSheet<Accessory: View, Content: View>: View {
                     if let onDone { onDone() } else { dismiss() }
                 } label: {
                     Text(doneTitle)
-                        .zType(.headline)
-                        .foregroundStyle(ZAccentStyle())
+                        .zType(.body)
+                        .foregroundStyle(ZTokens.Colors.screenT2)
                         .frame(minHeight: ZTokens.Layout.touchMinIos)
                         .contentShape(Rectangle())
                 }
-                .buttonStyle(ZPressStyle(haptic: .light))
+                .buttonStyle(ZPressStyle(haptic: .none))
             }
         }
-        .padding(.horizontal, ZTokens.Space.n6)
-        .padding(.top, ZTokens.Space.n2)
+        .padding(.horizontal, 22)
+        .padding(.top, 14)
     }
 }
 
@@ -108,7 +105,8 @@ public extension View {
         presentationDetents(detents)
             .presentationDragIndicator(.hidden)
             .presentationCornerRadius(ZTokens.Layout.sheetRadius)
-            .presentationBackground(ZTokens.Colors.surfaceElevated)
+            .presentationBackground(ZTokens.Colors.screenS1)
+            .environment(\.zInSheet, true)
     }
 }
 
@@ -138,7 +136,7 @@ private struct ZSheetSample: View {
                 ZSheet("场景") {
                     VStack(alignment: .leading, spacing: ZTokens.Space.n3) {
                         ZBigNumber("9", unit: "个可用", size: .hero)
-                        Text(verbatim: "从 13,109,802 个节点中筛选").zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary)
+                        Text(verbatim: "从 13,109,802 个节点中筛选").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
                     }
                     .padding(.horizontal, ZTokens.Space.n6)
                     .padding(.top, ZTokens.Space.n5)

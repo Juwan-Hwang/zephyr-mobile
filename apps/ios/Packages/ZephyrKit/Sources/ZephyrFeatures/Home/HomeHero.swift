@@ -32,7 +32,7 @@ struct HomeHero: View {
                 } else {
                     Text(verbatim: subline)
                         .zType(.footnote)
-                        .foregroundStyle(subline.isEmpty ? ZTokens.Colors.textTertiary : failureTone)
+                        .foregroundStyle(subline.isEmpty ? ZTokens.Colors.screenT3 : failureTone)
                         .lineLimit(2)
                 }
             }
@@ -44,7 +44,7 @@ struct HomeHero: View {
         ZStack(alignment: .bottomLeading) {
             Text(verbatim: statusTitle)
                 .zDisplay(.title, weight: .light)
-                .foregroundStyle(ZTokens.Colors.textPrimary)
+                .foregroundStyle(ZTokens.Colors.screenT1)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
                 .id(statusTitle)
@@ -75,7 +75,7 @@ struct HomeHero: View {
     }
 
     private var failureTone: Color {
-        model.connection.status == .failed ? ZTokens.Colors.textDanger : ZTokens.Colors.textTertiary
+        model.connection.status == .failed ? ZTokens.Colors.screenRed : ZTokens.Colors.screenT3
     }
 }
 
@@ -99,10 +99,10 @@ private struct ModeMenu: View {
                 Text(verbatim: model.connection.mode.zhLabel)
                     .zType(.footnote)
                     .fontWeight(.medium)
-                    .foregroundStyle(ZTokens.Colors.textPrimary)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
                 Image(systemName: "chevron.down")
                     .font(.caption2.weight(.semibold))
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
             }
             .frame(minHeight: ZTokens.Layout.touchMinIos)
             .contentShape(Rectangle())
@@ -124,7 +124,7 @@ struct ConnectionDuration: View {
             let ms = max(0, model.now() - since)
             Text(verbatim: ZFormat.duration(ms))
                 .zType(.footnote, monospacedDigits: true)
-                .foregroundStyle(ZTokens.Colors.textTertiary)
+                .foregroundStyle(ZTokens.Colors.screenT3)
                 .accessibilityLabel(Text(verbatim: "已连接 \(Self.spoken(ms))"))
         }
     }

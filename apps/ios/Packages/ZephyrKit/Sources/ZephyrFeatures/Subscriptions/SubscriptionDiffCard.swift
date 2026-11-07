@@ -24,12 +24,12 @@ struct SubscriptionDiffCard: View {
                     Text(verbatim: title)
                         .zType(.headline)
                         .fontWeight(.regular)
-                        .foregroundStyle(ZTokens.Colors.textPrimary)
+                        .foregroundStyle(ZTokens.Colors.screenT1)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     if let trailing {
                         Text(verbatim: trailing)
                             .zMono(.small)
-                            .foregroundStyle(ZTokens.Colors.textTertiary)
+                            .foregroundStyle(ZTokens.Colors.screenT3)
                     }
                 }
                 ViewThatFits(in: .horizontal) {
@@ -38,10 +38,10 @@ struct SubscriptionDiffCard: View {
                 }
                 ZDivider()
                 HStack(alignment: .firstTextBaseline, spacing: ZTokens.Space.n3) {
-                    ZStatusDot(isOn: true, color: diff.overridesKept ? ZSwitchColor.on : ZTokens.Colors.colorWarning)
+                    ZStatusDot(isOn: true, color: diff.overridesKept ? ZSwitchColor.on : ZTokens.Colors.screenAmber)
                     Text(verbatim: status)
                         .zType(.footnote)
-                        .foregroundStyle(ZTokens.Colors.textSecondary)
+                        .foregroundStyle(ZTokens.Colors.screenT2)
                 }
                 .accessibilityElement(children: .combine)
             }
@@ -50,10 +50,10 @@ struct SubscriptionDiffCard: View {
 
     @ViewBuilder private var numbers: some View {
         ZBigNumber(SubscriptionsModel.signed(diff.addedNodes, plus: true), size: .compact, caption: "节点",
-                   tone: ZTokens.Colors.textSuccess,
+                   tone: ZTokens.Colors.screenGreen,
                    accessibilityLabel: Text(verbatim: "新增 \(ZFormat.count(diff.addedNodes)) 个节点"))
         ZBigNumber(SubscriptionsModel.signed(diff.removedNodes, plus: false), size: .compact, caption: "节点",
-                   tone: ZTokens.Colors.textDanger,
+                   tone: ZTokens.Colors.screenRed,
                    accessibilityLabel: Text(verbatim: "移除 \(ZFormat.count(diff.removedNodes)) 个节点"))
         ZBigNumber(ZFormat.count(diff.ruleChanges), size: .compact, caption: "规则变更")
     }

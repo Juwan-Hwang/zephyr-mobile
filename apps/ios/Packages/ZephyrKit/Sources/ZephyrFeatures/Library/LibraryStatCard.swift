@@ -16,7 +16,7 @@ struct LibraryStatCard: View {
             ZCard(padding: ZTokens.Space.n5, cornerRadius: ZTokens.Radius.overlay - ZTokens.Space.n1) {
                 ZBigNumber(value ?? "000", size: .small, caption: caption,
                            accessibilityLabel: spokenValue.map { Text(caption) + Text(verbatim: " \($0)") })
-                    .foregroundStyle(ZTokens.Colors.textPrimary)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
                     .redacted(reason: value == nil ? .placeholder : [])
                     .frame(maxWidth: .infinity, alignment: .leading)
             }

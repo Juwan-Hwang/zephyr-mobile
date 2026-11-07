@@ -6,14 +6,14 @@ import SwiftUI
 public struct ZRowButtonStyle: ButtonStyle {
     public var haptic: ZHaptic
 
-    public init(haptic: ZHaptic = .selection) {
+    public init(haptic: ZHaptic = .none) {
         self.haptic = haptic
     }
 
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .contentShape(Rectangle())
-            .background(configuration.isPressed ? ZTokens.Colors.bgSubtle : Color.clear)
+            .background(configuration.isPressed ? ZTokens.Colors.screenPressed : Color.clear)
             .animation(ZMotion.micro, value: configuration.isPressed)
             .modifier(ZHapticOnPress(isPressed: configuration.isPressed, haptic: haptic))
     }

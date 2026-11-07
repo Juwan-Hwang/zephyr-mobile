@@ -33,13 +33,13 @@ public struct ZFlag: View {
         Text(verbatim: code)
             .zMono(size == .small ? .tag : .flag, weight: .semibold)
             .tracking(ZMetrics.monoFlag * 0.04)
-            .foregroundStyle(isHighlighted ? AnyShapeStyle(ZAccentStyle()) : AnyShapeStyle(ZTokens.Colors.textSecondary))
+            .foregroundStyle(isHighlighted ? AnyShapeStyle(ZAccentStyle()) : AnyShapeStyle(ZTokens.Colors.screenT2))
             .lineLimit(1)
             .fixedSize()
             .padding(.horizontal, ZTokens.Space.n1)
             .frame(minWidth: minWidth * scale, minHeight: height * scale)
             .overlay {
-                shape.strokeBorder(isHighlighted ? AnyShapeStyle(ZAccentStyle()) : AnyShapeStyle(ZTokens.Colors.borderPrimary),
+                shape.strokeBorder(isHighlighted ? AnyShapeStyle(ZAccentStyle()) : AnyShapeStyle(ZTokens.Colors.screenHl2),
                                    lineWidth: ZMetrics.hairline)
             }
             .scaleEffect(isHighlighted && !reduceMotion ? 1.18 : 1)

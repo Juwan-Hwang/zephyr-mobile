@@ -22,12 +22,12 @@ struct SubscriptionImportOptions: View {
     private func row(_ m: SubscriptionImportMethod) -> some View {
         HStack(spacing: ZTokens.Space.n4) {
             Image(systemName: m.systemImage)
-                .foregroundStyle(ZTokens.Colors.textSecondary)
+                .foregroundStyle(ZTokens.Colors.screenT2)
                 .frame(width: iconWidth)
                 .accessibilityHidden(true)
             Text(verbatim: m.title)
                 .zType(.body)
-                .foregroundStyle(ZTokens.Colors.textPrimary)
+                .foregroundStyle(ZTokens.Colors.screenT1)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Image(systemName: "chevron.right")
                 .font(.footnote.weight(.semibold))

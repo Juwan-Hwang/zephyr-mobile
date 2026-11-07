@@ -35,15 +35,15 @@ private struct ZCardSample: View {
                 HStack(alignment: .firstTextBaseline) {
                     Text(verbatim: "Nebula Cloud 已更新").zType(.body)
                     Spacer()
-                    Text(verbatim: "2 小时前").zMono(.small).foregroundStyle(ZTokens.Colors.textTertiary)
+                    Text(verbatim: "2 小时前").zMono(.small).foregroundStyle(ZTokens.Colors.screenT3)
                 }
                 HStack(spacing: ZTokens.Space.n5) {
-                    ZBigNumber("+1,204", size: .compact, caption: "节点", tone: ZTokens.Colors.textSuccess)
-                    ZBigNumber("−318", size: .compact, caption: "节点", tone: ZTokens.Colors.textDanger)
+                    ZBigNumber("+1,204", size: .compact, caption: "节点", tone: ZTokens.Colors.screenGreen)
+                    ZBigNumber("−318", size: .compact, caption: "节点", tone: ZTokens.Colors.screenRed)
                     ZBigNumber("0", size: .compact, caption: "规则变更")
                 }
             }
-            .foregroundStyle(ZTokens.Colors.textPrimary)
+            .foregroundStyle(ZTokens.Colors.screenT1)
         }
     }
 }

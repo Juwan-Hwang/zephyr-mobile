@@ -14,18 +14,22 @@ struct SceneChangeConfirm: View {
     let change: PendingSceneChange
     let sceneName: String
     @Environment(AppModel.self) private var model
+    /// 出现时把 VoiceOver 焦点移到标题；卡片不是模态，不锁焦点（REVIEW H-P1-8）。
+    @AccessibilityFocusState private var titleFocused: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: ZTokens.Space.n2) {
             HStack(alignment: .firstTextBaseline, spacing: ZTokens.Space.n3) {
-                Circle().fill(ZTokens.Colors.textWarning)
+                Circle().fill(ZTokens.Colors.screenAmber)
                     .frame(width: ZTokens.Space.n2, height: ZTokens.Space.n2)
                     .alignmentGuide(.firstTextBaseline) { $0[.bottom] }
-                Text(verbatim: title).zType(.body).foregroundStyle(ZTokens.Colors.textPrimary)
+                Text(verbatim: title).zType(.footnote).fontWeight(.medium).foregroundStyle(ZTokens.Colors.screenT1)
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityFocused($titleFocused)
             }
             ExitIPLine(change: change.exit, fallbackFrom: change.from.region, fallbackTo: change.to.region)
             if let kept = keptText {
-                Text(verbatim: kept).zType(.caption).foregroundStyle(ZTokens.Colors.textTertiary)
+                Text(verbatim: kept).zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
             }
             HStack(spacing: ZTokens.Space.n3) {
                 ZButton("更改", fullWidth: true, isLoading: change.exit == nil) {
@@ -38,15 +42,15 @@ struct SceneChangeConfirm: View {
             .padding(.top, ZTokens.Space.n3)
         }
         .padding(ZTokens.Space.n4)
-        .background(RoundedRectangle(cornerRadius: ZTokens.Radius.md, style: .continuous).fill(ZTrackFill().opacity(0.6)))
+        .background(RoundedRectangle(cornerRadius: ZTokens.Radius.md, style: .continuous).fill(ZTrackFill()))
         .overlay {
             RoundedRectangle(cornerRadius: ZTokens.Radius.md, style: .continuous)
-                .strokeBorder(ZTokens.Colors.borderSubtle, lineWidth: HMetrics.hairline)
+                .strokeBorder(ZTokens.Colors.screenHl, lineWidth: HMetrics.hairline)
         }
         .padding(.horizontal, HMetrics.rowHorizontal)
         .padding(.bottom, ZTokens.Space.n4)
         .accessibilityElement(children: .contain)
-        .accessibilityAddTraits(.isModal)
+        .onAppear { titleFocused = true }
     }
 
     /// "更改 GPT 和 Gemini 的出口 IP？"；没有受影响 App 列表时用场景名。
@@ -81,10 +85,10 @@ struct ExitIPLine: View {
     var body: some View {
         HStack(spacing: ZTokens.Space.n3) {
             Text(verbatim: side(change?.fromRegion ?? fallbackFrom, change?.fromIp))
-                .foregroundStyle(ZTokens.Colors.textSecondary)
+                .foregroundStyle(ZTokens.Colors.screenT2)
             Image(systemName: "arrow.right").font(.caption2).foregroundStyle(ZQuaternaryText())
             Text(verbatim: side(change?.toRegion ?? fallbackTo, change?.toIp))
-                .foregroundStyle(ZTokens.Colors.textPrimary)
+                .foregroundStyle(ZTokens.Colors.screenT1)
         }
         .zMono(.small)
         .lineLimit(1)

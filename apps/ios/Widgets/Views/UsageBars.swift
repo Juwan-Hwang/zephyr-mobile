@@ -32,5 +32,5 @@ struct UsageBars: View {
     UsageBars(hourly: SharedState.prototype().usage.hourly, accent: ZTokens.Accent.blue.color)
         .frame(width: 130, height: 60)
         .padding()
-        .background(ZTokens.Colors.bgElevated)
+        .background(ZTokens.Colors.screenS1)
 }

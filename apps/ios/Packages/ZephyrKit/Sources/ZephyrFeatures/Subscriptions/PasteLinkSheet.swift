@@ -38,11 +38,11 @@ struct PasteLinkSheet: View {
                 if let err = importer.errorMessage {
                     Label(err, systemImage: "exclamationmark.triangle.fill")
                         .zType(.footnote)
-                        .foregroundStyle(ZTokens.Colors.textWarning)
+                        .foregroundStyle(ZTokens.Colors.screenAmber)
                 }
                 Text("订阅与流量数据仅保存在此设备上。")
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
                 Spacer()
             }
             .padding(PageMetrics.margin)

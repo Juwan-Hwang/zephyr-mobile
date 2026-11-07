@@ -21,7 +21,7 @@ public struct ZSectionHeader: View {
             : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: ZTokens.Space.n3))
         layout {
             Text(title)
-                .foregroundStyle(ZTokens.Colors.textTertiary)
+                .foregroundStyle(ZTokens.Colors.screenT3)
                 .accessibilityAddTraits(.isHeader)
             if !dynamicTypeSize.isAccessibilitySize { Spacer(minLength: ZTokens.Space.n3) }
             trailingView
@@ -41,14 +41,14 @@ public struct ZSectionHeader: View {
                         Text(verbatim: trailing)
                         Image(systemName: "chevron.right").imageScale(.small)
                     }
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
                     .frame(minHeight: ZTokens.Layout.touchMinIos / 2)
                     .contentShape(Rectangle())
                 }
-                .buttonStyle(ZPressStyle(haptic: .light))
+                .buttonStyle(ZPressStyle(haptic: .none))
             } else {
                 Text(verbatim: trailing)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
             }
         }
     }

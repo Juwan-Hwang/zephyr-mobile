@@ -66,8 +66,8 @@ struct NodeListStyle {
         let latBase = ZTokens.TypeStyle.footnote.size         // 13
         let name = body.scaledFont(for: .systemFont(ofSize: nameBase), maximumPointSize: xl ? nameCapXL : nameCap, compatibleWith: traits)
         let lat = foot.scaledFont(for: mono(latBase), maximumPointSize: xl ? 16 : 14, compatibleWith: traits)
-        let primary = r(ZTokens.Colors.textPrimary)
-        let tertiary = r(ZTokens.Colors.textTertiary)
+        let primary = r(ZTokens.Colors.screenT1)
+        let tertiary = r(ZTokens.Colors.screenT3)
 
         return NodeListStyle(
             isXL: xl,
@@ -85,17 +85,17 @@ struct NodeListStyle {
             bubbleSubFont: mono(ZTokens.FontSize.xs - 1),
             railFont: mono(ZTokens.FontSize.n2xs - 0.5, .semibold),
             textPrimary: primary,
-            textSecondary: r(ZTokens.Colors.textSecondary),
+            textSecondary: r(ZTokens.Colors.screenT2),
             textTertiary: tertiary,
             textQuaternary: tertiary.withAlphaComponent(tertiary.cgColor.alpha * 0.5),
-            separator: r(ZTokens.Colors.borderSubtle),
-            badgeBorder: r(ZTokens.Colors.borderDefault),
+            separator: r(ZTokens.Colors.screenHl),
+            badgeBorder: r(ZTokens.Colors.screenHl2),
             accent: r(accent),
             warning: r(ZTokens.Colors.latencySlow),
             danger: r(ZTokens.Colors.latencyTimeout),
             background: .systemGroupedBackground.resolvedColor(with: traits),
-            bubbleBackground: r(ZTokens.Colors.bgElevated),
-            skeleton: r(ZTokens.Colors.bgMuted)
+            bubbleBackground: r(ZTokens.Colors.screenS1),
+            skeleton: r(ZTokens.Colors.screenS3)
         )
     }
 

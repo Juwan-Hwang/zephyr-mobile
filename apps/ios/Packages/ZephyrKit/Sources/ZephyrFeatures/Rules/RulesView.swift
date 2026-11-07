@@ -9,7 +9,6 @@ import ZephyrMock
 @MainActor
 public struct RulesView: View {
     @State private var model: RulesModel
-    @State private var adding = false
 
     /// - Parameters:
     ///   - query: 预填的测试输入（Route.rules(query:)、指令里的域名）；nil 用原型默认 chat.openai.com
@@ -36,17 +35,7 @@ public struct RulesView: View {
         .scrollDismissesKeyboard(.interactively)
         .zPageBackground()
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button { adding = true } label: {
-                    Image(systemName: "plus")
-                        .font(.body.weight(.medium))
-                        .frame(minWidth: ZTokens.Layout.touchMinIos, minHeight: ZTokens.Layout.touchMinIos)
-                }
-                .accessibilityLabel(Text(verbatim: "添加覆写"))
-            }
-        }
-        .sheet(isPresented: $adding) { RuleAddSheet() }
+        // “+ 添加覆写”在契约提供写覆写接口前不显示，避免可填不可交的死路表单（REVIEW L-P1-4）。
         .task { await model.start() }
         .onChange(of: model.input) { model.runTest() }
         .pageAccent(engine: model.engine)

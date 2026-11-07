@@ -50,7 +50,7 @@ public struct ZIconButton: View {
 
     private var foreground: AnyShapeStyle {
         switch style {
-        case .plain, .glass: return AnyShapeStyle(ZTokens.Colors.textSecondary)
+        case .plain, .glass: return AnyShapeStyle(ZTokens.Colors.screenT2)
         case .accent: return AnyShapeStyle(ZAccentStyle())
         }
     }
@@ -61,7 +61,7 @@ public struct ZIconButton: View {
             Circle()
                 .fill(.ultraThinMaterial)
                 .overlay { Circle().fill(ZCardFill()) }
-                .overlay { Circle().strokeBorder(ZTokens.Colors.borderSubtle, lineWidth: ZMetrics.hairline) }
+                .overlay { Circle().strokeBorder(ZTokens.Colors.screenHl, lineWidth: ZMetrics.hairline) }
         }
     }
 }
@@ -71,11 +71,11 @@ private struct ZIconPressStyle: ButtonStyle {
     let style: ZIconButtonStyle
 
     func makeBody(configuration: Configuration) -> some View {
-        ZPressStyle(haptic: .light).makeBody(configuration: configuration)
+        ZPressStyle(haptic: .none).makeBody(configuration: configuration)
             .background {
                 if style != .glass {
                     Circle()
-                        .fill(ZTokens.Colors.bgMuted)
+                        .fill(ZTokens.Colors.screenS3)
                         .opacity(configuration.isPressed ? 1 : 0)
                         .animation(ZMotion.micro, value: configuration.isPressed)
                 }

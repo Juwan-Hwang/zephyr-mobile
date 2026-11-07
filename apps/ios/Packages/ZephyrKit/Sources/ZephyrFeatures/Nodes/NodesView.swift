@@ -44,7 +44,7 @@ public struct NodesView: View {
             ToolbarItem(placement: .topBarTrailing) { jumpMenu }
         }
         .task { await model.start() }
-        .onChange(of: model.query) { model.runQuery() }
+        .onChange(of: model.query) { model.runQuery(debounced: true) }
         .sheet(item: $selected) { node in
             NodeDetailSheet(engine: model.engine, node: node) { model.store.testVisible([node]) }
         }

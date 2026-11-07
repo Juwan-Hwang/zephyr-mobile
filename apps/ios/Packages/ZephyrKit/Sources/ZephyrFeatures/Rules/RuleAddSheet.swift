@@ -19,7 +19,7 @@ struct RuleAddSheet: View {
                 ZSegmented(policies.map { ZSegment($0, verbatim: $0) }, selection: $policy, label: "使用")
                 Text(verbatim: "覆写位于第 1 层，在订阅规则之上，订阅更新时保持不变。此版本暂不支持在手机上保存覆写，可在电脑上的 Zephyr 中添加，同步后生效。")
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, ZTokens.Space.n2)
                     .padding(.top, ZTokens.Space.n4)

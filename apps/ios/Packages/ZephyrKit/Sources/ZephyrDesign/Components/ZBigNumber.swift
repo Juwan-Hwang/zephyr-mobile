@@ -48,7 +48,7 @@ public struct ZBigNumber: View {
             if let caption {
                 Text(caption)
                     .zType(.caption)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
             }
         }
         .accessibilityElement(children: .ignore)
@@ -58,7 +58,7 @@ public struct ZBigNumber: View {
     private var number: some View {
         Text(verbatim: value)
             .zDisplay(size)
-            .foregroundStyle(tone ?? ZTokens.Colors.textPrimary)
+            .foregroundStyle(tone ?? ZTokens.Colors.screenT1)
             .lineLimit(1)
             .minimumScaleFactor(0.4)
             .contentTransition(reduceMotion ? .identity : .numericText())
@@ -70,7 +70,7 @@ public struct ZBigNumber: View {
         if let unit {
             Text(verbatim: unit)
                 .zType(size == .hero ? .body : .footnote)
-                .foregroundStyle(size == .hero ? ZTokens.Colors.textSecondary : ZTokens.Colors.textTertiary)
+                .foregroundStyle(size == .hero ? ZTokens.Colors.screenT2 : ZTokens.Colors.screenT3)
                 .lineLimit(1)
         }
     }
@@ -95,8 +95,8 @@ private struct ZBigNumberSample: View {
         ZBigNumber("103,606,731", unit: "条", size: .title)
         ZBigNumber("2.8", unit: "MB/s", size: .large)
         HStack(spacing: ZTokens.Space.n5) {
-            ZBigNumber("+1,204", size: .compact, caption: "节点", tone: ZTokens.Colors.textSuccess)
-            ZBigNumber("−318", size: .compact, caption: "节点", tone: ZTokens.Colors.textDanger)
+            ZBigNumber("+1,204", size: .compact, caption: "节点", tone: ZTokens.Colors.screenGreen)
+            ZBigNumber("−318", size: .compact, caption: "节点", tone: ZTokens.Colors.screenRed)
             ZBigNumber("0", size: .compact, caption: "规则变更")
         }
     }

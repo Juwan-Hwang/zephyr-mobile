@@ -29,7 +29,7 @@ struct RuleTestCard: View {
                         if let took {
                             Text(verbatim: took)
                                 .zMono(.small)
-                                .foregroundStyle(ZTokens.Colors.textTertiary)
+                                .foregroundStyle(ZTokens.Colors.screenT3)
                                 .padding(.top, ZTokens.Space.n3)
                         }
                     }
@@ -56,7 +56,7 @@ struct RuleTestCard: View {
     private func hint(_ s: String) -> some View {
         Text(verbatim: s)
             .zType(.footnote)
-            .foregroundStyle(ZTokens.Colors.textTertiary)
+            .foregroundStyle(ZTokens.Colors.screenT3)
             .padding(.vertical, ZTokens.Space.n1)
     }
 }

@@ -14,18 +14,18 @@ struct ScenesMediumView: View {
             Text("场景")
                 .zType(.footnote)
                 .fontWeight(.semibold)
-                .foregroundStyle(ZTokens.Colors.textSecondary)
+                .foregroundStyle(ZTokens.Colors.screenT2)
             if state.scenes.isEmpty {
                 Spacer(minLength: 0)
                 Text("添加订阅后，这里会显示各场景的出口")
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
                 Spacer(minLength: 0)
             } else {
                 let rows = Array(state.scenes.prefix(Self.maxRows))
                 ForEach(Array(rows.enumerated()), id: \.element.id) { index, scene in
                     if index > 0 {
-                        Rectangle().fill(ZTokens.Colors.borderSubtle).frame(height: 1).accessibilityHidden(true)
+                        Rectangle().fill(ZTokens.Colors.screenHl).frame(height: 1).accessibilityHidden(true)
                     }
                     Link(destination: WidgetLinks.scene(scene.id)) {
                         SceneRow(scene: scene)
@@ -45,13 +45,13 @@ private struct SceneRow: View {
         HStack(spacing: ZTokens.Space.n3) {
             Text(scene.name)
                 .zType(.body)
-                .foregroundStyle(ZTokens.Colors.textSecondary)
+                .foregroundStyle(ZTokens.Colors.screenT2)
                 .frame(width: nameWidth, alignment: .leading)
                 .lineLimit(1)
             RegionBadge(region: scene.region)
             Text(scene.nodeName)
                 .zType(.body)
-                .foregroundStyle(ZTokens.Colors.textPrimary)
+                .foregroundStyle(ZTokens.Colors.screenT1)
                 .lineLimit(1)
                 .truncationMode(.middle)
             Spacer(minLength: ZTokens.Space.n1)
@@ -73,11 +73,11 @@ struct LatencyText: View {
                 Text("\(ms)").zType(.body, monospacedDigits: true)
                 Text("ms").zType(.caption)
             }
-            .foregroundStyle(ZTokens.Colors.textSecondary)
+            .foregroundStyle(ZTokens.Colors.screenT2)
         } else {
             Text(ms == nil ? "—" : "超时")
                 .zType(.footnote)
-                .foregroundStyle(ms == nil ? ZTokens.Colors.textTertiary : ZTokens.Colors.textWarning)
+                .foregroundStyle(ms == nil ? ZTokens.Colors.screenT3 : ZTokens.Colors.screenAmber)
         }
     }
 }
@@ -86,6 +86,6 @@ struct LatencyText: View {
     ScenesMediumView(state: .prototype())
         .padding(ZTokens.Space.n5)
         .frame(width: 364, height: 170)
-        .background(ZTokens.Colors.bgElevated)
+        .background(ZTokens.Colors.screenS1)
         .clipShape(RoundedRectangle(cornerRadius: ZTokens.Radius.overlay, style: .continuous))
 }

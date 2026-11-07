@@ -12,11 +12,11 @@ struct StorageCard: View {
         VStack(alignment: .leading, spacing: ZTokens.Space.n3) {
             Text(verbatim: "节点与规则")
                 .zType(.body)
-                .foregroundStyle(ZTokens.Colors.textPrimary)
+                .foregroundStyle(ZTokens.Colors.screenT1)
             ZProgressBar(segments: segments, label: "存储")
             Text(verbatim: caption)
                 .zType(.caption)
-                .foregroundStyle(ZTokens.Colors.textTertiary)
+                .foregroundStyle(ZTokens.Colors.screenT3)
                 .redacted(reason: info == nil ? .placeholder : [])
         }
         .padding(.horizontal, ZTokens.Space.n5 - ZTokens.Space.n1 / 2)

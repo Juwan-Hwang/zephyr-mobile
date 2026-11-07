@@ -59,7 +59,7 @@ struct ZShimmer: ViewModifier {
             content
                 .overlay {
                     GeometryReader { proxy in
-                        LinearGradient(colors: [.clear, ZTokens.Colors.bgMuted, .clear],
+                        LinearGradient(colors: [.clear, ZTokens.Colors.screenS3, .clear],
                                        startPoint: .leading, endPoint: .trailing)
                             .frame(width: proxy.size.width * 0.6)
                             .offset(x: proxy.size.width * phase)

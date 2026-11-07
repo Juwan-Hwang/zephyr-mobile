@@ -11,9 +11,9 @@ struct PowerButton: View {
         Button(intent: ConnectIntent(value: !isOn)) {
             Image(systemName: "power")
                 .zType(.headline)
-                .foregroundStyle(isOn ? ZTokens.Colors.bgElevated : ZTokens.Colors.textPrimary)
+                .foregroundStyle(isOn ? ZTokens.Colors.screenOnPrimary : ZTokens.Colors.screenT1)
                 .frame(width: ZTokens.Layout.touchMinIos, height: ZTokens.Layout.touchMinIos)
-                .background(Circle().fill(isOn ? ZTokens.Colors.textPrimary : ZTokens.Colors.bgMuted))
+                .background(Circle().fill(isOn ? ZTokens.Colors.screenT1 : ZTokens.Colors.screenS3))
         }
         .buttonStyle(.plain)
         .accessibilityLabel(isOn ? "断开 Zephyr" : "连接 Zephyr")
@@ -26,5 +26,5 @@ struct PowerButton: View {
         PowerButton(isOn: false)
     }
     .padding()
-    .background(ZTokens.Colors.bgElevated)
+    .background(ZTokens.Colors.screenS1)
 }

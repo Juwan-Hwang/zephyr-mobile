@@ -62,7 +62,7 @@ public struct ZSegmented<Value: Hashable>: View {
                 segment.title
                     .zType(.footnote)
                     .fontWeight(isOn ? .medium : .regular)
-                    .foregroundStyle(isOn ? ZTokens.Colors.textPrimary : ZTokens.Colors.textSecondary)
+                    .foregroundStyle(isOn ? ZTokens.Colors.screenT1 : ZTokens.Colors.screenT2)
                     .lineLimit(dynamicTypeSize.isAccessibilitySize ? 2 : 1)
                     .minimumScaleFactor(0.8)
                     .multilineTextAlignment(.center)

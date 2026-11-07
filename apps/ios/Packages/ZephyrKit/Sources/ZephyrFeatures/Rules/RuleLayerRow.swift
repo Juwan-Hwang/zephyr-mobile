@@ -21,7 +21,7 @@ struct RuleLayerRow: View {
             }
             Text(verbatim: count)
                 .zMono(.body)
-                .foregroundStyle(kind == nil ? ZTokens.Colors.textTertiary : ZTokens.Colors.textSecondary)
+                .foregroundStyle(kind == nil ? ZTokens.Colors.screenT3 : ZTokens.Colors.screenT2)
         }
         .animation(ZMotion.motion(ZMotion.standard, reduceMotion: reduceMotion), value: isHit)
         .accessibilityValue(Text(verbatim: isHit ? "已命中" : ""))

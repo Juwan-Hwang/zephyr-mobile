@@ -34,14 +34,14 @@ struct RegionChips: View {
                         .opacity(0.6)
                 }
             }
-            .foregroundStyle(on ? ZPage.background : ZTokens.Colors.textSecondary)
+            .foregroundStyle(on ? ZPage.background : ZTokens.Colors.screenT2)
             .padding(.horizontal, ZTokens.Space.n4)
             .frame(minHeight: ZTokens.Space.n7 - 2)
             .background {
-                Capsule().fill(on ? ZTokens.Colors.textPrimary : .clear)
+                Capsule().fill(on ? ZTokens.Colors.screenT1 : .clear)
             }
             .overlay {
-                Capsule().strokeBorder(on ? .clear : ZTokens.Colors.borderPrimary, lineWidth: 1)
+                Capsule().strokeBorder(on ? .clear : ZTokens.Colors.screenHl2, lineWidth: 1)
             }
             .contentShape(Capsule())
             .padding(.vertical, ZTokens.Space.n1)   // 触控区扩到 ≥ 38pt，视觉仍为 30pt

@@ -6,7 +6,7 @@ public struct ZStatusDot: View {
     private let isOn: Bool
     private let color: Color?
 
-    /// - Parameter color: 覆盖“开”的颜色（默认开关绿）；例如服务不可用时传 `ZTokens.Colors.colorWarning`。
+    /// - Parameter color: 覆盖“开”的颜色（默认开关绿）；例如服务不可用时传 `ZTokens.Colors.screenAmber`。
     public init(isOn: Bool, color: Color? = nil) {
         self.isOn = isOn
         self.color = color
@@ -32,7 +32,7 @@ public struct ZStatusDot: View {
         HStack(spacing: ZTokens.Space.n6) {
             ZStatusDot(isOn: false)
             ZStatusDot(isOn: true)
-            ZStatusDot(isOn: true, color: ZTokens.Colors.colorWarning)
+            ZStatusDot(isOn: true, color: ZTokens.Colors.screenAmber)
         }
     }
 }

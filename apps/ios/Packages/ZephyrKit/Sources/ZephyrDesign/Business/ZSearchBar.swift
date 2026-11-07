@@ -50,7 +50,7 @@ public struct ZSearchBar: View {
                 field(text: text, isFocused: isFocused)
             } else {
                 Button { onTap?() } label: { capsuleContent { placeholderText } }
-                    .buttonStyle(ZPressStyle(haptic: .light))
+                    .buttonStyle(ZPressStyle(haptic: .none))
                     .accessibilityLabel(Text(placeholder))
                     .accessibilityAddTraits(.isSearchField)
             }
@@ -63,7 +63,7 @@ public struct ZSearchBar: View {
 
     private var placeholderText: some View {
         Text(placeholder)
-            .foregroundStyle(ZTokens.Colors.textTertiary)
+            .foregroundStyle(ZTokens.Colors.screenT3)
             .lineLimit(1)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -76,16 +76,16 @@ public struct ZSearchBar: View {
                 .autocorrectionDisabled()
                 .submitLabel(.go)
                 .onSubmit { onSubmit?() }
-                .foregroundStyle(ZTokens.Colors.textPrimary)
+                .foregroundStyle(ZTokens.Colors.screenT1)
             if !text.wrappedValue.isEmpty {
                 Button { text.wrappedValue = "" } label: {
                     Image(systemName: "xmark.circle.fill")
                         .symbolRenderingMode(.hierarchical)
-                        .foregroundStyle(ZTokens.Colors.textTertiary)
+                        .foregroundStyle(ZTokens.Colors.screenT3)
                         .frame(minWidth: ZTokens.Layout.touchMinIos, minHeight: ZTokens.Layout.touchMinIos)
                         .contentShape(Rectangle())
                 }
-                .buttonStyle(ZPressStyle(haptic: .light))
+                .buttonStyle(ZPressStyle(haptic: .none))
                 .accessibilityLabel(Text(verbatim: "清除"))
             }
         }
@@ -94,7 +94,7 @@ public struct ZSearchBar: View {
     private func capsuleContent<C: View>(@ViewBuilder _ content: () -> C) -> some View {
         HStack(spacing: ZTokens.Space.n3 + ZTokens.Space.n1 / 2) {
             Image(systemName: "magnifyingglass")
-                .foregroundStyle(ZTokens.Colors.textTertiary)
+                .foregroundStyle(ZTokens.Colors.screenT3)
                 .accessibilityHidden(true)
             content()
         }
@@ -106,7 +106,7 @@ public struct ZSearchBar: View {
                 .fill(.ultraThinMaterial)
                 .overlay { Capsule(style: .continuous).fill(ZCardFill()) }
         }
-        .overlay { Capsule(style: .continuous).strokeBorder(ZTokens.Colors.borderSubtle, lineWidth: ZMetrics.hairline) }
+        .overlay { Capsule(style: .continuous).strokeBorder(ZTokens.Colors.screenHl, lineWidth: ZMetrics.hairline) }
         .contentShape(Capsule(style: .continuous))
     }
 }

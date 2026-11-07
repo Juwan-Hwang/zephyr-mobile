@@ -14,7 +14,7 @@ struct ProbeBar: View {
         GeometryReader { geo in
             let w = geo.size.width
             ZStack(alignment: .leading) {
-                Capsule().fill(ZTokens.Colors.borderDefault)
+                Capsule().fill(ZTokens.Colors.screenHl2)
                 Capsule().fill(ZAccentStyle())
                     .frame(width: w * 0.3)
                     .offset(x: reduceMotion ? 0 : phase * w * 0.7)

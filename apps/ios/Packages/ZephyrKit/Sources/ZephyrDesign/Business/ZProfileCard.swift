@@ -46,11 +46,11 @@ public struct ZProfileCard: View {
                 Text(verbatim: name)
                     .zType(.headline)
                     .fontWeight(.regular)
-                    .foregroundStyle(ZTokens.Colors.textPrimary)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
                 if let detail {
                     Text(verbatim: detail)
                         .zType(.footnote)
-                        .foregroundStyle(ZTokens.Colors.textTertiary)
+                        .foregroundStyle(ZTokens.Colors.screenT3)
                 }
                 if let usage {
                     ZProgressBar(value: usage, tone: isWarning ? .warning : .neutral, thickness: .regular, label: "已用流量")
@@ -65,11 +65,11 @@ public struct ZProfileCard: View {
                         VStack(alignment: stacked ? .leading : .trailing, spacing: ZTokens.Space.n1 / 2) {
                             Text(verbatim: remaining)
                                 .zMono(.large)
-                                .foregroundStyle(ZTokens.Colors.textPrimary)
+                                .foregroundStyle(ZTokens.Colors.screenT1)
                             if let remainingCaption {
                                 Text(verbatim: remainingCaption)
                                     .zType(.caption)
-                                    .foregroundStyle(isWarning ? ZTokens.Colors.textWarning : ZTokens.Colors.textTertiary)
+                                    .foregroundStyle(isWarning ? ZTokens.Colors.screenAmber : ZTokens.Colors.screenT3)
                             }
                         }
                     }
