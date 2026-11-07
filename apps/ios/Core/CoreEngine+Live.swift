@@ -23,6 +23,9 @@ public protocol TunnelPort: AnyObject, Sendable {
     var controllerSocketPath: String { get }
     /// App 写、扩展读的 mihomo 配置路径。
     var configURL: URL { get }
+    /// 批量延迟测试（扩展里 zm_url_test）；输入为核心 latencyTestBatch 的 JSON，返回 zm_url_test 原样 JSON。
+    /// 隧道未连接或不支持时为 nil。
+    func urlTest(proxiesJSON: String, url: String, timeoutMs: Int32) async -> String?
 }
 
 extension CoreEngine {

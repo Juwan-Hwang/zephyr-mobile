@@ -40,6 +40,19 @@ final class SystemTunnelPort: TunnelPort, @unchecked Sendable {
 
     func stop() async throws { try await controller.setConnected(false) }
 
+    func urlTest(proxiesJSON: String, url: String, timeoutMs: Int32) async -> String? {
+        // 定义可能几十 KB：写进 App Group 文件，消息里只带文件名；用完即删。
+        let name = "urltest-\(UUID().uuidString).json"
+        let file = AppGroup.coreDirectory.appendingPathComponent(name)
+        do {
+            try FileManager.default.createDirectory(at: AppGroup.coreDirectory, withIntermediateDirectories: true)
+            try Data(proxiesJSON.utf8).write(to: file, options: .atomic)
+        } catch { return nil }
+        defer { try? FileManager.default.removeItem(at: file) }
+        guard let r = try? await controller.request(.urlTest(file: name, url: url, timeoutMs: timeoutMs)), r.result == .ok else { return nil }
+        return r.payload
+    }
+
     func setMode(_ mode: ZephyrKit.ProxyMode) async throws {
         try await controller.setMode(SharedState.Mode(rawValue: mode.rawValue) ?? .rule)
     }

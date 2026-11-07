@@ -5,6 +5,7 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"net/http/httptest"
 	"strings"
 	"os"
 	"path/filepath"
@@ -85,5 +86,21 @@ func TestRuntimeConfigFromCore(t *testing.T) {
 	defer stop()
 	if _, err := net.Dial("unix", sock); err != nil {
 		t.Fatalf("控制 socket 未监听: %v", err)
+	}
+}
+
+func TestURLTestDirectAndDead(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(204) }))
+	defer srv.Close()
+	defs := `[{"name":"a1","type":"direct"},{"name":"b2","type":"socks5","server":"127.0.0.1","port":1},{"name":"bad","type":"nope"}]`
+	res, err := urlTest(defs, srv.URL, 2*time.Second, 4)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(res) != 3 || res[0].Name != "a1" || res[0].Ms <= 0 || res[1].Ms != -1 || res[2].Ms != -1 {
+		t.Fatalf("unexpected %+v", res)
+	}
+	if _, err := urlTest("not json", "", 0, 0); err == nil {
+		t.Fatal("want error")
 	}
 }

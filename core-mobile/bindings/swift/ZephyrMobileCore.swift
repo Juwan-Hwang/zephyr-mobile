@@ -886,9 +886,16 @@ public protocol MobileCoreProtocol : AnyObject {
     func importSubscription(name: String, url: String?, fetched: FetchedSubscription, autoUpdateHours: Int32, progress: BuildProgress?) throws  -> Subscription
     
     /**
+     * 给 `zm_url_test` 的一批代理定义（JSON 数组，name = id 十六进制）。超过 512 个报错；找不到定义的 id 跳过。
+     */
+    func latencyTestBatch(ids: [UInt64]) throws  -> String
+    
+    /**
      * 重新加载 rules/ 下全部层（按文件名序），final_policy 为 MATCH 的去向（通常是场景 "other"）。
      */
     func loadRules(finalPolicy: String) throws  -> RuleStats
+    
+    func nodeDetail(id: UInt64) throws  -> NodeDetail
     
     func nodeIndex() throws  -> NodeIndex
     
@@ -939,6 +946,11 @@ public protocol MobileCoreProtocol : AnyObject {
      * 这样随后的 fastestNodes / scenes 在主线程上始终是毫秒级。
      */
     func recordLatencies(samples: [LatencySample]) throws 
+    
+    /**
+     * `zm_url_test` 的返回 JSON 入延迟缓存，返回记录下的样本（供 latencyUpdates 推送）。
+     */
+    func recordUrlTest(resultJson: String, nowMillis: Int64) throws  -> [LatencySample]
     
     /**
      * 平台测得出口后回填（"198.51.100.7 · 美国"）。
@@ -1020,6 +1032,11 @@ public protocol MobileCoreProtocol : AnyObject {
     func subscriptionsSummary()  -> SubscriptionsSummary
     
     func testRule(input: String) throws  -> RuleTrace
+    
+    /**
+     * 有新鲜测速结果（max_age 内，含超时）的节点数；max_age ≤ 0 不限。
+     */
+    func testedCount(nowMillis: Int64, maxAgeMillis: Int64)  -> UInt64
     
     func updateSubscription(id: String, fetched: FetchedSubscription, progress: BuildProgress?) throws  -> SubscriptionDiff
     
@@ -1190,12 +1207,31 @@ open func importSubscription(name: String, url: String?, fetched: FetchedSubscri
 }
     
     /**
+     * 给 `zm_url_test` 的一批代理定义（JSON 数组，name = id 十六进制）。超过 512 个报错；找不到定义的 id 跳过。
+     */
+open func latencyTestBatch(ids: [UInt64])throws  -> String {
+    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_latency_test_batch(self.uniffiClonePointer(),
+        FfiConverterSequenceUInt64.lower(ids),$0
+    )
+})
+}
+    
+    /**
      * 重新加载 rules/ 下全部层（按文件名序），final_policy 为 MATCH 的去向（通常是场景 "other"）。
      */
 open func loadRules(finalPolicy: String)throws  -> RuleStats {
     return try  FfiConverterTypeRuleStats.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_load_rules(self.uniffiClonePointer(),
         FfiConverterString.lower(finalPolicy),$0
+    )
+})
+}
+    
+open func nodeDetail(id: UInt64)throws  -> NodeDetail {
+    return try  FfiConverterTypeNodeDetail.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_node_detail(self.uniffiClonePointer(),
+        FfiConverterUInt64.lower(id),$0
     )
 })
 }
@@ -1326,6 +1362,18 @@ open func recordLatencies(samples: [LatencySample])throws  {try rustCallWithErro
         FfiConverterSequenceTypeLatencySample.lower(samples),$0
     )
 }
+}
+    
+    /**
+     * `zm_url_test` 的返回 JSON 入延迟缓存，返回记录下的样本（供 latencyUpdates 推送）。
+     */
+open func recordUrlTest(resultJson: String, nowMillis: Int64)throws  -> [LatencySample] {
+    return try  FfiConverterSequenceTypeLatencySample.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_record_url_test(self.uniffiClonePointer(),
+        FfiConverterString.lower(resultJson),
+        FfiConverterInt64.lower(nowMillis),$0
+    )
+})
 }
     
     /**
@@ -1528,6 +1576,18 @@ open func testRule(input: String)throws  -> RuleTrace {
     return try  FfiConverterTypeRuleTrace.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_test_rule(self.uniffiClonePointer(),
         FfiConverterString.lower(input),$0
+    )
+})
+}
+    
+    /**
+     * 有新鲜测速结果（max_age 内，含超时）的节点数；max_age ≤ 0 不限。
+     */
+open func testedCount(nowMillis: Int64, maxAgeMillis: Int64) -> UInt64 {
+    return try!  FfiConverterUInt64.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_tested_count(self.uniffiClonePointer(),
+        FfiConverterInt64.lower(nowMillis),
+        FfiConverterInt64.lower(maxAgeMillis),$0
     )
 })
 }
@@ -2729,6 +2789,130 @@ public func FfiConverterTypeLocalProxy_lift(_ buf: RustBuffer) throws -> LocalPr
 #endif
 public func FfiConverterTypeLocalProxy_lower(_ value: LocalProxy) -> RustBuffer {
     return FfiConverterTypeLocalProxy.lower(value)
+}
+
+
+public struct NodeDetail {
+    public var row: NodeRow
+    /**
+     * 已脱敏（"a1***.example.com" / "198.51.*.*"）
+     */
+    public var server: String
+    public var port: Int32
+    public var subscription: String
+    /**
+     * 只含非敏感字段：network / tls / sni / udp / flow / plugin；绝不含密码、uuid、私钥。
+     */
+    public var extra: [String: String]
+    /**
+     * 最近一次测速（不限新鲜度，-1 = 超时）；从未测过为 None。
+     */
+    public var latencyMs: Int32?
+    public var latencyAt: Int64?
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(row: NodeRow, 
+        /**
+         * 已脱敏（"a1***.example.com" / "198.51.*.*"）
+         */server: String, port: Int32, subscription: String, 
+        /**
+         * 只含非敏感字段：network / tls / sni / udp / flow / plugin；绝不含密码、uuid、私钥。
+         */extra: [String: String], 
+        /**
+         * 最近一次测速（不限新鲜度，-1 = 超时）；从未测过为 None。
+         */latencyMs: Int32?, latencyAt: Int64?) {
+        self.row = row
+        self.server = server
+        self.port = port
+        self.subscription = subscription
+        self.extra = extra
+        self.latencyMs = latencyMs
+        self.latencyAt = latencyAt
+    }
+}
+
+
+
+extension NodeDetail: Equatable, Hashable {
+    public static func ==(lhs: NodeDetail, rhs: NodeDetail) -> Bool {
+        if lhs.row != rhs.row {
+            return false
+        }
+        if lhs.server != rhs.server {
+            return false
+        }
+        if lhs.port != rhs.port {
+            return false
+        }
+        if lhs.subscription != rhs.subscription {
+            return false
+        }
+        if lhs.extra != rhs.extra {
+            return false
+        }
+        if lhs.latencyMs != rhs.latencyMs {
+            return false
+        }
+        if lhs.latencyAt != rhs.latencyAt {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(row)
+        hasher.combine(server)
+        hasher.combine(port)
+        hasher.combine(subscription)
+        hasher.combine(extra)
+        hasher.combine(latencyMs)
+        hasher.combine(latencyAt)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeNodeDetail: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> NodeDetail {
+        return
+            try NodeDetail(
+                row: FfiConverterTypeNodeRow.read(from: &buf), 
+                server: FfiConverterString.read(from: &buf), 
+                port: FfiConverterInt32.read(from: &buf), 
+                subscription: FfiConverterString.read(from: &buf), 
+                extra: FfiConverterDictionaryStringString.read(from: &buf), 
+                latencyMs: FfiConverterOptionInt32.read(from: &buf), 
+                latencyAt: FfiConverterOptionInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: NodeDetail, into buf: inout [UInt8]) {
+        FfiConverterTypeNodeRow.write(value.row, into: &buf)
+        FfiConverterString.write(value.server, into: &buf)
+        FfiConverterInt32.write(value.port, into: &buf)
+        FfiConverterString.write(value.subscription, into: &buf)
+        FfiConverterDictionaryStringString.write(value.extra, into: &buf)
+        FfiConverterOptionInt32.write(value.latencyMs, into: &buf)
+        FfiConverterOptionInt64.write(value.latencyAt, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeNodeDetail_lift(_ buf: RustBuffer) throws -> NodeDetail {
+    return try FfiConverterTypeNodeDetail.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeNodeDetail_lower(_ value: NodeDetail) -> RustBuffer {
+    return FfiConverterTypeNodeDetail.lower(value)
 }
 
 
@@ -6656,6 +6840,32 @@ fileprivate struct FfiConverterSequenceOptionInt32: FfiConverterRustBuffer {
         return seq
     }
 }
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterDictionaryStringString: FfiConverterRustBuffer {
+    public static func write(_ value: [String: String], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for (key, value) in value {
+            FfiConverterString.write(key, into: &buf)
+            FfiConverterString.write(value, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [String: String] {
+        let len: Int32 = try readInt(&buf)
+        var dict = [String: String]()
+        dict.reserveCapacity(Int(len))
+        for _ in 0..<len {
+            let key = try FfiConverterString.read(from: &buf)
+            let value = try FfiConverterString.read(from: &buf)
+            dict[key] = value
+        }
+        return dict
+    }
+}
 /**
  * zephyr-core（桌面共用核心）版本探针，确认链接正常。
  */
@@ -6744,7 +6954,13 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription() != 45715) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_latency_test_batch() != 344) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_load_rules() != 40179) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_detail() != 17464) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_index() != 24911) {
@@ -6781,6 +6997,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_latencies() != 29104) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_url_test() != 28438) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_exit() != 54284) {
@@ -6838,6 +7057,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule() != 8556) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_tested_count() != 44270) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_update_subscription() != 7462) {

@@ -10,6 +10,7 @@
 //	int64_t zm_memory(void)                         // mihomo 自报内存（字节）
 //	void    zm_set_memory_limit(int64_t bytes)      // Go 软上限；iOS NE 约 50 MB 预算，建议 30 MB
 //	void    zm_free_os_memory(void)                 // 内存告警时调用
+//	char*   zm_url_test(const char* proxies_json, const char* url, int timeout_ms, int concurrency)  // 见 urltest.go；返回 JSON
 //	char*   zm_version(void)
 //	void    zm_free(char*)
 //

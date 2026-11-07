@@ -12,6 +12,9 @@ enum TunnelRequest: Codable, Sendable, Hashable {
     case setMode(SharedState.Mode)
     /// 重新加载配置（订阅更新后）。
     case reloadConfig
+    /// 批量延迟测试（契约 §5 testLatency）：file = App Group core 目录下的代理定义 JSON（核心 latencyTestBatch 生成，
+    /// 可能几十 KB，不走消息体）；结果 JSON 放在 TunnelResponse.payload。
+    case urlTest(file: String, url: String, timeoutMs: Int32)
 }
 
 struct TunnelResponse: Codable, Sendable, Hashable {
@@ -28,6 +31,8 @@ struct TunnelResponse: Codable, Sendable, Hashable {
     /// 扩展当前常驻内存（字节），用于在设置 → 诊断里观察 NE 50 MB 预算。
     var residentBytes: Int64?
     var errorCode: String?
+    /// urlTest 的结果（zm_url_test 原样 JSON）。
+    var payload: String?
 }
 
 enum TunnelMessageCodec {

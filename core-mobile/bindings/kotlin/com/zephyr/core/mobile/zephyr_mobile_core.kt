@@ -849,6 +849,14 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
+
+
+
+
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -921,7 +929,11 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_import_subscription(`ptr`: Pointer,`name`: RustBuffer.ByValue,`url`: RustBuffer.ByValue,`fetched`: RustBuffer.ByValue,`autoUpdateHours`: Int,`progress`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_latency_test_batch(`ptr`: Pointer,`ids`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_load_rules(`ptr`: Pointer,`finalPolicy`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_node_detail(`ptr`: Pointer,`id`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_node_index(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
@@ -947,6 +959,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_record_latencies(`ptr`: Pointer,`samples`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_record_url_test(`ptr`: Pointer,`resultJson`: RustBuffer.ByValue,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_exit(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`ip`: RustBuffer.ByValue,`region`: RustBuffer.ByValue,`testedAt`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_probe(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`success`: Byte,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
@@ -985,6 +999,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_test_rule(`ptr`: Pointer,`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_tested_count(`ptr`: Pointer,`nowMillis`: Long,`maxAgeMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): Long
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_update_subscription(`ptr`: Pointer,`id`: RustBuffer.ByValue,`fetched`: RustBuffer.ByValue,`progress`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_init_callback_vtable_buildprogress(`vtable`: UniffiVTableCallbackInterfaceBuildProgress,
@@ -1145,7 +1161,11 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_latency_test_batch(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_load_rules(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_detail(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_index(
     ): Short
@@ -1170,6 +1190,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rebuild_nodes_with_progress(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_latencies(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_url_test(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_exit(
     ): Short
@@ -1208,6 +1230,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscriptions_summary(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_tested_count(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_update_subscription(
     ): Short
@@ -1297,7 +1321,13 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription() != 45715.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_latency_test_batch() != 344.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_load_rules() != 40179.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_detail() != 17464.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_index() != 24911.toShort()) {
@@ -1334,6 +1364,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_latencies() != 29104.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_url_test() != 28438.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_exit() != 54284.toShort()) {
@@ -1391,6 +1424,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule() != 8556.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_tested_count() != 44270.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_update_subscription() != 7462.toShort()) {
@@ -2327,9 +2363,16 @@ public interface MobileCoreInterface {
     fun `importSubscription`(`name`: kotlin.String, `url`: kotlin.String?, `fetched`: FetchedSubscription, `autoUpdateHours`: kotlin.Int, `progress`: BuildProgress?): Subscription
     
     /**
+     * 给 `zm_url_test` 的一批代理定义（JSON 数组，name = id 十六进制）。超过 512 个报错；找不到定义的 id 跳过。
+     */
+    fun `latencyTestBatch`(`ids`: List<kotlin.ULong>): kotlin.String
+    
+    /**
      * 重新加载 rules/ 下全部层（按文件名序），final_policy 为 MATCH 的去向（通常是场景 "other"）。
      */
     fun `loadRules`(`finalPolicy`: kotlin.String): RuleStats
+    
+    fun `nodeDetail`(`id`: kotlin.ULong): NodeDetail
     
     fun `nodeIndex`(): NodeIndex
     
@@ -2380,6 +2423,11 @@ public interface MobileCoreInterface {
      * 这样随后的 fastestNodes / scenes 在主线程上始终是毫秒级。
      */
     fun `recordLatencies`(`samples`: List<LatencySample>)
+    
+    /**
+     * `zm_url_test` 的返回 JSON 入延迟缓存，返回记录下的样本（供 latencyUpdates 推送）。
+     */
+    fun `recordUrlTest`(`resultJson`: kotlin.String, `nowMillis`: kotlin.Long): List<LatencySample>
     
     /**
      * 平台测得出口后回填（"198.51.100.7 · 美国"）。
@@ -2461,6 +2509,11 @@ public interface MobileCoreInterface {
     fun `subscriptionsSummary`(): SubscriptionsSummary
     
     fun `testRule`(`input`: kotlin.String): RuleTrace
+    
+    /**
+     * 有新鲜测速结果（max_age 内，含超时）的节点数；max_age ≤ 0 不限。
+     */
+    fun `testedCount`(`nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long): kotlin.ULong
     
     fun `updateSubscription`(`id`: kotlin.String, `fetched`: FetchedSubscription, `progress`: BuildProgress?): SubscriptionDiff
     
@@ -2689,6 +2742,22 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
 
     
     /**
+     * 给 `zm_url_test` 的一批代理定义（JSON 数组，name = id 十六进制）。超过 512 个报错；找不到定义的 id 跳过。
+     */
+    @Throws(MobileException::class)override fun `latencyTestBatch`(`ids`: List<kotlin.ULong>): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_latency_test_batch(
+        it, FfiConverterSequenceULong.lower(`ids`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * 重新加载 rules/ 下全部层（按文件名序），final_policy 为 MATCH 的去向（通常是场景 "other"）。
      */
     @Throws(MobileException::class)override fun `loadRules`(`finalPolicy`: kotlin.String): RuleStats {
@@ -2697,6 +2766,19 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_load_rules(
         it, FfiConverterString.lower(`finalPolicy`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    @Throws(MobileException::class)override fun `nodeDetail`(`id`: kotlin.ULong): NodeDetail {
+            return FfiConverterTypeNodeDetail.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_node_detail(
+        it, FfiConverterULong.lower(`id`),_status)
 }
     }
     )
@@ -2881,6 +2963,22 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
 }
     }
     
+    
+
+    
+    /**
+     * `zm_url_test` 的返回 JSON 入延迟缓存，返回记录下的样本（供 latencyUpdates 推送）。
+     */
+    @Throws(MobileException::class)override fun `recordUrlTest`(`resultJson`: kotlin.String, `nowMillis`: kotlin.Long): List<LatencySample> {
+            return FfiConverterSequenceTypeLatencySample.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_record_url_test(
+        it, FfiConverterString.lower(`resultJson`),FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -3158,6 +3256,21 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_test_rule(
         it, FfiConverterString.lower(`input`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 有新鲜测速结果（max_age 内，含超时）的节点数；max_age ≤ 0 不限。
+     */override fun `testedCount`(`nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_tested_count(
+        it, FfiConverterLong.lower(`nowMillis`),FfiConverterLong.lower(`maxAgeMillis`),_status)
 }
     }
     )
@@ -3767,6 +3880,67 @@ public object FfiConverterTypeLocalProxy: FfiConverterRustBuffer<LocalProxy> {
     override fun write(value: LocalProxy, buf: ByteBuffer) {
             FfiConverterUShort.write(value.`port`, buf)
             FfiConverterOptionalString.write(value.`auth`, buf)
+    }
+}
+
+
+
+data class NodeDetail (
+    var `row`: NodeRow, 
+    /**
+     * 已脱敏（"a1***.example.com" / "198.51.*.*"）
+     */
+    var `server`: kotlin.String, 
+    var `port`: kotlin.Int, 
+    var `subscription`: kotlin.String, 
+    /**
+     * 只含非敏感字段：network / tls / sni / udp / flow / plugin；绝不含密码、uuid、私钥。
+     */
+    var `extra`: Map<kotlin.String, kotlin.String>, 
+    /**
+     * 最近一次测速（不限新鲜度，-1 = 超时）；从未测过为 None。
+     */
+    var `latencyMs`: kotlin.Int?, 
+    var `latencyAt`: kotlin.Long?
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeNodeDetail: FfiConverterRustBuffer<NodeDetail> {
+    override fun read(buf: ByteBuffer): NodeDetail {
+        return NodeDetail(
+            FfiConverterTypeNodeRow.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterInt.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterMapStringString.read(buf),
+            FfiConverterOptionalInt.read(buf),
+            FfiConverterOptionalLong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: NodeDetail) = (
+            FfiConverterTypeNodeRow.allocationSize(value.`row`) +
+            FfiConverterString.allocationSize(value.`server`) +
+            FfiConverterInt.allocationSize(value.`port`) +
+            FfiConverterString.allocationSize(value.`subscription`) +
+            FfiConverterMapStringString.allocationSize(value.`extra`) +
+            FfiConverterOptionalInt.allocationSize(value.`latencyMs`) +
+            FfiConverterOptionalLong.allocationSize(value.`latencyAt`)
+    )
+
+    override fun write(value: NodeDetail, buf: ByteBuffer) {
+            FfiConverterTypeNodeRow.write(value.`row`, buf)
+            FfiConverterString.write(value.`server`, buf)
+            FfiConverterInt.write(value.`port`, buf)
+            FfiConverterString.write(value.`subscription`, buf)
+            FfiConverterMapStringString.write(value.`extra`, buf)
+            FfiConverterOptionalInt.write(value.`latencyMs`, buf)
+            FfiConverterOptionalLong.write(value.`latencyAt`, buf)
     }
 }
 
@@ -6439,6 +6613,45 @@ public object FfiConverterSequenceOptionalInt: FfiConverterRustBuffer<List<kotli
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterOptionalInt.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterMapStringString: FfiConverterRustBuffer<Map<kotlin.String, kotlin.String>> {
+    override fun read(buf: ByteBuffer): Map<kotlin.String, kotlin.String> {
+        val len = buf.getInt()
+        return buildMap<kotlin.String, kotlin.String>(len) {
+            repeat(len) {
+                val k = FfiConverterString.read(buf)
+                val v = FfiConverterString.read(buf)
+                this[k] = v
+            }
+        }
+    }
+
+    override fun allocationSize(value: Map<kotlin.String, kotlin.String>): ULong {
+        val spaceForMapSize = 4UL
+        val spaceForChildren = value.map { (k, v) ->
+            FfiConverterString.allocationSize(k) +
+            FfiConverterString.allocationSize(v)
+        }.sum()
+        return spaceForMapSize + spaceForChildren
+    }
+
+    override fun write(value: Map<kotlin.String, kotlin.String>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        // The parens on `(k, v)` here ensure we're calling the right method,
+        // which is important for compatibility with older android devices.
+        // Ref https://blog.danlew.net/2017/03/16/kotlin-puzzler-whose-line-is-it-anyways/
+        value.forEach { (k, v) ->
+            FfiConverterString.write(k, buf)
+            FfiConverterString.write(v, buf)
         }
     }
 }

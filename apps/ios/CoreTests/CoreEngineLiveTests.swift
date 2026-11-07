@@ -26,6 +26,15 @@ final class FakeTunnel: TunnelPort, @unchecked Sendable {
     func setMode(_ m: ZephyrKit.ProxyMode) async throws { lock.withLock { mode = m } }
     func rate() async -> (up: Int64, down: Int64)? { lock.withLock { status == .connected ? (10, 2048) : nil } }
     func reloadConfig() async throws { lock.withLock { reloads += 1 } }
+    var urlTestInputs: [String] = []
+    func urlTest(proxiesJSON: String, url: String, timeoutMs: Int32) async -> String? {
+        let connected = lock.withLock { () -> Bool in urlTestInputs.append(proxiesJSON); return status == .connected }
+        guard connected, let data = proxiesJSON.data(using: .utf8),
+              let defs = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] else { return nil }
+        // 假结果：每个 37 ms
+        let results = defs.compactMap { $0["name"] as? String }.map { #"{"name":"\#($0)","ms":37}"# }
+        return #"{"results":["# + results.joined(separator: ",") + "]}"
+    }
 }
 
 final class CoreEngineLiveTests: XCTestCase {
@@ -150,6 +159,39 @@ final class CoreEngineLiveTests: XCTestCase {
         XCTAssertNil(CoreEngine.localProxy(settings: s, defaults: d)?.auth)
         s.localProxyPort = 80
         XCTAssertNil(CoreEngine.localProxy(settings: s, defaults: d), "特权端口拒绝")
+    }
+
+    func testLatencyViaTunnelRecordsAndStreams() async throws {
+        let (e, t) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        let q = try await e.queryNodes(query: "")
+        let page = try await e.nodeRows(token: q.token, offset: 0, limit: 10)
+        let ids = page.rows.map(\.id)
+        XCTAssertFalse(ids.isEmpty)
+        await e.testLatency(ids: ids)
+        XCTAssertTrue(t.urlTestInputs.isEmpty, "未连接不测")
+        try await e.connect()
+        var it = e.latencyUpdates().makeAsyncIterator()
+        await e.testLatency(ids: ids + ids)
+        XCTAssertEqual(t.urlTestInputs.count, 1, "去重后一批")
+        let ups = await it.next()
+        XCTAssertEqual(Set(ups?.map(\.id) ?? []), Set(ids))
+        XCTAssertEqual(ups?.first?.latencyMs, 37)
+        let idx = await e.nodeIndex()
+        XCTAssertEqual(idx.testedCount, Int64(ids.count))
+        let d = try await e.node(id: ids[0])
+        XCTAssertEqual(d.summary.id, ids[0])
+        XCTAssertEqual(d.summary.latencyMs, 37)
+        XCTAssertTrue(d.server.contains("*"), d.server)
+        XCTAssertFalse(t.urlTestInputs[0].isEmpty)
+    }
+
+    func testNodeDetailUnknownThrows() async throws {
+        let (e, _) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        do { _ = try await e.node(id: 0xdead); XCTFail("应抛 nodeNotFound") } catch let err as ZephyrError {
+            XCTAssertEqual(err.code, .nodeNotFound)
+        }
     }
 
     func testMemberIdIsStable() {

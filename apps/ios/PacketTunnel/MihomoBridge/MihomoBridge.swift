@@ -176,6 +176,21 @@ final class MihomoBridge: @unchecked Sendable {
         #endif
     }
 
+    /// 批量 URL 延迟测试（zm_url_test，不依赖隧道是否运行）；返回 `{"results":[…]}` 或 `{"error":…}`。阻塞，勿在主线程调用。
+    func urlTest(proxiesJSON: String, url: String, timeoutMs: Int32, concurrency: Int32 = 16) -> String {
+        #if MIHOMO_LINKED
+        return proxiesJSON.withCString { pj in url.withCString { pu in
+            guard let p = zm_url_test(UnsafeMutablePointer(mutating: pj), UnsafeMutablePointer(mutating: pu), timeoutMs, concurrency) else {
+                return #"{"error":"null"}"#
+            }
+            defer { zm_free(p) }
+            return String(cString: p)
+        } }
+        #else
+        return #"{"error":"mihomo not linked"}"#
+        #endif
+    }
+
     // MARK: C 字符串调用
 
     #if MIHOMO_LINKED

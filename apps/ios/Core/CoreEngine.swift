@@ -31,6 +31,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     private var remapped: [UInt64: UInt64] = [:]
     private var subsWatchers: [UUID: AsyncStream<[ZephyrKit.Subscription]>.Continuation] = [:]
     private var sceneWatchers: [UUID: AsyncStream<[ZephyrKit.Scene]>.Continuation] = [:]
+    private var latencyWatchers: [UUID: AsyncStream<[LatencyUpdate]>.Continuation] = [:]
     private var samples: [TrafficSample] = []
     private var members: [NodeId: String] = [:]
 
@@ -337,7 +338,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
             return mockData ? await fallback.nodeIndex() : ZephyrKit.NodeIndex(total: 0, sections: [], testedCount: 0)
         }
         guard let i = try? await run(.nodeNotFound, { try c.nodeIndex() }) else { return ZephyrKit.NodeIndex(total: 0, sections: [], testedCount: 0) }
-        return ZephyrKit.NodeIndex(total: Int64(i.total), sections: i.sections.map(CoreEngine.section), testedCount: 0)
+        let tested = await runQuiet { c.testedCount(nowMillis: self.clock(), maxAgeMillis: CoreEngine.latencyFreshMillis) }
+        return ZephyrKit.NodeIndex(total: Int64(i.total), sections: i.sections.map(CoreEngine.section), testedCount: Int64(tested))
     }
 
     public func queryNodes(query: String) async throws -> ZephyrKit.NodeQueryResult {
@@ -379,9 +381,46 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         return ZephyrKit.NodePage(rows: rows, offset: Int64(page.offset), total: Int64(page.total))
     }
 
-    public func node(id: NodeId) async throws -> NodeDetail { try await fallback.node(id: id) }
-    public func testLatency(ids: [NodeId]) async { await fallback.testLatency(ids: ids) }
-    public func latencyUpdates() -> AsyncStream<[LatencyUpdate]> { fallback.latencyUpdates() }
+    static let latencyFreshMillis: Int64 = 24 * 3_600_000
+
+    public func node(id: NodeId) async throws -> ZephyrKit.NodeDetail {
+        guard let c = await nodes() else {
+            if mockData { return try await fallback.node(id: id) }
+            throw ZephyrError(code: .nodeNotFound, message: String(id, radix: 16))
+        }
+        let d = try await run(.nodeNotFound) { try c.nodeDetail(id: id) }
+        var summary = CoreEngine.row(d.row)
+        if let ms = d.latencyMs { summary.latencyMs = ms }
+        return ZephyrKit.NodeDetail(summary: summary, server: d.server, port: d.port, subscription: d.subscription, extra: d.extra)
+    }
+
+    /// 契约 §5：分批（≤512）由核心给出代理定义，扩展里 zm_url_test 实测，结果入核心延迟缓存并推给 latencyUpdates。
+    /// 隧道未连接时不测（App 进程未链接 mihomo；未连接时的测速见 docs/perf.md 待办）。
+    public func testLatency(ids: [NodeId]) async {
+        guard let c = await nodes() else { return await fallback.testLatency(ids: ids) }
+        guard let t = tunnel, await isTunnelConnected(t) else { return }
+        var seen = Set<NodeId>()
+        let unique = ids.filter { seen.insert($0).inserted }
+        for start in stride(from: 0, to: unique.count, by: 512) {
+            if Task.isCancelled { return }
+            let chunk = Array(unique[start..<min(start + 512, unique.count)])
+            guard let json = try? await run({ try c.latencyTestBatch(ids: chunk) }), json != "[]",
+                  let out = await t.urlTest(proxiesJSON: json, url: "https://www.gstatic.com/generate_204", timeoutMs: 5000) else { continue }
+            let now = clock()
+            guard let samples = try? await run({ try c.recordUrlTest(resultJson: out, nowMillis: now) }), !samples.isEmpty else { continue }
+            let updates = samples.map { LatencyUpdate(id: $0.id, latencyMs: $0.ms, at: $0.at) }
+            for w in locked({ Array(latencyWatchers.values) }) { w.yield(updates) }
+        }
+    }
+
+    public func latencyUpdates() -> AsyncStream<[LatencyUpdate]> {
+        guard core != nil else { return fallback.latencyUpdates() }
+        let id = UUID()
+        let (stream, cont) = AsyncStream<[LatencyUpdate]>.makeStream(bufferingPolicy: .bufferingNewest(8))
+        locked { latencyWatchers[id] = cont }
+        cont.onTermination = { [weak self] _ in self?.locked { _ = self?.latencyWatchers.removeValue(forKey: id) } }
+        return stream
+    }
 
     // MARK: - §6 规则
 

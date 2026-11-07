@@ -370,3 +370,10 @@ record SceneFailover { failed: NodeRow, failureCount: UInt32, apply: SceneApply 
 **③ 写覆写**：平台接口补 `overrideHost(host, target: unchanged|direct|scene, sceneId?, persistent)`（§13 已有核心实现）。隧道运行中平台随后重写配置并 reloadConfig。
 
 **④ 本地代理**：`Settings.localProxyEnabled: Bool`（默认 false，旧数据无此键按 false）。`RuntimeOptions.localProxy: LocalProxy{port: UInt16, auth: "user:pass"?}?`（默认 null）→ `mixed-port` + `bind-address: 127.0.0.1` + `allow-lan: false`（+ `authentication`）；端口 <1024 忽略。凭据由平台本机生成并保存（iOS：`CoreEngine.localProxyCredential()`，形如 `zephyr:<24 位随机>`），设置页展示给用户。
+
+### 14.w 节点详情与按需测速（2026-11-08，只追加）
+
+- 核心 `nodeDetail(id) -> NodeDetail{row, server(脱敏), port, subscription, extra, latencyMs?, latencyAt?}`；extra 只含 network / tls / sni / servername / udp / flow / plugin / cipher / alpn / client-fingerprint，**不含**密码、uuid、私钥。
+- 测速：节点库上千万条，运行配置只放场景引用的节点，所以 `testLatency` 不走 mihomo REST。流程：核心 `latencyTestBatch(ids ≤ 512) -> JSON`（name = id 十六进制）→ mihomo-mobile `zm_url_test(json, url, timeoutMs, concurrency)` 临时建出站测 → 核心 `recordUrlTest(resultJson, nowMillis) -> [LatencySample]` 入缓存，平台推 `latencyUpdates`。
+- iOS：在扩展里跑（provider message `urlTest(file, url, timeoutMs)`，定义写 App Group core 目录文件，结果在 `TunnelResponse.payload`）；隧道未连接时暂不测（App 进程未链接 mihomo，待定）。Android：VPN 进程或 App 进程直接调 `zm_url_test`（不依赖 zm_start）。
+- `nodeIndex.testedCount` = 核心 `testedCount(nowMillis, maxAgeMillis)`（24 h 内有结果的节点数，含超时）。
