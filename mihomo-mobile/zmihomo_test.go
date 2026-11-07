@@ -104,3 +104,22 @@ func TestURLTestDirectAndDead(t *testing.T) {
 		t.Fatal("want error")
 	}
 }
+
+func TestLogRing(t *testing.T) {
+	startLogCollector()
+	for i := 0; i < logRingCap+20; i++ {
+		appendLog("info", "x", 1)
+	}
+	appendLog("error", "boom", 2)
+	seq, lines := logsSince(0, "warning", 10)
+	if len(lines) != 1 || lines[0].Msg != "boom" || lines[0].Seq != seq {
+		t.Fatalf("got %+v seq %d", lines, seq)
+	}
+	_, all := logsSince(0, "debug", 0)
+	if len(all) != logRingCap {
+		t.Fatalf("ring len %d", len(all))
+	}
+	if _, none := logsSince(seq, "debug", 0); len(none) != 0 {
+		t.Fatal("since is exclusive")
+	}
+}

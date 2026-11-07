@@ -11,6 +11,7 @@
 //	void    zm_set_memory_limit(int64_t bytes)      // Go 软上限；iOS NE 约 50 MB 预算，建议 30 MB
 //	void    zm_free_os_memory(void)                 // 内存告警时调用
 //	char*   zm_url_test(const char* proxies_json, const char* url, int timeout_ms, int concurrency)  // 见 urltest.go；返回 JSON
+//	char*   zm_logs(int64_t since, const char* min_level, int limit)   // 见 logs.go；返回 JSON
 //	char*   zm_version(void)
 //	void    zm_free(char*)
 //
@@ -49,6 +50,7 @@ func cerr(err error) *C.char {
 }
 
 func start(homeDir, cfg, unix string) error {
+	startLogCollector()
 	mu.Lock()
 	defer mu.Unlock()
 	if running {

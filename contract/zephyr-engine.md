@@ -377,3 +377,4 @@ record SceneFailover { failed: NodeRow, failureCount: UInt32, apply: SceneApply 
 - 测速：节点库上千万条，运行配置只放场景引用的节点，所以 `testLatency` 不走 mihomo REST。流程：核心 `latencyTestBatch(ids ≤ 512) -> JSON`（name = id 十六进制）→ mihomo-mobile `zm_url_test(json, url, timeoutMs, concurrency)` 临时建出站测 → 核心 `recordUrlTest(resultJson, nowMillis) -> [LatencySample]` 入缓存，平台推 `latencyUpdates`。
 - iOS：在扩展里跑（provider message `urlTest(file, url, timeoutMs)`，定义写 App Group core 目录文件，结果在 `TunnelResponse.payload`）；隧道未连接时暂不测（App 进程未链接 mihomo，待定）。Android：VPN 进程或 App 进程直接调 `zm_url_test`（不依赖 zm_start）。
 - `nodeIndex.testedCount` = 核心 `testedCount(nowMillis, maxAgeMillis)`（24 h 内有结果的节点数，含超时）。
+- 日志（§8 logs）：mihomo-mobile `zm_logs(since, minLevel, limit)` 返回嵌入进程内环形缓冲（500 条）里序号 > since 的行（`{"seq","lines":[{seq,level,msg,at}]}`）。iOS 经 provider message `logs(since, minLevel, limit)`，1 Hz 增量；扩展重启（seq 变小）从 0 重拉。Android 直接调用。

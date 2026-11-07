@@ -653,7 +653,10 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         if let t = tunnel { return try await liveClose(t, id: nil) }
         try await fallback.closeAll()
     }
-    public func logs(minLevel: LogLevel) -> AsyncStream<LogLine> { fallback.logs(minLevel: minLevel) }
+    public func logs(minLevel: LogLevel) -> AsyncStream<LogLine> {
+        if let t = tunnel { return liveLogs(t, minLevel: minLevel) }
+        return mockData ? fallback.logs(minLevel: minLevel) : AsyncStream { $0.finish() }
+    }
     /// 设置落盘（dataDir/settings.json）。无核心时回落 fallback；首次无文件用 `defaultSettings`。
     public func settings() -> AsyncStream<ZephyrKit.Settings> {
         guard core != nil else { return fallback.settings() }

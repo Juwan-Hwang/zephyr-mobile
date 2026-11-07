@@ -40,6 +40,11 @@ final class SystemTunnelPort: TunnelPort, @unchecked Sendable {
 
     func stop() async throws { try await controller.setConnected(false) }
 
+    func logs(since: Int64, minLevel: String, limit: Int32) async -> String? {
+        guard let r = try? await controller.request(.logs(since: since, minLevel: minLevel, limit: limit)), r.result == .ok else { return nil }
+        return r.payload
+    }
+
     func urlTest(proxiesJSON: String, url: String, timeoutMs: Int32) async -> String? {
         // 定义可能几十 KB：写进 App Group 文件，消息里只带文件名；用完即删。
         let name = "urltest-\(UUID().uuidString).json"

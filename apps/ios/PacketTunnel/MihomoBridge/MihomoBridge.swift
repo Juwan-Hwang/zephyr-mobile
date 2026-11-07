@@ -191,6 +191,19 @@ final class MihomoBridge: @unchecked Sendable {
         #endif
     }
 
+    /// 增量日志：`{"seq":N,"lines":[{seq,level,msg,at}]}`。
+    func logs(since: Int64, minLevel: String, limit: Int32) -> String {
+        #if MIHOMO_LINKED
+        return minLevel.withCString { pl in
+            guard let p = zm_logs(since, UnsafeMutablePointer(mutating: pl), limit) else { return #"{"seq":0,"lines":[]}"# }
+            defer { zm_free(p) }
+            return String(cString: p)
+        }
+        #else
+        return #"{"seq":0,"lines":[]}"#
+        #endif
+    }
+
     // MARK: C 字符串调用
 
     #if MIHOMO_LINKED

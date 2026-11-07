@@ -163,6 +163,10 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
                 var r = self.response(.ok); r.payload = out
                 completionHandler?(TunnelMessageCodec.encode(r))
             }
+        case .logs(let since, let minLevel, let limit):
+            var r = response(.ok)
+            r.payload = bridge.logs(since: since, minLevel: minLevel, limit: max(1, min(limit, 500)))
+            completionHandler?(TunnelMessageCodec.encode(r))
         case .reloadConfig:
             // App 重新生成了配置（订阅更新 / 场景切换需重载）：重新注入当前 fd 后热重载。
             let config = TunnelConfiguration.load(store: store)

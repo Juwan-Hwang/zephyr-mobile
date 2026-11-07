@@ -15,6 +15,8 @@ enum TunnelRequest: Codable, Sendable, Hashable {
     /// 批量延迟测试（契约 §5 testLatency）：file = App Group core 目录下的代理定义 JSON（核心 latencyTestBatch 生成，
     /// 可能几十 KB，不走消息体）；结果 JSON 放在 TunnelResponse.payload。
     case urlTest(file: String, url: String, timeoutMs: Int32)
+    /// 增量日志（zm_logs）：序号 > since、级别 ≥ minLevel，最多 limit 条；结果 JSON 在 payload。
+    case logs(since: Int64, minLevel: String, limit: Int32)
 }
 
 struct TunnelResponse: Codable, Sendable, Hashable {

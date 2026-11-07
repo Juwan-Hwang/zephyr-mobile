@@ -26,6 +26,11 @@ final class FakeTunnel: TunnelPort, @unchecked Sendable {
     func setMode(_ m: ZephyrKit.ProxyMode) async throws { lock.withLock { mode = m } }
     func rate() async -> (up: Int64, down: Int64)? { lock.withLock { status == .connected ? (10, 2048) : nil } }
     func reloadConfig() async throws { lock.withLock { reloads += 1 } }
+    var logCalls = 0
+    func logs(since: Int64, minLevel: String, limit: Int32) async -> String? {
+        lock.withLock { logCalls += 1 }
+        return since == 0 ? #"{"seq":2,"lines":[{"seq":1,"level":"warning","msg":"dial timeout","at":5},{"seq":2,"level":"error","msg":"x","at":6}]}"# : #"{"seq":2,"lines":[]}"#
+    }
     var urlTestInputs: [String] = []
     func urlTest(proxiesJSON: String, url: String, timeoutMs: Int32) async -> String? {
         let connected = lock.withLock { () -> Bool in urlTestInputs.append(proxiesJSON); return status == .connected }
@@ -215,6 +220,14 @@ final class CoreEngineLiveTests: XCTestCase {
         XCTAssertEqual(await it2.next(), s)
         s.tun.mtu = 100
         do { try await e.updateSettings(patch: s); XCTFail("非法 MTU") } catch {}
+    }
+
+    func testLogsFromTunnel() async throws {
+        let (e, _) = make()
+        var it = e.logs(minLevel: .warning).makeAsyncIterator()
+        let a = await it.next(), b = await it.next()
+        XCTAssertEqual(a, LogLine(at: 5, level: .warning, message: "dial timeout"))
+        XCTAssertEqual(b?.level, .error)
     }
 
     func testMemberIdIsStable() {
