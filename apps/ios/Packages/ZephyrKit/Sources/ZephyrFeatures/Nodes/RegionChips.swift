@@ -20,6 +20,7 @@ struct RegionChips: View {
             .padding(.horizontal, PageMetrics.margin)
             .padding(.vertical, ZTokens.Space.n1)
         }
+        .sensoryFeedback(.selection, trigger: selected)
         .scrollClipDisabled()
     }
 
@@ -49,7 +50,6 @@ struct RegionChips: View {
         .buttonStyle(.plain)
         .accessibilityLabel(count.map { "\(title)，\($0)个节点" } ?? title)
         .accessibilityAddTraits(on ? .isSelected : [])
-        .sensoryFeedback(.selection, trigger: on)
     }
 }
 

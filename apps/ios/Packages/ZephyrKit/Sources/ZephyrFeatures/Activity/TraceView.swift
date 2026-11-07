@@ -161,7 +161,7 @@ private struct TraceRailFlow: View {
     private static let period: Double = 1.8
 
     var body: some View {
-        TimelineView(.animation) { ctx in
+        TimelineView(.animation(minimumInterval: 1.0 / 30)) { ctx in
             Canvas { g, size in
                 let t = ctx.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: Self.period) / Self.period
                 // ZMotion.page 的缓动近似：ease-in-out
