@@ -408,10 +408,10 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         for start in stride(from: 0, to: unique.count, by: 512) {
             if Task.isCancelled { return }
             let chunk = Array(unique[start..<min(start + 512, unique.count)])
-            guard let json = try? await run({ try c.latencyTestBatch(ids: chunk) }), json != "[]",
+            guard let json = try? await run(.nodeNotFound, { try c.latencyTestBatch(ids: chunk) }), json != "[]",
                   let out = await t.urlTest(proxiesJSON: json, url: "https://www.gstatic.com/generate_204", timeoutMs: 5000) else { continue }
             let now = clock()
-            guard let samples = try? await run({ try c.recordUrlTest(resultJson: out, nowMillis: now) }), !samples.isEmpty else { continue }
+            guard let samples = try? await run(.nodeNotFound, { try c.recordUrlTest(resultJson: out, nowMillis: now) }), !samples.isEmpty else { continue }
             let updates = samples.map { LatencyUpdate(id: $0.id, latencyMs: $0.ms, at: $0.at) }
             for w in locked({ Array(latencyWatchers.values) }) { w.yield(updates) }
         }
