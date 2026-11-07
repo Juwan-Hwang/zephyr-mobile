@@ -41,20 +41,22 @@ pub struct App {
     pub name: &'static str,
     pub kind: SceneKind,
     pub domains: &'static [&'static str],
+    /// 服务健康探测地址（平台 HEAD/GET，经场景出口）；None = 不探测。
+    pub probe: Option<&'static str>,
 }
 
 /// 内置应用目录：场景路由与"影响哪些应用"的文案都来自这里。
 pub const APPS: &[App] = &[
-    App { id: "chatgpt", name: "ChatGPT", kind: SceneKind::Ai, domains: &["openai.com", "chatgpt.com", "oaistatic.com", "oaiusercontent.com", "sora.com"] },
-    App { id: "claude", name: "Claude", kind: SceneKind::Ai, domains: &["claude.ai", "anthropic.com", "claudeusercontent.com"] },
-    App { id: "gemini", name: "Gemini", kind: SceneKind::Ai, domains: &["gemini.google.com", "generativelanguage.googleapis.com", "aistudio.google.com", "makersuite.google.com"] },
-    App { id: "perplexity", name: "Perplexity", kind: SceneKind::Ai, domains: &["perplexity.ai"] },
-    App { id: "grok", name: "Grok", kind: SceneKind::Ai, domains: &["grok.com", "x.ai"] },
-    App { id: "netflix", name: "Netflix", kind: SceneKind::Video, domains: &["netflix.com", "netflix.net", "nflxvideo.net", "nflximg.net", "nflxext.com", "nflxso.net"] },
-    App { id: "youtube", name: "YouTube", kind: SceneKind::Video, domains: &["youtube.com", "googlevideo.com", "ytimg.com", "youtu.be", "youtube-nocookie.com"] },
-    App { id: "disney", name: "Disney+", kind: SceneKind::Video, domains: &["disneyplus.com", "disney-plus.net", "dssott.com", "bamgrid.com"] },
-    App { id: "max", name: "Max", kind: SceneKind::Video, domains: &["max.com", "hbomax.com", "hbomaxcdn.com"] },
-    App { id: "primevideo", name: "Prime Video", kind: SceneKind::Video, domains: &["primevideo.com", "aiv-cdn.net", "aiv-delivery.net"] },
+    App { id: "chatgpt", name: "ChatGPT", kind: SceneKind::Ai, domains: &["openai.com", "chatgpt.com", "oaistatic.com", "oaiusercontent.com", "sora.com"], probe: Some("https://chatgpt.com/") },
+    App { id: "claude", name: "Claude", kind: SceneKind::Ai, domains: &["claude.ai", "anthropic.com", "claudeusercontent.com"], probe: Some("https://claude.ai/") },
+    App { id: "gemini", name: "Gemini", kind: SceneKind::Ai, domains: &["gemini.google.com", "generativelanguage.googleapis.com", "aistudio.google.com", "makersuite.google.com"], probe: Some("https://gemini.google.com/") },
+    App { id: "perplexity", name: "Perplexity", kind: SceneKind::Ai, domains: &["perplexity.ai"], probe: None },
+    App { id: "grok", name: "Grok", kind: SceneKind::Ai, domains: &["grok.com", "x.ai"], probe: None },
+    App { id: "netflix", name: "Netflix", kind: SceneKind::Video, domains: &["netflix.com", "netflix.net", "nflxvideo.net", "nflximg.net", "nflxext.com", "nflxso.net"], probe: Some("https://www.netflix.com/") },
+    App { id: "youtube", name: "YouTube", kind: SceneKind::Video, domains: &["youtube.com", "googlevideo.com", "ytimg.com", "youtu.be", "youtube-nocookie.com"], probe: Some("https://www.youtube.com/") },
+    App { id: "disney", name: "Disney+", kind: SceneKind::Video, domains: &["disneyplus.com", "disney-plus.net", "dssott.com", "bamgrid.com"], probe: None },
+    App { id: "max", name: "Max", kind: SceneKind::Video, domains: &["max.com", "hbomax.com", "hbomaxcdn.com"], probe: None },
+    App { id: "primevideo", name: "Prime Video", kind: SceneKind::Video, domains: &["primevideo.com", "aiv-cdn.net", "aiv-delivery.net"], probe: None },
 ];
 
 pub fn app(id: &str) -> Option<&'static App> {
@@ -83,6 +85,16 @@ pub struct SceneRec {
     pub exit_ip: Option<String>,
     pub exit_region: Option<String>,
     pub tested_at: Option<i64>,
+    /// 按服务的健康（平台探测后上报）：app id → 最近一次结果。
+    #[serde(default)]
+    pub services: Vec<ServiceRec>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ServiceRec {
+    pub app_id: String,
+    pub ok: bool,
+    pub checked_at: i64,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, uniffi::Record)]
@@ -120,6 +132,7 @@ fn defaults() -> Vec<SceneRec> {
         exit_ip: None,
         exit_region: None,
         tested_at: None,
+        services: vec![],
     };
     vec![mk("ai", SceneKind::Ai, "AI", None), mk("video", SceneKind::Video, "视频", None), mk("other", SceneKind::Other, "其他", None)]
 }

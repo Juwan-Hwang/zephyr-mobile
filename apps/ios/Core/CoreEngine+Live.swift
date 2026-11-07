@@ -35,9 +35,13 @@ extension CoreEngine {
     }
 
     /// 隧道在跑时：重写配置并让扩展热重载；没在跑则什么都不做（下次连接时 liveConnect 会重写）。
-    func reloadTunnelIfRunning(_ t: any TunnelPort) async {
+    func isTunnelConnected(_ t: any TunnelPort) async -> Bool {
         var it = t.states().makeAsyncIterator()
-        guard let st = await it.next(), st.status == .connected else { return }
+        return await it.next()?.status == .connected
+    }
+
+    func reloadTunnelIfRunning(_ t: any TunnelPort) async {
+        guard await isTunnelConnected(t) else { return }
         do {
             try await writeTunnelConfig(to: t.configURL, controllerSocket: t.controllerSocketPath)
             try await t.reloadConfig()

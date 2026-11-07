@@ -121,6 +121,23 @@ public enum SceneSource: String, Sendable, Hashable, Codable, CaseIterable {
     case subscriptionGroup = "subscription_group"
 }
 
+/// 契约 §14.z：场景内单个服务的健康（"Claude 不可用 / GPT、Gemini 正常"）。
+public struct ServiceHealth: Sendable, Hashable, Codable {
+    public var appId: String
+    public var name: String
+    public var ok: Bool
+    public var checkedAt: Int64
+    public init(appId: String, name: String, ok: Bool, checkedAt: Int64) {
+        self.appId = appId; self.name = name; self.ok = ok; self.checkedAt = checkedAt
+    }
+    enum CodingKeys: String, CodingKey { case name, ok; case appId = "app_id", checkedAt = "checked_at" }
+}
+
+/// 契约 §13 overrideHost 的目标；unchanged = 清除覆写。
+public enum TraceTarget: String, Sendable, Hashable, Codable, CaseIterable {
+    case unchanged, direct, scene
+}
+
 public struct SceneException: Sendable, Hashable, Codable {
     public var app: String
     public var node: NodeSummary
@@ -139,11 +156,15 @@ public struct Scene: Sendable, Hashable, Codable, Identifiable {
     public var testedAt: Int64?
     public var note: String?
     public var exceptions: [SceneException]
+    /// 未探测过的服务不出现；空 = 不显示服务行（契约 §14.z）。不参与编码（fixture 无此字段）。
+    public var services: [ServiceHealth] = []
 
     public init(id: String, kind: SceneKind, name: String, available: Int32, selected: NodeSummary, exitIp: String? = nil,
-                source: SceneSource, testedAt: Int64? = nil, note: String? = nil, exceptions: [SceneException] = []) {
+                source: SceneSource, testedAt: Int64? = nil, note: String? = nil, exceptions: [SceneException] = [],
+                services: [ServiceHealth] = []) {
         self.id = id; self.kind = kind; self.name = name; self.available = available; self.selected = selected
         self.exitIp = exitIp; self.source = source; self.testedAt = testedAt; self.note = note; self.exceptions = exceptions
+        self.services = services
     }
     enum CodingKeys: String, CodingKey {
         case id, kind, name, available, selected, source, note, exceptions
@@ -500,16 +521,19 @@ public struct Settings: Sendable, Hashable, Codable {
     public var appearance: Appearance
     /// "图案由今天的流量生成，不含节点名称与 IP"
     public var shareAnonymousPattern: Bool
+    /// 本地代理开关（契约 §14.z）；开时监听 127.0.0.1:localProxyPort。旧数据无此键 → false。
+    public var localProxyEnabled: Bool = false
 
     public init(onDemand: Bool, trustedWifi: [String], disconnectOnTrusted: Bool, localProxyPort: Int32, localProxyAuth: Bool,
                 testOnWifiOnly: Bool, latencyTtlHours: Int32, autoUpdateHours: Int32, updateOnWifiOnly: Bool,
                 showChangesBeforeUpdate: Bool, dns: DnsSettings, tun: TunSettings, accent: Accent, appearance: Appearance,
-                shareAnonymousPattern: Bool) {
+                shareAnonymousPattern: Bool, localProxyEnabled: Bool = false) {
         self.onDemand = onDemand; self.trustedWifi = trustedWifi; self.disconnectOnTrusted = disconnectOnTrusted
         self.localProxyPort = localProxyPort; self.localProxyAuth = localProxyAuth; self.testOnWifiOnly = testOnWifiOnly
         self.latencyTtlHours = latencyTtlHours; self.autoUpdateHours = autoUpdateHours; self.updateOnWifiOnly = updateOnWifiOnly
         self.showChangesBeforeUpdate = showChangesBeforeUpdate; self.dns = dns; self.tun = tun; self.accent = accent
         self.appearance = appearance; self.shareAnonymousPattern = shareAnonymousPattern
+        self.localProxyEnabled = localProxyEnabled
     }
     enum CodingKeys: String, CodingKey {
         case dns, tun, accent, appearance
@@ -517,6 +541,23 @@ public struct Settings: Sendable, Hashable, Codable {
         case localProxyPort = "local_proxy_port", localProxyAuth = "local_proxy_auth", testOnWifiOnly = "test_on_wifi_only"
         case latencyTtlHours = "latency_ttl_hours", autoUpdateHours = "auto_update_hours", updateOnWifiOnly = "update_on_wifi_only"
         case showChangesBeforeUpdate = "show_changes_before_update", shareAnonymousPattern = "share_anonymous_pattern"
+        case localProxyEnabled = "local_proxy_enabled"
+    }
+}
+
+extension Settings {
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        self.init(onDemand: try c.decode(Bool.self, forKey: .onDemand), trustedWifi: try c.decode([String].self, forKey: .trustedWifi),
+                  disconnectOnTrusted: try c.decode(Bool.self, forKey: .disconnectOnTrusted),
+                  localProxyPort: try c.decode(Int32.self, forKey: .localProxyPort), localProxyAuth: try c.decode(Bool.self, forKey: .localProxyAuth),
+                  testOnWifiOnly: try c.decode(Bool.self, forKey: .testOnWifiOnly), latencyTtlHours: try c.decode(Int32.self, forKey: .latencyTtlHours),
+                  autoUpdateHours: try c.decode(Int32.self, forKey: .autoUpdateHours), updateOnWifiOnly: try c.decode(Bool.self, forKey: .updateOnWifiOnly),
+                  showChangesBeforeUpdate: try c.decode(Bool.self, forKey: .showChangesBeforeUpdate),
+                  dns: try c.decode(DnsSettings.self, forKey: .dns), tun: try c.decode(TunSettings.self, forKey: .tun),
+                  accent: try c.decode(Accent.self, forKey: .accent), appearance: try c.decode(Appearance.self, forKey: .appearance),
+                  shareAnonymousPattern: try c.decode(Bool.self, forKey: .shareAnonymousPattern),
+                  localProxyEnabled: try c.decodeIfPresent(Bool.self, forKey: .localProxyEnabled) ?? false)
     }
 }
 

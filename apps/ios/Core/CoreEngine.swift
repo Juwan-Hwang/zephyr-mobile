@@ -239,13 +239,76 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         }
     }
 
+    /// 重测（契约 §14.z）：隧道在跑时经 VPN 真实探测——出口用 Cloudflare trace，服务用 probe 地址；
+    /// 请求按域名走规则，测到的就是该场景（含应用例外）真正的出口。隧道没在跑时只返回缓存。
     public func retestScene(sceneId: String) async throws -> ZephyrKit.Scene {
-        guard await nodes() != nil else { return try await fallback.retestScene(sceneId: sceneId) }
+        guard let c = await nodes() else { return try await fallback.retestScene(sceneId: sceneId) }
+        if let t = tunnel, await isTunnelConnected(t) {
+            let exitURL = try await run(.sceneNotFound) { try c.sceneExitProbe(sceneId: sceneId) }
+            let targets = try await run(.sceneNotFound) { try c.sceneProbeTargets(sceneId: sceneId) }
+            let session = CoreEngine.probeSession
+            let now = clock
+            await withTaskGroup(of: Void.self) { g in
+                if let u = exitURL.flatMap(URL.init(string:)) {
+                    g.addTask {
+                        guard let (data, _) = try? await session.data(from: u) else { return }
+                        _ = try? c.reportSceneTrace(sceneId: sceneId, body: String(decoding: data, as: UTF8.self), nowMillis: now())
+                    }
+                }
+                for target in targets {
+                    guard let u = URL(string: target.url) else { continue }
+                    g.addTask {
+                        var req = URLRequest(url: u)
+                        req.httpMethod = "HEAD"
+                        // 能拿到任何 HTTP 响应（含 403 地区限制页以外的）即视为可达；超时/连接失败为不可用。
+                        let ok: Bool
+                        if let (_, resp) = try? await session.data(for: req), let h = resp as? HTTPURLResponse {
+                            ok = h.statusCode < 500 && h.statusCode != 403
+                        } else {
+                            ok = false
+                        }
+                        _ = try? c.reportSceneService(sceneId: sceneId, appId: target.appId, ok: ok, nowMillis: now())
+                    }
+                }
+            }
+        }
         guard let s = try await readScenes().first(where: { $0.id == sceneId }) else {
             throw ZephyrError(code: .sceneNotFound, message: sceneId)
         }
         await bumpScenes()
         return s
+    }
+
+    static let probeSession: URLSession = {
+        let cfg = URLSessionConfiguration.ephemeral
+        cfg.timeoutIntervalForRequest = 6
+        cfg.timeoutIntervalForResource = 8
+        cfg.waitsForConnectivity = false
+        cfg.requestCachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        return URLSession(configuration: cfg)
+    }()
+
+    public func setSceneSource(sceneId: String, source: ZephyrKit.SceneSource) async throws {
+        guard let c = await nodes() else { return try await fallback.setSceneSource(sceneId: sceneId, source: source) }
+        let src: SceneSource = switch source { case .auto: .auto; case .manual: .manual; case .subscriptionGroup: .subscriptionGroup }
+        let now = clock()
+        let apply = try await run(.sceneNotFound) { try c.setSceneSource(sceneId: sceneId, source: src, nowMillis: now) }
+        await bumpScenes()
+        if let apply, let t = tunnel {
+            if apply.needsReload {
+                await reloadTunnelIfRunning(t)
+            } else {
+                try? await mihomo(t.controllerSocketPath) { try $0.selectInGroup(group: apply.group, member: apply.member) }
+            }
+        }
+    }
+
+    public func overrideHost(host: String, target: ZephyrKit.TraceTarget, sceneId: String?, persistent: Bool) async throws {
+        guard let c = core else { return try await fallback.overrideHost(host: host, target: target, sceneId: sceneId, persistent: persistent) }
+        let tt: TraceTarget = switch target { case .unchanged: .unchanged; case .direct: .direct; case .scene: .scene }
+        try await run(.ruleInputInvalid) { try c.overrideHost(host: host, target: tt, sceneId: sceneId, persistent: persistent) }
+        await bumpScenes()
+        if let t = tunnel { await reloadTunnelIfRunning(t) }
     }
 
     // MARK: - §4 策略组（mihomo 实时数据，在 PacketTunnel）
@@ -512,7 +575,26 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         return RuntimeOptions(
             dns: DnsConfig(fakeIp: dns.fakeIp, nameservers: dns.nameservers, fallback: dns.fallback, ipv6: dns.ipv6),
             tun: TunConfig(stack: stack, mtu: tun.mtu, ipv6: tun.ipv6, strictRoute: tun.strictRoute, fileDescriptor: -1),
-            mode: coreMode, controllerSocket: controllerSocket, findProcess: false, logLevel: "warning")
+            mode: coreMode, controllerSocket: controllerSocket, findProcess: false, logLevel: "warning",
+            localProxy: localProxy(settings: s))
+    }
+
+    /// 本地代理（契约 §14.z）：只绑 127.0.0.1；开鉴权时用本机生成并保存的凭据。
+    static func localProxy(settings s: ZephyrKit.Settings?, defaults: UserDefaults = .standard) -> LocalProxy? {
+        guard let s, s.localProxyEnabled, (1024...65535).contains(Int(s.localProxyPort)) else { return nil }
+        return LocalProxy(port: UInt16(s.localProxyPort), auth: s.localProxyAuth ? localProxyCredential(defaults: defaults) : nil)
+    }
+
+    /// "zephyr:<随机 24 位>"，首次生成后保存；UI 在设置页展示给需要配置的 App。
+    public static func localProxyCredential(defaults: UserDefaults = .standard) -> String {
+        let key = "zephyr.localProxyCredential"
+        if let v = defaults.string(forKey: key), v.contains(":") { return v }
+        let alphabet = Array("abcdefghijkmnpqrstuvwxyzACDEFGHJKLMNPQRSTUVWXYZ23456789")
+        var rng = SystemRandomNumberGenerator()
+        let pass = String((0..<24).map { _ in alphabet.randomElement(using: &rng)! })
+        let v = "zephyr:\(pass)"
+        defaults.set(v, forKey: key)
+        return v
     }
 
     // MARK: - §8 连接、日志、设置、存储
@@ -583,6 +665,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         if let ms = s.selectedLatencyMs, ms > 0 { selected.latencyMs = ms }
         return ZephyrKit.Scene(id: s.id, kind: kind, name: s.name, available: s.available, selected: selected, exitIp: s.exitIp,
                                source: source, testedAt: s.testedAt, note: s.note,
-                               exceptions: s.exceptions.compactMap { e in e.node.map { ZephyrKit.SceneException(app: e.app, node: row($0)) } })
+                               exceptions: s.exceptions.compactMap { e in e.node.map { ZephyrKit.SceneException(app: e.app, node: row($0)) } },
+                               services: s.services.map { ZephyrKit.ServiceHealth(appId: $0.appId, name: $0.name, ok: $0.ok, checkedAt: $0.checkedAt) })
     }
 }

@@ -839,6 +839,16 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
+
+
+
+
+
+
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -941,13 +951,21 @@ internal interface UniffiLib : Library {
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_probe(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`success`: Byte,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_service(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`appId`: RustBuffer.ByValue,`ok`: Byte,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_trace(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`body`: RustBuffer.ByValue,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_stats(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_runtime_config(`ptr`: Pointer,`subscriptionId`: RustBuffer.ByValue,`options`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_candidates(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`region`: RustBuffer.ByValue,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_exit_probe(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_for_host(`ptr`: Pointer,`host`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_probe_targets(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scenes(`ptr`: Pointer,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
@@ -955,6 +973,8 @@ internal interface UniffiLib : Library {
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_exception(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`appId`: RustBuffer.ByValue,`nodeId`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_source(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`source`: RustBuffer.ByValue,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_storage_info(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_subscription_fetch_url(`ptr`: Pointer,`id`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -1155,19 +1175,29 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_probe(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_service(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_trace(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_runtime_config(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_candidates(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_exit_probe(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_for_host(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_probe_targets(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scenes(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_failover_policy(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_source(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_storage_info(
     ): Short
@@ -1312,6 +1342,12 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_probe() != 17449.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_service() != 1083.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_trace() != 6617.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -1321,7 +1357,13 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_candidates() != 42848.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_exit_probe() != 40239.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_for_host() != 35644.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_probe_targets() != 46639.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_scenes() != 51937.toShort()) {
@@ -1331,6 +1373,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception() != 4651.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_source() != 34889.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_storage_info() != 53541.toShort()) {
@@ -2350,6 +2395,16 @@ public interface MobileCoreInterface {
      */
     fun `reportSceneProbe`(`sceneId`: kotlin.String, `success`: kotlin.Boolean, `nowMillis`: kotlin.Long): SceneFailover?
     
+    /**
+     * 平台探测某服务后上报；只记录，不触发任何切换（AI 出口仅用户确认后更改，§14.y）。
+     */
+    fun `reportSceneService`(`sceneId`: kotlin.String, `appId`: kotlin.String, `ok`: kotlin.Boolean, `nowMillis`: kotlin.Long)
+    
+    /**
+     * 平台把 trace 响应正文交回；解析出 ip 与地区代码后回填出口。返回出口 IP。
+     */
+    fun `reportSceneTrace`(`sceneId`: kotlin.String, `body`: kotlin.String, `nowMillis`: kotlin.Long): kotlin.String
+    
     fun `ruleStats`(): RuleStats
     
     /**
@@ -2363,9 +2418,20 @@ public interface MobileCoreInterface {
     fun `sceneCandidates`(`sceneId`: kotlin.String, `region`: kotlin.String?, `nowMillis`: kotlin.Long): List<RankedNode>
     
     /**
+     * 测场景出口用的地址（Cloudflare trace，返回 ip= / loc=）。请求按域名走规则，所以选一个属于该场景、
+     * 且没被设成例外的服务域名；视频与自定义场景没有可用的 trace 域名，返回 None。
+     */
+    fun `sceneExitProbe`(`sceneId`: kotlin.String): kotlin.String?
+    
+    /**
      * 该 host 走哪个场景（内置应用目录），用于轨迹页"场景"一栏。
      */
     fun `sceneForHost`(`host`: kotlin.String): kotlin.String?
+    
+    /**
+     * 场景内需要探测健康的服务（按内置应用目录，有 probe 地址的）。
+     */
+    fun `sceneProbeTargets`(`sceneId`: kotlin.String): List<ProbeTarget>
     
     fun `scenes`(`nowMillis`: kotlin.Long): List<Scene>
     
@@ -2375,6 +2441,13 @@ public interface MobileCoreInterface {
      * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
      */
     fun `setSceneException`(`sceneId`: kotlin.String, `appId`: kotlin.String, `nodeId`: kotlin.ULong?)
+    
+    /**
+     * 场景来源（引导"优选 / 简单"与场景 sheet 的来源分段）。
+     * Auto：立即换到延迟缓存里最优的节点（当前地区优先，无选择时全库），返回需要平台执行的动作；
+     * 已是最优或没有测速数据时返回 None。Manual / SubscriptionGroup：只记录。
+     */
+    fun `setSceneSource`(`sceneId`: kotlin.String, `source`: SceneSource, `nowMillis`: kotlin.Long): SceneApply?
     
     fun `storageInfo`(): StorageInfo
     
@@ -2845,6 +2918,37 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     }
     
 
+    
+    /**
+     * 平台探测某服务后上报；只记录，不触发任何切换（AI 出口仅用户确认后更改，§14.y）。
+     */
+    @Throws(MobileException::class)override fun `reportSceneService`(`sceneId`: kotlin.String, `appId`: kotlin.String, `ok`: kotlin.Boolean, `nowMillis`: kotlin.Long)
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_service(
+        it, FfiConverterString.lower(`sceneId`),FfiConverterString.lower(`appId`),FfiConverterBoolean.lower(`ok`),FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    
+    
+
+    
+    /**
+     * 平台把 trace 响应正文交回；解析出 ip 与地区代码后回填出口。返回出口 IP。
+     */
+    @Throws(MobileException::class)override fun `reportSceneTrace`(`sceneId`: kotlin.String, `body`: kotlin.String, `nowMillis`: kotlin.Long): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_trace(
+        it, FfiConverterString.lower(`sceneId`),FfiConverterString.lower(`body`),FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    )
+    }
+    
+
     override fun `ruleStats`(): RuleStats {
             return FfiConverterTypeRuleStats.lift(
     callWithPointer {
@@ -2891,6 +2995,23 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
 
     
     /**
+     * 测场景出口用的地址（Cloudflare trace，返回 ip= / loc=）。请求按域名走规则，所以选一个属于该场景、
+     * 且没被设成例外的服务域名；视频与自定义场景没有可用的 trace 域名，返回 None。
+     */
+    @Throws(MobileException::class)override fun `sceneExitProbe`(`sceneId`: kotlin.String): kotlin.String? {
+            return FfiConverterOptionalString.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_exit_probe(
+        it, FfiConverterString.lower(`sceneId`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * 该 host 走哪个场景（内置应用目录），用于轨迹页"场景"一栏。
      */override fun `sceneForHost`(`host`: kotlin.String): kotlin.String? {
             return FfiConverterOptionalString.lift(
@@ -2898,6 +3019,22 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_for_host(
         it, FfiConverterString.lower(`host`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 场景内需要探测健康的服务（按内置应用目录，有 probe 地址的）。
+     */
+    @Throws(MobileException::class)override fun `sceneProbeTargets`(`sceneId`: kotlin.String): List<ProbeTarget> {
+            return FfiConverterSequenceTypeProbeTarget.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_probe_targets(
+        it, FfiConverterString.lower(`sceneId`),_status)
 }
     }
     )
@@ -2942,6 +3079,24 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
 }
     }
     
+    
+
+    
+    /**
+     * 场景来源（引导"优选 / 简单"与场景 sheet 的来源分段）。
+     * Auto：立即换到延迟缓存里最优的节点（当前地区优先，无选择时全库），返回需要平台执行的动作；
+     * 已是最优或没有测速数据时返回 None。Manual / SubscriptionGroup：只记录。
+     */
+    @Throws(MobileException::class)override fun `setSceneSource`(`sceneId`: kotlin.String, `source`: SceneSource, `nowMillis`: kotlin.Long): SceneApply? {
+            return FfiConverterOptionalTypeSceneApply.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_source(
+        it, FfiConverterString.lower(`sceneId`),FfiConverterTypeSceneSource.lower(`source`),FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    )
+    }
     
 
     override fun `storageInfo`(): StorageInfo {
@@ -3582,6 +3737,41 @@ public object FfiConverterTypeLatencySample: FfiConverterRustBuffer<LatencySampl
 
 
 
+data class LocalProxy (
+    var `port`: kotlin.UShort, 
+    /**
+     * "user:pass"；None = 不鉴权（仍只绑回环地址）
+     */
+    var `auth`: kotlin.String?
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeLocalProxy: FfiConverterRustBuffer<LocalProxy> {
+    override fun read(buf: ByteBuffer): LocalProxy {
+        return LocalProxy(
+            FfiConverterUShort.read(buf),
+            FfiConverterOptionalString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: LocalProxy) = (
+            FfiConverterUShort.allocationSize(value.`port`) +
+            FfiConverterOptionalString.allocationSize(value.`auth`)
+    )
+
+    override fun write(value: LocalProxy, buf: ByteBuffer) {
+            FfiConverterUShort.write(value.`port`, buf)
+            FfiConverterOptionalString.write(value.`auth`, buf)
+    }
+}
+
+
+
 data class NodeDiff (
     var `added`: kotlin.ULong, 
     var `removed`: kotlin.ULong, 
@@ -3845,6 +4035,45 @@ public object FfiConverterTypePolicyGroup: FfiConverterRustBuffer<PolicyGroup> {
 
 
 /**
+ * 平台对场景内服务做健康探测的目标：经 VPN 访问 url，规则会把它路由到该服务实际使用的出口（含应用例外）。
+ */
+data class ProbeTarget (
+    var `appId`: kotlin.String, 
+    var `name`: kotlin.String, 
+    var `url`: kotlin.String
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeProbeTarget: FfiConverterRustBuffer<ProbeTarget> {
+    override fun read(buf: ByteBuffer): ProbeTarget {
+        return ProbeTarget(
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ProbeTarget) = (
+            FfiConverterString.allocationSize(value.`appId`) +
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterString.allocationSize(value.`url`)
+    )
+
+    override fun write(value: ProbeTarget, buf: ByteBuffer) {
+            FfiConverterString.write(value.`appId`, buf)
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterString.write(value.`url`, buf)
+    }
+}
+
+
+
+/**
  * 节点 + 延迟（场景候选 / 最快节点）。
  */
 data class RankedNode (
@@ -4083,7 +4312,11 @@ data class RuntimeOptions (
      * iOS 扩展里关掉进程识别（系统不给），Android 可开
      */
     var `findProcess`: kotlin.Boolean, 
-    var `logLevel`: kotlin.String
+    var `logLevel`: kotlin.String, 
+    /**
+     * 本地代理（设置 → 本地代理端口）：只监听 127.0.0.1 的 mixed 端口；None = 关（默认）。
+     */
+    var `localProxy`: LocalProxy? = null
 ) {
     
     companion object
@@ -4101,6 +4334,7 @@ public object FfiConverterTypeRuntimeOptions: FfiConverterRustBuffer<RuntimeOpti
             FfiConverterString.read(buf),
             FfiConverterBoolean.read(buf),
             FfiConverterString.read(buf),
+            FfiConverterOptionalTypeLocalProxy.read(buf),
         )
     }
 
@@ -4110,7 +4344,8 @@ public object FfiConverterTypeRuntimeOptions: FfiConverterRustBuffer<RuntimeOpti
             FfiConverterTypeProxyMode.allocationSize(value.`mode`) +
             FfiConverterString.allocationSize(value.`controllerSocket`) +
             FfiConverterBoolean.allocationSize(value.`findProcess`) +
-            FfiConverterString.allocationSize(value.`logLevel`)
+            FfiConverterString.allocationSize(value.`logLevel`) +
+            FfiConverterOptionalTypeLocalProxy.allocationSize(value.`localProxy`)
     )
 
     override fun write(value: RuntimeOptions, buf: ByteBuffer) {
@@ -4120,6 +4355,7 @@ public object FfiConverterTypeRuntimeOptions: FfiConverterRustBuffer<RuntimeOpti
             FfiConverterString.write(value.`controllerSocket`, buf)
             FfiConverterBoolean.write(value.`findProcess`, buf)
             FfiConverterString.write(value.`logLevel`, buf)
+            FfiConverterOptionalTypeLocalProxy.write(value.`localProxy`, buf)
     }
 }
 
@@ -4141,6 +4377,10 @@ data class Scene (
     var `testedAt`: kotlin.Long?, 
     var `note`: kotlin.String?, 
     var `exceptions`: List<SceneExceptionView>, 
+    /**
+     * 按服务健康（原型："Claude 不可用 / GPT、Gemini 正常"）；未探测过的服务不出现。
+     */
+    var `services`: List<ServiceHealth>, 
     /**
      * mihomo 中的组名（MihomoClient.selectInGroup 用）
      */
@@ -4168,6 +4408,7 @@ public object FfiConverterTypeScene: FfiConverterRustBuffer<Scene> {
             FfiConverterOptionalLong.read(buf),
             FfiConverterOptionalString.read(buf),
             FfiConverterSequenceTypeSceneExceptionView.read(buf),
+            FfiConverterSequenceTypeServiceHealth.read(buf),
             FfiConverterString.read(buf),
         )
     }
@@ -4185,6 +4426,7 @@ public object FfiConverterTypeScene: FfiConverterRustBuffer<Scene> {
             FfiConverterOptionalLong.allocationSize(value.`testedAt`) +
             FfiConverterOptionalString.allocationSize(value.`note`) +
             FfiConverterSequenceTypeSceneExceptionView.allocationSize(value.`exceptions`) +
+            FfiConverterSequenceTypeServiceHealth.allocationSize(value.`services`) +
             FfiConverterString.allocationSize(value.`group`)
     )
 
@@ -4201,6 +4443,7 @@ public object FfiConverterTypeScene: FfiConverterRustBuffer<Scene> {
             FfiConverterOptionalLong.write(value.`testedAt`, buf)
             FfiConverterOptionalString.write(value.`note`, buf)
             FfiConverterSequenceTypeSceneExceptionView.write(value.`exceptions`, buf)
+            FfiConverterSequenceTypeServiceHealth.write(value.`services`, buf)
             FfiConverterString.write(value.`group`, buf)
     }
 }
@@ -4329,6 +4572,46 @@ public object FfiConverterTypeSceneFailover: FfiConverterRustBuffer<SceneFailove
             FfiConverterTypeNodeRow.write(value.`failed`, buf)
             FfiConverterUInt.write(value.`failureCount`, buf)
             FfiConverterTypeSceneApply.write(value.`apply`, buf)
+    }
+}
+
+
+
+data class ServiceHealth (
+    var `appId`: kotlin.String, 
+    var `name`: kotlin.String, 
+    var `ok`: kotlin.Boolean, 
+    var `checkedAt`: kotlin.Long
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeServiceHealth: FfiConverterRustBuffer<ServiceHealth> {
+    override fun read(buf: ByteBuffer): ServiceHealth {
+        return ServiceHealth(
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterBoolean.read(buf),
+            FfiConverterLong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ServiceHealth) = (
+            FfiConverterString.allocationSize(value.`appId`) +
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterBoolean.allocationSize(value.`ok`) +
+            FfiConverterLong.allocationSize(value.`checkedAt`)
+    )
+
+    override fun write(value: ServiceHealth, buf: ByteBuffer) {
+            FfiConverterString.write(value.`appId`, buf)
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterBoolean.write(value.`ok`, buf)
+            FfiConverterLong.write(value.`checkedAt`, buf)
     }
 }
 
@@ -5470,6 +5753,38 @@ public object FfiConverterOptionalTypeHostOverride: FfiConverterRustBuffer<HostO
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypeLocalProxy: FfiConverterRustBuffer<LocalProxy?> {
+    override fun read(buf: ByteBuffer): LocalProxy? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeLocalProxy.read(buf)
+    }
+
+    override fun allocationSize(value: LocalProxy?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeLocalProxy.allocationSize(value)
+        }
+    }
+
+    override fun write(value: LocalProxy?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeLocalProxy.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeNodeRow: FfiConverterRustBuffer<NodeRow?> {
     override fun read(buf: ByteBuffer): NodeRow? {
         if (buf.get().toInt() == 0) {
@@ -5492,6 +5807,38 @@ public object FfiConverterOptionalTypeNodeRow: FfiConverterRustBuffer<NodeRow?> 
         } else {
             buf.put(1)
             FfiConverterTypeNodeRow.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeSceneApply: FfiConverterRustBuffer<SceneApply?> {
+    override fun read(buf: ByteBuffer): SceneApply? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeSceneApply.read(buf)
+    }
+
+    override fun allocationSize(value: SceneApply?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeSceneApply.allocationSize(value)
+        }
+    }
+
+    override fun write(value: SceneApply?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeSceneApply.write(value, buf)
         }
     }
 }
@@ -5822,6 +6169,34 @@ public object FfiConverterSequenceTypePolicyGroup: FfiConverterRustBuffer<List<P
 /**
  * @suppress
  */
+public object FfiConverterSequenceTypeProbeTarget: FfiConverterRustBuffer<List<ProbeTarget>> {
+    override fun read(buf: ByteBuffer): List<ProbeTarget> {
+        val len = buf.getInt()
+        return List<ProbeTarget>(len) {
+            FfiConverterTypeProbeTarget.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<ProbeTarget>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeProbeTarget.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<ProbeTarget>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeProbeTarget.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterSequenceTypeRankedNode: FfiConverterRustBuffer<List<RankedNode>> {
     override fun read(buf: ByteBuffer): List<RankedNode> {
         val len = buf.getInt()
@@ -5952,6 +6327,34 @@ public object FfiConverterSequenceTypeSceneExceptionView: FfiConverterRustBuffer
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeSceneExceptionView.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeServiceHealth: FfiConverterRustBuffer<List<ServiceHealth>> {
+    override fun read(buf: ByteBuffer): List<ServiceHealth> {
+        val len = buf.getInt()
+        return List<ServiceHealth>(len) {
+            FfiConverterTypeServiceHealth.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<ServiceHealth>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeServiceHealth.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<ServiceHealth>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeServiceHealth.write(it, buf)
         }
     }
 }

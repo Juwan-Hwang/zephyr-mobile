@@ -181,7 +181,7 @@ logs(minLevel: LogLevel) -> Stream<LogLine>
 
 record Settings {
   onDemand: Bool, trustedWifi: [String], disconnectOnTrusted: Bool
-  localProxyPort: Int32, localProxyAuth: Bool
+  localProxyPort: Int32, localProxyAuth: Bool, localProxyEnabled: Bool = false   // §14.z
   testOnWifiOnly: Bool, latencyTtlHours: Int32
   autoUpdateHours: Int32, updateOnWifiOnly: Bool, showChangesBeforeUpdate: Bool
   dns: DnsSettings, tun: TunSettings
@@ -354,6 +354,19 @@ record SceneFailover { failed: NodeRow, failureCount: UInt32, apply: SceneApply 
 
 ### §14.y 场景自动切换不碰 AI（2026-11-07 追加）
 
-- `reportSceneProbe` 对 kind=AI 的场景恒返回 null，照常接受上报但不自动更换出口。依据：原型 index.html 672–675，AI 出口 IP 只能在用户确认后更改。
+- `reportSceneProbe` 对 kind=AI 的场景恒返回 null，接受上报但不计入失败计数、不自动更换出口（2026-11-08 对齐代码：在计数前返回）。依据：原型 index.html 672–675，AI 出口 IP 只能在用户确认后更改。
 - 应用例外（如 Claude 固定出口）不属于场景的 `selected`，任何自动逻辑都不修改。
 - 平台对 AI 场景只提示「出口无响应，出口 IP 不会自动更换」。视频、其他、自定义场景照旧在热备内切换。
+
+### 14.z 契约缺口补齐（2026-11-08，回应 B 的 ①–④，只追加）
+
+**① 场景按服务健康**：`Scene.services: [ServiceHealth{appId, name, ok, checkedAt}]`，按内置应用目录顺序；未探测过的服务不出现，空数组 = 不显示服务行。
+- 核心：`sceneProbeTargets(sceneId) -> [ProbeTarget{appId, name, url}]`（AI：ChatGPT / Claude / Gemini；视频：Netflix / YouTube；其他：无）；`reportSceneService(sceneId, appId, ok, nowMillis)`。上报只记录，**不触发切换**（AI 出口仅用户确认后更改，§14.y）。
+- 出口：`sceneExitProbe(sceneId) -> String?`（Cloudflare trace：AI 用未设例外的 chatgpt.com / claude.ai，其他用 cloudflare.com；视频与自定义为 null）；平台把响应正文交给 `reportSceneTrace(sceneId, body, nowMillis) -> ip`，核心解析 `ip=` / `loc=` 回填 `exitIp` / `exitRegion`（地区代码）/ `testedAt`。
+- 平台 `retestScene`：**仅隧道已连接时**经 VPN 探测（请求按域名走规则，测到的就是该服务真实出口，含应用例外）；HEAD 6 s 超时；有响应且状态 <500 且 ≠403 为 ok。未连接只返回缓存。
+
+**② `setSceneSource(sceneId, source)`**：核心 `setSceneSource(sceneId, source, nowMillis) -> SceneApply?`。`auto`（优选）：立即换到延迟缓存里最优节点（当前地区优先，无选择时全库），返回动作由平台执行（needsReload → 重写配置 + reloadConfig；否则 selectInGroup），已最优或无测速数据返回 null；`source` 保持 auto。`manual` / `subscriptionGroup`：只记录。
+
+**③ 写覆写**：平台接口补 `overrideHost(host, target: unchanged|direct|scene, sceneId?, persistent)`（§13 已有核心实现）。隧道运行中平台随后重写配置并 reloadConfig。
+
+**④ 本地代理**：`Settings.localProxyEnabled: Bool`（默认 false，旧数据无此键按 false）。`RuntimeOptions.localProxy: LocalProxy{port: UInt16, auth: "user:pass"?}?`（默认 null）→ `mixed-port` + `bind-address: 127.0.0.1` + `allow-lan: false`（+ `authentication`）；端口 <1024 忽略。凭据由平台本机生成并保存（iOS：`CoreEngine.localProxyCredential()`，形如 `zephyr:<24 位随机>`），设置页展示给用户。

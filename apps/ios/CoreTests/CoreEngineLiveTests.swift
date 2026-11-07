@@ -102,6 +102,56 @@ final class CoreEngineLiveTests: XCTestCase {
         XCTAssertEqual(t.reloads, 1)
     }
 
+    func testOverrideHostReloadsRunningTunnelAndLandsInConfig() async throws {
+        let (e, t) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        try await e.connect()
+        try await e.overrideHost(host: "corp.example.com", target: .direct, sceneId: nil, persistent: true)
+        XCTAssertEqual(t.reloads, 1)
+        let yaml = try String(contentsOf: t.configURL, encoding: .utf8)
+        XCTAssertTrue(yaml.contains("corp.example.com,DIRECT"), yaml)
+        try await e.overrideHost(host: "corp.example.com", target: .unchanged, sceneId: nil, persistent: true)
+        XCTAssertFalse(try String(contentsOf: t.configURL, encoding: .utf8).contains("corp.example.com"))
+    }
+
+    func testSetSceneSourceRecordsSource() async throws {
+        let (e, _) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        try await e.setSceneSource(sceneId: "video", source: .manual)
+        var it = e.scenes().makeAsyncIterator()
+        let v = await it.next()?.first { $0.id == "video" }
+        XCTAssertEqual(v?.source, .manual)
+        XCTAssertEqual(v?.services, [])
+    }
+
+    func testRetestWithoutTunnelReturnsCache() async throws {
+        let (e, _) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        let s = try await e.retestScene(sceneId: "ai")
+        XCTAssertEqual(s.id, "ai")
+        XCTAssertNil(s.testedAt, "隧道没在跑不探测")
+    }
+
+    func testLocalProxyOptions() throws {
+        let d = UserDefaults(suiteName: "lp-\(UUID().uuidString)")!
+        var s = ZephyrKit.Settings(onDemand: true, trustedWifi: [], disconnectOnTrusted: false, localProxyPort: 7890,
+                                   localProxyAuth: false, testOnWifiOnly: true, latencyTtlHours: 24, autoUpdateHours: 12,
+                                   updateOnWifiOnly: true, showChangesBeforeUpdate: true, dns: DnsSettings(), tun: TunSettings(),
+                                   accent: .blue, appearance: .system, shareAnonymousPattern: true)
+        XCTAssertNil(CoreEngine.localProxy(settings: s, defaults: d), "默认关")
+        s.localProxyEnabled = true
+        s.localProxyPort = 7890
+        s.localProxyAuth = true
+        let lp = try XCTUnwrap(CoreEngine.localProxy(settings: s, defaults: d))
+        XCTAssertEqual(lp.port, 7890)
+        XCTAssertEqual(lp.auth, CoreEngine.localProxyCredential(defaults: d), "凭据稳定")
+        XCTAssertTrue(lp.auth!.hasPrefix("zephyr:"))
+        s.localProxyAuth = false
+        XCTAssertNil(CoreEngine.localProxy(settings: s, defaults: d)?.auth)
+        s.localProxyPort = 80
+        XCTAssertNil(CoreEngine.localProxy(settings: s, defaults: d), "特权端口拒绝")
+    }
+
     func testMemberIdIsStable() {
         XCTAssertEqual(CoreEngine.memberId(group: "Proxy", name: "香港 01"), CoreEngine.memberId(group: "Proxy", name: "香港 01"))
         XCTAssertNotEqual(CoreEngine.memberId(group: "Proxy", name: "香港 01"), CoreEngine.memberId(group: "Video", name: "香港 01"))
