@@ -30,6 +30,10 @@ public protocol ZephyrEngine: AnyObject, Sendable {
     /// UI 支持"撤销"：再 apply 旧节点。
     func applySceneChange(sceneId: String, nodeId: NodeId) async throws
     func retestScene(sceneId: String) async throws -> Scene
+    /// 契约 §14.z：来源分段（优选 = auto 立即换到最优；manual / subscriptionGroup 只记录）。
+    func setSceneSource(sceneId: String, source: SceneSource) async throws
+    /// 契约 §13：连接轨迹"本次连接 / 始终应用"。target = .unchanged 清除；persistent = false 只在本次运行有效。
+    func overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Bool) async throws
 
     // MARK: §4 策略组
     func policyGroups() -> AsyncStream<[PolicyGroup]>
@@ -113,4 +117,11 @@ public extension Array where Element == RegionSection {
         let ordinal = s.rowOffset - Int64(lo) + (k - 1)
         return .node(section: lo, indexInSection: k - 1, ordinal: ordinal)
     }
+}
+
+// MARK: - 契约 §13 / §14.z 新增方法的默认实现（Mock 未实现前不影响编译；CoreEngine 有真实实现）
+
+public extension ZephyrEngine {
+    func setSceneSource(sceneId: String, source: SceneSource) async throws {}
+    func overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Bool) async throws {}
 }

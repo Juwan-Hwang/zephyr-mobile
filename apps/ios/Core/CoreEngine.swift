@@ -31,6 +31,10 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     private var remapped: [UInt64: UInt64] = [:]
     private var subsWatchers: [UUID: AsyncStream<[ZephyrKit.Subscription]>.Continuation] = [:]
     private var sceneWatchers: [UUID: AsyncStream<[ZephyrKit.Scene]>.Continuation] = [:]
+    private var latencyWatchers: [UUID: AsyncStream<[LatencyUpdate]>.Continuation] = [:]
+    private var settingsWatchers: [UUID: AsyncStream<ZephyrKit.Settings>.Continuation] = [:]
+    private var cachedSettings: ZephyrKit.Settings?
+    private let settingsURL: URL
     private var samples: [TrafficSample] = []
     private var members: [NodeId: String] = [:]
 
@@ -61,6 +65,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         let dir = dataDir ?? CoreEngine.defaultDataDir()
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         self.core = try? MobileCore(dataDir: dir.path)
+        self.settingsURL = dir.appendingPathComponent("settings.json")
         self.fallback = fallback ?? MockEngine(clock: .live)
         self.mockData = mockData
         self.clock = clock
@@ -239,13 +244,76 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         }
     }
 
+    /// 重测（契约 §14.z）：隧道在跑时经 VPN 真实探测——出口用 Cloudflare trace，服务用 probe 地址；
+    /// 请求按域名走规则，测到的就是该场景（含应用例外）真正的出口。隧道没在跑时只返回缓存。
     public func retestScene(sceneId: String) async throws -> ZephyrKit.Scene {
-        guard await nodes() != nil else { return try await fallback.retestScene(sceneId: sceneId) }
+        guard let c = await nodes() else { return try await fallback.retestScene(sceneId: sceneId) }
+        if let t = tunnel, await isTunnelConnected(t) {
+            let exitURL = try await run(.sceneNotFound) { try c.sceneExitProbe(sceneId: sceneId) }
+            let targets = try await run(.sceneNotFound) { try c.sceneProbeTargets(sceneId: sceneId) }
+            let session = CoreEngine.probeSession
+            let now = clock
+            await withTaskGroup(of: Void.self) { g in
+                if let u = exitURL.flatMap(URL.init(string:)) {
+                    g.addTask {
+                        guard let (data, _) = try? await session.data(from: u) else { return }
+                        _ = try? c.reportSceneTrace(sceneId: sceneId, body: String(decoding: data, as: UTF8.self), nowMillis: now())
+                    }
+                }
+                for target in targets {
+                    guard let u = URL(string: target.url) else { continue }
+                    g.addTask {
+                        var req = URLRequest(url: u)
+                        req.httpMethod = "HEAD"
+                        // 能拿到任何 HTTP 响应（含 403 地区限制页以外的）即视为可达；超时/连接失败为不可用。
+                        let ok: Bool
+                        if let (_, resp) = try? await session.data(for: req), let h = resp as? HTTPURLResponse {
+                            ok = h.statusCode < 500 && h.statusCode != 403
+                        } else {
+                            ok = false
+                        }
+                        _ = try? c.reportSceneService(sceneId: sceneId, appId: target.appId, ok: ok, nowMillis: now())
+                    }
+                }
+            }
+        }
         guard let s = try await readScenes().first(where: { $0.id == sceneId }) else {
             throw ZephyrError(code: .sceneNotFound, message: sceneId)
         }
         await bumpScenes()
         return s
+    }
+
+    static let probeSession: URLSession = {
+        let cfg = URLSessionConfiguration.ephemeral
+        cfg.timeoutIntervalForRequest = 6
+        cfg.timeoutIntervalForResource = 8
+        cfg.waitsForConnectivity = false
+        cfg.requestCachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        return URLSession(configuration: cfg)
+    }()
+
+    public func setSceneSource(sceneId: String, source: ZephyrKit.SceneSource) async throws {
+        guard let c = await nodes() else { return try await fallback.setSceneSource(sceneId: sceneId, source: source) }
+        let src: SceneSource = switch source { case .auto: .auto; case .manual: .manual; case .subscriptionGroup: .subscriptionGroup }
+        let now = clock()
+        let apply = try await run(.sceneNotFound) { try c.setSceneSource(sceneId: sceneId, source: src, nowMillis: now) }
+        await bumpScenes()
+        if let apply, let t = tunnel {
+            if apply.needsReload {
+                await reloadTunnelIfRunning(t)
+            } else {
+                try? await mihomo(t.controllerSocketPath) { try $0.selectInGroup(group: apply.group, member: apply.member) }
+            }
+        }
+    }
+
+    public func overrideHost(host: String, target: ZephyrKit.TraceTarget, sceneId: String?, persistent: Bool) async throws {
+        guard let c = core else { return try await fallback.overrideHost(host: host, target: target, sceneId: sceneId, persistent: persistent) }
+        let tt: TraceTarget = switch target { case .unchanged: .unchanged; case .direct: .direct; case .scene: .scene }
+        try await run(.ruleInputInvalid) { try c.overrideHost(host: host, target: tt, sceneId: sceneId, persistent: persistent) }
+        await bumpScenes()
+        if let t = tunnel { await reloadTunnelIfRunning(t) }
     }
 
     // MARK: - §4 策略组（mihomo 实时数据，在 PacketTunnel）
@@ -274,7 +342,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
             return mockData ? await fallback.nodeIndex() : ZephyrKit.NodeIndex(total: 0, sections: [], testedCount: 0)
         }
         guard let i = try? await run(.nodeNotFound, { try c.nodeIndex() }) else { return ZephyrKit.NodeIndex(total: 0, sections: [], testedCount: 0) }
-        return ZephyrKit.NodeIndex(total: Int64(i.total), sections: i.sections.map(CoreEngine.section), testedCount: 0)
+        let tested = await runQuiet { c.testedCount(nowMillis: self.clock(), maxAgeMillis: CoreEngine.latencyFreshMillis) }
+        return ZephyrKit.NodeIndex(total: Int64(i.total), sections: i.sections.map(CoreEngine.section), testedCount: Int64(tested))
     }
 
     public func queryNodes(query: String) async throws -> ZephyrKit.NodeQueryResult {
@@ -316,9 +385,46 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         return ZephyrKit.NodePage(rows: rows, offset: Int64(page.offset), total: Int64(page.total))
     }
 
-    public func node(id: NodeId) async throws -> NodeDetail { try await fallback.node(id: id) }
-    public func testLatency(ids: [NodeId]) async { await fallback.testLatency(ids: ids) }
-    public func latencyUpdates() -> AsyncStream<[LatencyUpdate]> { fallback.latencyUpdates() }
+    static let latencyFreshMillis: Int64 = 24 * 3_600_000
+
+    public func node(id: NodeId) async throws -> ZephyrKit.NodeDetail {
+        guard let c = await nodes() else {
+            if mockData { return try await fallback.node(id: id) }
+            throw ZephyrError(code: .nodeNotFound, message: String(id, radix: 16))
+        }
+        let d = try await run(.nodeNotFound) { try c.nodeDetail(id: id) }
+        var summary = CoreEngine.row(d.row)
+        if let ms = d.latencyMs { summary.latencyMs = ms }
+        return ZephyrKit.NodeDetail(summary: summary, server: d.server, port: d.port, subscription: d.subscription, extra: d.extra)
+    }
+
+    /// 契约 §5：分批（≤512）由核心给出代理定义，扩展里 zm_url_test 实测，结果入核心延迟缓存并推给 latencyUpdates。
+    /// 隧道未连接时不测（App 进程未链接 mihomo；未连接时的测速见 docs/perf.md 待办）。
+    public func testLatency(ids: [NodeId]) async {
+        guard let c = await nodes() else { return await fallback.testLatency(ids: ids) }
+        guard let t = tunnel, await isTunnelConnected(t) else { return }
+        var seen = Set<NodeId>()
+        let unique = ids.filter { seen.insert($0).inserted }
+        for start in stride(from: 0, to: unique.count, by: 512) {
+            if Task.isCancelled { return }
+            let chunk = Array(unique[start..<min(start + 512, unique.count)])
+            guard let json = try? await run(.nodeNotFound, { try c.latencyTestBatch(ids: chunk) }), json != "[]",
+                  let out = await t.urlTest(proxiesJSON: json, url: "https://www.gstatic.com/generate_204", timeoutMs: 5000) else { continue }
+            let now = clock()
+            guard let samples = try? await run(.nodeNotFound, { try c.recordUrlTest(resultJson: out, nowMillis: now) }), !samples.isEmpty else { continue }
+            let updates = samples.map { LatencyUpdate(id: $0.id, latencyMs: $0.ms, at: $0.at) }
+            for w in locked({ Array(latencyWatchers.values) }) { w.yield(updates) }
+        }
+    }
+
+    public func latencyUpdates() -> AsyncStream<[LatencyUpdate]> {
+        guard core != nil else { return fallback.latencyUpdates() }
+        let id = UUID()
+        let (stream, cont) = AsyncStream<[LatencyUpdate]>.makeStream(bufferingPolicy: .bufferingNewest(8))
+        locked { latencyWatchers[id] = cont }
+        cont.onTermination = { [weak self] _ in self?.locked { _ = self?.latencyWatchers.removeValue(forKey: id) } }
+        return stream
+    }
 
     // MARK: - §6 规则
 
@@ -494,8 +600,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         guard let id = await runQuiet({ c.subscriptions() }).first?.id else {
             throw ZephyrError(code: .subscriptionInvalid, message: "请先添加订阅")
         }
-        var settingsIterator = fallback.settings().makeAsyncIterator()
-        let s = await settingsIterator.next()
+        let s = await currentSettings()
         var modeIterator = connectionState().makeAsyncIterator()
         let mode = await modeIterator.next()?.mode ?? .rule
         let options = CoreEngine.runtimeOptions(settings: s, mode: mode, controllerSocket: controllerSocket)
@@ -512,7 +617,26 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         return RuntimeOptions(
             dns: DnsConfig(fakeIp: dns.fakeIp, nameservers: dns.nameservers, fallback: dns.fallback, ipv6: dns.ipv6),
             tun: TunConfig(stack: stack, mtu: tun.mtu, ipv6: tun.ipv6, strictRoute: tun.strictRoute, fileDescriptor: -1),
-            mode: coreMode, controllerSocket: controllerSocket, findProcess: false, logLevel: "warning")
+            mode: coreMode, controllerSocket: controllerSocket, findProcess: false, logLevel: "warning",
+            localProxy: localProxy(settings: s))
+    }
+
+    /// 本地代理（契约 §14.z）：只绑 127.0.0.1；开鉴权时用本机生成并保存的凭据。
+    static func localProxy(settings s: ZephyrKit.Settings?, defaults: UserDefaults = .standard) -> LocalProxy? {
+        guard let s, s.localProxyEnabled, (1024...65535).contains(Int(s.localProxyPort)) else { return nil }
+        return LocalProxy(port: UInt16(s.localProxyPort), auth: s.localProxyAuth ? localProxyCredential(defaults: defaults) : nil)
+    }
+
+    /// "zephyr:<随机 24 位>"，首次生成后保存；UI 在设置页展示给需要配置的 App。
+    public static func localProxyCredential(defaults: UserDefaults = .standard) -> String {
+        let key = "zephyr.localProxyCredential"
+        if let v = defaults.string(forKey: key), v.contains(":") { return v }
+        let alphabet = Array("abcdefghijkmnpqrstuvwxyzACDEFGHJKLMNPQRSTUVWXYZ23456789")
+        var rng = SystemRandomNumberGenerator()
+        let pass = String((0..<24).map { _ in alphabet.randomElement(using: &rng)! })
+        let v = "zephyr:\(pass)"
+        defaults.set(v, forKey: key)
+        return v
     }
 
     // MARK: - §8 连接、日志、设置、存储
@@ -529,9 +653,71 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         if let t = tunnel { return try await liveClose(t, id: nil) }
         try await fallback.closeAll()
     }
-    public func logs(minLevel: LogLevel) -> AsyncStream<LogLine> { fallback.logs(minLevel: minLevel) }
-    public func settings() -> AsyncStream<ZephyrKit.Settings> { fallback.settings() }
-    public func updateSettings(patch: ZephyrKit.Settings) async throws { try await fallback.updateSettings(patch: patch) }
+    public func logs(minLevel: LogLevel) -> AsyncStream<LogLine> {
+        if let t = tunnel { return liveLogs(t, minLevel: minLevel) }
+        return mockData ? fallback.logs(minLevel: minLevel) : AsyncStream { $0.finish() }
+    }
+    /// 设置落盘（dataDir/settings.json）。无核心时回落 fallback；首次无文件用 `defaultSettings`。
+    public func settings() -> AsyncStream<ZephyrKit.Settings> {
+        guard core != nil else { return fallback.settings() }
+        let id = UUID()
+        let (stream, cont) = AsyncStream<ZephyrKit.Settings>.makeStream(bufferingPolicy: .bufferingNewest(1))
+        let current = loadSettings()
+        locked { settingsWatchers[id] = cont }
+        cont.yield(current)
+        cont.onTermination = { [weak self] _ in self?.locked { _ = self?.settingsWatchers.removeValue(forKey: id) } }
+        return stream
+    }
+
+    public func updateSettings(patch: ZephyrKit.Settings) async throws {
+        guard core != nil else { return try await fallback.updateSettings(patch: patch) }
+        guard (1...65535).contains(patch.localProxyPort), patch.latencyTtlHours > 0, patch.autoUpdateHours > 0,
+              (576...9000).contains(patch.tun.mtu) else {
+            throw ZephyrError(code: .internal, message: "invalid settings value")
+        }
+        let old = loadSettings()
+        do {
+            try FileManager.default.createDirectory(at: settingsURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try SharedJSON.encoder.encode(patch).write(to: settingsURL, options: .atomic)
+        } catch {
+            throw ZephyrError(code: .storageFull, message: "\(error)")
+        }
+        let watchers = locked { () -> [AsyncStream<ZephyrKit.Settings>.Continuation] in
+            cachedSettings = patch
+            return Array(settingsWatchers.values)
+        }
+        for w in watchers { w.yield(patch) }
+        // 影响 mihomo 配置的字段变了：隧道运行中热重载。
+        if let t = tunnel, CoreEngine.affectsRuntime(old, patch) { await reloadTunnelIfRunning(t) }
+    }
+
+    static func affectsRuntime(_ a: ZephyrKit.Settings, _ b: ZephyrKit.Settings) -> Bool {
+        a.dns != b.dns || a.tun != b.tun || a.localProxyEnabled != b.localProxyEnabled
+            || a.localProxyPort != b.localProxyPort || a.localProxyAuth != b.localProxyAuth
+    }
+
+    func currentSettings() async -> ZephyrKit.Settings? {
+        guard core != nil else {
+            var it = fallback.settings().makeAsyncIterator()
+            return await it.next()
+        }
+        return loadSettings()
+    }
+
+    private func loadSettings() -> ZephyrKit.Settings {
+        if let s = locked({ cachedSettings }) { return s }
+        let s = (try? Data(contentsOf: settingsURL)).flatMap { try? SharedJSON.decoder.decode(ZephyrKit.Settings.self, from: $0) }
+            ?? CoreEngine.defaultSettings
+        locked { cachedSettings = s }
+        return s
+    }
+
+    /// 首次安装的设置：本地代理关、不信任任何 Wi-Fi、仅 Wi-Fi 下自动测速与更新。
+    public static let defaultSettings = ZephyrKit.Settings(
+        onDemand: false, trustedWifi: [], disconnectOnTrusted: false, localProxyPort: 7890, localProxyAuth: true,
+        testOnWifiOnly: true, latencyTtlHours: 24, autoUpdateHours: 12, updateOnWifiOnly: true, showChangesBeforeUpdate: true,
+        dns: DnsSettings(), tun: TunSettings(), accent: .blue, appearance: .system, shareAnonymousPattern: false,
+        localProxyEnabled: false)
 
     public func storage() async -> ZephyrKit.StorageInfo {
         guard let c = core else { return await fallback.storage() }
@@ -583,6 +769,13 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         if let ms = s.selectedLatencyMs, ms > 0 { selected.latencyMs = ms }
         return ZephyrKit.Scene(id: s.id, kind: kind, name: s.name, available: s.available, selected: selected, exitIp: s.exitIp,
                                source: source, testedAt: s.testedAt, note: s.note,
-                               exceptions: s.exceptions.compactMap { e in e.node.map { ZephyrKit.SceneException(app: e.app, node: row($0)) } })
+                               exceptions: s.exceptions.compactMap { e in e.node.map { ZephyrKit.SceneException(app: e.app, node: row($0)) } },
+                               services: s.services.map { ZephyrKit.ServiceHealth(appId: $0.appId, name: $0.name, ok: $0.ok, checkedAt: $0.checkedAt) })
     }
+}
+
+/// 设置文件的 JSON 编解码（键名用模型自带的 snake_case CodingKeys）。
+enum SharedJSON {
+    static let encoder: JSONEncoder = { let e = JSONEncoder(); e.outputFormatting = [.sortedKeys]; return e }()
+    static let decoder = JSONDecoder()
 }

@@ -15,6 +15,7 @@ pub mod error;
 pub mod latency;
 pub mod mihomo;
 pub mod mock;
+pub mod node_api;
 pub mod nodes;
 pub mod regions;
 pub mod rules;

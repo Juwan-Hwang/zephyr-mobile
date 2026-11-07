@@ -23,6 +23,11 @@ public protocol TunnelPort: AnyObject, Sendable {
     var controllerSocketPath: String { get }
     /// App 写、扩展读的 mihomo 配置路径。
     var configURL: URL { get }
+    /// 批量延迟测试（扩展里 zm_url_test）；输入为核心 latencyTestBatch 的 JSON，返回 zm_url_test 原样 JSON。
+    /// 隧道未连接或不支持时为 nil。
+    func urlTest(proxiesJSON: String, url: String, timeoutMs: Int32) async -> String?
+    /// zm_logs 增量 JSON；未连接为 nil。
+    func logs(since: Int64, minLevel: String, limit: Int32) async -> String?
 }
 
 extension CoreEngine {
@@ -35,9 +40,13 @@ extension CoreEngine {
     }
 
     /// 隧道在跑时：重写配置并让扩展热重载；没在跑则什么都不做（下次连接时 liveConnect 会重写）。
-    func reloadTunnelIfRunning(_ t: any TunnelPort) async {
+    func isTunnelConnected(_ t: any TunnelPort) async -> Bool {
         var it = t.states().makeAsyncIterator()
-        guard let st = await it.next(), st.status == .connected else { return }
+        return await it.next()?.status == .connected
+    }
+
+    func reloadTunnelIfRunning(_ t: any TunnelPort) async {
+        guard await isTunnelConnected(t) else { return }
         do {
             try await writeTunnelConfig(to: t.configURL, controllerSocket: t.controllerSocketPath)
             try await t.reloadConfig()
@@ -54,6 +63,35 @@ extension CoreEngine {
             let s = TrafficSample(at: self.now(), upBps: r.up, downBps: r.down)
             self.remember(s)
             return s
+        }
+    }
+
+    // MARK: 日志（契约 §8：扩展内环形缓冲 500 条，1 Hz 增量拉取）
+
+    private struct LogBatch: Decodable {
+        struct Line: Decodable { let seq: Int64; let level: String; let msg: String; let at: Int64 }
+        let seq: Int64
+        let lines: [Line]
+    }
+
+    func liveLogs(_ t: any TunnelPort, minLevel: LogLevel) -> AsyncStream<LogLine> {
+        AsyncStream(bufferingPolicy: .bufferingNewest(500)) { k in
+            let task = Task {
+                var since: Int64 = 0
+                while !Task.isCancelled {
+                    if let json = await t.logs(since: since, minLevel: minLevel.rawValue, limit: 200),
+                       let b = try? JSONDecoder().decode(LogBatch.self, from: Data(json.utf8)) {
+                        // 扩展重启后序号回到更小值：从头再拉
+                        since = b.seq < since ? 0 : b.seq
+                        for l in b.lines {
+                            k.yield(LogLine(at: l.at, level: LogLevel(rawValue: l.level) ?? .info, message: l.msg))
+                        }
+                    }
+                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                }
+                k.finish()
+            }
+            k.onTermination = { _ in task.cancel() }
         }
     }
 

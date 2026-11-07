@@ -26,6 +26,20 @@ final class FakeTunnel: TunnelPort, @unchecked Sendable {
     func setMode(_ m: ZephyrKit.ProxyMode) async throws { lock.withLock { mode = m } }
     func rate() async -> (up: Int64, down: Int64)? { lock.withLock { status == .connected ? (10, 2048) : nil } }
     func reloadConfig() async throws { lock.withLock { reloads += 1 } }
+    var logCalls = 0
+    func logs(since: Int64, minLevel: String, limit: Int32) async -> String? {
+        lock.withLock { logCalls += 1 }
+        return since == 0 ? #"{"seq":2,"lines":[{"seq":1,"level":"warning","msg":"dial timeout","at":5},{"seq":2,"level":"error","msg":"x","at":6}]}"# : #"{"seq":2,"lines":[]}"#
+    }
+    var urlTestInputs: [String] = []
+    func urlTest(proxiesJSON: String, url: String, timeoutMs: Int32) async -> String? {
+        let connected = lock.withLock { () -> Bool in urlTestInputs.append(proxiesJSON); return status == .connected }
+        guard connected, let data = proxiesJSON.data(using: .utf8),
+              let defs = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] else { return nil }
+        // 假结果：每个 37 ms
+        let results = defs.compactMap { $0["name"] as? String }.map { #"{"name":"\#($0)","ms":37}"# }
+        return #"{"results":["# + results.joined(separator: ",") + "]}"
+    }
 }
 
 final class CoreEngineLiveTests: XCTestCase {
@@ -100,6 +114,123 @@ final class CoreEngineLiveTests: XCTestCase {
         try await e.connect()
         _ = try await e.updateSubscription(id: sub.id)
         XCTAssertEqual(t.reloads, 1)
+    }
+
+    func testOverrideHostReloadsRunningTunnelAndLandsInConfig() async throws {
+        let (e, t) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        try await e.connect()
+        try await e.overrideHost(host: "corp.example.com", target: .direct, sceneId: nil, persistent: true)
+        XCTAssertEqual(t.reloads, 1)
+        let yaml = try String(contentsOf: t.configURL, encoding: .utf8)
+        XCTAssertTrue(yaml.contains("corp.example.com,DIRECT"), yaml)
+        try await e.overrideHost(host: "corp.example.com", target: .unchanged, sceneId: nil, persistent: true)
+        XCTAssertFalse(try String(contentsOf: t.configURL, encoding: .utf8).contains("corp.example.com"))
+    }
+
+    func testSetSceneSourceRecordsSource() async throws {
+        let (e, _) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        try await e.setSceneSource(sceneId: "video", source: .manual)
+        var it = e.scenes().makeAsyncIterator()
+        let v = await it.next()?.first { $0.id == "video" }
+        XCTAssertEqual(v?.source, .manual)
+        XCTAssertEqual(v?.services, [])
+    }
+
+    func testRetestWithoutTunnelReturnsCache() async throws {
+        let (e, _) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        let s = try await e.retestScene(sceneId: "ai")
+        XCTAssertEqual(s.id, "ai")
+        XCTAssertNil(s.testedAt, "隧道没在跑不探测")
+    }
+
+    func testLocalProxyOptions() throws {
+        let d = UserDefaults(suiteName: "lp-\(UUID().uuidString)")!
+        var s = ZephyrKit.Settings(onDemand: true, trustedWifi: [], disconnectOnTrusted: false, localProxyPort: 7890,
+                                   localProxyAuth: false, testOnWifiOnly: true, latencyTtlHours: 24, autoUpdateHours: 12,
+                                   updateOnWifiOnly: true, showChangesBeforeUpdate: true, dns: DnsSettings(), tun: TunSettings(),
+                                   accent: .blue, appearance: .system, shareAnonymousPattern: true)
+        XCTAssertNil(CoreEngine.localProxy(settings: s, defaults: d), "默认关")
+        s.localProxyEnabled = true
+        s.localProxyPort = 7890
+        s.localProxyAuth = true
+        let lp = try XCTUnwrap(CoreEngine.localProxy(settings: s, defaults: d))
+        XCTAssertEqual(lp.port, 7890)
+        XCTAssertEqual(lp.auth, CoreEngine.localProxyCredential(defaults: d), "凭据稳定")
+        XCTAssertTrue(lp.auth!.hasPrefix("zephyr:"))
+        s.localProxyAuth = false
+        XCTAssertNil(CoreEngine.localProxy(settings: s, defaults: d)?.auth)
+        s.localProxyPort = 80
+        XCTAssertNil(CoreEngine.localProxy(settings: s, defaults: d), "特权端口拒绝")
+    }
+
+    func testLatencyViaTunnelRecordsAndStreams() async throws {
+        let (e, t) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        let q = try await e.queryNodes(query: "")
+        let page = try await e.nodeRows(token: q.token, offset: 0, limit: 10)
+        let ids = page.rows.map(\.id)
+        XCTAssertFalse(ids.isEmpty)
+        await e.testLatency(ids: ids)
+        XCTAssertTrue(t.urlTestInputs.isEmpty, "未连接不测")
+        try await e.connect()
+        var it = e.latencyUpdates().makeAsyncIterator()
+        await e.testLatency(ids: ids + ids)
+        XCTAssertEqual(t.urlTestInputs.count, 1, "去重后一批")
+        let ups = await it.next()
+        XCTAssertEqual(Set(ups?.map(\.id) ?? []), Set(ids))
+        XCTAssertEqual(ups?.first?.latencyMs, 37)
+        let idx = await e.nodeIndex()
+        XCTAssertEqual(idx.testedCount, Int64(ids.count))
+        let d = try await e.node(id: ids[0])
+        XCTAssertEqual(d.summary.id, ids[0])
+        XCTAssertEqual(d.summary.latencyMs, 37)
+        XCTAssertTrue(d.server.contains("*"), d.server)
+        XCTAssertFalse(t.urlTestInputs[0].isEmpty)
+    }
+
+    func testNodeDetailUnknownThrows() async throws {
+        let (e, _) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        do { _ = try await e.node(id: 0xdead); XCTFail("应抛 nodeNotFound") } catch let err as ZephyrError {
+            XCTAssertEqual(err.code, .nodeNotFound)
+        }
+    }
+
+    func testSettingsPersistAndReloadOnRuntimeChange() async throws {
+        let (e, t) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        var it = e.settings().makeAsyncIterator()
+        let first = await it.next()
+        var s = try XCTUnwrap(first)
+        XCTAssertEqual(s, CoreEngine.defaultSettings)
+        try await e.connect()
+        s.appearance = .dark
+        try await e.updateSettings(patch: s)
+        XCTAssertEqual(t.reloads, 0, "外观不影响 mihomo")
+        s.localProxyEnabled = true
+        try await e.updateSettings(patch: s)
+        XCTAssertEqual(t.reloads, 1)
+        XCTAssertTrue(try String(contentsOf: t.configURL, encoding: .utf8).contains("mixed-port: 7890"))
+        let latest = await it.next()
+        XCTAssertEqual(latest?.appearance, .dark)
+        // 新实例读回
+        let e2 = CoreEngine(dataDir: dir.appendingPathComponent("core"), mockData: false)
+        var it2 = e2.settings().makeAsyncIterator()
+        let reread = await it2.next()
+        XCTAssertEqual(reread, s)
+        s.tun.mtu = 100
+        do { try await e.updateSettings(patch: s); XCTFail("非法 MTU") } catch {}
+    }
+
+    func testLogsFromTunnel() async throws {
+        let (e, _) = make()
+        var it = e.logs(minLevel: .warning).makeAsyncIterator()
+        let a = await it.next(), b = await it.next()
+        XCTAssertEqual(a, LogLine(at: 5, level: .warning, message: "dial timeout"))
+        XCTAssertEqual(b?.level, .error)
     }
 
     func testMemberIdIsStable() {

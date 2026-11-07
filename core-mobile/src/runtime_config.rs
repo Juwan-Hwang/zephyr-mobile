@@ -51,6 +51,16 @@ pub struct RuntimeOptions {
     /// iOS 扩展里关掉进程识别（系统不给），Android 可开
     pub find_process: bool,
     pub log_level: String,
+    /// 本地代理（设置 → 本地代理端口）：只监听 127.0.0.1 的 mixed 端口；None = 关（默认）。
+    #[uniffi(default = None)]
+    pub local_proxy: Option<LocalProxy>,
+}
+
+#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+pub struct LocalProxy {
+    pub port: u16,
+    /// "user:pass"；None = 不鉴权（仍只绑回环地址）
+    pub auth: Option<String>,
 }
 
 fn s(v: &str) -> Value {
@@ -75,6 +85,14 @@ fn overlay(o: &RuntimeOptions) -> Value {
         m.insert(s(k), Value::Null);
     }
     let mut profile = Mapping::new();
+    if let Some(lp) = o.local_proxy.as_ref().filter(|lp| lp.port >= 1024) {
+        m.insert(s("mixed-port"), Value::Number(lp.port.into()));
+        m.insert(s("bind-address"), s("127.0.0.1"));
+        m.insert(s("authentication"), match &lp.auth {
+            Some(a) if a.contains(':') => Value::Sequence(vec![s(a)]),
+            _ => Value::Null,
+        });
+    }
     profile.insert(s("store-selected"), Value::Bool(true));
     profile.insert(s("store-fake-ip"), Value::Bool(o.dns.fake_ip));
     m.insert(s("profile"), Value::Mapping(profile));
@@ -221,10 +239,25 @@ mod tests {
             controller_socket: "/data/zm.sock".into(),
             find_process: false,
             log_level: "warning".into(),
+            local_proxy: None,
         }
     }
 
     const SUB: &str = "mixed-port: 7890\nallow-lan: true\nexternal-controller: 0.0.0.0:9090\nsecret: leaked\nexternal-ui: ui\nexternal-controller-unix: /tmp/evil.sock\ndns:\n  enable: true\n  fallback: [8.8.8.8]\n  nameserver-policy: {'+.corp': 10.0.0.1}\nproxies:\n  - {name: a, server: a.example, port: 443, type: trojan, password: p}\nproxy-groups:\n  - {name: AI, type: select, proxies: [a]}\nrules:\n  - DOMAIN-SUFFIX,claude.ai,AI\n  - MATCH,DIRECT\n";
+
+    #[test]
+    fn local_proxy_binds_loopback_only() {
+        let mut o = opts(Some(3));
+        o.local_proxy = Some(LocalProxy { port: 7890, auth: Some("zephyr:s3cret".into()) });
+        let v: Value = serde_yaml::from_str(&build_runtime_config(SUB, &o).unwrap()).unwrap();
+        assert_eq!(v["mixed-port"].as_i64(), Some(7890));
+        assert_eq!(v["bind-address"].as_str(), Some("127.0.0.1"));
+        assert_eq!(v["allow-lan"].as_bool(), Some(false));
+        assert_eq!(v["authentication"][0].as_str(), Some("zephyr:s3cret"));
+        o.local_proxy = Some(LocalProxy { port: 80, auth: None });
+        let v: Value = serde_yaml::from_str(&build_runtime_config(SUB, &o).unwrap()).unwrap();
+        assert!(v.get("mixed-port").is_none(), "特权端口拒绝");
+    }
 
     #[test]
     fn pins_control_plane_and_applies_settings() {

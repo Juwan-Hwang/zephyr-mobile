@@ -886,9 +886,16 @@ public protocol MobileCoreProtocol : AnyObject {
     func importSubscription(name: String, url: String?, fetched: FetchedSubscription, autoUpdateHours: Int32, progress: BuildProgress?) throws  -> Subscription
     
     /**
+     * 给 `zm_url_test` 的一批代理定义（JSON 数组，name = id 十六进制）。超过 512 个报错；找不到定义的 id 跳过。
+     */
+    func latencyTestBatch(ids: [UInt64]) throws  -> String
+    
+    /**
      * 重新加载 rules/ 下全部层（按文件名序），final_policy 为 MATCH 的去向（通常是场景 "other"）。
      */
     func loadRules(finalPolicy: String) throws  -> RuleStats
+    
+    func nodeDetail(id: UInt64) throws  -> NodeDetail
     
     func nodeIndex() throws  -> NodeIndex
     
@@ -941,6 +948,11 @@ public protocol MobileCoreProtocol : AnyObject {
     func recordLatencies(samples: [LatencySample]) throws 
     
     /**
+     * `zm_url_test` 的返回 JSON 入延迟缓存，返回记录下的样本（供 latencyUpdates 推送）。
+     */
+    func recordUrlTest(resultJson: String, nowMillis: Int64) throws  -> [LatencySample]
+    
+    /**
      * 平台测得出口后回填（"198.51.100.7 · 美国"）。
      */
     func reportSceneExit(sceneId: String, ip: String, region: String?, testedAt: Int64) throws 
@@ -953,6 +965,16 @@ public protocol MobileCoreProtocol : AnyObject {
      * 应用例外如 Claude 固定出口也不被任何自动逻辑改动）：照常计数，但恒返回 None，平台只提示。
      */
     func reportSceneProbe(sceneId: String, success: Bool, nowMillis: Int64) throws  -> SceneFailover?
+    
+    /**
+     * 平台探测某服务后上报；只记录，不触发任何切换（AI 出口仅用户确认后更改，§14.y）。
+     */
+    func reportSceneService(sceneId: String, appId: String, ok: Bool, nowMillis: Int64) throws 
+    
+    /**
+     * 平台把 trace 响应正文交回；解析出 ip 与地区代码后回填出口。返回出口 IP。
+     */
+    func reportSceneTrace(sceneId: String, body: String, nowMillis: Int64) throws  -> String
     
     func ruleStats()  -> RuleStats
     
@@ -967,9 +989,20 @@ public protocol MobileCoreProtocol : AnyObject {
     func sceneCandidates(sceneId: String, region: String?, nowMillis: Int64) throws  -> [RankedNode]
     
     /**
+     * 测场景出口用的地址（Cloudflare trace，返回 ip= / loc=）。请求按域名走规则，所以选一个属于该场景、
+     * 且没被设成例外的服务域名；视频与自定义场景没有可用的 trace 域名，返回 None。
+     */
+    func sceneExitProbe(sceneId: String) throws  -> String?
+    
+    /**
      * 该 host 走哪个场景（内置应用目录），用于轨迹页"场景"一栏。
      */
     func sceneForHost(host: String)  -> String?
+    
+    /**
+     * 场景内需要探测健康的服务（按内置应用目录，有 probe 地址的）。
+     */
+    func sceneProbeTargets(sceneId: String) throws  -> [ProbeTarget]
     
     func scenes(nowMillis: Int64) throws  -> [Scene]
     
@@ -979,6 +1012,13 @@ public protocol MobileCoreProtocol : AnyObject {
      * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
      */
     func setSceneException(sceneId: String, appId: String, nodeId: UInt64?) throws 
+    
+    /**
+     * 场景来源（引导"优选 / 简单"与场景 sheet 的来源分段）。
+     * Auto：立即换到延迟缓存里最优的节点（当前地区优先，无选择时全库），返回需要平台执行的动作；
+     * 已是最优或没有测速数据时返回 None。Manual / SubscriptionGroup：只记录。
+     */
+    func setSceneSource(sceneId: String, source: SceneSource, nowMillis: Int64) throws  -> SceneApply?
     
     func storageInfo()  -> StorageInfo
     
@@ -992,6 +1032,11 @@ public protocol MobileCoreProtocol : AnyObject {
     func subscriptionsSummary()  -> SubscriptionsSummary
     
     func testRule(input: String) throws  -> RuleTrace
+    
+    /**
+     * 有新鲜测速结果（max_age 内，含超时）的节点数；max_age ≤ 0 不限。
+     */
+    func testedCount(nowMillis: Int64, maxAgeMillis: Int64)  -> UInt64
     
     func updateSubscription(id: String, fetched: FetchedSubscription, progress: BuildProgress?) throws  -> SubscriptionDiff
     
@@ -1162,12 +1207,31 @@ open func importSubscription(name: String, url: String?, fetched: FetchedSubscri
 }
     
     /**
+     * 给 `zm_url_test` 的一批代理定义（JSON 数组，name = id 十六进制）。超过 512 个报错；找不到定义的 id 跳过。
+     */
+open func latencyTestBatch(ids: [UInt64])throws  -> String {
+    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_latency_test_batch(self.uniffiClonePointer(),
+        FfiConverterSequenceUInt64.lower(ids),$0
+    )
+})
+}
+    
+    /**
      * 重新加载 rules/ 下全部层（按文件名序），final_policy 为 MATCH 的去向（通常是场景 "other"）。
      */
 open func loadRules(finalPolicy: String)throws  -> RuleStats {
     return try  FfiConverterTypeRuleStats.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_load_rules(self.uniffiClonePointer(),
         FfiConverterString.lower(finalPolicy),$0
+    )
+})
+}
+    
+open func nodeDetail(id: UInt64)throws  -> NodeDetail {
+    return try  FfiConverterTypeNodeDetail.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_node_detail(self.uniffiClonePointer(),
+        FfiConverterUInt64.lower(id),$0
     )
 })
 }
@@ -1301,6 +1365,18 @@ open func recordLatencies(samples: [LatencySample])throws  {try rustCallWithErro
 }
     
     /**
+     * `zm_url_test` 的返回 JSON 入延迟缓存，返回记录下的样本（供 latencyUpdates 推送）。
+     */
+open func recordUrlTest(resultJson: String, nowMillis: Int64)throws  -> [LatencySample] {
+    return try  FfiConverterSequenceTypeLatencySample.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_record_url_test(self.uniffiClonePointer(),
+        FfiConverterString.lower(resultJson),
+        FfiConverterInt64.lower(nowMillis),$0
+    )
+})
+}
+    
+    /**
      * 平台测得出口后回填（"198.51.100.7 · 美国"）。
      */
 open func reportSceneExit(sceneId: String, ip: String, region: String?, testedAt: Int64)throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
@@ -1325,6 +1401,32 @@ open func reportSceneProbe(sceneId: String, success: Bool, nowMillis: Int64)thro
     uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_probe(self.uniffiClonePointer(),
         FfiConverterString.lower(sceneId),
         FfiConverterBool.lower(success),
+        FfiConverterInt64.lower(nowMillis),$0
+    )
+})
+}
+    
+    /**
+     * 平台探测某服务后上报；只记录，不触发任何切换（AI 出口仅用户确认后更改，§14.y）。
+     */
+open func reportSceneService(sceneId: String, appId: String, ok: Bool, nowMillis: Int64)throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_service(self.uniffiClonePointer(),
+        FfiConverterString.lower(sceneId),
+        FfiConverterString.lower(appId),
+        FfiConverterBool.lower(ok),
+        FfiConverterInt64.lower(nowMillis),$0
+    )
+}
+}
+    
+    /**
+     * 平台把 trace 响应正文交回；解析出 ip 与地区代码后回填出口。返回出口 IP。
+     */
+open func reportSceneTrace(sceneId: String, body: String, nowMillis: Int64)throws  -> String {
+    return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_trace(self.uniffiClonePointer(),
+        FfiConverterString.lower(sceneId),
+        FfiConverterString.lower(body),
         FfiConverterInt64.lower(nowMillis),$0
     )
 })
@@ -1363,12 +1465,35 @@ open func sceneCandidates(sceneId: String, region: String?, nowMillis: Int64)thr
 }
     
     /**
+     * 测场景出口用的地址（Cloudflare trace，返回 ip= / loc=）。请求按域名走规则，所以选一个属于该场景、
+     * 且没被设成例外的服务域名；视频与自定义场景没有可用的 trace 域名，返回 None。
+     */
+open func sceneExitProbe(sceneId: String)throws  -> String? {
+    return try  FfiConverterOptionString.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_exit_probe(self.uniffiClonePointer(),
+        FfiConverterString.lower(sceneId),$0
+    )
+})
+}
+    
+    /**
      * 该 host 走哪个场景（内置应用目录），用于轨迹页"场景"一栏。
      */
 open func sceneForHost(host: String) -> String? {
     return try!  FfiConverterOptionString.lift(try! rustCall() {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_for_host(self.uniffiClonePointer(),
         FfiConverterString.lower(host),$0
+    )
+})
+}
+    
+    /**
+     * 场景内需要探测健康的服务（按内置应用目录，有 probe 地址的）。
+     */
+open func sceneProbeTargets(sceneId: String)throws  -> [ProbeTarget] {
+    return try  FfiConverterSequenceTypeProbeTarget.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_probe_targets(self.uniffiClonePointer(),
+        FfiConverterString.lower(sceneId),$0
     )
 })
 }
@@ -1398,6 +1523,21 @@ open func setSceneException(sceneId: String, appId: String, nodeId: UInt64?)thro
         FfiConverterOptionUInt64.lower(nodeId),$0
     )
 }
+}
+    
+    /**
+     * 场景来源（引导"优选 / 简单"与场景 sheet 的来源分段）。
+     * Auto：立即换到延迟缓存里最优的节点（当前地区优先，无选择时全库），返回需要平台执行的动作；
+     * 已是最优或没有测速数据时返回 None。Manual / SubscriptionGroup：只记录。
+     */
+open func setSceneSource(sceneId: String, source: SceneSource, nowMillis: Int64)throws  -> SceneApply? {
+    return try  FfiConverterOptionTypeSceneApply.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_source(self.uniffiClonePointer(),
+        FfiConverterString.lower(sceneId),
+        FfiConverterTypeSceneSource.lower(source),
+        FfiConverterInt64.lower(nowMillis),$0
+    )
+})
 }
     
 open func storageInfo() -> StorageInfo {
@@ -1436,6 +1576,18 @@ open func testRule(input: String)throws  -> RuleTrace {
     return try  FfiConverterTypeRuleTrace.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_test_rule(self.uniffiClonePointer(),
         FfiConverterString.lower(input),$0
+    )
+})
+}
+    
+    /**
+     * 有新鲜测速结果（max_age 内，含超时）的节点数；max_age ≤ 0 不限。
+     */
+open func testedCount(nowMillis: Int64, maxAgeMillis: Int64) -> UInt64 {
+    return try!  FfiConverterUInt64.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_tested_count(self.uniffiClonePointer(),
+        FfiConverterInt64.lower(nowMillis),
+        FfiConverterInt64.lower(maxAgeMillis),$0
     )
 })
 }
@@ -2568,6 +2720,202 @@ public func FfiConverterTypeLatencySample_lower(_ value: LatencySample) -> RustB
 }
 
 
+public struct LocalProxy {
+    public var port: UInt16
+    /**
+     * "user:pass"；None = 不鉴权（仍只绑回环地址）
+     */
+    public var auth: String?
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(port: UInt16, 
+        /**
+         * "user:pass"；None = 不鉴权（仍只绑回环地址）
+         */auth: String?) {
+        self.port = port
+        self.auth = auth
+    }
+}
+
+
+
+extension LocalProxy: Equatable, Hashable {
+    public static func ==(lhs: LocalProxy, rhs: LocalProxy) -> Bool {
+        if lhs.port != rhs.port {
+            return false
+        }
+        if lhs.auth != rhs.auth {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(port)
+        hasher.combine(auth)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeLocalProxy: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> LocalProxy {
+        return
+            try LocalProxy(
+                port: FfiConverterUInt16.read(from: &buf), 
+                auth: FfiConverterOptionString.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: LocalProxy, into buf: inout [UInt8]) {
+        FfiConverterUInt16.write(value.port, into: &buf)
+        FfiConverterOptionString.write(value.auth, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeLocalProxy_lift(_ buf: RustBuffer) throws -> LocalProxy {
+    return try FfiConverterTypeLocalProxy.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeLocalProxy_lower(_ value: LocalProxy) -> RustBuffer {
+    return FfiConverterTypeLocalProxy.lower(value)
+}
+
+
+public struct NodeDetail {
+    public var row: NodeRow
+    /**
+     * 已脱敏（"a1***.example.com" / "198.51.*.*"）
+     */
+    public var server: String
+    public var port: Int32
+    public var subscription: String
+    /**
+     * 只含非敏感字段：network / tls / sni / udp / flow / plugin；绝不含密码、uuid、私钥。
+     */
+    public var extra: [String: String]
+    /**
+     * 最近一次测速（不限新鲜度，-1 = 超时）；从未测过为 None。
+     */
+    public var latencyMs: Int32?
+    public var latencyAt: Int64?
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(row: NodeRow, 
+        /**
+         * 已脱敏（"a1***.example.com" / "198.51.*.*"）
+         */server: String, port: Int32, subscription: String, 
+        /**
+         * 只含非敏感字段：network / tls / sni / udp / flow / plugin；绝不含密码、uuid、私钥。
+         */extra: [String: String], 
+        /**
+         * 最近一次测速（不限新鲜度，-1 = 超时）；从未测过为 None。
+         */latencyMs: Int32?, latencyAt: Int64?) {
+        self.row = row
+        self.server = server
+        self.port = port
+        self.subscription = subscription
+        self.extra = extra
+        self.latencyMs = latencyMs
+        self.latencyAt = latencyAt
+    }
+}
+
+
+
+extension NodeDetail: Equatable, Hashable {
+    public static func ==(lhs: NodeDetail, rhs: NodeDetail) -> Bool {
+        if lhs.row != rhs.row {
+            return false
+        }
+        if lhs.server != rhs.server {
+            return false
+        }
+        if lhs.port != rhs.port {
+            return false
+        }
+        if lhs.subscription != rhs.subscription {
+            return false
+        }
+        if lhs.extra != rhs.extra {
+            return false
+        }
+        if lhs.latencyMs != rhs.latencyMs {
+            return false
+        }
+        if lhs.latencyAt != rhs.latencyAt {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(row)
+        hasher.combine(server)
+        hasher.combine(port)
+        hasher.combine(subscription)
+        hasher.combine(extra)
+        hasher.combine(latencyMs)
+        hasher.combine(latencyAt)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeNodeDetail: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> NodeDetail {
+        return
+            try NodeDetail(
+                row: FfiConverterTypeNodeRow.read(from: &buf), 
+                server: FfiConverterString.read(from: &buf), 
+                port: FfiConverterInt32.read(from: &buf), 
+                subscription: FfiConverterString.read(from: &buf), 
+                extra: FfiConverterDictionaryStringString.read(from: &buf), 
+                latencyMs: FfiConverterOptionInt32.read(from: &buf), 
+                latencyAt: FfiConverterOptionInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: NodeDetail, into buf: inout [UInt8]) {
+        FfiConverterTypeNodeRow.write(value.row, into: &buf)
+        FfiConverterString.write(value.server, into: &buf)
+        FfiConverterInt32.write(value.port, into: &buf)
+        FfiConverterString.write(value.subscription, into: &buf)
+        FfiConverterDictionaryStringString.write(value.extra, into: &buf)
+        FfiConverterOptionInt32.write(value.latencyMs, into: &buf)
+        FfiConverterOptionInt64.write(value.latencyAt, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeNodeDetail_lift(_ buf: RustBuffer) throws -> NodeDetail {
+    return try FfiConverterTypeNodeDetail.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeNodeDetail_lower(_ value: NodeDetail) -> RustBuffer {
+    return FfiConverterTypeNodeDetail.lower(value)
+}
+
+
 public struct NodeDiff {
     public var added: UInt64
     public var removed: UInt64
@@ -3102,6 +3450,83 @@ public func FfiConverterTypePolicyGroup_lower(_ value: PolicyGroup) -> RustBuffe
 
 
 /**
+ * 平台对场景内服务做健康探测的目标：经 VPN 访问 url，规则会把它路由到该服务实际使用的出口（含应用例外）。
+ */
+public struct ProbeTarget {
+    public var appId: String
+    public var name: String
+    public var url: String
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(appId: String, name: String, url: String) {
+        self.appId = appId
+        self.name = name
+        self.url = url
+    }
+}
+
+
+
+extension ProbeTarget: Equatable, Hashable {
+    public static func ==(lhs: ProbeTarget, rhs: ProbeTarget) -> Bool {
+        if lhs.appId != rhs.appId {
+            return false
+        }
+        if lhs.name != rhs.name {
+            return false
+        }
+        if lhs.url != rhs.url {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(appId)
+        hasher.combine(name)
+        hasher.combine(url)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeProbeTarget: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ProbeTarget {
+        return
+            try ProbeTarget(
+                appId: FfiConverterString.read(from: &buf), 
+                name: FfiConverterString.read(from: &buf), 
+                url: FfiConverterString.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: ProbeTarget, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.appId, into: &buf)
+        FfiConverterString.write(value.name, into: &buf)
+        FfiConverterString.write(value.url, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeProbeTarget_lift(_ buf: RustBuffer) throws -> ProbeTarget {
+    return try FfiConverterTypeProbeTarget.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeProbeTarget_lower(_ value: ProbeTarget) -> RustBuffer {
+    return FfiConverterTypeProbeTarget.lower(value)
+}
+
+
+/**
  * 节点 + 延迟（场景候选 / 最快节点）。
  */
 public struct RankedNode {
@@ -3575,6 +4000,10 @@ public struct RuntimeOptions {
      */
     public var findProcess: Bool
     public var logLevel: String
+    /**
+     * 本地代理（设置 → 本地代理端口）：只监听 127.0.0.1 的 mixed 端口；None = 关（默认）。
+     */
+    public var localProxy: LocalProxy?
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
@@ -3584,13 +4013,17 @@ public struct RuntimeOptions {
          */controllerSocket: String, 
         /**
          * iOS 扩展里关掉进程识别（系统不给），Android 可开
-         */findProcess: Bool, logLevel: String) {
+         */findProcess: Bool, logLevel: String, 
+        /**
+         * 本地代理（设置 → 本地代理端口）：只监听 127.0.0.1 的 mixed 端口；None = 关（默认）。
+         */localProxy: LocalProxy? = nil) {
         self.dns = dns
         self.tun = tun
         self.mode = mode
         self.controllerSocket = controllerSocket
         self.findProcess = findProcess
         self.logLevel = logLevel
+        self.localProxy = localProxy
     }
 }
 
@@ -3616,6 +4049,9 @@ extension RuntimeOptions: Equatable, Hashable {
         if lhs.logLevel != rhs.logLevel {
             return false
         }
+        if lhs.localProxy != rhs.localProxy {
+            return false
+        }
         return true
     }
 
@@ -3626,6 +4062,7 @@ extension RuntimeOptions: Equatable, Hashable {
         hasher.combine(controllerSocket)
         hasher.combine(findProcess)
         hasher.combine(logLevel)
+        hasher.combine(localProxy)
     }
 }
 
@@ -3642,7 +4079,8 @@ public struct FfiConverterTypeRuntimeOptions: FfiConverterRustBuffer {
                 mode: FfiConverterTypeProxyMode.read(from: &buf), 
                 controllerSocket: FfiConverterString.read(from: &buf), 
                 findProcess: FfiConverterBool.read(from: &buf), 
-                logLevel: FfiConverterString.read(from: &buf)
+                logLevel: FfiConverterString.read(from: &buf), 
+                localProxy: FfiConverterOptionTypeLocalProxy.read(from: &buf)
         )
     }
 
@@ -3653,6 +4091,7 @@ public struct FfiConverterTypeRuntimeOptions: FfiConverterRustBuffer {
         FfiConverterString.write(value.controllerSocket, into: &buf)
         FfiConverterBool.write(value.findProcess, into: &buf)
         FfiConverterString.write(value.logLevel, into: &buf)
+        FfiConverterOptionTypeLocalProxy.write(value.localProxy, into: &buf)
     }
 }
 
@@ -3689,6 +4128,10 @@ public struct Scene {
     public var note: String?
     public var exceptions: [SceneExceptionView]
     /**
+     * 按服务健康（原型："Claude 不可用 / GPT、Gemini 正常"）；未探测过的服务不出现。
+     */
+    public var services: [ServiceHealth]
+    /**
      * mihomo 中的组名（MihomoClient.selectInGroup 用）
      */
     public var group: String
@@ -3699,6 +4142,9 @@ public struct Scene {
         /**
          * "9 个可用"：所选地区 24 h 内测速成功的节点数（≤ 50）
          */available: Int32, selected: NodeRow?, selectedLatencyMs: Int32?, exitIp: String?, exitRegion: String?, source: SceneSource, testedAt: Int64?, note: String?, exceptions: [SceneExceptionView], 
+        /**
+         * 按服务健康（原型："Claude 不可用 / GPT、Gemini 正常"）；未探测过的服务不出现。
+         */services: [ServiceHealth], 
         /**
          * mihomo 中的组名（MihomoClient.selectInGroup 用）
          */group: String) {
@@ -3714,6 +4160,7 @@ public struct Scene {
         self.testedAt = testedAt
         self.note = note
         self.exceptions = exceptions
+        self.services = services
         self.group = group
     }
 }
@@ -3758,6 +4205,9 @@ extension Scene: Equatable, Hashable {
         if lhs.exceptions != rhs.exceptions {
             return false
         }
+        if lhs.services != rhs.services {
+            return false
+        }
         if lhs.group != rhs.group {
             return false
         }
@@ -3777,6 +4227,7 @@ extension Scene: Equatable, Hashable {
         hasher.combine(testedAt)
         hasher.combine(note)
         hasher.combine(exceptions)
+        hasher.combine(services)
         hasher.combine(group)
     }
 }
@@ -3801,6 +4252,7 @@ public struct FfiConverterTypeScene: FfiConverterRustBuffer {
                 testedAt: FfiConverterOptionInt64.read(from: &buf), 
                 note: FfiConverterOptionString.read(from: &buf), 
                 exceptions: FfiConverterSequenceTypeSceneExceptionView.read(from: &buf), 
+                services: FfiConverterSequenceTypeServiceHealth.read(from: &buf), 
                 group: FfiConverterString.read(from: &buf)
         )
     }
@@ -3818,6 +4270,7 @@ public struct FfiConverterTypeScene: FfiConverterRustBuffer {
         FfiConverterOptionInt64.write(value.testedAt, into: &buf)
         FfiConverterOptionString.write(value.note, into: &buf)
         FfiConverterSequenceTypeSceneExceptionView.write(value.exceptions, into: &buf)
+        FfiConverterSequenceTypeServiceHealth.write(value.services, into: &buf)
         FfiConverterString.write(value.group, into: &buf)
     }
 }
@@ -4092,6 +4545,88 @@ public func FfiConverterTypeSceneFailover_lift(_ buf: RustBuffer) throws -> Scen
 #endif
 public func FfiConverterTypeSceneFailover_lower(_ value: SceneFailover) -> RustBuffer {
     return FfiConverterTypeSceneFailover.lower(value)
+}
+
+
+public struct ServiceHealth {
+    public var appId: String
+    public var name: String
+    public var ok: Bool
+    public var checkedAt: Int64
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(appId: String, name: String, ok: Bool, checkedAt: Int64) {
+        self.appId = appId
+        self.name = name
+        self.ok = ok
+        self.checkedAt = checkedAt
+    }
+}
+
+
+
+extension ServiceHealth: Equatable, Hashable {
+    public static func ==(lhs: ServiceHealth, rhs: ServiceHealth) -> Bool {
+        if lhs.appId != rhs.appId {
+            return false
+        }
+        if lhs.name != rhs.name {
+            return false
+        }
+        if lhs.ok != rhs.ok {
+            return false
+        }
+        if lhs.checkedAt != rhs.checkedAt {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(appId)
+        hasher.combine(name)
+        hasher.combine(ok)
+        hasher.combine(checkedAt)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeServiceHealth: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ServiceHealth {
+        return
+            try ServiceHealth(
+                appId: FfiConverterString.read(from: &buf), 
+                name: FfiConverterString.read(from: &buf), 
+                ok: FfiConverterBool.read(from: &buf), 
+                checkedAt: FfiConverterInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: ServiceHealth, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.appId, into: &buf)
+        FfiConverterString.write(value.name, into: &buf)
+        FfiConverterBool.write(value.ok, into: &buf)
+        FfiConverterInt64.write(value.checkedAt, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeServiceHealth_lift(_ buf: RustBuffer) throws -> ServiceHealth {
+    return try FfiConverterTypeServiceHealth.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeServiceHealth_lower(_ value: ServiceHealth) -> RustBuffer {
+    return FfiConverterTypeServiceHealth.lower(value)
 }
 
 
@@ -5715,6 +6250,30 @@ fileprivate struct FfiConverterOptionTypeHostOverride: FfiConverterRustBuffer {
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterOptionTypeLocalProxy: FfiConverterRustBuffer {
+    typealias SwiftType = LocalProxy?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypeLocalProxy.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypeLocalProxy.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterOptionTypeNodeRow: FfiConverterRustBuffer {
     typealias SwiftType = NodeRow?
 
@@ -5731,6 +6290,30 @@ fileprivate struct FfiConverterOptionTypeNodeRow: FfiConverterRustBuffer {
         switch try readInt(&buf) as Int8 {
         case 0: return nil
         case 1: return try FfiConverterTypeNodeRow.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterOptionTypeSceneApply: FfiConverterRustBuffer {
+    typealias SwiftType = SceneApply?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypeSceneApply.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypeSceneApply.read(from: &buf)
         default: throw UniffiInternalError.unexpectedOptionalTag
         }
     }
@@ -6011,6 +6594,31 @@ fileprivate struct FfiConverterSequenceTypePolicyGroup: FfiConverterRustBuffer {
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterSequenceTypeProbeTarget: FfiConverterRustBuffer {
+    typealias SwiftType = [ProbeTarget]
+
+    public static func write(_ value: [ProbeTarget], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeProbeTarget.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [ProbeTarget] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [ProbeTarget]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeProbeTarget.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterSequenceTypeRankedNode: FfiConverterRustBuffer {
     typealias SwiftType = [RankedNode]
 
@@ -6136,6 +6744,31 @@ fileprivate struct FfiConverterSequenceTypeSceneExceptionView: FfiConverterRustB
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterSequenceTypeServiceHealth: FfiConverterRustBuffer {
+    typealias SwiftType = [ServiceHealth]
+
+    public static func write(_ value: [ServiceHealth], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeServiceHealth.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [ServiceHealth] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [ServiceHealth]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeServiceHealth.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterSequenceTypeSubscription: FfiConverterRustBuffer {
     typealias SwiftType = [Subscription]
 
@@ -6205,6 +6838,32 @@ fileprivate struct FfiConverterSequenceOptionInt32: FfiConverterRustBuffer {
             seq.append(try FfiConverterOptionInt32.read(from: &buf))
         }
         return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterDictionaryStringString: FfiConverterRustBuffer {
+    public static func write(_ value: [String: String], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for (key, value) in value {
+            FfiConverterString.write(key, into: &buf)
+            FfiConverterString.write(value, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [String: String] {
+        let len: Int32 = try readInt(&buf)
+        var dict = [String: String]()
+        dict.reserveCapacity(Int(len))
+        for _ in 0..<len {
+            let key = try FfiConverterString.read(from: &buf)
+            let value = try FfiConverterString.read(from: &buf)
+            dict[key] = value
+        }
+        return dict
     }
 }
 /**
@@ -6295,7 +6954,13 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription() != 45715) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_latency_test_batch() != 344) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_load_rules() != 40179) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_detail() != 17464) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_index() != 24911) {
@@ -6334,10 +6999,19 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_latencies() != 29104) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_record_url_test() != 28438) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_exit() != 54284) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_probe() != 17449) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_service() != 1083) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_trace() != 6617) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033) {
@@ -6349,7 +7023,13 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_candidates() != 42848) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_exit_probe() != 40239) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_for_host() != 35644) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_probe_targets() != 46639) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_scenes() != 51937) {
@@ -6359,6 +7039,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception() != 4651) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_source() != 34889) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_storage_info() != 53541) {
@@ -6374,6 +7057,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule() != 8556) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_tested_count() != 44270) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_update_subscription() != 7462) {

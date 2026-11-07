@@ -34,8 +34,26 @@ pub struct Scene {
     pub tested_at: Option<i64>,
     pub note: Option<String>,
     pub exceptions: Vec<SceneExceptionView>,
+    /// 按服务健康（原型："Claude 不可用 / GPT、Gemini 正常"）；未探测过的服务不出现。
+    pub services: Vec<ServiceHealth>,
     /// mihomo 中的组名（MihomoClient.selectInGroup 用）
     pub group: String,
+}
+
+#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+pub struct ServiceHealth {
+    pub app_id: String,
+    pub name: String,
+    pub ok: bool,
+    pub checked_at: i64,
+}
+
+/// 平台对场景内服务做健康探测的目标：经 VPN 访问 url，规则会把它路由到该服务实际使用的出口（含应用例外）。
+#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+pub struct ProbeTarget {
+    pub app_id: String,
+    pub name: String,
+    pub url: String,
 }
 
 #[derive(Debug, Clone, PartialEq, uniffi::Record)]
@@ -130,6 +148,11 @@ impl MobileCore {
                 .map(|(a, n)| SceneExceptionView { app_id: a.clone(), app: scenes::app(a).map_or(a.clone(), |x| x.name.to_string()), node: rows.get(n).cloned() })
                 .collect(),
             group: scenes::group_name(s),
+            services: s
+                .services
+                .iter()
+                .map(|r| ServiceHealth { app_id: r.app_id.clone(), name: scenes::app(&r.app_id).map_or(r.app_id.clone(), |a| a.name.to_string()), ok: r.ok, checked_at: r.checked_at })
+                .collect(),
         }
     }
 
@@ -304,6 +327,83 @@ impl MobileCore {
         sc.save()
     }
 
+    /// 场景内需要探测健康的服务（按内置应用目录，有 probe 地址的）。
+    pub fn scene_probe_targets(&self, scene_id: String) -> Result<Vec<ProbeTarget>, MobileError> {
+        let kind = self.scenes.lock().get(&scene_id)?.kind;
+        Ok(scenes::APPS
+            .iter()
+            .filter(|a| a.kind == kind)
+            .filter_map(|a| a.probe.map(|u| ProbeTarget { app_id: a.id.into(), name: a.name.into(), url: u.into() }))
+            .collect())
+    }
+
+    /// 平台探测某服务后上报；只记录，不触发任何切换（AI 出口仅用户确认后更改，§14.y）。
+    pub fn report_scene_service(&self, scene_id: String, app_id: String, ok: bool, now_millis: i64) -> Result<(), MobileError> {
+        if scenes::app(&app_id).is_none() {
+            return Err(MobileError::Invalid(format!("unknown app {app_id}")));
+        }
+        let mut sc = self.scenes.lock();
+        let s = sc.get_mut(&scene_id)?;
+        s.services.retain(|r| r.app_id != app_id);
+        s.services.push(scenes::ServiceRec { app_id, ok, checked_at: now_millis });
+        let order = |id: &str| scenes::APPS.iter().position(|a| a.id == id).unwrap_or(usize::MAX);
+        s.services.sort_by_key(|r| order(&r.app_id));
+        sc.save()
+    }
+
+    /// 测场景出口用的地址（Cloudflare trace，返回 ip= / loc=）。请求按域名走规则，所以选一个属于该场景、
+    /// 且没被设成例外的服务域名；视频与自定义场景没有可用的 trace 域名，返回 None。
+    pub fn scene_exit_probe(&self, scene_id: String) -> Result<Option<String>, MobileError> {
+        let sc = self.scenes.lock();
+        let s = sc.get(&scene_id)?;
+        let excepted = |id: &str| s.exceptions.iter().any(|e| e.0 == id);
+        Ok(match s.kind {
+            SceneKind::Ai => [("chatgpt", "https://chatgpt.com/cdn-cgi/trace"), ("claude", "https://claude.ai/cdn-cgi/trace")]
+                .into_iter()
+                .find(|(id, _)| !excepted(id))
+                .map(|(_, u)| u.to_string()),
+            SceneKind::Other => Some("https://www.cloudflare.com/cdn-cgi/trace".into()),
+            SceneKind::Video | SceneKind::Custom => None,
+        })
+    }
+
+    /// 平台把 trace 响应正文交回；解析出 ip 与地区代码后回填出口。返回出口 IP。
+    pub fn report_scene_trace(&self, scene_id: String, body: String, now_millis: i64) -> Result<String, MobileError> {
+        let field = |k: &str| body.lines().find_map(|l| l.strip_prefix(k)).map(|v| v.trim().to_string()).filter(|v| !v.is_empty());
+        let ip = field("ip=").filter(|v| v.parse::<std::net::IpAddr>().is_ok()).ok_or_else(|| MobileError::Invalid("trace: no ip".into()))?;
+        let loc = field("loc=").filter(|v| v.len() == 2 && v != "XX").map(|v| v.to_ascii_uppercase());
+        self.report_scene_exit(scene_id, ip.clone(), loc, now_millis)?;
+        Ok(ip)
+    }
+
+    /// 场景来源（引导"优选 / 简单"与场景 sheet 的来源分段）。
+    /// Auto：立即换到延迟缓存里最优的节点（当前地区优先，无选择时全库），返回需要平台执行的动作；
+    /// 已是最优或没有测速数据时返回 None。Manual / SubscriptionGroup：只记录。
+    pub fn set_scene_source(&self, scene_id: String, source: SceneSource, now_millis: i64) -> Result<Option<SceneApply>, MobileError> {
+        let selected = {
+            let mut sc = self.scenes.lock();
+            let s = sc.get_mut(&scene_id)?;
+            s.source = source;
+            let sel = s.selected;
+            sc.save()?;
+            sel
+        };
+        if source != SceneSource::Auto || self.store().is_err() {
+            return Ok(None);
+        }
+        let region = match selected {
+            Some(id) => self.row_by_id(id).map(|r| r.region).unwrap_or_default(),
+            None => String::new(),
+        };
+        let best = self.fastest_nodes(region, 1, now_millis, FRESH_MS)?.into_iter().find(|r| r.latency_ms >= 0).map(|r| r.row.id);
+        let Some(best) = best.filter(|&b| Some(b) != selected) else { return Ok(None) };
+        let apply = self.apply_scene_change(scene_id.clone(), best, now_millis)?;
+        let mut sc = self.scenes.lock();
+        sc.get_mut(&scene_id)?.source = SceneSource::Auto;
+        sc.save()?;
+        Ok(Some(apply))
+    }
+
     /// 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
     pub fn set_scene_exception(&self, scene_id: String, app_id: String, node_id: Option<u64>) -> Result<(), MobileError> {
         if scenes::app(&app_id).is_none() {
@@ -370,6 +470,7 @@ pub(crate) mod tests {
             controller_socket: "/data/zm.sock".into(),
             find_process: false,
             log_level: "warning".into(),
+            local_proxy: None,
         }
     }
 
@@ -392,6 +493,38 @@ pub(crate) mod tests {
         let s: Vec<LatencySample> = rows.iter().enumerate().map(|(k, r)| LatencySample { id: r.id, ms: 50 + 10 * k as i32, at: 1000 }).collect();
         core.record_latencies(s).unwrap();
         (d, core, sa.id, rows)
+    }
+
+    #[test]
+    fn services_and_source() {
+        let (_d, core, _sub, rows) = setup();
+        let t: Vec<String> = core.scene_probe_targets("ai".into()).unwrap().into_iter().map(|x| x.app_id).collect();
+        assert_eq!(t, vec!["chatgpt", "claude", "gemini"]);
+        core.report_scene_service("ai".into(), "gemini".into(), true, 5).unwrap();
+        core.report_scene_service("ai".into(), "claude".into(), false, 5).unwrap();
+        core.report_scene_service("ai".into(), "claude".into(), false, 6).unwrap();
+        assert!(core.report_scene_service("ai".into(), "nope".into(), true, 5).is_err());
+        let ai = core.scenes(1000).unwrap().into_iter().find(|s| s.id == "ai").unwrap();
+        let sv: Vec<(String, bool, i64)> = ai.services.iter().map(|x| (x.name.clone(), x.ok, x.checked_at)).collect();
+        assert_eq!(sv, vec![("Claude".into(), false, 6), ("Gemini".into(), true, 5)]);
+        assert!(ai.selected.is_none(), "上报服务健康不切换出口");
+
+        // 优选：无选择时取全库最快
+        let a = core.set_scene_source("video".into(), SceneSource::Auto, 1000).unwrap().expect("应换到最快节点");
+        assert!(a.needs_reload);
+        let v = core.scenes(1000).unwrap().into_iter().find(|s| s.id == "video").unwrap();
+        assert_eq!(v.selected.unwrap().id, rows[0].id);
+        assert_eq!(v.source, SceneSource::Auto);
+        assert!(core.set_scene_source("video".into(), SceneSource::Auto, 1000).unwrap().is_none(), "已最优");
+        assert!(core.set_scene_source("video".into(), SceneSource::Manual, 1000).unwrap().is_none());
+        assert_eq!(core.scene_exit_probe("ai".into()).unwrap().as_deref(), Some("https://chatgpt.com/cdn-cgi/trace"));
+        assert_eq!(core.scene_exit_probe("video".into()).unwrap(), None);
+        let ip = core.report_scene_trace("ai".into(), "fl=1\nh=chatgpt.com\nip=198.51.100.7\nloc=us\n".into(), 7).unwrap();
+        assert_eq!(ip, "198.51.100.7");
+        let ai = core.scenes(1000).unwrap().into_iter().find(|s| s.id == "ai").unwrap();
+        assert_eq!((ai.exit_ip.as_deref(), ai.exit_region.as_deref(), ai.tested_at), (Some("198.51.100.7"), Some("US"), Some(7)));
+        assert!(core.report_scene_trace("ai".into(), "ip=nope".into(), 7).is_err());
+        assert_eq!(core.scenes(1000).unwrap().into_iter().find(|s| s.id == "video").unwrap().source, SceneSource::Manual);
     }
 
     #[test]

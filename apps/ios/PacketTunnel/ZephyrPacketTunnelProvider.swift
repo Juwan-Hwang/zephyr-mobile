@@ -148,6 +148,25 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
             setState { $0.mode = newMode }
             try? store.update { $0.connection.mode = newMode; $0.tunnel.mode = newMode }
             completionHandler?(TunnelMessageCodec.encode(response(.ok)))
+        case .urlTest(let file, let url, let timeoutMs):
+            // 只接受 core 目录下的纯文件名，防路径穿越。
+            guard !file.contains("/"), !file.hasPrefix("."),
+                  let json = try? String(contentsOf: AppGroup.coreDirectory.appendingPathComponent(file), encoding: .utf8) else {
+                var r = response(.failed); r.errorCode = "internal"
+                completionHandler?(TunnelMessageCodec.encode(r))
+                return
+            }
+            let bridge = self.bridge
+            DispatchQueue.global(qos: .utility).async { [weak self] in
+                let out = bridge.urlTest(proxiesJSON: json, url: url, timeoutMs: timeoutMs, concurrency: 8)
+                guard let self else { completionHandler?(nil); return }
+                var r = self.response(.ok); r.payload = out
+                completionHandler?(TunnelMessageCodec.encode(r))
+            }
+        case .logs(let since, let minLevel, let limit):
+            var r = response(.ok)
+            r.payload = bridge.logs(since: since, minLevel: minLevel, limit: max(1, min(limit, 500)))
+            completionHandler?(TunnelMessageCodec.encode(r))
         case .reloadConfig:
             // App 重新生成了配置（订阅更新 / 场景切换需重载）：重新注入当前 fd 后热重载。
             let config = TunnelConfiguration.load(store: store)
