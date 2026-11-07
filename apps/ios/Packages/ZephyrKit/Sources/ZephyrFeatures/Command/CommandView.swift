@@ -46,6 +46,11 @@ struct CommandView: View {
             withAnimation(ZMotion.slow) { appeared = true }
             focused = true
         }
+        .task {
+            // overlay 首帧 UITextField 尚未进窗口时 focused 可能不生效，让一拍后再确认。
+            await Task.yield()
+            if !focused { focused = true }
+        }
         .accessibilityAddTraits(.isModal)
         .accessibilityAction(.escape) { close() }
     }

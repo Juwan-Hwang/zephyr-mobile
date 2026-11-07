@@ -21,7 +21,8 @@ public struct ZSectionHeader: View {
             : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: ZTokens.Space.n3))
         layout {
             Text(title)
-                .foregroundStyle(ZTokens.Colors.screenT3)
+                .fontWeight(.medium)
+                .foregroundStyle(ZTokens.Colors.screenT2)
                 .accessibilityAddTraits(.isHeader)
             if !dynamicTypeSize.isAccessibilitySize { Spacer(minLength: ZTokens.Space.n3) }
             trailingView
