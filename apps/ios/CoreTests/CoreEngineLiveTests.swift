@@ -194,6 +194,29 @@ final class CoreEngineLiveTests: XCTestCase {
         }
     }
 
+    func testSettingsPersistAndReloadOnRuntimeChange() async throws {
+        let (e, t) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        var it = e.settings().makeAsyncIterator()
+        var s = try XCTUnwrap(await it.next())
+        XCTAssertEqual(s, CoreEngine.defaultSettings)
+        try await e.connect()
+        s.appearance = .dark
+        try await e.updateSettings(patch: s)
+        XCTAssertEqual(t.reloads, 0, "外观不影响 mihomo")
+        s.localProxyEnabled = true
+        try await e.updateSettings(patch: s)
+        XCTAssertEqual(t.reloads, 1)
+        XCTAssertTrue(try String(contentsOf: t.configURL, encoding: .utf8).contains("mixed-port: 7890"))
+        XCTAssertEqual(await it.next()?.appearance, .dark)
+        // 新实例读回
+        let e2 = CoreEngine(dataDir: dir.appendingPathComponent("core"), mockData: false)
+        var it2 = e2.settings().makeAsyncIterator()
+        XCTAssertEqual(await it2.next(), s)
+        s.tun.mtu = 100
+        do { try await e.updateSettings(patch: s); XCTFail("非法 MTU") } catch {}
+    }
+
     func testMemberIdIsStable() {
         XCTAssertEqual(CoreEngine.memberId(group: "Proxy", name: "香港 01"), CoreEngine.memberId(group: "Proxy", name: "香港 01"))
         XCTAssertNotEqual(CoreEngine.memberId(group: "Proxy", name: "香港 01"), CoreEngine.memberId(group: "Video", name: "香港 01"))

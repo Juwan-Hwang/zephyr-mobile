@@ -32,6 +32,9 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     private var subsWatchers: [UUID: AsyncStream<[ZephyrKit.Subscription]>.Continuation] = [:]
     private var sceneWatchers: [UUID: AsyncStream<[ZephyrKit.Scene]>.Continuation] = [:]
     private var latencyWatchers: [UUID: AsyncStream<[LatencyUpdate]>.Continuation] = [:]
+    private var settingsWatchers: [UUID: AsyncStream<ZephyrKit.Settings>.Continuation] = [:]
+    private var cachedSettings: ZephyrKit.Settings?
+    private let settingsURL: URL
     private var samples: [TrafficSample] = []
     private var members: [NodeId: String] = [:]
 
@@ -62,6 +65,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         let dir = dataDir ?? CoreEngine.defaultDataDir()
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         self.core = try? MobileCore(dataDir: dir.path)
+        self.settingsURL = dir.appendingPathComponent("settings.json")
         self.fallback = fallback ?? MockEngine(clock: .live)
         self.mockData = mockData
         self.clock = clock
@@ -596,8 +600,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         guard let id = await runQuiet({ c.subscriptions() }).first?.id else {
             throw ZephyrError(code: .subscriptionInvalid, message: "请先添加订阅")
         }
-        var settingsIterator = fallback.settings().makeAsyncIterator()
-        let s = await settingsIterator.next()
+        let s = await currentSettings()
         var modeIterator = connectionState().makeAsyncIterator()
         let mode = await modeIterator.next()?.mode ?? .rule
         let options = CoreEngine.runtimeOptions(settings: s, mode: mode, controllerSocket: controllerSocket)
@@ -651,8 +654,67 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         try await fallback.closeAll()
     }
     public func logs(minLevel: LogLevel) -> AsyncStream<LogLine> { fallback.logs(minLevel: minLevel) }
-    public func settings() -> AsyncStream<ZephyrKit.Settings> { fallback.settings() }
-    public func updateSettings(patch: ZephyrKit.Settings) async throws { try await fallback.updateSettings(patch: patch) }
+    /// 设置落盘（dataDir/settings.json）。无核心时回落 fallback；首次无文件用 `defaultSettings`。
+    public func settings() -> AsyncStream<ZephyrKit.Settings> {
+        guard core != nil else { return fallback.settings() }
+        let id = UUID()
+        let (stream, cont) = AsyncStream<ZephyrKit.Settings>.makeStream(bufferingPolicy: .bufferingNewest(1))
+        let current = loadSettings()
+        locked { settingsWatchers[id] = cont }
+        cont.yield(current)
+        cont.onTermination = { [weak self] _ in self?.locked { _ = self?.settingsWatchers.removeValue(forKey: id) } }
+        return stream
+    }
+
+    public func updateSettings(patch: ZephyrKit.Settings) async throws {
+        guard core != nil else { return try await fallback.updateSettings(patch: patch) }
+        guard (1...65535).contains(patch.localProxyPort), patch.latencyTtlHours > 0, patch.autoUpdateHours > 0,
+              (576...9000).contains(patch.tun.mtu) else {
+            throw ZephyrError(code: .internal, message: "invalid settings value")
+        }
+        let old = loadSettings()
+        do {
+            try FileManager.default.createDirectory(at: settingsURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try SharedJSON.encoder.encode(patch).write(to: settingsURL, options: .atomic)
+        } catch {
+            throw ZephyrError(code: .storageFull, message: "\(error)")
+        }
+        let watchers = locked { () -> [AsyncStream<ZephyrKit.Settings>.Continuation] in
+            cachedSettings = patch
+            return Array(settingsWatchers.values)
+        }
+        for w in watchers { w.yield(patch) }
+        // 影响 mihomo 配置的字段变了：隧道运行中热重载。
+        if let t = tunnel, CoreEngine.affectsRuntime(old, patch) { await reloadTunnelIfRunning(t) }
+    }
+
+    static func affectsRuntime(_ a: ZephyrKit.Settings, _ b: ZephyrKit.Settings) -> Bool {
+        a.dns != b.dns || a.tun != b.tun || a.localProxyEnabled != b.localProxyEnabled
+            || a.localProxyPort != b.localProxyPort || a.localProxyAuth != b.localProxyAuth
+    }
+
+    func currentSettings() async -> ZephyrKit.Settings? {
+        guard core != nil else {
+            var it = fallback.settings().makeAsyncIterator()
+            return await it.next()
+        }
+        return loadSettings()
+    }
+
+    private func loadSettings() -> ZephyrKit.Settings {
+        if let s = locked({ cachedSettings }) { return s }
+        let s = (try? Data(contentsOf: settingsURL)).flatMap { try? SharedJSON.decoder.decode(ZephyrKit.Settings.self, from: $0) }
+            ?? CoreEngine.defaultSettings
+        locked { cachedSettings = s }
+        return s
+    }
+
+    /// 首次安装的设置：本地代理关、不信任任何 Wi-Fi、仅 Wi-Fi 下自动测速与更新。
+    public static let defaultSettings = ZephyrKit.Settings(
+        onDemand: false, trustedWifi: [], disconnectOnTrusted: false, localProxyPort: 7890, localProxyAuth: true,
+        testOnWifiOnly: true, latencyTtlHours: 24, autoUpdateHours: 12, updateOnWifiOnly: true, showChangesBeforeUpdate: true,
+        dns: DnsSettings(), tun: TunSettings(), accent: .blue, appearance: .system, shareAnonymousPattern: false,
+        localProxyEnabled: false)
 
     public func storage() async -> ZephyrKit.StorageInfo {
         guard let c = core else { return await fallback.storage() }
@@ -707,4 +769,10 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
                                exceptions: s.exceptions.compactMap { e in e.node.map { ZephyrKit.SceneException(app: e.app, node: row($0)) } },
                                services: s.services.map { ZephyrKit.ServiceHealth(appId: $0.appId, name: $0.name, ok: $0.ok, checkedAt: $0.checkedAt) })
     }
+}
+
+/// 设置文件的 JSON 编解码（键名用模型自带的 snake_case CodingKeys）。
+enum SharedJSON {
+    static let encoder: JSONEncoder = { let e = JSONEncoder(); e.outputFormatting = [.sortedKeys]; return e }()
+    static let decoder = JSONDecoder()
 }
