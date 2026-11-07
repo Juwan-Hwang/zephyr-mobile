@@ -857,6 +857,14 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
+
+
+
+
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -925,6 +933,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_fastest_nodes(`ptr`: Pointer,`query`: RustBuffer.ByValue,`limit`: Int,`nowMillis`: Long,`maxAgeMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_global_node(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_host_override(`ptr`: Pointer,`host`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_import_subscription(`ptr`: Pointer,`name`: RustBuffer.ByValue,`url`: RustBuffer.ByValue,`fetched`: RustBuffer.ByValue,`autoUpdateHours`: Int,`progress`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -941,6 +951,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_override_host(`ptr`: Pointer,`host`: RustBuffer.ByValue,`target`: RustBuffer.ByValue,`sceneId`: RustBuffer.ByValue,`persistent`: Byte,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_global_change(`ptr`: Pointer,`nodeId`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_scene_change(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`nodeId`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_subscription_update(`ptr`: Pointer,`id`: RustBuffer.ByValue,`fetched`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -985,6 +997,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_failover_policy(`ptr`: Pointer,`policy`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_global_node(`ptr`: Pointer,`nodeId`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_exception(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`appId`: RustBuffer.ByValue,`nodeId`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_source(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`source`: RustBuffer.ByValue,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
@@ -997,6 +1011,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_subscriptions_summary(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_sync_subscription_rules(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_test_rule(`ptr`: Pointer,`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_tested_count(`ptr`: Pointer,`nowMillis`: Long,`maxAgeMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
@@ -1157,6 +1173,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_global_node(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_host_override(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_import_subscription(
@@ -1172,6 +1190,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_rows(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_override_host(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_global_change(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_scene_change(
     ): Short
@@ -1217,6 +1237,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_failover_policy(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_global_node(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_source(
@@ -1228,6 +1250,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscriptions(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscriptions_summary(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_sync_subscription_rules(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule(
     ): Short
@@ -1315,6 +1339,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes() != 1274.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_global_node() != 56704.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_host_override() != 18746.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -1337,6 +1364,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_override_host() != 5360.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_global_change() != 20284.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_scene_change() != 49107.toShort()) {
@@ -1405,6 +1435,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_failover_policy() != 8372.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_global_node() != 52568.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception() != 4651.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -1421,6 +1454,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscriptions_summary() != 18705.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_sync_subscription_rules() != 47083.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule() != 8556.toShort()) {
@@ -2355,6 +2391,8 @@ public interface MobileCoreInterface {
      */
     fun `fastestNodes`(`query`: kotlin.String, `limit`: kotlin.UInt, `nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long): List<RankedNode>
     
+    fun `globalNode`(): kotlin.ULong?
+    
     fun `hostOverride`(`host`: kotlin.String): HostOverride?
     
     /**
@@ -2385,6 +2423,11 @@ public interface MobileCoreInterface {
      * 连接轨迹里的覆写（contract §13）。改完需重载；persistent = false 不落盘。
      */
     fun `overrideHost`(`host`: kotlin.String, `target`: TraceTarget, `sceneId`: kotlin.String?, `persistent`: kotlin.Boolean)
+    
+    /**
+     * 全局模式换出口的预览（"所有流量均经由新加坡 02。场景已暂停。"）：影响全部应用。
+     */
+    fun `previewGlobalChange`(`nodeId`: kotlin.ULong): ExitChange
     
     fun `previewSceneChange`(`sceneId`: kotlin.String, `nodeId`: kotlin.ULong): ExitChange
     
@@ -2486,6 +2529,12 @@ public interface MobileCoreInterface {
     fun `setFailoverPolicy`(`policy`: FailoverPolicy)
     
     /**
+     * 全局模式出口。返回的 group 恒为 mihomo 内置 "GLOBAL"：平台在需要时先重载（节点此前不在配置里），
+     * 然后**总是** selectInGroup("GLOBAL", member)。
+     */
+    fun `setGlobalNode`(`nodeId`: kotlin.ULong): SceneApply
+    
+    /**
      * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
      */
     fun `setSceneException`(`sceneId`: kotlin.String, `appId`: kotlin.String, `nodeId`: kotlin.ULong?)
@@ -2507,6 +2556,12 @@ public interface MobileCoreInterface {
     fun `subscriptions`(): List<Subscription>
     
     fun `subscriptionsSummary`(): SubscriptionsSummary
+    
+    /**
+     * 规则页第 2 层"订阅规则"：生效订阅（列表第一个，与运行配置一致）的 rules 编译进 rules/001.zr，
+     * MATCH 的去向作为最终策略；没有订阅时删除该层、最终策略回到 DIRECT。随后热加载全部层。
+     */
+    fun `syncSubscriptionRules`()
     
     fun `testRule`(`input`: kotlin.String): RuleTrace
     
@@ -2712,6 +2767,18 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     }
     
 
+    override fun `globalNode`(): kotlin.ULong? {
+            return FfiConverterOptionalULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_global_node(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `hostOverride`(`host`: kotlin.String): HostOverride? {
             return FfiConverterOptionalTypeHostOverride.lift(
     callWithPointer {
@@ -2827,6 +2894,22 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
 }
     }
     
+    
+
+    
+    /**
+     * 全局模式换出口的预览（"所有流量均经由新加坡 02。场景已暂停。"）：影响全部应用。
+     */
+    @Throws(MobileException::class)override fun `previewGlobalChange`(`nodeId`: kotlin.ULong): ExitChange {
+            return FfiConverterTypeExitChange.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_global_change(
+        it, FfiConverterULong.lower(`nodeId`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -3166,6 +3249,23 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
 
     
     /**
+     * 全局模式出口。返回的 group 恒为 mihomo 内置 "GLOBAL"：平台在需要时先重载（节点此前不在配置里），
+     * 然后**总是** selectInGroup("GLOBAL", member)。
+     */
+    @Throws(MobileException::class)override fun `setGlobalNode`(`nodeId`: kotlin.ULong): SceneApply {
+            return FfiConverterTypeSceneApply.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_set_global_node(
+        it, FfiConverterULong.lower(`nodeId`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
      */
     @Throws(MobileException::class)override fun `setSceneException`(`sceneId`: kotlin.String, `appId`: kotlin.String, `nodeId`: kotlin.ULong?)
@@ -3247,6 +3347,22 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     }
     )
     }
+    
+
+    
+    /**
+     * 规则页第 2 层"订阅规则"：生效订阅（列表第一个，与运行配置一致）的 rules 编译进 rules/001.zr，
+     * MATCH 的去向作为最终策略；没有订阅时删除该层、最终策略回到 DIRECT。随后热加载全部层。
+     */
+    @Throws(MobileException::class)override fun `syncSubscriptionRules`()
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_sync_subscription_rules(
+        it, _status)
+}
+    }
+    
     
 
     

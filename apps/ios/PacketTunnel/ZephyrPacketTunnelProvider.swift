@@ -61,6 +61,8 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
     private var asleep = false
     private var trafficTimer: DispatchSourceTimer?
     private var memoryPressure: DispatchSourceMemoryPressure?
+    /// 今日用量账本；只在 `queue` 上读写。
+    private var ledger: UsageLedger?
 
     // MARK: 生命周期
 
@@ -192,6 +194,11 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
 
     private func startMonitors() {
         stopMonitors()
+        queue.async { [weak self] in
+            var l = UsageLedger.load() ?? .empty(Date())
+            l.tunnelStarted()
+            self?.ledger = l
+        }
         let timer = DispatchSource.makeTimerSource(queue: queue)
         timer.schedule(deadline: .now() + 1, repeating: 1, leeway: .milliseconds(250))
         timer.setEventHandler { [weak self] in self?.tick() }
@@ -229,6 +236,11 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
         }
         guard shouldPublish else { return }
         try? store.update { $0.rate.push(down: traffic.down, up: traffic.up, at: now) }
+        if var l = ledger {
+            l.record(total: traffic.upTotal + traffic.downTotal, at: now)
+            l.save()
+            ledger = l
+        }
     }
 
     // MARK: 状态

@@ -352,6 +352,7 @@ impl MobileCore {
             let _ = self.subs.lock().delete(&sub.id);
             return Err(e);
         }
+        self.sync_subscription_rules()?;
         Ok(sub)
     }
 
@@ -363,6 +364,7 @@ impl MobileCore {
     pub fn update_subscription(&self, id: String, fetched: FetchedSubscription, progress: Option<Box<dyn BuildProgress>>) -> Result<SubscriptionDiff, MobileError> {
         let d = self.subs.lock().update(&id, &fetched)?;
         self.rebuild_from_subscriptions(progress)?;
+        self.sync_subscription_rules()?;
         Ok(d)
     }
 
@@ -379,7 +381,49 @@ impl MobileCore {
 
     pub fn delete_subscription(&self, id: String) -> Result<(), MobileError> {
         self.subs.lock().delete(&id)?;
-        self.rebuild_from_subscriptions(None).map(|_| ())
+        self.rebuild_from_subscriptions(None)?;
+        self.sync_subscription_rules()
+    }
+
+    /// 规则页第 2 层"订阅规则"：生效订阅（列表第一个，与运行配置一致）的 rules 编译进 rules/001.zr，
+    /// MATCH 的去向作为最终策略；没有订阅时删除该层、最终策略回到 DIRECT。随后热加载全部层。
+    pub fn sync_subscription_rules(&self) -> Result<(), MobileError> {
+        let active = {
+            let s = self.subs.lock();
+            s.entries.first().and_then(|e| s.body(e.slot).map(|b| (e.meta.name.clone(), b)))
+        };
+        // 第 1 层"Zephyr 覆写"恒在（可为空），层序号才稳定（UI "第 N 层"）
+        if !self.dir.join("rules").join("000.zr").exists() {
+            self.compile_rule_layer(0, "Zephyr 覆写".into(), LayerKind::Override, "订阅更新时保留".into(), "DIRECT".into(), String::new())?;
+        }
+        let path = self.dir.join("rules").join("001.zr");
+        let fin = match active {
+            Some((name, body)) => {
+                let v: serde_yaml::Value = serde_yaml::from_str(&body).unwrap_or(serde_yaml::Value::Null);
+                let lines: Vec<&str> = v.get("rules").and_then(|r| r.as_sequence()).map(|s| s.iter().filter_map(|x| x.as_str()).collect()).unwrap_or_default();
+                let fin = lines
+                    .iter()
+                    .rev()
+                    .find_map(|l| {
+                        let mut it = l.split(',').map(str::trim);
+                        (it.next()? == "MATCH").then(|| it.next().map(String::from)).flatten()
+                    })
+                    .unwrap_or_else(|| "DIRECT".into());
+                let text: String = lines.iter().filter(|l| !l.trim_start().starts_with("MATCH")).fold(String::new(), |mut acc, l| {
+                    acc.push_str(l);
+                    acc.push('\n');
+                    acc
+                });
+                self.compile_rule_layer(1, "订阅规则".into(), LayerKind::Subscription, name, fin.clone(), text)?;
+                fin
+            }
+            None => {
+                let _ = std::fs::remove_file(&path);
+                "DIRECT".into()
+            }
+        };
+        self.load_rules(fin)?;
+        Ok(())
     }
 
     /// 由已保存的全部订阅正文重建节点库（启动修复、批量更新后调用一次即可）。

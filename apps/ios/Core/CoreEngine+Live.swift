@@ -26,6 +26,8 @@ public protocol TunnelPort: AnyObject, Sendable {
     /// 批量延迟测试（扩展里 zm_url_test）；输入为核心 latencyTestBatch 的 JSON，返回 zm_url_test 原样 JSON。
     /// 隧道未连接或不支持时为 nil。
     func urlTest(proxiesJSON: String, url: String, timeoutMs: Int32) async -> String?
+    /// 扩展记的今日用量（字节、24 小时桶、在线毫秒）；没有账本为 nil。
+    func usageToday() async -> (hourly: [Int64], onlineMillis: Int64)?
     /// zm_logs 增量 JSON；未连接为 nil。
     func logs(since: Int64, minLevel: String, limit: Int32) async -> String?
 }

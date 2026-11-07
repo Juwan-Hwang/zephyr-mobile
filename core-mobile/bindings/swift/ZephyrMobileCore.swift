@@ -878,6 +878,8 @@ public protocol MobileCoreProtocol : AnyObject {
      */
     func fastestNodes(query: String, limit: UInt32, nowMillis: Int64, maxAgeMillis: Int64) throws  -> [RankedNode]
     
+    func globalNode()  -> UInt64?
+    
     func hostOverride(host: String)  -> HostOverride?
     
     /**
@@ -908,6 +910,11 @@ public protocol MobileCoreProtocol : AnyObject {
      * 连接轨迹里的覆写（contract §13）。改完需重载；persistent = false 不落盘。
      */
     func overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Bool) throws 
+    
+    /**
+     * 全局模式换出口的预览（"所有流量均经由新加坡 02。场景已暂停。"）：影响全部应用。
+     */
+    func previewGlobalChange(nodeId: UInt64) throws  -> ExitChange
     
     func previewSceneChange(sceneId: String, nodeId: UInt64) throws  -> ExitChange
     
@@ -1009,6 +1016,12 @@ public protocol MobileCoreProtocol : AnyObject {
     func setFailoverPolicy(policy: FailoverPolicy) throws 
     
     /**
+     * 全局模式出口。返回的 group 恒为 mihomo 内置 "GLOBAL"：平台在需要时先重载（节点此前不在配置里），
+     * 然后**总是** selectInGroup("GLOBAL", member)。
+     */
+    func setGlobalNode(nodeId: UInt64) throws  -> SceneApply
+    
+    /**
      * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
      */
     func setSceneException(sceneId: String, appId: String, nodeId: UInt64?) throws 
@@ -1030,6 +1043,12 @@ public protocol MobileCoreProtocol : AnyObject {
     func subscriptions()  -> [Subscription]
     
     func subscriptionsSummary()  -> SubscriptionsSummary
+    
+    /**
+     * 规则页第 2 层"订阅规则"：生效订阅（列表第一个，与运行配置一致）的 rules 编译进 rules/001.zr，
+     * MATCH 的去向作为最终策略；没有订阅时删除该层、最终策略回到 DIRECT。随后热加载全部层。
+     */
+    func syncSubscriptionRules() throws 
     
     func testRule(input: String) throws  -> RuleTrace
     
@@ -1183,6 +1202,13 @@ open func fastestNodes(query: String, limit: UInt32, nowMillis: Int64, maxAgeMil
 })
 }
     
+open func globalNode() -> UInt64? {
+    return try!  FfiConverterOptionUInt64.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_global_node(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
 open func hostOverride(host: String) -> HostOverride? {
     return try!  FfiConverterOptionTypeHostOverride.lift(try! rustCall() {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_host_override(self.uniffiClonePointer(),
@@ -1267,6 +1293,17 @@ open func overrideHost(host: String, target: TraceTarget, sceneId: String?, pers
         FfiConverterBool.lower(persistent),$0
     )
 }
+}
+    
+    /**
+     * 全局模式换出口的预览（"所有流量均经由新加坡 02。场景已暂停。"）：影响全部应用。
+     */
+open func previewGlobalChange(nodeId: UInt64)throws  -> ExitChange {
+    return try  FfiConverterTypeExitChange.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_global_change(self.uniffiClonePointer(),
+        FfiConverterUInt64.lower(nodeId),$0
+    )
+})
 }
     
 open func previewSceneChange(sceneId: String, nodeId: UInt64)throws  -> ExitChange {
@@ -1514,6 +1551,18 @@ open func setFailoverPolicy(policy: FailoverPolicy)throws  {try rustCallWithErro
 }
     
     /**
+     * 全局模式出口。返回的 group 恒为 mihomo 内置 "GLOBAL"：平台在需要时先重载（节点此前不在配置里），
+     * 然后**总是** selectInGroup("GLOBAL", member)。
+     */
+open func setGlobalNode(nodeId: UInt64)throws  -> SceneApply {
+    return try  FfiConverterTypeSceneApply.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_set_global_node(self.uniffiClonePointer(),
+        FfiConverterUInt64.lower(nodeId),$0
+    )
+})
+}
+    
+    /**
      * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
      */
 open func setSceneException(sceneId: String, appId: String, nodeId: UInt64?)throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
@@ -1570,6 +1619,16 @@ open func subscriptionsSummary() -> SubscriptionsSummary {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_subscriptions_summary(self.uniffiClonePointer(),$0
     )
 })
+}
+    
+    /**
+     * 规则页第 2 层"订阅规则"：生效订阅（列表第一个，与运行配置一致）的 rules 编译进 rules/001.zr，
+     * MATCH 的去向作为最终策略；没有订阅时删除该层、最终策略回到 DIRECT。随后热加载全部层。
+     */
+open func syncSubscriptionRules()throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_sync_subscription_rules(self.uniffiClonePointer(),$0
+    )
+}
 }
     
 open func testRule(input: String)throws  -> RuleTrace {
@@ -6948,6 +7007,9 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes() != 1274) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_global_node() != 56704) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_host_override() != 18746) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -6970,6 +7032,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_override_host() != 5360) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_global_change() != 20284) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_scene_change() != 49107) {
@@ -7038,6 +7103,9 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_failover_policy() != 8372) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_global_node() != 52568) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception() != 4651) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -7054,6 +7122,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscriptions_summary() != 18705) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_sync_subscription_rules() != 47083) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule() != 8556) {

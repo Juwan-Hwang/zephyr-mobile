@@ -317,6 +317,31 @@ impl MobileCore {
         Ok(SceneApply { needs_reload: !hot, group, member: member_name(&to), previous })
     }
 
+    /// 全局模式换出口的预览（"所有流量均经由新加坡 02。场景已暂停。"）：影响全部应用。
+    pub fn preview_global_change(&self, node_id: u64) -> Result<ExitChange, MobileError> {
+        let to = self.row_by_id(node_id)?;
+        let from = self.scenes.lock().global;
+        let from_region = from.and_then(|id| self.row_by_id(id).ok()).map(|r| r.region);
+        let affected = scenes::APPS.iter().map(|a| a.name.to_string()).collect();
+        Ok(ExitChange { scene_id: None, from_region, from_ip: None, to_region: to.region, to_ip: None, affected_apps: affected, unchanged_apps: vec![] })
+    }
+
+    /// 全局模式出口。返回的 group 恒为 mihomo 内置 "GLOBAL"：平台在需要时先重载（节点此前不在配置里），
+    /// 然后**总是** selectInGroup("GLOBAL", member)。
+    pub fn set_global_node(&self, node_id: u64) -> Result<SceneApply, MobileError> {
+        let to = self.row_by_id(node_id)?;
+        let mut sc = self.scenes.lock();
+        let previous = sc.global;
+        let already = sc.referenced_nodes().contains(&node_id);
+        sc.global = Some(node_id);
+        sc.save()?;
+        Ok(SceneApply { needs_reload: !already, group: "GLOBAL".into(), member: member_name(&to), previous })
+    }
+
+    pub fn global_node(&self) -> Option<u64> {
+        self.scenes.lock().global
+    }
+
     /// 平台测得出口后回填（"198.51.100.7 · 美国"）。
     pub fn report_scene_exit(&self, scene_id: String, ip: String, region: Option<String>, tested_at: i64) -> Result<(), MobileError> {
         let mut sc = self.scenes.lock();
@@ -493,6 +518,38 @@ pub(crate) mod tests {
         let s: Vec<LatencySample> = rows.iter().enumerate().map(|(k, r)| LatencySample { id: r.id, ms: 50 + 10 * k as i32, at: 1000 }).collect();
         core.record_latencies(s).unwrap();
         (d, core, sa.id, rows)
+    }
+
+    #[test]
+    fn subscription_rules_become_layer() {
+        let (_d, core, sub, _rows) = setup();
+        let t = core.test_rule("www.google.com".into()).unwrap();
+        assert_eq!((t.layer_index, t.policy.as_str()), (Some(1), "节点选择"));
+        let t = core.test_rule("example.org".into()).unwrap();
+        assert_eq!((t.layer_index, t.rule.as_str(), t.policy.as_str()), (None, "MATCH", "节点选择"));
+        let st = core.rule_stats();
+        assert!(st.layers.iter().any(|l| l.name == "订阅规则" && l.count == 1), "{:?}", st.layers);
+        core.delete_subscription(sub).unwrap();
+        // 剩下的 B 订阅没有 rules：层为空，最终策略回 DIRECT
+        assert_eq!(core.test_rule("www.google.com".into()).unwrap().policy, "DIRECT");
+    }
+
+    #[test]
+    fn global_node_lands_in_config() {
+        let (_d, core, sub, rows) = setup();
+        let p = core.preview_global_change(rows[2].id).unwrap();
+        assert_eq!(p.scene_id, None);
+        assert!(p.affected_apps.contains(&"Claude".to_string()));
+        let a = core.set_global_node(rows[2].id).unwrap();
+        assert!(a.needs_reload);
+        assert_eq!(a.group, "GLOBAL");
+        assert_eq!(core.global_node(), Some(rows[2].id));
+        let v: Value = serde_yaml::from_str(&core.runtime_config(sub, opts()).unwrap()).unwrap();
+        let names: Vec<&str> = v["proxies"].as_sequence().unwrap().iter().filter_map(|p| p["name"].as_str()).collect();
+        assert!(names.contains(&a.member.as_str()), "{names:?}");
+        let b = core.set_global_node(rows[2].id).unwrap();
+        assert!(!b.needs_reload, "已在配置里");
+        assert_eq!(b.previous, Some(rows[2].id));
     }
 
     #[test]
