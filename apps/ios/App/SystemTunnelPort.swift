@@ -40,6 +40,11 @@ final class SystemTunnelPort: TunnelPort, @unchecked Sendable {
 
     func stop() async throws { try await controller.setConnected(false) }
 
+    func usageToday() async -> (hourly: [Int64], onlineMillis: Int64)? {
+        guard let l = UsageLedger.load()?.today(Date()) else { return nil }
+        return (l.hourly, l.onlineMillis)
+    }
+
     func logs(since: Int64, minLevel: String, limit: Int32) async -> String? {
         guard let r = try? await controller.request(.logs(since: since, minLevel: minLevel, limit: limit)), r.result == .ok else { return nil }
         return r.payload

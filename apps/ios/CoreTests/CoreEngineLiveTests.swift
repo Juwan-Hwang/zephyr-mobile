@@ -26,6 +26,10 @@ final class FakeTunnel: TunnelPort, @unchecked Sendable {
     func setMode(_ m: ZephyrKit.ProxyMode) async throws { lock.withLock { mode = m } }
     func rate() async -> (up: Int64, down: Int64)? { lock.withLock { status == .connected ? (10, 2048) : nil } }
     func reloadConfig() async throws { lock.withLock { reloads += 1 } }
+    func usageToday() async -> (hourly: [Int64], onlineMillis: Int64)? {
+        var h = Array(repeating: Int64(0), count: 24); h[9] = 1_000; h[10] = 500
+        return (h, 7_200_000)
+    }
     var logCalls = 0
     func logs(since: Int64, minLevel: String, limit: Int32) async -> String? {
         lock.withLock { logCalls += 1 }
@@ -231,6 +235,46 @@ final class CoreEngineLiveTests: XCTestCase {
         let a = await it.next(), b = await it.next()
         XCTAssertEqual(a, LogLine(at: 5, level: .warning, message: "dial timeout"))
         XCTAssertEqual(b?.level, .error)
+    }
+
+    func testGlobalNodeReloadsAndLandsInConfig() async throws {
+        let (e, t) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        let q = try await e.queryNodes(query: "")
+        let id = try await e.nodeRows(token: q.token, offset: 0, limit: 1).rows[0].id
+        try await e.connect()
+        let x = try await e.setGlobalNode(id: id)
+        XCTAssertNil(x.sceneId)
+        XCTAssertFalse(x.affectedApps.isEmpty)
+        XCTAssertEqual(t.reloads, 1)
+        _ = try await e.setGlobalNode(id: id)
+        XCTAssertEqual(t.reloads, 1, "已在配置里不重载")
+    }
+
+    func testUsageTodayFromLedger() async throws {
+        let (e, _) = make()
+        let u = await e.usageToday()
+        XCTAssertEqual(u.todayBytes, 1_500)
+        XCTAssertEqual(u.hourly.count, 24)
+        XCTAssertEqual(u.onlineMillisToday, 7_200_000)
+        XCTAssertEqual(u.regionsToday, 0)
+    }
+
+    func testCommandSuggestionsReal() async throws {
+        let (e, _) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        let empty = await e.commandSuggestions(input: "")
+        XCTAssertEqual(empty.first?.kind, .toggleConnection)
+        XCTAssertTrue(empty.contains { $0.kind == .openPage && $0.subtitle == "1 个订阅" })
+        let host = await e.commandSuggestions(input: "example.com")
+        XCTAssertEqual(host.first?.kind, .testRule)
+        XCTAssertTrue(host.first?.subtitle?.hasSuffix("→ 直连") == true, "\(host)")
+        let mode = await e.commandSuggestions(input: "全局")
+        XCTAssertTrue(mode.contains { $0.kind == .switchMode && $0.payload == "global" })
+        let hk = await e.commandSuggestions(input: "香港")
+        XCTAssertTrue(hk.contains { $0.kind == .openNodeQuery }, "\(hk)")
+        XCTAssertLessThanOrEqual(hk.count, 8)
+        XCTAssertTrue(CoreEngine.looksLikeHost("1.2.3.4") && CoreEngine.looksLikeHost("2001:db8::1") && !CoreEngine.looksLikeHost("香港 iplc"))
     }
 
     func testMemberIdIsStable() {

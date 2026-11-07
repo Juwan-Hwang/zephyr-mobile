@@ -109,6 +109,9 @@ pub struct HostOverride {
 struct Disk {
     scenes: Vec<SceneRec>,
     overrides: Vec<HostOverride>,
+    /// 全局模式出口（setGlobalNode）
+    #[serde(default)]
+    global: Option<u64>,
 }
 
 #[derive(Clone)]
@@ -117,6 +120,7 @@ pub(crate) struct SceneStore {
     pub scenes: Vec<SceneRec>,
     /// 持久 + 仅本次（persistent=false 的不写盘）
     pub overrides: Vec<HostOverride>,
+    pub global: Option<u64>,
 }
 
 fn defaults() -> Vec<SceneRec> {
@@ -150,14 +154,14 @@ impl SceneStore {
         let path = dir.join("scenes.json");
         let d: Disk = match std::fs::read(&path) {
             Ok(b) => serde_json::from_slice(&b).map_err(|e| MobileError::Corrupt(format!("scenes.json: {e}")))?,
-            Err(e) if e.kind() == std::io::ErrorKind::NotFound => Disk { scenes: defaults(), overrides: vec![] },
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => Disk { scenes: defaults(), overrides: vec![], global: None },
             Err(e) => return Err(e.into()),
         };
-        Ok(Self { path, scenes: d.scenes, overrides: d.overrides })
+        Ok(Self { path, scenes: d.scenes, overrides: d.overrides, global: d.global })
     }
 
     pub fn save(&self) -> Result<(), MobileError> {
-        let d = Disk { scenes: self.scenes.clone(), overrides: self.overrides.iter().filter(|o| o.persistent).cloned().collect() };
+        let d = Disk { scenes: self.scenes.clone(), overrides: self.overrides.iter().filter(|o| o.persistent).cloned().collect(), global: self.global };
         let tmp = self.path.with_extension("tmp");
         std::fs::write(&tmp, serde_json::to_vec_pretty(&d).map_err(|e| MobileError::Io(e.to_string()))?)?;
         std::fs::rename(tmp, &self.path)?;
@@ -198,7 +202,7 @@ impl SceneStore {
 
     /// 生成配置时用：需要放进 mihomo 的全部节点。
     pub fn referenced_nodes(&self) -> Vec<u64> {
-        let mut v: Vec<u64> = self.scenes.iter().flat_map(|s| s.selected.iter().chain(s.standby.iter()).copied().chain(s.exceptions.iter().map(|e| e.1))).collect();
+        let mut v: Vec<u64> = self.scenes.iter().flat_map(|s| s.selected.iter().chain(s.standby.iter()).copied().chain(s.exceptions.iter().map(|e| e.1))).chain(self.global).collect();
         v.sort_unstable();
         v.dedup();
         v

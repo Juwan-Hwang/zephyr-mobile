@@ -378,3 +378,6 @@ record SceneFailover { failed: NodeRow, failureCount: UInt32, apply: SceneApply 
 - iOS：在扩展里跑（provider message `urlTest(file, url, timeoutMs)`，定义写 App Group core 目录文件，结果在 `TunnelResponse.payload`）；隧道未连接时暂不测（App 进程未链接 mihomo，待定）。Android：VPN 进程或 App 进程直接调 `zm_url_test`（不依赖 zm_start）。
 - `nodeIndex.testedCount` = 核心 `testedCount(nowMillis, maxAgeMillis)`（24 h 内有结果的节点数，含超时）。
 - 日志（§8 logs）：mihomo-mobile `zm_logs(since, minLevel, limit)` 返回嵌入进程内环形缓冲（500 条）里序号 > since 的行（`{"seq","lines":[{seq,level,msg,at}]}`）。iOS 经 provider message `logs(since, minLevel, limit)`，1 Hz 增量；扩展重启（seq 变小）从 0 重拉。Android 直接调用。
+- 全局出口（§1 setGlobalNode）：核心 `previewGlobalChange(nodeId) -> ExitChange`（sceneId=null，影响全部应用）、`setGlobalNode(nodeId) -> SceneApply`（group 恒为 "GLOBAL"；节点此前不在配置里时 needsReload）、`globalNode()`。平台：needsReload 先重写配置并 reloadConfig，然后**总是** selectInGroup("GLOBAL", member)。
+- 今日用量（§2 usageToday，iOS）：扩展按 mihomo 累计计数写 App Group/core/usage.json（UsageLedger：24 小时桶、在线毫秒，计数器归零按重启处理，跨天清零），App 只读；regionsToday = 当前各场景/全局出口的不同地区数；fastestLatencyMs = 24 h 内最快节点。
+- 命令搜索（§9）：平台用真实引擎实现同一套规则（testRule / queryNodes / fastestNodes），不再依赖 mock。

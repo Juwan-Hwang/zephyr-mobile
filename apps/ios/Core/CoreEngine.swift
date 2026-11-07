@@ -166,7 +166,18 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         if let t = tunnel { return try await t.setMode(mode) }
         try await fallback.setMode(mode: mode)
     }
-    public func setGlobalNode(id: NodeId) async throws -> ZephyrKit.ExitChange { try await fallback.setGlobalNode(id: id) }
+    /// 全局模式出口：核心记下节点（不在配置里则需重载），然后总是在 mihomo 的 GLOBAL 组里选中它。
+    public func setGlobalNode(id: NodeId) async throws -> ZephyrKit.ExitChange {
+        guard let c = await nodes() else { return try await fallback.setGlobalNode(id: id) }
+        let x = try await run(.nodeNotFound) { try c.previewGlobalChange(nodeId: id) }
+        let apply = try await run(.nodeNotFound) { try c.setGlobalNode(nodeId: id) }
+        if let t = tunnel, await isTunnelConnected(t) {
+            if apply.needsReload { await reloadTunnelIfRunning(t) }
+            try? await mihomo(t.controllerSocketPath) { try $0.selectInGroup(group: apply.group, member: apply.member) }
+        }
+        return ZephyrKit.ExitChange(sceneId: nil, fromRegion: x.fromRegion ?? "", fromIp: x.fromIp, toRegion: x.toRegion,
+                                    toIp: x.toIp, affectedApps: x.affectedApps, unchangedApps: x.unchangedApps)
+    }
 
     // MARK: - §2 流量与用量
 
@@ -179,7 +190,24 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         let since = clock() - Int64(seconds) * 1000
         return locked { samples.filter { $0.at >= since } }
     }
-    public func usageToday() async -> UsageSummary { await fallback.usageToday() }
+    /// 今日用量：字节与在线时长来自扩展的账本（UsageLedger）；地区数 = 当前各场景/全局出口的不同地区；
+    /// 最快 = 延迟缓存里 24 h 内最快节点。
+    public func usageToday() async -> UsageSummary {
+        guard let t = tunnel else { return await fallback.usageToday() }
+        let ledger = await t.usageToday()
+        let hourly = ledger?.hourly ?? Array(repeating: 0, count: 24)
+        var regions = Set((try? await readScenes())?.compactMap { $0.selected.region.isEmpty ? nil : $0.selected.region } ?? [])
+        var fastest: Int32?
+        if let c = core {
+            let now = clock()
+            let fresh = CoreEngine.latencyFreshMillis
+            let top = await runQuiet { (try? c.fastestNodes(query: "", limit: 1, nowMillis: now, maxAgeMillis: fresh)) ?? [] }
+            fastest = top.first.map(\.latencyMs).flatMap { $0 > 0 ? $0 : nil }
+            if let g = c.globalNode(), let r = try? await run(.nodeNotFound, { try c.nodeDetail(id: g) }) { regions.insert(r.row.region) }
+        }
+        return UsageSummary(todayBytes: hourly.reduce(0, +), regionsToday: Int32(regions.count),
+                            onlineMillisToday: ledger?.onlineMillis ?? 0, fastestLatencyMs: fastest, hourly: hourly)
+    }
 
     // MARK: - §3 场景
 
@@ -728,7 +756,21 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
 
     // MARK: - §9 命令搜索
 
-    public func commandSuggestions(input: String) async -> [CommandSuggestion] { await fallback.commandSuggestions(input: input) }
+    public func commandSuggestions(input: String) async -> [CommandSuggestion] {
+        guard await nodes() != nil else { return await fallback.commandSuggestions(input: input) }
+        return await liveCommandSuggestions(input: input)
+    }
+
+    /// 结果集里 24 h 内最快的节点（带延迟）；没有测速数据为 nil。
+    func fastest(query: String) async -> NodeSummary? {
+        guard let c = core else { return nil }
+        let now = clock()
+        let top = await runQuiet { (try? c.fastestNodes(query: query, limit: 1, nowMillis: now, maxAgeMillis: CoreEngine.latencyFreshMillis)) ?? [] }
+        guard let r = top.first, r.latencyMs > 0 else { return nil }
+        var s = CoreEngine.row(r.row)
+        s.latencyMs = r.latencyMs
+        return s
+    }
 
     // MARK: - 映射
 
