@@ -21,10 +21,10 @@ import com.zephyr.design.theme.ZTheme
 
 /** Brand lockup: Z glyph + "Zephyr" wordmark (design/prototype/brand/app-lockup.svg). */
 @Composable
-fun ZephyrLockup(modifier: Modifier = Modifier) {
+fun ZephyrLockup(modifier: Modifier = Modifier, tint: androidx.compose.ui.graphics.Color = ZTheme.colors.text1) {
     Row(modifier.clearAndSetSemantics { contentDescription = "Zephyr" }, verticalAlignment = Alignment.CenterVertically) {
-        Image(painterResource(R.drawable.ic_stat_zephyr), null, Modifier.size(20.dp), colorFilter = ColorFilter.tint(ZTheme.colors.text1))
+        Image(painterResource(R.drawable.ic_stat_zephyr), null, Modifier.size(20.dp), colorFilter = ColorFilter.tint(tint))
         Spacer(Modifier.width(4.dp))
-        ZText("Zephyr", style = ZTheme.type.headline.copy(fontWeight = FontWeight.Bold, fontSize = 19.sp, letterSpacing = (-0.2).sp))
+        ZText("Zephyr", style = ZTheme.type.headline.copy(fontWeight = FontWeight.Bold, fontSize = 19.sp, letterSpacing = (-0.2).sp), color = tint)
     }
 }

@@ -106,7 +106,7 @@ fun TodayScreen(onClose: () -> Unit) {
                 Box(Modifier.fillMaxWidth().height(1.dp).background(style.fg.copy(alpha = 0.14f)))
                 Spacer(Modifier.height(14.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    ZTheme.run { ZephyrLockup() }
+                    ZephyrLockup(tint = style.fg)
                     Spacer(Modifier.weight(1f))
                     ZText("今日", style = ZTheme.type.footnote, color = style.fg.copy(alpha = 0.5f))
                 }
@@ -128,7 +128,7 @@ fun TodayScreen(onClose: () -> Unit) {
         }
         Spacer(Modifier.height(20.dp))
         Row(Modifier.padding(horizontal = 22.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            ZButton("分享", { scope.launch { share(ctx, layer.toImageBitmap().asAndroidBitmap()) } }, Modifier.weight(1f))
+            ZButton("分享", { scope.launch { val b = layer.toImageBitmap().asAndroidBitmap(); share(ctx, b) } }, Modifier.weight(1f))
             ZButton("存储图像", { scope.launch { save(ctx, layer.toImageBitmap().asAndroidBitmap()) } }, Modifier.weight(1f), kind = ZButtonKind.Secondary)
         }
         ZText("图案由今天的流量生成，不含节点名称与 IP 地址。", Modifier.fillMaxWidth().padding(16.dp), style = ZTheme.type.footnote.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = c.text3)
@@ -170,15 +170,17 @@ private fun Flow(hourly: List<Long>, style: TodayStyle) {
     }
 }
 
-private fun share(ctx: android.content.Context, bmp: Bitmap) {
-    val dir = java.io.File(ctx.cacheDir, "share").apply { mkdirs() }
-    val f = java.io.File(dir, "zephyr-today.png")
-    f.outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
+// PNG encode of a ~1000×1500 bitmap is 100–300 ms: never on the main thread (review H-P1-10).
+private suspend fun share(ctx: android.content.Context, bmp: Bitmap) {
+    val f = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+        val dir = java.io.File(ctx.cacheDir, "share").apply { mkdirs() }
+        java.io.File(dir, "zephyr-today.png").also { f -> f.outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) } }
+    }
     val uri = FileProvider.getUriForFile(ctx, "${ctx.packageName}.files", f)
     ctx.startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).setType("image/png").putExtra(Intent.EXTRA_STREAM, uri).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION), null))
 }
 
-private fun save(ctx: android.content.Context, bmp: Bitmap) {
+private suspend fun save(ctx: android.content.Context, bmp: Bitmap) = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
     val values = ContentValues().apply {
         put(MediaStore.Images.Media.DISPLAY_NAME, "Zephyr-${System.currentTimeMillis()}.png")
         put(MediaStore.Images.Media.MIME_TYPE, "image/png")

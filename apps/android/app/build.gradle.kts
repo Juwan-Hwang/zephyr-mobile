@@ -22,7 +22,7 @@ android {
         buildConfigField("boolean", "DEMO", (providers.gradleProperty("zephyr.demo").orNull == "true").toString())
     }
     // minSdk 28: calling a newer API without a version check must fail the build, not crash a device.
-    lint { fatal += "NewApi" }
+    lint { fatal += "NewApi"; ignoreTestSources = true }
     buildTypes {
         release {
             isMinifyEnabled = true

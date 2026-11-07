@@ -86,7 +86,7 @@ interface TunBridge {
             addDnsServer("198.18.0.2")
             if (ipv6) { addAddress("fdfe:dcba:9876::1", 126); addRoute("::", 0) }
             setBlocking(false)
-            setMetered(false)
+            if (android.os.Build.VERSION.SDK_INT >= 29) setMetered(false) // API 29+; on Android 9 this crashed VPN start
             runCatching { addDisallowedApplication(self) }
             excluded.forEach { runCatching { addDisallowedApplication(it) } }
         }

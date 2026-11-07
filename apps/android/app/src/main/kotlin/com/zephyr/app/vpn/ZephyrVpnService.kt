@@ -77,7 +77,7 @@ class ZephyrVpnService : VpnService() {
             ) { c, t, sc -> Triple(c, t, sc) }.collect { (c, t, sc) ->
                 if (c.status == ConnectionStatus.DISCONNECTED) return@collect
                 val n: Notification = Notifications.ongoing(this@ZephyrVpnService, c, t, sc, connecting = c.status == ConnectionStatus.CONNECTING)
-                runCatching { NotificationManagerCompat.from(this@ZephyrVpnService).notify(Notifications.ID_ONGOING, n) }
+                postOngoing(n)
             }
         }
         scope.launch { ZephyrTileService.requestRefresh(this@ZephyrVpnService); ZephyrWidget.refreshAll(this@ZephyrVpnService) }
@@ -91,6 +91,13 @@ class ZephyrVpnService : VpnService() {
     private suspend fun fail(e: com.zephyr.engine.ZephyrError) {
         stop()
         (engine as? com.zephyr.engine.core.CoreEngine)?.reportConnectFailure(e)
+    }
+
+    /** Without POST_NOTIFICATIONS (13+) the foreground notification stays system-managed; skip updates. */
+    @android.annotation.SuppressLint("MissingPermission") // checked via areNotificationsEnabled()
+    private fun postOngoing(n: Notification) {
+        val nm = NotificationManagerCompat.from(this)
+        if (nm.areNotificationsEnabled()) runCatching { nm.notify(Notifications.ID_ONGOING, n) }
     }
 
     private suspend fun toggleMode() {

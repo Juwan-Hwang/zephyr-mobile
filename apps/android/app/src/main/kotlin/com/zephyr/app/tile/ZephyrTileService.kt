@@ -60,12 +60,16 @@ class ZephyrTileService : TileService() {
                     android.app.PendingIntent.getActivity(this, 0, intent, android.app.PendingIntent.FLAG_IMMUTABLE),
                 )
             } else {
-                @Suppress("DEPRECATION") startActivityAndCollapse(intent)
+                collapseTo(intent)
             }
             return
         }
         AppGraph.connection.toggle()
     }
+
+    @android.annotation.SuppressLint("StartActivityAndCollapseDeprecated") // the only overload below API 34
+    @Suppress("DEPRECATION")
+    private fun collapseTo(intent: android.content.Intent) = startActivityAndCollapse(intent)
 
     override fun onDestroy() { scope.cancel(); super.onDestroy() }
 

@@ -1,5 +1,12 @@
 package com.zephyr.app.ui.nav
 
+import com.zephyr.design.components.ZToast
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.zIndex
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.ui.Alignment
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
@@ -127,6 +134,15 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean) {
             ActivitySheet(activity, { activity = false }) { traceHost = it }
             TraceSheet(traceHost) { traceHost = null }
             ImportSheet(import, { import = false }) { import = false }
+            // Toasts sit above every sheet and the command layer, so an undo or a failover notice is never hidden.
+            val toast by home.toast.collectAsStateWithLifecycle()
+            ZToast(
+                visible = toast != null,
+                message = toast?.message ?: "",
+                action = if (toast?.let { it.undoAction != null || (it.sceneId != null && it.previousNodeId != null) } == true) "撤销" else null,
+                onAction = { home.undo() },
+                modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 84.dp).zIndex(10f),
+            )
             CommandOverlay(command, { command = false }) { a ->
                 command = false
                 when (a) {

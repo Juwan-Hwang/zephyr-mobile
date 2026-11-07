@@ -25,6 +25,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 @Immutable
@@ -55,6 +57,16 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
 
     private val _ui = MutableStateFlow(HomeUi())
     val ui: StateFlow<HomeUi> = _ui.asStateFlow()
+    /** App-level toast (drawn above sheets in AppRoot) without the 1 Hz home churn. */
+    val toast: StateFlow<UndoToast?> = _ui.map { it.toast }.distinctUntilChanged().stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    /** Engine errors become a visible toast instead of a crash or a silent no-op (review H-P1-2). */
+    private fun launchCatching(what: String, block: suspend () -> Unit) = viewModelScope.launch {
+        try { block() } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (e: Throwable) {
+            android.util.Log.w("Zephyr", "$what failed", e)
+            showToast(errorText(what, (e as? com.zephyr.engine.ZephyrException)?.error?.code), null, null)
+        }
+    }
     private var toastJob: Job? = null
     private var toastSerial = 0L
 
@@ -81,30 +93,30 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         }
     }
 
-    fun setMode(mode: ProxyMode) = viewModelScope.launch { engine.setMode(mode) }
+    fun setMode(mode: ProxyMode) = launchCatching("切换模式") { engine.setMode(mode) }
 
     /** Horizontal swipe on a scene row cycles regions; shows the inline confirm with the exit-IP change. */
-    fun cycleRegion(scene: Scene, forward: Boolean) = viewModelScope.launch {
+    fun cycleRegion(scene: Scene, forward: Boolean) = launchCatching("预览出口") {
         val idx = (_ui.value.regionIndex[scene.id] ?: REGIONS.indexOf(scene.selected.region).coerceAtLeast(0))
         val next = Math.floorMod(idx + if (forward) 1 else -1, REGIONS.size)
         val candidates = engine.sceneCandidates(scene.id, REGIONS[next])
-        val best = candidates.firstOrNull() ?: return@launch
+        val best = candidates.firstOrNull() ?: return@launchCatching
         val change = engine.previewSceneChange(scene.id, best.id)
         _ui.update { it.copy(pending = PendingChange(scene, best, change), regionIndex = it.regionIndex + (scene.id to next)) }
     }
 
-    fun confirmPending() = viewModelScope.launch {
-        val p = _ui.value.pending ?: return@launch
+    fun confirmPending() = launchCatching("切换出口") {
+        val p = _ui.value.pending ?: return@launchCatching
         val previous = p.scene.selected.id
         engine.applySceneChange(p.scene.id, p.node.id)
         _ui.update { it.copy(pending = null) }
-        showToast("已换到 ${p.node.name}", p.scene.id, previous)
+        showToast("已切换至${p.node.name}", p.scene.id, previous)
     }
 
     fun cancelPending() = _ui.update { it.copy(pending = null, regionIndex = emptyMap()) }
 
-    fun undo() = viewModelScope.launch {
-        val t = _ui.value.toast ?: return@launch
+    fun undo() = launchCatching("撤销") {
+        val t = _ui.value.toast ?: return@launchCatching
         val u = t.undoAction
         if (u != null) runCatching { u() }
         else if (t.sceneId != null && t.previousNodeId != null) engine.applySceneChange(t.sceneId, t.previousNodeId)
@@ -152,4 +164,13 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         val REGIONS = listOf("SG", "JP", "US", "HK", "TW", "KR")
         fun preview() = HomeViewModel(MockEngine(demo = true))
     }
+}
+
+/** One line, what happened and what to do; never a raw exception. */
+internal fun errorText(what: String, code: com.zephyr.engine.ErrorCode?): String = when (code) {
+    com.zephyr.engine.ErrorCode.NOT_RUNNING -> "$what 需要先连接"
+    com.zephyr.engine.ErrorCode.SUBSCRIPTION_NOT_FOUND -> "先添加一个订阅"
+    com.zephyr.engine.ErrorCode.NETWORK_UNAVAILABLE -> "网络不可用"
+    com.zephyr.engine.ErrorCode.NODE_NOT_FOUND, com.zephyr.engine.ErrorCode.SCENE_NOT_FOUND -> "$what 失败：节点已不存在"
+    else -> "$what 失败"
 }

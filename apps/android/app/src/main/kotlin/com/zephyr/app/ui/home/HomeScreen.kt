@@ -146,12 +146,5 @@ fun HomeContent(
             Spacer(Modifier.width(10.dp))
             ZIconButton(ZIcons.Grid, "资料库", actions.onLibrary, filled = true, size = 52.dp)
         }
-        ZToast(
-            visible = ui.toast != null,
-            message = ui.toast?.message ?: "",
-            action = if (ui.toast?.let { it.undoAction != null || (it.sceneId != null && it.previousNodeId != null) } == true) "撤销" else null,
-            onAction = cb.undo,
-            modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 84.dp),
-        )
     }
 }
