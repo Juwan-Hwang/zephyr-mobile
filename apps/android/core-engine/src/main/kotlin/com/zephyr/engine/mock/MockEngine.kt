@@ -153,6 +153,18 @@ class MockEngine(
         }
     }
 
+    override suspend fun setSceneException(sceneId: String, appId: String, nodeId: NodeId?) {
+        requireScene(sceneId)
+        val node = nodeId?.let { MockScenes.byId(it) ?: throw ZephyrException(ErrorCode.NODE_NOT_FOUND, "$it") }
+        val name = Apps.name(appId)
+        sceneState.update { list ->
+            list.map { s ->
+                if (s.id != sceneId) s
+                else s.copy(exceptions = s.exceptions.filter { it.appId != appId } + listOfNotNull(node?.let { SceneException(name, it, appId) }))
+            }
+        }
+    }
+
     override suspend fun retestScene(sceneId: String): Scene {
         requireScene(sceneId)
         delay(scaled(900))

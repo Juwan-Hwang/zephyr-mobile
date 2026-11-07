@@ -31,6 +31,8 @@ fun ZSearchField(
     modifier: Modifier = Modifier,
     focusRequester: FocusRequester? = null,
     onSubmit: (() -> Unit)? = null,
+    /** Styles the text without a mirror layer, so IME composition and scrolling stay native. */
+    visualTransformation: androidx.compose.ui.text.input.VisualTransformation = androidx.compose.ui.text.input.VisualTransformation.None,
 ) {
     val c = ZTheme.colors
     Row(
@@ -54,6 +56,7 @@ fun ZSearchField(
                 cursorBrush = SolidColor(c.accent),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = KeyboardActions(onSearch = { onSubmit?.invoke() }),
+                visualTransformation = visualTransformation,
                 modifier = Modifier.fillMaxWidth().then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier),
             )
         }

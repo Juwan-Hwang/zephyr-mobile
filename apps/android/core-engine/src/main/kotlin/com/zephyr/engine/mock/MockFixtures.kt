@@ -200,7 +200,7 @@ internal object MockCommands {
             val pool = MockScenes.pool(region.code).sortedBy { it.latencyMs ?: Int.MAX_VALUE }
             val best = pool.firstOrNull()
             if (best != null) {
-                val scene = if (service != null) scenes.firstOrNull { it.kind == SceneKind.AI || it.kind == SceneKind.VIDEO && service in setOf("Netflix", "YouTube") } else null
+                val scene = if (service != null) scenes.firstOrNull { it.kind == (if (service in setOf("Netflix", "YouTube")) SceneKind.VIDEO else SceneKind.AI) } else null
                 out += CommandSuggestion(
                     CommandKind.SWITCH_NODE,
                     if (service != null) "$service 使用${region.name}节点" else "切换到 ${best.name}",

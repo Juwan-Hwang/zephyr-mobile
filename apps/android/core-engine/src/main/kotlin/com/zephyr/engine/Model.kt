@@ -86,7 +86,7 @@ enum class SceneSource {
 }
 
 @Serializable
-data class SceneException(val app: String, val node: NodeSummary)
+data class SceneException(val app: String, val node: NodeSummary, val appId: String = app.lowercase())
 
 @Serializable
 data class Scene(

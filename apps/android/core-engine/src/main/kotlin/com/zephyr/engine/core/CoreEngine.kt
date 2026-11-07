@@ -28,6 +28,9 @@ import com.zephyr.engine.RuleLayer
 import com.zephyr.engine.RuleStats
 import com.zephyr.engine.RuleTrace
 import com.zephyr.engine.ZephyrEngine
+import com.zephyr.engine.UsageSummary
+import com.zephyr.engine.StorageInfo
+import com.zephyr.engine.CommandSuggestion
 import com.zephyr.engine.ZephyrError
 import com.zephyr.engine.ZephyrException
 import com.zephyr.engine.mock.MockCatalog
@@ -126,7 +129,7 @@ class CoreEngine(
     }
 
     override suspend fun importSubscription(source: ImportSource, payload: String): Subscription {
-        val c = core ?: return fallback.importSubscription(source, payload)
+        val c = core ?: return if (mockData) fallback.importSubscription(source, payload) else throw noCore()
         val p = payload.trim()
         if (p.isEmpty()) throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "empty")
         val isUrl = p.startsWith("https://") || p.startsWith("http://")
@@ -146,7 +149,7 @@ class CoreEngine(
     }
 
     override suspend fun updateSubscription(id: String): SubscriptionDiff {
-        val c = core ?: return fallback.updateSubscription(id)
+        val c = core ?: return if (mockData) fallback.updateSubscription(id) else throw noCore()
         return withContext(io) {
             val url = wrap { c.subscriptionFetchUrl(id) } ?: throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "local profile")
             val got = runCatching { fetcher(url) }.getOrElse { throw ZephyrException(ErrorCode.SUBSCRIPTION_FETCH_FAILED, it.message ?: "fetch failed") }
@@ -156,7 +159,7 @@ class CoreEngine(
     }
 
     override suspend fun previewUpdate(id: String): SubscriptionDiff {
-        val c = core ?: return fallback.previewUpdate(id)
+        val c = core ?: return if (mockData) fallback.previewUpdate(id) else throw noCore()
         return withContext(io) {
             val url = wrap { c.subscriptionFetchUrl(id) } ?: throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "local profile")
             val got = runCatching { fetcher(url) }.getOrElse { throw ZephyrException(ErrorCode.SUBSCRIPTION_FETCH_FAILED, it.message ?: "fetch failed") }
@@ -165,7 +168,7 @@ class CoreEngine(
     }
 
     override suspend fun updateAll(): List<SubscriptionDiff> {
-        val c = core ?: return fallback.updateAll()
+        val c = core ?: return if (mockData) fallback.updateAll() else emptyList()
         val ids = withContext(io) { wrap { c.subscriptions() }.filter { it.url != null }.map { it.id } }
         return ids.mapNotNull { runCatching { updateSubscription(it) }.getOrNull() }
     }
@@ -184,7 +187,7 @@ class CoreEngine(
     }
 
     override suspend fun deleteSubscription(id: String) {
-        val c = core ?: return fallback.deleteSubscription(id)
+        val c = core ?: return if (mockData) fallback.deleteSubscription(id) else throw noCore()
         withContext(io) { wrap { c.deleteSubscription(id) } }
         nodesReady = null
         val left = refreshSubs()
@@ -284,13 +287,13 @@ class CoreEngine(
     }
 
     override suspend fun previewSceneChange(sceneId: String, nodeId: NodeId): ExitChange {
-        val c = nodes() ?: return fallback.previewSceneChange(sceneId, nodeId)
+        val c = nodes() ?: return if (mockData) fallback.previewSceneChange(sceneId, nodeId) else throw noSubscription()
         val x = withContext(io) { sceneCall { c.previewSceneChange(sceneId, nodeId.toULong()) } }
         return ExitChange(x.sceneId, x.fromRegion ?: "", x.fromIp, x.toRegion, x.toIp, x.affectedApps, x.unchangedApps)
     }
 
     override suspend fun applySceneChange(sceneId: String, nodeId: NodeId) {
-        val c = nodes() ?: return fallback.applySceneChange(sceneId, nodeId)
+        val c = nodes() ?: return if (mockData) fallback.applySceneChange(sceneId, nodeId) else throw noSubscription()
         val a = withContext(io) { sceneCall { c.applySceneChange(sceneId, nodeId.toULong(), clock()) } }
         val l = live()
         when {
@@ -301,8 +304,15 @@ class CoreEngine(
         scenesBump.value++
     }
 
+    override suspend fun setSceneException(sceneId: String, appId: String, nodeId: NodeId?) {
+        val c = nodes() ?: return if (mockData) fallback.setSceneException(sceneId, appId, nodeId) else throw noSubscription()
+        withContext(io) { sceneCall { c.setSceneException(sceneId, appId, nodeId?.toULong()) } }
+        reloadIfRunning()
+        scenesBump.value++
+    }
+
     override suspend fun retestScene(sceneId: String): Scene {
-        val c = nodes() ?: return fallback.retestScene(sceneId)
+        val c = nodes() ?: return if (mockData) fallback.retestScene(sceneId) else throw noSubscription()
         val group = withContext(io) { wrap { c.scenes(clock()) } }.firstOrNull { it.id == sceneId }?.group ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
         live()?.let { l -> runCatching { withContext(io) { l.test(group, LivePort.TEST_URL, 5_000) } } }
         scenesBump.value++
@@ -357,7 +367,7 @@ class CoreEngine(
         exitIp = s.exitIp,
         source = when (s.source) { CoreSceneSource.AUTO -> SceneSource.AUTO; CoreSceneSource.MANUAL -> SceneSource.MANUAL; CoreSceneSource.SUBSCRIPTION_GROUP -> SceneSource.SUBSCRIPTION_GROUP },
         testedAt = s.testedAt, note = s.note,
-        exceptions = s.exceptions.mapNotNull { e -> e.node?.let { SceneException(e.app, row(it)) } },
+        exceptions = s.exceptions.mapNotNull { e -> e.node?.let { SceneException(e.app, row(it), e.appId) } },
     )
 
     private inline fun <T> sceneCall(block: () -> T): T = try { block() } catch (e: MobileException) {
@@ -422,7 +432,7 @@ class CoreEngine(
     }, { fallback.recentHosts(limit) }, emptyList())
 
     override suspend fun connectionTrace(host: String): ConnectionTrace {
-        val r = live() ?: return fallback.connectionTrace(host)
+        val r = live() ?: return if (mockData) fallback.connectionTrace(host) else throw ZephyrException(ErrorCode.NOT_RUNNING, "trace needs a running core")
         val t = withContext(io) { liveCall { r.trace(host) } }
         val direct = t.node == "DIRECT"
         return ConnectionTrace(
@@ -433,7 +443,7 @@ class CoreEngine(
     }
 
     override suspend fun overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Boolean) {
-        val c = core ?: return fallback.overrideHost(host, target, sceneId, persistent)
+        val c = core ?: return if (mockData) fallback.overrideHost(host, target, sceneId, persistent) else throw noCore()
         val t = when (target) { TraceTarget.UNCHANGED -> CoreTraceTarget.UNCHANGED; TraceTarget.DIRECT -> CoreTraceTarget.DIRECT; TraceTarget.SCENE -> CoreTraceTarget.SCENE }
         withContext(io) { sceneCall { c.overrideHost(host, t, sceneId, persistent) } }
         reloadIfRunning()
@@ -495,10 +505,10 @@ class CoreEngine(
     }
 
     override suspend fun testRule(input: String): RuleTrace {
-        val c = rules() ?: return fallback.testRule(input)
+        val c = rules() ?: return if (mockData) fallback.testRule(input) else throw noSubscription()
         val t = withContext(io) { wrap { c.testRule(input) } }
         // Scene/exit enrichment is a UI concern the core doesn't own: resolve the policy against live scenes.
-        val scene = fallback.scenes().first().firstOrNull { it.name.equals(t.policy, ignoreCase = true) || it.id.equals(t.policy, ignoreCase = true) }
+        val scene = scenes().first().firstOrNull { it.name.equals(t.policy, ignoreCase = true) || it.id.equals(t.policy, ignoreCase = true) }
         return RuleTrace(
             input = t.input, isIp = t.isIp, layerIndex = t.layerIndex?.toInt(), rule = t.rule,
             ruleNo = t.ruleNo?.toLong(), policy = t.policy, scene = scene, exitIp = null, tookMicros = t.tookMicros.toLong(),
@@ -534,6 +544,41 @@ class CoreEngine(
         is MobileException.Cancelled -> ErrorCode.CANCELLED
         else -> ErrorCode.INTERNAL
     }
+
+    // ── Connection: the VPN service drives it; a failed start is surfaced instead of a fake "已连接" ─────
+    private val connectError = kotlinx.coroutines.flow.MutableStateFlow<ZephyrError?>(null)
+
+    override fun connectionState(): Flow<com.zephyr.engine.ConnectionState> =
+        kotlinx.coroutines.flow.combine(fallback.connectionState(), connectError) { c, e ->
+            if (e != null && c.status == com.zephyr.engine.ConnectionStatus.DISCONNECTED) c.copy(status = com.zephyr.engine.ConnectionStatus.FAILED, error = e) else c
+        }
+
+    override suspend fun connect() { connectError.value = null; fallback.connect() }
+    override suspend fun disconnect() { fallback.disconnect() }
+
+    /** Called by the VPN service when the tunnel could not start (no core, no subscription, mihomo error). */
+    suspend fun reportConnectFailure(error: ZephyrError) { fallback.disconnect(); connectError.value = error }
+
+    private fun noCore() = ZephyrException(ErrorCode.CORE_CRASHED, "native core not packaged")
+    private fun noSubscription() = ZephyrException(ErrorCode.SUBSCRIPTION_NOT_FOUND, "no subscription imported yet")
+
+    // ── Release must never show synthetic numbers (review P0-1) ──────────────────────────────────
+    override suspend fun recentTraffic(seconds: Int): List<TrafficSample> =
+        if (mockData) fallback.recentTraffic(seconds) else emptyList()
+
+    override suspend fun usageToday(): UsageSummary =
+        if (mockData) fallback.usageToday() else UsageSummary(0, 0, 0, null, List(24) { 0L })
+
+    override suspend fun storage(): StorageInfo {
+        val c = core ?: return if (mockData) fallback.storage() else StorageInfo(0, 0, freeBytes())
+        val s = withContext(io) { wrap { c.storageInfo() } }
+        return StorageInfo(s.nodesBytes, s.rulesBytes, freeBytes())
+    }
+
+    private fun freeBytes(): Long = dataDir?.let { java.io.File(it).usableSpace } ?: 0L
+
+    override suspend fun commandSuggestions(input: String): List<CommandSuggestion> =
+        if (mockData) fallback.commandSuggestions(input) else emptyList() // UI plans commands itself (CommandPlanner)
 
     companion object {
         private val NAMES: Map<String, String> = MockCatalog.REGIONS.associate { it.code to it.name }

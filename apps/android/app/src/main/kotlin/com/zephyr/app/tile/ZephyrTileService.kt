@@ -33,11 +33,14 @@ class ZephyrTileService : TileService() {
                 tile.icon = Icon.createWithResource(this@ZephyrTileService, R.drawable.ic_stat_zephyr)
                 val mode = when (c.mode) { ProxyMode.RULE -> "规则"; ProxyMode.GLOBAL -> "全局"; ProxyMode.DIRECT -> "直连" }
                 val node = scenes.firstOrNull()?.selected?.name
-                tile.subtitle = when (c.status) {
+                val sub = when (c.status) {
                     ConnectionStatus.CONNECTING -> "正在连接…"
                     ConnectionStatus.CONNECTED -> listOfNotNull(mode, node).joinToString(" · ")
                     else -> getString(R.string.tile_off)
                 }
+                // Tile.subtitle is API 29+; on Android 9 the state goes into the content description only.
+                if (android.os.Build.VERSION.SDK_INT >= 29) tile.subtitle = sub
+                tile.contentDescription = "${getString(R.string.app_name)}，$sub"
                 tile.updateTile()
             }
         }
@@ -49,12 +52,16 @@ class ZephyrTileService : TileService() {
         AppGraph.init(this)
         if (AppGraph.connection.permissionIntent() != null) {
             // Needs an Activity to grant VPN permission.
-            val pi = android.app.PendingIntent.getActivity(
-                this, 0,
-                android.content.Intent(this, com.zephyr.app.MainActivity::class.java).setAction(com.zephyr.app.MainActivity.ACTION_CONNECT),
-                android.app.PendingIntent.FLAG_IMMUTABLE,
-            )
-            startActivityAndCollapse(pi)
+            val intent = android.content.Intent(this, com.zephyr.app.MainActivity::class.java)
+                .setAction(com.zephyr.app.MainActivity.ACTION_CONNECT)
+                .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+            if (android.os.Build.VERSION.SDK_INT >= 34) {
+                startActivityAndCollapse(
+                    android.app.PendingIntent.getActivity(this, 0, intent, android.app.PendingIntent.FLAG_IMMUTABLE),
+                )
+            } else {
+                @Suppress("DEPRECATION") startActivityAndCollapse(intent)
+            }
             return
         }
         AppGraph.connection.toggle()

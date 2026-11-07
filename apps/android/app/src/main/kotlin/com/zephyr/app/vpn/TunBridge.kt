@@ -65,6 +65,16 @@ interface TunBridge {
             return if (ready) Embedded(ctx, core!!, settings, mode) else Simulated
         }
 
+        /** Why [pick] fell back to [Simulated]; shown as the failure reason. */
+        suspend fun whyNoTunnel(engine: ZephyrEngine): com.zephyr.engine.ZephyrError {
+            val core = engine as? CoreEngine
+            return when {
+                !Mihomo.available || core == null || !core.isNative ->
+                    com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.CORE_CRASHED, "native core not packaged")
+                else -> com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.SUBSCRIPTION_NOT_FOUND, "no active subscription")
+            }
+        }
+
         /** mihomo home dir holds the socket; same path for zm_start and the REST client (RustLive). */
         fun controllerSocket(ctx: Context): File = File(File(ctx.filesDir, "mihomo").apply { mkdirs() }, "ctl.sock")
 

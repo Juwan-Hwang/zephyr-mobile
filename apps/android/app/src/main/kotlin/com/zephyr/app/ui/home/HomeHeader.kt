@@ -106,7 +106,11 @@ fun HomeStatus(
             Spacer(Modifier.width(18.dp))
             val since = connection.since
             ZText(
-                if (connection.status == ConnectionStatus.CONNECTED && since != null) ZFormat.duration(now - since) else "$sceneCount 个场景",
+                when {
+                    connection.status == ConnectionStatus.FAILED -> failureText(connection.error?.code)
+                    connection.status == ConnectionStatus.CONNECTED && since != null -> ZFormat.duration(now - since)
+                    else -> "$sceneCount 个场景"
+                },
                 style = ZTheme.type.numeric.copy(fontSize = ZTheme.type.headline.fontSize),
                 color = c.text3,
             )
@@ -155,3 +159,11 @@ val ProxyMode.hint: String get() = when (this) {
     ProxyMode.DIRECT -> "不经过代理"
 }
 
+
+/** One line under "连接失败": what to do next, never a raw error. */
+internal fun failureText(code: com.zephyr.engine.ErrorCode?): String = when (code) {
+    com.zephyr.engine.ErrorCode.SUBSCRIPTION_NOT_FOUND -> "先添加一个订阅"
+    com.zephyr.engine.ErrorCode.VPN_PERMISSION_DENIED -> "需要允许 VPN 连接"
+    com.zephyr.engine.ErrorCode.NETWORK_UNAVAILABLE -> "网络不可用"
+    else -> "内核未能启动"
+}

@@ -31,7 +31,11 @@ import kotlinx.coroutines.launch
 data class PendingChange(val scene: Scene, val node: NodeSummary, val change: ExitChange)
 
 @Immutable
-data class UndoToast(val message: String, val sceneId: String?, val previousNodeId: NodeId?, val serial: Long)
+data class UndoToast(
+    val message: String, val sceneId: String?, val previousNodeId: NodeId?, val serial: Long,
+    /** Overrides the scene-swap undo (pins, host overrides). */
+    val undoAction: (suspend () -> Unit)? = null,
+)
 
 @Immutable
 data class HomeUi(
@@ -101,25 +105,42 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
 
     fun undo() = viewModelScope.launch {
         val t = _ui.value.toast ?: return@launch
-        if (t.sceneId != null && t.previousNodeId != null) engine.applySceneChange(t.sceneId, t.previousNodeId)
+        val u = t.undoAction
+        if (u != null) runCatching { u() }
+        else if (t.sceneId != null && t.previousNodeId != null) engine.applySceneChange(t.sceneId, t.previousNodeId)
         _ui.update { it.copy(toast = null) }
     }
 
-    fun applyCommandSwitch(sceneId: String?, nodeId: NodeId, label: String) = viewModelScope.launch {
-        if (sceneId == null || sceneId == "global") {
-            engine.setMode(ProxyMode.GLOBAL); engine.setGlobalNode(nodeId)
-            showToast("已换到 $label", null, null)
-        } else {
-            val prev = scenes.value.firstOrNull { it.id == sceneId }?.selected?.id
-            engine.applySceneChange(sceneId, nodeId)
-            showToast("已换到 $label", sceneId, prev)
+    /** Applies a command the user saw previewed (exit-IP line included) and confirmed with "应用". */
+    fun applyCommand(plan: com.zephyr.app.ui.command.CommandPlan) = viewModelScope.launch {
+        when (plan) {
+            is com.zephyr.app.ui.command.CommandPlan.Exit -> runCatching {
+                val appId = plan.appId
+                if (appId != null) {
+                    // "Gemini 走日本" pins Gemini only (prototype 1054: AI 行显示「Gemini：东京 03」); GPT/Claude untouched.
+                    engine.setSceneException(plan.scene.id, appId, plan.node.id)
+                    val prevPin = plan.previousPin
+                    showToast("${plan.who} 现使用${plan.node.name}", null, null) { engine.setSceneException(plan.scene.id, appId, prevPin) }
+                } else {
+                    val prev = plan.scene.selected.id.takeIf { it >= 0 }
+                    engine.applySceneChange(plan.scene.id, plan.node.id)
+                    showToast("${plan.who} 现使用${plan.node.name}", plan.scene.id, prev)
+                }
+            }.onFailure { showToast("未能应用：${plan.who}", null, null) }
+            is com.zephyr.app.ui.command.CommandPlan.Direct -> runCatching {
+                engine.overrideHost(plan.host, com.zephyr.engine.TraceTarget.DIRECT, null, persistent = true)
+                showToast("${plan.who} 现为直连", null, null) {
+                    engine.overrideHost(plan.host, com.zephyr.engine.TraceTarget.UNCHANGED, null, persistent = true)
+                }
+            }.onFailure { showToast("未能应用：${plan.who}", null, null) }
+            is com.zephyr.app.ui.command.CommandPlan.NoNodes -> Unit
         }
     }
 
-    private fun showToast(msg: String, sceneId: String?, prev: NodeId?) {
+    private fun showToast(msg: String, sceneId: String?, prev: NodeId?, undo: (suspend () -> Unit)? = null) {
         toastJob?.cancel()
         val serial = ++toastSerial
-        _ui.update { it.copy(toast = UndoToast(msg, sceneId, prev, serial)) }
+        _ui.update { it.copy(toast = UndoToast(msg, sceneId, prev, serial, undo)) }
         toastJob = viewModelScope.launch {
             delay(com.zephyr.design.tokens.ZMotion.undoWindow.toLong())
             _ui.update { if (it.toast?.serial == serial) it.copy(toast = null) else it }

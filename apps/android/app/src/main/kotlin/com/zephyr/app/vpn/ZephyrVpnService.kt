@@ -50,10 +50,17 @@ class ZephyrVpnService : VpnService() {
         scope.launch {
             val s = engine.settings().first()
             bridge = TunBridge.pick(this@ZephyrVpnService, engine, s, engine.connectionState().first().mode)
+            if (!bridge.createsTun && !com.zephyr.app.BuildConfig.DEBUG) {
+                // Release never pretends: without a tunnel the app must not say "已连接" while traffic goes direct.
+                fail(TunBridge.whyNoTunnel(engine)); return@launch
+            }
             if (bridge.createsTun && tun == null) {
                 tun = TunBridge.configure(Builder().setSession("Zephyr"), s.tun.mtu, s.tun.ipv6, s.tun.excludedApps, packageName).establish()
                 val err = tun?.let { bridge.attach(it) } ?: "establish() returned null"
-                if (err != null) { android.util.Log.e("Zephyr", "core start failed: $err"); stop(); return@launch }
+                if (err != null) {
+                    android.util.Log.e("Zephyr", "core start failed: $err")
+                    fail(com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.CORE_CRASHED, err)); return@launch
+                }
             }
             runCatching { engine.connect() }.onFailure { stop(); return@launch }
             watch()
@@ -79,6 +86,11 @@ class ZephyrVpnService : VpnService() {
             // Scene exits are probed once a minute while connected; core's failover tracker decides when to switch.
             prober = scope.launch { while (true) { kotlinx.coroutines.delay(PROBE_EVERY_MS); runCatching { core.probeScenes() } } }
         }
+    }
+
+    private suspend fun fail(e: com.zephyr.engine.ZephyrError) {
+        stop()
+        (engine as? com.zephyr.engine.core.CoreEngine)?.reportConnectFailure(e)
     }
 
     private suspend fun toggleMode() {

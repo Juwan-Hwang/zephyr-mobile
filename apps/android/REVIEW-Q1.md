@@ -6,6 +6,11 @@
 - 方法：**静态审查**。按约定未跑 Gradle、未编译、未跑 Paparazzi；性能结论来自代码路径分析，需用 Macrobenchmark / Perfetto / Layout Inspector 的重组计数复核。
 - 行号均以当前提交为准。原型尺寸按 CSS px = dp/sp 换算。原型 CSS 行号指 `design/prototype/index.html`。
 
+## 修复进度（C 维护）
+
+- 2026-11-08 PR agent/android/review-q1：✅ P0-1（release 不再用 Mock 填充：recentTraffic/usageToday/storage/commandSuggestions/导入/场景/轨迹/规则在无核心或无订阅时返回空或抛错；无隧道时不再显示“已连接”，状态为“连接失败 · 先添加一个订阅 / 内核未能启动”）、P0-2（指令层按原型重写：空态为示例短语只填入输入框；令牌下划线用 VisualTransformation 画在真实输入框上；“Gemini 走日本”只固定 Gemini（setSceneException），卡片带“出口 IP 将更改 from → to”与“将暂停/使用其他节点”说明；“GitHub 直连”走 overrideHost；回车只应用已预览的计划；修正 MockFixtures 运算符优先级）、W-P1-2（首次连接成功后申请通知权限）、W-P1-3（磁贴 API 分支 + lint NewApi 致命）。
+- 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
+
 ## 总览
 
 | 级别 | 条数 | 含义 |
