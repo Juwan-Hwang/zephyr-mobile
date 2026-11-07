@@ -422,6 +422,7 @@ impl MobileCore {
                 "DIRECT".into()
             }
         };
+        self.prune_provider_layers()?;
         self.load_rules(fin)?;
         Ok(())
     }
@@ -483,7 +484,8 @@ impl MobileCore {
         let mut b = LayerBuilder::new(&name, kind, &note, &default_policy);
         b.add_text(&text);
         let path = self.dir.join("rules").join(format!("{index:03}.zr"));
-        let tmp = path.with_extension("tmp");
+        static SEQ: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        let tmp = path.with_extension(format!("tmp{}", SEQ.fetch_add(1, std::sync::atomic::Ordering::Relaxed)));
         b.write(&tmp)?;
         std::fs::rename(&tmp, &path)?;
         Ok(Layer::open(&path)?.info(index))

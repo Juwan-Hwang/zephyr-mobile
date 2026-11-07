@@ -862,6 +862,11 @@ public protocol MobileCoreProtocol : AnyObject {
      */
     func compileRuleLayer(index: UInt32, name: String, kind: LayerKind, note: String, defaultPolicy: String, text: String) throws  -> RuleLayerInfo
     
+    /**
+     * 平台拉到规则集正文后交回：编译为对应层并热加载全部规则。
+     */
+    func compileRuleProvider(name: String, body: String, nowMillis: Int64) throws  -> RuleLayerInfo
+    
     func deleteSubscription(id: String) throws 
     
     /**
@@ -982,6 +987,8 @@ public protocol MobileCoreProtocol : AnyObject {
      * 平台把 trace 响应正文交回；解析出 ip 与地区代码后回填出口。返回出口 IP。
      */
     func reportSceneTrace(sceneId: String, body: String, nowMillis: Int64) throws  -> String
+    
+    func ruleProviders(nowMillis: Int64)  -> [RuleProvider]
     
     func ruleStats()  -> RuleStats
     
@@ -1157,6 +1164,19 @@ open func compileRuleLayer(index: UInt32, name: String, kind: LayerKind, note: S
         FfiConverterString.lower(note),
         FfiConverterString.lower(defaultPolicy),
         FfiConverterString.lower(text),$0
+    )
+})
+}
+    
+    /**
+     * 平台拉到规则集正文后交回：编译为对应层并热加载全部规则。
+     */
+open func compileRuleProvider(name: String, body: String, nowMillis: Int64)throws  -> RuleLayerInfo {
+    return try  FfiConverterTypeRuleLayerInfo.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_compile_rule_provider(self.uniffiClonePointer(),
+        FfiConverterString.lower(name),
+        FfiConverterString.lower(body),
+        FfiConverterInt64.lower(nowMillis),$0
     )
 })
 }
@@ -1464,6 +1484,14 @@ open func reportSceneTrace(sceneId: String, body: String, nowMillis: Int64)throw
     uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_trace(self.uniffiClonePointer(),
         FfiConverterString.lower(sceneId),
         FfiConverterString.lower(body),
+        FfiConverterInt64.lower(nowMillis),$0
+    )
+})
+}
+    
+open func ruleProviders(nowMillis: Int64) -> [RuleProvider] {
+    return try!  FfiConverterSequenceTypeRuleProvider.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_providers(self.uniffiClonePointer(),
         FfiConverterInt64.lower(nowMillis),$0
     )
 })
@@ -3857,6 +3885,166 @@ public func FfiConverterTypeRuleLayerInfo_lift(_ buf: RustBuffer) throws -> Rule
 #endif
 public func FfiConverterTypeRuleLayerInfo_lower(_ value: RuleLayerInfo) -> RustBuffer {
     return FfiConverterTypeRuleLayerInfo.lower(value)
+}
+
+
+public struct RuleProvider {
+    public var name: String
+    /**
+     * 完整地址（只在本机用于拉取，不进日志、不上传）
+     */
+    public var url: String
+    /**
+     * domain | ipcidr | classical
+     */
+    public var behavior: String
+    /**
+     * yaml | text | mrs
+     */
+    public var format: String
+    public var intervalSecs: Int64
+    /**
+     * RULE-SET 行上的策略
+     */
+    public var policy: String
+    public var layerIndex: UInt32
+    public var ruleCount: UInt64?
+    public var updatedAt: Int64?
+    /**
+     * 到期需要（重新）拉取
+     */
+    public var due: Bool
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(name: String, 
+        /**
+         * 完整地址（只在本机用于拉取，不进日志、不上传）
+         */url: String, 
+        /**
+         * domain | ipcidr | classical
+         */behavior: String, 
+        /**
+         * yaml | text | mrs
+         */format: String, intervalSecs: Int64, 
+        /**
+         * RULE-SET 行上的策略
+         */policy: String, layerIndex: UInt32, ruleCount: UInt64?, updatedAt: Int64?, 
+        /**
+         * 到期需要（重新）拉取
+         */due: Bool) {
+        self.name = name
+        self.url = url
+        self.behavior = behavior
+        self.format = format
+        self.intervalSecs = intervalSecs
+        self.policy = policy
+        self.layerIndex = layerIndex
+        self.ruleCount = ruleCount
+        self.updatedAt = updatedAt
+        self.due = due
+    }
+}
+
+
+
+extension RuleProvider: Equatable, Hashable {
+    public static func ==(lhs: RuleProvider, rhs: RuleProvider) -> Bool {
+        if lhs.name != rhs.name {
+            return false
+        }
+        if lhs.url != rhs.url {
+            return false
+        }
+        if lhs.behavior != rhs.behavior {
+            return false
+        }
+        if lhs.format != rhs.format {
+            return false
+        }
+        if lhs.intervalSecs != rhs.intervalSecs {
+            return false
+        }
+        if lhs.policy != rhs.policy {
+            return false
+        }
+        if lhs.layerIndex != rhs.layerIndex {
+            return false
+        }
+        if lhs.ruleCount != rhs.ruleCount {
+            return false
+        }
+        if lhs.updatedAt != rhs.updatedAt {
+            return false
+        }
+        if lhs.due != rhs.due {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(url)
+        hasher.combine(behavior)
+        hasher.combine(format)
+        hasher.combine(intervalSecs)
+        hasher.combine(policy)
+        hasher.combine(layerIndex)
+        hasher.combine(ruleCount)
+        hasher.combine(updatedAt)
+        hasher.combine(due)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeRuleProvider: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> RuleProvider {
+        return
+            try RuleProvider(
+                name: FfiConverterString.read(from: &buf), 
+                url: FfiConverterString.read(from: &buf), 
+                behavior: FfiConverterString.read(from: &buf), 
+                format: FfiConverterString.read(from: &buf), 
+                intervalSecs: FfiConverterInt64.read(from: &buf), 
+                policy: FfiConverterString.read(from: &buf), 
+                layerIndex: FfiConverterUInt32.read(from: &buf), 
+                ruleCount: FfiConverterOptionUInt64.read(from: &buf), 
+                updatedAt: FfiConverterOptionInt64.read(from: &buf), 
+                due: FfiConverterBool.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: RuleProvider, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.name, into: &buf)
+        FfiConverterString.write(value.url, into: &buf)
+        FfiConverterString.write(value.behavior, into: &buf)
+        FfiConverterString.write(value.format, into: &buf)
+        FfiConverterInt64.write(value.intervalSecs, into: &buf)
+        FfiConverterString.write(value.policy, into: &buf)
+        FfiConverterUInt32.write(value.layerIndex, into: &buf)
+        FfiConverterOptionUInt64.write(value.ruleCount, into: &buf)
+        FfiConverterOptionInt64.write(value.updatedAt, into: &buf)
+        FfiConverterBool.write(value.due, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeRuleProvider_lift(_ buf: RustBuffer) throws -> RuleProvider {
+    return try FfiConverterTypeRuleProvider.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeRuleProvider_lower(_ value: RuleProvider) -> RustBuffer {
+    return FfiConverterTypeRuleProvider.lower(value)
 }
 
 
@@ -6753,6 +6941,31 @@ fileprivate struct FfiConverterSequenceTypeRuleLayerInfo: FfiConverterRustBuffer
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterSequenceTypeRuleProvider: FfiConverterRustBuffer {
+    typealias SwiftType = [RuleProvider]
+
+    public static func write(_ value: [RuleProvider], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeRuleProvider.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [RuleProvider] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [RuleProvider]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeRuleProvider.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterSequenceTypeScene: FfiConverterRustBuffer {
     typealias SwiftType = [Scene]
 
@@ -6995,6 +7208,9 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_layer() != 45440) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_provider() != 22374) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_delete_subscription() != 35061) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -7077,6 +7293,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_trace() != 6617) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_providers() != 32902) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033) {

@@ -865,6 +865,10 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -925,6 +929,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_compile_rule_layer(`ptr`: Pointer,`index`: Int,`name`: RustBuffer.ByValue,`kind`: RustBuffer.ByValue,`note`: RustBuffer.ByValue,`defaultPolicy`: RustBuffer.ByValue,`text`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_compile_rule_provider(`ptr`: Pointer,`name`: RustBuffer.ByValue,`body`: RustBuffer.ByValue,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_delete_subscription(`ptr`: Pointer,`id`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_due_subscriptions(`ptr`: Pointer,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
@@ -980,6 +986,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_service(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`appId`: RustBuffer.ByValue,`ok`: Byte,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_trace(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`body`: RustBuffer.ByValue,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_providers(`ptr`: Pointer,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_stats(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
@@ -1165,6 +1173,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_layer(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_provider(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_delete_subscription(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_due_subscriptions(
@@ -1220,6 +1230,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_service(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_trace(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_providers(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats(
     ): Short
@@ -1327,6 +1339,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_layer() != 45440.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_provider() != 22374.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_delete_subscription() != 35061.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -1409,6 +1424,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_report_scene_trace() != 6617.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_providers() != 32902.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats() != 61033.toShort()) {
@@ -2375,6 +2393,11 @@ public interface MobileCoreInterface {
      */
     fun `compileRuleLayer`(`index`: kotlin.UInt, `name`: kotlin.String, `kind`: LayerKind, `note`: kotlin.String, `defaultPolicy`: kotlin.String, `text`: kotlin.String): RuleLayerInfo
     
+    /**
+     * 平台拉到规则集正文后交回：编译为对应层并热加载全部规则。
+     */
+    fun `compileRuleProvider`(`name`: kotlin.String, `body`: kotlin.String, `nowMillis`: kotlin.Long): RuleLayerInfo
+    
     fun `deleteSubscription`(`id`: kotlin.String)
     
     /**
@@ -2495,6 +2518,8 @@ public interface MobileCoreInterface {
      * 平台把 trace 响应正文交回；解析出 ip 与地区代码后回填出口。返回出口 IP。
      */
     fun `reportSceneTrace`(`sceneId`: kotlin.String, `body`: kotlin.String, `nowMillis`: kotlin.Long): kotlin.String
+    
+    fun `ruleProviders`(`nowMillis`: kotlin.Long): List<RuleProvider>
     
     fun `ruleStats`(): RuleStats
     
@@ -2704,6 +2729,22 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_compile_rule_layer(
         it, FfiConverterUInt.lower(`index`),FfiConverterString.lower(`name`),FfiConverterTypeLayerKind.lower(`kind`),FfiConverterString.lower(`note`),FfiConverterString.lower(`defaultPolicy`),FfiConverterString.lower(`text`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 平台拉到规则集正文后交回：编译为对应层并热加载全部规则。
+     */
+    @Throws(MobileException::class)override fun `compileRuleProvider`(`name`: kotlin.String, `body`: kotlin.String, `nowMillis`: kotlin.Long): RuleLayerInfo {
+            return FfiConverterTypeRuleLayerInfo.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_compile_rule_provider(
+        it, FfiConverterString.lower(`name`),FfiConverterString.lower(`body`),FfiConverterLong.lower(`nowMillis`),_status)
 }
     }
     )
@@ -3124,6 +3165,18 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_report_scene_trace(
         it, FfiConverterString.lower(`sceneId`),FfiConverterString.lower(`body`),FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    )
+    }
+    
+
+    override fun `ruleProviders`(`nowMillis`: kotlin.Long): List<RuleProvider> {
+            return FfiConverterSequenceTypeRuleProvider.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_providers(
+        it, FfiConverterLong.lower(`nowMillis`),_status)
 }
     }
     )
@@ -4494,6 +4547,85 @@ public object FfiConverterTypeRuleLayerInfo: FfiConverterRustBuffer<RuleLayerInf
             FfiConverterULong.write(value.`count`, buf)
             FfiConverterString.write(value.`note`, buf)
             FfiConverterULong.write(value.`diskBytes`, buf)
+    }
+}
+
+
+
+data class RuleProvider (
+    var `name`: kotlin.String, 
+    /**
+     * 完整地址（只在本机用于拉取，不进日志、不上传）
+     */
+    var `url`: kotlin.String, 
+    /**
+     * domain | ipcidr | classical
+     */
+    var `behavior`: kotlin.String, 
+    /**
+     * yaml | text | mrs
+     */
+    var `format`: kotlin.String, 
+    var `intervalSecs`: kotlin.Long, 
+    /**
+     * RULE-SET 行上的策略
+     */
+    var `policy`: kotlin.String, 
+    var `layerIndex`: kotlin.UInt, 
+    var `ruleCount`: kotlin.ULong?, 
+    var `updatedAt`: kotlin.Long?, 
+    /**
+     * 到期需要（重新）拉取
+     */
+    var `due`: kotlin.Boolean
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeRuleProvider: FfiConverterRustBuffer<RuleProvider> {
+    override fun read(buf: ByteBuffer): RuleProvider {
+        return RuleProvider(
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterLong.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterUInt.read(buf),
+            FfiConverterOptionalULong.read(buf),
+            FfiConverterOptionalLong.read(buf),
+            FfiConverterBoolean.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: RuleProvider) = (
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterString.allocationSize(value.`url`) +
+            FfiConverterString.allocationSize(value.`behavior`) +
+            FfiConverterString.allocationSize(value.`format`) +
+            FfiConverterLong.allocationSize(value.`intervalSecs`) +
+            FfiConverterString.allocationSize(value.`policy`) +
+            FfiConverterUInt.allocationSize(value.`layerIndex`) +
+            FfiConverterOptionalULong.allocationSize(value.`ruleCount`) +
+            FfiConverterOptionalLong.allocationSize(value.`updatedAt`) +
+            FfiConverterBoolean.allocationSize(value.`due`)
+    )
+
+    override fun write(value: RuleProvider, buf: ByteBuffer) {
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterString.write(value.`url`, buf)
+            FfiConverterString.write(value.`behavior`, buf)
+            FfiConverterString.write(value.`format`, buf)
+            FfiConverterLong.write(value.`intervalSecs`, buf)
+            FfiConverterString.write(value.`policy`, buf)
+            FfiConverterUInt.write(value.`layerIndex`, buf)
+            FfiConverterOptionalULong.write(value.`ruleCount`, buf)
+            FfiConverterOptionalLong.write(value.`updatedAt`, buf)
+            FfiConverterBoolean.write(value.`due`, buf)
     }
 }
 
@@ -6561,6 +6693,34 @@ public object FfiConverterSequenceTypeRuleLayerInfo: FfiConverterRustBuffer<List
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeRuleLayerInfo.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeRuleProvider: FfiConverterRustBuffer<List<RuleProvider>> {
+    override fun read(buf: ByteBuffer): List<RuleProvider> {
+        val len = buf.getInt()
+        return List<RuleProvider>(len) {
+            FfiConverterTypeRuleProvider.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<RuleProvider>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeRuleProvider.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<RuleProvider>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeRuleProvider.write(it, buf)
         }
     }
 }
