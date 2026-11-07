@@ -203,7 +203,8 @@ final class CoreEngineLiveTests: XCTestCase {
         let (e, t) = make()
         _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
         var it = e.settings().makeAsyncIterator()
-        var s = try XCTUnwrap(await it.next())
+        let first = await it.next()
+        var s = try XCTUnwrap(first)
         XCTAssertEqual(s, CoreEngine.defaultSettings)
         try await e.connect()
         s.appearance = .dark
@@ -213,11 +214,13 @@ final class CoreEngineLiveTests: XCTestCase {
         try await e.updateSettings(patch: s)
         XCTAssertEqual(t.reloads, 1)
         XCTAssertTrue(try String(contentsOf: t.configURL, encoding: .utf8).contains("mixed-port: 7890"))
-        XCTAssertEqual(await it.next()?.appearance, .dark)
+        let latest = await it.next()
+        XCTAssertEqual(latest?.appearance, .dark)
         // 新实例读回
         let e2 = CoreEngine(dataDir: dir.appendingPathComponent("core"), mockData: false)
         var it2 = e2.settings().makeAsyncIterator()
-        XCTAssertEqual(await it2.next(), s)
+        let reread = await it2.next()
+        XCTAssertEqual(reread, s)
         s.tun.mtu = 100
         do { try await e.updateSettings(patch: s); XCTFail("非法 MTU") } catch {}
     }
