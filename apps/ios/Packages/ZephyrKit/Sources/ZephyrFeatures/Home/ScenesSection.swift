@@ -18,7 +18,7 @@ struct ScenesSection: View {
             if model.connection.mode == .global {
                 GlobalModeCard()
             } else if model.scenes.isEmpty {
-                ZCard { Text(verbatim: "添加订阅后，这里会显示 AI、视频等场景。").zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary) }
+                ZCard { Text(verbatim: "添加订阅后，这里会显示 AI、视频等场景。").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3) }
                     .padding(.horizontal, HMetrics.cardInset)
             } else {
                 card

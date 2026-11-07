@@ -23,7 +23,7 @@ final class WidgetSnapshotTests: XCTestCase {
         content()
             .padding(ZTokens.Space.n5)
             .frame(width: size.width, height: size.height)
-            .background(ZTokens.Colors.bgElevated)
+            .background(ZTokens.Colors.screenS1)
             .clipShape(RoundedRectangle(cornerRadius: ZTokens.Radius.overlay, style: .continuous))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -136,7 +136,7 @@ final class WidgetSnapshotTests: XCTestCase {
                 .frame(width: 200, height: 60)
         }
         .padding(ZTokens.Space.n5)
-        .foregroundStyle(ZTokens.Colors.textPrimary)
+        .foregroundStyle(ZTokens.Colors.screenT1)
         for variant in ZSnapshotVariant.standard {
             await zAssertSnapshot(of: parts, named: "parts-\(variant.name)", variant: variant, layout: .fitWidth(393))
         }

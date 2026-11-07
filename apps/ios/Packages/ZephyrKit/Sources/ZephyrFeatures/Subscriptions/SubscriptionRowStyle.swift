@@ -18,7 +18,7 @@ struct SubscriptionRowStyle: ViewModifier {
                 Button { model.deleting = sub } label: {
                     Label { Text(verbatim: "删除") } icon: { Image(systemName: "trash") }
                 }
-                .tint(ZTokens.Colors.colorDanger)
+                .tint(ZTokens.Colors.screenRed)
                 Button { Task { await model.update(sub) } } label: {
                     Label { Text(verbatim: "更新") } icon: { Image(systemName: "arrow.clockwise") }
                 }
@@ -38,7 +38,7 @@ extension View {
     func zCardListRow() -> some View {
         listRowInsets(EdgeInsets())
             .listRowBackground(Rectangle().fill(ZCardFill()))
-            .listRowSeparatorTint(ZTokens.Colors.borderSubtle)
+            .listRowSeparatorTint(ZTokens.Colors.screenHl)
     }
 
     /// List 里不带卡片底的整行（页头、diff 卡）。

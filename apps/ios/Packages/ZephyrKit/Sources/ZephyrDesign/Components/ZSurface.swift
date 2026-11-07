@@ -29,7 +29,7 @@ struct ZSurfaceModifier: ViewModifier {
             .background { surfaceFill(shape) }
             .clipShape(shape)
             .overlay {
-                shape.strokeBorder(style == .elevated ? ZTokens.Colors.borderDefault : ZTokens.Colors.borderSubtle,
+                shape.strokeBorder(style == .elevated ? ZTokens.Colors.screenHl2 : ZTokens.Colors.screenHl,
                                    lineWidth: ZMetrics.hairline)
             }
     }
@@ -41,9 +41,9 @@ struct ZSurfaceModifier: ViewModifier {
             shape.fill(ZCardFill())
         case .glass:
             shape.fill(.ultraThinMaterial)
-                .overlay { shape.fill(ZCardFill()) }
+                .overlay { shape.fill(ZTokens.Colors.screenGlass) }
         case .elevated:
-            shape.fill(ZTokens.Colors.surfaceElevated)
+            shape.fill(ZTokens.Colors.screenS4)
         }
     }
 }
@@ -73,8 +73,8 @@ private struct ZSurfaceSample: View {
         ForEach([ZSurfaceStyle.raised, .glass, .elevated], id: \.self) { style in
             ZSurface(style) {
                 VStack(alignment: .leading, spacing: ZTokens.Space.n1) {
-                    Text(verbatim: "\(style)").zType(.body).foregroundStyle(ZTokens.Colors.textPrimary)
-                    Text(verbatim: "深色玻璃 · 1px 细边框").zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary)
+                    Text(verbatim: "\(style)").zType(.body).foregroundStyle(ZTokens.Colors.screenT1)
+                    Text(verbatim: "深色玻璃 · 1px 细边框").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
                 }
                 .padding(ZTokens.Space.n5)
                 .frame(maxWidth: .infinity, alignment: .leading)

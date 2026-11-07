@@ -11,10 +11,10 @@ struct NodesEmptyState: View {
             Text("无结果")
                 .zType(.headline)
                 .fontWeight(.regular)
-                .foregroundStyle(ZTokens.Colors.textPrimary)
+                .foregroundStyle(ZTokens.Colors.screenT1)
             Text("没有与“\(query.trimmingCharacters(in: .whitespaces))”匹配的节点")
                 .zType(.footnote)
-                .foregroundStyle(ZTokens.Colors.textTertiary)
+                .foregroundStyle(ZTokens.Colors.screenT3)
                 .multilineTextAlignment(.center)
         }
         .padding(ZTokens.Space.n6)

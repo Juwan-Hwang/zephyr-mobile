@@ -32,7 +32,7 @@ public struct SettingsView: View {
                 PageFootnote("订阅、节点与流量数据仅保存在此设备上。")
                 Text(verbatim: Self.version)
                     .zMono(.small)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
                     .frame(maxWidth: .infinity)
                     .padding(.top, ZTokens.Space.n6)
             }
@@ -97,7 +97,7 @@ public struct SettingsView: View {
             MenuPickerRow(title: "外观", options: Self.appearanceOptions,
                           selection: store.binding(\.appearance, fallback: .system))
             ZDivider()
-            ZSettingsRow("强调色") {
+            ZSettingsRow("强调色", trailingIsInteractive: true) {
                 AccentPicker(selection: store.binding(\.accent, fallback: .blue))
             }
         }

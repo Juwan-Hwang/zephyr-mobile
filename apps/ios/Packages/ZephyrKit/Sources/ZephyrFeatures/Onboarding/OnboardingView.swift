@@ -78,7 +78,7 @@ public struct OnboardingView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     ZBrandMark(.mark)
                         .frame(height: markHeight)
-                        .foregroundStyle(ZTokens.Colors.textPrimary)
+                        .foregroundStyle(ZTokens.Colors.screenT1)
                         .padding(.top, ZTokens.Space.n5)
                     stepLabel("1 / 2").padding(.top, ZTokens.Space.n8 + ZTokens.Space.n4)
                     title("添加订阅")
@@ -98,13 +98,13 @@ public struct OnboardingView: View {
         if importer.isImporting {
             HStack(spacing: ZTokens.Space.n3) {
                 ProgressView()
-                Text(verbatim: "正在导入…").zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary)
+                Text(verbatim: "正在导入…").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
             }
             .padding(.top, ZTokens.Space.n4)
         } else if method == nil, let err = importer.errorMessage {
             Label { Text(verbatim: err) } icon: { Image(systemName: "exclamationmark.triangle.fill") }
                 .zType(.footnote)
-                .foregroundStyle(ZTokens.Colors.textWarning)
+                .foregroundStyle(ZTokens.Colors.screenAmber)
                 .padding(.top, ZTokens.Space.n4)
         }
     }
@@ -123,7 +123,7 @@ public struct OnboardingView: View {
                             .accessibilityHidden(true)
                         Text(verbatim: "已添加 \(sub.name)（\(ZFormat.count(sub.nodeCount)) 个节点）")
                             .zType(.body)
-                            .foregroundStyle(ZTokens.Colors.textSecondary)
+                            .foregroundStyle(ZTokens.Colors.screenT2)
                     }
                     .padding(.top, ZTokens.Space.n6)
                     title("选择\n使用方式")
@@ -162,14 +162,14 @@ public struct OnboardingView: View {
     private func stepLabel(_ s: String) -> some View {
         Text(verbatim: s)
             .zMono(.body)
-            .foregroundStyle(ZTokens.Colors.textTertiary)
+            .foregroundStyle(ZTokens.Colors.screenT3)
             .accessibilityLabel(Text(verbatim: "第 \(s.prefix(1)) 步，共 2 步"))
     }
 
     private func title(_ s: String) -> some View {
         Text(verbatim: s)
             .zDisplay(.title)
-            .foregroundStyle(ZTokens.Colors.textPrimary)
+            .foregroundStyle(ZTokens.Colors.screenT1)
             .fixedSize(horizontal: false, vertical: true)
             .padding(.top, ZTokens.Space.n3)
             .accessibilityAddTraits(.isHeader)
@@ -178,7 +178,7 @@ public struct OnboardingView: View {
     private func footnote(_ s: String) -> some View {
         Text(verbatim: s)
             .zType(.footnote)
-            .foregroundStyle(ZTokens.Colors.textTertiary)
+            .foregroundStyle(ZTokens.Colors.screenT3)
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)
             .padding(.top, ZTokens.Space.n4)

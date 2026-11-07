@@ -66,7 +66,7 @@ public struct ZProgressBar: View {
             }
         }
         .frame(height: thickness.height)
-        .background(ZTokens.Colors.borderSubtle)
+        .background(ZTokens.Colors.screenHl)
         .clipShape(Capsule(style: .continuous))
         .animation(reduceMotion ? nil : ZMotion.slow, value: segments.map(\.fraction))
         .accessibilityElement(children: .ignore)
@@ -80,10 +80,10 @@ public struct ZProgressBar: View {
 
     private func color(_ tone: ZProgressTone) -> Color {
         switch tone {
-        case .neutral: return thickness == .thin ? ZTokens.Colors.textTertiary : ZTokens.Colors.textSecondary
+        case .neutral: return thickness == .thin ? ZTokens.Colors.screenT3 : ZTokens.Colors.screenT2
         case .accent: return accent.color
-        case .warning: return ZTokens.Colors.colorWarning
-        case .danger: return ZTokens.Colors.colorDanger
+        case .warning: return ZTokens.Colors.screenAmber
+        case .danger: return ZTokens.Colors.screenRed
         }
     }
 }

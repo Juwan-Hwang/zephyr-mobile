@@ -70,7 +70,7 @@ private struct SubscriptionRow: View {
             VStack(alignment: .leading, spacing: ZTokens.Space.n3) {
                 Text(verbatim: sub.name)
                     .zType(.body)
-                    .foregroundStyle(ZTokens.Colors.textPrimary)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
                     .lineLimit(1)
                 if let used {
                     ZProgressBar(value: used, tone: warn ? .warning : .neutral)
@@ -80,12 +80,12 @@ private struct SubscriptionRow: View {
                 if let r = sub.remainingBytes {
                     Text(verbatim: ZFormat.bytes(r))
                         .zType(.body, monospacedDigits: true)
-                        .foregroundStyle(ZTokens.Colors.textPrimary)
+                        .foregroundStyle(ZTokens.Colors.screenT1)
                 }
                 if let e = sub.expiresAt {
                     Text(verbatim: ZFormat.expiry(e, now: now))
                         .zType(.caption)
-                        .foregroundStyle(warn ? ZTokens.Colors.textWarning : ZTokens.Colors.textTertiary)
+                        .foregroundStyle(warn ? ZTokens.Colors.screenAmber : ZTokens.Colors.screenT3)
                 }
             }
         }

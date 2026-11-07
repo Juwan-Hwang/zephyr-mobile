@@ -42,7 +42,7 @@ public struct ZToast: View {
         HStack(spacing: ZTokens.Space.n3) {
             Text(verbatim: item.message)
                 .zType(.footnote)
-                .foregroundStyle(ZTokens.Colors.textPrimary)
+                .foregroundStyle(ZTokens.Colors.screenT1)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
             if let title = item.actionTitle {
@@ -58,14 +58,14 @@ public struct ZToast: View {
                         .frame(minHeight: ZTokens.Layout.touchMinIos)
                         .contentShape(Rectangle())
                 }
-                .buttonStyle(ZPressStyle(haptic: .medium))
+                .buttonStyle(ZPressStyle(haptic: .none))
             }
         }
         .padding(.leading, ZTokens.Space.n5)
         .padding(.trailing, ZTokens.Space.n2)
         .padding(.vertical, ZTokens.Space.n1)
         .frame(minHeight: height)
-        .background(shape.fill(ZTokens.Colors.surfaceElevated))
+        .background(shape.fill(ZTokens.Colors.screenS4))
         .overlay(alignment: .bottomLeading) {
             Rectangle()
                 .fill(ZAccentStyle())
@@ -74,7 +74,7 @@ public struct ZToast: View {
                 .accessibilityHidden(true)
         }
         .clipShape(shape)
-        .overlay { shape.strokeBorder(ZTokens.Colors.borderSubtle, lineWidth: ZMetrics.hairline) }
+        .overlay { shape.strokeBorder(ZTokens.Colors.screenHl, lineWidth: ZMetrics.hairline) }
         .accessibilityElement(children: .combine)
         .onAppear {
             withAnimation(.linear(duration: item.duration)) { remaining = 0 }

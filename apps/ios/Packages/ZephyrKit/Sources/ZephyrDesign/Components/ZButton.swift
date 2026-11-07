@@ -65,7 +65,7 @@ public struct ZButton: View {
             .background(Capsule(style: .continuous).fill(background))
             .contentShape(Capsule(style: .continuous))
         }
-        .buttonStyle(ZPressStyle(haptic: kind == .ghost ? .light : .medium))
+        .buttonStyle(ZPressStyle(haptic: .none))
         .accessibilityLabel(Text(title))
         .accessibilityValue(isLoading ? Text(verbatim: "处理中") : Text(verbatim: ""))
     }
@@ -73,15 +73,15 @@ public struct ZButton: View {
     private var foreground: AnyShapeStyle {
         switch kind {
         case .primary: return AnyShapeStyle(ZPage.background)
-        case .ghost: return AnyShapeStyle(ZTokens.Colors.textPrimary)
-        case .danger: return AnyShapeStyle(ZTokens.Colors.textDanger)
+        case .ghost: return AnyShapeStyle(ZTokens.Colors.screenT1)
+        case .danger: return AnyShapeStyle(ZTokens.Colors.screenRed)
         case .accent: return AnyShapeStyle(ZTokens.Colors.textOnAccent)
         }
     }
 
     private var background: AnyShapeStyle {
         switch kind {
-        case .primary: return AnyShapeStyle(ZTokens.Colors.textPrimary)
+        case .primary: return AnyShapeStyle(ZTokens.Colors.screenT1)
         case .ghost, .danger: return AnyShapeStyle(ZTrackFill())
         case .accent: return AnyShapeStyle(ZAccentStyle())
         }

@@ -42,14 +42,14 @@ public struct ZTextField: View {
         HStack(spacing: ZTokens.Space.n3) {
             if let systemImage {
                 Image(systemName: systemImage)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
                     .accessibilityHidden(true)
             }
             field
             if let trailing, !trailing.isEmpty {
                 Text(verbatim: trailing)
                     .zMono(.small)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
                     .lineLimit(1)
                     .layoutPriority(-1)
             }
@@ -59,11 +59,11 @@ public struct ZTextField: View {
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .symbolRenderingMode(.hierarchical)
-                        .foregroundStyle(ZTokens.Colors.textTertiary)
+                        .foregroundStyle(ZTokens.Colors.screenT3)
                         .frame(minWidth: ZTokens.Layout.touchMinIos, minHeight: ZTokens.Layout.touchMinIos)
                         .contentShape(Rectangle())
                 }
-                .buttonStyle(ZPressStyle(haptic: .light))
+                .buttonStyle(ZPressStyle(haptic: .none))
                 .accessibilityLabel(Text(verbatim: "清除"))
                 .transition(.opacity)
             }
@@ -88,7 +88,7 @@ public struct ZTextField: View {
             .autocorrectionDisabled()
             .submitLabel(.search)
             .onSubmit { onSubmit?() }
-            .foregroundStyle(ZTokens.Colors.textPrimary)
+            .foregroundStyle(ZTokens.Colors.screenT1)
             .modifier(ZFieldFont(monospaced: monospaced, style: style))
     }
 }

@@ -32,7 +32,7 @@ struct CommandResults: View {
                     suggestionList(rest)
                 } else if model.preview == nil {
                     Text(verbatim: "无结果")
-                        .zType(.body).foregroundStyle(ZTokens.Colors.textTertiary)
+                        .zType(.body).foregroundStyle(ZTokens.Colors.screenT3)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, ZTokens.Space.n8)
                 }
@@ -44,7 +44,7 @@ struct CommandResults: View {
 
     private func label(_ s: String) -> some View {
         Text(verbatim: s)
-            .zType(.caption).foregroundStyle(ZTokens.Colors.textTertiary)
+            .zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
             .padding(.horizontal, HMetrics.homeInset + ZTokens.Space.n1)
             .padding(.top, ZTokens.Space.n6)
             .padding(.bottom, ZTokens.Space.n3)
@@ -82,8 +82,8 @@ private struct TokenChips: View {
     private var chips: some View {
         ForEach(tokens, id: \.self) { t in
             VStack(alignment: .leading, spacing: ZTokens.Space.n1 / 2) {
-                Text(verbatim: t.kind.rawValue).zType(.caption).foregroundStyle(ZTokens.Colors.textTertiary)
-                Text(verbatim: t.value).zType(.body).foregroundStyle(ZTokens.Colors.textPrimary)
+                Text(verbatim: t.kind.rawValue).zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
+                Text(verbatim: t.value).zType(.body).foregroundStyle(ZTokens.Colors.screenT1)
             }
             .padding(.horizontal, ZTokens.Space.n4)
             .padding(.vertical, ZTokens.Space.n3)
@@ -101,12 +101,12 @@ private struct SuggestionRow: View {
         HStack(spacing: ZTokens.Space.n4) {
             Image(systemName: symbol)
                 .font(.footnote)
-                .foregroundStyle(ZTokens.Colors.textTertiary)
+                .foregroundStyle(ZTokens.Colors.screenT3)
                 .frame(width: ZTokens.Space.n6)
             VStack(alignment: .leading, spacing: ZTokens.Space.n1 / 2) {
-                Text(verbatim: s.title).zType(.body).foregroundStyle(ZTokens.Colors.textPrimary)
+                Text(verbatim: s.title).zType(.body).foregroundStyle(ZTokens.Colors.screenT1)
                 if let sub = s.subtitle {
-                    Text(verbatim: sub).zType(.caption).foregroundStyle(ZTokens.Colors.textTertiary)
+                    Text(verbatim: sub).zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
                 }
             }
             Spacer(minLength: 0)

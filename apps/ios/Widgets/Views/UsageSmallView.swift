@@ -15,16 +15,16 @@ struct UsageSmallView: View {
             Text("今日")
                 .zType(.footnote)
                 .fontWeight(.semibold)
-                .foregroundStyle(ZTokens.Colors.textSecondary)
+                .foregroundStyle(ZTokens.Colors.screenT2)
             HStack(alignment: .lastTextBaseline, spacing: ZTokens.Space.n1) {
                 Text(parts.value)
                     .zType(.metric)
-                    .foregroundStyle(ZTokens.Colors.textPrimary)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                 Text(parts.unit)
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
             }
             .accessibilityElement(children: .combine)
             .accessibilityLabel("今日用量 \(ZFormat.bytes(usage.todayBytes))")
@@ -36,7 +36,7 @@ struct UsageSmallView: View {
                 Text("现在")
             }
             .zType(.caption)
-            .foregroundStyle(ZTokens.Colors.textTertiary)
+            .foregroundStyle(ZTokens.Colors.screenT3)
             .accessibilityHidden(true)
         }
         .dynamicTypeSize(...WidgetStyle.maxDynamicType)
@@ -47,6 +47,6 @@ struct UsageSmallView: View {
     UsageSmallView(state: .prototype(), now: Date())
         .padding(ZTokens.Space.n5)
         .frame(width: 170, height: 170)
-        .background(ZTokens.Colors.bgElevated)
+        .background(ZTokens.Colors.screenS1)
         .clipShape(RoundedRectangle(cornerRadius: ZTokens.Radius.overlay, style: .continuous))
 }

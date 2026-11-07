@@ -51,7 +51,7 @@ public struct ZLatencyPill: View {
     }
 
     private var color: Color {
-        if isTesting || ms == nil { return ZTokens.Colors.borderStrong }
+        if isTesting || ms == nil { return ZTokens.Colors.screenT4 }
         return ZTokens.LatencyThreshold.color(ms)
     }
 }

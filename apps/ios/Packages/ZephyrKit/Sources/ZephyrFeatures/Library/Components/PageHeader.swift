@@ -22,18 +22,18 @@ struct PageHeader: View {
         VStack(alignment: .leading, spacing: 0) {
             Text(title)
                 .zType(.large)
-                .foregroundStyle(ZTokens.Colors.textPrimary)
+                .foregroundStyle(ZTokens.Colors.screenT1)
                 .accessibilityAddTraits(.isHeader)
             if showsNumber {
                 ZBigNumber(number ?? "000", unit: unit, size: .title)
-                    .foregroundStyle(ZTokens.Colors.textPrimary)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
                     .redacted(reason: number == nil ? .placeholder : [])
                     .padding(.top, ZTokens.Space.n4)
             }
             if let subtitle {
                 Text(verbatim: subtitle)
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
                     .padding(.top, ZTokens.Space.n1)
             }
         }

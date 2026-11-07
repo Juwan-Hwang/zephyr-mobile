@@ -39,7 +39,7 @@ struct TraceView: View {
         VStack(alignment: .leading, spacing: 0) {
             if let onBack { backButton(onBack) }
             Text(verbatim: host)
-                .foregroundStyle(ZTokens.Colors.textPrimary)
+                .foregroundStyle(ZTokens.Colors.screenT1)
                 .zDisplay(.small, weight: .light)
                 .lineLimit(2)
                 .minimumScaleFactor(0.6)
@@ -48,14 +48,13 @@ struct TraceView: View {
                 .accessibilityAddTraits(.isHeader)
             Text(verbatim: lede)
                 .zType(.footnote)
-                .foregroundStyle(ZTokens.Colors.textTertiary)
+                .foregroundStyle(ZTokens.Colors.screenT3)
                 .padding(.top, ZTokens.Space.n2)
 
             chain
                 .padding(.top, ZTokens.Space.n6 + ZTokens.Space.n1 / 2)
 
-            TraceOverrideSection(currentSceneId: trace?.scene?.id ?? trace?.policy)
-                .padding(.top, ZTokens.Space.n4)
+            // 覆写（本次连接 / 始终应用）待契约提供写接口后再上线，不放禁用的死路 UI（REVIEW H-P1-9）。
         }
         .padding(.horizontal, HMetrics.homeInset)
         .padding(.bottom, ZTokens.Space.n8)
@@ -77,7 +76,7 @@ struct TraceView: View {
             .frame(minHeight: ZTokens.Layout.touchMinIos)
             .contentShape(Rectangle())
         }
-        .buttonStyle(ZPressStyle(haptic: .light))
+        .buttonStyle(ZPressStyle(haptic: .none))
         .accessibilityLabel(Text(verbatim: "返回刚才"))
     }
 
@@ -86,7 +85,7 @@ struct TraceView: View {
         if let failure {
             Text(verbatim: failure.userMessage)
                 .zType(.footnote)
-                .foregroundStyle(ZTokens.Colors.textDanger)
+                .foregroundStyle(ZTokens.Colors.screenRed)
         } else if steps.isEmpty {
             placeholder
         } else {

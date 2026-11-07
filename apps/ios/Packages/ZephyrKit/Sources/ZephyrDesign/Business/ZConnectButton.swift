@@ -115,7 +115,7 @@ private struct ZConnectSample: View {
         HStack(alignment: .bottom) {
             Text(verbatim: phase == .on ? "已连接" : "未连接")
                 .zDisplay(.title, weight: .light)
-                .foregroundStyle(ZTokens.Colors.textPrimary)
+                .foregroundStyle(ZTokens.Colors.screenT1)
             Spacer()
             ZConnectButton(phase: phase) {
                 phase = phase == .on ? .off : .on

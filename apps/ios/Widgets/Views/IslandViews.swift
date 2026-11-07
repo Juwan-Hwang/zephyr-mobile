@@ -18,13 +18,15 @@ struct IslandCompactLeading: View {
 
 struct IslandCompactTrailing: View {
     var state: ZephyrActivityAttributes.ContentState
+    var isStale: Bool = false
     var body: some View {
-        Text("\(ZFormat.rate(state.downBps).value) ↓")
-            .zType(.headline, monospacedDigits: true)
+        // 紧凑区系统建议 ≤ 15pt；过期时不显示陈旧速率。
+        Text(isStale ? "—" : "\(ZFormat.rate(state.downBps).value) ↓")
+            .zType(.footnote, monospacedDigits: true)
             .fontDesign(.monospaced)
-            .foregroundStyle(ZTokens.Colors.textPrimary)
+            .foregroundStyle(ZTokens.Colors.screenT1)
             .contentTransition(.numericText())
-            .accessibilityLabel("下行 \(ZFormat.rateString(state.downBps))")
+            .accessibilityLabel(isStale ? "速率已暂停更新" : "下行 \(ZFormat.rateString(state.downBps))")
     }
 }
 
@@ -40,10 +42,14 @@ struct IslandMinimal: View {
 /// 展开态底部区域（leading / trailing 区域由 ZephyrLiveActivity 用 IslandCompact* 与 ConnectionTimer 组合）。
 struct IslandExpandedBottom: View {
     var state: ZephyrActivityAttributes.ContentState
+    var isStale: Bool = false
 
     var body: some View {
         let down = ZFormat.rate(state.downBps)
         VStack(alignment: .leading, spacing: ZTokens.Space.n3) {
+            if isStale {
+                StaleRateLine()
+            } else {
             HStack(alignment: .lastTextBaseline, spacing: ZTokens.Space.n3) {
                 Text(down.value)
                     .zType(.metric)
@@ -51,16 +57,17 @@ struct IslandExpandedBottom: View {
                     .contentTransition(.numericText())
                 Text("\(down.unit) ↓")
                     .zType(.body)
-                    .foregroundStyle(ZTokens.Colors.textSecondary)
+                    .foregroundStyle(ZTokens.Colors.screenT2)
                 Spacer(minLength: ZTokens.Space.n3)
                 Text("\(ZFormat.rateString(state.upBps)) ↑")
                     .zType(.footnote, monospacedDigits: true)
-                    .foregroundStyle(ZTokens.Colors.textSecondary)
+                    .foregroundStyle(ZTokens.Colors.screenT2)
             }
             .minimumScaleFactor(0.7)
+            }
             SceneChips(scenes: state.scenes)
         }
-        .foregroundStyle(ZTokens.Colors.textPrimary)
+        .foregroundStyle(ZTokens.Colors.screenT1)
     }
 }
 

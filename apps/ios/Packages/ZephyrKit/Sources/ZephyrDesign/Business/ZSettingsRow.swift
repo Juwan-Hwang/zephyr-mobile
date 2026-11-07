@@ -23,6 +23,7 @@ public struct ZSettingsRow<Trailing: View>: View {
     private let isHighlighted: Bool
     private let toggle: Binding<Bool>?
     private let trailing: Trailing
+    private var trailingIsInteractive = false
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ScaledMetric(relativeTo: .body) private var minHeight: CGFloat = ZMetrics.settingsRowMin
 
@@ -31,7 +32,9 @@ public struct ZSettingsRow<Trailing: View>: View {
                 subtitle: String? = nil,
                 index: Int? = nil,
                 isHighlighted: Bool = false,
+                trailingIsInteractive: Bool = false,
                 @ViewBuilder trailing: () -> Trailing) {
+        self.trailingIsInteractive = trailingIsInteractive
         self.title = Text(title)
         self.subtitle = subtitle
         self.index = index
@@ -45,7 +48,9 @@ public struct ZSettingsRow<Trailing: View>: View {
                 subtitle: String? = nil,
                 index: Int? = nil,
                 isHighlighted: Bool = false,
+                trailingIsInteractive: Bool = false,
                 @ViewBuilder trailing: () -> Trailing) {
+        self.trailingIsInteractive = trailingIsInteractive
         self.title = Text(verbatim: title)
         self.subtitle = subtitle
         self.index = index
@@ -71,11 +76,13 @@ public struct ZSettingsRow<Trailing: View>: View {
                 let stacked = dynamicTypeSize.isAccessibilitySize
                 let layout = stacked ? AnyLayout(VStackLayout(alignment: .leading, spacing: ZTokens.Space.n2))
                                      : AnyLayout(HStackLayout(alignment: .center, spacing: ZTokens.Space.n4))
+                // 右侧含按钮时不能合并成一个元素，否则 VoiceOver 无法单独选中（REVIEW D-P1-2）。
                 layout {
                     titleBlock.frame(maxWidth: stacked ? nil : .infinity, alignment: .leading)
+                        .accessibilityElement(children: .combine)
                     trailing
                 }
-                .accessibilityElement(children: .combine)
+                .accessibilityElement(children: trailingIsInteractive ? .contain : .combine)
             }
         }
         .padding(.horizontal, ZTokens.Space.n5 - ZTokens.Space.n1 / 2)
@@ -97,11 +104,11 @@ public struct ZSettingsRow<Trailing: View>: View {
             VStack(alignment: .leading, spacing: ZTokens.Space.n1 / 2) {
                 title
                     .zType(.body)
-                    .foregroundStyle(ZTokens.Colors.textPrimary)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
                 if let subtitle {
                     Text(verbatim: subtitle)
                         .zType(.caption)
-                        .foregroundStyle(ZTokens.Colors.textTertiary)
+                        .foregroundStyle(ZTokens.Colors.screenT3)
                 }
             }
         }
@@ -131,7 +138,7 @@ public struct ZSettingsAccessoryView: View {
     private func value(_ v: String) -> some View {
         Text(verbatim: v)
             .zType(.body)
-            .foregroundStyle(ZTokens.Colors.textTertiary)
+            .foregroundStyle(ZTokens.Colors.screenT3)
             .multilineTextAlignment(.trailing)
     }
 
@@ -179,12 +186,12 @@ private struct ZSettingsRowSample: View {
         ZSettingsGroup {
             ZSettingsRow(verbatim: "Zephyr 覆写", subtitle: "在订阅之上", index: 1) {
                 ZBadge("覆写", tone: .accent)
-                Text(verbatim: "14").zMono(.body).foregroundStyle(ZTokens.Colors.textSecondary)
+                Text(verbatim: "14").zMono(.body).foregroundStyle(ZTokens.Colors.screenT2)
             }
             ZDivider()
             ZSettingsRow(verbatim: "OpenAI", subtitle: "规则集 · 每天更新", index: 3, isHighlighted: true) {
                 ZBadge("域名")
-                Text(verbatim: "312").zMono(.body).foregroundStyle(ZTokens.Colors.textSecondary)
+                Text(verbatim: "312").zMono(.body).foregroundStyle(ZTokens.Colors.screenT2)
             }
         }
     }

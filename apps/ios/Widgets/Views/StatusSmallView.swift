@@ -12,7 +12,7 @@ struct StatusSmallView: View {
             HStack(alignment: .top) {
                 WidgetMark()
                     .frame(height: ZTokens.Space.n5)
-                    .foregroundStyle(ZTokens.Colors.textPrimary)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
                 Spacer(minLength: ZTokens.Space.n3)
                 PowerButton(isOn: state.connection.isOn)
             }
@@ -33,23 +33,23 @@ struct RateBlock: View {
                 let rate = ZFormat.rate(state.rate.downBps)
                 Text(rate.value)
                     .zType(.metric)
-                    .foregroundStyle(ZTokens.Colors.textPrimary)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                     .contentTransition(.numericText())
                 Text("\(rate.unit) · \(state.connection.mode.title)")
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.textSecondary)
+                    .foregroundStyle(ZTokens.Colors.screenT2)
                     .lineLimit(1)
             } else {
                 Text(state.connection.status.title)
                     .zType(.title)
-                    .foregroundStyle(ZTokens.Colors.textPrimary)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
                 Text(state.connection.status == .failed ? "轻点查看原因" : "轻点电源连接")
                     .zType(.footnote)
-                    .foregroundStyle(state.connection.status == .failed ? ZTokens.Colors.textWarning : ZTokens.Colors.textSecondary)
+                    .foregroundStyle(state.connection.status == .failed ? ZTokens.Colors.screenAmber : ZTokens.Colors.screenT2)
                     .lineLimit(1)
             }
         }
@@ -67,6 +67,6 @@ struct RateBlock: View {
     StatusSmallView(state: .prototype())
         .padding(ZTokens.Space.n5)
         .frame(width: 170, height: 170)
-        .background(ZTokens.Colors.bgElevated)
+        .background(ZTokens.Colors.screenS1)
         .clipShape(RoundedRectangle(cornerRadius: ZTokens.Radius.overlay, style: .continuous))
 }

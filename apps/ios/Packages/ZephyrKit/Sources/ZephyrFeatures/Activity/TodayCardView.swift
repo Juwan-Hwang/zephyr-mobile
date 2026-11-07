@@ -46,7 +46,7 @@ struct TodayCardView: View {
                     .padding(.top, ZTokens.Space.n6)
                 Text(verbatim: footnote)
                     .zType(.caption)
-                    .foregroundStyle(saveState == .failed ? ZTokens.Colors.textDanger : ZTokens.Colors.textTertiary)
+                    .foregroundStyle(saveState == .failed ? ZTokens.Colors.screenRed : ZTokens.Colors.screenT3)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, HMetrics.homeInset)
                     .padding(.top, ZTokens.Space.n4)
@@ -54,7 +54,12 @@ struct TodayCardView: View {
             }
         }
         .task { await model.refreshUsage() }
-        .task(id: RenderKey(usage: model.usage, theme: theme)) { render() }
+        // 导出图延后到 sheet 弹出动画结束、usage 稳定后再渲染（去抖），PNG 编码离开主线程（REVIEW H-P1-7）。
+        .task(id: RenderKey(usage: model.usage, theme: theme)) {
+            try? await Task.sleep(nanoseconds: 450_000_000)
+            guard !Task.isCancelled else { return }
+            await render()
+        }
     }
 
     // MARK: 区块
@@ -82,10 +87,10 @@ struct TodayCardView: View {
                         .foregroundStyle(ZPage.background)
                         .frame(maxWidth: .infinity, minHeight: ZTokens.Layout.touchMinIos)
                         .padding(.vertical, ZTokens.Space.n1)
-                        .background(Capsule(style: .continuous).fill(ZTokens.Colors.textPrimary))
+                        .background(Capsule(style: .continuous).fill(ZTokens.Colors.screenT1))
                         .contentShape(Capsule(style: .continuous))
                 }
-                .buttonStyle(ZPressStyle(haptic: .medium))
+                .buttonStyle(ZPressStyle(haptic: .none))
             } else {
                 ZButton("分享", size: .large, fullWidth: true, isLoading: true) {}
             }
@@ -107,7 +112,7 @@ struct TodayCardView: View {
         var theme: TodayTheme
     }
 
-    private func render() {
+    private func render() async {
         guard let u = model.usage else { exported = nil; exportedPNG = nil; return }
         let size = HMetrics.todayCardSize
         let content = TodayCard(usage: u, dateText: dateText, theme: theme, animated: false)
@@ -119,7 +124,9 @@ struct TodayCardView: View {
         r.proposedSize = ProposedViewSize(size)
         guard let ui = r.uiImage else { return }
         exported = Image(uiImage: ui)
-        exportedPNG = ui.pngData()
+        let png = await Task.detached(priority: .utility) { ui.pngData() }.value
+        guard !Task.isCancelled else { return }
+        exportedPNG = png
         if saveState != .saving { saveState = .idle }
     }
 
@@ -161,10 +168,10 @@ struct TodayThemePicker: View {
                     HStack(spacing: ZTokens.Space.n2) {
                         Circle().fill(t.background)
                             .frame(width: swatch, height: swatch)
-                            .overlay { Circle().strokeBorder(ZTokens.Colors.borderStrong, lineWidth: HMetrics.hairline) }
+                            .overlay { Circle().strokeBorder(ZTokens.Colors.screenT4, lineWidth: HMetrics.hairline) }
                         Text(verbatim: t.title)
                             .zType(.footnote)
-                            .foregroundStyle(on ? ZTokens.Colors.textPrimary : ZTokens.Colors.textSecondary)
+                            .foregroundStyle(on ? ZTokens.Colors.screenT1 : ZTokens.Colors.screenT2)
                     }
                     .padding(.leading, ZTokens.Space.n2)
                     .padding(.trailing, ZTokens.Space.n4)
@@ -172,7 +179,7 @@ struct TodayThemePicker: View {
                     .background(Capsule(style: .continuous).fill(on ? AnyShapeStyle(ZCardFill()) : AnyShapeStyle(Color.clear)))
                     .overlay {
                         Capsule(style: .continuous)
-                            .strokeBorder(on ? ZTokens.Colors.borderStrong : ZTokens.Colors.borderPrimary, lineWidth: HMetrics.hairline)
+                            .strokeBorder(on ? ZTokens.Colors.screenT4 : ZTokens.Colors.screenHl2, lineWidth: HMetrics.hairline)
                     }
                     .frame(minHeight: ZTokens.Layout.touchMinIos)
                     .contentShape(Rectangle())

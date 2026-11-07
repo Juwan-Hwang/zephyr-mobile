@@ -1,52 +1,60 @@
-// 组合语义填充。原型的表面层级（--s1…--s4、--t4、页面底色）在 ZTokens 里没有一一对应的 token，
-// 这里用 iOS 17 自定义 ShapeStyle 在“组件库这一层”把 token 组合成原型的观感，组件里不写深浅三元。
-// 已在 NOTES-D.md 请求 A 补：surfaceCard / fillTrack / fillKnob / textQuaternary / bgPage。
+// 组合语义填充：把原型手机色板 screen.*（--s1…--s4、--t4、--bg）映射成组件可用的 ShapeStyle。
 
 import SwiftUI
 import UIKit
 
-/// 卡片表面：深色 = surfaceRaised（深色玻璃，靠 1px borderSubtle 分层）；浅色 = surfaceElevated（原型浅色卡片为纯白）。
+/// 卡片表面（原型 --s1）。在 sheet 内（底色本身是 --s1）自动抬到列表色 --s2，保持“列表比 sheet 亮”的层级。
 public struct ZCardFill: ShapeStyle, Sendable {
     public init() {}
     public func resolve(in environment: EnvironmentValues) -> Color {
-        environment.colorScheme == .dark ? ZTokens.Colors.surfaceRaised : ZTokens.Colors.surfaceElevated
+        environment.zInSheet ? ZTokens.Colors.screenS2 : ZTokens.Colors.screenS1
     }
+}
+
+/// 列表表面（原型 --s2：sheet 内列表、指令建议、资料库统计）。
+public struct ZListFill: ShapeStyle, Sendable {
+    public init() {}
+    public func resolve(in environment: EnvironmentValues) -> Color { ZTokens.Colors.screenS2 }
 }
 
 /// 轨道/输入底色（原型 --s3：分段控件底、搜索框、按钮 ghost 底）。
 public struct ZTrackFill: ShapeStyle, Sendable {
     public init() {}
-    public func resolve(in environment: EnvironmentValues) -> Color {
-        ZTokens.Colors.borderDefault
-    }
+    public func resolve(in environment: EnvironmentValues) -> Color { ZTokens.Colors.screenS3 }
 }
 
-/// 滑块/选中块（原型 --s4：分段控件的 knob、吐司底）。深色叠一层 borderDefault，浅色用白色抬起。
+/// 滑块/选中块（原型 --s4：分段控件的 knob、吐司底）。
 public struct ZKnobFill: ShapeStyle, Sendable {
     public init() {}
-    public func resolve(in environment: EnvironmentValues) -> Color {
-        environment.colorScheme == .dark ? ZTokens.Colors.borderPrimary : ZTokens.Colors.surfaceElevated
-    }
+    public func resolve(in environment: EnvironmentValues) -> Color { ZTokens.Colors.screenS4 }
 }
 
-/// 第四级文字（原型 --t4 20%：箭头、序号、未测延迟）。
+/// 第四级文字（原型 --t4：箭头、序号、未测延迟）。
 public struct ZQuaternaryText: ShapeStyle, Sendable {
     public init() {}
-    public func resolve(in environment: EnvironmentValues) -> Color {
-        ZTokens.Colors.borderStrong
-    }
+    public func resolve(in environment: EnvironmentValues) -> Color { ZTokens.Colors.screenT4 }
 }
 
-/// 开关“开”的颜色（原型 --green #30D158 / 浅色 #34C759，等于 latencyGood）。
+/// 开关颜色（原型 --green / --s4）。
 public enum ZSwitchColor {
     public static var on: Color { ZTokens.Colors.screenGreen }
     /// 开关“关”轨道（原型 --s4）。
-    public static var off: Color { ZTokens.Colors.borderStrong }
+    public static var off: Color { ZTokens.Colors.screenS4 }
 }
 
-/// 页面底色：深色纯黑、浅色 #F2F2F7（等于系统 grouped background）。
+private struct ZInSheetKey: EnvironmentKey { static let defaultValue = false }
+
+public extension EnvironmentValues {
+    /// 当前内容是否处在 Zephyr sheet 中（底色 --s1），卡片据此抬到 --s2。
+    var zInSheet: Bool {
+        get { self[ZInSheetKey.self] }
+        set { self[ZInSheetKey.self] = newValue }
+    }
+}
+
+/// 页面底色（原型 --bg：深色纯黑、浅色 #F2F2F7）。
 public enum ZPage {
-    public static var background: Color { Color(uiColor: .systemGroupedBackground) }
+    public static var background: Color { ZTokens.Colors.screenBg }
 }
 
 public extension View {

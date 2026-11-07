@@ -34,14 +34,14 @@ public struct ZBrandMark: View {
             ZStatusDot(isOn: true)
             ZBrandMark().frame(height: 15)
         }
-        .foregroundStyle(ZTokens.Colors.textPrimary)
+        .foregroundStyle(ZTokens.Colors.screenT1)
         ZBrandMark(.mark).frame(height: 40).foregroundStyle(ZAccentStyle())
     }
 }
 
 #Preview("浅色") {
     ZPreviewCanvas(scheme: .light) {
-        ZBrandMark().frame(height: 15).foregroundStyle(ZTokens.Colors.textPrimary)
+        ZBrandMark().frame(height: 15).foregroundStyle(ZTokens.Colors.screenT1)
     }
 }
 
@@ -53,6 +53,6 @@ public struct ZBrandMark: View {
 
 #Preview("AX5") {
     ZPreviewCanvas(dynamicType: .accessibility5) {
-        ZBrandMark().frame(height: 15).foregroundStyle(ZTokens.Colors.textPrimary)
+        ZBrandMark().frame(height: 15).foregroundStyle(ZTokens.Colors.screenT1)
     }
 }

@@ -20,7 +20,7 @@ struct NodeDetailSheet: View {
                         ZFlag(node.region)
                         Text(verbatim: node.name)
                             .zType(.title)
-                            .foregroundStyle(ZTokens.Colors.textPrimary)
+                            .foregroundStyle(ZTokens.Colors.screenT1)
                         Spacer(minLength: 0)
                     }
                     .padding(.horizontal, PageMetrics.titleInset)

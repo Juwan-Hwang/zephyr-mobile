@@ -25,10 +25,10 @@ struct WidgetsGuideSheet: View {
                         VStack(alignment: .leading, spacing: ZTokens.Space.n2) {
                             Text(s.title)
                                 .zType(.headline)
-                                .foregroundStyle(ZTokens.Colors.textPrimary)
+                                .foregroundStyle(ZTokens.Colors.screenT1)
                             Text(s.detail)
                                 .zType(.footnote)
-                                .foregroundStyle(ZTokens.Colors.textSecondary)
+                                .foregroundStyle(ZTokens.Colors.screenT2)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                     }

@@ -74,7 +74,7 @@ public struct ZChainStep: View {
             VStack(alignment: .leading, spacing: style == .compact ? 0 : ZTokens.Space.n1 / 2) {
                 Text(verbatim: label)
                     .zType(.caption)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
                 HStack(spacing: ZTokens.Space.n3) {
                     if let regionCode { ZFlag(regionCode) }
                     valueText
@@ -82,14 +82,14 @@ public struct ZChainStep: View {
                 if let detail {
                     Text(verbatim: detail)
                         .zType(.caption)
-                        .foregroundStyle(ZTokens.Colors.textTertiary)
+                        .foregroundStyle(ZTokens.Colors.screenT3)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             if let trailing {
                 Text(verbatim: trailing)
                     .zMono(.small)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
                     .lineLimit(1)
                     .fixedSize()
             }
@@ -104,7 +104,7 @@ public struct ZChainStep: View {
 
     @ViewBuilder
     private var valueText: some View {
-        let text = Text(verbatim: value).foregroundStyle(ZTokens.Colors.textPrimary)
+        let text = Text(verbatim: value).foregroundStyle(ZTokens.Colors.screenT1)
         if monospacedValue {
             text.zMono(.body).lineLimit(2)
         } else {
@@ -114,7 +114,7 @@ public struct ZChainStep: View {
 
     private var dot: some View {
         Circle()
-            .strokeBorder(markerColor ?? ZTokens.Colors.textTertiary, lineWidth: ZMetrics.chainDotStroke)
+            .strokeBorder(markerColor ?? ZTokens.Colors.screenT3, lineWidth: ZMetrics.chainDotStroke)
             .background(Circle().fill(markerColor ?? Color.clear))
             .frame(width: dotSize, height: dotSize)
             .accessibilityHidden(true)
@@ -125,8 +125,8 @@ public struct ZChainStep: View {
         case .hollow: return nil
         case .accent: return accent.color
         case .success: return ZSwitchColor.on
-        case .warning: return ZTokens.Colors.colorWarning
-        case .danger: return ZTokens.Colors.colorDanger
+        case .warning: return ZTokens.Colors.screenAmber
+        case .danger: return ZTokens.Colors.screenRed
         }
     }
 
@@ -149,7 +149,7 @@ public struct ZChainStep: View {
                     p.addLine(to: CGPoint(x: x, y: geo.size.height))
                 }
             }
-            .stroke(ZTokens.Colors.borderPrimary, lineWidth: ZMetrics.hairline)
+            .stroke(ZTokens.Colors.screenHl2, lineWidth: ZMetrics.hairline)
         }
         .accessibilityHidden(true)
     }

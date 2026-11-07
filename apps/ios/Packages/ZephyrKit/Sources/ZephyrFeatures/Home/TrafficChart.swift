@@ -1,6 +1,6 @@
 // 首页全宽流量曲线（原型 #cv "wind"）。
 //
-//  - Canvas 绘制，TimelineView(.animation) 驱动 60/120fps：样本 1 Hz 到达，曲线在两个样本之间匀速左移，
+//  - Canvas 绘制，TimelineView(.animation) 驱动 60fps（被 sheet 盖住/后台时暂停）：样本 1 Hz 到达，曲线在两个样本之间匀速左移，
 //    曲线头沿最后一段平滑插值，看起来是连续流动而不是每秒跳一格。
 //  - 只有本视图读取 TrafficStore；首页其余部分不随流量刷新重算。
 //  - 未连接：底部一条虚线（原型 setLineDash([2,8])），暂停时间线。连接时振幅 0→1 缓入。
@@ -22,27 +22,59 @@ struct TrafficChart: View {
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.colorScheme) private var scheme
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(AppModel.self) private var model
     @State private var onSince: TimeInterval?
+    /// 1 Hz 样本到达时算好的窗口与归一化区间；帧内只做插值，不再每帧分配数组（REVIEW H-P1-4）。
+    @State private var series = Series.empty
+
+    /// 被 sheet / 指令层盖住或不在前台时暂停逐帧时间线，省电。
+    private var isCovered: Bool {
+        model.sheet != nil || model.isCommandPresented || scenePhase != .active
+    }
 
     var body: some View {
-        // 读一次 latest：Reduce Motion（时间线暂停）时样本到达也能触发重绘；只重算本小视图。
-        let _ = store.latest?.at
-        TimelineView(.animation(minimumInterval: nil, paused: !isOn || reduceMotion)) { _ in
-            // 在主线程取值快照，Canvas 渲染闭包只接触值类型。
-            let window = store.ring.suffix(Self.scaleWindow)
-            let lo = Double(window.map(\.down).min() ?? 0), hi = Double(window.map(\.down).max() ?? 1)
-            let snap = Snapshot(points: Array(window.suffix(Self.visible + 2)),
-                                lo: lo * 0.92, hi: max(hi * 1.04, lo * 0.92 + 1),
-                                arrival: store.latestArrival,
+        let paused = !isOn || reduceMotion || isCovered
+        // 60fps 足够平滑地滚动 1 Hz 曲线；ProMotion 下不必 120fps。
+        TimelineView(.animation(minimumInterval: 1.0 / 60, paused: paused)) { _ in
+            let snap = Snapshot(points: series.points, lo: series.lo, hi: series.hi,
+                                arrival: series.arrival,
                                 clock: ProcessInfo.processInfo.systemUptime)
             Canvas { ctx, size in
                 draw(in: &ctx, size: size, snap: snap)
             }
         }
+        .onChange(of: store.latest?.at, initial: true) { _, _ in
+            series = Series(store: store)
+        }
         .onChange(of: isOn, initial: true) { _, on in
             onSince = on ? ProcessInfo.processInfo.systemUptime : nil
         }
         .accessibilityHidden(true)
+    }
+
+    private struct Series {
+        var points: [RatePoint]
+        var lo: Double
+        var hi: Double
+        var arrival: TimeInterval
+
+        static let empty = Series(points: [], lo: 0, hi: 1, arrival: 0)
+
+        init(points: [RatePoint], lo: Double, hi: Double, arrival: TimeInterval) {
+            self.points = points; self.lo = lo; self.hi = hi; self.arrival = arrival
+        }
+
+        @MainActor
+        init(store: TrafficStore) {
+            let window = store.ring.suffix(TrafficChart.scaleWindow)
+            var lo = Int64.max, hi = Int64.min
+            for p in window { lo = min(lo, p.down); hi = max(hi, p.down) }
+            let l = window.isEmpty ? 0 : Double(lo), h = window.isEmpty ? 1 : Double(hi)
+            self.init(points: Array(window.suffix(TrafficChart.visible + 2)),
+                      lo: l * 0.92, hi: max(h * 1.04, l * 0.92 + 1),
+                      arrival: store.latestArrival)
+        }
     }
 
     // MARK: 绘制
@@ -140,7 +172,7 @@ struct TrafficChart: View {
         var p = Path()
         p.move(to: CGPoint(x: 0, y: y))
         p.addLine(to: CGPoint(x: w, y: y))
-        ctx.stroke(p, with: .color(ZTokens.Colors.borderPrimary),
+        ctx.stroke(p, with: .color(ZTokens.Colors.screenHl2),
                    style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [1, 4]))
     }
 }

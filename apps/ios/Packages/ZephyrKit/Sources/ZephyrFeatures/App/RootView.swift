@@ -12,6 +12,8 @@ import ZephyrKit
 public struct RootView: View {
     @State private var model: AppModel
     @Environment(\.scenePhase) private var scenePhase
+    /// 首启引导是否已完成（原型 01–03）。老用户（已有订阅）首帧即视为完成。
+    @AppStorage("onboarding.done") private var onboardingDone = false
 
     public init(model: AppModel) {
         _model = State(initialValue: model)
@@ -33,7 +35,15 @@ public struct RootView: View {
                     .zIndex(1)
             }
         }
-        .overlay(alignment: .top) { ErrorBanner() }
+        .overlay(alignment: .top) { if model.sheet == nil { ErrorBanner() } }
+        .fullScreenCover(isPresented: needsOnboarding) {
+            OnboardingView(engine: model.engine, onFinishChoosing: { _ in onboardingDone = true })
+                .zAccent(accent)
+        }
+        .onChange(of: model.subscriptions.isEmpty) { _, empty in
+            // 已有订阅的用户（升级安装、在别处导入）不再看引导。
+            if !empty { onboardingDone = true }
+        }
         .animation(ZMotion.slow, value: model.isCommandPresented)
         .environment(model)
         .zAccent(accent)
@@ -41,6 +51,14 @@ public struct RootView: View {
         .task { model.start() }
         .onChange(of: scenePhase, initial: true) { _, phase in model.scenePhaseChanged(phase) }
         .onOpenURL { model.handle(url: $0) }
+    }
+
+    /// 订阅流首帧到达且为空、且从未完成引导时呈现引导（REVIEW P0-1）。VPN 授权留到首次点开关时再请求。
+    private var needsOnboarding: Binding<Bool> {
+        Binding(
+            get: { !onboardingDone && model.subscriptionsLoaded && model.subscriptions.isEmpty },
+            set: { presented in if !presented { onboardingDone = true } }
+        )
     }
 
     private var accent: ZTokens.Accent {
@@ -63,10 +81,15 @@ struct SheetHost: View {
     let route: SheetRoute
     /// RootView 按设置算出的强调色（sheet 内不依赖继承）。
     let accent: ZTokens.Accent
+    @Environment(AppModel.self) private var model
 
     var body: some View {
+        @Bindable var model = model
         content
             .zAccent(accent)
+            // 撤销吐司与错误横幅在 sheet 之上也要可见（REVIEW H-P1-1）；首页那份在有 sheet 时不显示。
+            .zToast($model.toast, bottomInset: ZTokens.Space.n6)
+            .overlay(alignment: .top) { ErrorBanner() }
     }
 
     @ViewBuilder
@@ -98,7 +121,7 @@ private struct ErrorBanner: View {
             if let e = model.lastError {
                 Text(verbatim: e.userMessage)
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.textPrimary)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
                     .padding(.horizontal, ZTokens.Space.n5)
                     .padding(.vertical, ZTokens.Space.n3)
                     .zSurface(.elevated, cornerRadius: ZTokens.Radius.full)

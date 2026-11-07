@@ -23,7 +23,7 @@ public struct ZPressStyle: ButtonStyle {
     public var scale: CGFloat
     public var haptic: ZHaptic
 
-    public init(scale: CGFloat = CGFloat(ZTokens.Motion.pressScale), haptic: ZHaptic = .light) {
+    public init(scale: CGFloat = CGFloat(ZTokens.Motion.pressScale), haptic: ZHaptic = .none) {
         self.scale = scale
         self.haptic = haptic
     }

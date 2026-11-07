@@ -24,6 +24,7 @@ struct SceneRow: View {
     @State private var startIndex = 0
     @State private var tickToken = 0
     @State private var ticking = false
+    @State private var pressed = false
 
     private var choices: [NodeSummary] { model.regionChoices[scene.id] ?? [] }
     private var shown: NodeSummary {
@@ -39,12 +40,13 @@ struct SceneRow: View {
         }
         .padding(.vertical, HMetrics.rowVertical)
         .padding(.horizontal, HMetrics.rowHorizontal)
-        .background(scrubIndex != nil ? AnyShapeStyle(ZAccentStyle(opacity: 0.05)) : AnyShapeStyle(Color.clear))
+        .background(rowBackground)
         .overlay(alignment: .bottom) { scrubTrack }
         .overlay(alignment: .bottom) { coach }
         .overlay {
             if scrubbable {
-                HorizontalPanOverlay(onTap: openDetail, onBegan: began, onChanged: changed, onEnded: ended)
+                HorizontalPanOverlay(onTap: openDetail, onBegan: began, onChanged: changed, onEnded: ended,
+                                     onPressChanged: { pressed = $0 })
             }
         }
         .contentShape(Rectangle())
@@ -61,13 +63,18 @@ struct SceneRow: View {
         }
     }
 
+    private var rowBackground: AnyShapeStyle {
+        if scrubIndex != nil { return AnyShapeStyle(ZAccentStyle(opacity: 0.05)) }
+        return pressed ? AnyShapeStyle(ZTokens.Colors.screenPressed) : AnyShapeStyle(Color.clear)
+    }
+
     // MARK: 左右两栏
 
     private var leading: some View {
         VStack(alignment: .leading, spacing: ZTokens.Space.n1) {
             Text(verbatim: scene.name)
                 .zType(.headline).fontWeight(.regular)
-                .foregroundStyle(ZTokens.Colors.textPrimary)
+                .foregroundStyle(ZTokens.Colors.screenT1)
             meta
         }
     }
@@ -77,15 +84,15 @@ struct SceneRow: View {
         if isProbing {
             VStack(alignment: .leading, spacing: ZTokens.Space.n2) {
                 Text(verbatim: scene.available > 0 ? "\(scene.available) 个可用 · 检测中" : "检测中")
-                    .zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary)
+                    .zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
                 ProbeBar().frame(width: HMetrics.probeBarWidth)
             }
         } else if scene.source == .subscriptionGroup {
-            Text(verbatim: "订阅分组").zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary)
+            Text(verbatim: "订阅分组").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
         } else if scene.available <= 0 {
-            Text(verbatim: "暂无可用节点").zType(.footnote).foregroundStyle(ZTokens.Colors.textDanger)
+            Text(verbatim: "暂无可用节点").zType(.footnote).foregroundStyle(ZTokens.Colors.screenRed)
         } else {
-            Text(verbatim: "\(scene.available) 个可用").zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary)
+            Text(verbatim: "\(scene.available) 个可用").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
         }
     }
 
@@ -95,7 +102,7 @@ struct SceneRow: View {
                 ZFlag(shown.region, isHighlighted: ticking)
                 Text(verbatim: shown.name)
                     .zType(.headline).fontWeight(.regular)
-                    .foregroundStyle(ZTokens.Colors.textPrimary)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
                     .lineLimit(1)
                     .contentTransition(.opacity)
             }
@@ -103,14 +110,14 @@ struct SceneRow: View {
                 HStack(spacing: ZTokens.Space.n2) {
                     Image(systemName: "lock.fill")
                         .font(.caption2)
-                        .foregroundStyle(ZTokens.Colors.textWarning)
+                        .foregroundStyle(ZTokens.Colors.screenAmber)
                     Text(verbatim: "\(ex.app)：\(ex.node.name)")
                 }
                 .zType(.caption)
-                .foregroundStyle(ZTokens.Colors.textTertiary)
+                .foregroundStyle(ZTokens.Colors.screenT3)
                 .lineLimit(1)
             } else if let note = scene.note {
-                Text(verbatim: note).zType(.caption).foregroundStyle(ZTokens.Colors.textTertiary).lineLimit(1)
+                Text(verbatim: note).zType(.caption).foregroundStyle(ZTokens.Colors.screenT3).lineLimit(1)
             }
         }
         .multilineTextAlignment(.trailing)
@@ -123,7 +130,7 @@ struct SceneRow: View {
         if scrubIndex != nil, choices.count > 1 {
             HStack(spacing: ZTokens.Space.n1) {
                 ForEach(choices.indices, id: \.self) { i in
-                    Capsule().fill(i == scrubIndex ? AnyShapeStyle(ZAccentStyle()) : AnyShapeStyle(ZTokens.Colors.borderStrong))
+                    Capsule().fill(i == scrubIndex ? AnyShapeStyle(ZAccentStyle()) : AnyShapeStyle(ZTokens.Colors.screenT4))
                         .frame(height: HMetrics.barThin + 1)
                 }
             }

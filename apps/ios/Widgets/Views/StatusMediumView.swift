@@ -11,7 +11,7 @@ struct StatusMediumView: View {
         HStack(spacing: ZTokens.Space.n5) {
             StatusSmallView(state: state)
             Rectangle()
-                .fill(ZTokens.Colors.borderSubtle)
+                .fill(ZTokens.Colors.screenHl)
                 .frame(width: 1)
                 .accessibilityHidden(true)
             UsageSmallView(state: state, now: now)
@@ -23,6 +23,6 @@ struct StatusMediumView: View {
     StatusMediumView(state: .prototype(), now: Date())
         .padding(ZTokens.Space.n5)
         .frame(width: 364, height: 170)
-        .background(ZTokens.Colors.bgElevated)
+        .background(ZTokens.Colors.screenS1)
         .clipShape(RoundedRectangle(cornerRadius: ZTokens.Radius.overlay, style: .continuous))
 }

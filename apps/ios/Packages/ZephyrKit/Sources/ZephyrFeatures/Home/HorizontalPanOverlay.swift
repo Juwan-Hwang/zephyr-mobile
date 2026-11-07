@@ -13,6 +13,8 @@ struct HorizontalPanOverlay: UIViewRepresentable {
     var onBegan: @MainActor () -> Void
     var onChanged: @MainActor (CGFloat) -> Void
     var onEnded: @MainActor (CGFloat) -> Void
+    /// 按下态（原型 `.row:active`）：手指落下即高亮，移动超过 10pt、开始横滑或抬起时取消（REVIEW H-P1-3）。
+    var onPressChanged: @MainActor (Bool) -> Void = { _ in }
 
     func makeCoordinator() -> Coordinator { Coordinator(self) }
 
@@ -24,8 +26,14 @@ struct HorizontalPanOverlay: UIViewRepresentable {
         pan.delegate = context.coordinator
         let tap = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.tap(_:)))
         tap.require(toFail: pan)
+        let press = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.press(_:)))
+        press.minimumPressDuration = 0.06
+        press.allowableMovement = 10
+        press.cancelsTouchesInView = false
+        press.delegate = context.coordinator
         v.addGestureRecognizer(pan)
         v.addGestureRecognizer(tap)
+        v.addGestureRecognizer(press)
         return v
     }
 
@@ -42,14 +50,28 @@ struct HorizontalPanOverlay: UIViewRepresentable {
             if g.state == .ended { parent.onTap() }
         }
 
+        @objc func press(_ g: UILongPressGestureRecognizer) {
+            switch g.state {
+            case .began: parent.onPressChanged(true)
+            case .ended, .cancelled, .failed: parent.onPressChanged(false)
+            default: break
+            }
+        }
+
         @objc func pan(_ g: UIPanGestureRecognizer) {
             let dx = g.translation(in: g.view).x
             switch g.state {
-            case .began: parent.onBegan(); parent.onChanged(dx)
+            case .began: parent.onPressChanged(false); parent.onBegan(); parent.onChanged(dx)
             case .changed: parent.onChanged(dx)
             case .ended, .cancelled, .failed: parent.onEnded(dx)
             default: break
             }
+        }
+
+        /// 按下态识别器与点按、横滑、外层 ScrollView 同时识别，不抢任何手势。
+        nonisolated func gestureRecognizer(_ g: UIGestureRecognizer,
+                                           shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool {
+            g is UILongPressGestureRecognizer || other is UILongPressGestureRecognizer
         }
 
         nonisolated func gestureRecognizerShouldBegin(_ g: UIGestureRecognizer) -> Bool {

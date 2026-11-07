@@ -62,7 +62,7 @@ public struct ZGroupCard: View {
                 Text(verbatim: title)
                     .zType(.headline)
                     .fontWeight(.regular)
-                    .foregroundStyle(ZTokens.Colors.textPrimary)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
                 Text(verbatim: subtitle)
                     .zType(.footnote)
                     .foregroundStyle(subtitleColor)
@@ -73,7 +73,7 @@ public struct ZGroupCard: View {
                     if let regionCode { ZFlag(regionCode, isHighlighted: scrubIndex != nil) }
                     Text(verbatim: exitName)
                         .zType(.body)
-                        .foregroundStyle(ZTokens.Colors.textPrimary)
+                        .foregroundStyle(ZTokens.Colors.screenT1)
                         .lineLimit(stacked ? nil : 1)
                 }
                 secondary
@@ -98,16 +98,16 @@ public struct ZGroupCard: View {
             HStack(spacing: ZTokens.Space.n2) {
                 Image(systemName: "lock.fill")
                     .imageScale(.small)
-                    .foregroundStyle(ZTokens.Colors.textWarning.opacity(0.85))
+                    .foregroundStyle(ZTokens.Colors.screenAmber.opacity(0.85))
                     .accessibilityLabel(Text(verbatim: "已锁定"))
                 Text(verbatim: pinned)
             }
             .zType(.caption)
-            .foregroundStyle(ZTokens.Colors.textTertiary)
+            .foregroundStyle(ZTokens.Colors.screenT3)
         } else if let detail {
             Text(verbatim: detail)
                 .zType(.footnote)
-                .foregroundStyle(ZTokens.Colors.textTertiary)
+                .foregroundStyle(ZTokens.Colors.screenT3)
         }
     }
 
@@ -117,7 +117,7 @@ public struct ZGroupCard: View {
             HStack(spacing: ZMetrics.scrubGap) {
                 ForEach(0..<scrubCount, id: \.self) { i in
                     Capsule()
-                        .fill(i == scrubIndex ? AnyShapeStyle(accent.color) : AnyShapeStyle(ZTokens.Colors.borderPrimary))
+                        .fill(i == scrubIndex ? AnyShapeStyle(accent.color) : AnyShapeStyle(ZTokens.Colors.screenHl2))
                         .frame(height: ZMetrics.scrubHeight)
                 }
             }
@@ -129,9 +129,9 @@ public struct ZGroupCard: View {
 
     private var subtitleColor: Color {
         switch subtitleTone {
-        case .normal: return ZTokens.Colors.textTertiary
-        case .warning: return ZTokens.Colors.textWarning
-        case .danger: return ZTokens.Colors.textDanger
+        case .normal: return ZTokens.Colors.screenT3
+        case .warning: return ZTokens.Colors.screenAmber
+        case .danger: return ZTokens.Colors.screenRed
         }
     }
 }

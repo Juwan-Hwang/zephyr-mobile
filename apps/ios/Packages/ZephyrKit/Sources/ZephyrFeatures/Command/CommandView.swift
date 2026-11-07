@@ -90,16 +90,16 @@ private struct CommandField: View {
     var body: some View {
         HStack(spacing: ZTokens.Space.n3) {
             Image(systemName: "magnifyingglass")
-                .foregroundStyle(ZTokens.Colors.textTertiary)
+                .foregroundStyle(ZTokens.Colors.screenT3)
                 .accessibilityHidden(true)
             ZStack(alignment: .leading) {
                 mirror
                     .lineLimit(1)
                     .accessibilityHidden(true)
-                TextField(text: $model.input, prompt: Text(verbatim: "搜索或输入指令").foregroundStyle(ZTokens.Colors.textTertiary)) {
+                TextField(text: $model.input, prompt: Text(verbatim: "搜索或输入指令").foregroundStyle(ZTokens.Colors.screenT3)) {
                     Text(verbatim: "指令")
                 }
-                .foregroundStyle(model.input.isEmpty ? AnyShapeStyle(ZTokens.Colors.textPrimary) : AnyShapeStyle(Color.clear))
+                .foregroundStyle(model.input.isEmpty ? AnyShapeStyle(ZTokens.Colors.screenT1) : AnyShapeStyle(Color.clear))
                 .tint(ZAccentStyle())
                 .focused(focused)
                 .submitLabel(.go)
@@ -112,7 +112,7 @@ private struct CommandField: View {
                 Text(verbatim: "取消").zType(.body).foregroundStyle(ZAccentStyle())
                     .frame(minHeight: ZTokens.Layout.touchMinIos)
             }
-            .buttonStyle(ZPressStyle(haptic: .light))
+            .buttonStyle(ZPressStyle(haptic: .none))
         }
         .padding(.horizontal, ZTokens.Space.n5)
         .frame(minHeight: height)
@@ -133,15 +133,15 @@ private struct CommandField: View {
             i = r.upperBound
         }
         out = out + Text(verbatim: String(chars[i...]))
-        return out.foregroundColor(ZTokens.Colors.textPrimary)
+        return out.foregroundColor(ZTokens.Colors.screenT1)
     }
 
     private func color(_ k: CommandToken.Kind) -> Color {
         switch k {
         case .service, .scene: ZTokens.Colors.colorDownload
-        case .region: ZTokens.Colors.colorSuccess
-        case .action: ZTokens.Colors.colorWarning
-        case .scope: ZTokens.Colors.textTertiary
+        case .region: ZTokens.Colors.screenGreen
+        case .action: ZTokens.Colors.screenAmber
+        case .scope: ZTokens.Colors.screenT3
         }
     }
 }

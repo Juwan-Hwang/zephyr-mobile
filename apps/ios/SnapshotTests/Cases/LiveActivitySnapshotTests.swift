@@ -13,7 +13,7 @@ final class LiveActivitySnapshotTests: XCTestCase {
     private func lockCard(state: ZephyrActivityAttributes.ContentState, accent: ZTokens.Accent) -> some View {
         LiveActivityLockView(state: state, accent: accent.color, frozenNow: SnapshotFixtures.now)
             .frame(width: Self.lockWidth)
-            .background(ZTokens.Colors.bgElevated)
+            .background(ZTokens.Colors.screenS1)
             .clipShape(RoundedRectangle(cornerRadius: ZTokens.Radius.overlay, style: .continuous))
             .padding(12)
     }

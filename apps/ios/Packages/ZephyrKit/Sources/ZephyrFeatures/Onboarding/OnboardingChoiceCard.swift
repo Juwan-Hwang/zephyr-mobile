@@ -26,10 +26,10 @@ struct OnboardingChoiceCard: View {
                     Text(title)
                         .zType(.headline)
                         .fontWeight(.medium)
-                        .foregroundStyle(ZTokens.Colors.textPrimary)
+                        .foregroundStyle(ZTokens.Colors.screenT1)
                     Text(detail)
                         .zType(.footnote)
-                        .foregroundStyle(ZTokens.Colors.textTertiary)
+                        .foregroundStyle(ZTokens.Colors.screenT3)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)

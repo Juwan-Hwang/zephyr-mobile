@@ -31,6 +31,7 @@ extension AppModel {
             for await list in engine.subscriptions() {
                 guard let self else { return }
                 self.subscriptions = list
+                self.subscriptionsLoaded = true
             }
         })
         streamTasks.append(Task { [weak self] in

@@ -12,10 +12,10 @@ struct HomeHeader: View {
     var body: some View {
         HStack(spacing: ZTokens.Space.n3) {
             ZStatusDot(isOn: model.isConnected,
-                       color: model.connection.status == .failed ? ZTokens.Colors.colorDanger : nil)
+                       color: model.connection.status == .failed ? ZTokens.Colors.screenRed : nil)
             ZBrandMark(.lockup)
                 .frame(height: lockupHeight)
-                .foregroundStyle(ZTokens.Colors.textPrimary)
+                .foregroundStyle(ZTokens.Colors.screenT1)
             Spacer(minLength: 0)
             ZIconButton(systemImage: "sun.max", label: "设置") {
                 model.push(.settings)

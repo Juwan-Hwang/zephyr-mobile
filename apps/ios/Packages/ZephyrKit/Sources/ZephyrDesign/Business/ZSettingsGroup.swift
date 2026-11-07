@@ -30,7 +30,7 @@ public struct ZSettingsGroup<Content: View>: View {
             if let footer {
                 Text(footer)
                     .zType(.caption)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
                     .padding(.horizontal, ZTokens.Space.n2)
                     .padding(.top, ZTokens.Space.n3)
                     .fixedSize(horizontal: false, vertical: true)
@@ -56,7 +56,7 @@ public struct ZSettingsGroup<Content: View>: View {
                 Text(verbatim: "节点与规则").zType(.body)
                 ZProgressBar(segments: [ZProgressSegment(id: 0, fraction: 0.27, tone: .accent),
                                         ZProgressSegment(id: 1, fraction: 0.36, tone: .neutral)], label: "存储")
-                Text(verbatim: "节点 0.6 GB · 规则 1.9 GB · 可用 3.1 GB").zType(.caption).foregroundStyle(ZTokens.Colors.textTertiary)
+                Text(verbatim: "节点 0.6 GB · 规则 1.9 GB · 可用 3.1 GB").zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
             }
             .padding(ZTokens.Space.n5)
         }

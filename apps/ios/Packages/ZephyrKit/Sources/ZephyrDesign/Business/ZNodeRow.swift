@@ -62,7 +62,7 @@ public struct ZNodeRow: View {
                 if let multiplier {
                     Text(verbatim: multiplier)
                         .zMono(.small)
-                        .foregroundStyle(ZTokens.Colors.textTertiary)
+                        .foregroundStyle(ZTokens.Colors.screenT3)
                         .fixedSize()
                 }
             }
@@ -76,7 +76,7 @@ public struct ZNodeRow: View {
                 Text(verbatim: protocolName)
                     .zMono(.micro)
                     .tracking(0.2)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
                     .fixedSize()
             }
             ZLatencyPill(ms: latency, isTesting: isTesting)
@@ -97,7 +97,7 @@ public struct ZNodeRow: View {
 
     private var attributedName: AttributedString {
         var s = AttributedString(name)
-        s.foregroundColor = ZTokens.Colors.textPrimary
+        s.foregroundColor = ZTokens.Colors.screenT1
         if let highlight, !highlight.isEmpty, let range = s.range(of: highlight, options: .caseInsensitive) {
             s[range].foregroundColor = accent.color
         }

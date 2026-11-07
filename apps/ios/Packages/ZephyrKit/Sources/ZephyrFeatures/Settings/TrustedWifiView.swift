@@ -28,7 +28,7 @@ struct TrustedWifiView: View {
                             Button { remove(ssid) } label: {
                                 Label { Text(verbatim: "删除") } icon: { Image(systemName: "trash") }
                             }
-                            .tint(ZTokens.Colors.colorDanger)
+                            .tint(ZTokens.Colors.screenRed)
                         }
                         .accessibilityAction(named: Text(verbatim: "删除")) { remove(ssid) }
                 }
@@ -67,7 +67,7 @@ struct TrustedWifiView: View {
     }
 
     private func footnote(_ s: String) -> some View {
-        Text(verbatim: s).zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary)
+        Text(verbatim: s).zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
     }
 }
 

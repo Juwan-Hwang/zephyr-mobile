@@ -19,16 +19,16 @@ struct CommandPreviewCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: ZTokens.Space.n1) {
-            Text(verbatim: title).zType(.headline).fontWeight(.regular).foregroundStyle(ZTokens.Colors.textPrimary)
-            Text(verbatim: summary).zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary)
+            Text(verbatim: title).zType(.headline).fontWeight(.regular).foregroundStyle(ZTokens.Colors.screenT1)
+            Text(verbatim: summary).zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
 
             if let exit = preview.exit, exit.fromIp != exit.toIp || exit.fromRegion != exit.toRegion {
                 VStack(alignment: .leading, spacing: ZTokens.Space.n2) {
                     HStack(alignment: .firstTextBaseline, spacing: ZTokens.Space.n3) {
-                        Circle().fill(ZTokens.Colors.textWarning)
+                        Circle().fill(ZTokens.Colors.screenAmber)
                             .frame(width: ZTokens.Space.n2, height: ZTokens.Space.n2)
                             .alignmentGuide(.firstTextBaseline) { $0[.bottom] }
-                        Text(verbatim: "出口 IP 将更改").zType(.footnote).foregroundStyle(ZTokens.Colors.textPrimary)
+                        Text(verbatim: "出口 IP 将更改").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT1)
                     }
                     ExitIPLine(change: exit)
                 }
@@ -39,7 +39,7 @@ struct CommandPreviewCard: View {
             }
 
             if let foot = footnote {
-                Text(verbatim: foot).zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary)
+                Text(verbatim: foot).zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
                     .padding(.top, ZTokens.Space.n4)
             }
 

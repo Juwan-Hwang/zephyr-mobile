@@ -11,7 +11,7 @@ public struct ZDivider: View {
 
     public var body: some View {
         Rectangle()
-            .fill(ZTokens.Colors.borderSubtle)
+            .fill(ZTokens.Colors.screenHl)
             .frame(height: ZMetrics.hairline)
             .padding(.leading, leadingInset)
             .accessibilityHidden(true)

@@ -15,7 +15,7 @@ struct SubscriptionReviewSheet: View {
                 SubscriptionDiffCard(title: title, diff: review.diff, isPreview: true)
                 Text(verbatim: "更新会替换订阅中的节点与规则。Zephyr 的覆写与场景选择保持不变。")
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
                     .fixedSize(horizontal: false, vertical: true)
                 VStack(spacing: ZTokens.Space.n3) {
                     ZButton("更新", kind: .primary, size: .large, fullWidth: true) {

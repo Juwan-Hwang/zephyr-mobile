@@ -26,6 +26,8 @@ public final class AppModel {
     public internal(set) var connection = ConnectionState(status: .disconnected, mode: .rule)
     public internal(set) var scenes: [ZephyrKit.Scene] = []
     public internal(set) var subscriptions: [Subscription] = []
+    /// 订阅流是否已收到首帧（区分“还没加载”和“真的没有订阅”，引导门控用）。
+    public internal(set) var subscriptionsLoaded = false
     public internal(set) var usage: UsageSummary?
     /// 设置（强调色 / 外观在 RootView 统一应用）。
     public internal(set) var settings: Settings?

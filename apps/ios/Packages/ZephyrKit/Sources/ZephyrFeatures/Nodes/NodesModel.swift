@@ -54,11 +54,21 @@ final class NodesModel {
         }
     }
 
-    func runQuery() {
+    /// 最近一次真正发给引擎的查询（chip 立即查后，随之而来的 onChange 去抖查询据此跳过）。
+    @ObservationIgnored private var issuedQuery: String?
+
+    /// 输入框改动走去抖（REVIEW L-P1-3：避免每个按键、拼音每个字母都打全量查询）；chip / 首次加载立即查。
+    func runQuery(debounced: Bool = false) {
         let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        if debounced, q == issuedQuery { return }
         searchTask?.cancel()
         searchTask = Task { [weak self] in
+            if debounced {
+                try? await Task.sleep(nanoseconds: 140_000_000)
+                guard !Task.isCancelled else { return }
+            }
             guard let self else { return }
+            self.issuedQuery = q
             do {
                 let r = try await self.engine.queryNodes(query: q)
                 guard !Task.isCancelled,
@@ -81,6 +91,7 @@ final class NodesModel {
 
     func select(chip region: String) {
         query = region
+        runQuery()
     }
 
     func jump(toSection region: String) {

@@ -19,7 +19,7 @@ final class ComponentSnapshotTests: XCTestCase {
             HStack(spacing: ZTokens.Space.n4) {
                 Text(verbatim: title)
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.textSecondary)
+                    .foregroundStyle(ZTokens.Colors.screenT2)
                 Spacer(minLength: ZTokens.Space.n3)
                 content()
             }

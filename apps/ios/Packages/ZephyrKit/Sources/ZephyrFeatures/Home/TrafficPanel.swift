@@ -46,7 +46,7 @@ private struct RateReadout: View {
             HStack(alignment: .firstTextBaseline, spacing: ZTokens.Space.n3) {
                 Text(verbatim: down.value)
                     .zDisplay(.large)
-                    .foregroundStyle(ZTokens.Colors.textPrimary)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
                     .contentTransition(reduceMotion ? .identity : .numericText())
                     .animation(reduceMotion ? nil : ZMotion.slow, value: down.value)
                 HStack(spacing: ZTokens.Space.n1) {
@@ -54,11 +54,11 @@ private struct RateReadout: View {
                     Image(systemName: "arrow.down").foregroundStyle(ZTokens.Colors.colorDownload)
                 }
                 .zType(.footnote)
-                .foregroundStyle(ZTokens.Colors.textTertiary)
+                .foregroundStyle(ZTokens.Colors.screenT3)
             }
             HStack(spacing: ZTokens.Space.n1) {
                 Text(verbatim: "\(up.value) \(up.unit)")
-                    .foregroundStyle(ZTokens.Colors.textSecondary)
+                    .foregroundStyle(ZTokens.Colors.screenT2)
                     .contentTransition(reduceMotion ? .identity : .numericText())
                 Image(systemName: "arrow.up").foregroundStyle(ZTokens.Colors.colorUpload)
             }

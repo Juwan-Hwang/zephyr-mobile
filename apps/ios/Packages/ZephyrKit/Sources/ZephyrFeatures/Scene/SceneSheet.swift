@@ -41,7 +41,7 @@ struct SceneSheet: View {
                     .padding(.horizontal, HMetrics.homeInset)
                     .padding(.top, ZTokens.Space.n5)
                 Text(verbatim: lede(scene))
-                    .zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary)
+                    .zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
                     .padding(.horizontal, HMetrics.homeInset)
                     .padding(.top, ZTokens.Space.n3)
 
@@ -66,7 +66,7 @@ struct SceneSheet: View {
                     .padding(.top, ZTokens.Space.n6)
 
                 Text(verbatim: "优选结果仅保存在 Zephyr 中，订阅配置保持原样。")
-                    .zType(.caption).foregroundStyle(ZTokens.Colors.textTertiary)
+                    .zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
                     .padding(.horizontal, HMetrics.homeInset + ZTokens.Space.n1)
                     .padding(.top, ZTokens.Space.n3)
                     .padding(.bottom, ZTokens.Space.n8)
@@ -173,9 +173,9 @@ private struct DetailRow: View {
     let value: String
     var body: some View {
         HStack(spacing: ZTokens.Space.n3) {
-            Text(verbatim: title).zType(.body).foregroundStyle(ZTokens.Colors.textPrimary)
+            Text(verbatim: title).zType(.body).foregroundStyle(ZTokens.Colors.screenT1)
             Spacer(minLength: ZTokens.Space.n3)
-            Text(verbatim: value).zType(.footnote).foregroundStyle(ZTokens.Colors.textTertiary)
+            Text(verbatim: value).zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
                 .multilineTextAlignment(.trailing)
         }
         .padding(.vertical, ZTokens.Space.n4)

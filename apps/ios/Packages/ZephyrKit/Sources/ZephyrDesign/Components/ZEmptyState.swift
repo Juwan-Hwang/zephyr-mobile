@@ -28,18 +28,18 @@ public struct ZEmptyState: View {
                 Image(systemName: systemImage)
                     .font(.largeTitle)
                     .fontWeight(.ultraLight)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
                     .padding(.bottom, ZTokens.Space.n3)
                     .accessibilityHidden(true)
             }
             Text(title)
                 .zType(.headline)
                 .fontWeight(.regular)
-                .foregroundStyle(ZTokens.Colors.textPrimary)
+                .foregroundStyle(ZTokens.Colors.screenT1)
             if let message {
                 Text(message)
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.textTertiary)
+                    .foregroundStyle(ZTokens.Colors.screenT3)
             }
             if let actionTitle, let action {
                 ZButton(actionTitle, kind: .ghost, action: action)

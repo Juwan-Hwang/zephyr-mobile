@@ -12,12 +12,12 @@ struct RegionBadge: View {
             .zType(.caption, monospacedDigits: true)
             .fontWeight(.semibold)
             .fontDesign(.monospaced)
-            .foregroundStyle(prominent ? ZTokens.Colors.textPrimary : ZTokens.Colors.textSecondary)
+            .foregroundStyle(prominent ? ZTokens.Colors.screenT1 : ZTokens.Colors.screenT2)
             .padding(.horizontal, ZTokens.Space.n1)
             .padding(.vertical, ZTokens.Space.n0 + 1)
             .overlay(
                 RoundedRectangle(cornerRadius: ZTokens.Radius.control / 2, style: .continuous)
-                    .strokeBorder(ZTokens.Colors.borderStrong, lineWidth: 1)
+                    .strokeBorder(ZTokens.Colors.screenT4, lineWidth: 1)
             )
             .accessibilityLabel(Locale.current.localizedString(forRegionCode: region) ?? region)
     }
@@ -30,5 +30,5 @@ struct RegionBadge: View {
         RegionBadge(region: "TW", prominent: true)
     }
     .padding()
-    .background(ZTokens.Colors.bgElevated)
+    .background(ZTokens.Colors.screenS1)
 }

@@ -8,9 +8,10 @@ import ZephyrDesign
 struct ZephyrLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: ZephyrActivityAttributes.self) { context in
-            LiveActivityLockView(state: context.state, accent: WidgetStyle.accent(context.attributes.accent))
-                .activityBackgroundTint(ZTokens.Colors.bgElevated)
-                .activitySystemActionForegroundColor(ZTokens.Colors.textPrimary)
+            LiveActivityLockView(state: context.state, accent: WidgetStyle.accent(context.attributes.accent),
+                                 isStale: context.isStale)
+                .activityBackgroundTint(ZTokens.Colors.screenGlass)
+                .activitySystemActionForegroundColor(ZTokens.Colors.screenT1)
                 .widgetURL(WidgetLinks.home)
         } dynamicIsland: { context in
             let accent = WidgetStyle.accent(context.attributes.accent)
@@ -25,15 +26,15 @@ struct ZephyrLiveActivity: Widget {
                     ConnectionTimer(since: context.state.connectedSince)
                         .zType(.headline, monospacedDigits: true)
                         .fontDesign(.monospaced)
-                        .foregroundStyle(ZTokens.Colors.textSecondary)
+                        .foregroundStyle(ZTokens.Colors.screenT2)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    IslandExpandedBottom(state: context.state)
+                    IslandExpandedBottom(state: context.state, isStale: context.isStale)
                 }
             } compactLeading: {
                 IslandCompactLeading(accent: accent)
             } compactTrailing: {
-                IslandCompactTrailing(state: context.state)
+                IslandCompactTrailing(state: context.state, isStale: context.isStale)
             } minimal: {
                 IslandMinimal(accent: accent)
             }

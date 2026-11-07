@@ -44,20 +44,20 @@ public struct ZBadge: View {
 
     private var tint: Color {
         switch tone {
-        case .neutral: return ZTokens.Colors.textTertiary
+        case .neutral: return ZTokens.Colors.screenT3
         case .accent: return accent.color
-        case .success: return ZTokens.Colors.colorSuccess
-        case .warning: return ZTokens.Colors.colorWarning
-        case .danger: return ZTokens.Colors.colorDanger
+        case .success: return ZTokens.Colors.screenGreen
+        case .warning: return ZTokens.Colors.screenAmber
+        case .danger: return ZTokens.Colors.screenRed
         }
     }
 
     private var foreground: Color {
-        tone == .neutral ? ZTokens.Colors.textTertiary : tint
+        tone == .neutral ? ZTokens.Colors.screenT3 : tint
     }
 
     private var border: Color {
-        tone == .neutral ? ZTokens.Colors.borderStrong : tint.opacity(0.45)
+        tone == .neutral ? ZTokens.Colors.screenT4 : tint.opacity(0.45)
     }
 }
 
