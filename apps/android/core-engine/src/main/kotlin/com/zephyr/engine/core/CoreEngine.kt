@@ -379,7 +379,7 @@ class CoreEngine(
     }, { fallback.policyGroups() }, emptyList())
 
     override suspend fun groupMembers(group: String, offset: Int, limit: Int): NodePage {
-        val r = live() ?: return fallback.groupMembers(group, offset, limit)
+        val r = live() ?: return if (mockData) fallback.groupMembers(group, offset, limit) else NodePage(emptyList(), offset.toLong(), 0)
         return withContext(io) {
             val total = liveCall { r.groups() }.firstOrNull { it.name == group }?.memberCount ?: throw ZephyrException(ErrorCode.GROUP_NOT_FOUND, group)
             val rows = liveCall(ErrorCode.GROUP_NOT_FOUND) { r.members(group, offset, limit.coerceIn(0, 500)) }.map { summary(it.name, it.type, it.latencyMs) }
@@ -388,13 +388,22 @@ class CoreEngine(
     }
 
     override suspend fun selectInGroup(group: String, nodeId: NodeId) {
-        val r = live() ?: return fallback.selectInGroup(group, nodeId)
+        val r = live() ?: return if (mockData) fallback.selectInGroup(group, nodeId) else throw notRunning()
         val name = names[nodeId] ?: throw ZephyrException(ErrorCode.NODE_NOT_FOUND, nodeId.toString())
         withContext(io) { liveCall(ErrorCode.GROUP_NOT_FOUND) { r.select(group, name) } }
     }
 
+    /** Global mode exit = mihomo's GLOBAL selector (prototype `gcf`: confirmed inline, never automatic). */
+    override suspend fun setGlobalNode(id: NodeId): ExitChange {
+        val r = live() ?: return if (mockData) fallback.setGlobalNode(id) else throw notRunning()
+        val to = names[id] ?: throw ZephyrException(ErrorCode.NODE_NOT_FOUND, id.toString())
+        val from = withContext(io) { liveCall { r.groups() } }.firstOrNull { it.name == GLOBAL }?.selected
+        withContext(io) { liveCall(ErrorCode.GROUP_NOT_FOUND) { r.select(GLOBAL, to) } }
+        return ExitChange(null, from?.let { summary(it, null, null).region } ?: "", null, summary(to, null, null).region, null)
+    }
+
     override suspend fun testGroup(group: String) {
-        val r = live() ?: return fallback.testGroup(group)
+        val r = live() ?: return if (mockData) fallback.testGroup(group) else throw notRunning()
         val res = withContext(io) { liveCall(ErrorCode.GROUP_NOT_FOUND) { r.test(group, LivePort.TEST_URL, 5_000) } }
         val now = clock()
         liveLatency.tryEmit(res.map { LatencyUpdate(LiveNames.idOf(it.name).also { id -> names[id] = it.name }, it.latencyMs ?: -1, now) })
@@ -559,6 +568,7 @@ class CoreEngine(
     /** Called by the VPN service when the tunnel could not start (no core, no subscription, mihomo error). */
     suspend fun reportConnectFailure(error: ZephyrError) { fallback.disconnect(); connectError.value = error }
 
+    private fun notRunning() = ZephyrException(ErrorCode.NOT_RUNNING, "core not running")
     private fun noCore() = ZephyrException(ErrorCode.CORE_CRASHED, "native core not packaged")
     private fun noSubscription() = ZephyrException(ErrorCode.SUBSCRIPTION_NOT_FOUND, "no subscription imported yet")
 
@@ -581,6 +591,7 @@ class CoreEngine(
         if (mockData) fallback.commandSuggestions(input) else emptyList() // UI plans commands itself (CommandPlanner)
 
     companion object {
+        const val GLOBAL = "GLOBAL"
         private val NAMES: Map<String, String> = MockCatalog.REGIONS.associate { it.code to it.name }
         fun regionName(code: String): String = NAMES[code] ?: code
     }

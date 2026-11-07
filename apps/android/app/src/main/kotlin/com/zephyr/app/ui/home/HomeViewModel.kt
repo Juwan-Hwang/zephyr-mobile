@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
@@ -48,6 +49,9 @@ data class HomeUi(
     val pending: PendingChange? = null,
     val toast: UndoToast? = null,
     val regionIndex: Map<String, Int> = emptyMap(),
+    /** Global mode: the exit now, and the inline "更换节点" proposal when open (prototype `gcf`). */
+    val globalNode: NodeSummary? = null,
+    val globalProposal: NodeSummary? = null,
 )
 
 class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewModel() {
@@ -78,6 +82,12 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
                 if (f.now == null) showToast("${f.sceneName} 出口无响应，出口 IP 不会自动更换", null, null)
                 else showToast("${f.sceneName} 出口已自动切换到 ${f.now}", f.sceneId, f.previous)
             } }
+        }
+        viewModelScope.launch {
+            connection.map { it.mode }.distinctUntilChanged().collectLatest { m ->
+                if (m == ProxyMode.GLOBAL) runCatching { globalNow() }.getOrNull()?.let { n -> _ui.update { it.copy(globalNode = n) } }
+                else _ui.update { it.copy(globalProposal = null) }
+            }
         }
         // 1 Hz clock for uptime; cheap and avoids per-frame recomposition.
         viewModelScope.launch { while (true) { _ui.update { it.copy(now = System.currentTimeMillis()) }; delay(1_000) } }
@@ -111,6 +121,30 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         engine.applySceneChange(p.scene.id, p.node.id)
         _ui.update { it.copy(pending = null) }
         showToast("已切换至${p.node.name}", p.scene.id, previous)
+    }
+
+    /** Prototype `#gChange`: toggles an inline proposal (fastest other node), confirmed with "更改为X". */
+    fun toggleGlobalChange() = launchCatching("读取节点") {
+        if (_ui.value.globalProposal != null) { _ui.update { it.copy(globalProposal = null) }; return@launchCatching }
+        val cur = globalNow()
+        val page = engine.groupMembers(com.zephyr.engine.core.CoreEngine.GLOBAL, 0, 500).rows
+        val best = page.filter { it.protocol.uppercase() !in NON_NODES && it.name != cur?.name && it.id >= 0 }
+            .minByOrNull { it.latencyMs ?: Int.MAX_VALUE } ?: throw com.zephyr.engine.ZephyrException(com.zephyr.engine.ErrorCode.NODE_NOT_FOUND, "no other node")
+        _ui.update { it.copy(globalNode = cur, globalProposal = best) }
+    }
+
+    fun confirmGlobal() = launchCatching("切换节点") {
+        val to = _ui.value.globalProposal ?: return@launchCatching
+        val from = _ui.value.globalNode
+        engine.setGlobalNode(to.id)
+        _ui.update { it.copy(globalProposal = null, globalNode = to) }
+        showToast("已切换至${to.name}", null, null, from?.let { f -> { engine.setGlobalNode(f.id); _ui.update { u -> u.copy(globalNode = f) } } })
+    }
+
+    private suspend fun globalNow(): NodeSummary? {
+        val name = engine.policyGroups().first().firstOrNull { it.name == com.zephyr.engine.core.CoreEngine.GLOBAL }?.selected
+        val rows = engine.groupMembers(com.zephyr.engine.core.CoreEngine.GLOBAL, 0, 500).rows
+        return rows.firstOrNull { it.name == name } ?: connection.value.globalNodeId?.let { id -> rows.firstOrNull { it.id == id } }
     }
 
     fun cancelPending() = _ui.update { it.copy(pending = null, regionIndex = emptyMap()) }
@@ -160,6 +194,8 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
     }
 
     companion object {
+        /** Group/built-in members of GLOBAL that are not exits. */
+        private val NON_NODES = setOf("SELECTOR", "URLTEST", "FALLBACK", "LOADBALANCE", "RELAY", "DIRECT", "REJECT", "REJECTDROP", "PASS", "COMPATIBLE")
         const val SPARK_POINTS = 90
         val REGIONS = listOf("SG", "JP", "US", "HK", "TW", "KR")
         fun preview() = HomeViewModel(MockEngine(demo = true))
