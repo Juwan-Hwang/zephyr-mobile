@@ -18,6 +18,7 @@ pub mod mock;
 pub mod node_api;
 pub mod nodes;
 pub mod regions;
+pub mod rule_providers;
 pub mod rules;
 pub mod runtime_config;
 pub mod failover;

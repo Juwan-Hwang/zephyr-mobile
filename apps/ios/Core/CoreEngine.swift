@@ -526,7 +526,30 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         invalidateNodes()
         await publishSubs()
         await bumpScenes()
+        scheduleRuleProviderRefresh()
         return CoreEngine.sub(s)
+    }
+
+    /// 规则集（契约 §14.w）：后台拉取到期的 http 规则集并编译为规则页第 3 层起。返回成功编译的个数。
+    /// 真实路由由扩展里的 mihomo 自己拉取；这里只服务规则页计数、testRule 与命令搜索。
+    @discardableResult
+    public func refreshRuleProviders(force: Bool = false) async -> Int {
+        guard let c = core else { return 0 }
+        let now = clock()
+        let due = await runQuiet { c.ruleProviders(nowMillis: now) }.filter { force || $0.due }
+        var ok = 0
+        for p in due where p.format != "mrs" {
+            if Task.isCancelled { break }
+            guard let url = URL(string: p.url), let got = try? await fetch(url) else { continue }
+            let at = clock()
+            if (try? await run(.ruleInputInvalid, { try c.compileRuleProvider(name: p.name, body: got.body, nowMillis: at) })) != nil { ok += 1 }
+        }
+        if ok > 0 { locked { rulesReady = nil } }
+        return ok
+    }
+
+    private func scheduleRuleProviderRefresh() {
+        Task.detached(priority: .utility) { [weak self] in await self?.refreshRuleProviders() }
     }
 
     public func previewUpdate(id: String) async throws -> ZephyrKit.SubscriptionDiff {
@@ -545,6 +568,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         await publishSubs()
         await bumpScenes()
         if let t = tunnel { await reloadTunnelIfRunning(t) }
+        scheduleRuleProviderRefresh()
         return CoreEngine.diff(d)
     }
 

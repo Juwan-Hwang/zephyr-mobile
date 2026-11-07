@@ -277,6 +277,29 @@ final class CoreEngineLiveTests: XCTestCase {
         XCTAssertTrue(CoreEngine.looksLikeHost("1.2.3.4") && CoreEngine.looksLikeHost("2001:db8::1") && !CoreEngine.looksLikeHost("香港 iplc"))
     }
 
+    func testRuleProvidersFetchedAndCompiled() async throws {
+        let sub = """
+        proxies:
+          - {name: a, server: a.example, port: 443, type: trojan, password: p}
+        rule-providers:
+          openai: {type: http, behavior: domain, url: 'https://rules.example/openai.yaml', interval: 86400}
+        rules:
+          - RULE-SET,openai,a
+          - MATCH,DIRECT
+        """
+        let e = CoreEngine(dataDir: dir.appendingPathComponent("core"), mockData: false, fetcher: { url in
+            url.host == "rules.example" ? CoreEngine.FetchedBody(body: "payload:\n  - '+.openai.com'\n") : CoreEngine.FetchedBody(body: sub, fileName: "S.yaml")
+        })
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/s")
+        let n = await e.refreshRuleProviders(force: true)
+        XCTAssertEqual(n, 1)
+        let t = try await e.testRule(input: "api.openai.com")
+        XCTAssertEqual(t.layerIndex, 2)
+        XCTAssertEqual(t.policy, "a")
+        let st = await e.ruleStats()
+        XCTAssertEqual(st.layers.count, 3)
+    }
+
     func testMemberIdIsStable() {
         XCTAssertEqual(CoreEngine.memberId(group: "Proxy", name: "香港 01"), CoreEngine.memberId(group: "Proxy", name: "香港 01"))
         XCTAssertNotEqual(CoreEngine.memberId(group: "Proxy", name: "香港 01"), CoreEngine.memberId(group: "Video", name: "香港 01"))
