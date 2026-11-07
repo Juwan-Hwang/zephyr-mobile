@@ -24,6 +24,7 @@ struct SceneRow: View {
     @State private var startIndex = 0
     @State private var tickToken = 0
     @State private var ticking = false
+    @State private var pressed = false
 
     private var choices: [NodeSummary] { model.regionChoices[scene.id] ?? [] }
     private var shown: NodeSummary {
@@ -39,12 +40,13 @@ struct SceneRow: View {
         }
         .padding(.vertical, HMetrics.rowVertical)
         .padding(.horizontal, HMetrics.rowHorizontal)
-        .background(scrubIndex != nil ? AnyShapeStyle(ZAccentStyle(opacity: 0.05)) : AnyShapeStyle(Color.clear))
+        .background(rowBackground)
         .overlay(alignment: .bottom) { scrubTrack }
         .overlay(alignment: .bottom) { coach }
         .overlay {
             if scrubbable {
-                HorizontalPanOverlay(onTap: openDetail, onBegan: began, onChanged: changed, onEnded: ended)
+                HorizontalPanOverlay(onTap: openDetail, onBegan: began, onChanged: changed, onEnded: ended,
+                                     onPressChanged: { pressed = $0 })
             }
         }
         .contentShape(Rectangle())
@@ -59,6 +61,11 @@ struct SceneRow: View {
         .task(id: scrubbable) {
             if scrubbable, choices.isEmpty { await model.loadRegionChoices(sceneId: scene.id) }
         }
+    }
+
+    private var rowBackground: AnyShapeStyle {
+        if scrubIndex != nil { return AnyShapeStyle(ZAccentStyle(opacity: 0.05)) }
+        return pressed ? AnyShapeStyle(ZTokens.Colors.screenPressed) : AnyShapeStyle(Color.clear)
     }
 
     // MARK: 左右两栏
