@@ -54,7 +54,12 @@ struct TodayCardView: View {
             }
         }
         .task { await model.refreshUsage() }
-        .task(id: RenderKey(usage: model.usage, theme: theme)) { render() }
+        // 导出图延后到 sheet 弹出动画结束、usage 稳定后再渲染（去抖），PNG 编码离开主线程（REVIEW H-P1-7）。
+        .task(id: RenderKey(usage: model.usage, theme: theme)) {
+            try? await Task.sleep(nanoseconds: 450_000_000)
+            guard !Task.isCancelled else { return }
+            await render()
+        }
     }
 
     // MARK: 区块
@@ -107,7 +112,7 @@ struct TodayCardView: View {
         var theme: TodayTheme
     }
 
-    private func render() {
+    private func render() async {
         guard let u = model.usage else { exported = nil; exportedPNG = nil; return }
         let size = HMetrics.todayCardSize
         let content = TodayCard(usage: u, dateText: dateText, theme: theme, animated: false)
@@ -119,7 +124,9 @@ struct TodayCardView: View {
         r.proposedSize = ProposedViewSize(size)
         guard let ui = r.uiImage else { return }
         exported = Image(uiImage: ui)
-        exportedPNG = ui.pngData()
+        let png = await Task.detached(priority: .utility) { ui.pngData() }.value
+        guard !Task.isCancelled else { return }
+        exportedPNG = png
         if saveState != .saving { saveState = .idle }
     }
 
