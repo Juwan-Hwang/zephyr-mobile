@@ -1,5 +1,10 @@
 package com.zephyr.app.ui.settings
 
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.Role
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -60,7 +65,7 @@ fun SettingsScreen(back: String, onBack: () -> Unit) {
             ZListGroup {
                 ZSettingsRow("按需连接", trailing = { ZToggle(s.onDemand, { v -> set { it.copy(onDemand = v) } }) })
                 ZDivider()
-                ZSettingsRow("受信任的 Wi‑Fi", subtitle = "连接后自动断开", value = s.trustedWifi.joinToString("、").ifEmpty { "无" }, chevron = true, onClick = {})
+                ZSettingsRow("受信任的 Wi‑Fi", subtitle = "连接后自动断开", value = s.trustedWifi.joinToString("、").ifEmpty { "无" })
                 ZDivider()
                 ZSettingsRow(
                     "本地代理端口", subtitle = "127.0.0.1:${s.localProxyPort}" + if (s.localProxyAuth) " · 需要密码" else "",
@@ -94,15 +99,22 @@ fun SettingsScreen(back: String, onBack: () -> Unit) {
                 ZDivider()
                 Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 14.dp), verticalAlignment = Alignment.CenterVertically) {
                     ZText("强调色", Modifier.weight(1f), style = ZTheme.type.body)
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    // Review L-P1-5: 28 dp dot inside a 44 dp radio target, Chinese names, selected semantics, one group.
+                    Row(Modifier.selectableGroup(), horizontalArrangement = Arrangement.spacedBy(0.dp)) {
                         Accent.entries.forEach { a ->
                             val z = ZAccent.valueOf(a.name)
                             val col = if (c.isDark) z.darkVariant() else z.color
                             Box(
-                                Modifier.size(28.dp).clip(CircleShape).background(col)
-                                    .then(if (s.accent == a) Modifier.border(2.dp, c.text1, CircleShape) else Modifier)
-                                    .zPressable(haptic = true, label = a.name) { set { it.copy(accent = a) } },
-                            )
+                                Modifier.size(44.dp)
+                                    .selectable(selected = s.accent == a, role = Role.RadioButton) { set { it.copy(accent = a) } }
+                                    .semantics { contentDescription = accentName(a) },
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Box(
+                                    Modifier.size(28.dp).clip(CircleShape).background(col)
+                                        .then(if (s.accent == a) Modifier.border(2.dp, c.text1, CircleShape) else Modifier),
+                                )
+                            }
                         }
                     }
                 }
@@ -126,4 +138,10 @@ private fun StorageBar(s: StorageInfo) {
         if (s.rulesBytes > 0) Box(Modifier.weight(s.rulesBytes / total).fillMaxHeight().background(c.text3))
         if (s.freeBytes > 0) Box(Modifier.weight(s.freeBytes / total).fillMaxHeight())
     }
+}
+
+private fun accentName(a: Accent): String = when (a.name) {
+    "BLUE" -> "蓝色"; "GREEN" -> "绿色"; "ORANGE" -> "橙色"; "PINK" -> "粉色"; "PURPLE" -> "紫色"
+    "RED" -> "红色"; "TEAL" -> "青色"; "INDIGO" -> "靛蓝"; "YELLOW" -> "黄色"; "GRAPHITE" -> "石墨"
+    else -> a.name.lowercase()
 }

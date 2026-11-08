@@ -77,6 +77,7 @@ class CoreEngine(
     private val clock: () -> Long = System::currentTimeMillis,
     private val fetcher: (String) -> SubscriptionFetcher.Fetched = SubscriptionFetcher::httpFetch,
     private val geoDownloader: (String, java.io.File) -> Unit = { u, f -> SubscriptionFetcher.download(u, f) },
+    private val tcpPing: suspend (String, Int) -> Int = TcpPinger.probe,
 ) : ZephyrEngine by fallback {
 
     private val core: MobileCore? = dataDir?.let { dir ->
@@ -533,7 +534,18 @@ class CoreEngine(
      */
     override suspend fun testLatency(ids: List<NodeId>) {
         val c = nodes() ?: return if (mockData) fallback.testLatency(ids) else Unit
-        if (!Mihomo.available) return
+        // §14.u: tunnel down → TCP handshake from the app process; UDP-based protocols get no target and stay untested.
+        if (!Mihomo.running) {
+            ids.chunked(512).forEach { chunk ->
+                val targets = withContext(io) { wrap { c.tcpPingTargets(chunk.map { it.toULong() }) } }
+                if (targets.isEmpty()) return@forEach
+                val now = clock()
+                val res = TcpPinger.pingAll(targets.map { Triple(it.id.toLong(), it.host, it.port.toInt()) }, tcpPing)
+                withContext(io) { wrap { c.recordLatencies(res.map { (id, ms) -> com.zephyr.core.mobile.LatencySample(id.toULong(), ms, now) }) } }
+                liveLatency.tryEmit(res.map { (id, ms) -> LatencyUpdate(id, ms, now) })
+            }
+            return
+        }
         ids.chunked(512).forEach { chunk ->
             val res = withContext(io) {
                 val batch = wrap { c.latencyTestBatch(chunk.map { it.toULong() }) }

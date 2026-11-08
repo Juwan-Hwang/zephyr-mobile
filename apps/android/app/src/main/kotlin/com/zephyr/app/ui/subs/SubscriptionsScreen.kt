@@ -105,9 +105,11 @@ fun SubscriptionsScreen(back: String = "资料库", onBack: () -> Unit, onImport
                         }
                     }
                 }
-                ZDivider(inset = false)
                 val others = summary.count - subs.size
-                ZSettingsRow("其他 $others 个", subtitle = "${ZFormat.grouped(summary.totalNodes - subs.sumOf { it.nodeCount })} 个节点", chevron = true, onClick = {})
+                if (others > 0) {
+                    ZDivider(inset = false)
+                    ZSettingsRow("其他 $others 个", subtitle = "${ZFormat.grouped(summary.totalNodes - subs.sumOf { it.nodeCount })} 个节点")
+                }
             }
             Spacer(Modifier.height(18.dp))
             ZSectionHeader("更新")
