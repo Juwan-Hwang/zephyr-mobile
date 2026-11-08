@@ -1064,6 +1064,13 @@ public protocol MobileCoreProtocol : AnyObject {
      */
     func syncSubscriptionRules() throws 
     
+    /**
+     * 隧道未连接时的测速目标（契约 §14.u）：平台直接测到 server:port 的 TCP 握手时间，结果用 recordLatencies 写回。
+     * 只在本进程内使用，不展示，server 不脱敏。基于 UDP 的协议（hysteria/hysteria2/tuic/wireguard）无法 TCP 握手，跳过。
+     * 超过 512 个报错；找不到定义的 id 跳过。
+     */
+    func tcpPingTargets(ids: [UInt64]) throws  -> [TcpTarget]
+    
     func testRule(input: String) throws  -> RuleTrace
     
     /**
@@ -1684,6 +1691,19 @@ open func syncSubscriptionRules()throws  {try rustCallWithError(FfiConverterType
     uniffi_zephyr_mobile_core_fn_method_mobilecore_sync_subscription_rules(self.uniffiClonePointer(),$0
     )
 }
+}
+    
+    /**
+     * 隧道未连接时的测速目标（契约 §14.u）：平台直接测到 server:port 的 TCP 握手时间，结果用 recordLatencies 写回。
+     * 只在本进程内使用，不展示，server 不脱敏。基于 UDP 的协议（hysteria/hysteria2/tuic/wireguard）无法 TCP 握手，跳过。
+     * 超过 512 个报错；找不到定义的 id 跳过。
+     */
+open func tcpPingTargets(ids: [UInt64])throws  -> [TcpTarget] {
+    return try  FfiConverterSequenceTypeTcpTarget.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_tcp_ping_targets(self.uniffiClonePointer(),
+        FfiConverterSequenceUInt64.lower(ids),$0
+    )
+})
 }
     
 open func testRule(input: String)throws  -> RuleTrace {
@@ -5472,6 +5492,80 @@ public func FfiConverterTypeSubscriptionsSummary_lower(_ value: SubscriptionsSum
 }
 
 
+public struct TcpTarget {
+    public var id: UInt64
+    public var host: String
+    public var port: UInt16
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(id: UInt64, host: String, port: UInt16) {
+        self.id = id
+        self.host = host
+        self.port = port
+    }
+}
+
+
+
+extension TcpTarget: Equatable, Hashable {
+    public static func ==(lhs: TcpTarget, rhs: TcpTarget) -> Bool {
+        if lhs.id != rhs.id {
+            return false
+        }
+        if lhs.host != rhs.host {
+            return false
+        }
+        if lhs.port != rhs.port {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(host)
+        hasher.combine(port)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeTcpTarget: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> TcpTarget {
+        return
+            try TcpTarget(
+                id: FfiConverterUInt64.read(from: &buf), 
+                host: FfiConverterString.read(from: &buf), 
+                port: FfiConverterUInt16.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: TcpTarget, into buf: inout [UInt8]) {
+        FfiConverterUInt64.write(value.id, into: &buf)
+        FfiConverterString.write(value.host, into: &buf)
+        FfiConverterUInt16.write(value.port, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeTcpTarget_lift(_ buf: RustBuffer) throws -> TcpTarget {
+    return try FfiConverterTypeTcpTarget.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeTcpTarget_lower(_ value: TcpTarget) -> RustBuffer {
+    return FfiConverterTypeTcpTarget.lower(value)
+}
+
+
 public struct TunConfig {
     public var stack: TunStackKind
     public var mtu: Int32
@@ -7309,6 +7403,31 @@ fileprivate struct FfiConverterSequenceTypeSubscriptionSource: FfiConverterRustB
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterSequenceTypeTcpTarget: FfiConverterRustBuffer {
+    typealias SwiftType = [TcpTarget]
+
+    public static func write(_ value: [TcpTarget], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeTcpTarget.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [TcpTarget] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [TcpTarget]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeTcpTarget.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterSequenceOptionInt32: FfiConverterRustBuffer {
     typealias SwiftType = [Int32?]
 
@@ -7568,6 +7687,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_sync_subscription_rules() != 47083) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_tcp_ping_targets() != 59198) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule() != 8556) {

@@ -99,6 +99,13 @@ impl MobileCore {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+pub struct TcpTarget {
+    pub id: u64,
+    pub host: String,
+    pub port: u16,
+}
+
 #[uniffi::export]
 impl MobileCore {
     pub fn node_detail(&self, id: u64) -> Result<NodeDetail, MobileError> {
@@ -152,6 +159,29 @@ impl MobileCore {
         Ok(samples)
     }
 
+    /// 隧道未连接时的测速目标（契约 §14.u）：平台直接测到 server:port 的 TCP 握手时间，结果用 recordLatencies 写回。
+    /// 只在本进程内使用，不展示，server 不脱敏。基于 UDP 的协议（hysteria/hysteria2/tuic/wireguard）无法 TCP 握手，跳过。
+    /// 超过 512 个报错；找不到定义的 id 跳过。
+    pub fn tcp_ping_targets(&self, ids: Vec<u64>) -> Result<Vec<TcpTarget>, MobileError> {
+        if ids.len() > URL_TEST_BATCH {
+            return Err(MobileError::Invalid(format!("batch > {URL_TEST_BATCH}")));
+        }
+        let (_, defs) = self.proxy_defs_by_id(&ids)?;
+        Ok(ids
+            .into_iter()
+            .filter_map(|id| {
+                let Some(Value::Mapping(m)) = defs.get(&id) else { return None };
+                let ty = m.get("type").and_then(|t| t.as_str()).unwrap_or("").to_ascii_lowercase();
+                if matches!(ty.as_str(), "hysteria" | "hysteria2" | "tuic" | "wireguard") {
+                    return None;
+                }
+                let host = m.get("server").and_then(scalar)?;
+                let port = m.get("port").and_then(|p| p.as_i64().or_else(|| p.as_str().and_then(|s| s.parse().ok())))?;
+                (!host.is_empty() && (1..=65535).contains(&port)).then(|| TcpTarget { id, host, port: port as u16 })
+            })
+            .collect())
+    }
+
     /// 有新鲜测速结果（max_age 内，含超时）的节点数；max_age ≤ 0 不限。
     pub fn tested_count(&self, now_millis: i64, max_age_millis: i64) -> u64 {
         let c = self.latency.lock();
@@ -169,6 +199,16 @@ mod tests {
         assert_eq!(mask_server("a1.node.example.com"), "a1***.example.com");
         assert_eq!(mask_server("2001:db8::1"), "2001:db8:*");
         assert_eq!(mask_server("localhost"), "lo***");
+    }
+
+    #[test]
+    fn tcp_targets() {
+        let (_d, core, _sub, rows) = crate::scene_api::tests::setup();
+        let ids: Vec<u64> = rows.iter().map(|r| r.id).collect();
+        let t = core.tcp_ping_targets(ids.clone()).unwrap();
+        assert!(!t.is_empty());
+        assert!(t.iter().all(|x| !x.host.contains("***") && x.port > 0));
+        assert!(core.tcp_ping_targets(vec![0; 513]).is_err());
     }
 
     #[test]
