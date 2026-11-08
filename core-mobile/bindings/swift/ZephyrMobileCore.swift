@@ -858,6 +858,11 @@ public protocol MobileCoreProtocol : AnyObject {
     func cachedLatencies(ids: [UInt64], nowMillis: Int64, maxAgeMillis: Int64)  -> [Int32?]
     
     /**
+     * 平台把 dat 下载到 `geoSources()` 给的 path 后调用：编译该类全部用到的分类，返回编译的层数。
+     */
+    func compileGeo(kind: GeoKind, nowMillis: Int64) throws  -> UInt32
+    
+    /**
      * 编译一层规则（文本为 Clash 规则行或规则集 payload）。index 决定匹配顺序。
      */
     func compileRuleLayer(index: UInt32, name: String, kind: LayerKind, note: String, defaultPolicy: String, text: String) throws  -> RuleLayerInfo
@@ -882,6 +887,8 @@ public protocol MobileCoreProtocol : AnyObject {
      * 场景候选：query = 地区代码（"JP"）；命令"最快节点"：query = 用户输入。
      */
     func fastestNodes(query: String, limit: UInt32, nowMillis: Int64, maxAgeMillis: Int64) throws  -> [RankedNode]
+    
+    func geoSources(nowMillis: Int64)  -> [GeoSource]
     
     func globalNode()  -> UInt64?
     
@@ -1153,6 +1160,18 @@ open func cachedLatencies(ids: [UInt64], nowMillis: Int64, maxAgeMillis: Int64) 
 }
     
     /**
+     * 平台把 dat 下载到 `geoSources()` 给的 path 后调用：编译该类全部用到的分类，返回编译的层数。
+     */
+open func compileGeo(kind: GeoKind, nowMillis: Int64)throws  -> UInt32 {
+    return try  FfiConverterUInt32.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_compile_geo(self.uniffiClonePointer(),
+        FfiConverterTypeGeoKind.lower(kind),
+        FfiConverterInt64.lower(nowMillis),$0
+    )
+})
+}
+    
+    /**
      * 编译一层规则（文本为 Clash 规则行或规则集 payload）。index 决定匹配顺序。
      */
 open func compileRuleLayer(index: UInt32, name: String, kind: LayerKind, note: String, defaultPolicy: String, text: String)throws  -> RuleLayerInfo {
@@ -1218,6 +1237,14 @@ open func fastestNodes(query: String, limit: UInt32, nowMillis: Int64, maxAgeMil
         FfiConverterUInt32.lower(limit),
         FfiConverterInt64.lower(nowMillis),
         FfiConverterInt64.lower(maxAgeMillis),$0
+    )
+})
+}
+    
+open func geoSources(nowMillis: Int64) -> [GeoSource] {
+    return try!  FfiConverterSequenceTypeGeoSource.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_geo_sources(self.uniffiClonePointer(),
+        FfiConverterInt64.lower(nowMillis),$0
     )
 })
 }
@@ -2332,6 +2359,108 @@ public func FfiConverterTypeFetchedSubscription_lift(_ buf: RustBuffer) throws -
 #endif
 public func FfiConverterTypeFetchedSubscription_lower(_ value: FetchedSubscription) -> RustBuffer {
     return FfiConverterTypeFetchedSubscription.lower(value)
+}
+
+
+public struct GeoSource {
+    public var kind: GeoKind
+    public var url: String
+    /**
+     * 平台把文件下载到这里（核心数据目录 geo/ 下）
+     */
+    public var path: String
+    /**
+     * 订阅里用到的分类（小写）："cn"、"category-ads-all"
+     */
+    public var codes: [String]
+    public var due: Bool
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(kind: GeoKind, url: String, 
+        /**
+         * 平台把文件下载到这里（核心数据目录 geo/ 下）
+         */path: String, 
+        /**
+         * 订阅里用到的分类（小写）："cn"、"category-ads-all"
+         */codes: [String], due: Bool) {
+        self.kind = kind
+        self.url = url
+        self.path = path
+        self.codes = codes
+        self.due = due
+    }
+}
+
+
+
+extension GeoSource: Equatable, Hashable {
+    public static func ==(lhs: GeoSource, rhs: GeoSource) -> Bool {
+        if lhs.kind != rhs.kind {
+            return false
+        }
+        if lhs.url != rhs.url {
+            return false
+        }
+        if lhs.path != rhs.path {
+            return false
+        }
+        if lhs.codes != rhs.codes {
+            return false
+        }
+        if lhs.due != rhs.due {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(kind)
+        hasher.combine(url)
+        hasher.combine(path)
+        hasher.combine(codes)
+        hasher.combine(due)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeGeoSource: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> GeoSource {
+        return
+            try GeoSource(
+                kind: FfiConverterTypeGeoKind.read(from: &buf), 
+                url: FfiConverterString.read(from: &buf), 
+                path: FfiConverterString.read(from: &buf), 
+                codes: FfiConverterSequenceString.read(from: &buf), 
+                due: FfiConverterBool.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: GeoSource, into buf: inout [UInt8]) {
+        FfiConverterTypeGeoKind.write(value.kind, into: &buf)
+        FfiConverterString.write(value.url, into: &buf)
+        FfiConverterString.write(value.path, into: &buf)
+        FfiConverterSequenceString.write(value.codes, into: &buf)
+        FfiConverterBool.write(value.due, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeGeoSource_lift(_ buf: RustBuffer) throws -> GeoSource {
+    return try FfiConverterTypeGeoSource.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeGeoSource_lower(_ value: GeoSource) -> RustBuffer {
+    return FfiConverterTypeGeoSource.lower(value)
 }
 
 
@@ -5526,6 +5655,70 @@ extension BuildPhase: Equatable, Hashable {}
 // Note that we don't yet support `indirect` for enums.
 // See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
 
+public enum GeoKind {
+    
+    case geosite
+    case geoip
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeGeoKind: FfiConverterRustBuffer {
+    typealias SwiftType = GeoKind
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> GeoKind {
+        let variant: Int32 = try readInt(&buf)
+        switch variant {
+        
+        case 1: return .geosite
+        
+        case 2: return .geoip
+        
+        default: throw UniffiInternalError.unexpectedEnumCase
+        }
+    }
+
+    public static func write(_ value: GeoKind, into buf: inout [UInt8]) {
+        switch value {
+        
+        
+        case .geosite:
+            writeInt(&buf, Int32(1))
+        
+        
+        case .geoip:
+            writeInt(&buf, Int32(2))
+        
+        }
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeGeoKind_lift(_ buf: RustBuffer) throws -> GeoKind {
+    return try FfiConverterTypeGeoKind.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeGeoKind_lower(_ value: GeoKind) -> RustBuffer {
+    return FfiConverterTypeGeoKind.lower(value)
+}
+
+
+
+extension GeoKind: Equatable, Hashable {}
+
+
+
+// Note that we don't yet support `indirect` for enums.
+// See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
+
 public enum GroupType {
     
     case select
@@ -6716,6 +6909,31 @@ fileprivate struct FfiConverterSequenceTypeConnectionInfo: FfiConverterRustBuffe
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterSequenceTypeGeoSource: FfiConverterRustBuffer {
+    typealias SwiftType = [GeoSource]
+
+    public static func write(_ value: [GeoSource], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeGeoSource.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [GeoSource] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [GeoSource]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeGeoSource.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterSequenceTypeGroupMember: FfiConverterRustBuffer {
     typealias SwiftType = [GroupMember]
 
@@ -7205,6 +7423,9 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_cached_latencies() != 41970) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_geo() != 16095) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_layer() != 45440) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -7221,6 +7442,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes() != 1274) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_geo_sources() != 32785) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_global_node() != 56704) {

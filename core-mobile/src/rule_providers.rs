@@ -49,6 +49,10 @@ pub(crate) fn load_manifest(dir: &Path) -> BTreeMap<u32, ManifestEntry> {
     std::fs::read(manifest_path(dir)).ok().and_then(|b| serde_json::from_slice(&b).ok()).unwrap_or_default()
 }
 
+pub(crate) fn save_manifest_pub(dir: &Path, m: &BTreeMap<u32, ManifestEntry>) -> Result<(), MobileError> {
+    save_manifest(dir, m)
+}
+
 fn save_manifest(dir: &Path, m: &BTreeMap<u32, ManifestEntry>) -> Result<(), MobileError> {
     let p = manifest_path(dir);
     let tmp = p.with_extension("tmp");
@@ -98,7 +102,10 @@ impl MobileCore {
 
     /// 订阅变化后：序号上的规则集换了名字（或已不存在）的旧层删除。
     pub(crate) fn prune_provider_layers(&self) -> Result<(), MobileError> {
-        let want: Vec<String> = self.active_subscription_body().map(|b| providers_in(&b).into_iter().map(|p| p.0).collect()).unwrap_or_default();
+        let want: Vec<String> = self
+            .active_subscription_body()
+            .map(|b| providers_in(&b).into_iter().map(|p| p.0).chain(self.geo_layer_names(&b)).collect())
+            .unwrap_or_default();
         let mut m = load_manifest(&self.dir);
         let rules_dir = self.dir.join("rules");
         if let Ok(rd) = std::fs::read_dir(&rules_dir) {
