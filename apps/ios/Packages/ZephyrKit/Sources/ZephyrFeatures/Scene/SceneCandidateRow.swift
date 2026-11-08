@@ -16,12 +16,12 @@ struct SceneCandidateRow: View {
             ZFlag(node.region)
             Text(verbatim: node.name)
                 .zType(.body)
-                .foregroundStyle(isSelected ? ZTokens.Colors.screenT1 : ZTokens.Colors.screenT2)
+                .foregroundStyle(isSelected ? ZTokens.Colors.screenT1 : ZColor.t2)
                 .fontWeight(isSelected ? .medium : .regular)
                 .lineLimit(1)
             Spacer(minLength: ZTokens.Space.n3)
             if let pinnedFor {
-                Text("\(pinnedFor) 固定").zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
+                Text("\(pinnedFor) 固定").zType(.caption).foregroundStyle(ZColor.t3)
             }
             Text(verbatim: ZFormat.latency(node.latencyMs))
                 .zMono(.body)
@@ -41,8 +41,8 @@ struct SceneCandidateRow: View {
     }
 
     private var latencyColor: Color {
-        guard let ms = node.latencyMs else { return ZTokens.Colors.screenT3 }
-        return ms < 0 || ms >= ZTokens.LatencyThreshold.slow ? ZTokens.LatencyThreshold.color(Int(ms)) : ZTokens.Colors.screenT3
+        guard let ms = node.latencyMs else { return ZColor.t3 }
+        return ms < 0 || ms >= ZTokens.LatencyThreshold.slow ? ZTokens.LatencyThreshold.color(Int(ms)) : ZColor.t3
     }
 
     private var a11y: String {

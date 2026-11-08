@@ -20,7 +20,7 @@ struct CommandPreviewCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: ZTokens.Space.n1) {
             Text(verbatim: title).zType(.headline).fontWeight(.regular).foregroundStyle(ZTokens.Colors.screenT1)
-            Text(verbatim: summary).zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+            Text(verbatim: summary).zType(.footnote).foregroundStyle(ZColor.t3)
 
             if let exit = preview.exit, exit.fromIp != exit.toIp || exit.fromRegion != exit.toRegion {
                 VStack(alignment: .leading, spacing: ZTokens.Space.n2) {
@@ -39,7 +39,7 @@ struct CommandPreviewCard: View {
             }
 
             if let foot = footnote {
-                Text(verbatim: foot).zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+                Text(verbatim: foot).zType(.footnote).foregroundStyle(ZColor.t3)
                     .padding(.top, ZTokens.Space.n4)
             }
 

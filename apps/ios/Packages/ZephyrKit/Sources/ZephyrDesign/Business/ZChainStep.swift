@@ -74,7 +74,7 @@ public struct ZChainStep: View {
             VStack(alignment: .leading, spacing: style == .compact ? 0 : ZTokens.Space.n1 / 2) {
                 Text(verbatim: label)
                     .zType(.caption)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
                 HStack(spacing: ZTokens.Space.n3) {
                     if let regionCode { ZFlag(regionCode) }
                     valueText
@@ -82,14 +82,14 @@ public struct ZChainStep: View {
                 if let detail {
                     Text(verbatim: detail)
                         .zType(.caption)
-                        .foregroundStyle(ZTokens.Colors.screenT3)
+                        .foregroundStyle(ZColor.t3)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             if let trailing {
                 Text(verbatim: trailing)
                     .zMono(.small)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
                     .lineLimit(1)
                     .fixedSize()
             }
@@ -114,7 +114,7 @@ public struct ZChainStep: View {
 
     private var dot: some View {
         Circle()
-            .strokeBorder(markerColor ?? ZTokens.Colors.screenT3, lineWidth: ZMetrics.chainDotStroke)
+            .strokeBorder(markerColor ?? ZColor.t3, lineWidth: ZMetrics.chainDotStroke)
             .background(Circle().fill(markerColor ?? Color.clear))
             .frame(width: dotSize, height: dotSize)
             .accessibilityHidden(true)

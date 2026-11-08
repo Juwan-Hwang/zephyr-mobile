@@ -38,7 +38,7 @@ struct TraceOverrideSection: View {
         VStack(alignment: .leading, spacing: 0) {
             Text("本次连接")
                 .zType(.caption)
-                .foregroundStyle(ZTokens.Colors.screenT3)
+                .foregroundStyle(ZColor.t3)
                 .padding(.horizontal, ZTokens.Space.n1)
                 .padding(.top, ZTokens.Space.n6)
                 .padding(.bottom, ZTokens.Space.n3)
@@ -52,7 +52,7 @@ struct TraceOverrideSection: View {
                 ZToggle(isOn: Binding(get: { always }, set: { always = $0; if selection != .unchanged { choose(selection, force: true) } })) {
                     VStack(alignment: .leading, spacing: ZTokens.Space.n1 / 2) {
                         Text("始终应用").zType(.body).foregroundStyle(ZTokens.Colors.screenT1)
-                        Text("关闭时仅更改本次连接").zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
+                        Text("关闭时仅更改本次连接").zType(.caption).foregroundStyle(ZColor.t3)
                     }
                 }
             }

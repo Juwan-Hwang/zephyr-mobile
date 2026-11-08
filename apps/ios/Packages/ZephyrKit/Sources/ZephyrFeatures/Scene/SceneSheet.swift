@@ -41,7 +41,7 @@ struct SceneSheet: View {
                     .padding(.horizontal, HMetrics.homeInset)
                     .padding(.top, ZTokens.Space.n5)
                 Text(verbatim: lede(scene))
-                    .zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+                    .zType(.footnote).foregroundStyle(ZColor.t3)
                     .padding(.horizontal, HMetrics.homeInset)
                     .padding(.top, ZTokens.Space.n3)
 
@@ -70,7 +70,7 @@ struct SceneSheet: View {
                     .padding(.top, ZTokens.Space.n6)
 
                 Text("优选结果仅保存在 Zephyr 中，订阅配置保持原样。")
-                    .zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
+                    .zType(.caption).foregroundStyle(ZColor.t3)
                     .padding(.horizontal, HMetrics.homeInset + ZTokens.Space.n1)
                     .padding(.top, ZTokens.Space.n3)
                     .padding(.bottom, ZTokens.Space.n8)
@@ -179,7 +179,7 @@ private struct DetailRow: View {
         HStack(spacing: ZTokens.Space.n3) {
             Text(verbatim: title).zType(.body).foregroundStyle(ZTokens.Colors.screenT1)
             Spacer(minLength: ZTokens.Space.n3)
-            Text(verbatim: value).zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+            Text(verbatim: value).zType(.footnote).foregroundStyle(ZColor.t3)
                 .multilineTextAlignment(.trailing)
         }
         .padding(.vertical, ZTokens.Space.n4)

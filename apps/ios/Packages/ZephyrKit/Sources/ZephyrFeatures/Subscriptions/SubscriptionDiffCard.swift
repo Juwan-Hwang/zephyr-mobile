@@ -29,7 +29,7 @@ struct SubscriptionDiffCard: View {
                     if let trailing {
                         Text(verbatim: trailing)
                             .zMono(.small)
-                            .foregroundStyle(ZTokens.Colors.screenT3)
+                            .foregroundStyle(ZColor.t3)
                     }
                 }
                 ViewThatFits(in: .horizontal) {
@@ -41,7 +41,7 @@ struct SubscriptionDiffCard: View {
                     ZStatusDot(isOn: true, color: diff.overridesKept ? ZSwitchColor.on : ZTokens.Colors.screenAmber)
                     Text(verbatim: status)
                         .zType(.footnote)
-                        .foregroundStyle(ZTokens.Colors.screenT2)
+                        .foregroundStyle(ZColor.t2)
                 }
                 .accessibilityElement(children: .combine)
             }

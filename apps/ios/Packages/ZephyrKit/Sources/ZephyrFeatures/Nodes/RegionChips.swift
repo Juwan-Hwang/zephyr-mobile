@@ -35,7 +35,7 @@ struct RegionChips: View {
                         .opacity(0.6)
                 }
             }
-            .foregroundStyle(on ? ZPage.background : ZTokens.Colors.screenT2)
+            .foregroundStyle(on ? ZPage.background : ZColor.t2)
             .padding(.horizontal, ZTokens.Space.n4)
             .frame(minHeight: ZTokens.Space.n7 - 2)
             .background {

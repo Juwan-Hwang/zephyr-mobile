@@ -21,7 +21,7 @@ struct GlobalModeCard: View {
             VStack(alignment: .leading, spacing: ZTokens.Space.n1) {
                 Text("全局模式").zType(.body).foregroundStyle(ZTokens.Colors.screenT1)
                 Text(verbatim: "所有流量均经由\(model.globalNode?.name ?? "当前节点")。场景已暂停。")
-                    .zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+                    .zType(.footnote).foregroundStyle(ZColor.t3)
                     .fixedSize(horizontal: false, vertical: true)
                 HStack(spacing: ZTokens.Space.n3) {
                     ZButton("使用规则模式", fullWidth: true) {
@@ -49,11 +49,11 @@ struct GlobalModeCard: View {
                     ZFlag(s.region)
                     Text(verbatim: s.name).zType(.footnote).foregroundStyle(ZTokens.Colors.screenT1)
                     if let ms = s.latencyMs, ms >= 0 {
-                        Text(verbatim: ZFormat.latency(ms)).zMono(.small).foregroundStyle(ZTokens.Colors.screenT3)
+                        Text(verbatim: ZFormat.latency(ms)).zMono(.small).foregroundStyle(ZColor.t3)
                     }
                 }
                 .padding(.top, ZTokens.Space.n4)
-                Text("所有 App 的出口都将变为\(s.name)。").zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
+                Text("所有 App 的出口都将变为\(s.name)。").zType(.caption).foregroundStyle(ZColor.t3)
                 HStack(spacing: ZTokens.Space.n3) {
                     ZButton("更改为\(s.name)", fullWidth: true) {
                         expanded = false

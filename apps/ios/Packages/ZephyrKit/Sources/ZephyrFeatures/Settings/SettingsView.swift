@@ -43,7 +43,7 @@ public struct SettingsView: View {
                 PageFootnote("订阅、节点与流量数据仅保存在此设备上。")
                 Text(verbatim: Self.version)
                     .zMono(.small)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
                     .frame(maxWidth: .infinity)
                     .padding(.top, ZTokens.Space.n6)
             }

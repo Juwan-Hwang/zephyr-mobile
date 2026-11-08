@@ -46,7 +46,7 @@ struct TodayCardView: View {
                     .padding(.top, ZTokens.Space.n6)
                 Text(verbatim: footnote)
                     .zType(.caption)
-                    .foregroundStyle(saveState == .failed ? ZTokens.Colors.screenRed : ZTokens.Colors.screenT3)
+                    .foregroundStyle(saveState == .failed ? ZTokens.Colors.screenRed : ZColor.t3)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, HMetrics.homeInset)
                     .padding(.top, ZTokens.Space.n4)
@@ -171,7 +171,7 @@ struct TodayThemePicker: View {
                             .overlay { Circle().strokeBorder(ZTokens.Colors.screenT4, lineWidth: HMetrics.hairline) }
                         Text(verbatim: t.title)
                             .zType(.footnote)
-                            .foregroundStyle(on ? ZTokens.Colors.screenT1 : ZTokens.Colors.screenT2)
+                            .foregroundStyle(on ? ZTokens.Colors.screenT1 : ZColor.t2)
                     }
                     .padding(.leading, ZTokens.Space.n2)
                     .padding(.trailing, ZTokens.Space.n4)

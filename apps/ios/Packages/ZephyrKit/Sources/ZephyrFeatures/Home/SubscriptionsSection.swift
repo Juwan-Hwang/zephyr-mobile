@@ -86,7 +86,7 @@ private struct SubscriptionRow: View {
                 if let e = sub.expiresAt {
                     Text(verbatim: HFormat.homeExpiry(e, now: now))
                         .zType(.footnote)
-                        .foregroundStyle(warn ? ZTokens.Colors.screenAmber : ZTokens.Colors.screenT3)
+                        .foregroundStyle(warn ? ZTokens.Colors.screenAmber : ZColor.t3)
                 }
             }
         }

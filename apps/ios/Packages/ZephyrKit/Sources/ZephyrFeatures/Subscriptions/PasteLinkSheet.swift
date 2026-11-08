@@ -42,7 +42,7 @@ struct PasteLinkSheet: View {
                 }
                 Text("订阅与流量数据仅保存在此设备上。")
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
                 Spacer()
             }
             .padding(PageMetrics.margin)

@@ -98,7 +98,7 @@ public struct OnboardingView: View {
         if importer.isImporting {
             HStack(spacing: ZTokens.Space.n3) {
                 ProgressView()
-                Text("正在导入…").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+                Text("正在导入…").zType(.footnote).foregroundStyle(ZColor.t3)
             }
             .padding(.top, ZTokens.Space.n4)
         } else if method == nil, let err = importer.errorMessage {
@@ -123,7 +123,7 @@ public struct OnboardingView: View {
                             .accessibilityHidden(true)
                         Text("已添加 \(sub.name)（\(ZFormat.count(sub.nodeCount)) 个节点）")
                             .zType(.body)
-                            .foregroundStyle(ZTokens.Colors.screenT2)
+                            .foregroundStyle(ZColor.t2)
                     }
                     .padding(.top, ZTokens.Space.n6)
                     title("选择\n使用方式")
@@ -162,7 +162,7 @@ public struct OnboardingView: View {
     private func stepLabel(_ s: String) -> some View {
         Text(verbatim: s)
             .zMono(.body)
-            .foregroundStyle(ZTokens.Colors.screenT3)
+            .foregroundStyle(ZColor.t3)
             .accessibilityLabel(Text("第 \(s.prefix(1)) 步，共 2 步"))
     }
 
@@ -179,7 +179,7 @@ public struct OnboardingView: View {
     private func footnote(_ s: String) -> some View {
         Text(verbatim: s)
             .zType(.footnote)
-            .foregroundStyle(ZTokens.Colors.screenT3)
+            .foregroundStyle(ZColor.t3)
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)
             .padding(.top, ZTokens.Space.n4)

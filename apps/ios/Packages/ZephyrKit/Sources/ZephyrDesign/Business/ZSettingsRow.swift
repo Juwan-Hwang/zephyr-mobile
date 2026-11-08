@@ -108,7 +108,7 @@ public struct ZSettingsRow<Trailing: View>: View {
                 if let subtitle {
                     Text(verbatim: subtitle)
                         .zType(.caption)
-                        .foregroundStyle(ZTokens.Colors.screenT3)
+                        .foregroundStyle(ZColor.t3)
                 }
             }
         }
@@ -138,7 +138,7 @@ public struct ZSettingsAccessoryView: View {
     private func value(_ v: String) -> some View {
         Text(verbatim: v)
             .zType(.body)
-            .foregroundStyle(ZTokens.Colors.screenT3)
+            .foregroundStyle(ZColor.t3)
             .multilineTextAlignment(.trailing)
     }
 
@@ -186,12 +186,12 @@ private struct ZSettingsRowSample: View {
         ZSettingsGroup {
             ZSettingsRow(verbatim: "Zephyr 覆写", subtitle: "在订阅之上", index: 1) {
                 ZBadge("覆写", tone: .accent)
-                Text(verbatim: "14").zMono(.body).foregroundStyle(ZTokens.Colors.screenT2)
+                Text(verbatim: "14").zMono(.body).foregroundStyle(ZColor.t2)
             }
             ZDivider()
             ZSettingsRow(verbatim: "OpenAI", subtitle: "规则集 · 每天更新", index: 3, isHighlighted: true) {
                 ZBadge("域名")
-                Text(verbatim: "312").zMono(.body).foregroundStyle(ZTokens.Colors.screenT2)
+                Text(verbatim: "312").zMono(.body).foregroundStyle(ZColor.t2)
             }
         }
     }

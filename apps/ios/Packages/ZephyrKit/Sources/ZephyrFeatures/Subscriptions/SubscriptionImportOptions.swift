@@ -22,7 +22,7 @@ struct SubscriptionImportOptions: View {
     private func row(_ m: SubscriptionImportMethod) -> some View {
         HStack(spacing: ZTokens.Space.n4) {
             Image(systemName: m.systemImage)
-                .foregroundStyle(ZTokens.Colors.screenT2)
+                .foregroundStyle(ZColor.t2)
                 .frame(width: iconWidth)
                 .accessibilityHidden(true)
             Text(verbatim: m.title)

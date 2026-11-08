@@ -48,7 +48,7 @@ struct TraceView: View {
                 .accessibilityAddTraits(.isHeader)
             Text(verbatim: lede)
                 .zType(.footnote)
-                .foregroundStyle(ZTokens.Colors.screenT3)
+                .foregroundStyle(ZColor.t3)
                 .padding(.top, ZTokens.Space.n2)
 
             chain

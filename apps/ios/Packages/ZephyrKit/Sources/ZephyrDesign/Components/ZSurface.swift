@@ -74,7 +74,7 @@ private struct ZSurfaceSample: View {
             ZSurface(style) {
                 VStack(alignment: .leading, spacing: ZTokens.Space.n1) {
                     Text(verbatim: "\(style)").zType(.body).foregroundStyle(ZTokens.Colors.screenT1)
-                    Text(verbatim: "深色玻璃 · 1px 细边框").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+                    Text(verbatim: "深色玻璃 · 1px 细边框").zType(.footnote).foregroundStyle(ZColor.t3)
                 }
                 .padding(ZTokens.Space.n5)
                 .frame(maxWidth: .infinity, alignment: .leading)

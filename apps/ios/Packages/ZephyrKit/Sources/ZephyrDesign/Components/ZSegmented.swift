@@ -62,7 +62,7 @@ public struct ZSegmented<Value: Hashable>: View {
             } label: {
                 segment.title
                     .zType(.zSegment)
-                    .foregroundStyle(isOn ? ZTokens.Colors.screenT1 : ZTokens.Colors.screenT2)
+                    .foregroundStyle(isOn ? ZTokens.Colors.screenT1 : ZColor.t2)
                     .lineLimit(dynamicTypeSize.isAccessibilitySize ? 2 : 1)
                     .minimumScaleFactor(0.8)
                     .multilineTextAlignment(.center)

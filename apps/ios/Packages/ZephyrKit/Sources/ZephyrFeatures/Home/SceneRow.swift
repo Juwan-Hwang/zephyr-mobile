@@ -91,17 +91,17 @@ struct SceneRow: View {
         if isProbing {
             VStack(alignment: .leading, spacing: ZTokens.Space.n2) {
                 Text(verbatim: scene.available > 0 ? ZL.f("%d 个可用 · 检测中", scene.available) : ZL.tr("检测中"))
-                    .zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+                    .zType(.footnote).foregroundStyle(ZColor.t3)
                 ProbeBar().frame(width: HMetrics.probeBarWidth)
             }
         } else if let down = services.unavailableText {
             Text(verbatim: down).zType(.footnote).foregroundStyle(ZTokens.Colors.screenRed)
         } else if scene.source == .subscriptionGroup {
-            Text("订阅分组").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+            Text("订阅分组").zType(.footnote).foregroundStyle(ZColor.t3)
         } else if scene.available <= 0 {
             Text("暂无可用节点").zType(.footnote).foregroundStyle(ZTokens.Colors.screenRed)
         } else {
-            Text("\(scene.available) 个可用").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+            Text("\(scene.available) 个可用").zType(.footnote).foregroundStyle(ZColor.t3)
         }
     }
 
@@ -117,7 +117,7 @@ struct SceneRow: View {
                     .contentTransition(.opacity)
             }
             if let ok = services.healthyText {
-                Text(verbatim: ok).zType(.caption).foregroundStyle(ZTokens.Colors.screenT3).lineLimit(stacked ? nil : 1)
+                Text(verbatim: ok).zType(.caption).foregroundStyle(ZColor.t3).lineLimit(stacked ? nil : 1)
             } else if let ex = scene.exceptions.first {
                 HStack(spacing: ZTokens.Space.n2) {
                     Image(systemName: "lock.fill")
@@ -127,10 +127,10 @@ struct SceneRow: View {
                     Text(verbatim: "\(ex.app)：\(ex.node.name)")
                 }
                 .zType(.caption)
-                .foregroundStyle(ZTokens.Colors.screenT3)
+                .foregroundStyle(ZColor.t3)
                 .lineLimit(stacked ? nil : 1)
             } else if let note = scene.note {
-                Text(verbatim: note).zType(.caption).foregroundStyle(ZTokens.Colors.screenT3).lineLimit(stacked ? nil : 1)
+                Text(verbatim: note).zType(.caption).foregroundStyle(ZColor.t3).lineLimit(stacked ? nil : 1)
             }
         }
         .multilineTextAlignment(stacked ? .leading : .trailing)

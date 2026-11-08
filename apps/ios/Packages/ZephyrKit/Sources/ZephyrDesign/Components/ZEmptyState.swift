@@ -28,7 +28,7 @@ public struct ZEmptyState: View {
                 Image(systemName: systemImage)
                     .font(.largeTitle)
                     .fontWeight(.ultraLight)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
                     .padding(.bottom, ZTokens.Space.n3)
                     .accessibilityHidden(true)
             }
@@ -39,7 +39,7 @@ public struct ZEmptyState: View {
             if let message {
                 Text(message)
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
             }
             if let actionTitle, let action {
                 ZButton(actionTitle, kind: .ghost, action: action)

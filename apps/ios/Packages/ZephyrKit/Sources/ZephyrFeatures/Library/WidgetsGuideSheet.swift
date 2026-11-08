@@ -28,7 +28,7 @@ struct WidgetsGuideSheet: View {
                                 .foregroundStyle(ZTokens.Colors.screenT1)
                             Text(s.detail)
                                 .zType(.footnote)
-                                .foregroundStyle(ZTokens.Colors.screenT2)
+                                .foregroundStyle(ZColor.t2)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                     }

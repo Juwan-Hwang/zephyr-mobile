@@ -50,7 +50,7 @@ public struct ZIconButton: View {
 
     private var foreground: AnyShapeStyle {
         switch style {
-        case .plain, .glass: return AnyShapeStyle(ZTokens.Colors.screenT2)
+        case .plain, .glass: return AnyShapeStyle(ZColor.t2)
         case .accent: return AnyShapeStyle(ZAccentStyle())
         }
     }

@@ -29,7 +29,7 @@ struct SceneChangeConfirm: View {
             }
             ExitIPLine(change: change.exit, fallbackFrom: change.from.region, fallbackTo: change.to.region)
             if let kept = keptText {
-                Text(verbatim: kept).zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
+                Text(verbatim: kept).zType(.caption).foregroundStyle(ZColor.t3)
             }
             HStack(spacing: ZTokens.Space.n3) {
                 ZButton("更改", fullWidth: true, isLoading: change.exit == nil) {
@@ -85,7 +85,7 @@ struct ExitIPLine: View {
     var body: some View {
         HStack(spacing: ZTokens.Space.n3) {
             Text(verbatim: side(change?.fromRegion ?? fallbackFrom, change?.fromIp))
-                .foregroundStyle(ZTokens.Colors.screenT2)
+                .foregroundStyle(ZColor.t2)
             Image(systemName: "arrow.right").font(.caption2).foregroundStyle(ZQuaternaryText())
             Text(verbatim: side(change?.toRegion ?? fallbackTo, change?.toIp))
                 .foregroundStyle(ZTokens.Colors.screenT1)

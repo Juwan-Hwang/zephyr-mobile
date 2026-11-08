@@ -24,7 +24,7 @@ struct SceneFunnel: View {
                 GridRow {
                     Text(verbatim: "\(step.count)")
                         .zMono(.body)
-                        .foregroundStyle(last ? ZTokens.Colors.screenT1 : ZTokens.Colors.screenT2)
+                        .foregroundStyle(last ? ZTokens.Colors.screenT1 : ZColor.t2)
                         .gridColumnAlignment(.trailing)
                     HStack(spacing: ZTokens.Space.n4) {
                         Capsule()
@@ -34,7 +34,7 @@ struct SceneFunnel: View {
                             .animation(reduceMotion ? nil : ZMotion.page.delay(0.12 + Double(i) * 0.09), value: shown)
                         Text(verbatim: step.label)
                             .zType(.footnote)
-                            .foregroundStyle(last ? ZTokens.Colors.screenT2 : ZTokens.Colors.screenT3)
+                            .foregroundStyle(last ? ZColor.t2 : ZColor.t3)
                             .lineLimit(2)
                     }
                 }

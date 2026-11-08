@@ -52,7 +52,7 @@ struct CommandTextField: UIViewRepresentable {
         tf.tintColor = UIColor(tint).resolvedColor(with: traits)
         tf.attributedPlaceholder = NSAttributedString(
             string: placeholder,
-            attributes: [.foregroundColor: UIColor(ZTokens.Colors.screenT3).resolvedColor(with: traits), .font: font])
+            attributes: [.foregroundColor: UIColor(ZColor.t3).resolvedColor(with: traits), .font: font])
 
         // 输入法组合中不动文字（否则会打断拼音）。
         (tf as? FocusingTextField)?.wantsFocus = isFocused

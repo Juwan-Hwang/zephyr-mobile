@@ -22,7 +22,7 @@ public struct ZSectionHeader: View {
         layout {
             Text(title)
                 .fontWeight(.medium)
-                .foregroundStyle(ZTokens.Colors.screenT2)
+                .foregroundStyle(ZColor.t2)
                 .accessibilityAddTraits(.isHeader)
             if !dynamicTypeSize.isAccessibilitySize { Spacer(minLength: ZTokens.Space.n3) }
             trailingView
@@ -42,14 +42,14 @@ public struct ZSectionHeader: View {
                         Text(verbatim: trailing)
                         Image(systemName: "chevron.right").imageScale(.small)
                     }
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
                     .frame(minHeight: ZTokens.Layout.touchMinIos / 2)
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(ZPressStyle(haptic: .none))
             } else {
                 Text(verbatim: trailing)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
             }
         }
     }

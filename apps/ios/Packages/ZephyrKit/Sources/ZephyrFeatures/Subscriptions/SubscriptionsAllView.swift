@@ -21,7 +21,7 @@ struct SubscriptionsAllView: View {
             } footer: {
                 Text("\(ZFormat.count(Int64(filtered.count))) 个订阅 · \(ZFormat.count(nodeCount)) 个节点")
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
             }
         }
         .listStyle(.insetGrouped)

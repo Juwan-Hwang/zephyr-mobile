@@ -26,7 +26,7 @@ struct LibraryStatCard: View {
                     Spacer(minLength: ZTokens.Space.n3)
                     Text(caption)
                         .zType(.footnote)
-                        .foregroundStyle(ZTokens.Colors.screenT2)
+                        .foregroundStyle(ZColor.t2)
                         .accessibilityHidden(true)
                 }
                 .frame(maxWidth: .infinity, minHeight: Self.minContentHeight, alignment: .topLeading)

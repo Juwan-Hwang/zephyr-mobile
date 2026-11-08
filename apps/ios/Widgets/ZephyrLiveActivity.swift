@@ -26,7 +26,7 @@ struct ZephyrLiveActivity: Widget {
                     ConnectionTimer(since: context.state.connectedSince)
                         .zType(.headline, monospacedDigits: true)
                         .fontDesign(.monospaced)
-                        .foregroundStyle(ZTokens.Colors.screenT2)
+                        .foregroundStyle(ZColor.t2)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     IslandExpandedBottom(state: context.state, isStale: context.isStale)

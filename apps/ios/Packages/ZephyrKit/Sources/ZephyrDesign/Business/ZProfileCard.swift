@@ -50,7 +50,7 @@ public struct ZProfileCard: View {
                 if let detail {
                     Text(verbatim: detail)
                         .zType(.footnote)
-                        .foregroundStyle(ZTokens.Colors.screenT3)
+                        .foregroundStyle(ZColor.t3)
                 }
                 if let usage {
                     ZProgressBar(value: usage, tone: isWarning ? .warning : .neutral, thickness: .regular, label: "已用流量")
@@ -69,7 +69,7 @@ public struct ZProfileCard: View {
                             if let remainingCaption {
                                 Text(verbatim: remainingCaption)
                                     .zType(.caption)
-                                    .foregroundStyle(isWarning ? ZTokens.Colors.screenAmber : ZTokens.Colors.screenT3)
+                                    .foregroundStyle(isWarning ? ZTokens.Colors.screenAmber : ZColor.t3)
                             }
                         }
                     }

@@ -89,7 +89,7 @@ public struct ZSheet<Accessory: View, Content: View>: View {
                 } label: {
                     Text(doneTitle)
                         .zType(.body)
-                        .foregroundStyle(ZTokens.Colors.screenT2)
+                        .foregroundStyle(ZColor.t2)
                         .frame(minHeight: ZTokens.Layout.touchMinIos)
                         .contentShape(Rectangle())
                 }
@@ -200,7 +200,7 @@ private struct ZSheetSample: View {
                 ZSheet("场景") {
                     VStack(alignment: .leading, spacing: ZTokens.Space.n3) {
                         ZBigNumber("9", unit: "个可用", size: .hero)
-                        Text(verbatim: "从 13,109,802 个节点中筛选").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+                        Text(verbatim: "从 13,109,802 个节点中筛选").zType(.footnote).foregroundStyle(ZColor.t3)
                     }
                     .padding(.horizontal, ZTokens.Space.n6)
                     .padding(.top, ZTokens.Space.n5)

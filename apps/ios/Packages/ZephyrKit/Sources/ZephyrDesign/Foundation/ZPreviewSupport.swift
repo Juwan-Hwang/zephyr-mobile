@@ -37,7 +37,7 @@ struct ZAccentMatrix<Content: View>: View {
                     VStack(alignment: .leading, spacing: ZTokens.Space.n3) {
                         Text(verbatim: accent.rawValue)
                             .zMono(.small)
-                            .foregroundStyle(ZTokens.Colors.screenT3)
+                            .foregroundStyle(ZColor.t3)
                         VStack(alignment: .leading, spacing: ZTokens.Space.n3) { content() }
                     }
                     .zAccent(accent)

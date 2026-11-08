@@ -73,7 +73,7 @@ struct TrustedWifiView: View {
     }
 
     private func footnote(_ s: String) -> some View {
-        Text(verbatim: s).zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+        Text(verbatim: s).zType(.footnote).foregroundStyle(ZColor.t3)
     }
 }
 

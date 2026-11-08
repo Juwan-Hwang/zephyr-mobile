@@ -63,7 +63,7 @@ public struct ZSearchBar: View {
 
     private var placeholderText: some View {
         Text(placeholder)
-            .foregroundStyle(ZTokens.Colors.screenT3)
+            .foregroundStyle(ZColor.t3)
             .lineLimit(1)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -81,7 +81,7 @@ public struct ZSearchBar: View {
                 Button { text.wrappedValue = "" } label: {
                     Image(systemName: "xmark.circle.fill")
                         .symbolRenderingMode(.hierarchical)
-                        .foregroundStyle(ZTokens.Colors.screenT3)
+                        .foregroundStyle(ZColor.t3)
                         .frame(minWidth: ZTokens.Layout.touchMinIos, minHeight: ZTokens.Layout.touchMinIos)
                         .contentShape(Rectangle())
                 }
@@ -94,7 +94,7 @@ public struct ZSearchBar: View {
     private func capsuleContent<C: View>(@ViewBuilder _ content: () -> C) -> some View {
         HStack(spacing: ZTokens.Space.n3 + ZTokens.Space.n1 / 2) {
             Image(systemName: "magnifyingglass")
-                .foregroundStyle(ZTokens.Colors.screenT3)
+                .foregroundStyle(ZColor.t3)
                 .accessibilityHidden(true)
             content()
         }

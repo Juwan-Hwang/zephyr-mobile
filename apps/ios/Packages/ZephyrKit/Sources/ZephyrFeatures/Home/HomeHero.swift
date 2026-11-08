@@ -32,7 +32,7 @@ struct HomeHero: View {
                 } else {
                     Text(verbatim: subline)
                         .hFont(HMetrics.subFont, relativeTo: .subheadline)
-                        .foregroundStyle(subline.isEmpty ? ZTokens.Colors.screenT3 : failureTone)
+                        .foregroundStyle(subline.isEmpty ? ZColor.t3 : failureTone)
                         .lineLimit(2)
                 }
             }
@@ -75,7 +75,7 @@ struct HomeHero: View {
     }
 
     private var failureTone: Color {
-        model.connection.status == .failed ? ZTokens.Colors.screenRed : ZTokens.Colors.screenT3
+        model.connection.status == .failed ? ZTokens.Colors.screenRed : ZColor.t3
     }
 }
 
@@ -139,7 +139,7 @@ struct ConnectionDuration: View {
     private func styled(_ text: Text) -> some View {
         text
             .hFont(HMetrics.subFont, relativeTo: .subheadline, monospacedDigits: true)
-            .foregroundStyle(ZTokens.Colors.screenT3)
+            .foregroundStyle(ZColor.t3)
     }
 
     /// 注入的时钟与系统时钟相差 5 秒以内 → 视为系统时钟。

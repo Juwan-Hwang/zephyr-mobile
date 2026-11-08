@@ -16,7 +16,7 @@ struct StorageCard: View {
             ZProgressBar(segments: segments, label: "存储")
             Text(verbatim: caption)
                 .zType(.caption)
-                .foregroundStyle(ZTokens.Colors.screenT3)
+                .foregroundStyle(ZColor.t3)
                 .redacted(reason: info == nil ? .placeholder : [])
         }
         .padding(.horizontal, ZTokens.Space.n5 - ZTokens.Space.n1 / 2)

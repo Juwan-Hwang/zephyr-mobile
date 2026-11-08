@@ -43,7 +43,7 @@ public struct ZTextField: View {
         HStack(spacing: ZTokens.Space.n3) {
             if let systemImage {
                 Image(systemName: systemImage)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
                     .accessibilityHidden(true)
                     .allowsHitTesting(false)
             }
@@ -51,7 +51,7 @@ public struct ZTextField: View {
             if let trailing, !trailing.isEmpty {
                 Text(verbatim: trailing)
                     .zMono(.small)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
                     .lineLimit(1)
                     .layoutPriority(-1)
                     .allowsHitTesting(false)
@@ -62,7 +62,7 @@ public struct ZTextField: View {
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .symbolRenderingMode(.hierarchical)
-                        .foregroundStyle(ZTokens.Colors.screenT3)
+                        .foregroundStyle(ZColor.t3)
                         .frame(minWidth: ZTokens.Layout.touchMinIos, minHeight: ZTokens.Layout.touchMinIos)
                         .contentShape(Rectangle())
                 }

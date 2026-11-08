@@ -48,7 +48,7 @@ public struct ZBigNumber: View {
             if let caption {
                 Text(caption)
                     .zType(.caption)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
             }
         }
         .accessibilityElement(children: .ignore)
@@ -70,7 +70,7 @@ public struct ZBigNumber: View {
         if let unit {
             Text(verbatim: unit)
                 .zType(size == .hero ? .body : .footnote)
-                .foregroundStyle(size == .hero ? ZTokens.Colors.screenT2 : ZTokens.Colors.screenT3)
+                .foregroundStyle(size == .hero ? ZColor.t2 : ZColor.t3)
                 .lineLimit(1)
         }
     }
