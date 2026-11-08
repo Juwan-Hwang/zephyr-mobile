@@ -394,7 +394,7 @@ impl MobileCore {
         };
         // 第 1 层"Zephyr 覆写"恒在（可为空），层序号才稳定（UI "第 N 层"）
         if !self.dir.join("rules").join("000.zr").exists() {
-            self.compile_rule_layer(0, "Zephyr 覆写".into(), LayerKind::Override, "订阅更新时保留".into(), "DIRECT".into(), String::new())?;
+            self.compile_rule_layer(0, "Zephyr 覆写".into(), LayerKind::Override, "在订阅之上".into(), "DIRECT".into(), String::new())?;
         }
         let path = self.dir.join("rules").join("001.zr");
         let fin = match active {
@@ -414,7 +414,9 @@ impl MobileCore {
                     acc.push('\n');
                     acc
                 });
-                self.compile_rule_layer(1, "订阅规则".into(), LayerKind::Subscription, name, fin.clone(), text)?;
+                // 与原型一致：层名为订阅名，说明为"订阅规则"
+                let title = if name.trim().is_empty() { "订阅规则".to_string() } else { name };
+                self.compile_rule_layer(1, title, LayerKind::Subscription, "订阅规则".into(), fin.clone(), text)?;
                 fin
             }
             None => {
