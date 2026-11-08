@@ -7,8 +7,8 @@ import ZephyrKit
 
 extension CoreEngine {
     /// 同时在途的握手数（太大易被运营商当成扫描、也挤占主线程网络回调）。
-    static let tcpPingConcurrency = 32
-    static let tcpPingTimeout: TimeInterval = 3
+    public static let tcpPingConcurrency = 32
+    public static let tcpPingTimeout: TimeInterval = 3
 
     /// 一次 TCP 握手耗时（毫秒）；失败、拒绝、超时为 -1。
     public static func tcpHandshake(host: String, port: UInt16, timeout: TimeInterval = tcpPingTimeout) async -> Int32 {
