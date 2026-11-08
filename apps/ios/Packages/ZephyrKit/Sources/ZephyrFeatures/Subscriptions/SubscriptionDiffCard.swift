@@ -51,10 +51,10 @@ struct SubscriptionDiffCard: View {
     @ViewBuilder private var numbers: some View {
         ZBigNumber(SubscriptionsModel.signed(diff.addedNodes, plus: true), size: .compact, caption: "节点",
                    tone: ZTokens.Colors.screenGreen,
-                   accessibilityLabel: Text(verbatim: "新增 \(ZFormat.count(diff.addedNodes)) 个节点"))
+                   accessibilityLabel: Text("新增 \(ZFormat.count(diff.addedNodes)) 个节点"))
         ZBigNumber(SubscriptionsModel.signed(diff.removedNodes, plus: false), size: .compact, caption: "节点",
                    tone: ZTokens.Colors.screenRed,
-                   accessibilityLabel: Text(verbatim: "移除 \(ZFormat.count(diff.removedNodes)) 个节点"))
+                   accessibilityLabel: Text("移除 \(ZFormat.count(diff.removedNodes)) 个节点"))
         ZBigNumber(ZFormat.count(diff.ruleChanges), size: .compact, caption: "规则变更")
     }
 

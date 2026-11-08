@@ -28,11 +28,11 @@ struct TrustedWifiView: View {
                         .zCardListRow()
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button { remove(ssid) } label: {
-                                Label { Text(verbatim: "删除") } icon: { Image(systemName: "trash") }
+                                Label { Text("删除") } icon: { Image(systemName: "trash") }
                             }
                             .tint(ZTokens.Colors.screenRed)
                         }
-                        .accessibilityAction(named: Text(verbatim: "删除")) { remove(ssid) }
+                        .accessibilityAction(named: Text("删除")) { remove(ssid) }
                 }
                 ZTextField("添加 Wi‑Fi 名称", text: $name, systemImage: "wifi", style: .plain, onSubmit: { add() })
                     .zCardListRow()
@@ -48,11 +48,11 @@ struct TrustedWifiView: View {
         .contentMargins(.horizontal, PageMetrics.margin, for: .scrollContent)
         .zPageBackground()
         .pageErrorBanner(Bindable(store).lastError)
-        .navigationTitle(Text(verbatim: "受信任的 Wi‑Fi"))
+        .navigationTitle(Text("受信任的 Wi‑Fi"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button { add() } label: { Text(verbatim: "添加") }
+                Button { add() } label: { Text("添加") }
                     .disabled(trimmed.isEmpty || names.contains(trimmed))
             }
         }

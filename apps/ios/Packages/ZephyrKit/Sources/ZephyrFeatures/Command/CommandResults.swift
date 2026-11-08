@@ -31,7 +31,7 @@ struct CommandResults: View {
                     label(model.preview == nil && model.parse.isEmpty ? "结果" : "更多")
                     suggestionList(rest)
                 } else if model.preview == nil {
-                    Text(verbatim: "无结果")
+                    Text("无结果")
                         .zType(.body).foregroundStyle(ZTokens.Colors.screenT3)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, ZTokens.Space.n8)

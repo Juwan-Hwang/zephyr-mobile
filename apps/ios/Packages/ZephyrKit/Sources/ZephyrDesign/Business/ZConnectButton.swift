@@ -34,10 +34,10 @@ public struct ZConnectButton: View {
         Button(action: action) { EmptyView() }
             .buttonStyle(ZConnectSwitchStyle(phase: phase, tint: tint))
             .sensoryFeedback(.success, trigger: phase) { _, new in new == .on }
-            .accessibilityLabel(Text(verbatim: "连接"))
+            .accessibilityLabel(Text("连接"))
             .accessibilityValue(Text(verbatim: spokenValue))
             .accessibilityAddTraits(.isToggle)
-            .accessibilityHint(Text(verbatim: phase.isOnSide ? "轻点两下断开" : "轻点两下连接"))
+            .accessibilityHint(Text(phase.isOnSide ? LocalizedStringKey("轻点两下断开") : LocalizedStringKey("轻点两下连接")))
     }
 
     private var spokenValue: String {
@@ -113,7 +113,7 @@ private struct ZConnectSample: View {
     @State var phase: ZConnectPhase = .on
     var body: some View {
         HStack(alignment: .bottom) {
-            Text(verbatim: phase == .on ? "已连接" : "未连接")
+            Text(phase == .on ? LocalizedStringKey("已连接") : LocalizedStringKey("未连接"))
                 .zDisplay(.title, weight: .light)
                 .foregroundStyle(ZTokens.Colors.screenT1)
             Spacer()

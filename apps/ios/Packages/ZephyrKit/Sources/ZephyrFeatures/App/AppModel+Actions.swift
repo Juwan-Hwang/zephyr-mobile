@@ -125,6 +125,38 @@ extension AppModel {
         } catch { report(error) }
     }
 
+    /// 场景节点来源：订阅分组 ↔ Zephyr 优选（契约 §14.z setSceneSource）。场景流会随核心更新回写。
+    public func setSceneSource(sceneId: String, source: SceneSource) async {
+        guard let current = scene(id: sceneId)?.source, current != source else { return }
+        do { try await engine.setSceneSource(sceneId: sceneId, source: source) } catch { report(error) }
+    }
+
+    /// 域名路由覆写（契约 §13 overrideHost）：直连 / 指定场景 / 清除（.unchanged）。成功后给可撤销吐司。
+    @discardableResult
+    public func overrideHost(_ host: String, target: TraceTarget, sceneId: String?, persistent: Bool) async -> Bool {
+        do {
+            try await engine.overrideHost(host: host, target: target, sceneId: sceneId, persistent: persistent)
+            switch target {
+            case .unchanged:
+                showUndo("已清除 \(host) 的路由覆写")
+            case .direct:
+                showUndo("\(host) 已改为直连") { [weak self] in
+                    guard let self else { return }
+                    do { try await self.engine.overrideHost(host: host, target: .unchanged, sceneId: nil, persistent: persistent) }
+                    catch { self.report(error) }
+                }
+            case .scene:
+                let name = sceneId.flatMap { scene(id: $0)?.name } ?? "场景"
+                showUndo("\(host) 已改走 \(name)") { [weak self] in
+                    guard let self else { return }
+                    do { try await self.engine.overrideHost(host: host, target: .unchanged, sceneId: nil, persistent: persistent) }
+                    catch { self.report(error) }
+                }
+            }
+            return true
+        } catch { report(error); return false }
+    }
+
     // MARK: 撤销提示
 
     /// 显示带"撤销"的吐司（停留 ZTokens.Motion.undoWindow）。`undo` 为 nil 时只显示文字。

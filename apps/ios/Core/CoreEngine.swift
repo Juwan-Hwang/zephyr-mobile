@@ -35,6 +35,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     private var sceneWatchers: [UUID: AsyncStream<[ZephyrKit.Scene]>.Continuation] = [:]
     var latencyWatchers: [UUID: AsyncStream<[LatencyUpdate]>.Continuation] = [:]
     private var settingsWatchers: [UUID: AsyncStream<ZephyrKit.Settings>.Continuation] = [:]
+    private var globalWatchers: [UUID: AsyncStream<Void>.Continuation] = [:]
     private var cachedSettings: ZephyrKit.Settings?
     private let settingsURL: URL
     private var samples: [TrafficSample] = []
@@ -135,6 +136,13 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
 
     private func invalidateNodes() { locked { nodesReady = nil } }
 
+    /// 核心没有节点数据时的回落：只有 Debug / 演示（mockData）才用 MockEngine 的确定性数据，
+    /// Release 抛出明确错误，绝不把假数据当真的写给用户（REVIEW-Q2 X-P0-2）。
+    private func demo<T>(_ code: ErrorCode, _ body: () async throws -> T) async throws -> T {
+        guard mockData else { throw ZephyrError(code: code, message: "节点库为空") }
+        return try await body()
+    }
+
     /// 有节点数据时返回核心，否则 nil（调用方回落）。
     private func nodes() async -> MobileCore? {
         guard let c = core else { return nil }
@@ -156,8 +164,41 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     // MARK: - §1 连接与模式（VPN 生命周期属 PacketTunnel；此处转发）
 
     public func connectionState() -> AsyncStream<ConnectionState> {
-        if let t = tunnel { return t.states() }
+        if let t = tunnel { return liveConnectionState(t) }
         return fallback.connectionState()
+    }
+
+    /// 隧道状态 + 全局出口节点：扩展写的状态里没有 globalNodeId，冷启动后全局卡会没有节点（REVIEW-Q2 X-P1）。
+    /// 全局模式下由核心补上 globalNode()；setGlobalNode 后用 globalWatchers 重发一次。
+    private func liveConnectionState(_ t: any TunnelPort) -> AsyncStream<ConnectionState> {
+        guard let c = core else { return t.states() }
+        let id = UUID()
+        let (nudges, nudge) = AsyncStream<Void>.makeStream(bufferingPolicy: .bufferingNewest(1))
+        locked { globalWatchers[id] = nudge }
+        return AsyncStream(bufferingPolicy: .bufferingNewest(1)) { k in
+            let latest = LockedBox<ConnectionState?>(nil)
+            let enrich: @Sendable (ConnectionState) -> ConnectionState = { s in
+                var s = s
+                if s.mode == .global { s.globalNodeId = c.globalNode() } else { s.globalNodeId = nil }
+                return s
+            }
+            let states = Task {
+                for await s in t.states() {
+                    latest.set(s)
+                    k.yield(enrich(s))
+                }
+                k.finish()
+            }
+            let renudge = Task {
+                for await _ in nudges {
+                    if let s = latest.get() { k.yield(enrich(s)) }
+                }
+            }
+            k.onTermination = { [weak self] _ in
+                states.cancel(); renudge.cancel(); nudge.finish()
+                self?.locked { _ = self?.globalWatchers.removeValue(forKey: id) }
+            }
+        }
     }
     public func connect() async throws {
         if let t = tunnel { return try await liveConnect(t) }
@@ -173,7 +214,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     }
     /// 全局模式出口：核心记下节点（不在配置里则需重载），然后总是在 mihomo 的 GLOBAL 组里选中它。
     public func setGlobalNode(id: NodeId) async throws -> ZephyrKit.ExitChange {
-        guard let c = await nodes() else { return try await fallback.setGlobalNode(id: id) }
+        guard let c = await nodes() else { return try await demo(.nodeNotFound) { try await fallback.setGlobalNode(id: id) } }
         let x = try await run(.nodeNotFound) { try c.previewGlobalChange(nodeId: id) }
         let apply = try await run(.nodeNotFound) { try c.setGlobalNode(nodeId: id) }
         if let t = tunnel {
@@ -189,6 +230,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
             default: break
             }
         }
+        for w in locked({ Array(globalWatchers.values) }) { w.yield() }
         return ZephyrKit.ExitChange(sceneId: nil, fromRegion: x.fromRegion ?? "", fromIp: x.fromIp, toRegion: x.toRegion,
                                     toIp: x.toIp, affectedApps: x.affectedApps, unchangedApps: x.unchangedApps)
     }
@@ -232,14 +274,20 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         locked { sceneWatchers[id] = cont }
         let task = Task { [weak self] in
             guard let self else { return }
-            guard await self.nodes() != nil else {
-                if self.mockData { for await v in self.fallback.scenes() { cont.yield(v) } } else { cont.yield([]) }
+            if self.mockData, await self.nodes() == nil {
+                for await v in self.fallback.scenes() { cont.yield(v) }
                 return
             }
+            // 空库先给空数组；之后每轮重新检查节点库（首次导入订阅会 invalidateNodes），有数据就恢复轮询（REVIEW-Q2 X-P1）。
             var last: [ZephyrKit.Scene]?
             while !Task.isCancelled {
-                if let v = try? await self.readScenes(), v != last { last = v; cont.yield(v) }
-                try? await Task.sleep(nanoseconds: 5_000_000_000)
+                if await self.nodes() != nil {
+                    if let v = try? await self.readScenes(), v != last { last = v; cont.yield(v) }
+                    try? await Task.sleep(nanoseconds: 5_000_000_000)
+                } else {
+                    if last != [] { last = []; cont.yield([]) }
+                    try? await Task.sleep(nanoseconds: 1_500_000_000)
+                }
             }
         }
         cont.onTermination = { [weak self] _ in task.cancel(); self?.locked { _ = self?.sceneWatchers.removeValue(forKey: id) } }
@@ -265,14 +313,14 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     }
 
     public func previewSceneChange(sceneId: String, nodeId: NodeId) async throws -> ZephyrKit.ExitChange {
-        guard let c = await nodes() else { return try await fallback.previewSceneChange(sceneId: sceneId, nodeId: nodeId) }
+        guard let c = await nodes() else { return try await demo(.sceneNotFound) { try await fallback.previewSceneChange(sceneId: sceneId, nodeId: nodeId) } }
         let x = try await run(.sceneNotFound) { try c.previewSceneChange(sceneId: sceneId, nodeId: nodeId) }
         return ZephyrKit.ExitChange(sceneId: x.sceneId, fromRegion: x.fromRegion ?? "", fromIp: x.fromIp, toRegion: x.toRegion,
                                     toIp: x.toIp, affectedApps: x.affectedApps, unchangedApps: x.unchangedApps)
     }
 
     public func applySceneChange(sceneId: String, nodeId: NodeId) async throws {
-        guard let c = await nodes() else { return try await fallback.applySceneChange(sceneId: sceneId, nodeId: nodeId) }
+        guard let c = await nodes() else { return try await demo(.sceneNotFound) { try await fallback.applySceneChange(sceneId: sceneId, nodeId: nodeId) } }
         let now = clock()
         let apply = try await run(.sceneNotFound) { try c.applySceneChange(sceneId: sceneId, nodeId: nodeId, nowMillis: now) }
         await bumpScenes()
@@ -289,7 +337,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     /// 重测（契约 §14.z）：隧道在跑时经 VPN 真实探测——出口用 Cloudflare trace，服务用 probe 地址；
     /// 请求按域名走规则，测到的就是该场景（含应用例外）真正的出口。隧道没在跑时只返回缓存。
     public func retestScene(sceneId: String) async throws -> ZephyrKit.Scene {
-        guard let c = await nodes() else { return try await fallback.retestScene(sceneId: sceneId) }
+        guard let c = await nodes() else { return try await demo(.sceneNotFound) { try await fallback.retestScene(sceneId: sceneId) } }
         if let t = tunnel, await isTunnelConnected(t) {
             let exitURL = try await run(.sceneNotFound) { try c.sceneExitProbe(sceneId: sceneId) }
             let targets = try await run(.sceneNotFound) { try c.sceneProbeTargets(sceneId: sceneId) }
@@ -336,7 +384,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     }()
 
     public func setSceneSource(sceneId: String, source: ZephyrKit.SceneSource) async throws {
-        guard let c = await nodes() else { return try await fallback.setSceneSource(sceneId: sceneId, source: source) }
+        guard let c = await nodes() else { return try await demo(.sceneNotFound) { try await fallback.setSceneSource(sceneId: sceneId, source: source) } }
         let src: SceneSource = switch source { case .auto: .auto; case .manual: .manual; case .subscriptionGroup: .subscriptionGroup }
         let now = clock()
         let apply = try await run(.sceneNotFound) { try c.setSceneSource(sceneId: sceneId, source: src, nowMillis: now) }
@@ -351,7 +399,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     }
 
     public func overrideHost(host: String, target: ZephyrKit.TraceTarget, sceneId: String?, persistent: Bool) async throws {
-        guard let c = core else { return try await fallback.overrideHost(host: host, target: target, sceneId: sceneId, persistent: persistent) }
+        guard let c = core else { return try await demo(.internal) { try await fallback.overrideHost(host: host, target: target, sceneId: sceneId, persistent: persistent) } }
         let tt: TraceTarget = switch target { case .unchanged: .unchanged; case .direct: .direct; case .scene: .scene }
         try await run(.ruleInputInvalid) { try c.overrideHost(host: host, target: tt, sceneId: sceneId, persistent: persistent) }
         await bumpScenes()
@@ -443,7 +491,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     /// 契约 §5：分批（≤512）由核心给出代理定义，扩展里 zm_url_test 实测，结果入核心延迟缓存并推给 latencyUpdates。
     /// 隧道未连接时改测 TCP 握手（契约 §14.u，CoreEngine+TcpPing.swift）。
     public func testLatency(ids: [NodeId]) async {
-        guard let c = await nodes() else { return await fallback.testLatency(ids: ids) }
+        guard let c = await nodes() else { if mockData { await fallback.testLatency(ids: ids) }; return }
         var seen = Set<NodeId>()
         let unique = ids.filter { seen.insert($0).inserted }
         guard let t = tunnel, await isTunnelConnected(t) else { return await tcpPing(c, ids: unique) }
@@ -830,7 +878,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     // MARK: - §9 命令搜索
 
     public func commandSuggestions(input: String) async -> [CommandSuggestion] {
-        guard await nodes() != nil else { return await fallback.commandSuggestions(input: input) }
+        guard await nodes() != nil else { return mockData ? await fallback.commandSuggestions(input: input) : [] }
         return await liveCommandSuggestions(input: input)
     }
 
@@ -893,4 +941,13 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
 enum SharedJSON {
     static let encoder: JSONEncoder = { let e = JSONEncoder(); e.outputFormatting = [.sortedKeys]; return e }()
     static let decoder = JSONDecoder()
+}
+
+/// 小型加锁盒子：在 @Sendable 闭包间共享最新值。
+final class LockedBox<T>: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value: T
+    init(_ v: T) { value = v }
+    func get() -> T { lock.lock(); defer { lock.unlock() }; return value }
+    func set(_ v: T) { lock.lock(); value = v; lock.unlock() }
 }

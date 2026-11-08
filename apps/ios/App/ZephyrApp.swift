@@ -11,6 +11,7 @@ import ZephyrFeatures
 struct ZephyrApp: App {
     @State private var model: AppModel
     private let services: AppServices
+    private let coreUnavailable: Bool
 
     init() {
         let environment = LaunchEnvironment.current()
@@ -20,14 +21,19 @@ struct ZephyrApp: App {
         services.install(on: model)
         _model = State(initialValue: model)
         self.services = services
+        self.coreUnavailable = built.coreUnavailable
     }
 
     // 注意：ZephyrKit 也有 `Scene`（场景模型），这里必须写全 SwiftUI.Scene。
     var body: some SwiftUI.Scene {
         WindowGroup {
-            RootView(model: model)
-                .onOpenURL { services.handleExternal(url: $0, model: model) }
-                .task { services.start(model: model) }
+            if coreUnavailable {
+                CoreUnavailableView()
+            } else {
+                RootView(model: model)
+                    .onOpenURL { services.handleExternal(url: $0, model: model) }
+                    .task { services.start(model: model) }
+            }
         }
     }
 }

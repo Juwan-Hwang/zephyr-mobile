@@ -53,7 +53,7 @@ public struct ZSettingsGroup<Content: View>: View {
     ZPreviewCanvas(scheme: .light) {
         ZSettingsGroup("存储") {
             VStack(alignment: .leading, spacing: ZTokens.Space.n3) {
-                Text(verbatim: "节点与规则").zType(.body)
+                Text("节点与规则").zType(.body)
                 ZProgressBar(segments: [ZProgressSegment(id: 0, fraction: 0.27, tone: .accent),
                                         ZProgressSegment(id: 1, fraction: 0.36, tone: .neutral)], label: "存储")
                 Text(verbatim: "节点 0.6 GB · 规则 1.9 GB · 可用 3.1 GB").zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)

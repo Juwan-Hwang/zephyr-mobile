@@ -142,7 +142,7 @@ public struct ZGroupCard: View {
                 Image(systemName: "lock.fill")
                     .imageScale(.small)
                     .foregroundStyle(ZTokens.Colors.screenAmber.opacity(ZMetrics.pinIconOpacity))
-                    .accessibilityLabel(Text(verbatim: "已锁定"))
+                    .accessibilityLabel(Text("已锁定"))
                 Text(verbatim: pinned)
                     .lineLimit(stacked ? nil : 1)
             }
@@ -213,7 +213,7 @@ private struct ZGroupProbeBar: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(verbatim: "检测中"))
+        .accessibilityLabel(Text("检测中"))
     }
 }
 

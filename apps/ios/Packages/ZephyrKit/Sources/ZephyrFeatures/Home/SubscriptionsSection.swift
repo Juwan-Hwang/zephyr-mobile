@@ -21,7 +21,7 @@ struct SubscriptionsSection: View {
                     if featured.isEmpty {
                         Button { model.push(.subscriptions) } label: {
                             HStack {
-                                Text(verbatim: "添加订阅").zType(.body).foregroundStyle(ZAccentStyle())
+                                Text("添加订阅").zType(.body).foregroundStyle(ZAccentStyle())
                                 Spacer()
                                 Image(systemName: "plus").foregroundStyle(ZAccentStyle())
                             }

@@ -24,7 +24,7 @@ struct RuleLayerRow: View {
                 .foregroundStyle(kind == nil ? ZTokens.Colors.screenT3 : ZTokens.Colors.screenT2)
         }
         .animation(ZMotion.motion(ZMotion.standard, reduceMotion: reduceMotion), value: isHit)
-        .accessibilityValue(Text(verbatim: isHit ? "已命中" : ""))
+        .accessibilityValue(Text(isHit ? LocalizedStringKey("已命中") : LocalizedStringKey("")))
     }
 
     static func title(_ k: LayerKind) -> String {

@@ -22,9 +22,9 @@ public struct ZDivider: View {
     ZPreviewCanvas {
         ZCard(padding: 0) {
             VStack(spacing: 0) {
-                Text(verbatim: "视频").padding()
+                Text("视频").padding()
                 ZDivider()
-                Text(verbatim: "其他").padding()
+                Text("其他").padding()
                 ZDivider(leadingInset: ZTokens.Space.n5)
                 Text(verbatim: "缩进").padding()
             }
@@ -37,9 +37,9 @@ public struct ZDivider: View {
     ZPreviewCanvas(scheme: .light) {
         ZCard(padding: 0) {
             VStack(spacing: 0) {
-                Text(verbatim: "视频").padding()
+                Text("视频").padding()
                 ZDivider()
-                Text(verbatim: "其他").padding()
+                Text("其他").padding()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }

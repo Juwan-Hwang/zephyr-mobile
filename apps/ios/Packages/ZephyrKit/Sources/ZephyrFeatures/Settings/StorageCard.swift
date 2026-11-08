@@ -10,7 +10,7 @@ struct StorageCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: ZTokens.Space.n3) {
-            Text(verbatim: "节点与规则")
+            Text("节点与规则")
                 .zType(.body)
                 .foregroundStyle(ZTokens.Colors.screenT1)
             ZProgressBar(segments: segments, label: "存储")
@@ -23,7 +23,7 @@ struct StorageCard: View {
         .padding(.vertical, ZTokens.Space.n4)
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(verbatim: "节点与规则，\(caption)"))
+        .accessibilityLabel(Text("节点与规则，\(caption)"))
     }
 
     private var segments: [ZProgressSegment] {

@@ -5,7 +5,7 @@
 //   ○ 场景  AI                         Zephyr 优选
 //   ○ 节点  US-Fixed-01                Claude 例外 · 固定
 //   ● 出口  203.0.113.24               美国 · 2 小时前检测
-//   本次连接 [不变|直连|视频|其他]  始终应用（暂不可用，见 TraceOverrideSection）
+//   本次连接 [不变|直连|视频|其他]  始终应用（TraceOverrideSection，overrideHost）
 //
 // 数据：engine.testRule(input: host) + ruleStats().layers + 当前 scenes + 该域名最近一条活动连接（TraceSteps）。
 // 动效：步骤逐个从左淡入（80ms 起、每步 +60ms，原型 playTrace）；竖线上一段光沿链路流动（原型 `.rail i`）。
@@ -54,7 +54,9 @@ struct TraceView: View {
             chain
                 .padding(.top, ZTokens.Space.n6 + ZTokens.Space.n1 / 2)
 
-            // 覆写（本次连接 / 始终应用）待契约提供写接口后再上线，不放禁用的死路 UI（REVIEW H-P1-9）。
+            if let trace, failure == nil {
+                TraceOverrideSection(host: host, currentSceneId: trace.scene?.id ?? trace.policy)
+            }
         }
         .padding(.horizontal, HMetrics.homeInset)
         .padding(.bottom, ZTokens.Space.n8)
@@ -69,7 +71,7 @@ struct TraceView: View {
         } label: {
             HStack(spacing: ZTokens.Space.n1) {
                 Image(systemName: "chevron.left").font(.footnote.weight(.semibold))
-                Text(verbatim: "刚才")
+                Text("刚才")
             }
             .zType(.body)
             .foregroundStyle(ZAccentStyle())
@@ -77,7 +79,7 @@ struct TraceView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(ZPressStyle(haptic: .none))
-        .accessibilityLabel(Text(verbatim: "返回刚才"))
+        .accessibilityLabel(Text("返回刚才"))
     }
 
     @ViewBuilder
@@ -105,7 +107,7 @@ struct TraceView: View {
             }
             .onAppear { shown = true }
             .accessibilityElement(children: .contain)
-            .accessibilityLabel(Text(verbatim: "连接轨迹"))
+            .accessibilityLabel(Text("连接轨迹"))
         }
     }
 
@@ -117,7 +119,7 @@ struct TraceView: View {
             }
         }
         .redacted(reason: .placeholder)
-        .accessibilityLabel(Text(verbatim: "正在加载连接轨迹"))
+        .accessibilityLabel(Text("正在加载连接轨迹"))
     }
 
     // MARK: 逻辑

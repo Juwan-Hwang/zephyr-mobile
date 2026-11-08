@@ -70,7 +70,7 @@ public struct ZProgressBar: View {
         .clipShape(Capsule(style: .continuous))
         .animation(reduceMotion ? nil : ZMotion.slow, value: segments.map(\.fraction))
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(label.map { Text($0) } ?? Text(verbatim: "进度"))
+        .accessibilityLabel(label.map { Text($0) } ?? Text("进度"))
         .accessibilityValue(Text(verbatim: "\(Int((clamp(segments.reduce(0) { $0 + $1.fraction }) * 100).rounded()))%"))
     }
 

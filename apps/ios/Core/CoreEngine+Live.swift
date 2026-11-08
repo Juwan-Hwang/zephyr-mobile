@@ -233,16 +233,50 @@ extension CoreEngine {
 let liveQueue = DispatchQueue(label: "app.zephyr.core.live", qos: .userInitiated, attributes: .concurrent)
 
 /// 限时等待：`op` 在 `seconds` 内没有结果返回 nil，调用方不会被挂起。
+/// 用两个非结构化任务竞速 + 一次性 continuation：任务组会等所有子任务结束，op 不响应取消时超时形同虚设
+/// （REVIEW-Q2 X-P1 withDeadline）。超时后 op 被取消，其迟到的结果直接丢弃。
 public func withDeadline<T: Sendable>(_ seconds: Double, _ op: @escaping @Sendable () async -> T?) async -> T? {
-    await withTaskGroup(of: T?.self) { g in
-        g.addTask { await op() }
-        g.addTask {
-            try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
-            return nil
+    await withCheckedContinuation { (cont: CheckedContinuation<T?, Never>) in
+        let once = DeadlineOnce<T>(cont)
+        let work = Task {
+            let v = await op()
+            once.finish(v)
         }
-        let first = await g.next() ?? nil
-        g.cancelAll()
-        return first
+        let timer = Task {
+            try? await Task.sleep(nanoseconds: UInt64(max(0, seconds) * 1_000_000_000))
+            if once.finish(nil) { work.cancel() }
+        }
+        once.onFinish { timer.cancel() }
+    }
+}
+
+/// 只恢复一次的 continuation 包装。
+private final class DeadlineOnce<T: Sendable>: @unchecked Sendable {
+    private let lock = NSLock()
+    private var cont: CheckedContinuation<T?, Never>?
+    private var cleanup: (@Sendable () -> Void)?
+    private var done = false
+
+    init(_ cont: CheckedContinuation<T?, Never>) { self.cont = cont }
+
+    @discardableResult
+    func finish(_ value: T?) -> Bool {
+        lock.lock()
+        if done { lock.unlock(); return false }
+        done = true
+        let c = cont; cont = nil
+        let f = cleanup; cleanup = nil
+        lock.unlock()
+        c?.resume(returning: value)
+        f?()
+        return true
+    }
+
+    func onFinish(_ f: @escaping @Sendable () -> Void) {
+        lock.lock()
+        if done { lock.unlock(); f(); return }
+        cleanup = f
+        lock.unlock()
     }
 }
 

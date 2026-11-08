@@ -74,15 +74,15 @@ struct TodayCardView: View {
                 .fill(theme.background)
                 .aspectRatio(HMetrics.todayCardAspect, contentMode: .fit)
                 .overlay { ProgressView() }
-                .accessibilityLabel(Text(verbatim: "正在生成今日卡片"))
+                .accessibilityLabel(Text("正在生成今日卡片"))
         }
     }
 
     private var actions: some View {
         HStack(spacing: ZTokens.Space.n3) {
             if let exported {
-                ShareLink(item: exported, preview: SharePreview(Text(verbatim: "Zephyr · 今日"), image: exported)) {
-                    Text(verbatim: "分享")
+                ShareLink(item: exported, preview: SharePreview(Text("Zephyr · 今日"), image: exported)) {
+                    Text("分享")
                         .zType(.body)
                         .foregroundStyle(ZPage.background)
                         .frame(maxWidth: .infinity, minHeight: ZTokens.Layout.touchMinIos)
@@ -185,7 +185,7 @@ struct TodayThemePicker: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(ZPressStyle(haptic: .selection))
-                .accessibilityLabel(Text(verbatim: "\(t.title)色主题"))
+                .accessibilityLabel(Text("\(t.title)色主题"))
                 .accessibilityAddTraits(on ? [.isButton, .isSelected] : .isButton)
             }
         }
