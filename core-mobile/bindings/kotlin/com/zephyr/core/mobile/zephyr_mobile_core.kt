@@ -1501,7 +1501,7 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_sync_subscription_rules() != 47083.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_tcp_ping_targets() != 59198.toShort()) {
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_tcp_ping_targets() != 53458.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule() != 8556.toShort()) {
@@ -2624,7 +2624,7 @@ public interface MobileCoreInterface {
     
     /**
      * 隧道未连接时的测速目标（契约 §14.u）：平台直接测到 server:port 的 TCP 握手时间，结果用 recordLatencies 写回。
-     * 只在本进程内使用，不展示，server 不脱敏。基于 UDP 的协议（hysteria/hysteria2/tuic/wireguard）无法 TCP 握手，跳过。
+     * 只在本进程内使用，不展示，server 不脱敏。基于 UDP 的协议（hysteria/hysteria2/hy2/tuic/wireguard/wg）无法 TCP 握手，跳过。
      * 超过 512 个报错；找不到定义的 id 跳过。
      */
     fun `tcpPingTargets`(`ids`: List<kotlin.ULong>): List<TcpTarget>
@@ -3490,7 +3490,7 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     
     /**
      * 隧道未连接时的测速目标（契约 §14.u）：平台直接测到 server:port 的 TCP 握手时间，结果用 recordLatencies 写回。
-     * 只在本进程内使用，不展示，server 不脱敏。基于 UDP 的协议（hysteria/hysteria2/tuic/wireguard）无法 TCP 握手，跳过。
+     * 只在本进程内使用，不展示，server 不脱敏。基于 UDP 的协议（hysteria/hysteria2/hy2/tuic/wireguard/wg）无法 TCP 握手，跳过。
      * 超过 512 个报错；找不到定义的 id 跳过。
      */
     @Throws(MobileException::class)override fun `tcpPingTargets`(`ids`: List<kotlin.ULong>): List<TcpTarget> {
