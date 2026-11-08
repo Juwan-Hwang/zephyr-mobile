@@ -48,9 +48,11 @@ final class AppModelTests: XCTestCase {
         model.start()
         _ = await until { model.connection.status == .connected }
         await model.setMode(.global)
-        XCTAssertEqual(model.connection.mode, .global)
+        let g = await until { model.connection.mode == .global }
+        XCTAssertTrue(g)
         await model.setMode(.direct)
-        XCTAssertEqual(model.connection.mode, .direct)
+        let d = await until { model.connection.mode == .direct }
+        XCTAssertTrue(d)
     }
 
     func testSetModeToCurrentModeIsNoOp() async {
