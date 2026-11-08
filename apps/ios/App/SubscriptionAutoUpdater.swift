@@ -20,6 +20,7 @@ final class SubscriptionAutoUpdater {
 
     private let log = Logger(subsystem: "app.zephyr.mobile", category: "auto-update")
     private var lastAttempt: [String: Int64] = [:]
+    private var sceneLastAttempt: [String: Int64] = [:]
     private var running = false
     private var observers: [NSObjectProtocol] = []
 
@@ -75,7 +76,10 @@ final class SubscriptionAutoUpdater {
 
         let now = ZFormat.nowMillis()
         let ids = AutoUpdatePlanner.due(subs, settings: settings, now: now, lastAttempt: lastAttempt)
-        guard !ids.isEmpty else { return 0 }
+        guard !ids.isEmpty else {
+            await retestStaleScenes(engine: engine, settings: settings, now: now)
+            return 0
+        }
         if settings?.updateOnWifiOnly ?? true, !(await NetworkPathProbe.isUnmetered()) { return -1 }
 
         var updated = 0
@@ -85,7 +89,27 @@ final class SubscriptionAutoUpdater {
             if (try? await engine.updateSubscription(id: id)) != nil { updated += 1 }
         }
         log.info("自动更新：到期 \(ids.count, privacy: .public)，成功 \(updated, privacy: .public)")
+        await retestStaleScenes(engine: engine, settings: settings, now: ZFormat.nowMillis())
         return updated
+    }
+
+    /// 场景检测结果超过“结果保留”时长 → 经 VPN 重测（只在已连接时；“仅 Wi‑Fi 测速”以 NWPath 判断）。
+    /// 重测会让核心更新场景选择；失败不重试（30 分钟退避，见 SceneRetestPlanner）。
+    private func retestStaleScenes(engine: any ZephyrEngine, settings: Settings?, now: Int64) async {
+        var connected = false
+        for await state in engine.connectionState() { connected = state.status == .connected; break }
+        guard connected else { return }
+        var scenes: [Scene] = []
+        for await list in engine.scenes() { scenes = list; break }
+        let ids = SceneRetestPlanner.due(scenes, settings: settings, connected: connected, now: now, lastAttempt: sceneLastAttempt)
+        guard !ids.isEmpty else { return }
+        if settings?.testOnWifiOnly ?? true, !(await NetworkPathProbe.isUnmetered()) { return }
+        for id in ids {
+            if Task.isCancelled { break }
+            sceneLastAttempt[id] = now
+            _ = try? await engine.retestScene(sceneId: id)
+        }
+        log.info("场景自动检测：\(ids.count, privacy: .public) 个")
     }
 }
 
