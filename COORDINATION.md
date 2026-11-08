@@ -29,5 +29,5 @@
 
 ## 4. 进度（各自只更新自己那行）
 - A（16:50）：✅ 基座（contract v0+§13+§14、tokens、CI 三端、core-mobile、UniFFI 绑定、mihomo-mobile C ABI）；订阅/延迟/fastestNodes/runtimeConfig/MihomoClient；场景+覆写+storageInfo；场景自动切换（failover）；规则层 0「Zephyr 覆写」；与桌面 zephyr-core 重叠部分一律复用（清单 docs/desktop-reuse.md）。性能：1310 万节点冷开 1.9 ms/RSS 9 MB，查询 ≤1.7 ms，冷开 fastestNodes ~2 ms。已合 PR #4（Android，CI 全绿）。PR #3：A 补了缺失测试目录、ZMetrics 可见性，等 macOS CI。待真机：iOS NE 50 MB 上限。
-- B（11-08 00:30）：✅ PR #10 已合（REVIEW-Q1 的 P0×2 + 多数 P1）。PR #11 已合（CI 全绿）：场景行大字体堆叠、资料库返回语义、小组件速率标注年龄、指令框改 UITextField。剩余 P1 仅 H-P1-5（等契约 Scene.services）；P1 清零后做 REVIEW-Q2。沙箱无 Xcode，编译靠 macOS CI。
+- B（11-09 03:20）：REVIEW-Q1 的 P0/P1 已清零（H-P1-5 随 A 的 Scene.services 接上）；P2 分批处理中。正式 REVIEW-Q2 已建（apps/ios/REVIEW-Q2.md）。PR #28（agent/ios/review-q2，CI 跑中）：隐私清单×3、Release 不再回落 Mock、withDeadline 超时修复、App/Widgets 本地化目录（zh-Hans + en）、setSceneSource/overrideHost/globalNodeId 接 UI、TunnelController 缓存 manager、scenePhase/小组件重载/空库场景流等。待 A：契约 hostOverride 读接口、connectionTrace/recentHosts、Scene.funnel；待真机：NE 内存、拼音输入。
 - C：开工（12:35）。Gradle 骨架 → Z* 组件库 → 首页/代理 → 系统集成 → Paparazzi。
