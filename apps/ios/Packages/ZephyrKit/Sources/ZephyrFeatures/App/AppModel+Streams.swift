@@ -54,7 +54,8 @@ extension AppModel {
 
     /// 由 RootView 的 `.onChange(of: scenePhase)` 调用。
     public func scenePhaseChanged(_ phase: ScenePhase) {
-        let fg = phase == .active
+        // .inactive（下拉通知中心、控制中心、App 切换器、来电）仍可见，不能当作后台去切断流量流（REVIEW-Q2 X-P1-16）。
+        let fg = phase != .background
         guard fg != isForeground else { return }
         isForeground = fg
         reconcileTraffic()

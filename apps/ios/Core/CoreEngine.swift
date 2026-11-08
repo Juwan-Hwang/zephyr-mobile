@@ -31,6 +31,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     private var rulesReady: Bool?
     private var queries: [UInt64: String] = [:]
     private var remapped: [UInt64: UInt64] = [:]
+    private var queryOrder: [UInt64] = []
     private var subsWatchers: [UUID: AsyncStream<[ZephyrKit.Subscription]>.Continuation] = [:]
     private var sceneWatchers: [UUID: AsyncStream<[ZephyrKit.Scene]>.Continuation] = [:]
     var latencyWatchers: [UUID: AsyncStream<[LatencyUpdate]>.Continuation] = [:]
@@ -436,13 +437,27 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         return ZephyrKit.NodeIndex(total: Int64(i.total), sections: i.sections.map(CoreEngine.section), testedCount: Int64(tested))
     }
 
+    /// 记录 token → 查询（过期 token 重建用）。只留最近 64 个，避免每次搜索都让两张表无限增长（REVIEW-Q2 P2）。
+    private func rememberQuery(token: UInt64, query: String, replacing original: UInt64? = nil) {
+        locked {
+            queries[token] = query
+            if let original { remapped[original] = token }
+            queryOrder.append(token)
+            while queryOrder.count > 64 {
+                let old = queryOrder.removeFirst()
+                queries.removeValue(forKey: old)
+                remapped = remapped.filter { $0.key != old && $0.value != old }
+            }
+        }
+    }
+
     public func queryNodes(query: String) async throws -> ZephyrKit.NodeQueryResult {
         guard let c = await nodes() else {
             if mockData { return try await fallback.queryNodes(query: query) }
             return ZephyrKit.NodeQueryResult(query: query, total: 0, sections: [], highlights: [], tookMicros: 0, token: 0)
         }
         let r = try await run { try c.queryNodes(query: query) }
-        locked { queries[r.token] = query }
+        rememberQuery(token: r.token, query: query)
         return ZephyrKit.NodeQueryResult(query: r.query, total: Int64(r.total), sections: r.sections.map(CoreEngine.section),
                                          highlights: r.highlights, tookMicros: Int64(r.tookMicros), token: Int64(bitPattern: r.token))
     }
@@ -465,7 +480,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
             // 订阅更新重建了库：用同一查询换新 token，列表继续翻页（与 Android 一致）。
             guard let q = locked({ queries[original] }) else { throw ZephyrError(code: .internal, message: "stale_token") }
             let fresh = try await run { try c.queryNodes(query: q) }.token
-            locked { queries[fresh] = q; remapped[original] = fresh }
+            rememberQuery(token: fresh, query: q, replacing: original)
             page = try await run { try c.nodeRows(token: fresh, offset: off, limit: lim) }
         }
         let ids = page.rows.map(\.id)

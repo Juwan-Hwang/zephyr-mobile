@@ -82,6 +82,14 @@ extension MockEngine {
         log(.info, "场景 \(sceneId) 来源：\(source.rawValue)")
     }
 
+    public func overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Bool) async throws {
+        if target == .scene, let sceneId,
+           !withState({ s in s.scenes.contains { $0.id == sceneId } }) {
+            throw ZephyrError(code: .sceneNotFound, message: sceneId)
+        }
+        log(.info, "覆写 \(host) → \(target.rawValue)\(persistent ? "（始终）" : "")")
+    }
+
     public func retestScene(sceneId: String) async throws -> Scene {
         guard withState({ s in s.scenes.contains { $0.id == sceneId } }) else {
             throw ZephyrError(code: .sceneNotFound, message: sceneId)
