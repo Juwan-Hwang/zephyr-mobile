@@ -61,6 +61,22 @@ struct SharedState: Codable, Sendable, Hashable {
         var isOn: Bool { status.isOn }
     }
 
+    // MARK: 写入归属
+
+    /// App（SharedStatePublisher）写盘时只合并自己负责的字段，不整份覆盖：
+    /// 速率两边都写（扩展每秒、App 节流 5 s），按时间戳新者胜，避免 App 的旧快照把扩展刚写的速率盖掉；
+    /// 连接、场景、强调色、用量、隧道偏好由 App 写；bypassLAN 等 App 不认识的字段保留盘上的值。
+    mutating func adopt(appSnapshot s: SharedState) {
+        connection = s.connection
+        if (s.rate.at ?? .distantPast) >= (rate.at ?? .distantPast) { rate = s.rate }
+        usage = s.usage
+        scenes = s.scenes
+        accent = s.accent
+        tunnel.mode = s.tunnel.mode
+        tunnel.mtu = s.tunnel.mtu
+        tunnel.ipv6 = s.tunnel.ipv6
+    }
+
     // MARK: 速率 / 用量
 
     struct Rate: Codable, Sendable, Hashable {

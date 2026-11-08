@@ -282,7 +282,7 @@ targets:
       - path: PacketTunnel/TunnelConfiguration.swift
         group: PacketTunnel
       - path: PacketTunnel/MihomoBridge/MihomoBridge.swift
-        group: PacketTunnel
+        group: PacketTunnel/MihomoBridge
       - path: PacketTunnel/MappedFile.swift
         group: PacketTunnel
     settings:

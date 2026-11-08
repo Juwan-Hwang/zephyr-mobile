@@ -76,6 +76,7 @@ final class SharedStatePublisher {
         if status != .connected {
             state.rate.downBps = 0
             state.rate.upBps = 0
+            state.rate.at = Date()   // 归零也要比扩展最后一次写入新，合并时才能生效
         }
         commit(significant: significant)
     }
@@ -146,7 +147,7 @@ final class SharedStatePublisher {
         lastWrite = Date()
         let snapshot = state
         do {
-            try store.update { $0 = snapshot }
+            try store.update { $0.adopt(appSnapshot: snapshot) }
         } catch {
             return
         }

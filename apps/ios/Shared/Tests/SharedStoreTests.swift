@@ -174,4 +174,24 @@ final class SharedStoreTests: XCTestCase {
         XCTAssertFalse(SharedState.Status.failed.isOn)
         XCTAssertFalse(SharedState.Status.disconnected.isOn)
     }
+
+    /// App 写盘不覆盖扩展更新的速率与 App 不认识的字段（此前整份写回会盖掉扩展的 rate）。
+    func testAppSnapshotKeepsNewerExtensionRate() throws {
+        let app = SharedState.prototype(now: now)
+        try store.update {
+            $0.rate.push(down: 9_000_000, up: 1_000, at: self.now.addingTimeInterval(3))
+            $0.tunnel.bypassLAN = false
+        }
+        let merged = try store.update { $0.adopt(appSnapshot: app) }
+        XCTAssertEqual(merged.rate.downBps, 9_000_000, "扩展的速率更新，保留")
+        XCTAssertFalse(merged.tunnel.bypassLAN, "App 不管的字段保留")
+        XCTAssertEqual(merged.scenes, app.scenes)
+        XCTAssertEqual(merged.accent, app.accent)
+        XCTAssertEqual(merged.connection, app.connection)
+
+        var newer = app
+        newer.rate.push(down: 1, up: 2, at: now.addingTimeInterval(10))
+        let again = try store.update { $0.adopt(appSnapshot: newer) }
+        XCTAssertEqual(again.rate.downBps, 1, "App 的速率更新时生效")
+    }
 }
