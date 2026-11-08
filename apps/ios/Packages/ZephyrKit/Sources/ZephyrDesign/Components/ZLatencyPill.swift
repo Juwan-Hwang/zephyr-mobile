@@ -12,13 +12,18 @@ public struct ZLatencyPill: View {
     private let ms: Int?
     private let isTesting: Bool
     private let style: ZLatencyStyle
+    private let maxFontSize: CGFloat?
+    private let columnWidth: CGFloat?
     @ScaledMetric(relativeTo: .footnote) private var minWidth: CGFloat = ZMetrics.latencyColumn
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// - Parameters:
     ///   - ms: 毫秒；`nil` = 未检测，`-1`（或任意负数）= 超时。与 `ZTokens.LatencyThreshold.color(_:)` 约定一致。
     ///   - isTesting: 正在检测（显示 “···”）。
-    public init(ms: Int?, isTesting: Bool = false, style: ZLatencyStyle = .text) {
+    public init(ms: Int?, isTesting: Bool = false, maxFontSize: CGFloat? = nil,
+                columnWidth: CGFloat? = nil, style: ZLatencyStyle = .text) {
+        self.maxFontSize = maxFontSize
+        self.columnWidth = columnWidth
         self.ms = ms
         self.isTesting = isTesting
         self.style = style
@@ -26,12 +31,12 @@ public struct ZLatencyPill: View {
 
     public var body: some View {
         Text(verbatim: display)
-            .zMono(.body)
+            .modifier(ZMonoModifier(.body, weight: .regular, maxSize: maxFontSize))
             .foregroundStyle(color)
             .lineLimit(1)
             .contentTransition(reduceMotion ? .identity : .numericText())
             .animation(reduceMotion ? nil : ZMotion.standard, value: display)
-            .modifier(ZLatencyChrome(style: style, color: color, minWidth: minWidth))
+            .modifier(ZLatencyChrome(style: style, color: color, minWidth: columnWidth ?? minWidth))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text(verbatim: spoken))
     }
