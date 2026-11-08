@@ -869,6 +869,10 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -927,6 +931,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_cached_latencies(`ptr`: Pointer,`ids`: RustBuffer.ByValue,`nowMillis`: Long,`maxAgeMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_compile_geo(`ptr`: Pointer,`kind`: RustBuffer.ByValue,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): Int
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_compile_rule_layer(`ptr`: Pointer,`index`: Int,`name`: RustBuffer.ByValue,`kind`: RustBuffer.ByValue,`note`: RustBuffer.ByValue,`defaultPolicy`: RustBuffer.ByValue,`text`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_compile_rule_provider(`ptr`: Pointer,`name`: RustBuffer.ByValue,`body`: RustBuffer.ByValue,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
@@ -938,6 +944,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_failover_policy(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_fastest_nodes(`ptr`: Pointer,`query`: RustBuffer.ByValue,`limit`: Int,`nowMillis`: Long,`maxAgeMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_geo_sources(`ptr`: Pointer,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_global_node(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
@@ -1171,6 +1179,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_cached_latencies(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_geo(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_layer(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_provider(
@@ -1182,6 +1192,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_failover_policy(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_geo_sources(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_global_node(
     ): Short
@@ -1336,6 +1348,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_cached_latencies() != 41970.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_geo() != 16095.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_compile_rule_layer() != 45440.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -1352,6 +1367,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_fastest_nodes() != 1274.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_geo_sources() != 32785.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_global_node() != 56704.toShort()) {
@@ -2389,6 +2407,11 @@ public interface MobileCoreInterface {
     fun `cachedLatencies`(`ids`: List<kotlin.ULong>, `nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long): List<kotlin.Int?>
     
     /**
+     * 平台把 dat 下载到 `geoSources()` 给的 path 后调用：编译该类全部用到的分类，返回编译的层数。
+     */
+    fun `compileGeo`(`kind`: GeoKind, `nowMillis`: kotlin.Long): kotlin.UInt
+    
+    /**
      * 编译一层规则（文本为 Clash 规则行或规则集 payload）。index 决定匹配顺序。
      */
     fun `compileRuleLayer`(`index`: kotlin.UInt, `name`: kotlin.String, `kind`: LayerKind, `note`: kotlin.String, `defaultPolicy`: kotlin.String, `text`: kotlin.String): RuleLayerInfo
@@ -2413,6 +2436,8 @@ public interface MobileCoreInterface {
      * 场景候选：query = 地区代码（"JP"）；命令"最快节点"：query = 用户输入。
      */
     fun `fastestNodes`(`query`: kotlin.String, `limit`: kotlin.UInt, `nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long): List<RankedNode>
+    
+    fun `geoSources`(`nowMillis`: kotlin.Long): List<GeoSource>
     
     fun `globalNode`(): kotlin.ULong?
     
@@ -2721,6 +2746,22 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
 
     
     /**
+     * 平台把 dat 下载到 `geoSources()` 给的 path 后调用：编译该类全部用到的分类，返回编译的层数。
+     */
+    @Throws(MobileException::class)override fun `compileGeo`(`kind`: GeoKind, `nowMillis`: kotlin.Long): kotlin.UInt {
+            return FfiConverterUInt.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_compile_geo(
+        it, FfiConverterTypeGeoKind.lower(`kind`),FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * 编译一层规则（文本为 Clash 规则行或规则集 payload）。index 决定匹配顺序。
      */
     @Throws(MobileException::class)override fun `compileRuleLayer`(`index`: kotlin.UInt, `name`: kotlin.String, `kind`: LayerKind, `note`: kotlin.String, `defaultPolicy`: kotlin.String, `text`: kotlin.String): RuleLayerInfo {
@@ -2802,6 +2843,18 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_fastest_nodes(
         it, FfiConverterString.lower(`query`),FfiConverterUInt.lower(`limit`),FfiConverterLong.lower(`nowMillis`),FfiConverterLong.lower(`maxAgeMillis`),_status)
+}
+    }
+    )
+    }
+    
+
+    override fun `geoSources`(`nowMillis`: kotlin.Long): List<GeoSource> {
+            return FfiConverterSequenceTypeGeoSource.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_geo_sources(
+        it, FfiConverterLong.lower(`nowMillis`),_status)
 }
     }
     )
@@ -3783,6 +3836,56 @@ public object FfiConverterTypeFetchedSubscription: FfiConverterRustBuffer<Fetche
             FfiConverterString.write(value.`body`, buf)
             FfiConverterOptionalString.write(value.`userinfo`, buf)
             FfiConverterLong.write(value.`nowMillis`, buf)
+    }
+}
+
+
+
+data class GeoSource (
+    var `kind`: GeoKind, 
+    var `url`: kotlin.String, 
+    /**
+     * 平台把文件下载到这里（核心数据目录 geo/ 下）
+     */
+    var `path`: kotlin.String, 
+    /**
+     * 订阅里用到的分类（小写）："cn"、"category-ads-all"
+     */
+    var `codes`: List<kotlin.String>, 
+    var `due`: kotlin.Boolean
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeGeoSource: FfiConverterRustBuffer<GeoSource> {
+    override fun read(buf: ByteBuffer): GeoSource {
+        return GeoSource(
+            FfiConverterTypeGeoKind.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterSequenceString.read(buf),
+            FfiConverterBoolean.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: GeoSource) = (
+            FfiConverterTypeGeoKind.allocationSize(value.`kind`) +
+            FfiConverterString.allocationSize(value.`url`) +
+            FfiConverterString.allocationSize(value.`path`) +
+            FfiConverterSequenceString.allocationSize(value.`codes`) +
+            FfiConverterBoolean.allocationSize(value.`due`)
+    )
+
+    override fun write(value: GeoSource, buf: ByteBuffer) {
+            FfiConverterTypeGeoKind.write(value.`kind`, buf)
+            FfiConverterString.write(value.`url`, buf)
+            FfiConverterString.write(value.`path`, buf)
+            FfiConverterSequenceString.write(value.`codes`, buf)
+            FfiConverterBoolean.write(value.`due`, buf)
     }
 }
 
@@ -5360,6 +5463,36 @@ public object FfiConverterTypeBuildPhase: FfiConverterRustBuffer<BuildPhase> {
 
 
 
+enum class GeoKind {
+    
+    GEOSITE,
+    GEOIP;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeGeoKind: FfiConverterRustBuffer<GeoKind> {
+    override fun read(buf: ByteBuffer) = try {
+        GeoKind.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: GeoKind) = 4UL
+
+    override fun write(value: GeoKind, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+
 enum class GroupType {
     
     SELECT,
@@ -6441,6 +6574,34 @@ public object FfiConverterSequenceTypeConnectionInfo: FfiConverterRustBuffer<Lis
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeConnectionInfo.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeGeoSource: FfiConverterRustBuffer<List<GeoSource>> {
+    override fun read(buf: ByteBuffer): List<GeoSource> {
+        val len = buf.getInt()
+        return List<GeoSource>(len) {
+            FfiConverterTypeGeoSource.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<GeoSource>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeGeoSource.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<GeoSource>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeGeoSource.write(it, buf)
         }
     }
 }

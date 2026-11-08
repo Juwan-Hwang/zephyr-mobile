@@ -21,6 +21,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     private let mockData: Bool
     private let clock: @Sendable () -> Int64
     private let fetcher: @Sendable (URL) async throws -> FetchedBody
+    /// 二进制下载（geosite.dat / geoip.dat）：(远端, 本地目标)。
+    private let downloader: @Sendable (URL, URL) async throws -> Void
     private let queue = DispatchQueue(label: "app.zephyr.core", qos: .userInitiated, attributes: .concurrent)
     private let lock = NSLock()
 
@@ -61,6 +63,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
                 mockData: Bool = false,
                 clock: @escaping @Sendable () -> Int64 = { ZFormat.nowMillis() },
                 fetcher: (@Sendable (URL) async throws -> FetchedBody)? = nil,
+                downloader: (@Sendable (URL, URL) async throws -> Void)? = nil,
                 tunnel: (any TunnelPort)? = nil) {
         let dir = dataDir ?? CoreEngine.defaultDataDir()
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
@@ -70,6 +73,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         self.mockData = mockData
         self.clock = clock
         self.fetcher = fetcher ?? CoreEngine.httpFetch
+        self.downloader = downloader ?? CoreEngine.httpDownload
         self.tunnel = tunnel
     }
 
@@ -544,8 +548,41 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
             let at = clock()
             if (try? await run(.ruleInputInvalid, { try c.compileRuleProvider(name: p.name, body: got.body, nowMillis: at) })) != nil { ok += 1 }
         }
+        ok += await refreshGeo(c, force: force)
         if ok > 0 { locked { rulesReady = nil } }
         return ok
+    }
+
+    /// GEOSITE / GEOIP：下载订阅用到的 dat 到核心给的路径，再由核心抽取分类编译成层（每周到期）。
+    private func refreshGeo(_ c: MobileCore, force: Bool) async -> Int {
+        var ok = 0
+        for s in await runQuiet({ c.geoSources(nowMillis: self.clock()) }) where force || s.due {
+            if Task.isCancelled { break }
+            guard let url = URL(string: s.url), url.scheme == "https" else { continue }
+            let dest = URL(fileURLWithPath: s.path)
+            do { try await downloader(url, dest) } catch { continue }
+            let at = clock()
+            if let n = try? await run(.ruleInputInvalid, { try c.compileGeo(kind: s.kind, nowMillis: at) }) { ok += Int(n) }
+        }
+        return ok
+    }
+
+    /// 下载到临时文件后原子替换，失败不破坏旧文件。
+    public static let httpDownload: @Sendable (URL, URL) async throws -> Void = { url, dest in
+        var req = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 120)
+        req.setValue("clash.meta/zephyr-mobile", forHTTPHeaderField: "User-Agent")
+        let (tmp, resp) = try await URLSession.shared.download(for: req)
+        guard let h = resp as? HTTPURLResponse, (200..<300).contains(h.statusCode) else {
+            try? FileManager.default.removeItem(at: tmp)
+            throw URLError(.badServerResponse)
+        }
+        let fm = FileManager.default
+        try fm.createDirectory(at: dest.deletingLastPathComponent(), withIntermediateDirectories: true)
+        if fm.fileExists(atPath: dest.path) {
+            _ = try fm.replaceItemAt(dest, withItemAt: tmp)
+        } else {
+            try fm.moveItem(at: tmp, to: dest)
+        }
     }
 
     private func scheduleRuleProviderRefresh() {

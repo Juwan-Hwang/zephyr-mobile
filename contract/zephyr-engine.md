@@ -383,3 +383,10 @@ record SceneFailover { failed: NodeRow, failureCount: UInt32, apply: SceneApply 
 - 命令搜索（§9）：平台用真实引擎实现同一套规则（testRule / queryNodes / fastestNodes），不再依赖 mock。
 - 订阅规则层：核心在导入/更新/删除订阅后自动把生效订阅（列表第一个，与运行配置同源）的 rules 编译为第 2 层"订阅规则"（rules/001.zr），MATCH 去向作为最终策略；第 1 层"Zephyr 覆写"恒存在（可为空），层序号稳定。此前订阅规则未进入 testRule / ruleStats，属缺陷。
 - 规则集（规则页第 3 层起）：核心 `ruleProviders(nowMillis) -> [RuleProvider{name, url, behavior, format, intervalSecs, policy, layerIndex, ruleCount?, updatedAt?, due}]`（生效订阅里被 RULE-SET 引用的 http 规则集，按首次引用顺序，layerIndex = 2 + 位置）；平台拉正文后 `compileRuleProvider(name, body, nowMillis) -> RuleLayerInfo`（mrs 格式暂不支持）。层说明按 interval：每小时 / 每天 / 每周 / 每月 / 手动更新。订阅变化后过期层自动删除。iOS：导入/更新订阅后后台刷新到期规则集（`refreshRuleProviders(force:)`）。GEOIP / GEOSITE 规则行暂不编译（mihomo 路由不受影响）。
+
+### 14.v GEOSITE / GEOIP 层（2026-11-08，只追加）
+- 规则页在规则集层之后追加订阅里 `GEOSITE,<code>,<policy>` / `GEOIP,<code>,<policy>` 对应的层，名称 `geosite:<code>` / `geoip:<code>`（小写），说明「规则集 · 每周更新」。
+- core：`geoSources(nowMillis) -> [GeoSource{kind: geosite|geoip, url, path, codes, due}]`。url 取订阅 `geox-url`（仅 https），否则 MetaCubeX meta-rules-dat latest。任一分类未编译或最旧一层满 7 天即 due。
+- 平台把 dat 下载到 `path`（失败不覆盖旧文件），再调 `compileGeo(kind, nowMillis) -> UInt32`（编译的层数）。核心只读映射 dat，只抽取用到的分类；Regex 域名跳过；带 reverse_match 的 geoip 分类跳过。
+- 层序号接在规则集之后；订阅变化时与规则集一起清理过期层。
+- iOS：`refreshRuleProviders` 末尾自动执行。Android：导入/更新订阅后同样调用 geoSources → 下载 → compileGeo。
