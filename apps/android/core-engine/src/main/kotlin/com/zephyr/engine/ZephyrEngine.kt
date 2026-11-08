@@ -30,6 +30,15 @@ interface ZephyrEngine {
     suspend fun previewSceneChange(sceneId: String, nodeId: NodeId): ExitChange
     suspend fun applySceneChange(sceneId: String, nodeId: NodeId)
     suspend fun retestScene(sceneId: String): Scene
+    /**
+     * Pins one app of a scene to a node ("Gemini 走日本" → Gemini：东京 03; contract §14 setSceneException).
+     * `nodeId = null` removes the pin. Never called by automation: only on an explicit, confirmed user action.
+     */
+    /** Exit change for global mode before it happens (prototype `gcf` IP line). */
+    suspend fun previewGlobalChange(nodeId: NodeId): ExitChange = setGlobalNodePreviewUnsupported()
+
+    suspend fun setSceneException(sceneId: String, appId: String, nodeId: NodeId?): Unit =
+        throw ZephyrException(ErrorCode.INTERNAL, "setSceneException unsupported")
 
     // 4. Policy groups
     fun policyGroups(): Flow<List<PolicyGroup>>
@@ -104,3 +113,5 @@ class ZephyrException(val error: ZephyrError) : Exception("${error.code}: ${erro
     constructor(code: ErrorCode, message: String = "") : this(ZephyrError(code, message))
     val code: ErrorCode get() = error.code
 }
+
+private fun setGlobalNodePreviewUnsupported(): Nothing = throw ZephyrException(ErrorCode.INTERNAL, "previewGlobalChange unsupported")

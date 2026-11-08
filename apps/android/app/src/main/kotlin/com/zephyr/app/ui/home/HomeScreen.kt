@@ -67,7 +67,7 @@ fun HomeScreen(vm: HomeViewModel, actions: HomeActions) {
     val ui by vm.ui.collectAsStateWithLifecycle()
     HomeContent(
         conn, scenes, subs, ui, actions,
-        HomeCallbacks({ vm.setMode(it) }, { s, f -> vm.cycleRegion(s, f) }, { vm.confirmPending() }, { vm.cancelPending() }, { vm.undo() }),
+        HomeCallbacks({ vm.setMode(it) }, { s, f -> vm.cycleRegion(s, f) }, { vm.confirmPending() }, { vm.cancelPending() }, { vm.undo() }, { vm.toggleGlobalChange() }, { vm.confirmGlobal() }),
     )
 }
 
@@ -78,6 +78,8 @@ data class HomeCallbacks(
     val confirm: () -> Unit,
     val cancel: () -> Unit,
     val undo: () -> Unit,
+    val toggleGlobalChange: () -> Unit = {},
+    val confirmGlobal: () -> Unit = {},
 )
 
 @Composable
@@ -118,7 +120,7 @@ fun HomeContent(
             }
             item("scenes") {
                 if (conn.mode == ProxyMode.GLOBAL) {
-                    GlobalModeCard("东京 03", onUseRule = { cb.setMode(ProxyMode.RULE) }, onChangeNode = actions.onChangeGlobalNode)
+                    GlobalModeCard(ui.globalNode, ui.globalProposal, ui.globalChange, onUseRule = { cb.setMode(ProxyMode.RULE) }, onChangeNode = cb.toggleGlobalChange, onConfirm = cb.confirmGlobal)
                 } else {
                     SceneCard(scenes, ui.pending, cb.cycleRegion, { cb.confirm() }, cb.cancel, actions.onScene)
                 }
@@ -146,12 +148,5 @@ fun HomeContent(
             Spacer(Modifier.width(10.dp))
             ZIconButton(ZIcons.Grid, "资料库", actions.onLibrary, filled = true, size = 52.dp)
         }
-        ZToast(
-            visible = ui.toast != null,
-            message = ui.toast?.message ?: "",
-            action = if (ui.toast?.sceneId != null) "撤销" else null,
-            onAction = cb.undo,
-            modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 84.dp),
-        )
     }
 }

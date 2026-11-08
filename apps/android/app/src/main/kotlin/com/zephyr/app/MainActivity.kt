@@ -20,6 +20,24 @@ class MainActivity : ComponentActivity() {
         if (r.resultCode == RESULT_OK) AppGraph.connection.connect()
     }
 
+    private val notifPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
+
+    /**
+     * Android 13+: the ongoing notification (prototype 17) and expiry alerts need POST_NOTIFICATIONS. Asked once,
+     * right after the first successful connection, when the user can see why, never at launch.
+     */
+    private fun askNotificationsAfterFirstConnect() {
+        if (android.os.Build.VERSION.SDK_INT < 33) return
+        val prefs = getSharedPreferences("zephyr.ui", MODE_PRIVATE)
+        if (prefs.getBoolean("notif.asked", false)) return
+        lifecycleScope.launch {
+            AppGraph.engine.connectionState().first { it.status == com.zephyr.engine.ConnectionStatus.CONNECTED }
+            val granted = checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED
+            prefs.edit().putBoolean("notif.asked", true).apply()
+            if (!granted) notifPermission.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
@@ -29,6 +47,7 @@ class MainActivity : ComponentActivity() {
             AppRoot(onToggle = { on -> if (on) requestConnect() else AppGraph.connection.disconnect() }, startOnboarding = onboard)
         }
         handle(intent)
+        askNotificationsAfterFirstConnect()
     }
 
     override fun onNewIntent(intent: Intent) {

@@ -1,5 +1,6 @@
 package com.zephyr.app.ui.library
 
+import com.zephyr.app.ui.common.collectWhile
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.zephyr.app.di.AppGraph
@@ -29,10 +31,10 @@ enum class LibraryDest { Nodes, Subscriptions, Rules, Scenes, Settings, Widgets,
 @Composable
 fun BoxScope.LibrarySheet(visible: Boolean, onDismiss: () -> Unit, onOpen: (LibraryDest) -> Unit) {
     val e = AppGraph.engine
-    val nodes by produceState(0L) { value = e.nodeIndex().total }
-    val subs by produceState(0) { value = e.subscriptionsSummary().count }
-    val rules by produceState(0L) { value = e.ruleStats().total }
-    val scenes by e.scenes().collectAsState(emptyList())
+    val nodes by produceState(0L, visible) { if (visible) value = runCatching { e.nodeIndex().total }.getOrDefault(value) }
+    val subs by produceState(0, visible) { if (visible) value = runCatching { e.subscriptionsSummary().count }.getOrDefault(value) }
+    val rules by produceState(0L, visible) { if (visible) value = runCatching { e.ruleStats().total }.getOrDefault(value) }
+    val scenes by remember { e.scenes() }.collectWhile(visible, emptyList())
     val settings by e.settings().collectAsState(Settings())
     ZSheet(visible, onDismiss, "资料库") {
         Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {

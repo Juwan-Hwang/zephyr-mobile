@@ -2,6 +2,8 @@ package com.zephyr.app.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,17 +25,49 @@ import com.zephyr.design.format.ZFormat
 import com.zephyr.design.theme.ZTheme
 import com.zephyr.engine.Subscription
 
-/** Global mode replaces the scenes card (prototype `global`). */
+/** Global mode replaces the scenes card (prototype `global`, 689–692): "更换节点" opens an inline confirm. */
 @Composable
-fun GlobalModeCard(nodeName: String, onUseRule: () -> Unit, onChangeNode: () -> Unit) {
+fun GlobalModeCard(
+    node: com.zephyr.engine.NodeSummary?,
+    proposal: com.zephyr.engine.NodeSummary?,
+    change: com.zephyr.engine.ExitChange?,
+    onUseRule: () -> Unit,
+    onChangeNode: () -> Unit,
+    onConfirm: () -> Unit,
+) {
+    val c = ZTheme.colors
     ZCard(Modifier.padding(horizontal = 16.dp), padding = 18.dp) {
         ZText("全局模式", style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight))
         Spacer(Modifier.height(6.dp))
-        ZText("所有流量均经由$nodeName。场景已暂停。", style = ZTheme.type.callout, color = ZTheme.colors.text3)
-        Spacer(Modifier.height(16.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        ZText(if (node != null) "所有流量均经由${node.name}。场景已暂停。" else "所有流量均经由同一节点。场景已暂停。", style = ZTheme.type.callout, color = c.text3)
+        Spacer(Modifier.height(14.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             ZButton("使用规则模式", onUseRule, Modifier.weight(1f))
             ZButton("更换节点", onChangeNode, Modifier.weight(1f), kind = ZButtonKind.Secondary)
+        }
+        androidx.compose.animation.AnimatedVisibility(proposal != null) {
+            val p = proposal ?: return@AnimatedVisibility
+            Column {
+                Spacer(Modifier.height(14.dp))
+                Column(Modifier.fillMaxWidth().background(c.surface3, ZTheme.shapes.surface).padding(12.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        androidx.compose.foundation.layout.Box(Modifier.size(6.dp).background(c.warning, androidx.compose.foundation.shape.CircleShape))
+                        Spacer(Modifier.width(8.dp))
+                        ZText("出口 IP 将更改", style = ZTheme.type.footnote)
+                    }
+                    Spacer(Modifier.height(4.dp))
+                    val from = change?.fromIp?.let { "${change.fromRegion} $it" } ?: node?.let { "${it.region} ${it.name}" } ?: "当前"
+                    val to = change?.toIp?.let { "${change.toRegion} $it" } ?: "${p.region} ${p.name}"
+                    ZText("$from → $to", style = ZTheme.type.monoSmall, color = c.text2)
+                }
+                Spacer(Modifier.height(8.dp))
+                ZText("所有 App 的出口都将变为${p.name}。", style = ZTheme.type.footnote, color = c.text3)
+                Spacer(Modifier.height(12.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    ZButton("更改为${p.name}", onConfirm, Modifier.weight(1f))
+                    ZButton("取消", onChangeNode, Modifier.weight(1f), kind = ZButtonKind.Secondary)
+                }
+            }
         }
     }
 }

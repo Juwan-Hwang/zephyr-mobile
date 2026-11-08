@@ -1,5 +1,6 @@
 package com.zephyr.app.ui.activity
 
+import com.zephyr.app.ui.common.collectWhile
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -46,7 +47,7 @@ fun BoxScope.TraceSheet(host: String?, onDismiss: () -> Unit) {
     val engine = AppGraph.engine
     val c = ZTheme.colors
     val now = LocalNow.current()
-    val scenes by engine.scenes().collectAsState(emptyList())
+    val scenes by remember { engine.scenes() }.collectWhile(host != null, emptyList())
     var reload by remember { mutableStateOf(0) }
     val trace by produceState<ConnectionTrace?>(null, host, reload) { value = host?.let { runCatching { engine.connectionTrace(it) }.getOrNull() } }
     val scope = rememberCoroutineScope()

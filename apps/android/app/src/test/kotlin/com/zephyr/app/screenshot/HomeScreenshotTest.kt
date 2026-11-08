@@ -53,7 +53,9 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
             e.setMode(ProxyMode.GLOBAL)
             Quint(e.connectionState().first(), e.scenes().first(), e.subscriptions().first(), e.usageToday(), e.recentTraffic(90))
         }
-        val ui = HomeUi(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = NOW, usage = usage)
+        // Only the name is drawn ("所有流量均经由东京 03"); the mock has no GLOBAL policy group.
+        val global = com.zephyr.engine.NodeSummary(id = conn.globalNodeId ?: 0, name = "东京 03", region = "JP", protocol = "vless")
+        val ui = HomeUi(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = NOW, usage = usage, globalNode = global)
         paparazzi.snapshot { ZephyrTheme(dark = dark, accent = accent) { HomeContent(conn, scenes, subs, ui, NO_ACTIONS, NO_CB) } }
     }
 

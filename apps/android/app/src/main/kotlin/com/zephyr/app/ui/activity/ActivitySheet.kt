@@ -1,5 +1,6 @@
 package com.zephyr.app.ui.activity
 
+import com.zephyr.app.ui.common.collectWhile
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,7 +30,7 @@ import com.zephyr.design.theme.ZTheme
 @Composable
 fun BoxScope.ActivitySheet(visible: Boolean, onDismiss: () -> Unit, onHost: (String) -> Unit) {
     val flow = remember { AppGraph.engine.recentHosts(5) }
-    val hosts by flow.collectAsState(emptyList())
+    val hosts by flow.collectWhile(visible, emptyList())
     val c = ZTheme.colors
     ZSheet(visible, onDismiss, "刚才") {
         if (hosts.isEmpty()) {

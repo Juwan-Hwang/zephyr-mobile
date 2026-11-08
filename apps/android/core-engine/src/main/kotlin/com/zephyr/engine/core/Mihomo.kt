@@ -23,6 +23,8 @@ object Mihomo {
         fun zm_free_os_memory()
         fun zm_version(): Pointer?
         fun zm_free(p: Pointer?)
+        fun zm_logs(since: Long, minLevel: String, limit: Int): Pointer?
+        fun zm_url_test(proxiesJson: String, url: String, timeoutMs: Int, concurrency: Int): Pointer?
     }
 
     private val lib: Lib? by lazy { runCatching { Native.load("zmihomo", Lib::class.java) }.getOrNull() }
@@ -50,4 +52,14 @@ object Mihomo {
         l.zm_traffic(a, b, c, d)
         Traffic(a.value, b.value, c.value, d.value)
     }
+
+    /** In-process ring buffer (500 lines): `{"seq":n,"lines":[{seq,level,msg,at}]}` newer than [since]. */
+    fun logs(since: Long, minLevel: String, limit: Int): String? = lib?.run { take(zm_logs(since, minLevel, limit)) }
+
+    /**
+     * Temporary outbounds from core `latencyTestBatch` JSON, tested without zm_start (contract §14.w).
+     * Returns `{"results":[{name,ms}]}` or `{"error":…}`; blocking, call off the main thread.
+     */
+    fun urlTest(proxiesJson: String, url: String, timeoutMs: Int, concurrency: Int): String? =
+        lib?.run { take(zm_url_test(proxiesJson, url, timeoutMs, concurrency)) }
 }

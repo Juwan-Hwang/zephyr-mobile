@@ -25,13 +25,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 @Immutable
 data class PendingChange(val scene: Scene, val node: NodeSummary, val change: ExitChange)
 
 @Immutable
-data class UndoToast(val message: String, val sceneId: String?, val previousNodeId: NodeId?, val serial: Long)
+data class UndoToast(
+    val message: String, val sceneId: String?, val previousNodeId: NodeId?, val serial: Long,
+    /** Overrides the scene-swap undo (pins, host overrides). */
+    val undoAction: (suspend () -> Unit)? = null,
+)
 
 @Immutable
 data class HomeUi(
@@ -42,6 +49,10 @@ data class HomeUi(
     val pending: PendingChange? = null,
     val toast: UndoToast? = null,
     val regionIndex: Map<String, Int> = emptyMap(),
+    /** Global mode: the exit now, and the inline "更换节点" proposal when open (prototype `gcf`). */
+    val globalNode: NodeSummary? = null,
+    val globalProposal: NodeSummary? = null,
+    val globalChange: com.zephyr.engine.ExitChange? = null,
 )
 
 class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewModel() {
@@ -51,6 +62,16 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
 
     private val _ui = MutableStateFlow(HomeUi())
     val ui: StateFlow<HomeUi> = _ui.asStateFlow()
+    /** App-level toast (drawn above sheets in AppRoot) without the 1 Hz home churn. */
+    val toast: StateFlow<UndoToast?> = _ui.map { it.toast }.distinctUntilChanged().stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    /** Engine errors become a visible toast instead of a crash or a silent no-op (review H-P1-2). */
+    private fun launchCatching(what: String, block: suspend () -> Unit) = viewModelScope.launch {
+        try { block() } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (e: Throwable) {
+            android.util.Log.w("Zephyr", "$what failed", e)
+            showToast(errorText(what, (e as? com.zephyr.engine.ZephyrException)?.error?.code), null, null)
+        }
+    }
     private var toastJob: Job? = null
     private var toastSerial = 0L
 
@@ -58,7 +79,16 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         viewModelScope.launch { _ui.update { it.copy(usage = engine.usageToday()) } }
         // Core switched a dead scene exit to a hot standby: say so, offer the undo (contract §14 场景自动切换).
         (engine as? com.zephyr.engine.core.CoreEngine)?.let { core ->
-            viewModelScope.launch { core.failovers.collect { f -> showToast("${f.sceneName} 出口已自动切换到 ${f.now}", f.sceneId, f.previous) } }
+            viewModelScope.launch { core.failovers.collect { f ->
+                if (f.now == null) showToast("${f.sceneName} 出口无响应，出口 IP 不会自动更换", null, null)
+                else showToast("${f.sceneName} 出口已自动切换到 ${f.now}", f.sceneId, f.previous)
+            } }
+        }
+        viewModelScope.launch {
+            connection.map { it.mode }.distinctUntilChanged().collectLatest { m ->
+                if (m == ProxyMode.GLOBAL) runCatching { globalNow() }.getOrNull()?.let { n -> _ui.update { it.copy(globalNode = n) } }
+                else _ui.update { it.copy(globalProposal = null) }
+            }
         }
         // 1 Hz clock for uptime; cheap and avoids per-frame recomposition.
         viewModelScope.launch { while (true) { _ui.update { it.copy(now = System.currentTimeMillis()) }; delay(1_000) } }
@@ -74,49 +104,92 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         }
     }
 
-    fun setMode(mode: ProxyMode) = viewModelScope.launch { engine.setMode(mode) }
+    fun setMode(mode: ProxyMode) = launchCatching("切换模式") { engine.setMode(mode) }
 
     /** Horizontal swipe on a scene row cycles regions; shows the inline confirm with the exit-IP change. */
-    fun cycleRegion(scene: Scene, forward: Boolean) = viewModelScope.launch {
+    fun cycleRegion(scene: Scene, forward: Boolean) = launchCatching("预览出口") {
         val idx = (_ui.value.regionIndex[scene.id] ?: REGIONS.indexOf(scene.selected.region).coerceAtLeast(0))
         val next = Math.floorMod(idx + if (forward) 1 else -1, REGIONS.size)
         val candidates = engine.sceneCandidates(scene.id, REGIONS[next])
-        val best = candidates.firstOrNull() ?: return@launch
+        val best = candidates.firstOrNull() ?: return@launchCatching
         val change = engine.previewSceneChange(scene.id, best.id)
         _ui.update { it.copy(pending = PendingChange(scene, best, change), regionIndex = it.regionIndex + (scene.id to next)) }
     }
 
-    fun confirmPending() = viewModelScope.launch {
-        val p = _ui.value.pending ?: return@launch
+    fun confirmPending() = launchCatching("切换出口") {
+        val p = _ui.value.pending ?: return@launchCatching
         val previous = p.scene.selected.id
         engine.applySceneChange(p.scene.id, p.node.id)
         _ui.update { it.copy(pending = null) }
-        showToast("已换到 ${p.node.name}", p.scene.id, previous)
+        showToast("已切换至${p.node.name}", p.scene.id, previous)
+    }
+
+    /** Prototype `#gChange`: toggles an inline proposal (fastest other node), confirmed with "更改为X". */
+    fun toggleGlobalChange() = launchCatching("读取节点") {
+        if (_ui.value.globalProposal != null) { _ui.update { it.copy(globalProposal = null) }; return@launchCatching }
+        val cur = globalNow()
+        val page = engine.groupMembers(com.zephyr.engine.core.CoreEngine.GLOBAL, 0, 500).rows
+        val best = page.filter { it.protocol.uppercase() !in NON_NODES && it.name != cur?.name && it.id >= 0 }
+            .minByOrNull { it.latencyMs ?: Int.MAX_VALUE } ?: throw com.zephyr.engine.ZephyrException(com.zephyr.engine.ErrorCode.NODE_NOT_FOUND, "no other node")
+        val x = runCatching { engine.previewGlobalChange(best.id) }.getOrNull()
+        _ui.update { it.copy(globalNode = cur, globalProposal = best, globalChange = x) }
+    }
+
+    fun confirmGlobal() = launchCatching("切换节点") {
+        val to = _ui.value.globalProposal ?: return@launchCatching
+        val from = _ui.value.globalNode
+        engine.setGlobalNode(to.id)
+        _ui.update { it.copy(globalProposal = null, globalNode = to) }
+        showToast("已切换至${to.name}", null, null, from?.let { f -> { engine.setGlobalNode(f.id); _ui.update { u -> u.copy(globalNode = f) } } })
+    }
+
+    private suspend fun globalNow(): NodeSummary? {
+        (engine as? com.zephyr.engine.core.CoreEngine)?.globalNode()?.let { return it }
+        val name = engine.policyGroups().first().firstOrNull { it.name == com.zephyr.engine.core.CoreEngine.GLOBAL }?.selected
+        val rows = engine.groupMembers(com.zephyr.engine.core.CoreEngine.GLOBAL, 0, 500).rows
+        return rows.firstOrNull { it.name == name } ?: connection.value.globalNodeId?.let { id -> rows.firstOrNull { it.id == id } }
     }
 
     fun cancelPending() = _ui.update { it.copy(pending = null, regionIndex = emptyMap()) }
 
-    fun undo() = viewModelScope.launch {
-        val t = _ui.value.toast ?: return@launch
-        if (t.sceneId != null && t.previousNodeId != null) engine.applySceneChange(t.sceneId, t.previousNodeId)
+    fun undo() = launchCatching("撤销") {
+        val t = _ui.value.toast ?: return@launchCatching
+        val u = t.undoAction
+        if (u != null) runCatching { u() }
+        else if (t.sceneId != null && t.previousNodeId != null) engine.applySceneChange(t.sceneId, t.previousNodeId)
         _ui.update { it.copy(toast = null) }
     }
 
-    fun applyCommandSwitch(sceneId: String?, nodeId: NodeId, label: String) = viewModelScope.launch {
-        if (sceneId == null || sceneId == "global") {
-            engine.setMode(ProxyMode.GLOBAL); engine.setGlobalNode(nodeId)
-            showToast("已换到 $label", null, null)
-        } else {
-            val prev = scenes.value.firstOrNull { it.id == sceneId }?.selected?.id
-            engine.applySceneChange(sceneId, nodeId)
-            showToast("已换到 $label", sceneId, prev)
+    /** Applies a command the user saw previewed (exit-IP line included) and confirmed with "应用". */
+    fun applyCommand(plan: com.zephyr.app.ui.command.CommandPlan) = viewModelScope.launch {
+        when (plan) {
+            is com.zephyr.app.ui.command.CommandPlan.Exit -> runCatching {
+                val appId = plan.appId
+                if (appId != null) {
+                    // "Gemini 走日本" pins Gemini only (prototype 1054: AI 行显示「Gemini：东京 03」); GPT/Claude untouched.
+                    engine.setSceneException(plan.scene.id, appId, plan.node.id)
+                    val prevPin = plan.previousPin
+                    showToast("${plan.who} 现使用${plan.node.name}", null, null) { engine.setSceneException(plan.scene.id, appId, prevPin) }
+                } else {
+                    val prev = plan.scene.selected.id.takeIf { it >= 0 }
+                    engine.applySceneChange(plan.scene.id, plan.node.id)
+                    showToast("${plan.who} 现使用${plan.node.name}", plan.scene.id, prev)
+                }
+            }.onFailure { showToast("未能应用：${plan.who}", null, null) }
+            is com.zephyr.app.ui.command.CommandPlan.Direct -> runCatching {
+                engine.overrideHost(plan.host, com.zephyr.engine.TraceTarget.DIRECT, null, persistent = true)
+                showToast("${plan.who} 现为直连", null, null) {
+                    engine.overrideHost(plan.host, com.zephyr.engine.TraceTarget.UNCHANGED, null, persistent = true)
+                }
+            }.onFailure { showToast("未能应用：${plan.who}", null, null) }
+            is com.zephyr.app.ui.command.CommandPlan.NoNodes -> Unit
         }
     }
 
-    private fun showToast(msg: String, sceneId: String?, prev: NodeId?) {
+    private fun showToast(msg: String, sceneId: String?, prev: NodeId?, undo: (suspend () -> Unit)? = null) {
         toastJob?.cancel()
         val serial = ++toastSerial
-        _ui.update { it.copy(toast = UndoToast(msg, sceneId, prev, serial)) }
+        _ui.update { it.copy(toast = UndoToast(msg, sceneId, prev, serial, undo)) }
         toastJob = viewModelScope.launch {
             delay(com.zephyr.design.tokens.ZMotion.undoWindow.toLong())
             _ui.update { if (it.toast?.serial == serial) it.copy(toast = null) else it }
@@ -124,8 +197,19 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
     }
 
     companion object {
+        /** Group/built-in members of GLOBAL that are not exits. */
+        private val NON_NODES = setOf("SELECTOR", "URLTEST", "FALLBACK", "LOADBALANCE", "RELAY", "DIRECT", "REJECT", "REJECTDROP", "PASS", "COMPATIBLE")
         const val SPARK_POINTS = 90
         val REGIONS = listOf("SG", "JP", "US", "HK", "TW", "KR")
         fun preview() = HomeViewModel(MockEngine(demo = true))
     }
+}
+
+/** One line, what happened and what to do; never a raw exception. */
+internal fun errorText(what: String, code: com.zephyr.engine.ErrorCode?): String = when (code) {
+    com.zephyr.engine.ErrorCode.NOT_RUNNING -> "$what 需要先连接"
+    com.zephyr.engine.ErrorCode.SUBSCRIPTION_NOT_FOUND -> "先添加一个订阅"
+    com.zephyr.engine.ErrorCode.NETWORK_UNAVAILABLE -> "网络不可用"
+    com.zephyr.engine.ErrorCode.NODE_NOT_FOUND, com.zephyr.engine.ErrorCode.SCENE_NOT_FOUND -> "$what 失败：节点已不存在"
+    else -> "$what 失败"
 }

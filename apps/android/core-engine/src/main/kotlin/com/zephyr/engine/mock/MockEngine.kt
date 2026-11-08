@@ -87,6 +87,12 @@ class MockEngine(
         }
     }
 
+    override suspend fun previewGlobalChange(nodeId: NodeId): ExitChange {
+        val from = MockScenes.byId(connection.value.globalNodeId ?: MockScenes.TOKYO_03.id) ?: MockScenes.TOKYO_03
+        val to = MockScenes.byId(nodeId) ?: catalogSummary(nodeId)
+        return ExitChange(null, from.region, MockScenes.exitIp(from.id), to.region, MockScenes.exitIp(to.id))
+    }
+
     override suspend fun setGlobalNode(id: NodeId): ExitChange {
         val from = MockScenes.byId(connection.value.globalNodeId ?: MockScenes.TOKYO_03.id) ?: MockScenes.TOKYO_03
         val to = MockScenes.byId(id) ?: catalogSummary(id)
@@ -150,6 +156,18 @@ class MockEngine(
         val to = MockScenes.byId(nodeId) ?: throw ZephyrException(ErrorCode.NODE_NOT_FOUND, "$nodeId")
         sceneState.update { list ->
             list.map { if (it.id == sceneId) it.copy(selected = to, exitIp = MockScenes.exitIp(to.id), source = SceneSource.MANUAL) else it }
+        }
+    }
+
+    override suspend fun setSceneException(sceneId: String, appId: String, nodeId: NodeId?) {
+        requireScene(sceneId)
+        val node = nodeId?.let { MockScenes.byId(it) ?: throw ZephyrException(ErrorCode.NODE_NOT_FOUND, "$it") }
+        val name = Apps.name(appId)
+        sceneState.update { list ->
+            list.map { s ->
+                if (s.id != sceneId) s
+                else s.copy(exceptions = s.exceptions.filter { it.appId != appId } + listOfNotNull(node?.let { SceneException(name, it, appId) }))
+            }
         }
     }
 

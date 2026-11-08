@@ -1,5 +1,12 @@
 package com.zephyr.app.ui.nav
 
+import com.zephyr.design.components.ZToast
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.zIndex
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.ui.Alignment
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
@@ -27,6 +34,7 @@ import androidx.navigation.toRoute
 import com.zephyr.app.di.AppGraph
 import com.zephyr.app.ui.activity.ActivitySheet
 import com.zephyr.app.ui.activity.TraceSheet
+import com.zephyr.app.ui.command.CommandAction
 import com.zephyr.app.ui.command.CommandOverlay
 import com.zephyr.app.ui.home.HomeActions
 import com.zephyr.app.ui.home.HomeScreen
@@ -47,7 +55,6 @@ import com.zephyr.design.theme.ZTheme
 import com.zephyr.design.theme.ZephyrTheme
 import com.zephyr.design.tokens.ZAccent
 import com.zephyr.engine.Appearance
-import com.zephyr.engine.CommandKind
 import com.zephyr.engine.ProxyMode
 import com.zephyr.engine.Scene
 import com.zephyr.engine.Settings
@@ -127,18 +134,21 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean) {
             ActivitySheet(activity, { activity = false }) { traceHost = it }
             TraceSheet(traceHost) { traceHost = null }
             ImportSheet(import, { import = false }) { import = false }
-            CommandOverlay(command, { command = false }) { s ->
+            // Toasts sit above every sheet and the command layer, so an undo or a failover notice is never hidden.
+            val toast by home.toast.collectAsStateWithLifecycle()
+            ZToast(
+                visible = toast != null,
+                message = toast?.message ?: "",
+                action = if (toast?.let { it.undoAction != null || (it.sceneId != null && it.previousNodeId != null) } == true) "撤销" else null,
+                onAction = { home.undo() },
+                modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 84.dp).zIndex(10f),
+            )
+            CommandOverlay(command, { command = false }) { a ->
                 command = false
-                when (s.kind) {
-                    CommandKind.TEST_RULE -> nav.navigate(Rules(s.payload))
-                    CommandKind.OPEN_NODE_QUERY -> nav.navigate(Nodes(s.payload))
-                    CommandKind.SWITCH_MODE -> home.setMode(ProxyMode.valueOf(s.payload.uppercase()))
-                    CommandKind.TOGGLE_CONNECTION -> AppGraph.connection.toggle()
-                    CommandKind.OPEN_PAGE -> library = true
-                    CommandKind.SWITCH_NODE -> {
-                        val (sceneId, id) = s.payload.split(":").let { it[0] to it[1].toLong() }
-                        home.applyCommandSwitch(sceneId, id, s.subtitle?.substringAfter("将使用 ")?.removeSuffix("。") ?: s.title)
-                    }
+                when (a) {
+                    is CommandAction.TestRule -> nav.navigate(Rules(a.input))
+                    is CommandAction.OpenNodes -> nav.navigate(Nodes(a.query))
+                    is CommandAction.Apply -> home.applyCommand(a.plan)
                 }
             }
         }
