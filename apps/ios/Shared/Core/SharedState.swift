@@ -63,18 +63,32 @@ struct SharedState: Codable, Sendable, Hashable {
 
     // MARK: 写入归属
 
-    /// App（SharedStatePublisher）写盘时只合并自己负责的字段，不整份覆盖：
-    /// 速率两边都写（扩展每秒、App 节流 5 s），按时间戳新者胜，避免 App 的旧快照把扩展刚写的速率盖掉；
-    /// 连接、场景、强调色、用量、隧道偏好由 App 写；bypassLAN 等 App 不认识的字段保留盘上的值。
-    mutating func adopt(appSnapshot s: SharedState) {
-        connection = s.connection
-        if (s.rate.at ?? .distantPast) >= (rate.at ?? .distantPast) { rate = s.rate }
-        usage = s.usage
-        scenes = s.scenes
-        accent = s.accent
-        tunnel.mode = s.tunnel.mode
-        tunnel.mtu = s.tunnel.mtu
-        tunnel.ipv6 = s.tunnel.ipv6
+    /// App 自上次写盘以来改过的字段。
+    struct Fields: OptionSet, Sendable, Hashable {
+        let rawValue: Int
+        static let connection = Fields(rawValue: 1 << 0)
+        static let rate = Fields(rawValue: 1 << 1)
+        static let usage = Fields(rawValue: 1 << 2)
+        static let scenes = Fields(rawValue: 1 << 3)
+        static let appearance = Fields(rawValue: 1 << 4)   // accent + tunnel.mtu/ipv6
+    }
+
+    /// App（SharedStatePublisher）写盘时只合并自己改过的字段，不整份覆盖：
+    /// 扩展也写 connection / tunnel.mode / rate，节流中的旧快照不能把它们盖回去。
+    /// 速率两边都写，按时间戳新者胜；App 不认识的字段（bypassLAN 等）原样保留。
+    mutating func adopt(appSnapshot s: SharedState, fields: Fields) {
+        if fields.contains(.connection) {
+            connection = s.connection
+            tunnel.mode = s.tunnel.mode
+        }
+        if fields.contains(.rate), (s.rate.at ?? .distantPast) >= (rate.at ?? .distantPast) { rate = s.rate }
+        if fields.contains(.usage) { usage = s.usage }
+        if fields.contains(.scenes) { scenes = s.scenes }
+        if fields.contains(.appearance) {
+            accent = s.accent
+            tunnel.mtu = s.tunnel.mtu
+            tunnel.ipv6 = s.tunnel.ipv6
+        }
     }
 
     // MARK: 速率 / 用量

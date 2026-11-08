@@ -21,6 +21,7 @@ final class SharedStatePublisher {
     private var tasks: [Task<Void, Never>] = []
     private var lastWrite = Date.distantPast
     private var pendingWrite: Task<Void, Never>?
+    private var dirty: SharedState.Fields = []
 
     init(engine: any ZephyrEngine, store: SharedStore = .shared) {
         self.engine = engine
@@ -78,12 +79,12 @@ final class SharedStatePublisher {
             state.rate.upBps = 0
             state.rate.at = Date()   // 归零也要比扩展最后一次写入新，合并时才能生效
         }
-        commit(significant: significant)
+        commit([.connection, .rate], significant: significant)
     }
 
     func apply(traffic value: TrafficSample) {
         state.rate.push(down: value.downBps, up: value.upBps, at: Self.date(fromMillis: value.at))
-        commit(significant: false)
+        commit(.rate, significant: false)
     }
 
     func apply(scenes value: [Scene]) {
@@ -98,7 +99,7 @@ final class SharedStatePublisher {
         }
         let significant = summaries != state.scenes
         state.scenes = Array(summaries)
-        commit(significant: significant)
+        commit(.scenes, significant: significant)
     }
 
     func apply(settings value: Settings) {
@@ -107,7 +108,7 @@ final class SharedStatePublisher {
         state.accent = accent
         state.tunnel.mtu = Int(value.tun.mtu)
         state.tunnel.ipv6 = value.tun.ipv6
-        commit(significant: significant)
+        commit(.appearance, significant: significant)
     }
 
     func apply(usage value: UsageSummary) {
@@ -119,12 +120,13 @@ final class SharedStatePublisher {
             regionsToday: Int(value.regionsToday),
             fastestLatencyMs: value.fastestLatencyMs.map { Int($0) }
         )
-        commit(significant: false)
+        commit(.usage, significant: false)
     }
 
     // MARK: 写盘 / 刷新
 
-    private func commit(significant: Bool) {
+    private func commit(_ changed: SharedState.Fields, significant: Bool) {
+        dirty.formUnion(changed)
         onChange?(state, significant)
         let now = Date()
         if significant || now.timeIntervalSince(lastWrite) >= Self.rateWriteInterval {
@@ -145,10 +147,14 @@ final class SharedStatePublisher {
         pendingWrite?.cancel()
         pendingWrite = nil
         lastWrite = Date()
-        let snapshot = state
+        let snapshot = state, fields = dirty
+        dirty = []
         do {
-            try store.update { $0.adopt(appSnapshot: snapshot) }
+            let merged = try store.update { $0.adopt(appSnapshot: snapshot, fields: fields) }
+            // 盘上可能有扩展写的更新速率：内存跟上，实时活动 / onChange 不显示旧值
+            state.rate = merged.rate
         } catch {
+            dirty.formUnion(fields)
             return
         }
         guard reloadWidgets else { return }

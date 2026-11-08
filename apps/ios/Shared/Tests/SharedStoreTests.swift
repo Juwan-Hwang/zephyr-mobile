@@ -182,7 +182,7 @@ final class SharedStoreTests: XCTestCase {
             $0.rate.push(down: 9_000_000, up: 1_000, at: self.now.addingTimeInterval(3))
             $0.tunnel.bypassLAN = false
         }
-        let merged = try store.update { $0.adopt(appSnapshot: app) }
+        let merged = try store.update { $0.adopt(appSnapshot: app, fields: [.connection, .rate, .scenes, .appearance, .usage]) }
         XCTAssertEqual(merged.rate.downBps, 9_000_000, "扩展的速率更新，保留")
         XCTAssertFalse(merged.tunnel.bypassLAN, "App 不管的字段保留")
         XCTAssertEqual(merged.scenes, app.scenes)
@@ -191,7 +191,15 @@ final class SharedStoreTests: XCTestCase {
 
         var newer = app
         newer.rate.push(down: 1, up: 2, at: now.addingTimeInterval(10))
-        let again = try store.update { $0.adopt(appSnapshot: newer) }
+        let again = try store.update { $0.adopt(appSnapshot: newer, fields: .rate) }
         XCTAssertEqual(again.rate.downBps, 1, "App 的速率更新时生效")
+
+        // 只改了速率的节流写入，不把扩展后来写的连接状态盖回去
+        try store.update { $0.connection.status = .failed; $0.connection.errorCode = "tunnelStartFailed" }
+        var stale = newer
+        stale.rate.push(down: 5, up: 5, at: now.addingTimeInterval(20))
+        let third = try store.update { $0.adopt(appSnapshot: stale, fields: .rate) }
+        XCTAssertEqual(third.connection.status, .failed)
+        XCTAssertEqual(third.rate.downBps, 5)
     }
 }
