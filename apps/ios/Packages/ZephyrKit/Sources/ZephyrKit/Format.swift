@@ -119,10 +119,20 @@ public enum ZFormat {
         return ZL.tr(names[(weekday - 1 + 7) % 7])
     }
 
-    /// "9:41"
+    /// "9:41"。App 运行时（`ZL.bundle` 已设置）遵循系统的 12 / 24 小时设置与语言（"9:41 AM" / "09:41"）；
+    /// 单测（`ZL.bundle == nil`）固定为 "H:mm"，输出稳定。
     public static func clock(_ at: Int64, timeZone: TimeZone = .current) -> String {
+        let date = Date(timeIntervalSince1970: Double(at) / 1000)
+        if ZL.bundle != nil {
+            let f = DateFormatter()
+            f.locale = .autoupdatingCurrent
+            f.timeZone = timeZone
+            f.dateStyle = .none
+            f.timeStyle = .short
+            return f.string(from: date)
+        }
         var cal = Calendar(identifier: .gregorian); cal.timeZone = timeZone
-        let c = cal.dateComponents([.hour, .minute], from: Date(timeIntervalSince1970: Double(at) / 1000))
+        let c = cal.dateComponents([.hour, .minute], from: date)
         return "\(c.hour ?? 0):\(pad2(Int64(c.minute ?? 0)))"
     }
 

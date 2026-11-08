@@ -66,7 +66,12 @@ final class SubscriptionImporter {
     func importFile(at url: URL) async -> Subscription? {
         let scoped = url.startAccessingSecurityScopedResource()
         defer { if scoped { url.stopAccessingSecurityScopedResource() } }
-        guard let data = try? Data(contentsOf: url), let text = String(data: data, encoding: .utf8) else {
+        // 读文件放到后台线程（大文件不卡主线程）；安全作用域在 await 期间保持打开。
+        let text = await Task.detached(priority: .userInitiated) { () -> String? in
+            guard let data = try? Data(contentsOf: url) else { return nil }
+            return String(data: data, encoding: .utf8)
+        }.value
+        guard let text else {
             phase = .failed(ZL.tr("无法读取这个文件"))
             return nil
         }

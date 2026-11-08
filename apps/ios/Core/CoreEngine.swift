@@ -671,24 +671,41 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     }
 
     public func updateSubscription(id: String) async throws -> ZephyrKit.SubscriptionDiff {
-        guard let c = core else { return try await fallback.updateSubscription(id: id) }
+        guard core != nil else { return try await fallback.updateSubscription(id: id) }
+        let d = try await applyUpdate(id: id)
+        if let t = tunnel { await reloadTunnelIfRunning(t) }
+        return d
+    }
+
+    /// 全部更新：只在最后重载一次隧道（此前每个订阅各重载一次）；单个失败不影响其余，
+    /// 但全部失败时抛出第一个错误，让界面能提示（此前 `try?` 吞掉，显示“已更新 0 个订阅”）。
+    public func updateAll() async throws -> [ZephyrKit.SubscriptionDiff] {
+        guard let c = core else { return try await fallback.updateAll() }
+        let ids = await runQuiet { c.subscriptions() }.filter { $0.url != nil }.map(\.id)
+        var out: [ZephyrKit.SubscriptionDiff] = []
+        var firstError: Error?
+        for id in ids {
+            try Task.checkCancellation()
+            do { out.append(try await applyUpdate(id: id)) } catch is CancellationError { throw CancellationError() } catch {
+                if firstError == nil { firstError = error }
+            }
+        }
+        if !out.isEmpty, let t = tunnel { await reloadTunnelIfRunning(t) }
+        if out.isEmpty, let firstError { throw firstError }
+        return out
+    }
+
+    /// 取回并应用一个订阅的新内容；不重载隧道（由调用方决定何时重载）。
+    private func applyUpdate(id: String) async throws -> ZephyrKit.SubscriptionDiff {
+        guard let c = core else { throw ZephyrError(code: .subscriptionInvalid, message: "no core") }
         let got = try await fetchFor(id, c)
         let fetched = FetchedSubscription(body: got.body, userinfo: got.userInfo, nowMillis: clock())
         let d = try await run(.subscriptionInvalid) { try c.updateSubscription(id: id, fetched: fetched, progress: nil) }
         invalidateNodes()
         await publishSubs()
         await bumpScenes()
-        if let t = tunnel { await reloadTunnelIfRunning(t) }
         scheduleRuleProviderRefresh()
         return CoreEngine.diff(d)
-    }
-
-    public func updateAll() async throws -> [ZephyrKit.SubscriptionDiff] {
-        guard let c = core else { return try await fallback.updateAll() }
-        let ids = await runQuiet { c.subscriptions() }.filter { $0.url != nil }.map(\.id)
-        var out: [ZephyrKit.SubscriptionDiff] = []
-        for id in ids { if let d = try? await updateSubscription(id: id) { out.append(d) } }
-        return out
     }
 
     public func deleteSubscription(id: String) async throws {
