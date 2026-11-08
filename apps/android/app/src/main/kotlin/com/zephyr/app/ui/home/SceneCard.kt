@@ -114,9 +114,12 @@ private fun SceneRow(s: Scene, onSwipe: (Boolean) -> Unit, onOpen: () -> Unit) {
             .padding(horizontal = 18.dp, vertical = 18.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // 40/60 split keeps both sides on one line up to fontScale 2.0; long names ellipsize instead of wrapping.
-        Column(Modifier.weight(0.4f)) {
-            ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight, fontSize = ZTheme.type.headline.fontSize * 1.1f), maxLines = 1)
+        // Prototype 19 (xl): at large font sizes the row stacks — name, count, [badge] node, pin line — left-aligned,
+        // two lines each, so the pin note ("Claude：US-Fixed-01") is never cut (review H-P1-4).
+        val stacked = androidx.compose.ui.platform.LocalDensity.current.fontScale >= 1.3f
+        val lines = if (stacked) 2 else 1
+        val left: @Composable (Modifier) -> Unit = { m -> Column(m) {
+            ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight, fontSize = ZTheme.type.headline.fontSize * 1.1f), maxLines = lines)
             Spacer(Modifier.height(6.dp))
             val down = s.services.filter { !it.ok }
             ZText(
@@ -125,10 +128,11 @@ private fun SceneRow(s: Scene, onSwipe: (Boolean) -> Unit, onOpen: () -> Unit) {
                     s.source == SceneSource.SUBSCRIPTION_GROUP -> "订阅分组"
                     else -> "${s.available} 个可用"
                 },
-                style = ZTheme.type.callout, color = if (down.isNotEmpty()) c.danger else c.text3, maxLines = 1,
+                style = ZTheme.type.callout, color = if (down.isNotEmpty()) c.danger else c.text3, maxLines = lines,
             )
         }
-        Column(Modifier.weight(0.6f), horizontalAlignment = Alignment.End) {
+        }
+        val right: @Composable (Modifier) -> Unit = { m -> Column(m, horizontalAlignment = if (stacked) Alignment.Start else Alignment.End) {
             AnimatedContent(
                 targetState = s.selected,
                 transitionSpec = { (slideInHorizontally(ZAnim.slow()) { it / 3 } + fadeIn(ZAnim.standard())) togetherWith fadeOut(ZAnim.micro()) },
@@ -137,7 +141,7 @@ private fun SceneRow(s: Scene, onSwipe: (Boolean) -> Unit, onOpen: () -> Unit) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     ZRegionBadge(n.region)
                     Spacer(Modifier.width(10.dp))
-                    ZText(n.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight), maxLines = 1)
+                    ZText(n.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight), maxLines = lines)
                 }
             }
             // Prototype 11 (zero): "Claude 不可用" left, "GPT、Gemini 正常" right, replacing the pin line.
@@ -148,9 +152,15 @@ private fun SceneRow(s: Scene, onSwipe: (Boolean) -> Unit, onOpen: () -> Unit) {
                 Spacer(Modifier.height(6.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     if (serviceLine == null && s.exceptions.isNotEmpty()) { ZIcon(ZIcons.Lock, tint = c.warning, size = 13.dp); Spacer(Modifier.width(6.dp)) }
-                    ZText(sub, style = ZTheme.type.callout, color = c.text3, maxLines = 1)
+                    ZText(sub, style = ZTheme.type.callout, color = c.text3, maxLines = lines)
                 }
             }
+        }
+        }
+        if (stacked) {
+            Column(Modifier.fillMaxWidth()) { left(Modifier); Spacer(Modifier.height(10.dp)); right(Modifier) }
+        } else {
+            left(Modifier.weight(0.4f)); right(Modifier.weight(0.6f))
         }
     }
 }
