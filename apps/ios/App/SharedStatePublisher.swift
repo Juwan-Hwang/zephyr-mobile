@@ -152,7 +152,10 @@ final class SharedStatePublisher {
         do {
             let merged = try store.update { $0.adopt(appSnapshot: snapshot, fields: fields) }
             // 盘上可能有扩展写的更新速率：内存跟上，实时活动 / onChange 不显示旧值
-            state.rate = merged.rate
+            if merged.rate != state.rate {
+                state.rate = merged.rate
+                onChange?(state, false)
+            }
         } catch {
             dirty.formUnion(fields)
             return
