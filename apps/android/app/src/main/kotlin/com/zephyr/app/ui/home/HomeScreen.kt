@@ -65,8 +65,9 @@ fun HomeScreen(vm: HomeViewModel, actions: HomeActions) {
     val scenes by vm.scenes.collectAsStateWithLifecycle()
     val subs by vm.subscriptions.collectAsStateWithLifecycle()
     val ui by vm.ui.collectAsStateWithLifecycle()
+    val live = vm.live.collectAsStateWithLifecycle()
     HomeContent(
-        conn, scenes, subs, ui, actions,
+        conn, scenes, subs, ui, { live.value }, actions,
         HomeCallbacks({ vm.setMode(it) }, { s, f -> vm.cycleRegion(s, f) }, { vm.confirmPending() }, { vm.cancelPending() }, { vm.undo() }, { vm.toggleGlobalChange() }, { vm.confirmGlobal() }),
     )
 }
@@ -88,6 +89,8 @@ fun HomeContent(
     scenes: List<Scene>,
     subs: List<com.zephyr.engine.Subscription>,
     ui: HomeUi,
+    /** Read inside the status/traffic rows only, so 1 Hz updates recompose those two rows and nothing else. */
+    live: () -> HomeLive,
     actions: HomeActions,
     cb: HomeCallbacks,
 ) {
@@ -101,14 +104,15 @@ fun HomeContent(
             item("top") { Spacer(Modifier.height(12.dp)); HomeTopBar(conn.status, actions.onSettings) }
             item("status") {
                 Spacer(Modifier.height(24.dp))
-                HomeStatus(conn, ui.now, scenes.size, actions.onToggle, cb.setMode)
+                HomeStatus(conn, live().now, scenes.size, actions.onToggle, cb.setMode)
             }
             item("traffic") {
                 AnimatedVisibility(connected, enter = expandVertically(ZAnim.slow()) + fadeIn(ZAnim.slow()), exit = shrinkVertically(ZAnim.standard()) + fadeOut(ZAnim.micro())) {
                     Column {
+                        val l = live()
                         Spacer(Modifier.height(36.dp))
-                        ZTrafficStat(ui.traffic.downBps, ui.traffic.upBps, Modifier.padding(horizontal = 22.dp).zPressable(label = "最近连接", onClick = actions.onActivity))
-                        ZSparkline(ui.spark, Modifier.fillMaxWidth().height(72.dp), description = "最近 90 秒下载速率")
+                        ZTrafficStat(l.traffic.downBps, l.traffic.upBps, Modifier.padding(horizontal = 22.dp).zPressable(label = "最近连接", onClick = actions.onActivity))
+                        ZSparkline(l.spark, Modifier.fillMaxWidth().height(72.dp), description = "最近 90 秒下载速率")
                     }
                 }
                 if (!connected) Spacer(Modifier.height(150.dp))

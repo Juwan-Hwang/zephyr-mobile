@@ -29,9 +29,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flatMapLatest
 
 @Immutable
-data class PendingChange(val scene: Scene, val node: NodeSummary, val change: ExitChange)
+data class PendingChange(
+    val scene: Scene, val node: NodeSummary, val change: ExitChange,
+    /** Set when the change came from choosing "Zephyr 优选" on an AI scene: record the source after confirm. */
+    val thenSource: com.zephyr.engine.SceneSource? = null,
+)
 
 @Immutable
 data class UndoToast(
@@ -40,10 +45,17 @@ data class UndoToast(
     val undoAction: (suspend () -> Unit)? = null,
 )
 
+/** Fast-changing values (1 Hz clock, traffic samples), read only by the status and traffic rows (review H-P1-5). */
 @Immutable
-data class HomeUi(
+data class HomeLive(
     val traffic: TrafficSample = TrafficSample(0, 0, 0),
     val spark: List<Float> = emptyList(),
+    val now: Long = System.currentTimeMillis(),
+)
+
+@Immutable
+data class HomeUi(
+    /** Minute-granular clock for "x 分钟前检测" / expiry text; the 1 Hz clock lives in [HomeLive]. */
     val now: Long = System.currentTimeMillis(),
     val usage: UsageSummary? = null,
     val pending: PendingChange? = null,
@@ -57,8 +69,8 @@ data class HomeUi(
 
 class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewModel() {
     val connection: StateFlow<ConnectionState> = engine.connectionState().stateIn(viewModelScope, SharingStarted.Eagerly, ConnectionState())
-    val scenes: StateFlow<List<Scene>> = engine.scenes().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-    val subscriptions: StateFlow<List<Subscription>> = engine.subscriptions().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    val scenes: StateFlow<List<Scene>> = engine.scenes().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    val subscriptions: StateFlow<List<Subscription>> = engine.subscriptions().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     private val _ui = MutableStateFlow(HomeUi())
     val ui: StateFlow<HomeUi> = _ui.asStateFlow()
@@ -90,19 +102,36 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
                 else _ui.update { it.copy(globalProposal = null) }
             }
         }
-        // 1 Hz clock for uptime; cheap and avoids per-frame recomposition.
-        viewModelScope.launch { while (true) { _ui.update { it.copy(now = System.currentTimeMillis()) }; delay(1_000) } }
+        // Minute clock for the slow rows; the 1 Hz one is [live], and only while the screen collects it.
         viewModelScope.launch {
-            connection.collectLatest { c ->
-                if (c.status != ConnectionStatus.CONNECTED) return@collectLatest
-                val back = engine.recentTraffic(SPARK_POINTS).map { it.downBps.toFloat() }
-                _ui.update { it.copy(spark = back, traffic = engine.recentTraffic(1).lastOrNull() ?: it.traffic) }
-                engine.traffic().collect { s ->
-                    _ui.update { u -> u.copy(traffic = s, spark = (u.spark + s.downBps.toFloat()).takeLast(SPARK_POINTS)) }
-                }
+            while (true) {
+                delay(60_000 - System.currentTimeMillis() % 60_000)
+                val u = runCatching { engine.usageToday() }.getOrNull()
+                _ui.update { it.copy(now = System.currentTimeMillis(), usage = u ?: it.usage) }
             }
         }
     }
+
+    private val clock = kotlinx.coroutines.flow.flow { while (true) { emit(System.currentTimeMillis()); delay(1_000 - System.currentTimeMillis() % 1_000) } }
+
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    private val trafficLive = connection.map { it.status == ConnectionStatus.CONNECTED }.distinctUntilChanged().flatMapLatest<Boolean, Pair<TrafficSample, List<Float>>> { on ->
+        if (!on) kotlinx.coroutines.flow.flowOf(TrafficSample(0, 0, 0) to emptyList<Float>())
+        else kotlinx.coroutines.flow.flow {
+            // Ring of the last 90 samples; one snapshot list per sample instead of two concatenations.
+            val ring = FloatArray(SPARK_POINTS); var n = 0; var head = 0
+            fun push(v: Float) { ring[head] = v; head = (head + 1) % SPARK_POINTS; if (n < SPARK_POINTS) n++ }
+            fun snapshot() = List(n) { i -> ring[(head - n + i + SPARK_POINTS) % SPARK_POINTS] }
+            val back = engine.recentTraffic(SPARK_POINTS)
+            back.forEach { push(it.downBps.toFloat()) }
+            emit((back.lastOrNull() ?: TrafficSample(0, 0, 0)) to snapshot())
+            engine.traffic().collect { s -> push(s.downBps.toFloat()); emit(s to snapshot()) }
+        }
+    }
+
+    /** Stops 5 s after the home screen stops collecting (background, other screen): no FFI polling then. */
+    val live: StateFlow<HomeLive> = kotlinx.coroutines.flow.combine(clock, trafficLive) { now, (t, sp) -> HomeLive(t, sp, now) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeLive())
 
     fun setMode(mode: ProxyMode) = launchCatching("切换模式") { engine.setMode(mode) }
 
@@ -116,10 +145,36 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         _ui.update { it.copy(pending = PendingChange(scene, best, change), regionIndex = it.regionIndex + (scene.id to next)) }
     }
 
+    /** A candidate tapped in the scene sheet: same inline confirm as the swipe (exit IP line, 更改/取消). */
+    fun pick(scene: Scene, node: NodeSummary) = launchCatching("预览出口") {
+        if (node.id == scene.selected.id) return@launchCatching
+        val change = engine.previewSceneChange(scene.id, node.id)
+        _ui.update { it.copy(pending = PendingChange(scene, node, change)) }
+    }
+
+    /**
+     * 订阅分组 / Zephyr 优选. Choosing 优选 may move the exit to the best node; for AI that is an exit-IP change,
+     * so it goes through the inline confirm first and the source is recorded only after "更改" (§14.y).
+     */
+    fun setSource(scene: Scene, source: com.zephyr.engine.SceneSource) = launchCatching("切换来源") {
+        if (scene.kind == com.zephyr.engine.SceneKind.AI && source == com.zephyr.engine.SceneSource.AUTO) {
+            val best = engine.sceneCandidates(scene.id, null).firstOrNull()
+            if (best != null && best.id != scene.selected.id) {
+                val change = engine.previewSceneChange(scene.id, best.id)
+                _ui.update { it.copy(pending = PendingChange(scene, best, change, thenSource = source)) }
+                return@launchCatching
+            }
+        }
+        val previous = scene.selected.id
+        val now = engine.setSceneSource(scene.id, source)
+        if (now != null && now.id != previous) showToast("已切换至${now.name}", scene.id, previous)
+    }
+
     fun confirmPending() = launchCatching("切换出口") {
         val p = _ui.value.pending ?: return@launchCatching
         val previous = p.scene.selected.id
         engine.applySceneChange(p.scene.id, p.node.id)
+        p.thenSource?.let { runCatching { engine.setSceneSource(p.scene.id, it) } }
         _ui.update { it.copy(pending = null) }
         showToast("已切换至${p.node.name}", p.scene.id, previous)
     }

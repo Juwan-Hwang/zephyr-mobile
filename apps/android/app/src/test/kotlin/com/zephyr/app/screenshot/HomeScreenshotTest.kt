@@ -7,6 +7,7 @@ import com.zephyr.app.ui.home.HomeActions
 import com.zephyr.app.ui.home.HomeCallbacks
 import com.zephyr.app.ui.home.HomeContent
 import com.zephyr.app.ui.home.HomeUi
+import com.zephyr.app.ui.home.HomeLive
 import com.zephyr.design.theme.ZephyrTheme
 import com.zephyr.design.tokens.ZAccent
 import com.zephyr.engine.ProxyMode
@@ -37,10 +38,11 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
         val (conn, scenes, subs, usage, spark) = runBlocking {
             Quint(e.connectionState().first(), e.scenes().first(), e.subscriptions().first(), e.usageToday(), e.recentTraffic(90))
         }
-        val ui = HomeUi(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = NOW, usage = usage)
+        val ui = HomeUi(now = NOW, usage = usage)
+        val live = HomeLive(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = NOW)
         paparazzi.snapshot {
             ZephyrTheme(dark = dark, accent = accent) {
-                HomeContent(conn, scenes, subs, ui, NO_ACTIONS, NO_CB)
+                HomeContent(conn, scenes, subs, ui, { live }, NO_ACTIONS, NO_CB)
             }
         }
     }
@@ -55,8 +57,9 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
         }
         // Only the name is drawn ("所有流量均经由东京 03"); the mock has no GLOBAL policy group.
         val global = com.zephyr.engine.NodeSummary(id = conn.globalNodeId ?: 0, name = "东京 03", region = "JP", protocol = "vless")
-        val ui = HomeUi(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = NOW, usage = usage, globalNode = global)
-        paparazzi.snapshot { ZephyrTheme(dark = dark, accent = accent) { HomeContent(conn, scenes, subs, ui, NO_ACTIONS, NO_CB) } }
+        val ui = HomeUi(now = NOW, usage = usage, globalNode = global)
+        val live = HomeLive(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = NOW)
+        paparazzi.snapshot { ZephyrTheme(dark = dark, accent = accent) { HomeContent(conn, scenes, subs, ui, { live }, NO_ACTIONS, NO_CB) } }
     }
 
     private data class Quint<A, B, C, D, E>(val a: A, val b: B, val c: C, val d: D, val e: E)

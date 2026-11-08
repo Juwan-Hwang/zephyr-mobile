@@ -130,7 +130,13 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean) {
                     LibraryDest.Settings, LibraryDest.TrustedWifi, LibraryDest.LocalProxy, LibraryDest.Widgets -> nav.navigate(SettingsRoute())
                 }
             }
-            SceneSheet(scene) { scene = null }
+            val scenesNow by home.scenes.collectAsStateWithLifecycle()
+            SceneSheet(
+                scene?.let { s -> scenesNow.firstOrNull { it.id == s.id } ?: s },
+                onDismiss = { scene = null },
+                onPick = { s, n -> scene = null; home.pick(s, n) },
+                onSource = { s, src -> home.setSource(s, src); if (s.kind == com.zephyr.engine.SceneKind.AI && src == com.zephyr.engine.SceneSource.AUTO) scene = null },
+            )
             ActivitySheet(activity, { activity = false }) { traceHost = it }
             TraceSheet(traceHost) { traceHost = null }
             ImportSheet(import, { import = false }) { import = false }

@@ -76,6 +76,7 @@ class CoreEngine(
     private val tick: Long = 1_000,
     private val clock: () -> Long = System::currentTimeMillis,
     private val fetcher: (String) -> SubscriptionFetcher.Fetched = SubscriptionFetcher::httpFetch,
+    private val geoDownloader: (String, java.io.File) -> Unit = { u, f -> SubscriptionFetcher.download(u, f) },
 ) : ZephyrEngine by fallback {
 
     private val core: MobileCore? = dataDir?.let { dir ->
@@ -96,6 +97,16 @@ class CoreEngine(
             if (!(force || p.due) || p.format.equals("mrs", ignoreCase = true)) continue
             val ok = withContext(io) { runCatching { val got = fetcher(p.url); c.compileRuleProvider(p.name, got.body, clock()) }.isSuccess }
             if (ok) done++
+        }
+        // GEOSITE / GEOIP layers (§14.v): download due .dat files (old file kept on failure), then compile.
+        val geo = withContext(io) { runCatching { c.geoSources(clock()) }.getOrDefault(emptyList()) }
+        for (g in geo) {
+            if (!(force || g.due) || g.codes.isEmpty()) continue
+            val n = withContext(io) {
+                runCatching { geoDownloader(g.url, java.io.File(g.path)) }
+                runCatching { c.compileGeo(g.kind, clock()).toInt() }.getOrDefault(0)
+            }
+            done += n
         }
         if (done > 0) rulesReady = null
         return done
@@ -379,6 +390,17 @@ class CoreEngine(
             else -> reloadIfRunning()
         }
         scenesBump.value++
+    }
+
+    override suspend fun setSceneSource(sceneId: String, source: SceneSource): NodeSummary? {
+        val c = nodes() ?: return if (mockData) fallback.setSceneSource(sceneId, source) else throw noSubscription()
+        val src = when (source) { SceneSource.AUTO -> CoreSceneSource.AUTO; SceneSource.MANUAL -> CoreSceneSource.MANUAL; SceneSource.SUBSCRIPTION_GROUP -> CoreSceneSource.SUBSCRIPTION_GROUP }
+        val a = withContext(io) { sceneCall { c.setSceneSource(sceneId, src, clock()) } }
+        scenesBump.value++
+        a ?: return null
+        if (a.needsReload) reloadIfRunning()
+        else live()?.let { l -> withContext(io) { runCatching { l.select(a.group, a.member) } } }
+        return withContext(io) { runCatching { c.scenes(clock()).firstOrNull { it.id == sceneId }?.selected?.let(::row) }.getOrNull() }
     }
 
     override suspend fun setSceneException(sceneId: String, appId: String, nodeId: NodeId?) {

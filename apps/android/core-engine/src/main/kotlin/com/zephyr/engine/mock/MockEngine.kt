@@ -159,6 +159,12 @@ class MockEngine(
         }
     }
 
+    override suspend fun setSceneSource(sceneId: String, source: SceneSource): NodeSummary? {
+        requireScene(sceneId)
+        sceneState.update { list -> list.map { if (it.id == sceneId) it.copy(source = source) else it } }
+        return null
+    }
+
     override suspend fun setSceneException(sceneId: String, appId: String, nodeId: NodeId?) {
         requireScene(sceneId)
         val node = nodeId?.let { MockScenes.byId(it) ?: throw ZephyrException(ErrorCode.NODE_NOT_FOUND, "$it") }

@@ -34,6 +34,13 @@ interface ZephyrEngine {
      * Pins one app of a scene to a node ("Gemini 走日本" → Gemini：东京 03; contract §14 setSceneException).
      * `nodeId = null` removes the pin. Never called by automation: only on an explicit, confirmed user action.
      */
+    /**
+     * Scene source (contract §14.z ②): AUTO ("Zephyr 优选") moves to the best tested node now; returns the new exit
+     * when it changed. Callers must confirm first for AI scenes (exit IP rule, §14.y).
+     */
+    suspend fun setSceneSource(sceneId: String, source: SceneSource): NodeSummary? =
+        throw ZephyrException(ErrorCode.INTERNAL, "setSceneSource unsupported")
+
     /** Exit change for global mode before it happens (prototype `gcf` IP line). */
     suspend fun previewGlobalChange(nodeId: NodeId): ExitChange = setGlobalNodePreviewUnsupported()
 

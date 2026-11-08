@@ -42,4 +42,35 @@ object SubscriptionFetcher {
             }
             error("too many redirects")
         }
+
+    /**
+     * Streams a binary file (geosite/geoip .dat) to [dest] via a temp file; on any failure the old file stays
+     * untouched (contract §14.v). https only, redirects followed, capped at [maxBytes].
+     */
+    fun download(url: String, dest: java.io.File, maxBytes: Long = 64L * 1024 * 1024) {
+        var target = url
+        repeat(5) {
+            require(target.startsWith("https://")) { "https only" }
+            val c = (java.net.URL(target).openConnection() as HttpURLConnection).apply {
+                connectTimeout = 15_000; readTimeout = 60_000; instanceFollowRedirects = false
+                setRequestProperty("User-Agent", "clash.meta (Zephyr Android)")
+            }
+            try {
+                val code = c.responseCode
+                if (code in 300..399) { target = URI(target).resolve(c.getHeaderField("Location") ?: error("redirect")).toString(); return@repeat }
+                if (code !in 200..299) error("HTTP $code")
+                dest.parentFile?.mkdirs()
+                val tmp = java.io.File(dest.path + ".part")
+                c.inputStream.use { s ->
+                    tmp.outputStream().use { o ->
+                        val b = ByteArray(64 * 1024); var total = 0L
+                        while (true) { val r = s.read(b); if (r < 0) break; total += r; if (total > maxBytes) error("too large"); o.write(b, 0, r) }
+                    }
+                }
+                if (!tmp.renameTo(dest)) { tmp.delete(); error("rename failed") }
+                return
+            } finally { c.disconnect() }
+        }
+        error("too many redirects")
+    }
 }
