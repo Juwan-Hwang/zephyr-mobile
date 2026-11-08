@@ -385,7 +385,8 @@ pub(crate) mod tests {
         assert_eq!((t.layer_index, t.policy.as_str()), (Some(2), "DIRECT"), "ads 未拉取时不占位，按已加载层序号");
         let st = core.rule_stats();
         let names: Vec<&str> = st.layers.iter().map(|l| l.name.as_str()).collect();
-        assert_eq!(names, vec!["Zephyr 覆写", "订阅规则", "geosite:cn", "geoip:cn"]);
+        assert_eq!((names[0], &names[2..]), ("Zephyr 覆写", &["geosite:cn", "geoip:cn"][..]));
+        assert_eq!(st.layers[1].note, "订阅规则");
         assert!(core.geo_sources(200).iter().all(|s| !s.due));
         assert!(core.geo_sources(100 + WEEK_MS).iter().all(|s| s.due));
     }

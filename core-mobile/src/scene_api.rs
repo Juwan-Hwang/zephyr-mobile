@@ -251,7 +251,7 @@ impl MobileCore {
                 }
             }
         }
-        self.compile_rule_layer(0, "Zephyr 覆写".into(), crate::rules::LayerKind::Override, "订阅更新时保留".into(), "DIRECT".into(), text)?;
+        self.compile_rule_layer(0, "Zephyr 覆写".into(), crate::rules::LayerKind::Override, "在订阅之上".into(), "DIRECT".into(), text)?;
         let fin = self.rules.read().final_policy.clone();
         self.load_rules(fin)?;
         Ok(())
@@ -528,7 +528,7 @@ pub(crate) mod tests {
         let t = core.test_rule("example.org".into()).unwrap();
         assert_eq!((t.layer_index, t.rule.as_str(), t.policy.as_str()), (None, "MATCH", "节点选择"));
         let st = core.rule_stats();
-        assert!(st.layers.iter().any(|l| l.name == "订阅规则" && l.count == 1), "{:?}", st.layers);
+        assert!(st.layers.iter().any(|l| l.kind == crate::rules::LayerKind::Subscription && l.note == "订阅规则" && l.count == 1), "{:?}", st.layers);
         core.delete_subscription(sub).unwrap();
         // 剩下的 B 订阅没有 rules：层为空，最终策略回 DIRECT
         assert_eq!(core.test_rule("www.google.com".into()).unwrap().policy, "DIRECT");

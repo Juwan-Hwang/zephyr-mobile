@@ -395,3 +395,8 @@ record SceneFailover { failed: NodeRow, failureCount: UInt32, apply: SceneApply 
 - 隧道已连接：照旧 `latencyTestBatch` → 扩展/服务内 `zm_url_test` → `recordUrlTest`（经代理的真实 URL 测试）。
 - 隧道未连接：`tcpPingTargets(ids ≤ 512) -> [TcpTarget{id, host, port}]`，平台在 App 进程内并发（建议 32）测 TCP 握手，超时 3 s 记 -1，用 `recordLatencies` 写回并推 latencyUpdates。host 不脱敏，仅进程内使用、不展示。基于 UDP 的协议（hysteria/hysteria2/hy2/tuic/wireguard/wg）不返回目标，保持「未测」（UI 在 testLatency 返回后把没有结果的节点退回未测）。握手名额进程级共享。
 - 两种结果写入同一延迟缓存，最新一次覆盖；握手时间不含代理协议开销，UI 不区分。
+
+### 14.t 规则页层名与原型对齐（2026-11-09，只追加）
+- 第 1 层：名称「Zephyr 覆写」，说明「在订阅之上」（此前说明为「订阅更新时保留」）。
+- 第 2 层：名称为生效订阅的名称（如「Nebula Cloud」），说明「订阅规则」，kind = subscription（此前名称与说明对调）。订阅名为空时名称回退为「订阅规则」。平台识别订阅层应看 kind，不看名称。
+- 已有安装在下次导入/更新/删除订阅（或场景变更重建覆写层）时自然更新为新文案。
