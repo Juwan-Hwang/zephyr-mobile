@@ -21,6 +21,7 @@ struct TrafficChart: View {
     static let scaleWindow = 120
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
     @Environment(\.colorScheme) private var scheme
     @Environment(\.scenePhase) private var scenePhase
     @Environment(AppModel.self) private var model
@@ -34,7 +35,7 @@ struct TrafficChart: View {
     }
 
     var body: some View {
-        let paused = !isOn || reduceMotion || isCovered
+        let paused = !isOn || reduceMotion || still || isCovered
         // 60fps 足够平滑地滚动 1 Hz 曲线；ProMotion 下不必 120fps。
         TimelineView(.animation(minimumInterval: 1.0 / 60, paused: paused)) { _ in
             let snap = Snapshot(points: series.points, lo: series.lo, hi: series.hi,
@@ -99,13 +100,13 @@ struct TrafficChart: View {
 
         // 振幅缓入（0.6s ease-out）
         let amp: CGFloat = {
-            guard !reduceMotion, let s = onSince else { return 1 }
+            guard !reduceMotion, !still, let s = onSince else { return 1 }
             let t = min(1, max(0, (clock - s) / 0.6))
             return CGFloat(1 - pow(1 - t, 3))
         }()
 
         // 两个样本之间的滚动进度
-        let progress: CGFloat = reduceMotion ? 1 : CGFloat(min(1, max(0, clock - snap.arrival)))
+        let progress: CGFloat = (reduceMotion || still) ? 1 : CGFloat(min(1, max(0, clock - snap.arrival)))
 
         let pts = snap.points
         let dx = w / CGFloat(Self.visible - 2)

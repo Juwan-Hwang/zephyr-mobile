@@ -17,6 +17,7 @@ public struct ZLatencyPill: View {
     private let columnWidth: CGFloat?
     @ScaledMetric(relativeTo: .footnote) private var minWidth: CGFloat = ZMetrics.latencyColumn
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
 
     /// - Parameters:
     ///   - ms: 毫秒；`nil` = 未检测，`-1`（或任意负数）= 超时。与 `ZTokens.LatencyThreshold.color(_:)` 约定一致。
@@ -35,8 +36,8 @@ public struct ZLatencyPill: View {
             .modifier(ZMonoModifier(.body, weight: .regular, maxSize: maxFontSize))
             .foregroundStyle(color)
             .lineLimit(1)
-            .contentTransition(reduceMotion ? .identity : .numericText())
-            .animation(reduceMotion ? nil : ZMotion.standard, value: display)
+            .contentTransition((reduceMotion || still) ? .identity : .numericText())
+            .animation((reduceMotion || still) ? nil : ZMotion.standard, value: display)
             .modifier(ZLatencyChrome(style: style, color: color, minWidth: columnWidth ?? minWidth))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text(verbatim: spoken))

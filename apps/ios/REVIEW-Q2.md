@@ -15,6 +15,9 @@
 
 - 2026-11-09 PR agent/ios/review-q2e：[已修] X-P1-3 流量流（AppModel 与 SharedStatePublisher 共用一次 1 Hz 轮询，`SharedBroadcast`，有单测；场景/设置流仍各自订阅）、AppShortcuts.xcstrings（Siri 短语英文）、PacketTunnel 错误文案本地化（PacketTunnel/Localizable.xcstrings）、X-P1-8 部分（AppModelTests：流落地/连接断开/模式/导航/指令层/深链确认）；Q1 H-P2-21（外部 zephyr://connect|disconnect|mode 先弹确认，导航类不确认，DeepLinkPolicy 接入 AppModel.open(source:)）、H-P2-22（Intent 不再误用残留 lastError）、H-P2-19（recentTraffic 离主线程）、L-P2-8（节点页请求失败退避重试）、D-P2-3（SceneSheet 标题 verbatim）、DarwinObservation 回调竞态（弱引用上下文令牌）。核对确认已在先前批次完成：L-P2-3、L-P2-10、H-P2-13、W-P2-5、W-P2-6、D-P2-4。
 
+- 2026-11-09 PR agent/ios/review-q2e 续（快照首批人工审核，取自 harvest 的 115 张 CI 渲染图）：对照 design/prototype/shots 发现并修复——① 快照渲染器重复计入模拟器安全区（页面标题下移约 59pt、小组件上下被裁）：改为量出宿主自带安全区后只补差值；② 速率数字/曲线/延迟药丸在截图瞬间处于 numericText 滚动与缓入中（“2.8”的 8 模糊、曲线几乎平）：新增环境值 `zStaticRendering`（仅快照注入）关闭这些动画，并在渲染期间关闭 UIKit 动画；③ 小组件“x 分钟前”随真实时钟变化，快照夹具去掉该行；④ 首页顶栏/底部指令栏在 AX5 下占据半屏：限定到 AX2/AX1；⑤ 节点行协议列（TUIC/Hy2…）在截图中缺失：加 NodeCellTests 断言布局（若 CI 失败再追根）。其余页面（资料库、规则、设置、订阅、引导、今日卡、锁屏/灵动岛）与原型一致，待重录后入库。快照入库仍需再取一轮干净图（修复 ①② 之后）。
+- 2026-11-09 SharedBroadcast：上游流改为 subscribe 内同步创建，修复 CI 红的 testTwoSubscribersShareOneUpstream。
+
 ## P0
 
 - **Q2-X-P0-1 无隐私清单** [已修] — `App/` `PacketTunnel/` `Widgets/` 各加 `PrivacyInfo.xcprivacy`（UserDefaults CA92.1、文件时间戳 C617.1、磁盘空间 85F4.1、系统启动时间 35F9.1；不追踪、不收集）。随 target 资源打包。

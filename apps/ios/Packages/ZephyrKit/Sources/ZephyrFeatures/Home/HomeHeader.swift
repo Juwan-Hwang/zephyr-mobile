@@ -23,6 +23,8 @@ struct HomeHeader: View {
                 model.push(.settings)
             }
         }
+        // 顶栏品牌字标与设置按钮：放大到 AX2 为止，避免字标占据半个顶栏（Q2 快照审核）。
+        .dynamicTypeSize(...DynamicTypeSize.accessibility2)
         .padding(.leading, HMetrics.homeInset)
         .padding(.trailing, ZTokens.Space.n4)
         .accessibilityElement(children: .contain)

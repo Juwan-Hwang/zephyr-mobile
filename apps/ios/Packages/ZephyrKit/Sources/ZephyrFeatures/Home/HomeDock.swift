@@ -11,6 +11,8 @@ struct HomeDock: View {
     var body: some View {
         ZSearchBar(onTap: { model.openCommand() },
                    libraryAction: { model.present(.library) })
+            // 底部浮动栏是常驻快捷入口：最大放大到 AX1，更大时仍可经 VoiceOver / 触控使用，但不吞掉半屏内容（Q2 快照审核）。
+            .dynamicTypeSize(...DynamicTypeSize.accessibility1)
             .padding(.horizontal, HMetrics.cardInset)
             .padding(.bottom, HMetrics.dockBottom)
     }

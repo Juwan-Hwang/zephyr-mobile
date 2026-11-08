@@ -38,6 +38,7 @@ struct TrafficPanel: View {
 private struct RateReadout: View {
     let store: TrafficStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
 
     var body: some View {
         let down = ZFormat.rate(store.latest?.down ?? 0)
@@ -47,8 +48,8 @@ private struct RateReadout: View {
                 Text(verbatim: down.value)
                     .zDisplay(.large)
                     .foregroundStyle(ZTokens.Colors.screenT1)
-                    .contentTransition(reduceMotion ? .identity : .numericText())
-                    .animation(reduceMotion ? nil : ZMotion.slow, value: down.value)
+                    .contentTransition((reduceMotion || still) ? .identity : .numericText())
+                    .animation((reduceMotion || still) ? nil : ZMotion.slow, value: down.value)
                 HStack(spacing: ZTokens.Space.n1) {
                     Text(verbatim: down.unit)
                     Image(systemName: "arrow.down").foregroundStyle(ZTokens.Colors.colorDownload)
@@ -59,7 +60,7 @@ private struct RateReadout: View {
             HStack(spacing: ZTokens.Space.n1) {
                 Text(verbatim: "\(up.value) \(up.unit)")
                     .foregroundStyle(ZColor.t2)
-                    .contentTransition(reduceMotion ? .identity : .numericText())
+                    .contentTransition((reduceMotion || still) ? .identity : .numericText())
                 Image(systemName: "arrow.up").foregroundStyle(ZTokens.Colors.colorUpload)
             }
             .zType(.footnote, monospacedDigits: true)
