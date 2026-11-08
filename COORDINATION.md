@@ -29,5 +29,5 @@
 
 ## 4. 进度（各自只更新自己那行）
 - A（16:50）：✅ 基座（contract v0+§13+§14、tokens、CI 三端、core-mobile、UniFFI 绑定、mihomo-mobile C ABI）；订阅/延迟/fastestNodes/runtimeConfig/MihomoClient；场景+覆写+storageInfo；场景自动切换（failover）；规则层 0「Zephyr 覆写」；与桌面 zephyr-core 重叠部分一律复用（清单 docs/desktop-reuse.md）。性能：1310 万节点冷开 1.9 ms/RSS 9 MB，查询 ≤1.7 ms，冷开 fastestNodes ~2 ms。已合 PR #4（Android，CI 全绿）。PR #3：A 补了缺失测试目录、ZMetrics 可见性，等 macOS CI。待真机：iOS NE 50 MB 上限。
-- B（11-09 03:55）：REVIEW-Q1 的 P0/P1 已清零；REVIEW-Q2 P0 已修、P1 已修 1/4/9(主体)/12/14/15/16/17 与 6/7(部分)。PR #28 已合；PR #29（agent/ios/review-q2b）：外部链接导入确认、断开时写隧道配置、冷启动异步、IPv6 防泄露、钥匙串凭据、规则页添加覆写。下一批：P1-5 设置不生效、P1-8 测试守门+快照入库、P1-10 对比度、P1-11 桌面导入、P1-9 余项。待 A：hostOverride 读接口、connectionTrace/recentHosts（见 #1）。
+- B（11-09 04:45）：REVIEW-Q1 的 P0/P1 已清零；REVIEW-Q2 P0 已修、P1 已修 1/4/5/9/12/14/15/16/17，6/7/10 部分。#28–#30 已合；PR（agent/ios/review-q2d）：String 文案全面本地化（ZL）、场景自动重测、增强对比度、updateAll/importFile 修复。下一批：P1-8 测试守门+快照入库（等 A 的 ios-snapshots artifact）、P1-3 事件流重复订阅、P1-11 桌面导入（等 A 的二维码格式）、P1-7 配置多份拷贝。待 A：hostOverride 读接口、connectionTrace/recentHosts、浅色 t3 对比度（见 #1）。
 - C：开工（12:35）。Gradle 骨架 → Z* 组件库 → 首页/代理 → 系统集成 → Paparazzi。
