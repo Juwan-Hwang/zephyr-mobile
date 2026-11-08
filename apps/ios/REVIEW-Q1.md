@@ -174,7 +174,7 @@
 - 建议：契约无写覆写接口前隐藏右上角“+”；若必须保留入口，改为一张说明卡（`zSheetPresentation(.medium)`），不要放可编辑但不可提交的表单。
 
 ### P2
-- **L-P2-1** `Onboarding/OnboardingView.swift:171`：标题用 `zDisplay(.title)` = 44 Thin；原型 `.ob h1` 是 34 Light、行高 1.18（ob1.png / ob2.png）。改 34 / `.light`，`lineSpacing` 补到 1.18。
+- **L-P2-1** [已修] `Onboarding/OnboardingView.swift:171`：标题用 `zDisplay(.title)` = 44 Thin；原型 `.ob h1` 是 34 Light、行高 1.18（ob1.png / ob2.png）。改 34 / `.light`，`lineSpacing` 补到 1.18。
 - **L-P2-2** `Onboarding/OnboardingView.swift:83`：“1 / 2” 距标志 60pt，原型 `.step-n` margin-top 28；整体垂直节奏偏松。
 - **L-P2-3** `Library/LibrarySheet.swift:68-80`：“受信任的 Wi‑Fi”“本地代理端口”都跳到设置首页，应直达 `TrustedWifiView` / `LocalProxyView`（给 `Route` 加子页）；文案原型为“连上这些 Wi‑Fi 时自动断开 / 家里”“本地代理端口 / 关”，现为“受信任的 Wi‑Fi”“7890”（端口开关缺字段，记 NOTES）。
 - **L-P2-4** `App/RouteDestination.swift:42-43`：资料库“场景”卡片在 sheet 已呈现时把 `sheet` 换成 `.scene`，SwiftUI 会先关后开，偶发闪动；先 `dismissSheet()`，在 `onDismiss` 里再呈现。
