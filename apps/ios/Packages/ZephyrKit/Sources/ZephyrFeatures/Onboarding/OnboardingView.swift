@@ -26,6 +26,9 @@ public struct OnboardingView: View {
     @State private var choice: OnboardingChoice = .best
     @State private var finishing = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// 引导大标题：随 Dynamic Type 缩放，封顶 52pt 以免 AX5 下单行溢出（REVIEW-Q2 无障碍）。
+    @ScaledMetric(relativeTo: .largeTitle) private var rawTitleSize: CGFloat = 34
+    private var titleSize: CGFloat { min(rawTitleSize, 52) }
     @ScaledMetric(relativeTo: .largeTitle) private var markHeight: CGFloat = ZTokens.Space.n7 - ZTokens.Space.n1 / 2
     private let onFinish: (OnboardingChoice) -> Void
 
@@ -168,7 +171,7 @@ public struct OnboardingView: View {
 
     private func title(_ s: String) -> some View {
         Text(verbatim: s)
-            .font(.system(size: 34, weight: .light))
+            .font(.system(size: titleSize, weight: .light))
             .lineSpacing(6)
             .foregroundStyle(ZTokens.Colors.screenT1)
             .fixedSize(horizontal: false, vertical: true)
