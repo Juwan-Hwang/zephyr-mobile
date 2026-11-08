@@ -48,16 +48,34 @@ extension CoreEngine {
         await t.currentStatus() == .connected
     }
 
-    /// 已连接或正在连接（含 reasserting）都写新配置并请求热重载：正在连接时扩展可能已读走旧配置。
-    /// 扩展尚未就绪时 reloadConfig 抛错，忽略即可（扩展启动时会读到刚写入的新配置）。
+    /// 已连接：写新配置并热重载。正在连接（含 reasserting）：扩展可能已在启动早期读走旧配置，
+    /// 而连接中 provider message 发不出去，所以先写配置，等连上后再补一次重载（`afterConnect`）。
     func reloadTunnelIfRunning(_ t: any TunnelPort) async {
         let st = await t.currentStatus()
         guard st == .connected || st == .connecting else { return }
         do {
             try await writeTunnelConfig(to: t.configURL, controllerSocket: t.controllerSocketPath)
-            try await t.reloadConfig()
         } catch {
-            // 热重载失败不影响订阅/场景本身已写入核心；扩展保持旧配置继续工作。
+            return   // 写失败：扩展保持旧配置继续工作，核心里的改动已落盘
+        }
+        if st == .connected {
+            try? await t.reloadConfig()
+        } else {
+            afterConnect(t) { try? await t.reloadConfig() }
+        }
+    }
+
+    /// 连接中时排队一个动作：每 0.5 s 查一次，连上就执行；离开 connecting（失败/断开）或 30 s 后放弃。
+    func afterConnect(_ t: any TunnelPort, _ action: @escaping @Sendable () async -> Void) {
+        Task.detached(priority: .utility) {
+            for _ in 0..<60 {
+                try? await Task.sleep(nanoseconds: 500_000_000)
+                switch await t.currentStatus() {
+                case .connected: await action(); return
+                case .connecting: continue
+                default: return
+                }
+            }
         }
     }
 
@@ -214,20 +232,25 @@ extension CoreEngine {
 
 let liveQueue = DispatchQueue(label: "app.zephyr.core.live", qos: .userInitiated, attributes: .concurrent)
 
+/// 限时等待：`op` 在 `seconds` 内没有结果返回 nil，调用方不会被挂起。
+public func withDeadline<T: Sendable>(_ seconds: Double, _ op: @escaping @Sendable () async -> T?) async -> T? {
+    await withTaskGroup(of: T?.self) { g in
+        g.addTask { await op() }
+        g.addTask {
+            try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+            return nil
+        }
+        let first = await g.next() ?? nil
+        g.cancelAll()
+        return first
+    }
+}
+
 public extension TunnelPort {
     func currentStatus() async -> ConnectionStatus {
-        await withTaskGroup(of: ConnectionStatus?.self) { g in
-            g.addTask {
-                var it = self.states().makeAsyncIterator()
-                return await it.next()?.status
-            }
-            g.addTask {
-                try? await Task.sleep(nanoseconds: 2_000_000_000)
-                return nil
-            }
-            let first = await g.next() ?? nil
-            g.cancelAll()
-            return first ?? .disconnected
-        }
+        await withDeadline(2) {
+            var it = self.states().makeAsyncIterator()
+            return await it.next()?.status
+        } ?? .disconnected
     }
 }
