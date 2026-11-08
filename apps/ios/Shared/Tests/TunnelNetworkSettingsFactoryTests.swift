@@ -47,8 +47,10 @@ final class TunnelNetworkSettingsFactoryTests: XCTestCase {
 
     // MARK: IPv6
 
-    func testIPv6DisabledByDefault() {
-        XCTAssertNil(TunnelNetworkSettingsFactory.make(config(ipv6: false)).ipv6Settings)
+    /// IPv6 关闭时仍把 IPv6 默认路由收进隧道（由 mihomo 丢弃），否则字面 IPv6 地址的流量绕过隧道泄露真实 IP。
+    func testIPv6DisabledStillRoutesIntoTunnelToAvoidLeak() throws {
+        let v6 = try XCTUnwrap(TunnelNetworkSettingsFactory.make(config(ipv6: false)).ipv6Settings)
+        XCTAssertEqual(v6.includedRoutes?.first?.destinationAddress, NEIPv6Route.default().destinationAddress)
     }
 
     func testIPv6EnabledWithDefaultRouteAndLANExclusions() throws {

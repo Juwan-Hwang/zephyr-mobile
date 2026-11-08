@@ -41,12 +41,32 @@
         }
       }
     },
+    "Zephyr 未在运行" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zephyr isn’t running"
+          }
+        }
+      }
+    },
     "Zephyr 未连接" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zephyr not connected"
+          }
+        }
+      }
+    },
+    "Zephyr 未连接。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zephyr isn’t connected."
           }
         }
       }
@@ -121,6 +141,16 @@
         }
       }
     },
+    "代理扩展没有响应。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The proxy extension isn’t responding."
+          }
+        }
+      }
+    },
     "代理模式" : {
       "localizations" : {
         "en" : {
@@ -147,6 +177,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Send all traffic through the proxy"
+          }
+        }
+      }
+    },
+    "出了点问题，请稍后再试" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Something went wrong. Try again later."
           }
         }
       }
@@ -201,12 +241,62 @@
         }
       }
     },
+    "场景已不存在" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This scene no longer exists"
+          }
+        }
+      }
+    },
+    "存储空间不足" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not enough storage"
+          }
+        }
+      }
+    },
+    "导入" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import"
+          }
+        }
+      }
+    },
+    "导入订阅？" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import subscription?"
+          }
+        }
+      }
+    },
     "已切换到%@模式" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Switched to %@ mode"
+          }
+        }
+      }
+    },
+    "已取消" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelled"
           }
         }
       }
@@ -271,12 +361,42 @@
         }
       }
     },
+    "无法获取订阅" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn’t fetch the subscription"
+          }
+        }
+      }
+    },
     "未连接" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not Connected"
+          }
+        }
+      }
+    },
+    "来源：%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Source: %@"
+          }
+        }
+      }
+    },
+    "核心意外退出，已自动重启" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The core quit unexpectedly and was restarted"
           }
         }
       }
@@ -301,12 +421,42 @@
         }
       }
     },
+    "正在载入" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading"
+          }
+        }
+      }
+    },
     "正在连接" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Connecting"
+          }
+        }
+      }
+    },
+    "此链接未加密（http），内容可能被窃听或篡改。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This link isn’t encrypted (http); its contents could be read or altered."
+          }
+        }
+      }
+    },
+    "没有 VPN 权限，请在 Zephyr 里允许添加 VPN 配置。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VPN permission is missing. Allow the VPN configuration in Zephyr."
           }
         }
       }
@@ -341,12 +491,72 @@
         }
       }
     },
+    "策略组已不存在" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This policy group no longer exists"
+          }
+        }
+      }
+    },
+    "网络不可用" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Network unavailable"
+          }
+        }
+      }
+    },
+    "节点已不存在" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This node no longer exists"
+          }
+        }
+      }
+    },
     "规则" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rule"
+          }
+        }
+      }
+    },
+    "订阅格式无效" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid subscription format"
+          }
+        }
+      }
+    },
+    "请确认这个链接来自你信任的服务商。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only continue if you trust this provider."
+          }
+        }
+      }
+    },
+    "请输入域名或 IP" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a domain or IP"
           }
         }
       }
@@ -377,6 +587,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tap power to connect"
+          }
+        }
+      }
+    },
+    "还没有可用的配置，请先打开 Zephyr 添加订阅。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No configuration yet. Open Zephyr and add a subscription first."
           }
         }
       }
@@ -457,6 +677,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Speed updates paused. Open Zephyr to see the latest."
+          }
+        }
+      }
+    },
+    "需要允许添加 VPN 配置" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow Zephyr to add a VPN configuration"
           }
         }
       }

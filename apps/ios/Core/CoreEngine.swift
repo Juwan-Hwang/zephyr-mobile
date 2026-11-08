@@ -603,6 +603,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         await publishSubs()
         await bumpScenes()
         scheduleRuleProviderRefresh()
+        // 首个订阅导入后就写出配置：控制中心 / 小组件的连接开关由扩展直接启动隧道，不能等到 App 里点连接（X-P1-6）。
+        if let t = tunnel { await reloadTunnelIfRunning(t) }
         return CoreEngine.sub(s)
     }
 
@@ -792,14 +794,21 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     }
 
     /// "zephyr:<随机 24 位>"，首次生成后保存；UI 在设置页展示给需要配置的 App。
+    /// 标准 UserDefaults 时存钥匙串（REVIEW-Q2：凭据不落 plist），并把旧版 UserDefaults 里的值迁移过去；
+    /// 自定义 defaults（单测）或钥匙串不可用时存 defaults。
     public static func localProxyCredential(defaults: UserDefaults = .standard) -> String {
         let key = "zephyr.localProxyCredential"
-        if let v = defaults.string(forKey: key), v.contains(":") { return v }
+        let useKeychain = defaults === UserDefaults.standard
+        if useKeychain, let v = KeychainStore.read(key), v.contains(":") { return v }
+        if let v = defaults.string(forKey: key), v.contains(":") {
+            if useKeychain, KeychainStore.write(key, v) { defaults.removeObject(forKey: key) }
+            return v
+        }
         let alphabet = Array("abcdefghijkmnpqrstuvwxyzACDEFGHJKLMNPQRSTUVWXYZ23456789")
         var rng = SystemRandomNumberGenerator()
         let pass = String((0..<24).map { _ in alphabet.randomElement(using: &rng)! })
         let v = "zephyr:\(pass)"
-        defaults.set(v, forKey: key)
+        if !(useKeychain && KeychainStore.write(key, v)) { defaults.set(v, forKey: key) }
         return v
     }
 

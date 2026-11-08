@@ -9,6 +9,7 @@
 // 测试进程（XCTest）里什么都不启动。
 
 import Foundation
+import Observation
 import os
 import ZephyrFeatures
 import ZephyrKit
@@ -68,13 +69,21 @@ final class AppServices {
 
     // MARK: 外部链接（导入订阅）
 
+    /// 待用户确认的导入请求（REVIEW-Q2 X-P1-1：外部链接不得静默导入）。
+    let importPrompt = ImportPrompt()
+
     /// clash://install-config?url=<订阅地址>[&name=…]、mihomo://install-config?url=…
-    /// zephyr:// 交给 RootView 里的 AppModel.handle(url:)，这里忽略。
+    /// 只弹出确认（显示域名；http 另加警告），用户点“导入”后才真正导入。zephyr:// 交给 RootView 里的 AppModel.handle(url:)，这里忽略。
     func handleExternal(url: URL, model: AppModel) {
         guard let payload = Self.subscriptionURL(from: url) else { return }
+        importPrompt.request = ImportRequest(payload: payload)
+    }
+
+    func confirmImport(_ request: ImportRequest, model: AppModel) {
+        importPrompt.request = nil
         Task {
             do {
-                _ = try await engine.importSubscription(source: .url, payload: payload)
+                _ = try await engine.importSubscription(source: .url, payload: request.payload)
                 model.push(.subscriptions)
             } catch let error as ZephyrError {
                 model.lastError = error
@@ -86,13 +95,7 @@ final class AppServices {
 
     /// 解析导入链接；非 clash/mihomo 或缺少 url 参数返回 nil。
     nonisolated static func subscriptionURL(from url: URL) -> String? {
-        guard let scheme = url.scheme?.lowercased(), scheme == "clash" || scheme == "mihomo",
-              url.host?.lowercased() == "install-config",
-              let raw = URLComponents(url: url, resolvingAgainstBaseURL: false)?
-                .queryItems?.first(where: { $0.name == "url" })?.value,
-              let target = URL(string: raw), let s = target.scheme?.lowercased(), s == "https" || s == "http"
-        else { return nil }
-        return raw
+        ImportRequest.subscriptionURL(from: url)
     }
 }
 
@@ -112,4 +115,10 @@ final class ModelConnectionControl: ConnectionControlling {
         await model.setMode(ProxyMode(rawValue: mode.rawValue) ?? .rule)
         if let error = model.lastError { throw error }
     }
+}
+
+@MainActor
+@Observable
+final class ImportPrompt {
+    var request: ImportRequest?
 }
