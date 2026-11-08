@@ -53,7 +53,7 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
             e.setMode(ProxyMode.GLOBAL)
             Quint(e.connectionState().first(), e.scenes().first(), e.subscriptions().first(), e.usageToday(), e.recentTraffic(90))
         }
-        val ui = HomeUi(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = NOW, usage = usage)
+        val ui = HomeUi(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = NOW, usage = usage, globalNode = com.zephyr.engine.mock.MockScenes.TOKYO_03)
         paparazzi.snapshot { ZephyrTheme(dark = dark, accent = accent) { HomeContent(conn, scenes, subs, ui, NO_ACTIONS, NO_CB) } }
     }
 
