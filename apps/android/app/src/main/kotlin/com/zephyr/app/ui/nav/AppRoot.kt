@@ -59,6 +59,8 @@ import com.zephyr.engine.ProxyMode
 import com.zephyr.engine.Scene
 import com.zephyr.engine.Settings
 import kotlinx.serialization.Serializable
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 @Serializable object Home
 @Serializable data class Nodes(val query: String = "", val back: String = "资料库")
@@ -122,13 +124,18 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean) {
                 }
             }
 
+            val rootScope = androidx.compose.runtime.rememberCoroutineScope()
             LibrarySheet(library, { library = false }) { d ->
                 library = false
                 when (d) {
                     LibraryDest.Nodes -> nav.navigate(Nodes())
                     LibraryDest.Subscriptions -> nav.navigate(Subs())
                     LibraryDest.Rules -> nav.navigate(Rules())
-                    LibraryDest.Scenes -> scene = home.scenes.value.firstOrNull()
+                    // scenes is WhileSubscribed: when home is not composed .value can be empty, so subscribe once.
+                    LibraryDest.Scenes -> rootScope.launch {
+                        scene = home.scenes.value.firstOrNull()
+                            ?: kotlinx.coroutines.withTimeoutOrNull(2_000) { home.scenes.first { it.isNotEmpty() } }?.firstOrNull()
+                    }
                     LibraryDest.Settings, LibraryDest.TrustedWifi, LibraryDest.LocalProxy, LibraryDest.Widgets -> nav.navigate(SettingsRoute())
                 }
             }
