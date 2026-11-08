@@ -44,11 +44,32 @@ fun BoxScope.ImportSheet(visible: Boolean, onDismiss: () -> Unit, onDone: (Strin
     var url by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
     var busy by remember { mutableStateOf(false) }
+    var hint by remember { mutableStateOf<String?>(null) }
     fun submit(src: ImportSource, payload: String) = scope.launch {
         busy = true; error = null
         try { val s = AppGraph.engine.importSubscription(src, payload); url = ""; onDone("已添加 ${s.name}（${s.nodeCount} 个节点）") }
-        catch (e: ZephyrException) { error = "这不是有效的订阅链接" }
+        catch (e: ZephyrException) { error = if (src == ImportSource.FILE) "这不是有效的配置文件" else "这不是有效的订阅链接" }
         busy = false
+    }
+    // Review L-P1-3: file import is real (SAF OpenDocument → profile text → core import, ≤ 32 MB).
+    val pickFile = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) scope.launch {
+            val text = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                runCatching {
+                    ctx.contentResolver.openInputStream(uri)?.use { ins ->
+                        val out = java.io.ByteArrayOutputStream()
+                        val chunk = ByteArray(64 * 1024)
+                        while (true) {
+                            val n = ins.read(chunk); if (n < 0) break
+                            out.write(chunk, 0, n)
+                            if (out.size() > 32 * 1024 * 1024) return@use null
+                        }
+                        out.toString(Charsets.UTF_8.name())
+                    }
+                }.getOrNull()
+            }
+            if (text.isNullOrBlank()) error = "无法读取这个文件" else submit(ImportSource.FILE, text)
+        }
     }
     ZSheet(visible, onDismiss, "添加订阅", trailing = "取消") {
         Column(Modifier.padding(horizontal = 16.dp)) {
@@ -64,20 +85,23 @@ fun BoxScope.ImportSheet(visible: Boolean, onDismiss: () -> Unit, onDone: (Strin
                 val t = cm.primaryClip?.getItemAt(0)?.coerceToText(ctx)?.toString().orEmpty()
                 if (t.isBlank()) error = "剪贴板是空的" else submit(ImportSource.CLIPBOARD, t)
             }
-            ZDivider(); Option(ZIcons.Qr, "扫描二维码") { error = "相机扫码将在核心接入后启用" }
-            ZDivider(); Option(ZIcons.Laptop, "从电脑上的 Zephyr 导入") { error = "在电脑端打开 设置 › 移动端，扫描二维码" }
-            ZDivider(); Option(ZIcons.File, "从文件导入") { error = "请从文件管理器用 Zephyr 打开 .yaml 文件" }
+            ZDivider(); Option(ZIcons.Qr, "扫描二维码", enabled = false, note = "即将支持") {}
+            ZDivider(); Option(ZIcons.Laptop, "从电脑上的 Zephyr 导入") { error = null; hint = "在电脑端打开 设置 › 移动端，即可显示二维码" }
+            ZDivider(); Option(ZIcons.File, "从文件导入") { error = null; hint = null; pickFile.launch(arrayOf("application/x-yaml", "application/yaml", "text/*", "application/octet-stream")) }
         }
+        hint?.let { ZText(it, Modifier.padding(horizontal = 22.dp, vertical = 4.dp), style = ZTheme.type.footnote, color = c.text2) }
         ZText("订阅与流量数据仅保存在此设备上。", Modifier.padding(horizontal = 22.dp, vertical = 12.dp), style = ZTheme.type.footnote, color = c.text3)
     }
 }
 
 @Composable
-private fun Option(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, onClick: () -> Unit) {
-    Row(Modifier.fillMaxWidth().zPressable(onClick = onClick).padding(horizontal = 20.dp, vertical = 16.dp), verticalAlignment = Alignment.CenterVertically) {
-        ZIcon(icon, tint = ZTheme.colors.accent, size = 22.dp)
+private fun Option(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, enabled: Boolean = true, note: String? = null, onClick: () -> Unit) {
+    val c = ZTheme.colors
+    Row(Modifier.fillMaxWidth().then(if (enabled) Modifier.zPressable(onClick = onClick) else Modifier).padding(horizontal = 20.dp, vertical = 16.dp), verticalAlignment = Alignment.CenterVertically) {
+        ZIcon(icon, tint = if (enabled) c.accent else c.text4, size = 22.dp)
         Spacer(Modifier.width(14.dp))
-        ZText(label, Modifier.weight(1f), style = ZTheme.type.body)
+        ZText(label, Modifier.weight(1f), style = ZTheme.type.body, color = if (enabled) c.text1 else c.text3)
+        note?.let { ZText(it, style = ZTheme.type.footnote, color = c.text4) }
         ZIcon(ZIcons.ChevronRight, tint = ZTheme.colors.text4, size = 16.dp)
     }
 }

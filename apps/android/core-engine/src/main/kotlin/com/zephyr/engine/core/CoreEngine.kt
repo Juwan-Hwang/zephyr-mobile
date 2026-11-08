@@ -76,6 +76,8 @@ class CoreEngine(
     private val tick: Long = 1_000,
     private val clock: () -> Long = System::currentTimeMillis,
     private val fetcher: (String) -> SubscriptionFetcher.Fetched = SubscriptionFetcher::httpFetch,
+    private val geoDownloader: (String, java.io.File) -> Unit = { u, f -> SubscriptionFetcher.download(u, f) },
+    private val tcpPing: suspend (String, Int) -> Int = TcpPinger.probe,
 ) : ZephyrEngine by fallback {
 
     private val core: MobileCore? = dataDir?.let { dir ->
@@ -96,6 +98,16 @@ class CoreEngine(
             if (!(force || p.due) || p.format.equals("mrs", ignoreCase = true)) continue
             val ok = withContext(io) { runCatching { val got = fetcher(p.url); c.compileRuleProvider(p.name, got.body, clock()) }.isSuccess }
             if (ok) done++
+        }
+        // GEOSITE / GEOIP layers (§14.v): download due .dat files (old file kept on failure), then compile.
+        val geo = withContext(io) { runCatching { c.geoSources(clock()) }.getOrDefault(emptyList()) }
+        for (g in geo) {
+            if (!(force || g.due) || g.codes.isEmpty()) continue
+            val n = withContext(io) {
+                runCatching { geoDownloader(g.url, java.io.File(g.path)) }
+                runCatching { c.compileGeo(g.kind, clock()).toInt() }.getOrDefault(0)
+            }
+            done += n
         }
         if (done > 0) rulesReady = null
         return done
@@ -381,6 +393,17 @@ class CoreEngine(
         scenesBump.value++
     }
 
+    override suspend fun setSceneSource(sceneId: String, source: SceneSource): NodeSummary? {
+        val c = nodes() ?: return if (mockData) fallback.setSceneSource(sceneId, source) else throw noSubscription()
+        val src = when (source) { SceneSource.AUTO -> CoreSceneSource.AUTO; SceneSource.MANUAL -> CoreSceneSource.MANUAL; SceneSource.SUBSCRIPTION_GROUP -> CoreSceneSource.SUBSCRIPTION_GROUP }
+        val a = withContext(io) { sceneCall { c.setSceneSource(sceneId, src, clock()) } }
+        scenesBump.value++
+        a ?: return null
+        if (a.needsReload) reloadIfRunning()
+        else live()?.let { l -> withContext(io) { runCatching { l.select(a.group, a.member) } } }
+        return withContext(io) { runCatching { c.scenes(clock()).firstOrNull { it.id == sceneId }?.selected?.let(::row) }.getOrNull() }
+    }
+
     override suspend fun setSceneException(sceneId: String, appId: String, nodeId: NodeId?) {
         val c = nodes() ?: return if (mockData) fallback.setSceneException(sceneId, appId, nodeId) else throw noSubscription()
         withContext(io) { sceneCall { c.setSceneException(sceneId, appId, nodeId?.toULong()) } }
@@ -511,7 +534,18 @@ class CoreEngine(
      */
     override suspend fun testLatency(ids: List<NodeId>) {
         val c = nodes() ?: return if (mockData) fallback.testLatency(ids) else Unit
-        if (!Mihomo.available) return
+        // §14.u: tunnel down → TCP handshake from the app process; UDP-based protocols get no target and stay untested.
+        if (!Mihomo.running) {
+            ids.chunked(512).forEach { chunk ->
+                val targets = withContext(io) { wrap { c.tcpPingTargets(chunk.map { it.toULong() }) } }
+                if (targets.isEmpty()) return@forEach
+                val now = clock()
+                val res = TcpPinger.pingAll(targets.map { Triple(it.id.toLong(), it.host, it.port.toInt()) }, tcpPing)
+                withContext(io) { wrap { c.recordLatencies(res.map { (id, ms) -> com.zephyr.core.mobile.LatencySample(id.toULong(), ms, now) }) } }
+                liveLatency.tryEmit(res.map { (id, ms) -> LatencyUpdate(id, ms, now) })
+            }
+            return
+        }
         ids.chunked(512).forEach { chunk ->
             val res = withContext(io) {
                 val batch = wrap { c.latencyTestBatch(chunk.map { it.toULong() }) }

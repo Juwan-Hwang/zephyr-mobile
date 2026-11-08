@@ -97,4 +97,31 @@ class CoreParityTest {
     companion object {
         val QUERIES = listOf("", "JP", "东京", "日本 NTT", "HK HKT", "IPLC", "US 洛杉矶 CN2", "家宽", "TW-Fixed", "zzz-none")
     }
+
+    /** §14.u: tunnel down → TCP handshake targets from core (hosts unmasked), results written back to the cache. */
+    @Test
+    fun tcpPingWhenDisconnected() = runBlocking {
+        assumeTrue("set -Pzephyr.coreLib to run", lib != null)
+        System.setProperty("uniffi.component.zephyr_mobile_core.libraryOverride", lib!!)
+        System.setProperty("uniffi.component.zephyr_core.libraryOverride", lib)
+        val dir = Files.createTempDirectory("ztcp").toFile()
+        val yaml = """
+            proxies:
+              - {name: HK 01, type: ss, server: hk1.example.com, port: 443, cipher: aes-128-gcm, password: x}
+              - {name: JP 01, type: hysteria2, server: jp1.example.com, port: 443, password: x}
+        """.trimIndent()
+        val pinged = mutableListOf<Pair<String, Int>>()
+        val core = CoreEngine(
+            MockEngine(clock = { 0L }), dir.path, mockData = false, clock = { 1_000L },
+            fetcher = { SubscriptionFetcher.Fetched(yaml, null, null) },
+            tcpPing = { h, p -> synchronized(pinged) { pinged += h to p }; 42 },
+        )
+        core.importSubscription(com.zephyr.engine.ImportSource.URL, "https://sub.example.com/t")
+        val q = core.queryNodes("")
+        val ids = core.nodeRows(q.token, 0, 10).rows.map { it.id }
+        assertEquals(2, ids.size)
+        core.testLatency(ids)
+        assertEquals(listOf("hk1.example.com" to 443), pinged, "UDP protocol skipped, host unmasked")
+        assertEquals(1L, core.nodeIndex().testedCount)
+    }
 }

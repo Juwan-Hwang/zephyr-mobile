@@ -47,7 +47,7 @@ import kotlinx.coroutines.delay
 
 /** Rules (prototype `rules`): 7 compiled layers in match order + live domain/IP trace. */
 @Composable
-fun RulesScreen(initial: String, onBack: () -> Unit) {
+fun RulesScreen(initial: String, back: String = "资料库", onBack: () -> Unit) {
     val engine = AppGraph.engine
     val c = ZTheme.colors
     var q by remember { mutableStateOf(initial) }
@@ -57,7 +57,7 @@ fun RulesScreen(initial: String, onBack: () -> Unit) {
         if (q != initial) delay(60) // debounce typing, not the deep-linked first query
         value = runCatching { engine.testRule(q) }.getOrNull()
     }
-    PageScaffold(back = "资料库", title = "规则", onBack = onBack) {
+    PageScaffold(back = back, title = "规则", onBack = onBack) {
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
             Row(Modifier.padding(horizontal = 22.dp), verticalAlignment = Alignment.Bottom) {
                 ZText(ZFormat.grouped(stats?.total ?: 0), style = ZTheme.type.hero.copy(fontSize = ZTheme.type.hero.fontSize * 0.86f))

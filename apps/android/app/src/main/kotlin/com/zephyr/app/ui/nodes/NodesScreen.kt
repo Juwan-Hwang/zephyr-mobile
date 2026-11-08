@@ -57,11 +57,10 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-private val CHIPS = listOf("US" to 3_118_402L, "JP" to 2_204_117L, "HK" to 1_906_551L, "SG" to 1_512_880L, "TW" to 1_288_406L, "KR" to 702_315L, "DE" to 488_210L, "GB" to 455_903L)
 
 /** Node library (prototype `nodes`): 13,109,802 rows, fixed row height, region rail, index search. */
 @Composable
-fun NodesScreen(vm: NodesViewModel, initialQuery: String, onBack: () -> Unit, onImport: () -> Unit = {}) {
+fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: String = "资料库", onBack: () -> Unit, onImport: () -> Unit = {}) {
     val c = ZTheme.colors
     val ui by vm.ui.collectAsStateWithLifecycle()
     LaunchedEffect(initialQuery) { vm.setQuery(initialQuery, immediate = true) }
@@ -83,14 +82,14 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, onBack: () -> Unit, on
     }
     LaunchedEffect(result?.token) { list.scrollToItem(0) }
 
-    PageScaffold(back = "资料库", title = "节点", onBack = onBack) {
+    PageScaffold(back = back, title = "节点", onBack = onBack) {
         Column(Modifier.fillMaxSize()) {
             Row(Modifier.padding(horizontal = 22.dp), verticalAlignment = Alignment.Bottom) {
                 ZText(ZFormat.grouped(ui.total), style = ZTheme.type.hero.copy(fontSize = ZTheme.type.hero.fontSize * 0.86f))
                 Spacer(Modifier.width(8.dp))
                 ZText("个", Modifier.padding(bottom = 10.dp), style = ZTheme.type.body, color = c.text3)
             }
-            ZText("来自 214 个订阅 · ${ui.regionCount} 个地区", Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
+            ZText(listOfNotNull(ui.subscriptionCount.takeIf { it > 0 }?.let { "来自 $it 个订阅" }, "${ui.regionCount} 个地区").joinToString(" · "), Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
             Spacer(Modifier.height(18.dp))
             ZSearchField(ui.query, { vm.setQuery(it) }, "地区、城市或线路", Modifier.padding(horizontal = 16.dp))
             if (ui.query.isNotBlank() && result != null) {
@@ -99,7 +98,7 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, onBack: () -> Unit, on
             Spacer(Modifier.height(12.dp))
             LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 item { ZChip("全部", ui.query.isBlank(), { vm.setQuery("", true) }) }
-                items(CHIPS, key = { it.first }) { (code, n) -> ZChip(code, ui.query.trim().equals(code, true), { vm.setQuery(code, true) }, detail = ZFormat.wan(n)) }
+                items(ui.chips, key = { it.first }) { (code, n) -> ZChip(code, ui.query.trim().equals(code, true), { vm.setQuery(code, true) }, detail = ZFormat.wan(n)) }
             }
             Spacer(Modifier.height(10.dp))
             Box(Modifier.weight(1f).fillMaxWidth()) {
