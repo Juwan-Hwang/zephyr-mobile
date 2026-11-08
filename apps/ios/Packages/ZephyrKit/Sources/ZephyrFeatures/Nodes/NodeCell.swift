@@ -10,7 +10,7 @@ final class NodeCell: UICollectionViewCell {
     static let reuseID = "NodeCell"
 
     private let nameLabel = UILabel()
-    private let protocolLabel = UILabel()
+    let protocolLabel = UILabel()
     private let latencyLabel = UILabel()
     private let skeleton = CALayer()
     private let separator = CALayer()

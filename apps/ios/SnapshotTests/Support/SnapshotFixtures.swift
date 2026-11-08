@@ -29,7 +29,12 @@ enum SnapshotFixtures {
 
     // MARK: 小组件 / 实时活动
 
-    static var connected: SharedState { SharedState.prototype(now: now) }
+    /// 速率年龄行（“x 分钟前”，Text(.relative)）随真实时钟变化，快照里去掉以保证确定。
+    static var connected: SharedState {
+        var s = SharedState.prototype(now: now)
+        s.rate.at = nil
+        return s
+    }
 
     static func accent(_ accent: ZTokens.Accent) -> SharedState {
         var s = connected

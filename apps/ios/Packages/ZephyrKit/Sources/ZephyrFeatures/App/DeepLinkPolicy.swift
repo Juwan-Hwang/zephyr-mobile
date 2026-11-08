@@ -54,6 +54,12 @@ public struct DeepLinkPrompt: Equatable, Sendable {
     public var destructive: Bool
 }
 
+/// 等待用户确认的外部深链。
+public struct PendingDeepLink: Equatable, Sendable {
+    public var link: DeepLink
+    public var prompt: DeepLinkPrompt
+}
+
 enum DeepLinkPolicy {
     /// 令牌最短长度：过短的令牌（含空串）一律不认。
     static let minTokenLength = 16

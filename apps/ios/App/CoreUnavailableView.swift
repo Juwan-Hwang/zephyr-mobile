@@ -6,11 +6,12 @@ struct CoreUnavailableView: View {
     var body: some View {
         VStack(spacing: 14) {
             Image(systemName: "exclamationmark.triangle.fill")
-                .font(.system(size: 40))
+                .font(.largeTitle)
                 .foregroundStyle(.orange)
                 .accessibilityHidden(true)
             Text("代理核心无法启动")
                 .font(.title3.weight(.semibold))
+                .accessibilityAddTraits(.isHeader)
             Text("请退出后重新打开 Zephyr；若问题持续，请重新安装应用。")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)

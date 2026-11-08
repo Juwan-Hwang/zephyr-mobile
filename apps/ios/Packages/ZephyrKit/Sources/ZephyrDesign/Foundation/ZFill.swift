@@ -52,6 +52,16 @@ public extension EnvironmentValues {
     }
 }
 
+private struct ZStaticRenderingKey: EnvironmentKey { static let defaultValue = false }
+
+public extension EnvironmentValues {
+    /// 静态渲染（快照测试）：关闭数字滚动、曲线缓入与逐帧时间线，使截图确定、不受真实时钟影响。生产代码不设置。
+    var zStaticRendering: Bool {
+        get { self[ZStaticRenderingKey.self] }
+        set { self[ZStaticRenderingKey.self] = newValue }
+    }
+}
+
 /// 页面底色（原型 --bg：深色纯黑、浅色 #F2F2F7）。
 public enum ZPage {
     public static var background: Color { ZTokens.Colors.screenBg }

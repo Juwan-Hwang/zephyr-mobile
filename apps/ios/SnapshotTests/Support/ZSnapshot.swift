@@ -196,6 +196,8 @@ enum ZSnapshotRenderer {
             .zAccent(variant.accent)
             .dynamicTypeSize(variant.dynamicType)
             .environment(\.colorScheme, variant.colorScheme)
+            .environment(\.zStaticRendering, true)
+            .transaction { $0.animation = nil }
             .zPageBackground()
         let host = UIHostingController(rootView: root)
         host.overrideUserInterfaceStyle = variant.interfaceStyle
@@ -208,18 +210,36 @@ enum ZSnapshotRenderer {
         window.rootViewController = host
         window.isHidden = false
 
+        // 快照期间关闭 UIKit 层动画（UICollectionView 更新、布局过渡），与 zStaticRendering 一起保证截图确定。
+        let animationsWereEnabled = UIView.areAnimationsEnabled
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(animationsWereEnabled) }
+
+        // 先按目标尺寸（fitWidth 先给足高度）布局一次，量出测试宿主 UIWindow 自带的安全区（模拟器为 59/34），
+        // 再只补差值到目标安全区：device = iPhone 16 的 59/34，其余布局 = 0。避免重复计入使内容整体下移、小组件被裁切。
+        let target: UIEdgeInsets
         var size: CGSize
         switch layout {
         case .device:
             size = ZSnapshotLayout.iPhone16
-            host.additionalSafeAreaInsets = ZSnapshotLayout.iPhone16SafeArea
+            target = ZSnapshotLayout.iPhone16SafeArea
         case .fixed(let s):
             size = s
+            target = .zero
         case .fitWidth(let width):
-            // 先给足高度布局一次，让 Dynamic Type / 环境生效后再量。
-            window.frame = CGRect(x: 0, y: 0, width: width, height: 4000)
-            host.view.frame = window.bounds
-            host.view.layoutIfNeeded()
+            size = CGSize(width: width, height: 4000)
+            target = .zero
+        }
+        window.frame = CGRect(origin: .zero, size: size)
+        host.view.frame = window.bounds
+        host.view.layoutIfNeeded()
+        let own = UIEdgeInsets(top: host.view.safeAreaInsets.top - host.additionalSafeAreaInsets.top,
+                               left: 0,
+                               bottom: host.view.safeAreaInsets.bottom - host.additionalSafeAreaInsets.bottom,
+                               right: 0)
+        host.additionalSafeAreaInsets = UIEdgeInsets(top: target.top - own.top, left: 0, bottom: target.bottom - own.bottom, right: 0)
+        host.view.layoutIfNeeded()
+        if case .fitWidth(let width) = layout {
             let fitted = host.sizeThatFits(in: CGSize(width: width, height: .greatestFiniteMagnitude))
             size = CGSize(width: width, height: max(1, ceil(fitted.height)))
         }

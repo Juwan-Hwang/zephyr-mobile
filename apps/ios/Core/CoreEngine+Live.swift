@@ -92,11 +92,14 @@ extension CoreEngine {
     // MARK: 流量
 
     func liveTraffic(_ t: any TunnelPort) -> AsyncStream<TrafficSample> {
-        poll(every: 1) { [weak self] in
-            guard let self, let r = await t.rate() else { return nil }
-            let s = TrafficSample(at: self.now(), upBps: r.up, downBps: r.down)
-            self.remember(s)
-            return s
+        trafficBroadcast.subscribe { [weak self] in
+            guard let self else { return AsyncStream { $0.finish() } }
+            return self.poll(every: 1) { [weak self] in
+                guard let self, let r = await t.rate() else { return nil }
+                let s = TrafficSample(at: self.now(), upBps: r.up, downBps: r.down)
+                self.remember(s)
+                return s
+            }
         }
     }
 

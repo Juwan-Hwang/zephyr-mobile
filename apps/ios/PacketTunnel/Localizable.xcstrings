@@ -1,0 +1,46 @@
+{
+  "sourceLanguage" : "zh-Hans",
+  "version" : "1.0",
+  "strings" : {
+    "此构建未包含代理核心（libmihomo）。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This build does not include the proxy core (libmihomo)."
+          }
+        }
+      }
+    },
+    "没有可用的配置，请先添加订阅。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No configuration available. Add a subscription first."
+          }
+        }
+      }
+    },
+    "无法获取虚拟网卡。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn’t get the virtual network interface."
+          }
+        }
+      }
+    },
+    "代理核心启动失败：%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The proxy core failed to start: %@"
+          }
+        }
+      }
+    }
+  }
+}

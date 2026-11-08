@@ -12,6 +12,7 @@ public struct ZBigNumber: View {
     private let tone: Color?
     private let a11yLabel: Text?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
 
     /// - Parameters:
     ///   - value: 已格式化好的数字，如 `ZFormat.count(13_109_802)` → "13,109,802"。
@@ -61,8 +62,8 @@ public struct ZBigNumber: View {
             .foregroundStyle(tone ?? ZTokens.Colors.screenT1)
             .lineLimit(1)
             .minimumScaleFactor(0.4)
-            .contentTransition(reduceMotion ? .identity : .numericText())
-            .animation(reduceMotion ? nil : ZMotion.slow, value: value)
+            .contentTransition((reduceMotion || still) ? .identity : .numericText())
+            .animation((reduceMotion || still) ? nil : ZMotion.slow, value: value)
     }
 
     @ViewBuilder

@@ -53,6 +53,10 @@ public final class AppModel {
     public var isCommandPresented = false
     /// 打开指令层时预填的文字（深链 zephyr://command?q=…）。
     public var commandPrefill = ""
+    /// 外部来源（其他 App / 网页）请求改变连接状态的深链，待用户确认后才执行（REVIEW-Q1 H-P2-21）。
+    public var pendingLink: PendingDeepLink?
+    /// 我们自己的小组件 / 实时活动拼在状态类链接上的可信令牌（见 DeepLinkPolicy）；nil = 一律视为外部。
+    @ObservationIgnored public var trustedLinkToken: String?
     /// 带"撤销"的提示（原型 toast：已切换至东京 03 · 撤销）。HomeView 用 D 的 `.zToast($model.toast)` 展示；
     /// 写操作用 `showUndo(_:undo:)` 生成，不要直接拼 ZToastItem。
     public var toast: ZToastItem?

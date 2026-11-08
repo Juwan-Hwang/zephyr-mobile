@@ -28,6 +28,9 @@ final class NodeRowStore {
     private(set) var highlights: [String] = []
     private var pages = LRUCache<Int64, [NodeSummary]>(capacity: NodeRowStore.cachePages)
     private var inFlight: Set<Int64> = []
+    /// 页请求失败后的重试次数（退避 0.4 s、0.8 s、1.6 s，之后放弃，等下次滚动再请求）。
+    private var retries: [Int64: Int] = [:]
+    static let maxRetries = 3
     /// 测得/测试中的延迟。上限约 50k，超过时整体清空（只影响本次会话的覆盖显示，缓存值仍由引擎给出）。
     private var latency: [NodeId: LatencyState] = [:]
     nonisolated(unsafe) private var latencyTask: Task<Void, Never>?
@@ -69,6 +72,7 @@ final class NodeRowStore {
         self.highlights = highlights
         pages.removeAll()
         inFlight.removeAll()
+        retries.removeAll()
     }
 
     // MARK: 读取
@@ -118,8 +122,19 @@ final class NodeRowStore {
         Task { @MainActor [weak self] in
             let result = try? await engine.nodeRows(token: tk, offset: offset, limit: limit)
             guard let self, self.token == tk else { return }
+            guard let result else {
+                // 失败：保持“在途”占位并退避重试，避免行永久停在骨架直到再次滚动（REVIEW-Q1 L-P2-8）。
+                let n = self.retries[p, default: 0]
+                guard n < Self.maxRetries else { self.inFlight.remove(p); return }
+                self.retries[p] = n + 1
+                try? await Task.sleep(nanoseconds: UInt64(400_000_000) << UInt64(n))
+                guard self.token == tk, !Task.isCancelled else { return }
+                self.inFlight.remove(p)
+                self.load(page: p)
+                return
+            }
             self.inFlight.remove(p)
-            guard let result else { return }
+            self.retries[p] = nil
             self.pages.insert(result.rows, for: p)
             self.onPageLoaded?(p)
         }
