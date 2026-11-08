@@ -28,10 +28,10 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
 
         var errorDescription: String? {
             switch self {
-            case .coreNotLinked: "此构建未包含代理核心（libmihomo）。"
-            case .configMissing: "没有可用的配置，请先添加订阅。"
-            case .tunUnavailable: "无法获取虚拟网卡。"
-            case .coreFailed(let message): "代理核心启动失败：\(message)"
+            case .coreNotLinked: String(localized: "此构建未包含代理核心（libmihomo）。")
+            case .configMissing: String(localized: "没有可用的配置，请先添加订阅。")
+            case .tunUnavailable: String(localized: "无法获取虚拟网卡。")
+            case .coreFailed(let message): String(localized: "代理核心启动失败：\(message)")
             }
         }
 

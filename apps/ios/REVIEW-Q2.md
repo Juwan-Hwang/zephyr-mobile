@@ -13,6 +13,8 @@
 
 - 2026-11-09 PR agent/ios/review-q2d：[已修] X-P1-9 余项（`ZL` 本地化入口：ZFormat/HFormat、模型层与页面里返回 String 的文案、Widgets/Shared 的三目与可访问性文案全部走目录并补英文；`ZL.bundle` 默认 nil 使单测保持中文，App/Widgets 启动时设为 .main）、X-P1-5 余项（场景检测结果按“结果保留”过期后，回前台/后台刷新时经 VPN 自动重测，“仅 Wi‑Fi 测速”以 NWPath 判断，SceneRetestPlanner 单测）、X-P1-10（增强对比度：`ZColor.t2/t3` 加深次级/三级文字，全部引用已迁移；正常对比度下浅色 t3 偏淡属 tokens，已在 #1 请 A 上调）；P2：updateAll 只重载隧道一次且全部失败时报错、importFile 后台读取、删除与 localhost 矛盾的 NSLocalNetworkUsageDescription、时钟遵循 12/24 小时设置。新增 TextTests / LocalizationTests / SceneRetestPlannerTests。
 
+- 2026-11-09 PR agent/ios/review-q2e：[已修] X-P1-3 流量流（AppModel 与 SharedStatePublisher 共用一次 1 Hz 轮询，`SharedBroadcast`，有单测；场景/设置流仍各自订阅）、AppShortcuts.xcstrings（Siri 短语英文）、PacketTunnel 错误文案本地化（PacketTunnel/Localizable.xcstrings）、X-P1-8 部分（AppModelTests：流落地/连接断开/模式/导航/指令层/深链确认）；Q1 H-P2-21（外部 zephyr://connect|disconnect|mode 先弹确认，导航类不确认，DeepLinkPolicy 接入 AppModel.open(source:)）、H-P2-22（Intent 不再误用残留 lastError）、H-P2-19（recentTraffic 离主线程）、L-P2-8（节点页请求失败退避重试）、D-P2-3（SceneSheet 标题 verbatim）、DarwinObservation 回调竞态（弱引用上下文令牌）。核对确认已在先前批次完成：L-P2-3、L-P2-10、H-P2-13、W-P2-5、W-P2-6、D-P2-4。
+
 ## P0
 
 - **Q2-X-P0-1 无隐私清单** [已修] — `App/` `PacketTunnel/` `Widgets/` 各加 `PrivacyInfo.xcprivacy`（UserDefaults CA92.1、文件时间戳 C617.1、磁盘空间 85F4.1、系统启动时间 35F9.1；不追踪、不收集）。随 target 资源打包。
@@ -45,7 +47,7 @@
 - ~~`NSLocalNetworkUsageDescription` 与只绑 localhost 矛盾~~ [已修]；缺 `ITSAppUsesNonExemptEncryption`（待用户决定）。
 - ~~代理凭据存 UserDefaults，应进 Keychain~~ [已修]
 - ~~CoreEngine queries/remapped 无限增长~~ [已修]；~~协议默认 no-op~~ [已修]。
-- DarwinObservation deinit 与回调竞态；CoreEngine `queries`/`remapped` 字典无限增长。
+- ~~DarwinObservation deinit 与回调竞态~~ [已修]；~~CoreEngine `queries`/`remapped` 字典无限增长~~ [已修]。
 - ~~`updateAll` 吞错误且重载隧道 N 次~~ [已修]；订阅导入无进度/取消；无日志/诊断 UI；~~`importFile` 主线程读文件~~ [已修]。
 - 协议扩展里 `setSceneSource`/`overrideHost` 默认静默 no-op（应改为必须实现或抛 unsupported）。
 - 原型“检测中 138/512”进度未显示；~~时钟格式忽略 12/24 小时~~ [已修]。
