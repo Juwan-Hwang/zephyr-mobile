@@ -26,8 +26,10 @@ final class SharedBroadcast<Element: Sendable>: @unchecked Sendable {
         if needsPump {
             generation += 1
             let mine = generation
+            // 同步创建上游流（保证“0→1 时恰好调用一次”在 subscribe 返回前已发生），再由任务消费。
+            let source = upstream()
             pump = Task { [weak self] in
-                for await value in upstream() {
+                for await value in source {
                     guard let self else { return }
                     self.emit(value)
                 }
