@@ -48,20 +48,20 @@ extension CoreEngine {
         await t.currentStatus() == .connected
     }
 
-    /// 已连接：写新配置并热重载。正在连接（含 reasserting）：扩展可能已在启动早期读走旧配置，
+    /// 配置变了：总是把新配置写到 App Group（断开时也写——控制中心 / 小组件的连接开关由扩展进程直接启动隧道，
+    /// 读到的必须是最新配置，REVIEW-Q2 X-P1-6）。已连接：写完让扩展热重载。正在连接（含 reasserting）：扩展可能已在启动早期读走旧配置，
     /// 而连接中 provider message 发不出去，所以先写配置，等连上后再补一次重载（`afterConnect`）。
     func reloadTunnelIfRunning(_ t: any TunnelPort) async {
         let st = await t.currentStatus()
-        guard st == .connected || st == .connecting else { return }
         do {
             try await writeTunnelConfig(to: t.configURL, controllerSocket: t.controllerSocketPath)
         } catch {
             return   // 写失败：扩展保持旧配置继续工作，核心里的改动已落盘
         }
-        if st == .connected {
-            try? await t.reloadConfig()
-        } else {
-            afterConnect(t) { try? await t.reloadConfig() }
+        switch st {
+        case .connected: try? await t.reloadConfig()
+        case .connecting: afterConnect(t) { try? await t.reloadConfig() }
+        default: break
         }
     }
 

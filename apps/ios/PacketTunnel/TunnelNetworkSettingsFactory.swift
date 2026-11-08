@@ -1,5 +1,5 @@
 // TunnelNetworkSettingsFactory —— TunnelConfiguration → NEPacketTunnelNetworkSettings。
-// 默认路由全部进隧道（IPv4 必有、IPv6 可选），DNS 指向 mihomo 的劫持地址并匹配所有域名。
+// 默认路由全部进隧道（IPv4、IPv6 都进；IPv6 关闭时由 mihomo 丢弃，防泄露），DNS 指向 mihomo 的劫持地址并匹配所有域名。
 
 import Foundation
 import NetworkExtension
@@ -18,17 +18,17 @@ enum TunnelNetworkSettingsFactory {
         }
         settings.ipv4Settings = v4
 
-        if config.ipv6 {
-            let v6 = NEIPv6Settings(addresses: [config.ipv6Address],
-                                    networkPrefixLengths: [NSNumber(value: config.ipv6PrefixLength)])
-            v6.includedRoutes = [NEIPv6Route.default()]
-            if config.bypassLAN {
-                v6.excludedRoutes = TunnelConfiguration.lanIPv6.map {
-                    NEIPv6Route(destinationAddress: $0.address, networkPrefixLength: NSNumber(value: $0.prefix))
-                }
+        // IPv6 无论开关都声明默认路由进隧道：关闭时若不声明，字面 IPv6 地址的流量会绕过隧道走物理网卡，泄露真实 IP
+        //（REVIEW-Q2 X-P1-7）。关闭 IPv6 时 DNS 不返回 AAAA（fake-ip），mihomo 的 tun 丢弃这些包，应用回落 IPv4。
+        let v6 = NEIPv6Settings(addresses: [config.ipv6Address],
+                                networkPrefixLengths: [NSNumber(value: config.ipv6PrefixLength)])
+        v6.includedRoutes = [NEIPv6Route.default()]
+        if config.bypassLAN {
+            v6.excludedRoutes = TunnelConfiguration.lanIPv6.map {
+                NEIPv6Route(destinationAddress: $0.address, networkPrefixLength: NSNumber(value: $0.prefix))
             }
-            settings.ipv6Settings = v6
         }
+        settings.ipv6Settings = v6
 
         let dns = NEDNSSettings(servers: config.dnsServers)
         // 空字符串 = 匹配所有域名：所有 DNS 查询都交给隧道内的 mihomo（fake-ip）。

@@ -293,6 +293,8 @@ targets:
         group: PacketTunnel/MihomoBridge
       - path: PacketTunnel/MappedFile.swift
         group: PacketTunnel
+      - path: App/ImportRequest.swift
+        group: App
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.tests

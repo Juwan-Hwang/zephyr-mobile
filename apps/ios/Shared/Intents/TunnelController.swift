@@ -14,11 +14,24 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
     /// 与 project.yml 中 PacketTunnel 的 PRODUCT_BUNDLE_IDENTIFIER 一致。
     static let providerBundleIdentifier = "app.zephyr.mobile.PacketTunnel"
     static let localizedDescription = "Zephyr"
+    /// App 写、扩展读的 mihomo 配置（与 TunnelConfiguration.defaultConfigURL 一致）。
+    static var defaultConfigURL: URL { AppGroup.coreDirectory.appendingPathComponent("config.yaml") }
 
-    enum TunnelError: Error, Sendable {
+    enum TunnelError: Error, LocalizedError, Sendable {
         case permissionDenied
         case notConnected
         case badResponse
+        /// 还没有 mihomo 配置（App 里没添加过订阅）：扩展进程无法生成配置，需要先打开 App。
+        case configMissing
+
+        var errorDescription: String? {
+            switch self {
+            case .permissionDenied: String(localized: "没有 VPN 权限，请在 Zephyr 里允许添加 VPN 配置。")
+            case .notConnected: String(localized: "Zephyr 未连接。")
+            case .badResponse: String(localized: "代理扩展没有响应。")
+            case .configMissing: String(localized: "还没有可用的配置，请先打开 Zephyr 添加订阅。")
+            }
+        }
     }
 
     // MARK: ConnectionControlling
@@ -27,6 +40,12 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
         #if targetEnvironment(simulator)
         try PendingCommandChannel.post(.setConnected(on))
         #else
+        if on {
+            // 配置由 App 的 CoreEngine 在订阅 / 设置变更时写好；没有就明确提示，而不是启动后立刻失败。
+            guard let size = try? TunnelController.defaultConfigURL.resourceValues(forKeys: [.fileSizeKey]).fileSize, size > 0 else {
+                throw TunnelError.configMissing
+            }
+        }
         let manager = try await loadOrCreateManager()
         if on {
             if !manager.isEnabled {

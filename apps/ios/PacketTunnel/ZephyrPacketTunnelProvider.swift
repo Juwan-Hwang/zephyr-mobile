@@ -121,14 +121,21 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     override func sleep(completionHandler: @escaping () -> Void) {
-        // 睡眠期间跳过轮询与写盘，省电；核心本身保持连接。
-        //（不 suspend DispatchSource：suspend/resume 不配对或释放已挂起的源会直接崩溃。）
+        // 睡眠期间停掉 1 Hz 轮询（定时器唤醒会耗电，REVIEW-Q2 X-P1-7）；核心本身保持连接。
+        // 取消并在 wake 时重建，而不是 suspend：suspend/resume 不配对或释放已挂起的源会直接崩溃。
         setState { $0.asleep = true }
-        completionHandler()
+        queue.async { [weak self] in
+            self?.cancelTrafficTimer()
+            completionHandler()
+        }
     }
 
     override func wake() {
         setState { $0.asleep = false }
+        queue.async { [weak self] in
+            guard let self, self.bridge.isRunning, self.trafficTimer == nil else { return }
+            self.scheduleTrafficTimer()
+        }
     }
 
     // MARK: App 消息
@@ -199,11 +206,7 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
             l.tunnelStarted()
             self?.ledger = l
         }
-        let timer = DispatchSource.makeTimerSource(queue: queue)
-        timer.schedule(deadline: .now() + 1, repeating: 1, leeway: .milliseconds(250))
-        timer.setEventHandler { [weak self] in self?.tick() }
-        timer.resume()
-        trafficTimer = timer
+        queue.async { [weak self] in self?.scheduleTrafficTimer() }
 
         let pressure = DispatchSource.makeMemoryPressureSource(eventMask: [.warning, .critical], queue: queue)
         pressure.setEventHandler { [weak self] in
@@ -216,8 +219,24 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     private func stopMonitors() {
-        trafficTimer?.cancel(); trafficTimer = nil
+        queue.async { [weak self] in self?.cancelTrafficTimer() }
         memoryPressure?.cancel(); memoryPressure = nil
+    }
+
+    /// 只在 `queue` 上调用。
+    private func scheduleTrafficTimer() {
+        trafficTimer?.cancel()
+        let timer = DispatchSource.makeTimerSource(queue: queue)
+        timer.schedule(deadline: .now() + 1, repeating: 1, leeway: .milliseconds(250))
+        timer.setEventHandler { [weak self] in self?.tick() }
+        timer.resume()
+        trafficTimer = timer
+    }
+
+    /// 只在 `queue` 上调用。
+    private func cancelTrafficTimer() {
+        trafficTimer?.cancel()
+        trafficTimer = nil
     }
 
     private func tick() {

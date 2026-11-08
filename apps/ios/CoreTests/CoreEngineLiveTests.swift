@@ -121,6 +121,19 @@ final class CoreEngineLiveTests: XCTestCase {
         XCTAssertEqual(t.reloads, 1)
     }
 
+    /// REVIEW-Q2 X-P1-6：控制中心 / 小组件由扩展进程直接启动隧道，断开时的配置变更也要落盘，但不重载。
+    func testConfigChangeWhileDisconnectedWritesConfigWithoutReload() async throws {
+        let (e, t) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        XCTAssertEqual(t.reloads, 0)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: t.configURL.path), "断开时导入订阅也应写出配置")
+        try? FileManager.default.removeItem(at: t.configURL)
+        try await e.overrideHost(host: "corp.example.com", target: .direct, sceneId: nil, persistent: true)
+        let yaml = try String(contentsOf: t.configURL, encoding: .utf8)
+        XCTAssertTrue(yaml.contains("corp.example.com,DIRECT"), yaml)
+        XCTAssertEqual(t.reloads, 0, "未连接不重载")
+    }
+
     func testOverrideHostReloadsRunningTunnelAndLandsInConfig() async throws {
         let (e, t) = make()
         _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")

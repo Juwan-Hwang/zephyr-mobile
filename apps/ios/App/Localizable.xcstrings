@@ -397,6 +397,16 @@
         }
       }
     },
+    "Zephyr 未连接。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zephyr isn’t connected."
+          }
+        }
+      }
+    },
     "iPhone 看不到是哪个 App 发起的，只能显示域名。" : {
       "localizations" : {
         "en" : {
@@ -635,6 +645,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import from Computer"
+          }
+        }
+      }
+    },
+    "代理扩展没有响应。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The proxy extension isn’t responding."
           }
         }
       }
@@ -1251,6 +1271,16 @@
         }
       }
     },
+    "域名，例如 example.com" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain, e.g. example.com"
+          }
+        }
+      }
+    },
     "处理中" : {
       "localizations" : {
         "en" : {
@@ -1357,6 +1387,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import Failed"
+          }
+        }
+      }
+    },
+    "导入订阅？" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import subscription?"
           }
         }
       }
@@ -2275,6 +2315,16 @@
         }
       }
     },
+    "来源：%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Source: %@"
+          }
+        }
+      }
+    },
     "来自 %@" : {
       "localizations" : {
         "en" : {
@@ -2539,6 +2589,16 @@
         }
       }
     },
+    "此链接未加密（http），内容可能被窃听或篡改。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This link isn’t encrypted (http); its contents could be read or altered."
+          }
+        }
+      }
+    },
     "每 %lld 小时" : {
       "localizations" : {
         "en" : {
@@ -2587,6 +2647,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Daily (Wi‑Fi Only)"
+          }
+        }
+      }
+    },
+    "没有 VPN 权限，请在 Zephyr 里允许添加 VPN 配置。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VPN permission is missing. Allow the VPN configuration in Zephyr."
           }
         }
       }
@@ -2706,7 +2776,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add Override"
+            "value" : "Add override"
           }
         }
       }
@@ -3091,6 +3161,16 @@
         }
       }
     },
+    "覆写位于第 1 层，在订阅规则之上，订阅更新时保持不变。按域名生效，包含子域名。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overrides sit on layer 1, above subscription rules, and stay put when subscriptions update. They match by domain, including subdomains."
+          }
+        }
+      }
+    },
     "覆写位于第 1 层，在订阅规则之上，订阅更新时保持不变。此版本暂不支持在手机上保存覆写，可在电脑上的 Zephyr 中添加，同步后生效。" : {
       "localizations" : {
         "en" : {
@@ -3251,6 +3331,16 @@
         }
       }
     },
+    "请确认这个链接来自你信任的服务商。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only continue if you trust this provider."
+          }
+        }
+      }
+    },
     "请粘贴订阅链接" : {
       "localizations" : {
         "en" : {
@@ -3276,7 +3366,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enter a domain or IP address"
+            "value" : "Enter a domain or IP"
           }
         }
       }
@@ -3397,6 +3487,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Back to Recent"
+          }
+        }
+      }
+    },
+    "还没有可用的配置，请先打开 Zephyr 添加订阅。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No configuration yet. Open Zephyr and add a subscription first."
           }
         }
       }
