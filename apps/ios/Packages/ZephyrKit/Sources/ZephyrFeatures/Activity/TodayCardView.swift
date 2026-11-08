@@ -102,7 +102,7 @@ struct TodayCardView: View {
     private var saveTitle: LocalizedStringKey { saveState == .saved ? "已存储" : "存储图像" }
 
     private var footnote: String {
-        saveState == .failed ? "无法存储。请在“设置”中允许 Zephyr 添加照片。" : "图案由今天的流量生成，不含节点名称与 IP 地址。"
+        ZL.tr(saveState == .failed ? "无法存储。请在“设置”中允许 Zephyr 添加照片。" : "图案由今天的流量生成，不含节点名称与 IP 地址。")
     }
 
     // MARK: 导出

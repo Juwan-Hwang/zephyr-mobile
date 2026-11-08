@@ -106,15 +106,15 @@ final class NodesModel {
     /// “来自 214 个订阅 · 15 个地区”
     var subtitle: String? {
         guard let index else { return nil }
-        let subs = subscriptionCount.map { "来自 \($0) 个订阅 · " } ?? ""
-        return "\(subs)\(index.sections.count) 个地区"
+        let subs = subscriptionCount.map { ZL.f("来自 %lld 个订阅 · ", Int64($0)) } ?? ""
+        return subs + ZL.f("%lld 个地区", Int64(index.sections.count))
     }
 
     /// 搜索框右侧：“220,412 个 · 0.70 ms”（原型：< 1ms 两位小数，否则一位）。
     var queryInfo: String? {
         guard let r = result, !query.trimmingCharacters(in: .whitespaces).isEmpty else { return nil }
         let ms = Double(r.tookMicros) / 1000
-        return "\(ZFormat.count(r.total)) 个 · \(String(format: ms < 1 ? "%.2f" : "%.1f", ms)) ms"
+        return ZL.s("%@ 个 · %@ ms", ZFormat.count(r.total), String(format: ms < 1 ? "%.2f" : "%.1f", ms))
     }
 
     /// 地区 chips：全部 + 前 8 个地区（原型 RG.slice(0,8)）。

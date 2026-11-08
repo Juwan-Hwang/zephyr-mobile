@@ -17,7 +17,7 @@ struct PageError: Identifiable, Equatable {
         self.id = UUID()
         self.message = message
         self.retry = retry
-        self.retryTitle = retry == nil ? nil : (retryTitle ?? "重试")
+        self.retryTitle = retry == nil ? nil : (retryTitle ?? ZL.tr("重试"))
     }
 
     /// 由引擎错误生成；取消（CancellationError / .cancelled）返回 nil，不打扰用户。

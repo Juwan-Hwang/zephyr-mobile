@@ -11,8 +11,8 @@ struct RecentHostRow: View {
     let sceneName: String?
 
     private var subtitle: String {
-        guard !item.isDirect, let sceneName else { return "直连" }
-        return "\(sceneName)，\(item.node)"
+        guard !item.isDirect, let sceneName else { return ZL.tr("直连") }
+        return ZL.s("%@，%@", sceneName, item.node)
     }
 
     var body: some View {

@@ -66,7 +66,7 @@ struct LocalProxyView: View {
 
     private var invalid: String? {
         guard !portText.isEmpty, parsed == nil else { return nil }
-        return "请输入 \(Self.validPorts.lowerBound)–\(Self.validPorts.upperBound) 之间的端口"
+        return ZL.f("请输入 %d–%d 之间的端口", Self.validPorts.lowerBound, Self.validPorts.upperBound)
     }
 
     private func save() {

@@ -15,7 +15,7 @@ struct ZephyrConnectionControl: ControlWidget {
     var body: some ControlWidgetConfiguration {
         StaticControlConfiguration(kind: Self.kind, provider: Provider()) { value in
             ControlWidgetToggle("Zephyr", isOn: value.isOn, action: ConnectIntent()) { on in
-                Label(on ? "已连接" : "未连接", systemImage: on ? "bolt.horizontal.circle.fill" : "bolt.horizontal.circle")
+                Label(on ? LocalizedStringKey("已连接") : LocalizedStringKey("未连接"), systemImage: on ? "bolt.horizontal.circle.fill" : "bolt.horizontal.circle")
             }
             .tint(WidgetStyle.accent(value.accent))
         }

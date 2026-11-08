@@ -26,7 +26,7 @@ struct IslandCompactTrailing: View {
             .fontDesign(.monospaced)
             .foregroundStyle(ZTokens.Colors.screenT1)
             .contentTransition(.numericText())
-            .accessibilityLabel(isStale ? "速率已暂停更新" : "下行 \(ZFormat.rateString(state.downBps))")
+            .accessibilityLabel(isStale ? String(localized: "速率已暂停更新") : String(localized: "下行 \(ZFormat.rateString(state.downBps))"))
     }
 }
 

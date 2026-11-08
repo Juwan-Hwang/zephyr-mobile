@@ -6,6 +6,7 @@
 import SwiftUI
 import UIKit
 import ZephyrDesign
+import ZephyrKit
 
 @MainActor
 struct NodeListStyle {
@@ -104,7 +105,7 @@ struct NodeListStyle {
         switch state {
         case .none: return ("—", textQuaternary)
         case .testing: return ("···", textQuaternary)
-        case .value(let ms) where ms < 0: return ("超时", danger)
+        case .value(let ms) where ms < 0: return (ZL.tr("超时"), danger)
         case .value(let ms): return ("\(ms) ms", ms >= ZTokens.LatencyThreshold.slow ? warning : textSecondary)
         }
     }

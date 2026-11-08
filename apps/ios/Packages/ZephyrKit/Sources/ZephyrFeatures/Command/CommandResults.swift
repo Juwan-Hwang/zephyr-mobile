@@ -14,11 +14,11 @@ struct CommandResults: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             if model.input.trimmingCharacters(in: .whitespaces).isEmpty {
-                label("建议")
+                label(ZL.tr("建议"))
                 suggestionList(model.suggestions)
             } else {
                 if !model.parse.isEmpty {
-                    label("指令")
+                    label(ZL.tr("指令"))
                     TokenChips(tokens: model.parse.tokens)
                 }
                 if let p = model.preview {
@@ -28,7 +28,7 @@ struct CommandResults: View {
                 }
                 let rest = model.suggestions.filter { $0 != model.preview?.suggestion }
                 if !rest.isEmpty {
-                    label(model.preview == nil && model.parse.isEmpty ? "结果" : "更多")
+                    label(ZL.tr(model.preview == nil && model.parse.isEmpty ? "结果" : "更多"))
                     suggestionList(rest)
                 } else if model.preview == nil {
                     Text("无结果")
@@ -82,7 +82,7 @@ private struct TokenChips: View {
     private var chips: some View {
         ForEach(tokens, id: \.self) { t in
             VStack(alignment: .leading, spacing: ZTokens.Space.n1 / 2) {
-                Text(verbatim: t.kind.rawValue).zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
+                Text(verbatim: ZL.tr(t.kind.rawValue)).zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
                 Text(verbatim: t.value).zType(.body).foregroundStyle(ZTokens.Colors.screenT1)
             }
             .padding(.horizontal, ZTokens.Space.n4)

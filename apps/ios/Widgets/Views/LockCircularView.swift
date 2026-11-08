@@ -29,7 +29,7 @@ struct LockCircularView: View {
             }
         }
         .gaugeStyle(.accessoryCircular)
-        .accessibilityLabel(on ? "Zephyr 下行 \(ZFormat.rateString(state.rate.downBps))" : "Zephyr 未连接")
+        .accessibilityLabel(on ? String(localized: "Zephyr 下行 \(ZFormat.rateString(state.rate.downBps))") : String(localized: "Zephyr 未连接"))
     }
 }
 

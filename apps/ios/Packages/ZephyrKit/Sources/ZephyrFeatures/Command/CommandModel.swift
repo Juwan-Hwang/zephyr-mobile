@@ -99,7 +99,7 @@ final class CommandModel {
         defer { isApplying = false }
         if let sid = p.sceneId, let scene = app.scene(id: sid) {
             await app.applySceneChange(sceneId: sid, from: scene.selected, to: node)
-            if let who = parse.serviceName { app.toast?.message = "\(who) 现使用\(node.name)" }
+            if let who = parse.serviceName { app.toast?.message = ZL.s("%@ 现使用%@", who, node.name) }
         } else {
             await app.setGlobalNode(node)
         }

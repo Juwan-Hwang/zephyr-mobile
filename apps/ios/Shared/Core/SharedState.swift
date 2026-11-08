@@ -30,11 +30,11 @@ struct SharedState: Codable, Sendable, Hashable {
         var isOn: Bool { self == .connected || self == .connecting }
         var title: String {
             switch self {
-            case .disconnected: "未连接"
-            case .connecting: "正在连接"
-            case .connected: "已连接"
-            case .disconnecting: "正在断开"
-            case .failed: "连接失败"
+            case .disconnected: String(localized: "未连接")
+            case .connecting: String(localized: "正在连接")
+            case .connected: String(localized: "已连接")
+            case .disconnecting: String(localized: "正在断开")
+            case .failed: String(localized: "连接失败")
             }
         }
     }
@@ -43,9 +43,9 @@ struct SharedState: Codable, Sendable, Hashable {
         case rule, global, direct
         var title: String {
             switch self {
-            case .rule: "规则"
-            case .global: "全局"
-            case .direct: "直连"
+            case .rule: String(localized: "规则")
+            case .global: String(localized: "全局")
+            case .direct: String(localized: "直连")
             }
         }
     }

@@ -57,7 +57,7 @@ public enum ZFormat {
     /// 延迟："38 ms"；nil → "—"；-1 → "超时"。
     public static func latency(_ ms: Int32?) -> String {
         guard let ms else { return "—" }
-        return ms < 0 ? "超时" : "\(ms) ms"
+        return ms < 0 ? ZL.tr("超时") : "\(ms) ms"
     }
 
     // MARK: 时间
@@ -72,36 +72,51 @@ public enum ZFormat {
     /// 时间戳（毫秒）相对 now → "刚刚" / "5 分钟前" / "2 小时前" / "3 天前" / "2 小时后" / "26 天后"。
     public static func relative(_ at: Int64, now: Int64 = nowMillis()) -> String {
         let d = now - at
-        let a = d.magnitude
-        let suffix = d >= 0 ? "前" : "后"
-        if a < 60_000 { return d >= 0 ? "刚刚" : "即将" }
-        if a < 3_600_000 { return "\(a / 60_000) 分钟\(suffix)" }
-        if a < 86_400_000 { return "\(a / 3_600_000) 小时\(suffix)" }
-        return "\(a / 86_400_000) 天\(suffix)"
+        let a = Int64(d.magnitude)
+        let past = d >= 0
+        if a < 60_000 { return ZL.tr(past ? "刚刚" : "即将") }
+        if a < 3_600_000 { return ZL.f(past ? "%lld 分钟前" : "%lld 分钟后", a / 60_000) }
+        if a < 86_400_000 { return ZL.f(past ? "%lld 小时前" : "%lld 小时后", a / 3_600_000) }
+        return ZL.f(past ? "%lld 天前" : "%lld 天后", a / 86_400_000)
     }
 
     /// 到期文案：≥ 7 天 → "26 天后到期"；1–6 天 → "11月9日到期"；当天 → "今天到期"；已过 → "已到期"。
     public static func expiry(_ at: Int64, now: Int64 = nowMillis(), timeZone: TimeZone = .current) -> String {
-        if at <= now { return "已到期" }
+        if at <= now { return ZL.tr("已到期") }
         let days = dayIndex(at, timeZone) - dayIndex(now, timeZone)
-        if days <= 0 { return "今天到期" }
-        if days < 7 { return "\(monthDay(at, timeZone: timeZone))到期" }
-        return "\(days) 天后到期"
+        if days <= 0 { return ZL.tr("今天到期") }
+        if days < 7 { return ZL.s("%@到期", monthDay(at, timeZone: timeZone)) }
+        return ZL.f("%lld 天后到期", days)
     }
 
-    /// "11月9日"
+    /// "11月9日"（英文："Nov 9"）
     public static func monthDay(_ at: Int64, timeZone: TimeZone = .current) -> String {
         var cal = Calendar(identifier: .gregorian); cal.timeZone = timeZone
-        let c = cal.dateComponents([.month, .day], from: Date(timeIntervalSince1970: Double(at) / 1000))
-        return "\(c.month ?? 0)月\(c.day ?? 0)日"
+        let date = Date(timeIntervalSince1970: Double(at) / 1000)
+        let c = cal.dateComponents([.month, .day], from: date)
+        let key = "%lld月%lld日"
+        let format = ZL.tr(key)
+        if format == key { return "\(c.month ?? 0)月\(c.day ?? 0)日" }          // 未翻译（中文）
+        return String(format: format, Int64(c.month ?? 0), Int64(c.day ?? 0))
     }
 
     /// "11月6日 · 星期五"
     public static func dayTitle(_ at: Int64, timeZone: TimeZone = .current) -> String {
         var cal = Calendar(identifier: .gregorian); cal.timeZone = timeZone
         let wd = cal.component(.weekday, from: Date(timeIntervalSince1970: Double(at) / 1000))
+        return "\(monthDay(at, timeZone: timeZone)) · \(weekdayName(wd))"
+    }
+
+    /// 1 = 周日。"周五" / "Fri"。
+    public static func shortWeekdayName(_ weekday: Int) -> String {
+        let names = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"]
+        return ZL.tr(names[(weekday - 1 + 7) % 7])
+    }
+
+    /// 1 = 周日。"星期五" / "Friday"。
+    public static func weekdayName(_ weekday: Int) -> String {
         let names = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
-        return "\(monthDay(at, timeZone: timeZone)) · \(names[(wd - 1 + 7) % 7])"
+        return ZL.tr(names[(weekday - 1 + 7) % 7])
     }
 
     /// "9:41"

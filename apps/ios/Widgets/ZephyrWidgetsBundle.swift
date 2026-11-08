@@ -2,9 +2,14 @@
 
 import SwiftUI
 import WidgetKit
+import ZephyrKit
 
 @main
 struct ZephyrWidgetsBundle: WidgetBundle {
+    init() {
+        ZL.bundle = .main   // ZFormat 等返回 String 的文案按系统语言查 Localizable.xcstrings
+    }
+
     var body: some Widget {
         StatusWidget()
         UsageWidget()

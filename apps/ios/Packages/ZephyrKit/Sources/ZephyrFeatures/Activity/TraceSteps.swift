@@ -37,37 +37,37 @@ enum TraceSteps {
         var steps = [ruleStep(trace, layers: layers)]
         let policy = trace.policy.uppercased()
         if policy == reject {
-            steps.append(TraceStep(label: "结果", value: "已拦截", detail: "请求在本机被丢弃，不会发出", marker: .danger))
+            steps.append(TraceStep(label: ZL.tr("结果"), value: ZL.tr("已拦截"), detail: ZL.tr("请求在本机被丢弃，不会发出"), marker: .danger))
             return steps
         }
         if policy == direct {
-            steps.append(TraceStep(label: "出口", value: "直连", detail: "不经过代理，使用本机网络", marker: .success))
+            steps.append(TraceStep(label: ZL.tr("出口"), value: ZL.tr("直连"), detail: ZL.tr("不经过代理，使用本机网络"), marker: .success))
             return steps
         }
         guard let scene = trace.scene ?? scenes.first(where: { $0.id == trace.policy }) else {
             // 策略组 / 未知策略：只显示策略名。
-            steps.append(TraceStep(label: "策略", value: trace.policy, marker: .success))
+            steps.append(TraceStep(label: ZL.tr("策略"), value: trace.policy, marker: .success))
             return steps
         }
-        steps.append(TraceStep(label: "场景", value: scene.name, detail: sourceText(scene.source)))
+        steps.append(TraceStep(label: ZL.tr("场景"), value: scene.name, detail: sourceText(scene.source)))
 
         let (node, exception) = resolveNode(scene: scene, latest: latest)
         var nodeDetail: String?
         if let exception {
-            nodeDetail = "\(exception.app) 例外 · 固定"
+            nodeDetail = ZL.s("%@ 例外 · 固定", exception.app)
         } else if let node {
             nodeDetail = [node.latencyMs.map { ZFormat.latency($0) }, node.tag, node.protocol.isEmpty ? nil : node.protocol]
                 .compactMap { $0 }.joined(separator: " · ")
         }
         let nodeName = node?.name ?? latest?.node ?? scene.selected.name
-        steps.append(TraceStep(label: "节点", value: nodeName, detail: nodeDetail?.isEmpty == true ? nil : nodeDetail,
+        steps.append(TraceStep(label: ZL.tr("节点"), value: nodeName, detail: nodeDetail?.isEmpty == true ? nil : nodeDetail,
                                regionCode: node?.region))
 
         let ip = exception == nil ? (trace.exitIp ?? scene.exitIp) : nil
         var exitDetail: [String] = []
         if let r = node?.region { exitDetail.append(HRegionName.name(r)) }
-        if exception == nil, let t = scene.testedAt { exitDetail.append("\(ZFormat.relative(t, now: now))检测") }
-        steps.append(TraceStep(label: "出口", value: ip ?? "未检测", detail: exitDetail.isEmpty ? nil : exitDetail.joined(separator: " · "),
+        if exception == nil, let t = scene.testedAt { exitDetail.append(ZL.s("%@检测", ZFormat.relative(t, now: now))) }
+        steps.append(TraceStep(label: ZL.tr("出口"), value: ip ?? ZL.tr("未检测"), detail: exitDetail.isEmpty ? nil : exitDetail.joined(separator: " · "),
                                monospaced: ip != nil, marker: .success))
         return steps
     }
@@ -81,21 +81,21 @@ enum TraceSteps {
 
     static func sourceText(_ s: SceneSource) -> String {
         switch s {
-        case .auto: "Zephyr 优选"
-        case .manual: "手动选择"
-        case .subscriptionGroup: "订阅分组"
+        case .auto: ZL.tr("Zephyr 优选")
+        case .manual: ZL.tr("手动选择")
+        case .subscriptionGroup: ZL.tr("订阅分组")
         }
     }
 
     private static func ruleStep(_ t: RuleTrace, layers: [RuleLayer]) -> TraceStep {
         let detail: String
         if let i = t.layerIndex {
-            let name = layers.first { $0.index == i }?.name ?? "第 \(i) 层"
-            detail = "来自 \(name)"
+            let name = layers.first { $0.index == i }?.name ?? ZL.f("第 %lld 层", Int64(i))
+            detail = ZL.s("来自 %@", name)
         } else {
-            detail = "其余流量"
+            detail = ZL.tr("其余流量")
         }
-        return TraceStep(label: "规则", value: ruleText(t.rule), detail: detail, monospaced: true)
+        return TraceStep(label: ZL.tr("规则"), value: ruleText(t.rule), detail: detail, monospaced: true)
     }
 
     /// 实际节点：最近连接的节点名若命中场景例外 → 例外节点；命中当前节点 → 当前节点；否则只有名字。

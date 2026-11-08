@@ -66,14 +66,14 @@ public struct SettingsView: View {
             ZSettingsRow("按需连接", isOn: store.binding(\.onDemand, fallback: false))
             ZDivider()
             NavigationLink { TrustedWifiView(store: store) } label: {
-                ZSettingsRow("受信任的 Wi‑Fi", subtitle: "连接后自动断开",
+                ZSettingsRow("受信任的 Wi‑Fi", subtitle: ZL.tr("连接后自动断开"),
                              accessory: .valueChevron(store.settings.map(LibraryModel.trustedWifiText) ?? "—"))
             }
             .buttonStyle(ZRowButtonStyle())
             ZDivider()
             NavigationLink { LocalProxyView(store: store) } label: {
                 ZSettingsRow("本地代理端口", subtitle: localProxySubtitle,
-                             accessory: .valueChevron(store.settings.map { $0.localProxyEnabled ? "开" : "关" } ?? "—"))
+                             accessory: .valueChevron(store.settings.map { $0.localProxyEnabled ? ZL.tr("开") : ZL.tr("关") } ?? "—"))
             }
             .buttonStyle(ZRowButtonStyle())
         }
@@ -82,7 +82,7 @@ public struct SettingsView: View {
     /// “127.0.0.1:7890 · 需要密码”；行值为开关状态“开 / 关”（原型 settings.png）。
     private var localProxySubtitle: String? {
         guard let s = store.settings else { return nil }
-        return "127.0.0.1:\(s.localProxyPort) · \(s.localProxyAuth ? "需要密码" : "无需密码")"
+        return "127.0.0.1:\(s.localProxyPort) · \(s.localProxyAuth ? ZL.tr("需要密码") : ZL.tr("无需密码"))"
     }
 
     // MARK: 检测
@@ -97,7 +97,7 @@ public struct SettingsView: View {
     }
 
     static let defaultTtl: Int32 = 24
-    static let ttlOptions: [MenuOption<Int32>] = [6, 12, 24, 72].map { MenuOption(value: Int32($0), title: "\($0) 小时") }
+    static let ttlOptions: [MenuOption<Int32>] = [6, 12, 24, 72].map { MenuOption(value: Int32($0), title: ZL.f("%lld 小时", Int64($0))) }
 
     // MARK: 外观
 
@@ -139,9 +139,9 @@ public struct SettingsView: View {
     }
 
     static let appearanceOptions: [MenuOption<Appearance>] = [
-        MenuOption(value: .system, title: "跟随系统"),
-        MenuOption(value: .dark, title: "深色"),
-        MenuOption(value: .light, title: "浅色"),
+        MenuOption(value: .system, title: ZL.tr("跟随系统")),
+        MenuOption(value: .dark, title: ZL.tr("深色")),
+        MenuOption(value: .light, title: ZL.tr("浅色")),
     ]
 
     // MARK: 隐私
@@ -149,7 +149,7 @@ public struct SettingsView: View {
     /// 原型为“共享诊断数据”；契约暂无 shareDiagnostics 字段（NOTES-L），先放“分享今日卡片时附带图案”。
     private var privacy: some View {
         ZSettingsGroup("隐私") {
-            ZSettingsRow("分享今日卡片时附带图案", subtitle: "图案由今天的流量生成，不含节点名称与 IP",
+            ZSettingsRow("分享今日卡片时附带图案", subtitle: ZL.tr("图案由今天的流量生成，不含节点名称与 IP"),
                          isOn: store.binding(\.shareAnonymousPattern, fallback: false))
         }
     }

@@ -125,8 +125,8 @@ struct TraceView: View {
     // MARK: 逻辑
 
     private var lede: String {
-        guard let r = recent else { return "暂无活动连接" }
-        return "\(ZFormat.relative(r.lastSeenAt, now: model.now())) · \(r.connections) 个连接 · \(ZFormat.bytes(r.totalBytes))"
+        guard let r = recent else { return ZL.tr("暂无活动连接") }
+        return ZL.f("%1$@ · %2$lld 个连接 · %3$@", ZFormat.relative(r.lastSeenAt, now: model.now()) as NSString, Int64(r.connections), ZFormat.bytes(r.totalBytes) as NSString)
     }
 
     private func marker(_ m: TraceStep.Marker) -> ZChainMarker {

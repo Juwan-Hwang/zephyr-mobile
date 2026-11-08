@@ -15,8 +15,7 @@ enum HFormat {
         let days = cal.dateComponents([.day], from: b, to: a).day ?? 0
         guard days >= 1, days < 7 else { return ZFormat.expiry(at, now: now, timeZone: timeZone) }
         let wd = cal.component(.weekday, from: a)          // 1 = 周日
-        return "\(weekdayNames[(wd - 1 + 7) % 7])到期"
+        return ZL.s("%@到期", ZFormat.shortWeekdayName(wd))
     }
 
-    static let weekdayNames = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"]
 }

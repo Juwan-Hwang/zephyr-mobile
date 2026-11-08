@@ -55,7 +55,7 @@ struct RateBlock: View {
                     .foregroundStyle(ZTokens.Colors.screenT1)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
-                Text(state.connection.status == .failed ? "轻点查看原因" : "轻点电源连接")
+                Text(state.connection.status == .failed ? LocalizedStringKey("轻点查看原因") : LocalizedStringKey("轻点电源连接"))
                     .zType(.footnote)
                     .foregroundStyle(state.connection.status == .failed ? ZTokens.Colors.screenAmber : ZTokens.Colors.screenT2)
                     .lineLimit(1)

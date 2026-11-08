@@ -61,11 +61,11 @@ struct SubscriptionDiffCard: View {
     private var status: String {
         var parts: [String] = []
         if isPreview {
-            parts.append(diff.overridesKept ? "覆写将保留" : "部分覆写将失效")
-            if diff.scenesRetested { parts.append("场景池将重新检测") }
+            parts.append(ZL.tr(diff.overridesKept ? "覆写将保留" : "部分覆写将失效"))
+            if diff.scenesRetested { parts.append(ZL.tr("场景池将重新检测")) }
         } else {
-            parts.append(diff.overridesKept ? "覆写已保留" : "部分覆写已失效")
-            if diff.scenesRetested { parts.append("场景池已重新检测") }
+            parts.append(ZL.tr(diff.overridesKept ? "覆写已保留" : "部分覆写已失效"))
+            if diff.scenesRetested { parts.append(ZL.tr("场景池已重新检测")) }
         }
         return parts.joined(separator: " · ")
     }

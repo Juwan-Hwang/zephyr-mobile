@@ -5,6 +5,7 @@
 
 import SwiftUI
 import ZephyrFeatures
+import ZephyrKit
 
 @main
 @MainActor
@@ -12,6 +13,7 @@ struct ZephyrApp: App {
     @State private var bootstrap = AppBootstrap()
 
     init() {
+        ZL.bundle = .main   // ZFormat 等返回 String 的文案按系统语言查 Localizable.xcstrings
         // BGTaskScheduler 要求在启动完成前注册。
         SubscriptionAutoUpdater.register()
     }

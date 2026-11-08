@@ -99,7 +99,7 @@ private struct CommandField: View {
                 .foregroundStyle(ZTokens.Colors.screenT3)
                 .accessibilityHidden(true)
             CommandTextField(text: $model.input, isFocused: $focused, marks: marks, tint: accent.color,
-                             placeholder: "搜索或输入指令", onSubmit: onSubmit)
+                             placeholder: ZL.tr("搜索或输入指令"), onSubmit: onSubmit)
                 .frame(maxWidth: .infinity)
                 .frame(height: height)
             Button(action: onCancel) {

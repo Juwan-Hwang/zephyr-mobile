@@ -26,13 +26,13 @@ struct QRScanSheet: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                Text(desktop ? "在电脑上的 Zephyr 打开“设置 › 同步到手机”，扫描显示的二维码。" : "将订阅二维码放入框内，即可自动识别。")
+                Text(desktop ? LocalizedStringKey("在电脑上的 Zephyr 打开“设置 › 同步到手机”，扫描显示的二维码。") : LocalizedStringKey("将订阅二维码放入框内，即可自动识别。"))
                     .zType(.footnote)
                     .foregroundStyle(.white.opacity(0.75))
                     .multilineTextAlignment(.center)
                     .padding(ZTokens.Space.n6)
             }
-            .navigationTitle(desktop ? "从电脑导入" : "扫描二维码")
+            .navigationTitle(desktop ? LocalizedStringKey("从电脑导入") : LocalizedStringKey("扫描二维码"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
@@ -56,7 +56,7 @@ struct QRScanSheet: View {
             Image(systemName: available ? "camera.fill" : "camera.metering.unknown")
                 .font(.largeTitle)
                 .foregroundStyle(.white.opacity(0.6))
-            Text(available ? "需要相机权限才能扫码" : "此设备没有可用的相机")
+            Text(available ? LocalizedStringKey("需要相机权限才能扫码") : LocalizedStringKey("此设备没有可用的相机"))
                 .zType(.headline)
                 .foregroundStyle(.white)
             if available && permission == .denied {

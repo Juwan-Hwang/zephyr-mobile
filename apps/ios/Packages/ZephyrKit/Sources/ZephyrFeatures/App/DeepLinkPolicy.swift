@@ -83,24 +83,24 @@ enum DeepLinkPolicy {
     static func prompt(for link: DeepLink, isOn: Bool) -> DeepLinkPrompt? {
         switch link {
         case .connect:
-            return DeepLinkPrompt(title: "连接 Zephyr？", message: "另一个 App 请求开启 Zephyr。", confirm: "连接", destructive: false)
+            return DeepLinkPrompt(title: ZL.tr("连接 Zephyr？"), message: ZL.tr("另一个 App 请求开启 Zephyr。"), confirm: ZL.tr("连接"), destructive: false)
         case .disconnect:
-            return DeepLinkPrompt(title: "断开 Zephyr？", message: "另一个 App 请求断开 Zephyr，断开后流量不再经过代理。",
-                                  confirm: "断开", destructive: true)
+            return DeepLinkPrompt(title: ZL.tr("断开 Zephyr？"), message: ZL.tr("另一个 App 请求断开 Zephyr，断开后流量不再经过代理。"),
+                                  confirm: ZL.tr("断开"), destructive: true)
         case .toggle:
             return prompt(for: isOn ? .disconnect : .connect, isOn: isOn)
         case .mode(let raw):
             guard let m = ProxyMode(rawValue: raw) else { return nil }
             let name = modeName(m)
-            return DeepLinkPrompt(title: "切换到\(name)模式？", message: "另一个 App 请求把代理模式改为“\(name)”。",
-                                  confirm: "切换", destructive: m == .direct)
+            return DeepLinkPrompt(title: ZL.s("切换到%@模式？", name), message: ZL.s("另一个 App 请求把代理模式改为“%@”。", name),
+                                  confirm: ZL.tr("切换"), destructive: m == .direct)
         case .home, .sheet, .command, .push:
             return nil
         }
     }
 
     static func modeName(_ m: ProxyMode) -> String {
-        switch m { case .rule: "规则"; case .global: "全局"; case .direct: "直连" }
+        switch m { case .rule: ZL.tr("规则"); case .global: ZL.tr("全局"); case .direct: ZL.tr("直连") }
     }
 
     /// 定长时间比较（长度不同直接 false；长度本身不是秘密）。

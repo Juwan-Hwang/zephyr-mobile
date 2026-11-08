@@ -35,7 +35,7 @@ struct SubscriptionsPresentations: ViewModifier {
         Binding(get: { isActive ? model.toast : nil }, set: { if isActive { model.toast = $0 } })
     }
 
-    private var deleteTitle: String { model.deleting.map { "删除“\($0.name)”？" } ?? "" }
+    private var deleteTitle: String { model.deleting.map { ZL.s("删除“%@”？", $0.name) } ?? "" }
 
     private var deletingBinding: Binding<Bool> {
         Binding(get: { isActive && model.deleting != nil }, set: { if !$0 { model.deleting = nil } })

@@ -6,6 +6,7 @@
 // 集中在此并注明出处；已在 NOTES-H.md 请 A 评估是否收进 tokens（art.today.*）。
 
 import SwiftUI
+import ZephyrKit
 
 enum TodayTheme: String, CaseIterable, Identifiable, Sendable {
     case night, dawn, mist
@@ -13,7 +14,7 @@ enum TodayTheme: String, CaseIterable, Identifiable, Sendable {
     var id: String { rawValue }
 
     var title: String {
-        switch self { case .night: "夜"; case .dawn: "晨"; case .mist: "雾" }
+        switch self { case .night: ZL.tr("夜"); case .dawn: ZL.tr("晨"); case .mist: ZL.tr("雾") }
     }
 
     /// 卡片底色（原型 `.card` background）。

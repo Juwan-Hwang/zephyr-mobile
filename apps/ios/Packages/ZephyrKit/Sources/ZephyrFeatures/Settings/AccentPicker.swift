@@ -41,10 +41,10 @@ struct AccentPicker: View {
 
     static func title(_ a: Accent) -> String {
         switch a {
-        case .blue: "蓝色"
-        case .green: "绿色"
-        case .orange: "橙色"
-        case .pink: "粉色"
+        case .blue: ZL.tr("蓝色")
+        case .green: ZL.tr("绿色")
+        case .orange: ZL.tr("橙色")
+        case .pink: ZL.tr("粉色")
         }
     }
 }

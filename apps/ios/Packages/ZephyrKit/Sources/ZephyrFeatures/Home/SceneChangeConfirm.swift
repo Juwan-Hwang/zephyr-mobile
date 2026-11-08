@@ -57,12 +57,12 @@ struct SceneChangeConfirm: View {
     private var title: String {
         let apps = change.exit?.affectedApps ?? []
         let who = apps.isEmpty ? sceneName : Self.join(apps)
-        return "更改 \(who) 的出口 IP？"
+        return ZL.s("更改 %@ 的出口 IP？", who)
     }
 
     private var keptText: String? {
         guard let kept = change.exit?.unchangedApps, !kept.isEmpty else { return nil }
-        return "\(Self.join(kept)) 保持不变。"
+        return ZL.s("%@ 保持不变。", Self.join(kept))
     }
 
     /// ["GPT","Gemini","Claude"] → "GPT、Gemini 和 Claude"
@@ -70,7 +70,7 @@ struct SceneChangeConfirm: View {
         switch xs.count {
         case 0: return ""
         case 1: return xs[0]
-        default: return xs.dropLast().joined(separator: "、") + " 和 " + xs[xs.count - 1]
+        default: return xs.dropLast().joined(separator: ZL.tr("、")) + ZL.tr(" 和 ") + xs[xs.count - 1]
         }
     }
 }
@@ -103,8 +103,8 @@ struct ExitIPLine: View {
     }
 
     private var a11y: String {
-        guard let c = change else { return "正在获取出口 IP" }
-        return "出口从 \(HRegionName.name(c.fromRegion)) \(c.fromIp ?? "") 变为 \(HRegionName.name(c.toRegion)) \(c.toIp ?? "")"
+        guard let c = change else { return ZL.tr("正在获取出口 IP") }
+        return ZL.s("出口从 %1$@ %2$@ 变为 %3$@ %4$@", HRegionName.name(c.fromRegion), c.fromIp ?? "", HRegionName.name(c.toRegion), c.toIp ?? "")
     }
 }
 

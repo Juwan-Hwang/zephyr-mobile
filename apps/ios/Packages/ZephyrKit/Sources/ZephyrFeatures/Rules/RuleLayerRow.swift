@@ -29,9 +29,9 @@ struct RuleLayerRow: View {
 
     static func title(_ k: LayerKind) -> String {
         switch k {
-        case .override: "覆写"
-        case .subscription: "订阅"
-        case .domain: "域名"
+        case .override: ZL.tr("覆写")
+        case .subscription: ZL.tr("订阅")
+        case .domain: ZL.tr("域名")
         case .ip: "IP"
         }
     }

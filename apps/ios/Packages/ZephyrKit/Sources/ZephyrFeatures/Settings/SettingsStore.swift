@@ -38,7 +38,7 @@ final class SettingsStore {
             return true
         } catch {
             if mine == generation { settings = old }
-            lastError = PageError.from(error, fallback: "无法保存设置")
+            lastError = PageError.from(error, fallback: ZL.tr("无法保存设置"))
             return false
         }
     }

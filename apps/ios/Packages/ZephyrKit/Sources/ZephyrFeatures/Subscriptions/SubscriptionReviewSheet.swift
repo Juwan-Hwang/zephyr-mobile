@@ -34,8 +34,8 @@ struct SubscriptionReviewSheet: View {
 
     private var title: String {
         switch review.target {
-        case .one(let s): "将更新 \(s.name)"
-        case .all(let n): "将更新全部 \(ZFormat.count(Int64(n))) 个订阅"
+        case .one(let s): ZL.s("将更新 %@", s.name)
+        case .all(let n): ZL.s("将更新全部 %@ 个订阅", ZFormat.count(Int64(n)))
         }
     }
 }

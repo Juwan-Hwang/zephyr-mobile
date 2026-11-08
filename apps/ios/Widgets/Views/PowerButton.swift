@@ -27,7 +27,7 @@ struct PowerButton: View {
         }
         .buttonStyle(.plain)
         .padding(-(touch - diameter) / 2)
-        .accessibilityLabel(isOn ? "断开 Zephyr" : "连接 Zephyr")
+        .accessibilityLabel(isOn ? String(localized: "断开 Zephyr") : String(localized: "连接 Zephyr"))
     }
 }
 
