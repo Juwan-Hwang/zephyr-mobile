@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 
 /** A virtual row: header of [section] or the [ordinal]-th matched node (0-based across sections). */
 sealed interface NodeRow {
@@ -33,6 +34,9 @@ data class NodesUi(
     val result: NodeQueryResult? = null,
     val total: Long = 0,
     val regionCount: Int = 0,
+    /** Region chips: the index's largest sections, top 8 by count (review L-P1-4). */
+    val chips: List<Pair<String, Long>> = emptyList(),
+    val subscriptionCount: Int = 0,
     val testedCount: Long = 0,
 )
 
@@ -58,7 +62,9 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
     init {
         viewModelScope.launch {
             val idx = engine.nodeIndex()
-            _ui.value = _ui.value.copy(total = idx.total, regionCount = idx.sections.size, testedCount = idx.testedCount)
+            val chips = idx.sections.filter { it.count > 0 }.sortedByDescending { it.count }.take(8).map { it.region to it.count }
+            val subs = runCatching { engine.subscriptions().first().size }.getOrDefault(0)
+            _ui.value = _ui.value.copy(total = idx.total, regionCount = idx.sections.size, testedCount = idx.testedCount, chips = chips, subscriptionCount = subs)
         }
         viewModelScope.launch {
             queryFlow.debounce(80).distinctUntilChanged().collect { q -> if (q != null) run(q) }

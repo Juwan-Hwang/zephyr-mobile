@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -48,16 +49,19 @@ import com.zephyr.design.components.ZText
 import com.zephyr.design.components.zPressable
 import com.zephyr.design.theme.ZAnim
 import com.zephyr.design.theme.ZTheme
+import com.zephyr.engine.NodeSummary
 import com.zephyr.engine.Scene
 import com.zephyr.engine.SceneKind
 import com.zephyr.engine.SceneSource
 
-/** Scenes card (prototype home): swipe a row to change its region, confirm inline, undo via toast. */
+/** Scenes card (prototype home): scrub a row across regions, confirm inline, undo via toast. */
 @Composable
 fun SceneCard(
     scenes: List<Scene>,
     pending: PendingChange?,
-    onSwipe: (Scene, Boolean) -> Unit,
+    slots: Map<String, List<NodeSummary>>,
+    onPick: (Scene, NodeSummary) -> Unit,
+    onPrefetch: (Scene) -> Unit,
     onConfirm: () -> Unit,
     onCancel: () -> Unit,
     onOpen: (Scene) -> Unit,
@@ -66,7 +70,12 @@ fun SceneCard(
     ZCard(Modifier.padding(horizontal = 16.dp)) {
         scenes.forEachIndexed { i, s ->
             if (i > 0 && (scenes[i - 1].kind != SceneKind.AI || pending?.scene?.id == scenes[i - 1].id)) ZDivider(inset = false)
-            SceneRow(s, onSwipe = { fwd -> hinted = true; onSwipe(s, fwd) }, onOpen = { onOpen(s) })
+            if (s.source != SceneSource.SUBSCRIPTION_GROUP) androidx.compose.runtime.LaunchedEffect(s.id, s.selected.id, s.source) { onPrefetch(s) }
+            SceneRow(
+                s, slots[s.id].orEmpty(), pendingNode = pending?.takeIf { it.scene.id == s.id }?.node,
+                onScrubStart = { hinted = true; if (pending != null) onCancel() },
+                onPick = { n -> onPick(s, n) }, onOpen = { onOpen(s) },
+            )
             if (s.kind == SceneKind.AI && !hinted && pending == null) {
                 ZText(
                     "左右滑动以切换地区",
@@ -85,29 +94,62 @@ fun SceneCard(
 }
 
 @Composable
-private fun SceneRow(s: Scene, onSwipe: (Boolean) -> Unit, onOpen: () -> Unit) {
+private fun SceneRow(
+    s: Scene,
+    slots: List<NodeSummary>,
+    pendingNode: NodeSummary?,
+    onScrubStart: () -> Unit,
+    onPick: (NodeSummary) -> Unit,
+    onOpen: () -> Unit,
+) {
     val c = ZTheme.colors
     val hf = LocalHapticFeedback.current
-    var acc by remember { mutableStateOf(0f) }
-    val swipeable = s.source != SceneSource.SUBSCRIPTION_GROUP
+    val swipeable = s.source != SceneSource.SUBSCRIPTION_GROUP && slots.size > 1
+    val current = slots.indexOfFirst { it.id == s.selected.id }.coerceAtLeast(0)
+    // Prototype scrub (978–988): every 42 dp crosses one slot, badge + node update live, tick + haptic per slot,
+    // clamped at both ends; release on another slot opens the inline confirm. Pending confirm keeps its node shown.
+    var scrubbing by remember { mutableStateOf(false) }
+    var idx by remember(s.id, s.selected.id) { mutableStateOf(current) }
+    var tick by remember { mutableStateOf(0) }
+    // `.cc.tick`: a 120 ms pop on every slot crossed.
+    val pop = remember { androidx.compose.animation.core.Animatable(1f) }
+    androidx.compose.runtime.LaunchedEffect(tick) {
+        if (tick > 0) { pop.snapTo(1.18f); pop.animateTo(1f, androidx.compose.animation.core.tween(120)) }
+    }
+    val shown = when {
+        scrubbing -> slots.getOrNull(idx) ?: s.selected
+        pendingNode != null -> pendingNode
+        else -> s.selected
+    }
+    val stepPx = with(androidx.compose.ui.platform.LocalDensity.current) { 42.dp.toPx() }
+    val latestSlots by androidx.compose.runtime.rememberUpdatedState(slots)
+    val latestCurrent by androidx.compose.runtime.rememberUpdatedState(current)
+    Box {
     Row(
         Modifier
             .fillMaxWidth()
             .then(
                 if (swipeable) Modifier.pointerInput(s.id) {
+                    var dx = 0f
                     detectHorizontalDragGestures(
+                        onDragStart = { dx = 0f; idx = latestCurrent; scrubbing = true; onScrubStart() },
                         onDragEnd = {
-                            if (kotlin.math.abs(acc) > 60.dp.toPx()) { hf.performHapticFeedback(HapticFeedbackType.SegmentTick); onSwipe(acc < 0) }
-                            acc = 0f
+                            scrubbing = false
+                            val target = latestSlots.getOrNull(idx)
+                            if (target != null && target.id != s.selected.id) onPick(target) else idx = latestCurrent
                         },
-                        onDragCancel = { acc = 0f },
-                    ) { _, d -> acc += d }
+                        onDragCancel = { scrubbing = false; idx = latestCurrent },
+                    ) { _, d ->
+                        dx += d
+                        val i = (latestCurrent + kotlin.math.round(dx / stepPx).toInt()).coerceIn(0, latestSlots.lastIndex)
+                        if (i != idx) { idx = i; tick++; hf.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick) }
+                    }
                 } else Modifier,
             )
             .semantics {
-                if (swipeable) customActions = listOf(
-                    CustomAccessibilityAction("下一个地区") { onSwipe(true); true },
-                    CustomAccessibilityAction("上一个地区") { onSwipe(false); true },
+                if (swipeable) customActions = listOfNotNull(
+                    slots.getOrNull(current + 1)?.let { n -> CustomAccessibilityAction("下一个地区：${n.name}") { onPick(n); true } },
+                    slots.getOrNull(current - 1)?.let { n -> CustomAccessibilityAction("上一个地区：${n.name}") { onPick(n); true } },
                 )
             }
             .zPressable(label = "${s.name} 场景详情", onClick = onOpen)
@@ -134,12 +176,12 @@ private fun SceneRow(s: Scene, onSwipe: (Boolean) -> Unit, onOpen: () -> Unit) {
         }
         val right: @Composable (Modifier) -> Unit = { m -> Column(m, horizontalAlignment = if (stacked) Alignment.Start else Alignment.End) {
             AnimatedContent(
-                targetState = s.selected,
+                targetState = shown,
                 transitionSpec = { (slideInHorizontally(ZAnim.slow()) { it / 3 } + fadeIn(ZAnim.standard())) togetherWith fadeOut(ZAnim.micro()) },
                 label = "node",
             ) { n ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    ZRegionBadge(n.region)
+                    ZRegionBadge(n.region, Modifier.graphicsLayer { scaleX = pop.value; scaleY = pop.value }, active = scrubbing)
                     Spacer(Modifier.width(10.dp))
                     ZText(n.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight), maxLines = lines)
                 }
@@ -162,6 +204,15 @@ private fun SceneRow(s: Scene, onSwipe: (Boolean) -> Unit, onOpen: () -> Unit) {
         } else {
             left(Modifier.weight(0.4f)); right(Modifier.weight(0.6f))
         }
+    }
+    // Track (prototype `.track`): one segment per slot, visible only while scrubbing.
+    AnimatedVisibility(scrubbing, Modifier.align(Alignment.BottomCenter), enter = fadeIn(ZAnim.micro()), exit = fadeOut(ZAnim.standard())) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+            slots.indices.forEach { k ->
+                Box(Modifier.weight(1f).height(3.dp).background(if (k == idx) c.accent else c.hairlineStrong, ZTheme.shapes.pill))
+            }
+        }
+    }
     }
 }
 

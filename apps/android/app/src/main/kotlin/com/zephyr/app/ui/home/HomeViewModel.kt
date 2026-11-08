@@ -60,7 +60,8 @@ data class HomeUi(
     val usage: UsageSummary? = null,
     val pending: PendingChange? = null,
     val toast: UndoToast? = null,
-    val regionIndex: Map<String, Int> = emptyMap(),
+    /** Scrub slots per scene (prototype `#aiTrack`): best node of each region in the scene's pool, current included. */
+    val slots: Map<String, List<NodeSummary>> = emptyMap(),
     /** Global mode: the exit now, and the inline "更换节点" proposal when open (prototype `gcf`). */
     val globalNode: NodeSummary? = null,
     val globalProposal: NodeSummary? = null,
@@ -135,14 +136,16 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
 
     fun setMode(mode: ProxyMode) = launchCatching("切换模式") { engine.setMode(mode) }
 
-    /** Horizontal swipe on a scene row cycles regions; shows the inline confirm with the exit-IP change. */
-    fun cycleRegion(scene: Scene, forward: Boolean) = launchCatching("预览出口") {
-        val idx = (_ui.value.regionIndex[scene.id] ?: REGIONS.indexOf(scene.selected.region).coerceAtLeast(0))
-        val next = Math.floorMod(idx + if (forward) 1 else -1, REGIONS.size)
-        val candidates = engine.sceneCandidates(scene.id, REGIONS[next])
-        val best = candidates.firstOrNull() ?: return@launchCatching
-        val change = engine.previewSceneChange(scene.id, best.id)
-        _ui.update { it.copy(pending = PendingChange(scene, best, change), regionIndex = it.regionIndex + (scene.id to next)) }
+    /**
+     * Loads the scrub slots for a row: one per region the scene's pool covers, its fastest node, ordered by
+     * [REGION_ORDER] then code; the current exit occupies its region's slot. No looping, no hard-coded list (H-P1-3).
+     */
+    fun prefetchSlots(scene: Scene) = viewModelScope.launch {
+        val pool = runCatching { engine.sceneCandidates(scene.id, null) }.getOrDefault(emptyList())
+        val byRegion = (pool + scene.selected).filter { it.id >= 0 && it.region.isNotBlank() }.groupBy { it.region.uppercase() }
+        val slots = byRegion.map { (r, ns) -> ns.firstOrNull { it.id == scene.selected.id } ?: ns.minBy { it.latencyMs ?: Int.MAX_VALUE } }
+            .sortedWith(compareBy({ REGION_ORDER.indexOf(it.region.uppercase()).let { i -> if (i < 0) Int.MAX_VALUE else i } }, { it.region.uppercase() }))
+        _ui.update { it.copy(slots = it.slots + (scene.id to slots)) }
     }
 
     /** A candidate tapped in the scene sheet: same inline confirm as the swipe (exit IP line, 更改/取消). */
@@ -205,7 +208,7 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         return rows.firstOrNull { it.name == name } ?: connection.value.globalNodeId?.let { id -> rows.firstOrNull { it.id == id } }
     }
 
-    fun cancelPending() = _ui.update { it.copy(pending = null, regionIndex = emptyMap()) }
+    fun cancelPending() = _ui.update { it.copy(pending = null) }
 
     fun undo() = launchCatching("撤销") {
         val t = _ui.value.toast ?: return@launchCatching
@@ -255,7 +258,7 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         /** Group/built-in members of GLOBAL that are not exits. */
         private val NON_NODES = setOf("SELECTOR", "URLTEST", "FALLBACK", "LOADBALANCE", "RELAY", "DIRECT", "REJECT", "REJECTDROP", "PASS", "COMPATIBLE")
         const val SPARK_POINTS = 90
-        val REGIONS = listOf("SG", "JP", "US", "HK", "TW", "KR")
+        val REGION_ORDER = listOf("HK", "TW", "JP", "KR", "SG", "US", "GB", "DE", "FR", "NL", "CA", "AU")
         fun preview() = HomeViewModel(MockEngine(demo = true))
     }
 }

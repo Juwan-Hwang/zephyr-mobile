@@ -45,7 +45,7 @@ import com.zephyr.engine.SubscriptionsSummary
 import kotlinx.coroutines.launch
 
 @Composable
-fun SubscriptionsScreen(onBack: () -> Unit, onImport: () -> Unit) {
+fun SubscriptionsScreen(back: String = "资料库", onBack: () -> Unit, onImport: () -> Unit) {
     val engine = AppGraph.engine
     val c = ZTheme.colors
     val subs by engine.subscriptions().collectAsState(emptyList())
@@ -56,7 +56,7 @@ fun SubscriptionsScreen(onBack: () -> Unit, onImport: () -> Unit) {
     val now = remember { clock() }
     var updating by remember { mutableStateOf(false) }
 
-    PageScaffold("资料库", "订阅", onBack, trailing = { ZIconButton(ZIcons.Plus, "添加订阅", onImport, tint = c.accent) }) {
+    PageScaffold(back, "订阅", onBack, trailing = { ZIconButton(ZIcons.Plus, "添加订阅", onImport, tint = c.accent) }) {
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
             Row(Modifier.padding(horizontal = 22.dp), verticalAlignment = Alignment.Bottom) {
                 ZText("${summary.count}", style = ZTheme.type.hero.copy(fontSize = ZTheme.type.hero.fontSize * 0.86f))

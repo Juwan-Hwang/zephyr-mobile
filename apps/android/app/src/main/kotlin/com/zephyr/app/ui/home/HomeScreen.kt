@@ -68,19 +68,20 @@ fun HomeScreen(vm: HomeViewModel, actions: HomeActions) {
     val live = vm.live.collectAsStateWithLifecycle()
     HomeContent(
         conn, scenes, subs, ui, { live.value }, actions,
-        HomeCallbacks({ vm.setMode(it) }, { s, f -> vm.cycleRegion(s, f) }, { vm.confirmPending() }, { vm.cancelPending() }, { vm.undo() }, { vm.toggleGlobalChange() }, { vm.confirmGlobal() }),
+        HomeCallbacks({ vm.setMode(it) }, { s, n -> vm.pick(s, n) }, { vm.confirmPending() }, { vm.cancelPending() }, { vm.undo() }, { vm.toggleGlobalChange() }, { vm.confirmGlobal() }, { vm.prefetchSlots(it) }),
     )
 }
 
 /** VM-side callbacks, split out so screenshot tests can render [HomeContent] from plain data. */
 data class HomeCallbacks(
     val setMode: (ProxyMode) -> Unit,
-    val cycleRegion: (Scene, Boolean) -> Unit,
+    val pick: (Scene, com.zephyr.engine.NodeSummary) -> Unit,
     val confirm: () -> Unit,
     val cancel: () -> Unit,
     val undo: () -> Unit,
     val toggleGlobalChange: () -> Unit = {},
     val confirmGlobal: () -> Unit = {},
+    val prefetchSlots: (Scene) -> Unit = {},
 )
 
 @Composable
@@ -126,7 +127,7 @@ fun HomeContent(
                 if (conn.mode == ProxyMode.GLOBAL) {
                     GlobalModeCard(ui.globalNode, ui.globalProposal, ui.globalChange, onUseRule = { cb.setMode(ProxyMode.RULE) }, onChangeNode = cb.toggleGlobalChange, onConfirm = cb.confirmGlobal)
                 } else {
-                    SceneCard(scenes, ui.pending, cb.cycleRegion, { cb.confirm() }, cb.cancel, actions.onScene)
+                    SceneCard(scenes, ui.pending, ui.slots, cb.pick, cb.prefetchSlots, { cb.confirm() }, cb.cancel, actions.onScene)
                 }
             }
             item("subs-h") {

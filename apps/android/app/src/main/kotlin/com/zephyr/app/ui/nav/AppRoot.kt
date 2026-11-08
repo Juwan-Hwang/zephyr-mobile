@@ -61,9 +61,9 @@ import com.zephyr.engine.Settings
 import kotlinx.serialization.Serializable
 
 @Serializable object Home
-@Serializable data class Nodes(val query: String = "")
-@Serializable data class Rules(val query: String = "")
-@Serializable object Subs
+@Serializable data class Nodes(val query: String = "", val back: String = "资料库")
+@Serializable data class Rules(val query: String = "", val back: String = "资料库")
+@Serializable data class Subs(val back: String = "资料库")
 @Serializable data class SettingsRoute(val back: String = "资料库")
 @Serializable object Today
 @Serializable object Onboarding
@@ -76,6 +76,7 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean) {
     ZephyrTheme(dark = dark, accent = ZAccent.valueOf(settings.accent.name)) {
         val nav = rememberNavController()
         var library by remember { mutableStateOf(false) }
+        val backTo: (String) -> Unit = { label -> nav.popBackStack(); if (label == "资料库") library = true }
         var scene by remember { mutableStateOf<Scene?>(null) }
         var activity by remember { mutableStateOf(false) }
         var traceHost by remember { mutableStateOf<String?>(null) }
@@ -100,17 +101,18 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean) {
                             onLibrary = { library = true },
                             onCommand = { command = true },
                             onToday = { nav.navigate(Today) },
-                            onSubscriptions = { nav.navigate(Subs) },
+                            onSubscriptions = { nav.navigate(Subs(back = "首页")) },
                             onScene = { scene = it },
-                            onChangeGlobalNode = { nav.navigate(Nodes()) },
+                            onChangeGlobalNode = { nav.navigate(Nodes(back = "首页")) },
                             onActivity = { activity = true },
                         ),
                     )
                 }
-                composable<Nodes> { e -> NodesScreen(viewModel { NodesViewModel() }, e.toRoute<Nodes>().query, onBack = { nav.popBackStack() }, onImport = { import = true }) }
-                composable<Rules> { e -> RulesScreen(e.toRoute<Rules>().query) { nav.popBackStack() } }
-                composable<Subs> { SubscriptionsScreen(onBack = { nav.popBackStack() }, onImport = { import = true }) }
-                composable<SettingsRoute> { e -> SettingsScreen(e.toRoute<SettingsRoute>().back) { nav.popBackStack() } }
+                // Back returns where the page was opened from; from the library it reopens the library (prototype 1287).
+                composable<Nodes> { e -> val r = e.toRoute<Nodes>(); NodesScreen(viewModel { NodesViewModel() }, r.query, back = r.back, onBack = { backTo(r.back) }, onImport = { import = true }) }
+                composable<Rules> { e -> val r = e.toRoute<Rules>(); RulesScreen(r.query, back = r.back) { backTo(r.back) } }
+                composable<Subs> { e -> val r = e.toRoute<Subs>(); SubscriptionsScreen(back = r.back, onBack = { backTo(r.back) }, onImport = { import = true }) }
+                composable<SettingsRoute> { e -> val r = e.toRoute<SettingsRoute>(); SettingsScreen(r.back) { backTo(r.back) } }
                 composable<Today>(
                     enterTransition = { slideInVertically(ZAnim.slow()) { it / 3 } + fadeIn(ZAnim.standard()) },
                     popExitTransition = { slideOutVertically(ZAnim.standard()) { it / 3 } + fadeOut(ZAnim.standard()) },
@@ -124,7 +126,7 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean) {
                 library = false
                 when (d) {
                     LibraryDest.Nodes -> nav.navigate(Nodes())
-                    LibraryDest.Subscriptions -> nav.navigate(Subs)
+                    LibraryDest.Subscriptions -> nav.navigate(Subs())
                     LibraryDest.Rules -> nav.navigate(Rules())
                     LibraryDest.Scenes -> scene = home.scenes.value.firstOrNull()
                     LibraryDest.Settings, LibraryDest.TrustedWifi, LibraryDest.LocalProxy, LibraryDest.Widgets -> nav.navigate(SettingsRoute())
@@ -152,8 +154,8 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean) {
             CommandOverlay(command, { command = false }) { a ->
                 command = false
                 when (a) {
-                    is CommandAction.TestRule -> nav.navigate(Rules(a.input))
-                    is CommandAction.OpenNodes -> nav.navigate(Nodes(a.query))
+                    is CommandAction.TestRule -> nav.navigate(Rules(a.input, back = "首页"))
+                    is CommandAction.OpenNodes -> nav.navigate(Nodes(a.query, back = "首页"))
                     is CommandAction.Apply -> home.applyCommand(a.plan)
                 }
             }
