@@ -176,9 +176,18 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         guard let c = await nodes() else { return try await fallback.setGlobalNode(id: id) }
         let x = try await run(.nodeNotFound) { try c.previewGlobalChange(nodeId: id) }
         let apply = try await run(.nodeNotFound) { try c.setGlobalNode(nodeId: id) }
-        if let t = tunnel, await isTunnelConnected(t) {
+        if let t = tunnel {
+            // reloadTunnelIfRunning 自己处理已连接 / 连接中；选择出口在连上后执行（连接中排队）
             if apply.needsReload { await reloadTunnelIfRunning(t) }
-            try? await mihomo(t.controllerSocketPath) { try $0.selectInGroup(group: apply.group, member: apply.member) }
+            let sock = t.controllerSocketPath, group = apply.group, member = apply.member
+            let select: @Sendable () async -> Void = { [weak self] in
+                _ = try? await self?.mihomo(sock) { try $0.selectInGroup(group: group, member: member) }
+            }
+            switch await t.currentStatus() {
+            case .connected: await select()
+            case .connecting: afterConnect(t, select)
+            default: break
+            }
         }
         return ZephyrKit.ExitChange(sceneId: nil, fromRegion: x.fromRegion ?? "", fromIp: x.fromIp, toRegion: x.toRegion,
                                     toIp: x.toIp, affectedApps: x.affectedApps, unchangedApps: x.unchangedApps)

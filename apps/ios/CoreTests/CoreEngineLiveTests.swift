@@ -300,6 +300,31 @@ final class CoreEngineLiveTests: XCTestCase {
         XCTAssertEqual(st.layers.count, 3)
     }
 
+    /// states() 永不出值时 currentStatus 不挂起，按 disconnected 处理（热重载不会卡住订阅更新）。
+    func testCurrentStatusDoesNotHang() async {
+        final class Silent: TunnelPort, @unchecked Sendable {
+            let configURL = URL(fileURLWithPath: "/dev/null")
+            let controllerSocketPath = "/nonexistent.sock"
+            func states() -> AsyncStream<ConnectionState> { AsyncStream { _ in } }
+            func start() async throws {}
+            func stop() async throws {}
+            func setMode(_ mode: ZephyrKit.ProxyMode) async throws {}
+            func rate() async -> (up: Int64, down: Int64)? { nil }
+            func reloadConfig() async throws {}
+            func urlTest(proxiesJSON: String, url: String, timeoutMs: Int32) async -> String? { nil }
+            func usageToday() async -> (hourly: [Int64], onlineMillis: Int64)? { nil }
+            func logs(since: Int64, minLevel: String, limit: Int32) async -> String? { nil }
+        }
+        let t0 = Date()
+        let st = await Silent().currentStatus()
+        XCTAssertEqual(st, .disconnected)
+        XCTAssertLessThan(Date().timeIntervalSince(t0), 5)
+        let f = FakeTunnel(dir: dir)
+        f.status = .connected
+        let st2 = await f.currentStatus()
+        XCTAssertEqual(st2, .connected)
+    }
+
     func testMemberIdIsStable() {
         XCTAssertEqual(CoreEngine.memberId(group: "Proxy", name: "香港 01"), CoreEngine.memberId(group: "Proxy", name: "香港 01"))
         XCTAssertNotEqual(CoreEngine.memberId(group: "Proxy", name: "香港 01"), CoreEngine.memberId(group: "Video", name: "香港 01"))

@@ -32,6 +32,15 @@ final class SystemTunnelPort: TunnelPort, @unchecked Sendable {
         }
     }
 
+    /// 直接读系统 VPN 状态，避免 states() 里通知与首值竞争；loadAllFromPreferences 可能不返回，限时 2 s。
+    func currentStatus() async -> ConnectionStatus {
+        let controller = self.controller
+        let raw = await withDeadline(2) { () async -> NEVPNStatus? in
+            (try? await controller.existingManager())?.connection.status ?? .disconnected
+        }
+        return Self.state(raw ?? .disconnected, since: nil).status
+    }
+
     func start() async throws {
         do { try await controller.setConnected(true) } catch {
             throw ZephyrError(code: .vpnPermissionDenied, message: "\(error)")
