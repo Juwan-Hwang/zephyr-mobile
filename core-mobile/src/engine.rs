@@ -395,6 +395,9 @@ impl MobileCore {
         // 第 1 层"Zephyr 覆写"恒在（可为空），层序号才稳定（UI "第 N 层"）
         if !self.dir.join("rules").join("000.zr").exists() {
             self.compile_rule_layer(0, "Zephyr 覆写".into(), LayerKind::Override, "在订阅之上".into(), "DIRECT".into(), String::new())?;
+        } else if self.rules.read().layers.first().is_some_and(|l| l.info(0).note != "在订阅之上") {
+            // 旧安装的覆写层说明是旧文案：按场景与覆写重新生成（内容不变，只更新说明）
+            self.sync_override_layer()?;
         }
         let path = self.dir.join("rules").join("001.zr");
         let fin = match active {
