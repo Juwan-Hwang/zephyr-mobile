@@ -10,6 +10,8 @@ import ZephyrKit
 
 /// App 层提供的系统隧道入口（真机）。
 public protocol TunnelPort: AnyObject, Sendable {
+    /// 当前状态，不订阅。默认实现取 `states()` 首个值，2 s 内没有值视为 disconnected（不会挂起调用方）。
+    func currentStatus() async -> ConnectionStatus
     /// 隧道状态（含模式与起始时间），首个值为当前状态。
     func states() -> AsyncStream<ConnectionState>
     func start() async throws
@@ -43,12 +45,14 @@ extension CoreEngine {
 
     /// 隧道在跑时：重写配置并让扩展热重载；没在跑则什么都不做（下次连接时 liveConnect 会重写）。
     func isTunnelConnected(_ t: any TunnelPort) async -> Bool {
-        var it = t.states().makeAsyncIterator()
-        return await it.next()?.status == .connected
+        await t.currentStatus() == .connected
     }
 
+    /// 已连接或正在连接（含 reasserting）都写新配置并请求热重载：正在连接时扩展可能已读走旧配置。
+    /// 扩展尚未就绪时 reloadConfig 抛错，忽略即可（扩展启动时会读到刚写入的新配置）。
     func reloadTunnelIfRunning(_ t: any TunnelPort) async {
-        guard await isTunnelConnected(t) else { return }
+        let st = await t.currentStatus()
+        guard st == .connected || st == .connecting else { return }
         do {
             try await writeTunnelConfig(to: t.configURL, controllerSocket: t.controllerSocketPath)
             try await t.reloadConfig()
@@ -209,3 +213,21 @@ extension CoreEngine {
 }
 
 let liveQueue = DispatchQueue(label: "app.zephyr.core.live", qos: .userInitiated, attributes: .concurrent)
+
+public extension TunnelPort {
+    func currentStatus() async -> ConnectionStatus {
+        await withTaskGroup(of: ConnectionStatus?.self) { g in
+            g.addTask {
+                var it = self.states().makeAsyncIterator()
+                return await it.next()?.status
+            }
+            g.addTask {
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
+                return nil
+            }
+            let first = await g.next() ?? nil
+            g.cancelAll()
+            return first ?? .disconnected
+        }
+    }
+}
