@@ -108,6 +108,11 @@ targets:
           - UIInterfaceOrientationPortrait
         UIUserInterfaceStyle: Automatic
         UIStatusBarStyle: UIStatusBarStyleDefault
+        # 订阅自动更新（App/SubscriptionAutoUpdater）：后台刷新任务。
+        UIBackgroundModes:
+          - fetch
+        BGTaskSchedulerPermittedIdentifiers:
+          - app.zephyr.mobile.refresh
         NSSupportsLiveActivities: true
         NSSupportsLiveActivitiesFrequentUpdates: false
         # 资料库 → 添加订阅 → 扫码（ZephyrFeatures/Subscriptions/QRScannerView）。缺这个键，首次调用相机会直接崩溃。

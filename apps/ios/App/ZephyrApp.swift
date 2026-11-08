@@ -11,6 +11,11 @@ import ZephyrFeatures
 struct ZephyrApp: App {
     @State private var bootstrap = AppBootstrap()
 
+    init() {
+        // BGTaskScheduler 要求在启动完成前注册。
+        SubscriptionAutoUpdater.register()
+    }
+
     // 注意：ZephyrKit 也有 `Scene`（场景模型），这里必须写全 SwiftUI.Scene。
     var body: some SwiftUI.Scene {
         WindowGroup {

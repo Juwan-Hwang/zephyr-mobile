@@ -862,6 +862,11 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         for w in watchers { w.yield(patch) }
         // 影响 mihomo 配置的字段变了：隧道运行中热重载。
         if let t = tunnel, CoreEngine.affectsRuntime(old, patch) { await reloadTunnelIfRunning(t) }
+        if let t = tunnel, old.onDemand != patch.onDemand || old.trustedWifi != patch.trustedWifi
+            || old.disconnectOnTrusted != patch.disconnectOnTrusted {
+            await t.applyOnDemand(onDemand: patch.onDemand, trustedNetworks: patch.trustedWifi,
+                                  disconnectOnTrusted: patch.disconnectOnTrusted, create: false)
+        }
     }
 
     static func affectsRuntime(_ a: ZephyrKit.Settings, _ b: ZephyrKit.Settings) -> Bool {

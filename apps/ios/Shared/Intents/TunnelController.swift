@@ -83,6 +83,31 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
         return try await send(request, via: session)
     }
 
+    /// 把按需规则写进系统 VPN 配置。配置不存在且 `createIfNeeded == false` 时什么都不做。
+    func apply(onDemand plan: OnDemandPlan, createIfNeeded: Bool) async throws {
+        let manager: NETunnelProviderManager
+        if createIfNeeded { manager = try await loadOrCreateManager() } else if let found = try await existingManager() { manager = found } else { return }
+
+        var rules: [NEOnDemandRule] = []
+        if !plan.disconnectSSIDs.isEmpty {
+            let disconnect = NEOnDemandRuleDisconnect()
+            disconnect.interfaceTypeMatch = .wiFi
+            disconnect.ssidMatch = plan.disconnectSSIDs
+            rules.append(disconnect)
+        }
+        if plan.connectElsewhere { rules.append(NEOnDemandRuleConnect()) } else if !rules.isEmpty { rules.append(NEOnDemandRuleIgnore()) }
+
+        let enabled = !plan.isEmpty
+        // 没有变化就不写系统配置（每次保存都会触发 NEVPNConfigurationChange 通知）。
+        let sameRules = (manager.onDemandRules ?? []).count == rules.count
+            && zip(manager.onDemandRules ?? [], rules).allSatisfy { type(of: $0) == type(of: $1) && ($0 as? NEOnDemandRuleDisconnect)?.ssidMatch == ($1 as? NEOnDemandRuleDisconnect)?.ssidMatch }
+        if manager.isOnDemandEnabled == enabled && sameRules { return }
+        manager.onDemandRules = rules.isEmpty ? nil : rules
+        manager.isOnDemandEnabled = enabled
+        try await manager.saveToPreferences()
+        try await manager.loadFromPreferences()
+    }
+
     // MARK: 内部
 
     func loadOrCreateManager() async throws -> NETunnelProviderManager {

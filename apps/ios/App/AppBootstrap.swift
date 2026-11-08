@@ -24,9 +24,9 @@ final class AppBootstrap {
     func run() async {
         guard !started else { return }
         started = true
-        let requested = LaunchEnvironment.current()
-        // EngineFactory.make 可能阻塞（打开核心库）：放到后台线程，主线程继续渲染启动画面。
-        let built = await Task.detached(priority: .userInitiated) { EngineFactory.make(requested) }.value
+        // EngineHost 在后台执行器上加载引擎（打开核心库会阻塞），主线程继续渲染启动画面；
+        // 后台刷新任务共用同一实例，避免两个 MobileCore 同时写一份数据目录。
+        let built = await EngineHost.shared.get()
         if built.coreUnavailable {
             phase = .unavailable
             return
