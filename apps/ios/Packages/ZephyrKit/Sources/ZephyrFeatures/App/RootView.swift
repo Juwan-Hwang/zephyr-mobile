@@ -55,6 +55,18 @@ public struct RootView: View {
         .task { model.start() }
         .onChange(of: scenePhase, initial: true) { _, phase in model.scenePhaseChanged(phase) }
         .onOpenURL { model.handle(url: $0) }
+        .alert(
+            Text(verbatim: model.pendingLink?.prompt.title ?? ""),
+            isPresented: Binding(get: { model.pendingLink != nil }, set: { if !$0 { model.pendingLink = nil } }),
+            presenting: model.pendingLink
+        ) { pending in
+            Button(role: pending.prompt.destructive ? .destructive : nil) {
+                model.confirmPendingLink()
+            } label: { Text(verbatim: pending.prompt.confirm) }
+            Button("取消", role: .cancel) {}
+        } message: { pending in
+            Text(verbatim: pending.prompt.message)
+        }
     }
 
     /// 订阅流首帧到达且为空、且从未完成引导时呈现引导（REVIEW P0-1）。VPN 授权留到首次点开关时再请求。

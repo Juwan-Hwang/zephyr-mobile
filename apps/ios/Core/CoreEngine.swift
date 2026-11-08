@@ -40,6 +40,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     private var cachedSettings: ZephyrKit.Settings?
     private let settingsURL: URL
     private var samples: [TrafficSample] = []
+    /// 流量流的共享上游（AppModel / SharedStatePublisher 共用一次轮询）。
+    let trafficBroadcast = SharedBroadcast<TrafficSample>()
     private var members: [NodeId: String] = [:]
 
     /// 真机的系统隧道；nil = 模拟器 / 单测，实时数据走 fallback。

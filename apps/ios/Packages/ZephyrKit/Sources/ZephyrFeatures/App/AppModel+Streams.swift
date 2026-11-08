@@ -83,8 +83,13 @@ extension AppModel {
         let want = isForeground && connection.status == .connected
         if want, trafficTask == nil {
             let engine = self.engine
+            let capacity = Int32(TrafficStore.capacity)
             trafficTask = Task { [weak self] in
-                let history = engine.recentTraffic(seconds: Int32(TrafficStore.capacity))
+                // 真实引擎的 recentTraffic 走 FFI / 锁，不在主线程做（REVIEW-Q1 H-P2-19）。
+                let history = await Task.detached(priority: .userInitiated) {
+                    engine.recentTraffic(seconds: capacity)
+                }.value
+                if Task.isCancelled { return }
                 self?.traffic.backfill(history)
                 for await s in engine.traffic() {
                     guard let self, !Task.isCancelled else { return }

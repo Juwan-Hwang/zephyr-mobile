@@ -108,11 +108,13 @@ final class ModelConnectionControl: ConnectionControlling {
     init(model: AppModel) { self.model = model }
 
     func setConnected(_ on: Bool) async throws {
+        model.lastError = nil   // 否则会把之前残留的错误当成本次失败（REVIEW-Q1 H-P2-22）
         if on { await model.connect() } else { await model.disconnect() }
         if let error = model.lastError { throw error }
     }
 
     func setMode(_ mode: SharedState.Mode) async throws {
+        model.lastError = nil
         await model.setMode(ProxyMode(rawValue: mode.rawValue) ?? .rule)
         if let error = model.lastError { throw error }
     }

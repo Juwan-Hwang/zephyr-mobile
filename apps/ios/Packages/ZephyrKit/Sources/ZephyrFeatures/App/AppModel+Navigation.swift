@@ -53,11 +53,24 @@ extension AppModel {
     @discardableResult
     public func handle(url: URL) -> Bool {
         guard let link = DeepLink(url: url) else { return false }
-        open(link)
+        open(link, source: DeepLinkPolicy.source(of: url, trustedToken: trustedLinkToken))
         return true
     }
 
-    public func open(_ link: DeepLink) {
+    /// 用户在确认弹窗里点了“确认”。
+    public func confirmPendingLink() {
+        guard let pending = pendingLink else { return }
+        pendingLink = nil
+        open(pending.link, source: .trusted)
+    }
+
+    public func open(_ link: DeepLink, source: DeepLinkSource = .trusted) {
+        if DeepLinkPolicy.requiresConfirmation(link, source: source, isOn: isOn, mode: connection.mode),
+           let prompt = DeepLinkPolicy.prompt(for: link, isOn: isOn) {
+            popToHome()
+            pendingLink = PendingDeepLink(link: link, prompt: prompt)
+            return
+        }
         switch link {
         case .home: popToHome()
         case .connect: Task { await connect() }
