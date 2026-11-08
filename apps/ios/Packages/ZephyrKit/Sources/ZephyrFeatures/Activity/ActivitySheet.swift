@@ -22,7 +22,8 @@ struct ActivitySheet: View {
     @State private var received = false
     @State private var host: String?
 
-    private var hosts: [RecentHost] { RecentHost.aggregate(connections) }
+    /// 连接流每次推送时聚合一次并缓存（REVIEW H-P2-13），body 内不再重复聚合。
+    @State private var hosts: [RecentHost] = []
 
     /// 标题：列表页"刚才"，轨迹页留空（轨迹自带域名大标题）。
     private var title: LocalizedStringKey {
@@ -70,6 +71,7 @@ struct ActivitySheet: View {
         host = initialHost
         for await latest in model.engine.activeConnections() {
             connections = latest
+            hosts = RecentHost.aggregate(latest)
             received = true
         }
     }
