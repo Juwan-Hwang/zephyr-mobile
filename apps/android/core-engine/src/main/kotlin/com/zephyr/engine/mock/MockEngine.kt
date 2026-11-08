@@ -87,6 +87,12 @@ class MockEngine(
         }
     }
 
+    override suspend fun previewGlobalChange(nodeId: NodeId): ExitChange {
+        val from = MockScenes.byId(connection.value.globalNodeId ?: MockScenes.TOKYO_03.id) ?: MockScenes.TOKYO_03
+        val to = MockScenes.byId(nodeId) ?: catalogSummary(nodeId)
+        return ExitChange(null, from.region, MockScenes.exitIp(from.id), to.region, MockScenes.exitIp(to.id))
+    }
+
     override suspend fun setGlobalNode(id: NodeId): ExitChange {
         val from = MockScenes.byId(connection.value.globalNodeId ?: MockScenes.TOKYO_03.id) ?: MockScenes.TOKYO_03
         val to = MockScenes.byId(id) ?: catalogSummary(id)

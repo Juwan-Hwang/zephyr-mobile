@@ -118,12 +118,14 @@ private fun SceneRow(s: Scene, onSwipe: (Boolean) -> Unit, onOpen: () -> Unit) {
         Column(Modifier.weight(0.4f)) {
             ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight, fontSize = ZTheme.type.headline.fontSize * 1.1f), maxLines = 1)
             Spacer(Modifier.height(6.dp))
+            val down = s.services.filter { !it.ok }
             ZText(
                 when {
+                    down.isNotEmpty() -> "${down.joinToString("、") { it.name }} 不可用"
                     s.source == SceneSource.SUBSCRIPTION_GROUP -> "订阅分组"
                     else -> "${s.available} 个可用"
                 },
-                style = ZTheme.type.callout, color = c.text3, maxLines = 1,
+                style = ZTheme.type.callout, color = if (down.isNotEmpty()) c.danger else c.text3, maxLines = 1,
             )
         }
         Column(Modifier.weight(0.6f), horizontalAlignment = Alignment.End) {
@@ -138,11 +140,14 @@ private fun SceneRow(s: Scene, onSwipe: (Boolean) -> Unit, onOpen: () -> Unit) {
                     ZText(n.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight), maxLines = 1)
                 }
             }
-            val sub = s.exceptions.firstOrNull()?.let { "${it.app}：${it.node.name}" } ?: s.note
+            // Prototype 11 (zero): "Claude 不可用" left, "GPT、Gemini 正常" right, replacing the pin line.
+            val up = s.services.filter { it.ok }
+            val serviceLine = if (s.services.any { !it.ok } && up.isNotEmpty()) "${up.joinToString("、") { it.name }} 正常" else null
+            val sub = serviceLine ?: s.exceptions.firstOrNull()?.let { "${it.app}：${it.node.name}" } ?: s.note
             if (sub != null) {
                 Spacer(Modifier.height(6.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (s.exceptions.isNotEmpty()) { ZIcon(ZIcons.Lock, tint = c.warning, size = 13.dp); Spacer(Modifier.width(6.dp)) }
+                    if (serviceLine == null && s.exceptions.isNotEmpty()) { ZIcon(ZIcons.Lock, tint = c.warning, size = 13.dp); Spacer(Modifier.width(6.dp)) }
                     ZText(sub, style = ZTheme.type.callout, color = c.text3, maxLines = 1)
                 }
             }

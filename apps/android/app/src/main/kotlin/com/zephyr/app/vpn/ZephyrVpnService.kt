@@ -109,6 +109,7 @@ class ZephyrVpnService : VpnService() {
         prober?.cancel(); prober = null
         watcher?.cancel()
         runCatching { engine.disconnect() }
+        (engine as? com.zephyr.engine.core.CoreEngine)?.flushUsage()
         bridge.detach()
         tun?.close(); tun = null
         ZephyrTileService.requestRefresh(this)

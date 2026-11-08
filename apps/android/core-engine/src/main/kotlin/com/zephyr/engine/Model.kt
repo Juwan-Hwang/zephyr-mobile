@@ -100,7 +100,12 @@ data class Scene(
     val testedAt: Long? = null,
     val note: String? = null,
     val exceptions: List<SceneException> = emptyList(),
+    /** §14.z ①: per-service reachability ("Claude 不可用 / GPT、Gemini 正常"); empty = no service line. */
+    val services: List<ServiceHealth> = emptyList(),
 )
+
+@Serializable
+data class ServiceHealth(val appId: String, val name: String, val ok: Boolean, val checkedAt: Long)
 
 @Serializable
 data class ExitChange(
@@ -180,6 +185,8 @@ data class NodeDetail(
     val port: Int,
     val subscription: String,
     val extra: Map<String, String> = emptyMap(),
+    val latencyMs: Int? = null,
+    val latencyAt: Long? = null,
 )
 
 // ── 6. Rules ────────────────────────────────────────────────────────────────

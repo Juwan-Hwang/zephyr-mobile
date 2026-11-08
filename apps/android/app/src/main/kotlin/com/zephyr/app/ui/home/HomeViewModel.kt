@@ -52,6 +52,7 @@ data class HomeUi(
     /** Global mode: the exit now, and the inline "更换节点" proposal when open (prototype `gcf`). */
     val globalNode: NodeSummary? = null,
     val globalProposal: NodeSummary? = null,
+    val globalChange: com.zephyr.engine.ExitChange? = null,
 )
 
 class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewModel() {
@@ -130,7 +131,8 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         val page = engine.groupMembers(com.zephyr.engine.core.CoreEngine.GLOBAL, 0, 500).rows
         val best = page.filter { it.protocol.uppercase() !in NON_NODES && it.name != cur?.name && it.id >= 0 }
             .minByOrNull { it.latencyMs ?: Int.MAX_VALUE } ?: throw com.zephyr.engine.ZephyrException(com.zephyr.engine.ErrorCode.NODE_NOT_FOUND, "no other node")
-        _ui.update { it.copy(globalNode = cur, globalProposal = best) }
+        val x = runCatching { engine.previewGlobalChange(best.id) }.getOrNull()
+        _ui.update { it.copy(globalNode = cur, globalProposal = best, globalChange = x) }
     }
 
     fun confirmGlobal() = launchCatching("切换节点") {
@@ -142,6 +144,7 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
     }
 
     private suspend fun globalNow(): NodeSummary? {
+        (engine as? com.zephyr.engine.core.CoreEngine)?.globalNode()?.let { return it }
         val name = engine.policyGroups().first().firstOrNull { it.name == com.zephyr.engine.core.CoreEngine.GLOBAL }?.selected
         val rows = engine.groupMembers(com.zephyr.engine.core.CoreEngine.GLOBAL, 0, 500).rows
         return rows.firstOrNull { it.name == name } ?: connection.value.globalNodeId?.let { id -> rows.firstOrNull { it.id == id } }

@@ -120,7 +120,7 @@ fun HomeContent(
             }
             item("scenes") {
                 if (conn.mode == ProxyMode.GLOBAL) {
-                    GlobalModeCard(ui.globalNode, ui.globalProposal, onUseRule = { cb.setMode(ProxyMode.RULE) }, onChangeNode = cb.toggleGlobalChange, onConfirm = cb.confirmGlobal)
+                    GlobalModeCard(ui.globalNode, ui.globalProposal, ui.globalChange, onUseRule = { cb.setMode(ProxyMode.RULE) }, onChangeNode = cb.toggleGlobalChange, onConfirm = cb.confirmGlobal)
                 } else {
                     SceneCard(scenes, ui.pending, cb.cycleRegion, { cb.confirm() }, cb.cancel, actions.onScene)
                 }

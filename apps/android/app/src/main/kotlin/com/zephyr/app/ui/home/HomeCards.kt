@@ -30,6 +30,7 @@ import com.zephyr.engine.Subscription
 fun GlobalModeCard(
     node: com.zephyr.engine.NodeSummary?,
     proposal: com.zephyr.engine.NodeSummary?,
+    change: com.zephyr.engine.ExitChange?,
     onUseRule: () -> Unit,
     onChangeNode: () -> Unit,
     onConfirm: () -> Unit,
@@ -55,7 +56,9 @@ fun GlobalModeCard(
                         ZText("出口 IP 将更改", style = ZTheme.type.footnote)
                     }
                     Spacer(Modifier.height(4.dp))
-                    ZText("${node?.let { "${it.region} ${it.name}" } ?: "当前"} → ${p.region} ${p.name}", style = ZTheme.type.monoSmall, color = c.text2)
+                    val from = change?.fromIp?.let { "${change.fromRegion} $it" } ?: node?.let { "${it.region} ${it.name}" } ?: "当前"
+                    val to = change?.toIp?.let { "${change.toRegion} $it" } ?: "${p.region} ${p.name}"
+                    ZText("$from → $to", style = ZTheme.type.monoSmall, color = c.text2)
                 }
                 Spacer(Modifier.height(8.dp))
                 ZText("所有 App 的出口都将变为${p.name}。", style = ZTheme.type.footnote, color = c.text3)

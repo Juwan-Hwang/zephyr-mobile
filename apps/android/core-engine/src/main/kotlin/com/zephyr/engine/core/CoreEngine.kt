@@ -48,6 +48,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.merge
 import com.zephyr.engine.*
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 import com.zephyr.core.mobile.LayerKind as CoreLayerKind
 import com.zephyr.core.mobile.NodeRow as CoreRow
 import com.zephyr.core.mobile.RegionSection as CoreSection
@@ -80,6 +81,27 @@ class CoreEngine(
     private val core: MobileCore? = dataDir?.let { dir ->
         try { MobileCore(dir) } catch (_: Throwable) { null } // UnsatisfiedLinkError / missing .so → mock
     }
+
+    private val bg = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + io)
+
+    /**
+     * Rule sets referenced by the active subscription (RULE-SET, contract §14.w): fetch each due one and
+     * compile it into its rules-page layer. mrs (binary) is not supported by the core yet. Returns how many compiled.
+     */
+    suspend fun refreshRuleProviders(force: Boolean = false): Int {
+        val c = core ?: return 0
+        val list = withContext(io) { runCatching { c.ruleProviders(clock()) }.getOrDefault(emptyList()) }
+        var done = 0
+        for (p in list) {
+            if (!(force || p.due) || p.format.equals("mrs", ignoreCase = true)) continue
+            val ok = withContext(io) { runCatching { val got = fetcher(p.url); c.compileRuleProvider(p.name, got.body, clock()) }.isSuccess }
+            if (ok) done++
+        }
+        if (done > 0) rulesReady = null
+        return done
+    }
+
+    private fun refreshRuleProvidersLater() { bg.launch { runCatching { refreshRuleProviders() } } }
 
     /** True when the native core is loaded (not necessarily populated). */
     val isNative: Boolean get() = core != null
@@ -144,6 +166,8 @@ class CoreEngine(
             nodesReady = null
             if (activeSubscription() == null) setActiveSubscription(s.id)
             refreshSubs()
+            rulesReady = null
+            refreshRuleProvidersLater()
             sub(s)
         }
     }
@@ -154,7 +178,7 @@ class CoreEngine(
             val url = wrap { c.subscriptionFetchUrl(id) } ?: throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "local profile")
             val got = runCatching { fetcher(url) }.getOrElse { throw ZephyrException(ErrorCode.SUBSCRIPTION_FETCH_FAILED, it.message ?: "fetch failed") }
             val d = wrap { c.updateSubscription(id, FetchedSubscription(got.body, got.userInfo, clock()), null) }
-            nodesReady = null; refreshSubs(); diff(d)
+            nodesReady = null; rulesReady = null; refreshSubs(); refreshRuleProvidersLater(); diff(d)
         }
     }
 
@@ -182,6 +206,7 @@ class CoreEngine(
         val c = core ?: return emptyList()
         val due = withContext(io) { wrap { c.dueSubscriptions(clock()) } }
         val done = due.filter { runCatching { updateSubscription(it) }.isSuccess }
+        runCatching { refreshRuleProviders() } // hourly worker: also picks up rule sets whose own interval elapsed
         if (activeSubscription() in done) runCatching { reloadIfRunning() }
         return done
     }
@@ -189,7 +214,7 @@ class CoreEngine(
     override suspend fun deleteSubscription(id: String) {
         val c = core ?: return if (mockData) fallback.deleteSubscription(id) else throw noCore()
         withContext(io) { wrap { c.deleteSubscription(id) } }
-        nodesReady = null
+        nodesReady = null; rulesReady = null
         val left = refreshSubs()
         if (activeSubscription() == id) setActiveSubscription(left.firstOrNull()?.id)
     }
@@ -217,8 +242,60 @@ class CoreEngine(
             ),
             mode = when (mode) { ProxyMode.RULE -> CoreMode.RULE; ProxyMode.GLOBAL -> CoreMode.GLOBAL; ProxyMode.DIRECT -> CoreMode.DIRECT },
             controllerSocket = controllerSocket, findProcess = true, logLevel = "warning",
+            localProxy = com.zephyr.core.mobile.LocalProxy(proxyPort(settings).toUShort(), localProxyCredential()),
         )
         return withContext(io) { wrap { c.runtimeConfig(id, opts) } }
+    }
+
+    // ── Loopback mixed port: the user's "本地代理端口" when enabled, else a private port for service probes ──
+    @Volatile private var activeProxyPort: Int = 0
+
+    /** `zephyr:<24 random>`; generated once, kept in the private data dir, shown in Settings (§14.z ④). */
+    fun localProxyCredential(): String {
+        val f = dataDir?.let { java.io.File(it, "local-proxy-credential") }
+        f?.takeIf { it.isFile }?.readText()?.trim()?.takeIf { it.startsWith("zephyr:") }?.let { return it }
+        val rnd = java.security.SecureRandom()
+        val abc = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+        val cred = "zephyr:" + (1..24).map { abc[rnd.nextInt(abc.length)] }.joinToString("")
+        runCatching { f?.writeText(cred) }
+        return cred
+    }
+
+    private fun proxyPort(settings: Settings): Int {
+        val p = if (settings.localProxyEnabled && settings.localProxyPort >= 1024) settings.localProxyPort else privateProbePort()
+        activeProxyPort = p
+        return p
+    }
+
+    private fun privateProbePort(): Int {
+        val f = dataDir?.let { java.io.File(it, "probe-port") }
+        f?.takeIf { it.isFile }?.readText()?.trim()?.toIntOrNull()?.let { return it }
+        val p = 20_000 + java.security.SecureRandom().nextInt(40_000)
+        runCatching { f?.writeText(p.toString()) }
+        return p
+    }
+
+    private var serviceRound = 0
+
+    /**
+     * Per-service reachability and exit IP (§14.z ①), through the tunnel's rules via the loopback port.
+     * Only records results: it never switches anything (AI exits change only on user confirm, §14.y).
+     */
+    suspend fun probeServices(sceneIds: List<String>? = null) {
+        val c = nodes() ?: return
+        val port = activeProxyPort.takeIf { it > 0 && Mihomo.running } ?: return
+        val auth = localProxyCredential()
+        val ids = sceneIds ?: withContext(io) { wrap { c.scenes(clock()) } }.map { it.id }
+        for (id in ids) withContext(io) {
+            runCatching { c.sceneProbeTargets(id) }.getOrDefault(emptyList()).forEach { t ->
+                val r = ProxyProbe.request(t.url, port, auth, method = "HEAD")
+                runCatching { c.reportSceneService(id, t.appId, ProxyProbe.serviceOk(r), clock()) }
+            }
+            runCatching { c.sceneExitProbe(id) }.getOrNull()?.let { url ->
+                ProxyProbe.request(url, port, auth)?.takeIf { it.status == 200 }?.let { r -> runCatching { c.reportSceneTrace(id, r.body, clock()) } }
+            }
+        }
+        scenesBump.value++
     }
 
     private fun sub(s: com.zephyr.core.mobile.Subscription) = Subscription(
@@ -314,7 +391,10 @@ class CoreEngine(
     override suspend fun retestScene(sceneId: String): Scene {
         val c = nodes() ?: return if (mockData) fallback.retestScene(sceneId) else throw noSubscription()
         val group = withContext(io) { wrap { c.scenes(clock()) } }.firstOrNull { it.id == sceneId }?.group ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
-        live()?.let { l -> runCatching { withContext(io) { l.test(group, LivePort.TEST_URL, 5_000) } } }
+        live()?.let { l ->
+            runCatching { withContext(io) { l.test(group, LivePort.TEST_URL, 5_000) } }
+            runCatching { probeServices(listOf(sceneId)) }
+        }
         scenesBump.value++
         return withContext(io) { wrap { c.scenes(clock()) } }.firstOrNull { it.id == sceneId }?.let(::scene) ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
     }
@@ -354,6 +434,7 @@ class CoreEngine(
             out += e; failoverEvents.tryEmit(e)
         }
         if (out.isNotEmpty()) scenesBump.value++
+        if (serviceRound++ % 10 == 0) runCatching { probeServices() }
         return out
     }
 
@@ -368,6 +449,7 @@ class CoreEngine(
         source = when (s.source) { CoreSceneSource.AUTO -> SceneSource.AUTO; CoreSceneSource.MANUAL -> SceneSource.MANUAL; CoreSceneSource.SUBSCRIPTION_GROUP -> SceneSource.SUBSCRIPTION_GROUP },
         testedAt = s.testedAt, note = s.note,
         exceptions = s.exceptions.mapNotNull { e -> e.node?.let { SceneException(e.app, row(it), e.appId) } },
+        services = s.services.map { ServiceHealth(it.appId, it.name, it.ok, it.checkedAt) },
     )
 
     private inline fun <T> sceneCall(block: () -> T): T = try { block() } catch (e: MobileException) {
@@ -393,14 +475,71 @@ class CoreEngine(
         withContext(io) { liveCall(ErrorCode.GROUP_NOT_FOUND) { r.select(group, name) } }
     }
 
-    /** Global mode exit = mihomo's GLOBAL selector (prototype `gcf`: confirmed inline, never automatic). */
-    override suspend fun setGlobalNode(id: NodeId): ExitChange {
-        val r = live() ?: return if (mockData) fallback.setGlobalNode(id) else throw notRunning()
-        val to = names[id] ?: throw ZephyrException(ErrorCode.NODE_NOT_FOUND, id.toString())
-        val from = withContext(io) { liveCall { r.groups() } }.firstOrNull { it.name == GLOBAL }?.selected
-        withContext(io) { liveCall(ErrorCode.GROUP_NOT_FOUND) { r.select(GLOBAL, to) } }
-        return ExitChange(null, from?.let { summary(it, null, null).region } ?: "", null, summary(to, null, null).region, null)
+    /** Global mode exit (contract §14.w): core picks the GLOBAL member, reload if new, then always select. */
+    override suspend fun previewGlobalChange(nodeId: NodeId): ExitChange {
+        val c = nodes() ?: return if (mockData) fallback.previewGlobalChange(nodeId) else throw noSubscription()
+        val x = withContext(io) { sceneCall { c.previewGlobalChange(nodeId.toULong()) } }
+        return ExitChange(null, x.fromRegion ?: "", x.fromIp, x.toRegion, x.toIp, x.affectedApps, x.unchangedApps)
     }
+
+    override suspend fun setGlobalNode(id: NodeId): ExitChange {
+        val c = nodes() ?: return if (mockData) fallback.setGlobalNode(id) else throw noSubscription()
+        val preview = runCatching { previewGlobalChange(id) }.getOrNull()
+        val a = withContext(io) { sceneCall { c.setGlobalNode(id.toULong()) } }
+        live()?.let { l ->
+            if (a.needsReload) reloadIfRunning()
+            withContext(io) { liveCall(ErrorCode.GROUP_NOT_FOUND) { l.select(a.group, a.member) } }
+        }
+        return preview ?: ExitChange(null, "", null, "", null)
+    }
+
+    /** Current global exit as a library row (null before the first choice). */
+    suspend fun globalNode(): NodeSummary? {
+        val c = nodes() ?: return null
+        return withContext(io) { runCatching { c.globalNode()?.let { id -> row(c.nodeDetail(id).row) } }.getOrNull() }
+    }
+
+    override suspend fun node(id: NodeId): NodeDetail {
+        val c = nodes() ?: return if (mockData) fallback.node(id) else throw noSubscription()
+        val d = withContext(io) { wrap { c.nodeDetail(id.toULong()) } }
+        return NodeDetail(row(d.row), d.server, d.port, d.subscription, d.extra, d.latencyMs?.takeIf { it > 0 }, d.latencyAt)
+    }
+
+    /**
+     * On-demand latency for library rows (§14.w): the runtime config only holds scene nodes, so rows are
+     * tested through temporary outbounds (zm_url_test), never via the REST controller.
+     */
+    override suspend fun testLatency(ids: List<NodeId>) {
+        val c = nodes() ?: return if (mockData) fallback.testLatency(ids) else Unit
+        if (!Mihomo.available) return
+        ids.chunked(512).forEach { chunk ->
+            val res = withContext(io) {
+                val batch = wrap { c.latencyTestBatch(chunk.map { it.toULong() }) }
+                val out = Mihomo.urlTest(batch, LivePort.TEST_URL, 5_000, 32) ?: return@withContext emptyList()
+                if (out.contains("\"error\"")) emptyList() else wrap { c.recordUrlTest(out, clock()) }
+            }
+            if (res.isNotEmpty()) liveLatency.tryEmit(res.map { LatencyUpdate(it.id.toLong(), it.ms, clock()) })
+        }
+    }
+
+    /** mihomo log ring buffer, 1 Hz increments while the core runs in-process (§14.w logs). */
+    override fun logs(minLevel: LogLevel): Flow<LogLine> =
+        if (mockData && !Mihomo.available) fallback.logs(minLevel)
+        else flow {
+            var since = 0L
+            while (true) {
+                if (Mihomo.running) {
+                    val raw = withContext(io) { Mihomo.logs(since, minLevel.name.lowercase(), 200) }
+                    if (raw != null) {
+                        val o = LogsJson.parse(raw)
+                        if (o.seq < since) since = 0 // core restarted: sequence went back
+                        o.lines.forEach { emit(it) }
+                        since = maxOf(since, o.seq)
+                    }
+                }
+                delay(tick)
+            }
+        }
 
     override suspend fun testGroup(group: String) {
         val r = live() ?: return if (mockData) fallback.testGroup(group) else throw notRunning()
@@ -417,7 +556,12 @@ class CoreEngine(
     }
 
     override fun traffic(): Flow<TrafficSample> = switching({ _ ->
-        flow { while (true) { Mihomo.traffic()?.let { emit(TrafficSample(clock(), it.upBps, it.downBps)) }; delay(tick) } }.flowOn(io)
+        flow {
+            while (true) {
+                Mihomo.traffic()?.let { t -> val now = clock(); usage.record(t.upTotal + t.downTotal, now); emit(TrafficSample(now, t.upBps, t.downBps)) }
+                delay(tick)
+            }
+        }.flowOn(io)
     }, { fallback.traffic() }, TrafficSample(0, 0, 0))
 
     private fun conn(c: LivePort.Conn) = ConnectionInfo(
@@ -465,7 +609,7 @@ class CoreEngine(
     // ── Nodes ──────────────────────────────────────────────────────────────────────────────────────
     override suspend fun nodeIndex(): NodeIndex {
         val c = nodes() ?: return if (mockData) fallback.nodeIndex() else NodeIndex(0, emptyList(), 0)
-        val tested = fallback.nodeIndex().testedCount
+        val tested = withContext(io) { runCatching { c.testedCount(clock(), DAY_MS).toLong() }.getOrDefault(0L) }
         return withContext(io) { wrap { c.nodeIndex() }.let { NodeIndex(it.total.toLong(), it.sections.map(::section), tested) } }
     }
 
@@ -576,8 +720,24 @@ class CoreEngine(
     override suspend fun recentTraffic(seconds: Int): List<TrafficSample> =
         if (mockData) fallback.recentTraffic(seconds) else emptyList()
 
-    override suspend fun usageToday(): UsageSummary =
-        if (mockData) fallback.usageToday() else UsageSummary(0, 0, 0, null, List(24) { 0L })
+    private val usage = UsageLedger(dataDir?.let { java.io.File(it, "usage.json") })
+
+    /** Today's usage from the ledger the traffic sampler keeps while the tunnel runs (§2, §14.w). */
+    override suspend fun usageToday(): UsageSummary {
+        val c = core
+        if (c == null || (mockData && usage.state.lastAt == 0L)) return if (mockData) fallback.usageToday() else UsageSummary(0, 0, 0, null, List(24) { 0L })
+        val now = clock()
+        val u = usage.today(now)
+        val regions = runCatching {
+            val sc = scenes().first().mapNotNull { it.selected.takeIf { n -> n.id >= 0 }?.region }
+            (sc + listOfNotNull(globalNode()?.region)).toSet().size
+        }.getOrDefault(0)
+        val fastest = withContext(io) { runCatching { c.fastestNodes("", 1u, now, DAY_MS).firstOrNull()?.latencyMs?.takeIf { it > 0 } }.getOrNull() }
+        return UsageSummary(u.hourly.sum(), regions, u.onlineMs, fastest, u.hourly)
+    }
+
+    /** Flushes the usage ledger (VPN stop / process trim). */
+    fun flushUsage() = usage.save(clock())
 
     override suspend fun storage(): StorageInfo {
         val c = core ?: return if (mockData) fallback.storage() else StorageInfo(0, 0, freeBytes())
@@ -592,6 +752,7 @@ class CoreEngine(
 
     companion object {
         const val GLOBAL = "GLOBAL"
+        private const val DAY_MS = 86_400_000L
         private val NAMES: Map<String, String> = MockCatalog.REGIONS.associate { it.code to it.name }
         fun regionName(code: String): String = NAMES[code] ?: code
     }
