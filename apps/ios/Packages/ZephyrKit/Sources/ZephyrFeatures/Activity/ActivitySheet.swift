@@ -162,7 +162,7 @@ struct ActivitySheet: View {
     private var footnote: some View {
         Text("iPhone 看不到是哪个 App 发起的，只能显示域名。")
             .zType(.caption)
-            .foregroundStyle(ZTokens.Colors.screenT3)
+            .foregroundStyle(ZColor.t3)
             .padding(.horizontal, HMetrics.homeInset + ZTokens.Space.n1)
             .padding(.top, ZTokens.Space.n3)
             .padding(.bottom, ZTokens.Space.n8)

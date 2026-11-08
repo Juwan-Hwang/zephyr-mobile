@@ -11,10 +11,10 @@ enum SubscriptionImportMethod: String, CaseIterable, Identifiable, Sendable {
 
     var title: String {
         switch self {
-        case .paste: "粘贴链接"
-        case .scan: "扫描二维码"
-        case .desktop: "从电脑上的 Zephyr 导入"
-        case .file: "从文件导入"
+        case .paste: ZL.tr("粘贴链接")
+        case .scan: ZL.tr("扫描二维码")
+        case .desktop: ZL.tr("从电脑上的 Zephyr 导入")
+        case .file: ZL.tr("从文件导入")
         }
     }
 
@@ -51,7 +51,7 @@ final class SubscriptionImporter {
     @discardableResult
     func importLink(_ text: String, fromClipboard: Bool = false) async -> Subscription? {
         let s = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !s.isEmpty else { phase = .failed("请粘贴订阅链接"); return nil }
+        guard !s.isEmpty else { phase = .failed(ZL.tr("请粘贴订阅链接")); return nil }
         return await run(fromClipboard ? .clipboard : .url, s)
     }
 
@@ -66,8 +66,13 @@ final class SubscriptionImporter {
     func importFile(at url: URL) async -> Subscription? {
         let scoped = url.startAccessingSecurityScopedResource()
         defer { if scoped { url.stopAccessingSecurityScopedResource() } }
-        guard let data = try? Data(contentsOf: url), let text = String(data: data, encoding: .utf8) else {
-            phase = .failed("无法读取这个文件")
+        // 读文件放到后台线程（大文件不卡主线程）；安全作用域在 await 期间保持打开。
+        let text = await Task.detached(priority: .userInitiated) { () -> String? in
+            guard let data = try? Data(contentsOf: url) else { return nil }
+            return String(data: data, encoding: .utf8)
+        }.value
+        guard let text else {
+            phase = .failed(ZL.tr("无法读取这个文件"))
             return nil
         }
         return await run(.file, text)
@@ -82,19 +87,19 @@ final class SubscriptionImporter {
         } catch let e as ZephyrError {
             phase = .failed(Self.message(for: e.code))
         } catch {
-            phase = .failed("导入失败")
+            phase = .failed(ZL.tr("导入失败"))
         }
         return nil
     }
 
     static func message(for code: ErrorCode) -> String {
         switch code {
-        case .subscriptionInvalid: "无法识别的订阅链接或配置"
-        case .subscriptionFetchFailed: "无法获取订阅，请检查网络后重试"
-        case .networkUnavailable: "网络不可用"
-        case .storageFull: "设备存储空间不足"
-        case .cancelled: "已取消"
-        default: "导入失败"
+        case .subscriptionInvalid: ZL.tr("无法识别的订阅链接或配置")
+        case .subscriptionFetchFailed: ZL.tr("无法获取订阅，请检查网络后重试")
+        case .networkUnavailable: ZL.tr("网络不可用")
+        case .storageFull: ZL.tr("设备存储空间不足")
+        case .cancelled: ZL.tr("已取消")
+        default: ZL.tr("导入失败")
         }
     }
 }

@@ -58,7 +58,7 @@ final class NodeCell: UICollectionViewCell {
             nameLabel.attributedText = nil
             latencyLabel.text = nil
             skeleton.isHidden = false
-            accessibilityLabel = "正在载入"
+            accessibilityLabel = ZL.tr("正在载入")
             return
         }
         skeleton.isHidden = true
@@ -80,16 +80,16 @@ final class NodeCell: UICollectionViewCell {
         latencyLabel.text = text
         let spoken: String
         switch state {
-        case .none: spoken = "未测速"
-        case .testing: spoken = "正在测速"
-        case .value(let ms) where ms < 0: spoken = "超时"
-        case .value(let ms): spoken = "\(ms) 毫秒"
+        case .none: spoken = ZL.tr("未测速")
+        case .testing: spoken = ZL.tr("正在测速")
+        case .value(let ms) where ms < 0: spoken = ZL.tr("超时")
+        case .value(let ms): spoken = ZL.f("%lld 毫秒", Int64(ms))
         }
         accessibilityParts.latency = spoken
         var parts = [accessibilityParts.name]
-        if let m = accessibilityParts.mult { parts.append("倍率 \(m.dropFirst())") }
+        if let m = accessibilityParts.mult { parts.append(ZL.s("倍率 %@", String(m.dropFirst()))) }
         parts += [accessibilityParts.proto, spoken]
-        accessibilityLabel = parts.joined(separator: "，")
+        accessibilityLabel = parts.joined(separator: ZL.tr("，"))
     }
 
     private static func attributed(_ m: NodeNameMarkup, style: NodeListStyle) -> NSAttributedString {

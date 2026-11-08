@@ -11,8 +11,8 @@ struct RecentHostRow: View {
     let sceneName: String?
 
     private var subtitle: String {
-        guard !item.isDirect, let sceneName else { return "直连" }
-        return "\(sceneName)，\(item.node)"
+        guard !item.isDirect, let sceneName else { return ZL.tr("直连") }
+        return ZL.s("%@，%@", sceneName, item.node)
     }
 
     var body: some View {
@@ -25,13 +25,13 @@ struct RecentHostRow: View {
                     .truncationMode(.middle)
                 Text(verbatim: subtitle)
                     .zType(.caption)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
                     .lineLimit(1)
             }
             Spacer(minLength: ZTokens.Space.n3)
             Text(verbatim: ZFormat.bytes(item.totalBytes))
                 .zMono(.body)
-                .foregroundStyle(ZTokens.Colors.screenT3)
+                .foregroundStyle(ZColor.t3)
                 .fixedSize()
             Image(systemName: "chevron.right")
                 .font(.caption)

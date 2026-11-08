@@ -1,6 +1,7 @@
 // NodeListFooterView — 底部“1 / 13,109,802”与“已检测 41,288”（原型 .vfoot：70pt，向背景渐隐）。
 
 import UIKit
+import ZephyrKit
 
 final class NodeListFooterView: UIView {
     private let gradient = CAGradientLayer()
@@ -46,15 +47,15 @@ final class NodeListFooterView: UIView {
 
     private func updateAccessibility() {
         var parts: [String] = []
-        if lastTotal > 0 { parts.append("第 \(CompactCount.grouped(lastOrdinal)) 个，共 \(CompactCount.grouped(lastTotal)) 个") }
-        if lastTested >= 0 { parts.append("已检测 \(CompactCount.grouped(lastTested)) 个") }
-        accessibilityLabel = parts.joined(separator: "，")
+        if lastTotal > 0 { parts.append(ZL.s("第 %1$@ 个，共 %2$@ 个", CompactCount.grouped(lastOrdinal), CompactCount.grouped(lastTotal))) }
+        if lastTested >= 0 { parts.append(ZL.s("已检测 %@ 个", CompactCount.grouped(lastTested))) }
+        accessibilityLabel = parts.joined(separator: ZL.tr("，"))
     }
 
     func set(tested: Int64) {
         guard tested != lastTested else { return }
         lastTested = tested
-        testedLabel.text = "已检测 \(CompactCount.grouped(tested))"
+        testedLabel.text = ZL.s("已检测 %@", CompactCount.grouped(tested))
         updateAccessibility()
     }
 

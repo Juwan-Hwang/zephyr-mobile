@@ -8,6 +8,7 @@
 
 import Foundation
 import Observation
+import ZephyrKit
 
 enum AppIconOption: String, CaseIterable, Identifiable, Sendable {
     /// 主图标 AppIcon。
@@ -19,8 +20,8 @@ enum AppIconOption: String, CaseIterable, Identifiable, Sendable {
 
     var title: String {
         switch self {
-        case .dark: "深色"
-        case .light: "浅色"
+        case .dark: ZL.tr("深色")
+        case .light: ZL.tr("浅色")
         }
     }
 
@@ -81,7 +82,7 @@ final class AppIconModel {
             return nil
         } catch {
             current = old
-            return PageError.from(error, fallback: "无法更换应用图标")
+            return PageError.from(error, fallback: ZL.tr("无法更换应用图标"))
         }
     }
 }

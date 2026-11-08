@@ -21,7 +21,7 @@ struct RuleLayerRow: View {
             }
             Text(verbatim: count)
                 .zMono(.body)
-                .foregroundStyle(kind == nil ? ZTokens.Colors.screenT3 : ZTokens.Colors.screenT2)
+                .foregroundStyle(kind == nil ? ZColor.t3 : ZColor.t2)
         }
         .animation(ZMotion.motion(ZMotion.standard, reduceMotion: reduceMotion), value: isHit)
         .accessibilityValue(Text(isHit ? LocalizedStringKey("已命中") : LocalizedStringKey("")))
@@ -29,9 +29,9 @@ struct RuleLayerRow: View {
 
     static func title(_ k: LayerKind) -> String {
         switch k {
-        case .override: "覆写"
-        case .subscription: "订阅"
-        case .domain: "域名"
+        case .override: ZL.tr("覆写")
+        case .subscription: ZL.tr("订阅")
+        case .domain: ZL.tr("域名")
         case .ip: "IP"
         }
     }

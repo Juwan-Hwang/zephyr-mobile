@@ -96,10 +96,10 @@ private struct CommandField: View {
     var body: some View {
         HStack(spacing: ZTokens.Space.n3) {
             Image(systemName: "magnifyingglass")
-                .foregroundStyle(ZTokens.Colors.screenT3)
+                .foregroundStyle(ZColor.t3)
                 .accessibilityHidden(true)
             CommandTextField(text: $model.input, isFocused: $focused, marks: marks, tint: accent.color,
-                             placeholder: "搜索或输入指令", onSubmit: onSubmit)
+                             placeholder: ZL.tr("搜索或输入指令"), onSubmit: onSubmit)
                 .frame(maxWidth: .infinity)
                 .frame(height: height)
             Button(action: onCancel) {
@@ -124,7 +124,7 @@ private struct CommandField: View {
         case .service, .scene: ZTokens.Colors.colorDownload
         case .region: ZTokens.Colors.screenGreen
         case .action: ZTokens.Colors.screenAmber
-        case .scope: ZTokens.Colors.screenT3
+        case .scope: ZColor.t3
         }
     }
 }

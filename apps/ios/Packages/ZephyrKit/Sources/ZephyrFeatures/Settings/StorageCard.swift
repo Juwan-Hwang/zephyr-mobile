@@ -16,7 +16,7 @@ struct StorageCard: View {
             ZProgressBar(segments: segments, label: "存储")
             Text(verbatim: caption)
                 .zType(.caption)
-                .foregroundStyle(ZTokens.Colors.screenT3)
+                .foregroundStyle(ZColor.t3)
                 .redacted(reason: info == nil ? .placeholder : [])
         }
         .padding(.horizontal, ZTokens.Space.n5 - ZTokens.Space.n1 / 2)
@@ -34,8 +34,8 @@ struct StorageCard: View {
     }
 
     private var caption: String {
-        guard let i = info else { return "节点 0.0 GB · 规则 0.0 GB · 可用 0.0 GB" }
-        return "节点 \(Self.gb(i.nodesBytes)) · 规则 \(Self.gb(i.rulesBytes)) · 可用 \(Self.gb(i.freeBytes))"
+        guard let i = info else { return ZL.tr("节点 0.0 GB · 规则 0.0 GB · 可用 0.0 GB") }
+        return ZL.s("节点 %1$@ · 规则 %2$@ · 可用 %3$@", Self.gb(i.nodesBytes), Self.gb(i.rulesBytes), Self.gb(i.freeBytes))
     }
 
     /// 存储统一以 GB 一位小数显示（原型 “0.6 GB”）；不足 0.1 GB 时退回 ZFormat.bytes。

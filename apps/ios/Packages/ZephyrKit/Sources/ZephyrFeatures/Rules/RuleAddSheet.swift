@@ -65,7 +65,7 @@ struct RuleAddSheet: View {
                 }
                 Text("覆写位于第 1 层，在订阅规则之上，订阅更新时保持不变。按域名生效，包含子域名。")
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, ZTokens.Space.n2)
                     .padding(.top, ZTokens.Space.n4)

@@ -32,22 +32,6 @@
           }
         }
       }
-    },
-    "NSLocalNetworkUsageDescription" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "用于局域网设备通过本地端口共享代理。"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lets devices on your local network share this proxy through the local port."
-          }
-        }
-      }
     }
   },
   "version" : "1.0"

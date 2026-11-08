@@ -30,7 +30,7 @@ public struct SubscriptionsView: View {
         List {
             Section { header }
             if !model.subscriptions.isEmpty {
-                Section { traffic } header: { ZSectionHeader("流量", trailing: "本月") }
+                Section { traffic } header: { ZSectionHeader("流量", trailing: ZL.tr("本月")) }
             } else if model.loaded {
                 Section { empty }
             }
@@ -59,7 +59,7 @@ public struct SubscriptionsView: View {
             .padding(.bottom, ZTokens.Space.n4)
             .clearListRow()
         if let sub = model.latestUpdate, let diff = sub.lastDiff {
-            SubscriptionDiffCard(title: "\(sub.name) 已更新",
+            SubscriptionDiffCard(title: ZL.s("%@ 已更新", sub.name),
                                  trailing: sub.updatedAt.map { ZFormat.relative($0, now: model.now()) },
                                  diff: diff)
                 .clearListRow()
@@ -77,8 +77,8 @@ public struct SubscriptionsView: View {
         }
         if !model.others.isEmpty {
             Button { showsAll = true } label: {
-                ZSettingsRow(verbatim: "其他 \(ZFormat.count(Int64(model.others.count))) 个",
-                             subtitle: "\(ZFormat.count(model.othersNodeCount)) 个节点")
+                ZSettingsRow(verbatim: ZL.s("其他 %@ 个", ZFormat.count(Int64(model.others.count))),
+                             subtitle: ZL.s("%@ 个节点", ZFormat.count(model.othersNodeCount)))
             }
             .buttonStyle(ZRowButtonStyle())
             .zCardListRow()
@@ -101,13 +101,13 @@ public struct SubscriptionsView: View {
             .zCardListRow()
         ZSettingsRow("仅在 Wi‑Fi 下更新", isOn: store.binding(\.updateOnWifiOnly, fallback: true))
             .zCardListRow()
-        ZSettingsRow("更新前显示更改", subtitle: "先预览新增与移除的节点，确认后再更新",
+        ZSettingsRow("更新前显示更改", subtitle: ZL.tr("先预览新增与移除的节点，确认后再更新"),
                      isOn: store.binding(\.showChangesBeforeUpdate, fallback: false))
             .zCardListRow()
     }
 
     static let defaultInterval: Int32 = 12
-    static let intervals: [MenuOption<Int32>] = [6, 12, 24, 48].map { MenuOption(value: Int32($0), title: "每 \($0) 小时") }
+    static let intervals: [MenuOption<Int32>] = [6, 12, 24, 48].map { MenuOption(value: Int32($0), title: ZL.f("每 %lld 小时", Int64($0))) }
 
     // MARK: 导入
 

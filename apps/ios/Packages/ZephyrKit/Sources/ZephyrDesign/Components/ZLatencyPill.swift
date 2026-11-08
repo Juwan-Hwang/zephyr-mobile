@@ -3,6 +3,7 @@
 // text = 列表里的纯文字；pill = 带 14% 底色的胶囊（详情、小组件）。
 
 import SwiftUI
+import ZephyrKit
 
 public enum ZLatencyStyle: Sendable {
     case text, pill
@@ -44,15 +45,15 @@ public struct ZLatencyPill: View {
     private var display: String {
         if isTesting { return "···" }
         guard let ms else { return "—" }
-        if ms < 0 { return "超时" }
+        if ms < 0 { return ZL.tr("超时") }
         return "\(ms) ms"
     }
 
     private var spoken: String {
-        if isTesting { return "延迟检测中" }
-        guard let ms else { return "延迟未检测" }
-        if ms < 0 { return "延迟超时" }
-        return "延迟 \(ms) 毫秒"
+        if isTesting { return ZL.tr("延迟检测中") }
+        guard let ms else { return ZL.tr("延迟未检测") }
+        if ms < 0 { return ZL.tr("延迟超时") }
+        return ZL.f("延迟 %lld 毫秒", Int64(ms))
     }
 
     private var color: Color {

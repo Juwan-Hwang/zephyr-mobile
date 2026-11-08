@@ -38,7 +38,7 @@ extension AppModel {
         do {
             let change = try await engine.setGlobalNode(id: node.id)
             globalNode = node
-            showUndo("已切换至\(node.name)") { [weak self] in
+            showUndo(ZL.s("已切换至%@", node.name)) { [weak self] in
                 guard let self, let previous else { return }
                 _ = try? await self.engine.setGlobalNode(id: previous.id)
                 self.globalNode = previous
@@ -108,7 +108,7 @@ extension AppModel {
     public func applySceneChange(sceneId: String, from: NodeSummary, to: NodeSummary) async {
         do {
             try await engine.applySceneChange(sceneId: sceneId, nodeId: to.id)
-            showUndo("已切换至\(to.name)") { [weak self] in
+            showUndo(ZL.s("已切换至%@", to.name)) { [weak self] in
                 guard let self else { return }
                 do { try await self.engine.applySceneChange(sceneId: sceneId, nodeId: from.id) } catch { self.report(error) }
             }
@@ -138,16 +138,16 @@ extension AppModel {
             try await engine.overrideHost(host: host, target: target, sceneId: sceneId, persistent: persistent)
             switch target {
             case .unchanged:
-                showUndo("已清除 \(host) 的路由覆写")
+                showUndo(ZL.s("已清除 %@ 的路由覆写", host))
             case .direct:
-                showUndo("\(host) 已改为直连") { [weak self] in
+                showUndo(ZL.s("%@ 已改为直连", host)) { [weak self] in
                     guard let self else { return }
                     do { try await self.engine.overrideHost(host: host, target: .unchanged, sceneId: nil, persistent: persistent) }
                     catch { self.report(error) }
                 }
             case .scene:
-                let name = sceneId.flatMap { scene(id: $0)?.name } ?? "场景"
-                showUndo("\(host) 已改走 \(name)") { [weak self] in
+                let name = sceneId.flatMap { scene(id: $0)?.name } ?? ZL.tr("场景")
+                showUndo(ZL.s("%@ 已改走 %@", host, name)) { [weak self] in
                     guard let self else { return }
                     do { try await self.engine.overrideHost(host: host, target: .unchanged, sceneId: nil, persistent: persistent) }
                     catch { self.report(error) }
@@ -163,7 +163,7 @@ extension AppModel {
     /// ZToastItem 的 action 是同步闭包，这里包一层主线程 Task 再执行异步撤销。
     public func showUndo(_ message: String, undo: (@MainActor @Sendable () async -> Void)? = nil) {
         guard let undo else { toast = ZToastItem(message); return }
-        toast = ZToastItem(message, actionTitle: "撤销") {
+        toast = ZToastItem(message, actionTitle: ZL.tr("撤销")) {
             Task { @MainActor in await undo() }
         }
     }

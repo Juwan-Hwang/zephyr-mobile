@@ -120,7 +120,6 @@ targets:
         # 资料库 → 本地端口：局域网设备通过 mixed-port 共享代理；iOS 14+ 访问局域网需要说明文案。
         # 今日卡片 →「存储图像」（PhotoKit 仅添加）。
         NSPhotoLibraryAddUsageDescription: 将今日卡片保存到照片
-        NSLocalNetworkUsageDescription: 用于局域网设备通过本地端口共享代理。
         ZephyrAppGroup: $(ZEPHYR_APP_GROUP)
         CFBundleURLTypes:
           - CFBundleURLName: app.zephyr.mobile

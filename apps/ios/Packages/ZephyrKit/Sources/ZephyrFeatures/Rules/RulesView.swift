@@ -20,12 +20,12 @@ public struct RulesView: View {
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                PageHeader(title: "规则", number: model.stats.map { ZFormat.count($0.total) }, unit: "条",
+                PageHeader(title: "规则", number: model.stats.map { ZFormat.count($0.total) }, unit: ZL.tr("条"),
                            subtitle: model.subtitle)
                 VStack(alignment: .leading, spacing: 0) {
                     RuleTestCard(input: $model.input, steps: model.steps, took: model.tookText, invalid: model.invalid)
                         .padding(.top, ZTokens.Space.n5)
-                    ZSectionHeader("匹配顺序", trailing: "从上到下")
+                    ZSectionHeader("匹配顺序", trailing: ZL.tr("从上到下"))
                     layers
                 }
                 .padding(.horizontal, PageMetrics.margin)
@@ -60,8 +60,8 @@ public struct RulesView: View {
                                      count: ZFormat.count(layer.count), isHit: model.hitRow == i)
                     }
                     ZDivider()
-                    RuleLayerRow(ordinal: stats.layers.count + 1, name: "其余流量", note: "MATCH", kind: nil,
-                                 count: "其他", isHit: model.hitRow == stats.layers.count)
+                    RuleLayerRow(ordinal: stats.layers.count + 1, name: ZL.tr("其余流量"), note: "MATCH", kind: nil,
+                                 count: ZL.tr("其他"), isHit: model.hitRow == stats.layers.count)
                 }
             }
         } else {

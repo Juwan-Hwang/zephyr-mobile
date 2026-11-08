@@ -4,6 +4,7 @@
 // 触感：按下 medium；连上 success。VoiceOver：开关语义（.isToggle），值为 已连接 / 未连接 / 正在连接…
 
 import SwiftUI
+import ZephyrKit
 
 public enum ZConnectPhase: Sendable, Equatable {
     case off, connecting, on, disconnecting
@@ -42,10 +43,10 @@ public struct ZConnectButton: View {
 
     private var spokenValue: String {
         switch phase {
-        case .off: return "未连接"
-        case .connecting: return "正在连接"
-        case .on: return "已连接"
-        case .disconnecting: return "正在断开"
+        case .off: return ZL.tr("未连接")
+        case .connecting: return ZL.tr("正在连接")
+        case .on: return ZL.tr("已连接")
+        case .disconnecting: return ZL.tr("正在断开")
         }
     }
 }

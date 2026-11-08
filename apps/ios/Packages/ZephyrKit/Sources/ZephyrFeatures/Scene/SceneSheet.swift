@@ -41,7 +41,7 @@ struct SceneSheet: View {
                     .padding(.horizontal, HMetrics.homeInset)
                     .padding(.top, ZTokens.Space.n5)
                 Text(verbatim: lede(scene))
-                    .zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+                    .zType(.footnote).foregroundStyle(ZColor.t3)
                     .padding(.horizontal, HMetrics.homeInset)
                     .padding(.top, ZTokens.Space.n3)
 
@@ -70,7 +70,7 @@ struct SceneSheet: View {
                     .padding(.top, ZTokens.Space.n6)
 
                 Text("优选结果仅保存在 Zephyr 中，订阅配置保持原样。")
-                    .zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
+                    .zType(.caption).foregroundStyle(ZColor.t3)
                     .padding(.horizontal, HMetrics.homeInset + ZTokens.Space.n1)
                     .padding(.top, ZTokens.Space.n3)
                     .padding(.bottom, ZTokens.Space.n8)
@@ -118,16 +118,16 @@ struct SceneSheet: View {
         ZCard(padding: 0, cornerRadius: HMetrics.cardRadius) {
             VStack(spacing: 0) {
                 ForEach(Array(scene.exceptions.enumerated()), id: \.offset) { _, ex in
-                    DetailRow(title: ex.app, value: "\(ex.node.name)（固定）")
+                    DetailRow(title: ex.app, value: ZL.s("%@（固定）", ex.node.name))
                     ZDivider()
                 }
-                DetailRow(title: "检测频率", value: model.settings?.testOnWifiOnly == false ? "每天" : "每天（仅 Wi‑Fi）")
+                DetailRow(title: ZL.tr("检测频率"), value: ZL.tr(model.settings?.testOnWifiOnly == false ? "每天" : "每天（仅 Wi‑Fi）"))
                 ZDivider()
                 Button {
                     Task { await model.retest(sceneId: scene.id) }
                 } label: {
                     HStack {
-                        Text(verbatim: model.retesting.contains(scene.id) ? "检测中…" : "重新检测")
+                        Text(verbatim: ZL.tr(model.retesting.contains(scene.id) ? "检测中…" : "重新检测"))
                             .zType(.body).foregroundStyle(ZAccentStyle())
                         Spacer()
                         if model.retesting.contains(scene.id) { ProgressView() }
@@ -155,17 +155,17 @@ struct SceneSheet: View {
 
     private func lede(_ scene: Scene) -> String {
         var parts: [String] = []
-        if loaded, !candidates.isEmpty { parts.append("检测自 \(candidates.count) 个候选节点") }
-        if let t = scene.testedAt { parts.append("\(ZFormat.relative(t, now: model.now()))检测") }
+        if loaded, !candidates.isEmpty { parts.append(ZL.f("检测自 %lld 个候选节点", Int64(candidates.count))) }
+        if let t = scene.testedAt { parts.append(ZL.s("%@检测", ZFormat.relative(t, now: model.now()))) }
         return parts.isEmpty ? " " : parts.joined(separator: " · ")
     }
 
     /// 由候选推出的三级漏斗：候选 → 延迟低于 300 ms → 全部可访问（Scene.available）。
     private func funnel(_ scene: Scene) -> [FunnelStep] {
         let fast = candidates.filter { ($0.latencyMs ?? .max) >= 0 && ($0.latencyMs ?? .max) < 300 }.count
-        return [FunnelStep(count: candidates.count, label: "全部候选"),
-                FunnelStep(count: fast, label: "延迟低于 300 ms"),
-                FunnelStep(count: Int(scene.available), label: "全部可访问")]
+        return [FunnelStep(count: candidates.count, label: ZL.tr("全部候选")),
+                FunnelStep(count: fast, label: ZL.tr("延迟低于 300 ms")),
+                FunnelStep(count: Int(scene.available), label: ZL.tr("全部可访问"))]
     }
 }
 
@@ -179,7 +179,7 @@ private struct DetailRow: View {
         HStack(spacing: ZTokens.Space.n3) {
             Text(verbatim: title).zType(.body).foregroundStyle(ZTokens.Colors.screenT1)
             Spacer(minLength: ZTokens.Space.n3)
-            Text(verbatim: value).zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+            Text(verbatim: value).zType(.footnote).foregroundStyle(ZColor.t3)
                 .multilineTextAlignment(.trailing)
         }
         .padding(.vertical, ZTokens.Space.n4)

@@ -33,7 +33,7 @@ public struct ZFlag: View {
         Text(verbatim: code)
             .zMono(size == .small ? .tag : .flag, weight: .semibold)
             .tracking(ZMetrics.monoFlag * 0.04)
-            .foregroundStyle(isHighlighted ? AnyShapeStyle(ZAccentStyle()) : AnyShapeStyle(ZTokens.Colors.screenT2))
+            .foregroundStyle(isHighlighted ? AnyShapeStyle(ZAccentStyle()) : AnyShapeStyle(ZColor.t2))
             .lineLimit(1)
             .fixedSize()
             .padding(.horizontal, ZTokens.Space.n1)

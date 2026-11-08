@@ -11,6 +11,8 @@
 
 - 2026-11-09 PR #29 续：[部分已修] X-P1-5——订阅自动更新（BGAppRefreshTask `app.zephyr.mobile.refresh` + 回前台检查 + 仅 Wi‑Fi 以 NWPath 判断；AutoUpdatePlanner 有单测；EngineHost 让前后台共用同一核心实例）、按需连接 / 受信任 Wi‑Fi 自动断开（OnDemandPlan → NEOnDemandRule，连接前与设置变更时写入系统配置）。剩余：仅 Wi‑Fi 测速（需区分手动 / 自动测速）、延迟 TTL、自动故障转移（reportSceneProbe）、场景 sheet“每日检测”文案。X-P1-11 阻塞：桌面“同步到手机”二维码格式未在契约里定义〔等 A：请给出 payload 格式〕。
 
+- 2026-11-09 PR agent/ios/review-q2d：[已修] X-P1-9 余项（`ZL` 本地化入口：ZFormat/HFormat、模型层与页面里返回 String 的文案、Widgets/Shared 的三目与可访问性文案全部走目录并补英文；`ZL.bundle` 默认 nil 使单测保持中文，App/Widgets 启动时设为 .main）、X-P1-5 余项（场景检测结果按“结果保留”过期后，回前台/后台刷新时经 VPN 自动重测，“仅 Wi‑Fi 测速”以 NWPath 判断，SceneRetestPlanner 单测）、X-P1-10（增强对比度：`ZColor.t2/t3` 加深次级/三级文字，全部引用已迁移；正常对比度下浅色 t3 偏淡属 tokens，已在 #1 请 A 上调）；P2：updateAll 只重载隧道一次且全部失败时报错、importFile 后台读取、删除与 localhost 矛盾的 NSLocalNetworkUsageDescription、时钟遵循 12/24 小时设置。新增 TextTests / LocalizationTests / SceneRetestPlannerTests。
+
 ## P0
 
 - **Q2-X-P0-1 无隐私清单** [已修] — `App/` `PacketTunnel/` `Widgets/` 各加 `PrivacyInfo.xcprivacy`（UserDefaults CA92.1、文件时间戳 C617.1、磁盘空间 85F4.1、系统启动时间 35F9.1；不追踪、不收集）。随 target 资源打包。
@@ -27,7 +29,7 @@
 - **Q2-X-P1-7 PacketTunnel 内存与电量** [部分已修：IPv6 路由、睡眠定时器；配置多份拷贝待做] — 配置被复制 5–6 次；1 Hz 定时器睡眠时仍唤醒；IPv6 关闭时未声明 IPv6 路由导致绕过隧道（隐私泄露）。
 - **Q2-X-P1-8 测试不守门** — `__Snapshots__` 空且录制模式 missing，永不比对；快照 bundle 无 TEST_HOST；`layer.render` 丢模糊材质；容差 0.99/0.98 偏松；缺 AppModel、SharedStatePublisher、AppServices 链接解析、LiveActivity 测试；SPM target 无严格并发设置，App 仍 Swift 5 模式。
 - **Q2-X-P1-9 本地化** [部分已修] — App 与 Widgets 的 `Localizable.xcstrings` 已生成（zh-Hans 源 + en，373 key，含复数），`Text(verbatim:)` 用户文案已改可本地化，`InfoPlist.xcstrings`（相机/相册/本地网络说明）、project.yml `knownRegions`/`CFBundleLocalizations` 已加。剩余：返回 String 的文案（ErrorText、HFormat、ZSettingsRow(verbatim:)、AppShortcuts、Live Activity 状态文字）需改 `String(localized:)`；英文版快照；伪语言（加长）布局测试。
-- **Q2-X-P1-10 对比度与显示辅助** — 浅色 t3 仅 2.8:1、深色 3.7:1；不支持增强对比度、降低透明度、不以颜色区分。
+- **Q2-X-P1-10 对比度与显示辅助** [部分已修：增强对比度；浅色 t3 基色等 A 的 tokens；降低透明度由系统材质处理] — 浅色 t3 仅 2.8:1、深色 3.7:1；不支持增强对比度、降低透明度、不以颜色区分。
 - **Q2-X-P1-11 “从桌面 Zephyr 导入”在真引擎必败** — `CoreEngine.swift:~529` 拒绝非 URL 二维码。
 - **Q2-X-P1-12 新接口未接 UI** [已修] — SceneSheet 来源分段 → `AppModel.setSceneSource`；TraceView 底部 `TraceOverrideSection` → `AppModel.overrideHost`（直连/场景、始终应用、撤销吐司）；`CoreEngine.connectionState()` 在全局模式补 `globalNodeId`（冷启动即有出口节点，setGlobalNode 后重发）；Scene.services 行此前已接。剩余：RuleAddSheet 接 overrideHost；契约 `hostOverride` 读接口〔等 A〕用于回填当前覆写。
 - **Q2-X-P1-13 连接轨迹用 App 侧 testRule 预测，不是 mihomo 实际匹配** 〔等 A：connectionTrace/recentHosts〕。
@@ -40,12 +42,12 @@
 
 - ~~启动屏颜色与 App 背景不一致~~ [已修]
 - 无深色/着色 App 图标变体（AppIcon-Light 资源与 `ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES`）。
-- `NSLocalNetworkUsageDescription` 与只绑 localhost 矛盾；缺 `ITSAppUsesNonExemptEncryption`。
+- ~~`NSLocalNetworkUsageDescription` 与只绑 localhost 矛盾~~ [已修]；缺 `ITSAppUsesNonExemptEncryption`（待用户决定）。
 - ~~代理凭据存 UserDefaults，应进 Keychain~~ [已修]
 - ~~CoreEngine queries/remapped 无限增长~~ [已修]；~~协议默认 no-op~~ [已修]。
 - DarwinObservation deinit 与回调竞态；CoreEngine `queries`/`remapped` 字典无限增长。
-- `updateAll` 吞错误且重载隧道 N 次；订阅导入无进度/取消；无日志/诊断 UI；`importFile` 主线程读文件。
+- ~~`updateAll` 吞错误且重载隧道 N 次~~ [已修]；订阅导入无进度/取消；无日志/诊断 UI；~~`importFile` 主线程读文件~~ [已修]。
 - 协议扩展里 `setSceneSource`/`overrideHost` 默认静默 no-op（应改为必须实现或抛 unsupported）。
-- 原型“检测中 138/512”进度未显示；时钟格式忽略 12/24 小时。
+- 原型“检测中 138/512”进度未显示；~~时钟格式忽略 12/24 小时~~ [已修]。
 - CI 性能测试用墙钟易抖；覆盖率只统计 App target。
 - 11-08 子代理遗留：~~RuleAddSheet 接 overrideHost~~ [已修]；NodeRowStore 失败重试（L-P2-8）；订阅/节点/规则错误横幅（L-P2-11）；其余文件 #if DEBUG 包裹 Mock（L-P2-5）；引导节奏（L-P2-2）；registerForTraitChanges（L-P2-7）；L-P2-12/13/4；深链来源（H-P2-21：AppModel.pendingLink、确认弹窗、小组件 URL 令牌）；H-P2-10/11/14/15/16/18/19/20；D：ZTrafficStat/ZSparkline 颜色改 accent/screenUp、ZLatencyPill 注释、SceneSheet 改 ZSheet(verbatim:)、Features 采用 ZGroupCard。

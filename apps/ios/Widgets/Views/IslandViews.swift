@@ -26,7 +26,7 @@ struct IslandCompactTrailing: View {
             .fontDesign(.monospaced)
             .foregroundStyle(ZTokens.Colors.screenT1)
             .contentTransition(.numericText())
-            .accessibilityLabel(isStale ? "速率已暂停更新" : "下行 \(ZFormat.rateString(state.downBps))")
+            .accessibilityLabel(isStale ? String(localized: "速率已暂停更新") : String(localized: "下行 \(ZFormat.rateString(state.downBps))"))
     }
 }
 
@@ -57,11 +57,11 @@ struct IslandExpandedBottom: View {
                     .contentTransition(.numericText())
                 Text("\(down.unit) ↓")
                     .zType(.body)
-                    .foregroundStyle(ZTokens.Colors.screenT2)
+                    .foregroundStyle(ZColor.t2)
                 Spacer(minLength: ZTokens.Space.n3)
                 Text("\(ZFormat.rateString(state.upBps)) ↑")
                     .zType(.footnote, monospacedDigits: true)
-                    .foregroundStyle(ZTokens.Colors.screenT2)
+                    .foregroundStyle(ZColor.t2)
             }
             .minimumScaleFactor(0.7)
             }

@@ -44,8 +44,8 @@ struct SubscriptionsSection: View {
     }
 
     private var todayText: String {
-        guard let u = model.usage else { return "今日" }
-        return "今日 \(ZFormat.bytes(u.todayBytes))"
+        guard let u = model.usage else { return ZL.tr("今日") }
+        return ZL.s("今日 %@", ZFormat.bytes(u.todayBytes))
     }
 }
 
@@ -86,7 +86,7 @@ private struct SubscriptionRow: View {
                 if let e = sub.expiresAt {
                     Text(verbatim: HFormat.homeExpiry(e, now: now))
                         .zType(.footnote)
-                        .foregroundStyle(warn ? ZTokens.Colors.screenAmber : ZTokens.Colors.screenT3)
+                        .foregroundStyle(warn ? ZTokens.Colors.screenAmber : ZColor.t3)
                 }
             }
         }
@@ -99,8 +99,8 @@ private struct SubscriptionRow: View {
 
     private var a11y: String {
         var parts = [sub.name]
-        if let r = sub.remainingBytes { parts.append("剩余 \(ZFormat.bytes(r))") }
-        if let used { parts.append("已用 \(Int((used * 100).rounded()))%") }
+        if let r = sub.remainingBytes { parts.append(ZL.s("剩余 %@", ZFormat.bytes(r))) }
+        if let used { parts.append(ZL.f("已用 %lld%%", Int64((used * 100).rounded()))) }
         if let e = sub.expiresAt { parts.append(HFormat.homeExpiry(e, now: now)) }
         return parts.joined(separator: "，")
     }

@@ -40,8 +40,8 @@ public struct ZTrafficStat: View {
                 ZBigNumber(down.value, unit: nil, size: .large)
                     .modifier(ZTrailingUnit(text: down.unit, arrow: "↓", arrowColor: ZTokens.Colors.colorDownload))
                 HStack(spacing: ZTokens.Space.n1) {
-                    Text(verbatim: up.value).foregroundStyle(ZTokens.Colors.screenT2)
-                    Text(verbatim: up.unit).foregroundStyle(ZTokens.Colors.screenT3)
+                    Text(verbatim: up.value).foregroundStyle(ZColor.t2)
+                    Text(verbatim: up.unit).foregroundStyle(ZColor.t3)
                     Text(verbatim: "↑").foregroundStyle(ZTokens.Colors.colorUpload)
                 }
                 .zType(.footnote, monospacedDigits: true)
@@ -51,7 +51,7 @@ public struct ZTrafficStat: View {
             if let idleMessage {
                 Text(idleMessage)
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.top, ZTokens.Space.n6)
                     .opacity(isActive ? 0 : 1)
@@ -94,7 +94,7 @@ private struct ZTrailingUnit: ViewModifier {
 
     private var unit: some View {
         HStack(spacing: ZTokens.Space.n1) {
-            Text(verbatim: text).foregroundStyle(ZTokens.Colors.screenT3)
+            Text(verbatim: text).foregroundStyle(ZColor.t3)
             Text(verbatim: arrow).foregroundStyle(arrowColor)
         }
         .zType(.footnote)

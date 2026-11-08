@@ -18,7 +18,7 @@ struct PageFootnote: View {
     var body: some View {
         text
             .zType(.footnote)
-            .foregroundStyle(ZTokens.Colors.screenT3)
+            .foregroundStyle(ZColor.t3)
             .multilineTextAlignment(centered ? .center : .leading)
             .fixedSize(horizontal: false, vertical: true)
             .padding(.horizontal, PageMetrics.titleInset)

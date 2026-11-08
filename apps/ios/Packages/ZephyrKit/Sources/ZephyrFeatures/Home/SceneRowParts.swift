@@ -2,6 +2,7 @@
 
 import SwiftUI
 import ZephyrDesign
+import ZephyrKit
 
 /// 检测中：2pt 轨道上来回移动的强调色片段。契约 v0 没有检测进度（tested/total），所以是不确定进度；
 /// 契约补上后改为确定进度（见 NOTES-H.md）。Reduce Motion 下静止显示 30%。
@@ -58,7 +59,7 @@ struct CoachHint: View {
 #Preview {
     VStack(spacing: ZTokens.Space.n6) {
         ProbeBar().frame(width: HMetrics.probeBarWidth)
-        CoachHint(text: "左右滑动以切换地区")
+        CoachHint(text: ZL.tr("左右滑动以切换地区"))
     }
     .padding()
     .zPageBackground()

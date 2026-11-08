@@ -1,12 +1,234 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+    " 和 " : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " and "
+          }
+        }
+      }
+    },
+    "%1$@ · %2$lld 个连接 · %3$@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$lld connections · %3$@"
+          }
+        }
+      }
+    },
+    "%1$@ 不可用，%2$@ 正常" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ unavailable, %2$@ OK"
+          }
+        }
+      }
+    },
+    "%1$@ 等 %2$lld 个" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@, %2$lld networks"
+          }
+        }
+      }
+    },
+    "%@ 不可用" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ unavailable"
+          }
+        }
+      }
+    },
+    "%@ 均不可用" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ all unavailable"
+          }
+        }
+      }
+    },
+    "%@ 均正常" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ all OK"
+          }
+        }
+      }
+    },
+    "%@ 已改为直连" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ now connects directly"
+          }
+        }
+      }
+    },
+    "%@ 已改走 %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ now uses %2$@"
+          }
+        }
+      }
+    },
+    "%@ 正常" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ OK"
+          }
+        }
+      }
+    },
+    "%@到期" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expires %@"
+          }
+        }
+      }
+    },
     "%@前" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ ago"
+          }
+        }
+      }
+    },
+    "%lld 个地区" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld region"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld regions"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld 分钟前" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min ago"
+          }
+        }
+      }
+    },
+    "%lld 分钟后" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "in %lld min"
+          }
+        }
+      }
+    },
+    "%lld 天前" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld d ago"
+          }
+        }
+      }
+    },
+    "%lld 天后" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "in %lld d"
+          }
+        }
+      }
+    },
+    "%lld 天后到期" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expires in %lld d"
+          }
+        }
+      }
+    },
+    "%lld 小时前" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld hr ago"
+          }
+        }
+      }
+    },
+    "%lld 小时后" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "in %lld hr"
+          }
+        }
+      }
+    },
+    "%lld 毫秒" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ms"
+          }
+        }
+      }
+    },
+    "%lld月%lld日" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld/%2$lld"
           }
         }
       }
@@ -71,6 +293,16 @@
         }
       }
     },
+    "、" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", "
+          }
+        }
+      }
+    },
     "下行" : {
       "localizations" : {
         "en" : {
@@ -111,6 +343,16 @@
         }
       }
     },
+    "今天到期" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expires today"
+          }
+        }
+      }
+    },
     "今天用了多少流量，按小时分布。" : {
       "localizations" : {
         "en" : {
@@ -127,6 +369,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Today"
+          }
+        }
+      }
+    },
+    "今日 %1$@ %2$@，%3$@ 个地区，%4$@ 小时在线，最快 %5$@ 毫秒。%6$@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today %1$@ %2$@, %3$@ regions, %4$@ hours online, fastest %5$@ ms. %6$@"
           }
         }
       }
@@ -191,6 +443,26 @@
         }
       }
     },
+    "出口从 %1$@ %2$@ 变为 %3$@ %4$@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exit changed from %1$@ %2$@ to %3$@ %4$@"
+          }
+        }
+      }
+    },
+    "切换" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch"
+          }
+        }
+      }
+    },
     "切换代理模式" : {
       "localizations" : {
         "en" : {
@@ -201,12 +473,142 @@
         }
       }
     },
+    "切换到%@模式？" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch to %@ mode?"
+          }
+        }
+      }
+    },
+    "刚刚" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Just now"
+          }
+        }
+      }
+    },
+    "即将" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soon"
+          }
+        }
+      }
+    },
+    "另一个 App 请求开启 Zephyr。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Another app is asking to turn on Zephyr."
+          }
+        }
+      }
+    },
+    "另一个 App 请求把代理模式改为“%@”。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Another app is asking to change the proxy mode to “%@”."
+          }
+        }
+      }
+    },
+    "另一个 App 请求断开 Zephyr，断开后流量不再经过代理。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Another app is asking to disconnect Zephyr. Traffic will no longer go through the proxy."
+          }
+        }
+      }
+    },
     "各场景当前使用的地区与节点。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The region and node each scene is using."
+          }
+        }
+      }
+    },
+    "周一" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mon"
+          }
+        }
+      }
+    },
+    "周三" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wed"
+          }
+        }
+      }
+    },
+    "周二" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tue"
+          }
+        }
+      }
+    },
+    "周五" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fri"
+          }
+        }
+      }
+    },
+    "周六" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sat"
+          }
+        }
+      }
+    },
+    "周四" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thu"
+          }
+        }
+      }
+    },
+    "周日" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sun"
           }
         }
       }
@@ -291,6 +693,16 @@
         }
       }
     },
+    "已到期" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expired"
+          }
+        }
+      }
+    },
     "已取消" : {
       "localizations" : {
         "en" : {
@@ -311,12 +723,32 @@
         }
       }
     },
+    "已清除 %@ 的路由覆写" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cleared route override for %@"
+          }
+        }
+      }
+    },
     "已连接" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Connected"
+          }
+        }
+      }
+    },
+    "开" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
           }
         }
       }
@@ -361,12 +793,102 @@
         }
       }
     },
+    "断开 Zephyr？" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disconnect Zephyr?"
+          }
+        }
+      }
+    },
+    "无法更换应用图标" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn’t change the app icon"
+          }
+        }
+      }
+    },
     "无法获取订阅" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Couldn’t fetch the subscription"
+          }
+        }
+      }
+    },
+    "星期一" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monday"
+          }
+        }
+      }
+    },
+    "星期三" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wednesday"
+          }
+        }
+      }
+    },
+    "星期二" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tuesday"
+          }
+        }
+      }
+    },
+    "星期五" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Friday"
+          }
+        }
+      }
+    },
+    "星期六" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saturday"
+          }
+        }
+      }
+    },
+    "星期四" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thursday"
+          }
+        }
+      }
+    },
+    "星期日" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunday"
           }
         }
       }
@@ -387,6 +909,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Source: %@"
+          }
+        }
+      }
+    },
+    "来自 %lld 个订阅 · " : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From %lld subscriptions · "
           }
         }
       }
@@ -491,6 +1023,26 @@
         }
       }
     },
+    "第 %1$@ 个，共 %2$@ 个" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ of %2$@"
+          }
+        }
+      }
+    },
+    "第 %lld 层" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Layer %lld"
+          }
+        }
+      }
+    },
     "策略组已不存在" : {
       "localizations" : {
         "en" : {
@@ -507,6 +1059,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Network unavailable"
+          }
+        }
+      }
+    },
+    "节点 %1$@ · 规则 %2$@ · 可用 %3$@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nodes %1$@ · Rules %2$@ · Free %3$@"
           }
         }
       }
@@ -631,6 +1193,16 @@
         }
       }
     },
+    "连接 Zephyr？" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect Zephyr?"
+          }
+        }
+      }
+    },
     "连接失败" : {
       "localizations" : {
         "en" : {
@@ -681,12 +1253,32 @@
         }
       }
     },
+    "重试" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry"
+          }
+        }
+      }
+    },
     "需要允许添加 VPN 配置" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allow Zephyr to add a VPN configuration"
+          }
+        }
+      }
+    },
+    "，" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", "
           }
         }
       }

@@ -63,12 +63,12 @@ final class LibraryModel {
     var localPortText: String? { settings.map(Self.localProxyText) }
 
     nonisolated static func localProxyText(_ s: Settings) -> String {
-        s.localProxyEnabled ? String(s.localProxyPort) : "关"
+        s.localProxyEnabled ? String(s.localProxyPort) : ZL.tr("关")
     }
 
     nonisolated static func trustedWifiText(_ s: Settings) -> String {
-        guard s.disconnectOnTrusted else { return "关" }
-        guard let first = s.trustedWifi.first else { return "无" }
-        return s.trustedWifi.count == 1 ? first : "\(first) 等 \(s.trustedWifi.count) 个"
+        guard s.disconnectOnTrusted else { return ZL.tr("关") }
+        guard let first = s.trustedWifi.first else { return ZL.tr("无") }
+        return s.trustedWifi.count == 1 ? first : ZL.f("%1$@ 等 %2$lld 个", first as NSString, Int64(s.trustedWifi.count))
     }
 }

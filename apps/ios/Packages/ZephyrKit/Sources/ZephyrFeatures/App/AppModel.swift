@@ -79,9 +79,9 @@ public final class AppModel {
 
     /// 首页"场景"区右侧："2 小时前检测" / "正在检测…"。
     public var scenesTestedText: String? {
-        if !retesting.isEmpty { return "正在检测…" }
+        if !retesting.isEmpty { return ZL.tr("正在检测…") }
         guard let t = scenes.compactMap(\.testedAt).max() else { return nil }
-        return "\(ZFormat.relative(t, now: now()))检测"
+        return ZL.s("%@检测", ZFormat.relative(t, now: now()))
     }
 
     public func scene(id: String) -> ZephyrKit.Scene? { scenes.first { $0.id == id } }

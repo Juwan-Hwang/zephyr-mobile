@@ -29,7 +29,7 @@ struct OnboardingChoiceCard: View {
                         .foregroundStyle(ZTokens.Colors.screenT1)
                     Text(detail)
                         .zType(.footnote)
-                        .foregroundStyle(ZTokens.Colors.screenT3)
+                        .foregroundStyle(ZColor.t3)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)

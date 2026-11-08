@@ -20,7 +20,7 @@ struct TrustedWifiView: View {
                 ZSettingsRow("连上这些 Wi‑Fi 时自动断开", isOn: store.binding(\.disconnectOnTrusted, fallback: false))
                     .zCardListRow()
             } footer: {
-                footnote("在家或公司等可信网络中，Zephyr 会自动断开，离开后按需重新连接。")
+                footnote(ZL.tr("在家或公司等可信网络中，Zephyr 会自动断开，离开后按需重新连接。"))
             }
             Section {
                 ForEach(names, id: \.self) { ssid in
@@ -38,7 +38,7 @@ struct TrustedWifiView: View {
                     .zCardListRow()
             } header: {
                 // 去掉 insetGrouped 自带的页眉内边距，标题与卡片左缘按原型对齐（同 REVIEW L-P2-12）。
-                ZSectionHeader("网络", trailing: names.isEmpty ? nil : "\(names.count) 个")
+                ZSectionHeader("网络", trailing: names.isEmpty ? nil : ZL.f("%lld 个", Int64(names.count)))
                     .listRowInsets(EdgeInsets())
                     .textCase(nil)
             }
@@ -73,7 +73,7 @@ struct TrustedWifiView: View {
     }
 
     private func footnote(_ s: String) -> some View {
-        Text(verbatim: s).zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+        Text(verbatim: s).zType(.footnote).foregroundStyle(ZColor.t3)
     }
 }
 

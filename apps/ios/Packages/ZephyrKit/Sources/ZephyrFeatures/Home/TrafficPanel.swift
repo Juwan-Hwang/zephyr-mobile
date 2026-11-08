@@ -54,11 +54,11 @@ private struct RateReadout: View {
                     Image(systemName: "arrow.down").foregroundStyle(ZTokens.Colors.colorDownload)
                 }
                 .zType(.footnote)
-                .foregroundStyle(ZTokens.Colors.screenT3)
+                .foregroundStyle(ZColor.t3)
             }
             HStack(spacing: ZTokens.Space.n1) {
                 Text(verbatim: "\(up.value) \(up.unit)")
-                    .foregroundStyle(ZTokens.Colors.screenT2)
+                    .foregroundStyle(ZColor.t2)
                     .contentTransition(reduceMotion ? .identity : .numericText())
                 Image(systemName: "arrow.up").foregroundStyle(ZTokens.Colors.colorUpload)
             }

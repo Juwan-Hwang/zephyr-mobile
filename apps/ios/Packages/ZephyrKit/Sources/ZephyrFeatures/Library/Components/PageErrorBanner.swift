@@ -8,6 +8,7 @@
 import SwiftUI
 import UIKit
 import ZephyrDesign
+import ZephyrKit
 
 struct PageErrorBanner: View {
     let error: PageError
@@ -40,7 +41,7 @@ struct PageErrorBanner: View {
         .zSurface(.elevated, cornerRadius: ZTokens.Radius.full)
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isStaticText)
-        .accessibilityAction(named: Text(verbatim: error.retryTitle ?? "关闭")) {
+        .accessibilityAction(named: Text(verbatim: error.retryTitle ?? ZL.tr("关闭"))) {
             onDismiss()
             error.retry?()
         }

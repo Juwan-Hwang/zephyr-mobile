@@ -39,13 +39,13 @@ struct RateBlock: View {
                     .contentTransition(.numericText())
                 Text("\(rate.unit) · \(state.connection.mode.displayTitle)")
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.screenT2)
+                    .foregroundStyle(ZColor.t2)
                     .lineLimit(1)
                 // 速率是上次时间线生成时的瞬时值（最长约 15 分钟前），标出它的年龄（REVIEW W-P1-2）。
                 if let at = state.rate.at {
                     Text("\(Text(at, style: .relative))前")
                         .font(.caption2)
-                        .foregroundStyle(ZTokens.Colors.screenT3)
+                        .foregroundStyle(ZColor.t3)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 }
@@ -55,9 +55,9 @@ struct RateBlock: View {
                     .foregroundStyle(ZTokens.Colors.screenT1)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
-                Text(state.connection.status == .failed ? "轻点查看原因" : "轻点电源连接")
+                Text(state.connection.status == .failed ? LocalizedStringKey("轻点查看原因") : LocalizedStringKey("轻点电源连接"))
                     .zType(.footnote)
-                    .foregroundStyle(state.connection.status == .failed ? ZTokens.Colors.screenAmber : ZTokens.Colors.screenT2)
+                    .foregroundStyle(state.connection.status == .failed ? ZTokens.Colors.screenAmber : ZColor.t2)
                     .lineLimit(1)
             }
         }

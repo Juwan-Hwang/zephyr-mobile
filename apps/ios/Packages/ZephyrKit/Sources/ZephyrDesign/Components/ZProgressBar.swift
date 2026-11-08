@@ -80,7 +80,7 @@ public struct ZProgressBar: View {
 
     private func color(_ tone: ZProgressTone) -> Color {
         switch tone {
-        case .neutral: return thickness == .thin ? ZTokens.Colors.screenT3 : ZTokens.Colors.screenT2
+        case .neutral: return thickness == .thin ? ZColor.t3 : ZColor.t2
         case .accent: return accent.color
         case .warning: return ZTokens.Colors.screenAmber
         case .danger: return ZTokens.Colors.screenRed

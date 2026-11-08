@@ -168,6 +168,6 @@ extension NodeListView {
         guard !rowMap.sections.isEmpty else { return "" }
         let first = scrollWindow.firstVisibleRow(physical: Double(collectionView.contentOffset.y))
         let sec = rowMap.sections[rowMap.sectionIndex(forRow: first)]
-        return "\(sec.name)，\(ZFormat.count(sec.count)) 个"
+        return ZL.s("%@，%@ 个", sec.name, ZFormat.count(sec.count))
     }
 }

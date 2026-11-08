@@ -35,7 +35,7 @@ private struct ZCardSample: View {
                 HStack(alignment: .firstTextBaseline) {
                     Text(verbatim: "Nebula Cloud 已更新").zType(.body)
                     Spacer()
-                    Text(verbatim: "2 小时前").zMono(.small).foregroundStyle(ZTokens.Colors.screenT3)
+                    Text(verbatim: "2 小时前").zMono(.small).foregroundStyle(ZColor.t3)
                 }
                 HStack(spacing: ZTokens.Space.n5) {
                     ZBigNumber("+1,204", size: .compact, caption: "节点", tone: ZTokens.Colors.screenGreen)

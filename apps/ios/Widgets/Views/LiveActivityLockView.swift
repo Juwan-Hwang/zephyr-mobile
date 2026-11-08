@@ -26,7 +26,7 @@ struct LiveActivityLockView: View {
                 ConnectionTimer(since: state.connectedSince, frozenNow: frozenNow)
                     .zType(.headline, monospacedDigits: true)
                     .fontDesign(.monospaced)
-                    .foregroundStyle(ZTokens.Colors.screenT2)
+                    .foregroundStyle(ZColor.t2)
             }
             .foregroundStyle(ZTokens.Colors.screenT1)
 
@@ -42,11 +42,11 @@ struct LiveActivityLockView: View {
                         .contentTransition(.numericText())
                     Text("\(down.unit) ↓")
                         .zType(.body)
-                        .foregroundStyle(ZTokens.Colors.screenT2)
+                        .foregroundStyle(ZColor.t2)
                     Spacer(minLength: ZTokens.Space.n3)
                     Text("\(ZFormat.rateString(state.upBps)) ↑")
                         .zType(.body, monospacedDigits: true)
-                        .foregroundStyle(ZTokens.Colors.screenT2)
+                        .foregroundStyle(ZColor.t2)
                 }
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
@@ -67,10 +67,10 @@ struct StaleRateLine: View {
         HStack(alignment: .lastTextBaseline, spacing: ZTokens.Space.n3) {
             Text(verbatim: "—")
                 .zType(.metric)
-                .foregroundStyle(ZTokens.Colors.screenT3)
+                .foregroundStyle(ZColor.t3)
             Text("已暂停更新")
                 .zType(.body)
-                .foregroundStyle(ZTokens.Colors.screenT3)
+                .foregroundStyle(ZColor.t3)
             Spacer(minLength: 0)
         }
         .lineLimit(1)
@@ -109,7 +109,7 @@ struct SceneChips: View {
                     RegionBadge(region: scene.region)
                     Text(scene.name)
                         .zType(.caption)
-                        .foregroundStyle(ZTokens.Colors.screenT2)
+                        .foregroundStyle(ZColor.t2)
                         .lineLimit(1)
                 }
                 .accessibilityElement(children: .combine)

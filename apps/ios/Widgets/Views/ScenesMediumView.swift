@@ -14,12 +14,12 @@ struct ScenesMediumView: View {
             Text("场景")
                 .zType(.footnote)
                 .fontWeight(.semibold)
-                .foregroundStyle(ZTokens.Colors.screenT2)
+                .foregroundStyle(ZColor.t2)
             if state.scenes.isEmpty {
                 Spacer(minLength: 0)
                 Text("添加订阅后，这里会显示各场景的出口")
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
                 Spacer(minLength: 0)
             } else {
                 let rows = Array(state.scenes.prefix(Self.maxRows))
@@ -53,7 +53,7 @@ private struct SceneRow: View {
                 }
                 Text(verbatim: scene.name)
                     .zType(.body)
-                    .foregroundStyle(ZTokens.Colors.screenT2)
+                    .foregroundStyle(ZColor.t2)
                     .lineLimit(1)
             }
             .frame(maxWidth: nameMaxWidth, alignment: .leading)
@@ -83,11 +83,11 @@ struct LatencyText: View {
                 Text("\(ms)").zType(.body, monospacedDigits: true)
                 Text("ms").zType(.caption)
             }
-            .foregroundStyle(ZTokens.Colors.screenT2)
+            .foregroundStyle(ZColor.t2)
         } else {
-            Text(ms == nil ? "—" : "超时")
+            Text(ms == nil ? LocalizedStringKey("—") : LocalizedStringKey("超时"))
                 .zType(.footnote)
-                .foregroundStyle(ms == nil ? ZTokens.Colors.screenT3 : ZTokens.Colors.screenAmber)
+                .foregroundStyle(ms == nil ? ZColor.t3 : ZTokens.Colors.screenAmber)
         }
     }
 }

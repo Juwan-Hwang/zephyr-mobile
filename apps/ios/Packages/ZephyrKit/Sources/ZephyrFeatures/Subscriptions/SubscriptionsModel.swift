@@ -79,8 +79,8 @@ final class SubscriptionsModel {
 
     /// “个 · 每 12 小时更新”
     var headerUnit: String {
-        guard let h = settings.settings?.autoUpdateHours else { return "个" }
-        return "个 · 每 \(h) 小时更新"
+        guard let h = settings.settings?.autoUpdateHours else { return ZL.tr("个") }
+        return ZL.f("个 · 每 %lld 小时更新", Int64(h))
     }
 
     func usage(_ s: Subscription) -> Double? {
@@ -96,10 +96,10 @@ final class SubscriptionsModel {
 
     /// “8,204 个节点 · 26 天后到期”；更新中为“正在更新…”。
     func detail(_ s: Subscription) -> String {
-        if updating.contains(s.id) || isUpdatingAll { return "正在更新…" }
-        var parts = ["\(ZFormat.count(s.nodeCount)) 个节点"]
+        if updating.contains(s.id) || isUpdatingAll { return ZL.tr("正在更新…") }
+        var parts = [ZL.s("%@ 个节点", ZFormat.count(s.nodeCount))]
         if let e = s.expiresAt { parts.append(ZFormat.expiry(e, now: now())) }
-        else if let u = s.updatedAt { parts.append("\(ZFormat.relative(u, now: now()))更新") }
+        else if let u = s.updatedAt { parts.append(ZL.s("%@更新", ZFormat.relative(u, now: now()))) }
         return parts.joined(separator: " · ")
     }
 
@@ -145,7 +145,7 @@ final class SubscriptionsModel {
         defer { updating.remove(sub.id) }
         do {
             let d = try await engine.updateSubscription(id: sub.id)
-            toast = ZToastItem("已更新 \(sub.name)：\(Self.signed(d.addedNodes, plus: true)) / \(Self.signed(d.removedNodes, plus: false)) 节点")
+            toast = ZToastItem(ZL.s("已更新 %@：%@ / %@ 节点", sub.name, Self.signed(d.addedNodes, plus: true), Self.signed(d.removedNodes, plus: false)))
         } catch { report(error) }
     }
 
@@ -154,7 +154,7 @@ final class SubscriptionsModel {
         defer { isUpdatingAll = false }
         do {
             let diffs = try await engine.updateAll()
-            toast = ZToastItem("已更新 \(diffs.count) 个订阅")
+            toast = ZToastItem(ZL.f("已更新 %lld 个订阅", Int64(diffs.count)))
         } catch { report(error) }
     }
 
@@ -190,12 +190,12 @@ final class SubscriptionsModel {
         deleting = nil
         do {
             try await engine.deleteSubscription(id: sub.id)
-            toast = ZToastItem("已删除 \(sub.name)")
+            toast = ZToastItem(ZL.s("已删除 %@", sub.name))
         } catch { report(error) }
     }
 
     func didImport(_ sub: Subscription) {
-        toast = ZToastItem("已添加 \(sub.name)（\(ZFormat.count(sub.nodeCount)) 个节点）")
+        toast = ZToastItem(ZL.s("已添加 %@（%@ 个节点）", sub.name, ZFormat.count(sub.nodeCount)))
     }
 
     func report(_ error: Error) {
@@ -204,7 +204,7 @@ final class SubscriptionsModel {
             if z.code == .cancelled { return }
             toast = ZToastItem(z.userMessage)
         } else {
-            toast = ZToastItem("操作失败")
+            toast = ZToastItem(ZL.tr("操作失败"))
         }
     }
 }

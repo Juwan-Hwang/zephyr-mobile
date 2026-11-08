@@ -14,7 +14,7 @@ struct NodesEmptyState: View {
                 .foregroundStyle(ZTokens.Colors.screenT1)
             Text("没有与“\(query.trimmingCharacters(in: .whitespaces))”匹配的节点")
                 .zType(.footnote)
-                .foregroundStyle(ZTokens.Colors.screenT3)
+                .foregroundStyle(ZColor.t3)
                 .multilineTextAlignment(.center)
         }
         .padding(ZTokens.Space.n6)

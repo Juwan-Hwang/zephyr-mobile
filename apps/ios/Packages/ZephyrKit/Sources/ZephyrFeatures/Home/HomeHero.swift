@@ -32,7 +32,7 @@ struct HomeHero: View {
                 } else {
                     Text(verbatim: subline)
                         .hFont(HMetrics.subFont, relativeTo: .subheadline)
-                        .foregroundStyle(subline.isEmpty ? ZTokens.Colors.screenT3 : failureTone)
+                        .foregroundStyle(subline.isEmpty ? ZColor.t3 : failureTone)
                         .lineLimit(2)
                 }
             }
@@ -59,11 +59,11 @@ struct HomeHero: View {
 
     private var statusTitle: String {
         switch model.connection.status {
-        case .disconnected: "未连接"
-        case .connecting: "连接中"
-        case .connected: "已连接"
-        case .disconnecting: "断开中"
-        case .failed: "未连接"
+        case .disconnected: ZL.tr("未连接")
+        case .connecting: ZL.tr("连接中")
+        case .connected: ZL.tr("已连接")
+        case .disconnecting: ZL.tr("断开中")
+        case .failed: ZL.tr("未连接")
         }
     }
 
@@ -71,11 +71,11 @@ struct HomeHero: View {
     private var subline: String {
         if model.connection.status == .failed, let e = model.connection.error { return e.userMessage }
         let n = model.scenes.count
-        return n > 0 ? "\(n) 个场景" : ""
+        return n > 0 ? ZL.f("%lld 个场景", Int64(n)) : ""
     }
 
     private var failureTone: Color {
-        model.connection.status == .failed ? ZTokens.Colors.screenRed : ZTokens.Colors.screenT3
+        model.connection.status == .failed ? ZTokens.Colors.screenRed : ZColor.t3
     }
 }
 
@@ -139,7 +139,7 @@ struct ConnectionDuration: View {
     private func styled(_ text: Text) -> some View {
         text
             .hFont(HMetrics.subFont, relativeTo: .subheadline, monospacedDigits: true)
-            .foregroundStyle(ZTokens.Colors.screenT3)
+            .foregroundStyle(ZColor.t3)
     }
 
     /// 注入的时钟与系统时钟相差 5 秒以内 → 视为系统时钟。
@@ -150,7 +150,7 @@ struct ConnectionDuration: View {
     static func spoken(_ ms: Int64) -> String {
         let s = ms / 1000
         let h = s / 3600, m = (s % 3600) / 60
-        return h > 0 ? "\(h) 小时 \(m) 分钟" : "\(m) 分钟"
+        return h > 0 ? ZL.f("%lld 小时 %lld 分钟", h, m) : ZL.f("%lld 分钟", m)
     }
 }
 
@@ -169,7 +169,7 @@ extension ConnectionStatus {
 extension ProxyMode {
     /// 原型文案：规则 / 全局 / 直连。
     var zhLabel: String {
-        switch self { case .rule: "规则"; case .global: "全局"; case .direct: "直连" }
+        switch self { case .rule: ZL.tr("规则"); case .global: ZL.tr("全局"); case .direct: ZL.tr("直连") }
     }
     var zhSymbol: String {
         switch self { case .rule: "arrow.triangle.branch"; case .global: "globe"; case .direct: "arrow.right" }

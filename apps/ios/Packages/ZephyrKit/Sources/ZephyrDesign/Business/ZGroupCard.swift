@@ -147,12 +147,12 @@ public struct ZGroupCard: View {
                     .lineLimit(stacked ? nil : 1)
             }
             .zType(.caption)
-            .foregroundStyle(ZTokens.Colors.screenT3)
+            .foregroundStyle(ZColor.t3)
             .padding(.top, ZMetrics.groupPinTop)
         } else if let detail {
             Text(verbatim: detail)
                 .zType(.caption)
-                .foregroundStyle(ZTokens.Colors.screenT3)
+                .foregroundStyle(ZColor.t3)
                 .lineLimit(stacked ? nil : 1)
                 .padding(.top, ZMetrics.groupPinTop)
         }
@@ -183,7 +183,7 @@ public struct ZGroupCard: View {
 
     private var subtitleColor: Color {
         switch subtitleTone {
-        case .normal: return ZTokens.Colors.screenT3
+        case .normal: return ZColor.t3
         case .warning: return ZTokens.Colors.screenAmber
         case .danger: return ZTokens.Colors.screenRed
         }

@@ -57,9 +57,9 @@ struct TodayCard: View {
             }
             .padding(.top, ZTokens.Space.n1)
             HStack(alignment: .top, spacing: ZTokens.Space.n6) {
-                stat("\(usage.regionsToday)", "个地区")
-                stat("\(hours)", "小时在线")
-                stat(fastest, "ms 最快")
+                stat("\(usage.regionsToday)", ZL.tr("个地区"))
+                stat("\(hours)", ZL.tr("小时在线"))
+                stat(fastest, ZL.tr("ms 最快"))
             }
             .padding(.top, ZTokens.Space.n5)
             Rectangle().fill(theme.rule).frame(height: HMetrics.hairline / 2)
@@ -96,7 +96,7 @@ struct TodayCard: View {
     }
 
     private var a11y: String {
-        "今日 \(total.value) \(total.unit)，\(usage.regionsToday) 个地区，\(hours) 小时在线，最快 \(fastest) 毫秒。\(dateText)"
+        ZL.s("今日 %1$@ %2$@，%3$@ 个地区，%4$@ 小时在线，最快 %5$@ 毫秒。%6$@", total.value, total.unit, "\(usage.regionsToday)", "\(hours)", fastest, dateText)
     }
 }
 

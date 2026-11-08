@@ -3,6 +3,7 @@
 //   [US] 美国                                3,118,402
 
 import UIKit
+import ZephyrKit
 
 /// 分区头内容：地区码方框徽标 + 名称 + 计数。手动布局。
 final class NodeRegionHeaderContent: UIView {
@@ -38,7 +39,7 @@ final class NodeRegionHeaderContent: UIView {
         countLabel.font = style.headerCountFont
         countLabel.textColor = style.textTertiary
         countLabel.text = count
-        accessibilityLabel = "\(name)，\(count) 个节点"
+        accessibilityLabel = ZL.s("%@，%@ 个节点", name, count)
         setNeedsLayout()
     }
 

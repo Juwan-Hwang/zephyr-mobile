@@ -6,6 +6,7 @@
 import SwiftUI
 import UIKit
 import ZephyrDesign
+import ZephyrKit
 
 /// 一段需要下划线的字符（按 Character 下标，与 CommandToken.range 同口径）。
 struct CommandMark: Equatable {
@@ -37,7 +38,7 @@ struct CommandTextField: UIViewRepresentable {
         tf.adjustsFontForContentSizeCategory = true
         tf.setContentHuggingPriority(.defaultLow, for: .horizontal)
         tf.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        tf.accessibilityLabel = "指令"
+        tf.accessibilityLabel = ZL.tr("指令")
         return tf
     }
 
@@ -51,7 +52,7 @@ struct CommandTextField: UIViewRepresentable {
         tf.tintColor = UIColor(tint).resolvedColor(with: traits)
         tf.attributedPlaceholder = NSAttributedString(
             string: placeholder,
-            attributes: [.foregroundColor: UIColor(ZTokens.Colors.screenT3).resolvedColor(with: traits), .font: font])
+            attributes: [.foregroundColor: UIColor(ZColor.t3).resolvedColor(with: traits), .font: font])
 
         // 输入法组合中不动文字（否则会打断拼音）。
         (tf as? FocusingTextField)?.wantsFocus = isFocused

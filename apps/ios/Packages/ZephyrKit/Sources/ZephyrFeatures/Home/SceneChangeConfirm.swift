@@ -29,7 +29,7 @@ struct SceneChangeConfirm: View {
             }
             ExitIPLine(change: change.exit, fallbackFrom: change.from.region, fallbackTo: change.to.region)
             if let kept = keptText {
-                Text(verbatim: kept).zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
+                Text(verbatim: kept).zType(.caption).foregroundStyle(ZColor.t3)
             }
             HStack(spacing: ZTokens.Space.n3) {
                 ZButton("更改", fullWidth: true, isLoading: change.exit == nil) {
@@ -57,12 +57,12 @@ struct SceneChangeConfirm: View {
     private var title: String {
         let apps = change.exit?.affectedApps ?? []
         let who = apps.isEmpty ? sceneName : Self.join(apps)
-        return "更改 \(who) 的出口 IP？"
+        return ZL.s("更改 %@ 的出口 IP？", who)
     }
 
     private var keptText: String? {
         guard let kept = change.exit?.unchangedApps, !kept.isEmpty else { return nil }
-        return "\(Self.join(kept)) 保持不变。"
+        return ZL.s("%@ 保持不变。", Self.join(kept))
     }
 
     /// ["GPT","Gemini","Claude"] → "GPT、Gemini 和 Claude"
@@ -70,7 +70,7 @@ struct SceneChangeConfirm: View {
         switch xs.count {
         case 0: return ""
         case 1: return xs[0]
-        default: return xs.dropLast().joined(separator: "、") + " 和 " + xs[xs.count - 1]
+        default: return xs.dropLast().joined(separator: ZL.tr("、")) + ZL.tr(" 和 ") + xs[xs.count - 1]
         }
     }
 }
@@ -85,7 +85,7 @@ struct ExitIPLine: View {
     var body: some View {
         HStack(spacing: ZTokens.Space.n3) {
             Text(verbatim: side(change?.fromRegion ?? fallbackFrom, change?.fromIp))
-                .foregroundStyle(ZTokens.Colors.screenT2)
+                .foregroundStyle(ZColor.t2)
             Image(systemName: "arrow.right").font(.caption2).foregroundStyle(ZQuaternaryText())
             Text(verbatim: side(change?.toRegion ?? fallbackTo, change?.toIp))
                 .foregroundStyle(ZTokens.Colors.screenT1)
@@ -103,8 +103,8 @@ struct ExitIPLine: View {
     }
 
     private var a11y: String {
-        guard let c = change else { return "正在获取出口 IP" }
-        return "出口从 \(HRegionName.name(c.fromRegion)) \(c.fromIp ?? "") 变为 \(HRegionName.name(c.toRegion)) \(c.toIp ?? "")"
+        guard let c = change else { return ZL.tr("正在获取出口 IP") }
+        return ZL.s("出口从 %1$@ %2$@ 变为 %3$@ %4$@", HRegionName.name(c.fromRegion), c.fromIp ?? "", HRegionName.name(c.toRegion), c.toIp ?? "")
     }
 }
 

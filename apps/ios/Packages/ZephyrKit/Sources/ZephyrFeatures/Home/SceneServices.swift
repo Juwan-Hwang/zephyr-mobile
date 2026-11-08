@@ -28,22 +28,22 @@ struct SceneServiceSummary: Equatable, Sendable {
 
     /// 首页行左侧红字："Claude 不可用"。
     var unavailableText: String? {
-        failing.isEmpty ? nil : "\(Self.join(failing)) 不可用"
+        failing.isEmpty ? nil : ZL.s("%@ 不可用", Self.join(failing))
     }
 
     /// 首页行右侧第二行："GPT、Gemini 正常"。只有部分不可用时才有。
     var healthyText: String? {
         guard !failing.isEmpty, !healthy.isEmpty else { return nil }
-        return "\(Self.join(healthy)) 正常"
+        return ZL.s("%@ 正常", Self.join(healthy))
     }
 
     /// VoiceOver："Claude 不可用，ChatGPT、Gemini 正常" / "ChatGPT、Claude、Gemini 均正常" / "Netflix 正常"。
     var spoken: String? {
         if isEmpty { return nil }
-        if failing.isEmpty { return "\(Self.join(healthy)) \(healthy.count > 1 ? "均" : "")正常" }
-        if healthy.isEmpty { return "\(Self.join(failing)) \(failing.count > 1 ? "均" : "")不可用" }
-        return "\(Self.join(failing)) 不可用，\(Self.join(healthy)) 正常"
+        if failing.isEmpty { return ZL.s(healthy.count > 1 ? "%@ 均正常" : "%@ 正常", Self.join(healthy)) }
+        if healthy.isEmpty { return ZL.s(failing.count > 1 ? "%@ 均不可用" : "%@ 不可用", Self.join(failing)) }
+        return ZL.s("%1$@ 不可用，%2$@ 正常", Self.join(failing), Self.join(healthy))
     }
 
-    static func join(_ names: [String]) -> String { names.joined(separator: "、") }
+    static func join(_ names: [String]) -> String { names.joined(separator: ZL.tr("、")) }
 }

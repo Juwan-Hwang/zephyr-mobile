@@ -83,7 +83,7 @@ public struct ZNodeRow: View {
                 if let multiplier {
                     Text(verbatim: multiplier)
                         .modifier(ZMonoModifier(.small, weight: .regular, maxSize: ZMetrics.nodeLatencyCap))
-                        .foregroundStyle(ZTokens.Colors.screenT3)
+                        .foregroundStyle(ZColor.t3)
                         .fixedSize()
                 }
             }
@@ -98,7 +98,7 @@ public struct ZNodeRow: View {
                 Text(verbatim: protocolName)
                     .modifier(ZMonoModifier(.micro, weight: .regular, maxSize: ZMetrics.monoMicro))
                     .tracking(ZMetrics.monoMicro * 0.02)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
                     .fixedSize()
             }
             ZLatencyPill(ms: latency, isTesting: isTesting,

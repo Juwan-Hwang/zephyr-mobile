@@ -33,7 +33,7 @@ struct PageHeader: View {
             if let subtitle {
                 Text(verbatim: subtitle)
                     .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZColor.t3)
                     .padding(.top, ZTokens.Space.n1)
             }
         }

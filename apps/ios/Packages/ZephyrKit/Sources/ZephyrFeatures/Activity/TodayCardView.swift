@@ -46,7 +46,7 @@ struct TodayCardView: View {
                     .padding(.top, ZTokens.Space.n6)
                 Text(verbatim: footnote)
                     .zType(.caption)
-                    .foregroundStyle(saveState == .failed ? ZTokens.Colors.screenRed : ZTokens.Colors.screenT3)
+                    .foregroundStyle(saveState == .failed ? ZTokens.Colors.screenRed : ZColor.t3)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, HMetrics.homeInset)
                     .padding(.top, ZTokens.Space.n4)
@@ -102,7 +102,7 @@ struct TodayCardView: View {
     private var saveTitle: LocalizedStringKey { saveState == .saved ? "已存储" : "存储图像" }
 
     private var footnote: String {
-        saveState == .failed ? "无法存储。请在“设置”中允许 Zephyr 添加照片。" : "图案由今天的流量生成，不含节点名称与 IP 地址。"
+        ZL.tr(saveState == .failed ? "无法存储。请在“设置”中允许 Zephyr 添加照片。" : "图案由今天的流量生成，不含节点名称与 IP 地址。")
     }
 
     // MARK: 导出
@@ -171,7 +171,7 @@ struct TodayThemePicker: View {
                             .overlay { Circle().strokeBorder(ZTokens.Colors.screenT4, lineWidth: HMetrics.hairline) }
                         Text(verbatim: t.title)
                             .zType(.footnote)
-                            .foregroundStyle(on ? ZTokens.Colors.screenT1 : ZTokens.Colors.screenT2)
+                            .foregroundStyle(on ? ZTokens.Colors.screenT1 : ZColor.t2)
                     }
                     .padding(.leading, ZTokens.Space.n2)
                     .padding(.trailing, ZTokens.Space.n4)

@@ -27,7 +27,7 @@ struct RegionBadge: View {
         Text(verbatim: code)
             .zMono(.tag, weight: .semibold)
             .tracking(Spec.tracking)
-            .foregroundStyle(prominent ? ZTokens.Colors.screenT1 : ZTokens.Colors.screenT2)
+            .foregroundStyle(prominent ? ZTokens.Colors.screenT1 : ZColor.t2)
             .lineLimit(1)
             .fixedSize()
             .padding(.horizontal, ZTokens.Space.n1)
