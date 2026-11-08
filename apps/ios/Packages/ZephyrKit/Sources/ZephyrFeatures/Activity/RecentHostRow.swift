@@ -43,7 +43,7 @@ struct RecentHostRow: View {
         .contentShape(Rectangle())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: "\(item.host)，\(subtitle)，\(ZFormat.bytes(item.totalBytes))"))
-        .accessibilityHint(Text(verbatim: "轻点两下查看连接轨迹"))
+        .accessibilityHint(Text("轻点两下查看连接轨迹"))
     }
 }
 

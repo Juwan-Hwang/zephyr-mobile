@@ -16,16 +16,16 @@ struct SubscriptionRowStyle: ViewModifier {
             .zCardListRow()
             .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                 Button { model.deleting = sub } label: {
-                    Label { Text(verbatim: "删除") } icon: { Image(systemName: "trash") }
+                    Label { Text("删除") } icon: { Image(systemName: "trash") }
                 }
                 .tint(ZTokens.Colors.screenRed)
                 Button { Task { await model.update(sub) } } label: {
-                    Label { Text(verbatim: "更新") } icon: { Image(systemName: "arrow.clockwise") }
+                    Label { Text("更新") } icon: { Image(systemName: "arrow.clockwise") }
                 }
                 .tint(accent.color)
             }
-            .accessibilityAction(named: Text(verbatim: "更新")) { Task { await model.update(sub) } }
-            .accessibilityAction(named: Text(verbatim: "删除")) { model.deleting = sub }
+            .accessibilityAction(named: Text("更新")) { Task { await model.update(sub) } }
+            .accessibilityAction(named: Text("删除")) { model.deleting = sub }
     }
 }
 

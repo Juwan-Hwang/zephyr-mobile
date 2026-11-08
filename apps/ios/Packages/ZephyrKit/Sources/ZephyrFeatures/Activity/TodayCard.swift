@@ -69,7 +69,7 @@ struct TodayCard: View {
                     .frame(height: HMetrics.todayLockupHeight)
                     .foregroundStyle(theme.primary)
                 Spacer(minLength: ZTokens.Space.n3)
-                Text(verbatim: "今日").zType(.caption).foregroundStyle(theme.tertiary)
+                Text("今日").zType(.caption).foregroundStyle(theme.tertiary)
             }
             .padding(.top, ZTokens.Space.n4)
         }

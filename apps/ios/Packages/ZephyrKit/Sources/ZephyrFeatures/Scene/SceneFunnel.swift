@@ -39,7 +39,7 @@ struct SceneFunnel: View {
                     }
                 }
                 .accessibilityElement(children: .ignore)
-                .accessibilityLabel(Text(verbatim: "\(step.label) \(step.count) 个"))
+                .accessibilityLabel(Text("\(step.label) \(step.count) 个"))
             }
         }
         .onAppear { shown = true }

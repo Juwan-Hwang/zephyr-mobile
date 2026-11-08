@@ -71,6 +71,7 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
         if let existing = managers.first(where: {
             ($0.protocolConfiguration as? NETunnelProviderProtocol)?.providerBundleIdentifier == Self.providerBundleIdentifier
         }) {
+            remember(existing)
             return existing
         }
         let manager = NETunnelProviderManager()
@@ -88,23 +89,40 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
         }
         // Apple 要求保存后重新 load，否则首次 startVPNTunnel 会失败（NEVPNErrorConfigurationInvalid）。
         try await manager.loadFromPreferences()
+        remember(manager)
         return manager
     }
 
     /// 已存在的 Zephyr VPN 配置（不创建、不弹授权）；没有则 nil。
     func existingManager() async throws -> NETunnelProviderManager? {
-        try await NETunnelProviderManager.loadAllFromPreferences().first {
+        let found = try await NETunnelProviderManager.loadAllFromPreferences().first {
             ($0.protocolConfiguration as? NETunnelProviderProtocol)?.providerBundleIdentifier == Self.providerBundleIdentifier
         }
+        remember(found)
+        return found
+    }
+
+    /// 缓存的 manager：provider 消息每秒一条，每次都 loadAllFromPreferences 是跨进程 IPC，既慢又耗电（REVIEW-Q2 X-P1-3）。
+    /// NEVPNConnection 会随系统更新状态，复用同一个 manager 即可；会话不可用时丢弃缓存，下次重新加载。
+    private let cacheLock = NSLock()
+    private var cachedManager: NETunnelProviderManager?
+
+    private func remember(_ manager: NETunnelProviderManager?) {
+        cacheLock.lock(); cachedManager = manager; cacheLock.unlock()
+    }
+
+    private func cachedValue() -> NETunnelProviderManager? {
+        cacheLock.lock(); defer { cacheLock.unlock() }
+        return cachedManager
     }
 
     private func activeSession() async throws -> NETunnelProviderSession? {
-        let managers = try await NETunnelProviderManager.loadAllFromPreferences()
-        guard let manager = managers.first(where: {
-            ($0.protocolConfiguration as? NETunnelProviderProtocol)?.providerBundleIdentifier == Self.providerBundleIdentifier
-        }), let session = manager.connection as? NETunnelProviderSession,
+        let cached = cachedValue()
+        let manager: NETunnelProviderManager
+        if let cached { manager = cached } else if let found = try await existingManager() { manager = found } else { return nil }
+        guard let session = manager.connection as? NETunnelProviderSession,
               session.status == .connected || session.status == .reasserting
-        else { return nil }
+        else { remember(nil); return nil }
         return session
     }
 

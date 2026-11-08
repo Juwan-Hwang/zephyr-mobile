@@ -97,7 +97,15 @@ final class SharedStatePublisher {
                 latencyMs: scene.selected.latencyMs.map { Int($0) }
             )
         }
-        let significant = summaries != state.scenes
+        // 延迟数值每次测速都会变，不算“显著变化”（否则反复 reload 全部小组件时间线，REVIEW-Q2 X-P1-15）；
+        // 只有场景集合、出口节点或延迟的 未测/超时/正常 档位变化才算。写盘仍会带上最新延迟，由下次 reload 取走。
+        func shape(_ list: [SharedState.SceneSummary]) -> [String] {
+            list.map { s in
+                let tier = s.latencyMs.map { $0 < 0 ? "x" : "ok" } ?? "n"
+                return "\(s.id)|\(s.name)|\(s.region)|\(s.nodeName)|\(tier)"
+            }
+        }
+        let significant = shape(Array(summaries)) != shape(state.scenes)
         state.scenes = Array(summaries)
         commit(.scenes, significant: significant)
     }

@@ -110,7 +110,7 @@ private struct ModeMenu: View {
             .contentShape(Rectangle())
         }
         .sensoryFeedback(.selection, trigger: model.connection.mode)
-        .accessibilityLabel(Text(verbatim: "代理模式"))
+        .accessibilityLabel(Text("代理模式"))
         .accessibilityValue(Text(verbatim: model.connection.mode.zhLabel))
     }
 }
@@ -132,7 +132,7 @@ struct ConnectionDuration: View {
         } else {
             let ms = max(0, nowMs - since)
             styled(Text(verbatim: ZFormat.duration(ms)))
-                .accessibilityLabel(Text(verbatim: "已连接 \(Self.spoken(ms))"))
+                .accessibilityLabel(Text("已连接 \(Self.spoken(ms))"))
         }
     }
 

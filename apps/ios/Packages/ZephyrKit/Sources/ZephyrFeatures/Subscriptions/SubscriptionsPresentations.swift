@@ -17,11 +17,11 @@ struct SubscriptionsPresentations: ViewModifier {
             }
             .confirmationDialog(Text(verbatim: deleteTitle), isPresented: deletingBinding, titleVisibility: .visible) {
                 if let sub = model.deleting {
-                    Button(role: .destructive) { Task { await model.delete(sub) } } label: { Text(verbatim: "删除订阅") }
+                    Button(role: .destructive) { Task { await model.delete(sub) } } label: { Text("删除订阅") }
                 }
-                Button(role: .cancel) { model.deleting = nil } label: { Text(verbatim: "取消") }
+                Button(role: .cancel) { model.deleting = nil } label: { Text("取消") }
             } message: {
-                Text(verbatim: "将移除它提供的节点与规则。覆写与场景设置保持不变。")
+                Text("将移除它提供的节点与规则。覆写与场景设置保持不变。")
             }
             .zToast(toastBinding, bottomInset: ZTokens.Space.n6)
     }

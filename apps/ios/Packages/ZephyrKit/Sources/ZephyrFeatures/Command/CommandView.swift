@@ -103,7 +103,7 @@ private struct CommandField: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: height)
             Button(action: onCancel) {
-                Text(verbatim: "取消").zType(.body).foregroundStyle(ZAccentStyle())
+                Text("取消").zType(.body).foregroundStyle(ZAccentStyle())
                     .frame(minHeight: ZTokens.Layout.touchMinIos)
             }
             .buttonStyle(ZPressStyle(haptic: .none))

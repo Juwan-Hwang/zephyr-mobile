@@ -152,7 +152,7 @@ struct ActivitySheet: View {
             close(h)
         } label: {
             Label {
-                Text(verbatim: "关闭 \(h.connections) 个连接")
+                Text("关闭 \(h.connections) 个连接")
             } icon: {
                 Image(systemName: "xmark.circle")
             }
@@ -160,7 +160,7 @@ struct ActivitySheet: View {
     }
 
     private var footnote: some View {
-        Text(verbatim: "iPhone 看不到是哪个 App 发起的，只能显示域名。")
+        Text("iPhone 看不到是哪个 App 发起的，只能显示域名。")
             .zType(.caption)
             .foregroundStyle(ZTokens.Colors.screenT3)
             .padding(.horizontal, HMetrics.homeInset + ZTokens.Space.n1)

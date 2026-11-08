@@ -28,7 +28,7 @@ struct CommandPreviewCard: View {
                         Circle().fill(ZTokens.Colors.screenAmber)
                             .frame(width: ZTokens.Space.n2, height: ZTokens.Space.n2)
                             .alignmentGuide(.firstTextBaseline) { $0[.bottom] }
-                        Text(verbatim: "出口 IP 将更改").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT1)
+                        Text("出口 IP 将更改").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT1)
                     }
                     ExitIPLine(change: exit)
                 }

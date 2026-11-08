@@ -47,9 +47,13 @@ struct SceneSheet: View {
 
                 ZSegmented([ZSegment(SceneSourceChoice.group, title: "订阅分组"),
                             ZSegment(SceneSourceChoice.pick, title: "Zephyr 优选")],
-                           selection: .constant(scene.source == .subscriptionGroup ? .group : .pick),
+                           selection: Binding(
+                               get: { scene.source == .subscriptionGroup ? .group : .pick },
+                               set: { choice in
+                                   let target: SceneSource = choice == .group ? .subscriptionGroup : .auto
+                                   Task { await model.setSceneSource(sceneId: scene.id, source: target) }
+                               }),
                            label: "节点来源")
-                    .disabled(true)   // 契约 v0 无 setSceneSource；见 NOTES-H.md
                     .padding(.horizontal, HMetrics.homeInset)
                     .padding(.top, ZTokens.Space.n6)
 
@@ -65,7 +69,7 @@ struct SceneSheet: View {
                 detailList(scene)
                     .padding(.top, ZTokens.Space.n6)
 
-                Text(verbatim: "优选结果仅保存在 Zephyr 中，订阅配置保持原样。")
+                Text("优选结果仅保存在 Zephyr 中，订阅配置保持原样。")
                     .zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
                     .padding(.horizontal, HMetrics.homeInset + ZTokens.Space.n1)
                     .padding(.top, ZTokens.Space.n3)
@@ -107,7 +111,7 @@ struct SceneSheet: View {
         }
         .padding(.horizontal, HMetrics.cardInset)
         .accessibilityElement(children: .contain)
-        .accessibilityLabel(Text(verbatim: "候选节点"))
+        .accessibilityLabel(Text("候选节点"))
     }
 
     private func detailList(_ scene: Scene) -> some View {

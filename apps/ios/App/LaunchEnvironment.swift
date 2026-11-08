@@ -28,16 +28,22 @@ struct LaunchEnvironment: Sendable {
 
     static func current(processInfo: ProcessInfo = .processInfo, defaults: UserDefaults = .standard) -> LaunchEnvironment {
         let isTests = processInfo.environment["XCTestConfigurationFilePath"] != nil
-        let requested = defaults.string(forKey: "ZephyrEngine").flatMap(EngineKind.init(rawValue:))
         #if DEBUG || targetEnvironment(simulator)
+        // 启动参数只在 Debug / 模拟器生效；发布到真机的 Release 固定用真核心，没有任何入口能切到演示数据。
+        let requested = defaults.string(forKey: "ZephyrEngine").flatMap(EngineKind.init(rawValue:))
         let fallback = EngineKind.mock
+        let frozen = isTests || defaults.string(forKey: "ZephyrClock") == "frozen941"
+        let seed = UInt64(max(0, defaults.integer(forKey: "ZephyrSeed")))
         #else
+        let requested: EngineKind? = nil
         let fallback = EngineKind.core
+        let frozen = isTests
+        let seed: UInt64 = 0
         #endif
         return LaunchEnvironment(
             engine: isTests ? .mock : (requested ?? fallback),
-            frozenClock: isTests || defaults.string(forKey: "ZephyrClock") == "frozen941",
-            seed: UInt64(max(0, defaults.integer(forKey: "ZephyrSeed"))),
+            frozenClock: frozen,
+            seed: seed,
             isRunningTests: isTests
         )
     }

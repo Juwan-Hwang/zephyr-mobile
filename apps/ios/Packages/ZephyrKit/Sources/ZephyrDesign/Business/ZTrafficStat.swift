@@ -66,10 +66,10 @@ public struct ZTrafficStat: View {
 extension ZTrafficStat {
     private var spoken: Text {
         if isActive {
-            return Text(verbatim: "下载 \(down.value) \(down.unit)，上传 \(up.value) \(up.unit)")
+            return Text("下载 \(down.value) \(down.unit)，上传 \(up.value) \(up.unit)")
         }
         if let idleMessage { return Text(idleMessage) }
-        return Text(verbatim: "未连接")
+        return Text("未连接")
     }
 }
 

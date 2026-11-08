@@ -62,7 +62,7 @@ struct SceneRow: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: a11yLabel))
         .accessibilityAddTraits(.isButton)
-        .accessibilityHint(Text(verbatim: scrubbable ? "上下轻扫切换地区，轻点两下查看详情" : "轻点两下查看详情"))
+        .accessibilityHint(Text(scrubbable ? LocalizedStringKey("上下轻扫切换地区，轻点两下查看详情") : LocalizedStringKey("轻点两下查看详情")))
         .accessibilityAction { openDetail() }
         .modifier(AdjustableIf(enabled: scrubbable) { step in adjust(step) })
         .task(id: scrubbable) {
@@ -97,11 +97,11 @@ struct SceneRow: View {
         } else if let down = services.unavailableText {
             Text(verbatim: down).zType(.footnote).foregroundStyle(ZTokens.Colors.screenRed)
         } else if scene.source == .subscriptionGroup {
-            Text(verbatim: "订阅分组").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+            Text("订阅分组").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
         } else if scene.available <= 0 {
-            Text(verbatim: "暂无可用节点").zType(.footnote).foregroundStyle(ZTokens.Colors.screenRed)
+            Text("暂无可用节点").zType(.footnote).foregroundStyle(ZTokens.Colors.screenRed)
         } else {
-            Text(verbatim: "\(scene.available) 个可用").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
+            Text("\(scene.available) 个可用").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
         }
     }
 

@@ -21,7 +21,7 @@ struct SceneCandidateRow: View {
                 .lineLimit(1)
             Spacer(minLength: ZTokens.Space.n3)
             if let pinnedFor {
-                Text(verbatim: "\(pinnedFor) 固定").zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
+                Text("\(pinnedFor) 固定").zType(.caption).foregroundStyle(ZTokens.Colors.screenT3)
             }
             Text(verbatim: ZFormat.latency(node.latencyMs))
                 .zMono(.body)

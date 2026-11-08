@@ -123,7 +123,7 @@ public struct SubscriptionsView: View {
                 .font(.body.weight(.medium))
                 .frame(minWidth: ZTokens.Layout.touchMinIos, minHeight: ZTokens.Layout.touchMinIos)
         }
-        .accessibilityLabel(Text(verbatim: "添加订阅"))
+        .accessibilityLabel(Text("添加订阅"))
     }
 }
 

@@ -122,6 +122,11 @@ public extension Array where Element == RegionSection {
 // MARK: - 契约 §13 / §14.z 新增方法的默认实现（Mock 未实现前不影响编译；CoreEngine 有真实实现）
 
 public extension ZephyrEngine {
-    func setSceneSource(sceneId: String, source: SceneSource) async throws {}
-    func overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Bool) async throws {}
+    // 默认抛“不支持”，不再静默成功（UI 会提示失败而不是假装生效，REVIEW-Q2 P2）。
+    func setSceneSource(sceneId: String, source: SceneSource) async throws {
+        throw ZephyrError(code: .internal, message: "setSceneSource unsupported")
+    }
+    func overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Bool) async throws {
+        throw ZephyrError(code: .internal, message: "overrideHost unsupported")
+    }
 }

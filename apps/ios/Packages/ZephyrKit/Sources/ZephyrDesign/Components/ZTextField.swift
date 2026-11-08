@@ -67,7 +67,7 @@ public struct ZTextField: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(ZPressStyle(haptic: .none))
-                .accessibilityLabel(Text(verbatim: "清除"))
+                .accessibilityLabel(Text("清除"))
                 .transition(.opacity)
             }
         }

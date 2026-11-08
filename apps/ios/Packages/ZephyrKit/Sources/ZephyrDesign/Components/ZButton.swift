@@ -71,7 +71,7 @@ public struct ZButton: View {
         .buttonStyle(ZPressStyle(haptic: .none))
         .padding(.vertical, -hitOutset)
         .accessibilityLabel(Text(title))
-        .accessibilityValue(isLoading ? Text(verbatim: "处理中") : Text(verbatim: ""))
+        .accessibilityValue(isLoading ? Text("处理中") : Text(verbatim: ""))
     }
 
     private var visualHeight: CGFloat { size == .large ? largeHeight : regularHeight }

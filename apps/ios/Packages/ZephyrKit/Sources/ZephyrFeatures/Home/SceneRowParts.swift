@@ -27,7 +27,7 @@ struct ProbeBar: View {
                 phase = 1
             }
         }
-        .accessibilityLabel(Text(verbatim: "检测中"))
+        .accessibilityLabel(Text("检测中"))
     }
 }
 

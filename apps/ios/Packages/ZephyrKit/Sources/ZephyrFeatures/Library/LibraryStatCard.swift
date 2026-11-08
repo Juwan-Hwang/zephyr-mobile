@@ -34,7 +34,7 @@ struct LibraryStatCard: View {
         }
         .buttonStyle(ZPressStyle())
         .accessibilityElement(children: .combine)
-        .accessibilityHint(Text(verbatim: "打开"))
+        .accessibilityHint(Text("打开"))
     }
 }
 

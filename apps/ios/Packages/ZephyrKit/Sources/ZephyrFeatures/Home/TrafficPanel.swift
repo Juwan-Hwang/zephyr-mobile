@@ -29,7 +29,7 @@ struct TrafficPanel: View {
         .buttonStyle(.plain)
         .disabled(!on)
         .accessibilityElement(children: .contain)
-        .accessibilityHint(Text(verbatim: on ? "轻点两下查看最近连接" : ""))
+        .accessibilityHint(Text(on ? LocalizedStringKey("轻点两下查看最近连接") : LocalizedStringKey("")))
     }
 }
 
@@ -67,7 +67,7 @@ private struct RateReadout: View {
         .lineLimit(1)
         .minimumScaleFactor(0.7)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(verbatim: "下载 \(down.value) \(down.unit)，上传 \(up.value) \(up.unit)"))
+        .accessibilityLabel(Text("下载 \(down.value) \(down.unit)，上传 \(up.value) \(up.unit)"))
         .accessibilityAddTraits(.updatesFrequently)
     }
 }

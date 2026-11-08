@@ -24,6 +24,10 @@ options:
   deploymentTarget:
     iOS: "17.0"
   developmentLanguage: zh-Hans
+  knownRegions:
+    - zh-Hans
+    - en
+    - Base
   createIntermediateGroups: true
   generateEmptyDirectories: true
   groupSortPosition: top
@@ -92,6 +96,9 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleDevelopmentRegion: zh-Hans
+        CFBundleLocalizations:
+          - zh-Hans
+          - en
         LSRequiresIPhoneOS: true
         UILaunchScreen:
           UIColorName: LaunchBackground
@@ -240,6 +247,7 @@ targets:
       path: Widgets/Info.plist
       properties:
         CFBundleDisplayName: Zephyr
+        CFBundleDevelopmentRegion: zh-Hans
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         ZephyrAppGroup: $(ZEPHYR_APP_GROUP)

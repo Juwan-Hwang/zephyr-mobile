@@ -44,7 +44,7 @@ private struct ZSkeletonModifier: ViewModifier {
                 .modifier(ZShimmer(active: true, clip: .content))
                 .allowsHitTesting(false)
                 .accessibilityElement(children: .ignore)
-                .accessibilityLabel(Text(verbatim: "加载中"))
+                .accessibilityLabel(Text("加载中"))
         } else {
             content
         }

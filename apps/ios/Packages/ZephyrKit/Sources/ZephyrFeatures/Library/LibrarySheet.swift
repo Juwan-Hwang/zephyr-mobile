@@ -43,7 +43,7 @@ public struct LibrarySheet: View {
                 .padding(.bottom, PageMetrics.bottomInset)
             }
             // ZSheet 自绘抓手与标题栏；导航栏只在子页出现，标题供子页返回键显示“资料库”。
-            .navigationTitle(Text(verbatim: "资料库"))
+            .navigationTitle(Text("资料库"))
             .toolbar(.hidden, for: .navigationBar)
             .navigationDestination(for: Subpage.self) { page in
                 switch page {

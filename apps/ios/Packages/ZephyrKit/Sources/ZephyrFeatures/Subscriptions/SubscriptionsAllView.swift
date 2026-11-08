@@ -19,7 +19,7 @@ struct SubscriptionsAllView: View {
                         .subscriptionRow(sub, model: model)
                 }
             } footer: {
-                Text(verbatim: "\(ZFormat.count(Int64(filtered.count))) 个订阅 · \(ZFormat.count(nodeCount)) 个节点")
+                Text("\(ZFormat.count(Int64(filtered.count))) 个订阅 · \(ZFormat.count(nodeCount)) 个节点")
                     .zType(.footnote)
                     .foregroundStyle(ZTokens.Colors.screenT3)
             }
@@ -29,7 +29,7 @@ struct SubscriptionsAllView: View {
         .contentMargins(.horizontal, PageMetrics.margin, for: .scrollContent)
         .environment(\.defaultMinListRowHeight, 0)
         .zPageBackground()
-        .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .automatic), prompt: Text(verbatim: "搜索订阅"))
+        .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .automatic), prompt: Text("搜索订阅"))
         .overlay {
             if filtered.isEmpty && !query.isEmpty {
                 ZEmptyState("无结果", message: "没有与“\(query)”匹配的订阅")
@@ -37,7 +37,7 @@ struct SubscriptionsAllView: View {
         }
         .refreshable { await model.refreshAll() }
         .subscriptionsPresentations(model)
-        .navigationTitle(Text(verbatim: "全部订阅"))
+        .navigationTitle(Text("全部订阅"))
         .navigationBarTitleDisplayMode(.inline)
     }
 

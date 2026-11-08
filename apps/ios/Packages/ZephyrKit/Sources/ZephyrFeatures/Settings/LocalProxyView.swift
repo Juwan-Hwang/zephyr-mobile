@@ -44,11 +44,11 @@ struct LocalProxyView: View {
         }
         .scrollDismissesKeyboard(.interactively)
         .zPageBackground()
-        .navigationTitle(Text(verbatim: "本地代理端口"))
+        .navigationTitle(Text("本地代理端口"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button { save() } label: { Text(verbatim: "存储") }
+                Button { save() } label: { Text("存储") }
                     .disabled(parsed == nil || parsed == store.settings?.localProxyPort)
             }
         }
