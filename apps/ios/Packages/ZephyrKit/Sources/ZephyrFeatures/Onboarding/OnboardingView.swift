@@ -168,7 +168,8 @@ public struct OnboardingView: View {
 
     private func title(_ s: String) -> some View {
         Text(verbatim: s)
-            .zDisplay(.title)
+            .font(.system(size: 34, weight: .light))
+            .lineSpacing(6)
             .foregroundStyle(ZTokens.Colors.screenT1)
             .fixedSize(horizontal: false, vertical: true)
             .padding(.top, ZTokens.Space.n3)
