@@ -32,6 +32,13 @@ public protocol TunnelPort: AnyObject, Sendable {
     func usageToday() async -> (hourly: [Int64], onlineMillis: Int64)?
     /// zm_logs 增量 JSON；未连接为 nil。
     func logs(since: Int64, minLevel: String, limit: Int32) async -> String?
+    /// 系统按需规则（按需连接 / 受信任 Wi‑Fi 自动断开）。`create == false` 时 VPN 配置尚未创建就什么都不做（避免提前弹授权）。
+    /// 默认不支持（单测、模拟器）。
+    func applyOnDemand(onDemand: Bool, trustedNetworks: [String], disconnectOnTrusted: Bool, create: Bool) async
+}
+
+public extension TunnelPort {
+    func applyOnDemand(onDemand: Bool, trustedNetworks: [String], disconnectOnTrusted: Bool, create: Bool) async {}
 }
 
 extension CoreEngine {
@@ -40,6 +47,9 @@ extension CoreEngine {
 
     func liveConnect(_ t: any TunnelPort) async throws {
         try await writeTunnelConfig(to: t.configURL, controllerSocket: t.controllerSocketPath)
+        if let s = await currentSettings() {
+            await t.applyOnDemand(onDemand: s.onDemand, trustedNetworks: s.trustedWifi, disconnectOnTrusted: s.disconnectOnTrusted, create: true)
+        }
         try await t.start()
     }
 

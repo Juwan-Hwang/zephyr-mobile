@@ -27,6 +27,11 @@ final class FakeTunnel: TunnelPort, @unchecked Sendable {
     func setMode(_ m: ZephyrKit.ProxyMode) async throws { lock.withLock { mode = m } }
     func rate() async -> (up: Int64, down: Int64)? { lock.withLock { status == .connected ? (10, 2048) : nil } }
     func reloadConfig() async throws { lock.withLock { reloads += 1 } }
+    struct OnDemandCall: Equatable { var onDemand: Bool, trusted: [String], disconnectOnTrusted: Bool, create: Bool }
+    var onDemandCalls: [OnDemandCall] = []
+    func applyOnDemand(onDemand: Bool, trustedNetworks: [String], disconnectOnTrusted: Bool, create: Bool) async {
+        lock.withLock { onDemandCalls.append(OnDemandCall(onDemand: onDemand, trusted: trustedNetworks, disconnectOnTrusted: disconnectOnTrusted, create: create)) }
+    }
     func usageToday() async -> (hourly: [Int64], onlineMillis: Int64)? {
         var h = Array(repeating: Int64(0), count: 24); h[9] = 1_000; h[10] = 500
         return (h, 7_200_000)
@@ -241,6 +246,27 @@ final class CoreEngineLiveTests: XCTestCase {
         XCTAssertEqual(reread, s)
         s.tun.mtu = 100
         do { try await e.updateSettings(patch: s); XCTFail("非法 MTU") } catch {}
+    }
+
+    /// X-P1-5：按需连接 / 受信任 Wi‑Fi 设置要落到系统按需规则：连接前带 create，之后改设置只更新已存在的配置。
+    func testOnDemandSettingsReachTunnelPort() async throws {
+        let (e, t) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        var it = e.settings().makeAsyncIterator()
+        let first = await it.next()
+        var s = try XCTUnwrap(first)
+        try await e.connect()
+        XCTAssertEqual(t.onDemandCalls.last, FakeTunnel.OnDemandCall(onDemand: s.onDemand, trusted: s.trustedWifi,
+                                                                     disconnectOnTrusted: s.disconnectOnTrusted, create: true))
+        let before = t.onDemandCalls.count
+        s.appearance = .dark
+        try await e.updateSettings(patch: s)
+        XCTAssertEqual(t.onDemandCalls.count, before, "外观不影响按需规则")
+        s.onDemand = true
+        s.trustedWifi = ["Home"]
+        s.disconnectOnTrusted = true
+        try await e.updateSettings(patch: s)
+        XCTAssertEqual(t.onDemandCalls.last, FakeTunnel.OnDemandCall(onDemand: true, trusted: ["Home"], disconnectOnTrusted: true, create: false))
     }
 
     func testLogsFromTunnel() async throws {
