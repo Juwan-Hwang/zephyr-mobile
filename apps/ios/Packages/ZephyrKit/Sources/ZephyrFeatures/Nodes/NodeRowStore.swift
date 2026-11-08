@@ -139,9 +139,22 @@ final class NodeRowStore {
         guard !ids.isEmpty else { return [] }
         let engine = self.engine
         let submitted = ids
-        Task.detached(priority: .utility) { await engine.testLatency(ids: submitted) }
+        Task.detached(priority: .utility) { [weak self] in
+            await engine.testLatency(ids: submitted)
+            // 引擎没给结果的（不能测的协议、批次失败）退回「未测」，不要一直显示 ···
+            await self?.clearTesting(submitted)
+        }
         onLatencyChanged?(Set(ids))
         return ids
+    }
+
+    private func clearTesting(_ ids: [NodeId]) {
+        var changed = Set<NodeId>()
+        for id in ids where latency[id] == .testing {
+            latency[id] = nil
+            changed.insert(id)
+        }
+        if !changed.isEmpty { onLatencyChanged?(changed) }
     }
 
     private func apply(_ batch: [LatencyUpdate]) {

@@ -160,7 +160,7 @@ impl MobileCore {
     }
 
     /// 隧道未连接时的测速目标（契约 §14.u）：平台直接测到 server:port 的 TCP 握手时间，结果用 recordLatencies 写回。
-    /// 只在本进程内使用，不展示，server 不脱敏。基于 UDP 的协议（hysteria/hysteria2/tuic/wireguard）无法 TCP 握手，跳过。
+    /// 只在本进程内使用，不展示，server 不脱敏。基于 UDP 的协议（hysteria/hysteria2/hy2/tuic/wireguard/wg）无法 TCP 握手，跳过。
     /// 超过 512 个报错；找不到定义的 id 跳过。
     pub fn tcp_ping_targets(&self, ids: Vec<u64>) -> Result<Vec<TcpTarget>, MobileError> {
         if ids.len() > URL_TEST_BATCH {
@@ -172,7 +172,7 @@ impl MobileCore {
             .filter_map(|id| {
                 let Some(Value::Mapping(m)) = defs.get(&id) else { return None };
                 let ty = m.get("type").and_then(|t| t.as_str()).unwrap_or("").to_ascii_lowercase();
-                if matches!(ty.as_str(), "hysteria" | "hysteria2" | "tuic" | "wireguard") {
+                if matches!(ty.as_str(), "hysteria" | "hysteria2" | "hy2" | "tuic" | "wireguard" | "wg") {
                     return None;
                 }
                 let host = m.get("server").and_then(scalar)?;
