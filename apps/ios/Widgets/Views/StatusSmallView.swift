@@ -37,20 +37,20 @@ struct RateBlock: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                     .contentTransition(.numericText())
-                Text("\(rate.unit) · \(state.connection.mode.title)")
+                Text("\(rate.unit) · \(state.connection.mode.displayTitle)")
                     .zType(.footnote)
                     .foregroundStyle(ZTokens.Colors.screenT2)
                     .lineLimit(1)
                 // 速率是上次时间线生成时的瞬时值（最长约 15 分钟前），标出它的年龄（REVIEW W-P1-2）。
                 if let at = state.rate.at {
-                    (Text(at, style: .relative) + Text("前"))
+                    Text("\(Text(at, style: .relative))前")
                         .font(.caption2)
                         .foregroundStyle(ZTokens.Colors.screenT3)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 }
             } else {
-                Text(state.connection.status.title)
+                Text(state.connection.status.displayTitle)
                     .zType(.title)
                     .foregroundStyle(ZTokens.Colors.screenT1)
                     .lineLimit(1)
@@ -66,8 +66,8 @@ struct RateBlock: View {
     }
 
     private var accessibilityText: String {
-        guard state.connection.status == .connected else { return "Zephyr \(state.connection.status.title)" }
-        return "Zephyr 已连接，\(state.connection.mode.title)模式，下行 \(ZFormat.rateString(state.rate.downBps))"
+        guard state.connection.status == .connected else { return String(localized: "Zephyr \(state.connection.status.displayTitle)") }
+        return String(localized: "Zephyr 已连接，\(state.connection.mode.displayTitle)模式，下行 \(ZFormat.rateString(state.rate.downBps))")
     }
 }
 

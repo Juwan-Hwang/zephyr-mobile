@@ -1,13 +1,14 @@
-// 节点行（原型 `.vr`：52 高、左 22 / 右 44（给索引条让位）、名称 15 号单行省略、搜索命中词强调色、
-// 倍率 “×1.5” 等宽 12 t3、协议等宽 10.5 t3、延迟列 52 宽；底部 1px 分隔线从 22 起）。
-// 为 1e8 行虚拟列表设计：固定高度（ZTokens.Layout.rowHeight；AX 尺寸 66 并隐藏协议，同原型 xl），
-// 无状态、无 GeometryReader、无动画，适合 UIHostingConfiguration 复用。
+// 节点行（原型 `.vr`：52 高、左 22 / 右 44（给索引条让位）、列间距 12、名称 15 号（左内 2）单行省略、搜索命中词强调色、
+// 倍率 “×1.5” 等宽 12 t3、协议等宽 10.5 t3 字距 .02em、延迟等宽 13 列宽 52（<200 t2 / ≥200 琥珀 / 未测 t4）；底部 1px --hl 分隔线从 22 起）。
+// 大字体（≥ xxLarge，与节点页 UIKit 列表 NodeListStyle.isXL 同阈值，原型 `.device.xl .vr`）：66 高、名称封顶 19、延迟 16、隐藏协议。
+// 固定行高下字号封顶（名称 17 / xl 19，延迟 14 / xl 16），与 NodeListStyle 一致，SwiftUI 与 UIKit 两条渲染路径同一套数值。
+// 为 1e8 行虚拟列表设计：无状态、无 GeometryReader、无动画，适合 UIHostingConfiguration 复用。
 
 import SwiftUI
 
 public struct ZNodeRow: View {
     private let name: String
-    private let highlight: String?
+    private let highlights: [String]
     private let protocolName: String?
     private let multiplier: String?
     private let latency: Int?
@@ -17,6 +18,7 @@ public struct ZNodeRow: View {
     private let trailingInset: CGFloat
     @Environment(\.zAccent) private var accent
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @ScaledMetric(relativeTo: .body) private var nameSize: CGFloat = ZTokens.TypeStyle.zRowValue.size
 
     /// - Parameters:
     ///   - name: 节点名（不含倍率），如 "东京 03"。
@@ -35,8 +37,23 @@ public struct ZNodeRow: View {
                 isSelected: Bool = false,
                 regionCode: String? = nil,
                 trailingInset: CGFloat = ZTokens.Layout.touchMinIos) {
+        self.init(name: name, highlights: highlight.map { [$0] } ?? [], protocolName: protocolName, multiplier: multiplier,
+                  latency: latency, isTesting: isTesting, isSelected: isSelected, regionCode: regionCode,
+                  trailingInset: trailingInset)
+    }
+
+    /// 多个搜索词（如 “东京 iplc” 拆词后逐个高亮，与节点页 NodeNameMarkup 一致）。`highlights` 无默认值，避免与上面的初始化重载歧义。
+    public init(name: String,
+                highlights: [String],
+                protocolName: String? = nil,
+                multiplier: String? = nil,
+                latency: Int?,
+                isTesting: Bool = false,
+                isSelected: Bool = false,
+                regionCode: String? = nil,
+                trailingInset: CGFloat = ZTokens.Layout.touchMinIos) {
         self.name = name
-        self.highlight = highlight
+        self.highlights = highlights
         self.protocolName = protocolName
         self.multiplier = multiplier
         self.latency = latency
@@ -46,26 +63,31 @@ public struct ZNodeRow: View {
         self.trailingInset = trailingInset
     }
 
+    /// 是否按原型 xl 排版（与 NodeListStyle：`preferredContentSizeCategory >= .extraExtraLarge` 一致）。
+    public static func isLarge(_ size: DynamicTypeSize) -> Bool { size >= .xxLarge }
+
     /// 行高：列表布局用（与视图内部一致）。
     public static func height(for size: DynamicTypeSize) -> CGFloat {
-        size.isAccessibilitySize ? ZMetrics.rowHeightLarge : ZTokens.Layout.rowHeight
+        isLarge(size) ? ZMetrics.rowHeightLarge : ZTokens.Layout.rowHeight
     }
 
     public var body: some View {
-        let large = dynamicTypeSize.isAccessibilitySize
+        let large = Self.isLarge(dynamicTypeSize)
         HStack(spacing: ZTokens.Space.n4) {
-            if let regionCode { ZFlag(regionCode) }
+            if let regionCode { ZFlag(regionCode).dynamicTypeSize(...DynamicTypeSize.xxxLarge) }
             HStack(alignment: .firstTextBaseline, spacing: ZTokens.Space.n1) {
                 Text(attributedName)
+                    .font(.system(size: min(nameSize, large ? ZMetrics.nodeNameCapLarge : ZMetrics.nodeNameCap)))
                     .lineLimit(1)
                     .truncationMode(.tail)
                 if let multiplier {
                     Text(verbatim: multiplier)
-                        .zMono(.small)
+                        .modifier(ZMonoModifier(.small, weight: .regular, maxSize: ZMetrics.nodeLatencyCap))
                         .foregroundStyle(ZTokens.Colors.screenT3)
                         .fixedSize()
                 }
             }
+            .padding(.leading, ZMetrics.nodeNameLead)
             .frame(maxWidth: .infinity, alignment: .leading)
             if isSelected {
                 Image(systemName: "checkmark")
@@ -74,16 +96,16 @@ public struct ZNodeRow: View {
             }
             if let protocolName, !large {
                 Text(verbatim: protocolName)
-                    .zMono(.micro)
-                    .tracking(0.2)
+                    .modifier(ZMonoModifier(.micro, weight: .regular, maxSize: ZMetrics.monoMicro))
+                    .tracking(ZMetrics.monoMicro * 0.02)
                     .foregroundStyle(ZTokens.Colors.screenT3)
                     .fixedSize()
             }
-            ZLatencyPill(ms: latency, isTesting: isTesting)
+            ZLatencyPill(ms: latency, isTesting: isTesting,
+                         maxFontSize: large ? ZMetrics.nodeLatencyCapLarge : ZMetrics.nodeLatencyCap,
+                         columnWidth: large ? ZMetrics.rowHeightLarge : ZMetrics.latencyColumn)
                 .fixedSize()
         }
-        .zType(.body)
-        .dynamicTypeSize(...DynamicTypeSize.accessibility2)
         .padding(.leading, ZMetrics.rowLeading)
         .padding(.trailing, trailingInset)
         .frame(height: Self.height(for: dynamicTypeSize))
@@ -98,8 +120,13 @@ public struct ZNodeRow: View {
     private var attributedName: AttributedString {
         var s = AttributedString(name)
         s.foregroundColor = ZTokens.Colors.screenT1
-        if let highlight, !highlight.isEmpty, let range = s.range(of: highlight, options: .caseInsensitive) {
-            s[range].foregroundColor = accent.color
+        for term in highlights where !term.isEmpty {
+            var searchStart = s.startIndex
+            while searchStart < s.endIndex,
+                  let range = s[searchStart...].range(of: term, options: .caseInsensitive) {
+                s[range].foregroundColor = accent.color
+                searchStart = range.upperBound
+            }
         }
         return s
     }
@@ -115,6 +142,7 @@ private struct ZNodeRowSample: View {
             ZNodeRow(name: "名古屋 01", protocolName: "VMESS", latency: nil)
             ZNodeRow(name: "札幌 02", protocolName: "HY2", latency: nil, isTesting: true)
             ZNodeRow(name: "新加坡 02", latency: -1, regionCode: "SG")
+            ZNodeRow(name: "东京 IPLC 东京", highlights: ["东京", "iplc"], protocolName: "VLESS", latency: 212)
         }
     }
 }

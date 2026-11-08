@@ -42,7 +42,7 @@ public struct ZFlag: View {
                 shape.strokeBorder(isHighlighted ? AnyShapeStyle(ZAccentStyle()) : AnyShapeStyle(ZTokens.Colors.screenHl2),
                                    lineWidth: ZMetrics.hairline)
             }
-            .scaleEffect(isHighlighted && !reduceMotion ? 1.18 : 1)
+            .scaleEffect(isHighlighted && !reduceMotion ? ZMetrics.flagTickScale : 1)
             .animation(ZMotion.micro, value: isHighlighted)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text(verbatim: Self.regionName(code)))

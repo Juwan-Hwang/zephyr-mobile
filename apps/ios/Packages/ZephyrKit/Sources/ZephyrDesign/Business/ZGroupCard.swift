@@ -1,8 +1,12 @@
-// 场景/策略组行（原型首页 `.rows .row`）：左 “AI” 17 号 + “9 个可用” 13 t3（或红色 “Claude 不可用”）；
-// 右 [JP] 东京 03（15 号）+ 下方说明（“GPT、Gemini 正常”）或锁定说明（🔒 黄色锁 “Claude：US-Fixed-01”）或检测进度条。
-// 左右滑切换地区时底部出现分段轨道（`.track`，当前段强调色）并带 5% 强调色底。
-// 未连接时整行 55% 透明。AX 尺寸改为上下堆叠（同原型 xl）。
-// 本身不带背景：放进 `ZCard(padding: 0)`，行间 `ZDivider()`；可点时包 `Button { } label: { ZGroupCard(…) }.buttonStyle(ZRowButtonStyle())`。
+// 场景/策略组行（原型首页 `.rows .row`，数值均取自 index.html）：
+//   行 padding 15 16、两栏间距 12、垂直居中；按下 rgba(255,255,255,.025)（screen.pressed）。
+//   左：名称 17 / 字距 −0.01em；下方 3pt 处状态 13 t3（或红色 “Claude 不可用”）；检测中时状态下方 9pt 一条 96×2 进度条（--hl 轨道 + 强调色）。
+//   右：`.ex` [JP] 东京 03（15 号，间距 8）；下方 5pt 处 `.pin` 12 t3：🔒（琥珀 .85，间距 6）锁定说明，或纯文字备注（“Netflix 完整片库”）。
+//   左右滑切换地区：底部 `.track`（3 高、段距 3、圆角 2、--hl2 / 当前段强调色，左右 16）+ 5% 强调色底；地区码 `.cc.tick` 跳动。
+//   未连接时整行 55% 透明。大字体（≥ xxxLarge，同原型 xl 与首页 SceneRow）改为上下堆叠、左对齐、间距 6，文字不截断。
+// 本身不带背景：放进 `ZCard(padding: 0)`，行间 `ZDivider()`。
+// 可点：`Button { } label: { ZGroupCard(…) }.buttonStyle(ZRowButtonStyle())`；
+// 自己处理手势（如首页横滑）时传 `isPressed` / `scrubIndex` / `isFlagHighlighted`，并在外层用自定义无障碍标签覆盖（`.accessibilityElement(children: .ignore)`）。
 
 import SwiftUI
 
@@ -22,13 +26,21 @@ public struct ZGroupCard: View {
     private let isDimmed: Bool
     private let scrubCount: Int
     private let scrubIndex: Int?
+    private let isProbing: Bool
+    private let isPressed: Bool
+    private let isFlagHighlighted: Bool?
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.zAccent) private var accent
 
     /// - Parameters:
-    ///   - pinned: 锁定说明，如 "Claude：US-Fixed-01"（优先于 detail 显示）。
-    ///   - progress: 0...1 显示检测进度条（优先于 detail/pinned）。
+    ///   - subtitle: 名称下方状态（“9 个可用” / “订阅分组” / “4 个可用 · 检测中”）。
+    ///   - pinned: 锁定说明，如 "Claude：US-Fixed-01"（优先于 detail 显示，带琥珀小锁）。
+    ///   - detail: 右侧第二行纯文字备注（`.pin` 无锁版本）。
+    ///   - progress: 0...1 时在状态下方显示确定进度条（原型 scan）。
+    ///   - isProbing: progress 为 nil 时显示不确定（往复流动）进度条。
     ///   - scrubCount / scrubIndex: 横滑切换时的候选数与当前位置；scrubIndex 为 nil 不显示轨道。
+    ///   - isPressed: 自定义手势的按下态（用 ZRowButtonStyle 时不用传）。
+    ///   - isFlagHighlighted: 地区码跳动；nil 时跟随 “正在横滑”（scrubIndex != nil）。
     public init(title: String,
                 subtitle: String,
                 subtitleTone: ZGroupTone = .normal,
@@ -39,7 +51,10 @@ public struct ZGroupCard: View {
                 progress: Double? = nil,
                 isDimmed: Bool = false,
                 scrubCount: Int = 0,
-                scrubIndex: Int? = nil) {
+                scrubIndex: Int? = nil,
+                isProbing: Bool = false,
+                isPressed: Bool = false,
+                isFlagHighlighted: Bool? = nil) {
         self.title = title
         self.subtitle = subtitle
         self.subtitleTone = subtitleTone
@@ -51,80 +66,119 @@ public struct ZGroupCard: View {
         self.isDimmed = isDimmed
         self.scrubCount = scrubCount
         self.scrubIndex = scrubIndex
+        self.isProbing = isProbing
+        self.isPressed = isPressed
+        self.isFlagHighlighted = isFlagHighlighted
     }
 
+    /// 与首页 SceneRow 相同的堆叠阈值（原型 xl 在非 AX 尺寸就开始堆叠）。
+    public static func isStacked(_ size: DynamicTypeSize) -> Bool { size >= .xxxLarge }
+
     public var body: some View {
-        let stacked = dynamicTypeSize.isAccessibilitySize
-        let layout = stacked ? AnyLayout(VStackLayout(alignment: .leading, spacing: ZTokens.Space.n2))
-                             : AnyLayout(HStackLayout(alignment: .top, spacing: ZTokens.Space.n4))
+        let stacked = Self.isStacked(dynamicTypeSize)
+        let layout = stacked ? AnyLayout(VStackLayout(alignment: .leading, spacing: ZMetrics.groupStackGap))
+                             : AnyLayout(HStackLayout(alignment: .center, spacing: ZMetrics.groupRowGap))
         layout {
-            VStack(alignment: .leading, spacing: ZTokens.Space.n1) {
-                Text(verbatim: title)
-                    .zType(.headline)
-                    .fontWeight(.regular)
-                    .foregroundStyle(ZTokens.Colors.screenT1)
-                Text(verbatim: subtitle)
-                    .zType(.footnote)
-                    .foregroundStyle(subtitleColor)
-            }
-            .frame(maxWidth: stacked ? nil : .infinity, alignment: .leading)
-            VStack(alignment: stacked ? .leading : .trailing, spacing: ZTokens.Space.n1) {
-                HStack(spacing: ZTokens.Space.n3) {
-                    if let regionCode { ZFlag(regionCode, isHighlighted: scrubIndex != nil) }
-                    Text(verbatim: exitName)
-                        .zType(.body)
-                        .foregroundStyle(ZTokens.Colors.screenT1)
-                        .lineLimit(stacked ? nil : 1)
-                }
-                secondary
-            }
+            leading
+                .frame(maxWidth: stacked ? nil : .infinity, alignment: .leading)
+            trailing(stacked: stacked)
         }
-        .padding(.horizontal, ZTokens.Space.n5)
-        .padding(.vertical, ZTokens.Space.n5)
+        .padding(.vertical, ZMetrics.groupRowVertical)
+        .padding(.horizontal, ZMetrics.groupRowHorizontal)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(scrubIndex != nil ? accent.color.opacity(0.05) : Color.clear)
+        .background(rowBackground)
         .overlay(alignment: .bottom) { scrubTrack }
         .opacity(isDimmed ? 0.55 : 1)
         .animation(ZMotion.standard, value: scrubIndex)
         .accessibilityElement(children: .combine)
     }
 
+    // MARK: 左栏
+
+    private var leading: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(verbatim: title)
+                .zType(.headline)
+                .fontWeight(.regular)
+                .tracking(ZTokens.TypeStyle.headline.size * ZMetrics.rowTitleTracking)
+                .foregroundStyle(ZTokens.Colors.screenT1)
+            Text(verbatim: subtitle)
+                .zType(.footnote)
+                .foregroundStyle(subtitleColor)
+                .padding(.top, ZMetrics.groupMetaTop)
+            if let progress {
+                ZProgressBar(value: progress, tone: .accent, label: "检测进度")
+                    .frame(width: ZMetrics.probeBarWidth)
+                    .padding(.top, ZMetrics.probeBarTop)
+            } else if isProbing {
+                ZGroupProbeBar()
+                    .frame(width: ZMetrics.probeBarWidth)
+                    .padding(.top, ZMetrics.probeBarTop)
+            }
+        }
+    }
+
+    // MARK: 右栏
+
+    private func trailing(stacked: Bool) -> some View {
+        VStack(alignment: stacked ? .leading : .trailing, spacing: 0) {
+            HStack(spacing: ZTokens.Space.n3) {
+                if let regionCode { ZFlag(regionCode, isHighlighted: isFlagHighlighted ?? (scrubIndex != nil)) }
+                Text(verbatim: exitName)
+                    .zType(.zRowValue)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
+                    .lineLimit(stacked ? nil : 1)
+                    .contentTransition(.opacity)
+            }
+            secondary(stacked: stacked)
+        }
+        .multilineTextAlignment(stacked ? .leading : .trailing)
+    }
+
     @ViewBuilder
-    private var secondary: some View {
-        if let progress {
-            ZProgressBar(value: progress, tone: .accent, label: "检测进度")
-                .frame(maxWidth: ZMetrics.scanBarWidth)
-        } else if let pinned {
-            HStack(spacing: ZTokens.Space.n2) {
+    private func secondary(stacked: Bool) -> some View {
+        if let pinned {
+            HStack(spacing: ZMetrics.groupPinGap) {
                 Image(systemName: "lock.fill")
                     .imageScale(.small)
-                    .foregroundStyle(ZTokens.Colors.screenAmber.opacity(0.85))
+                    .foregroundStyle(ZTokens.Colors.screenAmber.opacity(ZMetrics.pinIconOpacity))
                     .accessibilityLabel(Text(verbatim: "已锁定"))
                 Text(verbatim: pinned)
+                    .lineLimit(stacked ? nil : 1)
             }
             .zType(.caption)
             .foregroundStyle(ZTokens.Colors.screenT3)
+            .padding(.top, ZMetrics.groupPinTop)
         } else if let detail {
             Text(verbatim: detail)
-                .zType(.footnote)
+                .zType(.caption)
                 .foregroundStyle(ZTokens.Colors.screenT3)
+                .lineLimit(stacked ? nil : 1)
+                .padding(.top, ZMetrics.groupPinTop)
         }
     }
+
+    // MARK: 横滑轨道 / 背景
 
     @ViewBuilder
     private var scrubTrack: some View {
         if let scrubIndex, scrubCount > 1 {
             HStack(spacing: ZMetrics.scrubGap) {
                 ForEach(0..<scrubCount, id: \.self) { i in
-                    Capsule()
+                    RoundedRectangle(cornerRadius: ZMetrics.scrubRadius, style: .continuous)
                         .fill(i == scrubIndex ? AnyShapeStyle(accent.color) : AnyShapeStyle(ZTokens.Colors.screenHl2))
                         .frame(height: ZMetrics.scrubHeight)
                 }
             }
-            .padding(.horizontal, ZTokens.Space.n5)
+            .padding(.horizontal, ZMetrics.groupRowHorizontal)
             .accessibilityHidden(true)
             .transition(.opacity)
         }
+    }
+
+    private var rowBackground: Color {
+        if scrubIndex != nil { return accent.color.opacity(ZMetrics.scrubTint) }
+        return isPressed ? ZTokens.Colors.screenPressed : Color.clear
     }
 
     private var subtitleColor: Color {
@@ -133,6 +187,33 @@ public struct ZGroupCard: View {
         case .warning: return ZTokens.Colors.screenAmber
         case .danger: return ZTokens.Colors.screenRed
         }
+    }
+}
+
+/// 不确定进度：强调色短条在 --hl 轨道里往复（Reduce Motion 下静止在左侧）。
+private struct ZGroupProbeBar: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var phase: CGFloat = 0
+
+    var body: some View {
+        GeometryReader { proxy in
+            let w = proxy.size.width
+            ZStack(alignment: .leading) {
+                Capsule(style: .continuous).fill(ZTokens.Colors.screenHl)
+                Capsule(style: .continuous).fill(ZAccentStyle())
+                    .frame(width: w * 0.3)
+                    .offset(x: reduceMotion ? 0 : phase * w * 0.7)
+            }
+        }
+        .frame(height: ZMetrics.barThin)
+        .onAppear {
+            guard !reduceMotion else { return }
+            withAnimation(ZTokens.Easing.easeInOut(duration: ZTokens.Time.slow * 3).repeatForever(autoreverses: true)) {
+                phase = 1
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(verbatim: "检测中"))
     }
 }
 
@@ -147,7 +228,9 @@ private struct ZGroupCardSample: View {
                 ZDivider()
                 ZGroupCard(title: "视频", subtitle: "22 个可用", regionCode: "HK", exitName: "香港 HKT", detail: "Netflix 完整片库", scrubCount: 6, scrubIndex: 2)
                 ZDivider()
-                ZGroupCard(title: "其他", subtitle: "订阅分组", regionCode: "TW", exitName: "TW-Fixed-01", progress: 0.27)
+                ZGroupCard(title: "AI", subtitle: "4 个可用", regionCode: "SG", exitName: "新加坡 02", pinned: "Claude：US-Fixed-01", progress: 0.27)
+                ZDivider()
+                ZGroupCard(title: "AI", subtitle: "4 个可用 · 检测中", regionCode: "SG", exitName: "新加坡 02", isProbing: true, isPressed: true)
                 ZDivider()
                 ZGroupCard(title: "其他", subtitle: "订阅分组", regionCode: "TW", exitName: "TW-Fixed-01", isDimmed: true)
             }

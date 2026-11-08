@@ -20,10 +20,10 @@ struct LockCircularView: View {
             Text("下行")
         } currentValueLabel: {
             VStack(spacing: ZTokens.Space.n0) {
-                Text(on ? rate.value : "—")
+                Text(verbatim: on ? rate.value : "—")
                     .zType(.headline, monospacedDigits: true)
                     .minimumScaleFactor(0.5)
-                Text(on ? rate.unit : "未连接")
+                (on ? Text(verbatim: rate.unit) : Text("未连接"))
                     .zType(.caption)
                     .minimumScaleFactor(0.5)
             }

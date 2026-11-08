@@ -41,7 +41,7 @@ public struct ZToast: View {
         let shape = RoundedRectangle(cornerRadius: ZMetrics.toastRadius, style: .continuous)
         HStack(spacing: ZTokens.Space.n3) {
             Text(verbatim: item.message)
-                .zType(.footnote)
+                .zType(.zCallout)
                 .foregroundStyle(ZTokens.Colors.screenT1)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
@@ -51,8 +51,7 @@ public struct ZToast: View {
                     onDismiss()
                 } label: {
                     Text(verbatim: title)
-                        .zType(.footnote)
-                        .fontWeight(.medium)
+                        .zType(.zControl)
                         .foregroundStyle(ZAccentStyle())
                         .padding(.horizontal, ZTokens.Space.n4)
                         .frame(minHeight: ZTokens.Layout.touchMinIos)

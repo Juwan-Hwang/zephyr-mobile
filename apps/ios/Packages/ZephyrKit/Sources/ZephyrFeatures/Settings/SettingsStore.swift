@@ -1,5 +1,5 @@
 // SettingsStore — 订阅 settings() 流，并以“全量写回”（契约 §8 updateSettings(patch:)）修改。
-// 设置页、订阅页“更新”分组、引导页共用。写入是乐观的：先改本地，失败回滚并给出 lastError。
+// 设置页、订阅页“更新”分组、引导页、资料库子页共用。写入是乐观的：先改本地，失败回滚并给出 lastError（顶部横幅）。
 
 import Observation
 import SwiftUI
@@ -11,8 +11,8 @@ final class SettingsStore {
     @ObservationIgnored let engine: any ZephyrEngine
     /// nil = 还没收到第一帧。
     private(set) var settings: Settings?
-    /// 最近一次写回失败的文案；页面展示后置 nil。
-    var lastError: String?
+    /// 最近一次写回失败（页面以顶部横幅展示，展示后置 nil）。
+    var lastError: PageError?
     /// 写回请求的代数：只有最后一次写回失败时才回滚，避免连续拨动开关时被旧请求覆盖。
     @ObservationIgnored private var generation = 0
 
@@ -38,7 +38,7 @@ final class SettingsStore {
             return true
         } catch {
             if mine == generation { settings = old }
-            lastError = (error as? ZephyrError)?.userMessage ?? "无法保存设置"
+            lastError = PageError.from(error, fallback: "无法保存设置")
             return false
         }
     }

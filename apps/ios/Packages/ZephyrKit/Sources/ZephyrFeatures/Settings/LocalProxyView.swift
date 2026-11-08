@@ -1,11 +1,14 @@
-// LocalProxyView — 本地代理端口：端口号（1024–65535）+ “需要密码”。写回 localProxyPort / localProxyAuth。
-// 契约 v0 没有“启用本地端口”字段（原型行值“关”），见 NOTES-L 需要 A 补充。
+// LocalProxyView — 本地代理端口：开关（契约 §14.z localProxyEnabled）+ 端口号（1024–65535）+ “需要密码”。
+// 写回 localProxyEnabled / localProxyPort / localProxyAuth；失败以顶部横幅提示。
+// 凭据（zephyr:<24 位随机>）由 CoreEngine.localProxyCredential() 生成，不在 ZephyrEngine 协议里，暂不展示（NOTES-L）。
 
 import SwiftUI
 import UIKit
 import ZephyrDesign
 import ZephyrKit
+#if DEBUG
 import ZephyrMock
+#endif
 
 @MainActor
 struct LocalProxyView: View {
@@ -17,6 +20,9 @@ struct LocalProxyView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
+                ZSettingsGroup(footer: "开启后仅监听 127.0.0.1，局域网中的其他设备无法连接。") {
+                    ZSettingsRow("本地代理端口", isOn: store.binding(\.localProxyEnabled, fallback: false))
+                }
                 ZSettingsGroup("端口", footer: "其他 App 可通过 127.0.0.1 上的这个端口使用 Zephyr 的规则与场景。") {
                     ZTextField("7890", text: $portText, systemImage: "number", style: .plain, monospaced: true, onSubmit: { save() })
                         .keyboardType(.numberPad)
@@ -46,6 +52,7 @@ struct LocalProxyView: View {
                     .disabled(parsed == nil || parsed == store.settings?.localProxyPort)
             }
         }
+        .pageErrorBanner(Bindable(store).lastError)
         .onAppear { if let p = store.settings?.localProxyPort { portText = String(p) } }
         .onChange(of: store.settings?.localProxyPort) { _, p in
             if let p { portText = String(p) }
@@ -69,9 +76,11 @@ struct LocalProxyView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let store = SettingsStore(engine: MockEngine(seed: 0, clock: .frozen941))
     return NavigationStack { LocalProxyView(store: store) }
         .task { await store.start() }
         .preferredColorScheme(.dark)
 }
+#endif

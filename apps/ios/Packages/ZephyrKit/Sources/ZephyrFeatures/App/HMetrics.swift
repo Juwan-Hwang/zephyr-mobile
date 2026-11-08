@@ -46,4 +46,34 @@ enum HMetrics {
     static let swatch: CGFloat = 20
     /// 1px 细线
     static let hairline: CGFloat = 1
+
+    // MARK: H3（REVIEW-Q1 H 段 P2）补齐的原型尺寸
+
+    /// 首页状态区上边距 18（`.hero` padding-top 18px）
+    static let heroTop: CGFloat = 18
+    /// 模式与时长之间 14（`.sub` gap 14px）
+    static let subGap: CGFloat = 14
+    /// 模式 / 时长字号 14（`.sub` font-size 14px）
+    static let subFont: CGFloat = 14
+    /// 场景行右侧节点名 15（`.ex` font-size 15px）
+    static let rowValueFont: CGFloat = 15
+    /// 锁图标不透明度 .85（`.pin svg` opacity .85）
+    static let pinIconOpacity: Double = 0.85
+    /// 场景详情候选行（`.li` padding 13px 14px，font-size 15px）
+    static let listItemVertical: CGFloat = 13
+    static let listItemHorizontal: CGFloat = 14
+    static let listItemFont: CGFloat = 15
+    /// 指令 token 卡片（`.pc small` 10.5px / `.pc b` 15px / 圆角 12 / padding 8px 12px）
+    static let chipLabelFont: CGFloat = 10.5
+    static let chipValueFont: CGFloat = 15
+    /// token 卡片依次淡入：每张 +40ms，位移 6（`@keyframes pcIn` translateY(6px)）
+    static let chipStagger: Double = 0.04
+    static let chipRise: CGFloat = 6
+    /// 轨迹页域名 32 light、字距 -0.03em（原型 `#trace .big span` font:300 32px）
+    static let traceHostFont: CGFloat = 32
+    static let traceHostTracking: CGFloat = -0.03
+    /// 服务健康圆点 6（`.svc i` 6×6）
+    static let serviceDot: CGFloat = 6
+    /// 大字号最多放大 1.6 倍（与 ZDisplay 一致，避免 AX5 下溢出）
+    static let displayMaxScale: CGFloat = 1.6
 }

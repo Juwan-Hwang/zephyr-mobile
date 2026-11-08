@@ -1,7 +1,7 @@
 // 首页（原型 03/04/05/10/11/12）。单一首页：顶栏 + 状态 + 速率曲线 + 场景 + 订阅，底部浮动指令栏与资料库按钮。
 //
 // 性能约定：HomeView 的 body 只读 toast（低频），其余区块是独立的小视图，各自只读自己需要的切片；
-// 1 Hz 流量只让 RateReadout / TrafficChart 重算，连接时长只让 ConnectionDuration 每秒重算。
+// 1 Hz 流量只让 RateReadout / TrafficChart 重算，连接时长交给系统计时 Text（不重算 body）。
 
 import SwiftUI
 import ZephyrDesign
@@ -22,7 +22,7 @@ public struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     HomeHero()
-                        .padding(.top, ZTokens.Space.n4)
+                        .padding(.top, HMetrics.heroTop)
                     TrafficPanel()
                         .padding(.top, ZTokens.Space.n6)
                     ScenesSection()

@@ -59,8 +59,12 @@ final class LibraryModel {
         return Self.trustedWifiText(s)
     }
 
-    /// 本地代理端口行的值：“7890”。契约 v0 无“端口开关”字段，原型的“关”暂无法表达（NOTES-L）。
-    var localPortText: String? { settings.map { String($0.localProxyPort) } }
+    /// 本地代理端口行的值：关闭时“关”（原型 lib.png），开启时显示端口“7890”（契约 §14.z localProxyEnabled）。
+    var localPortText: String? { settings.map(Self.localProxyText) }
+
+    nonisolated static func localProxyText(_ s: Settings) -> String {
+        s.localProxyEnabled ? String(s.localProxyPort) : "关"
+    }
 
     nonisolated static func trustedWifiText(_ s: Settings) -> String {
         guard s.disconnectOnTrusted else { return "关" }

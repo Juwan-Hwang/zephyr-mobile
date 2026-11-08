@@ -2,6 +2,7 @@
 //
 // 左：场景名 + 状态（"9 个可用" / "订阅分组" / 检测中进度 / 无可用节点）
 // 右：地区码 + 当前节点；第二行例外（🔒 Claude：US-Fixed-01）或备注（Netflix 完整片库）
+// 服务不可用（原型 11 zero.png，契约 §14.z Scene.services）：左"Claude 不可用"（红），右第二行"GPT、Gemini 正常"。
 // 交互：轻点 → 场景详情；左右滑动（每 42pt 一个地区）→ 逐格触感 + 地区码放大，松手后请求出口变化预览。
 // VoiceOver：可调整（上下轻扫切换地区）+ 默认操作打开详情。
 
@@ -28,6 +29,7 @@ struct SceneRow: View {
     @State private var pressed = false
 
     private var choices: [NodeSummary] { model.regionChoices[scene.id] ?? [] }
+    private var services: SceneServiceSummary { SceneServiceSummary(scene.services) }
     private var shown: NodeSummary {
         if let i = scrubIndex, choices.indices.contains(i) { return choices[i] }
         return pendingTarget ?? scene.selected
@@ -92,6 +94,8 @@ struct SceneRow: View {
                     .zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
                 ProbeBar().frame(width: HMetrics.probeBarWidth)
             }
+        } else if let down = services.unavailableText {
+            Text(verbatim: down).zType(.footnote).foregroundStyle(ZTokens.Colors.screenRed)
         } else if scene.source == .subscriptionGroup {
             Text(verbatim: "订阅分组").zType(.footnote).foregroundStyle(ZTokens.Colors.screenT3)
         } else if scene.available <= 0 {
@@ -105,17 +109,21 @@ struct SceneRow: View {
         VStack(alignment: stacked ? .leading : .trailing, spacing: ZTokens.Space.n1) {
             HStack(spacing: ZTokens.Space.n3) {
                 ZFlag(shown.region, isHighlighted: ticking)
+                // 原型 `.ex` font-size 15（REVIEW H-P2-3）。
                 Text(verbatim: shown.name)
-                    .zType(.headline).fontWeight(.regular)
+                    .hFont(HMetrics.rowValueFont, relativeTo: .subheadline)
                     .foregroundStyle(ZTokens.Colors.screenT1)
                     .lineLimit(stacked ? nil : 1)
                     .contentTransition(.opacity)
             }
-            if let ex = scene.exceptions.first {
+            if let ok = services.healthyText {
+                Text(verbatim: ok).zType(.caption).foregroundStyle(ZTokens.Colors.screenT3).lineLimit(stacked ? nil : 1)
+            } else if let ex = scene.exceptions.first {
                 HStack(spacing: ZTokens.Space.n2) {
                     Image(systemName: "lock.fill")
                         .font(.caption2)
                         .foregroundStyle(ZTokens.Colors.screenAmber)
+                        .opacity(HMetrics.pinIconOpacity)
                     Text(verbatim: "\(ex.app)：\(ex.node.name)")
                 }
                 .zType(.caption)
@@ -200,6 +208,7 @@ struct SceneRow: View {
     private var a11yLabel: String {
         var parts = [scene.name]
         if isProbing { parts.append("检测中") }
+        else if services.replacesRowStatus { parts.append(services.spoken ?? "") }
         else if scene.source == .subscriptionGroup { parts.append("订阅分组") }
         else { parts.append(scene.available > 0 ? "\(scene.available) 个可用" : "暂无可用节点") }
         parts.append("\(HRegionName.name(shown.region)) \(shown.name)")
@@ -231,4 +240,18 @@ private struct AdjustableIf: ViewModifier {
 
 #Preview {
     HPreview(model: .preview()) { HomeView() }
+}
+
+#Preview("服务不可用（原型 11）") {
+    let tested = ZFormat.nowMillis()
+    let scene = Scene(id: "ai", kind: .ai, name: "AI", available: 9,
+                      selected: NodeSummary(id: 2, name: "新加坡 02", region: "SG", protocol: "Hy2", latencyMs: 74),
+                      source: .auto, testedAt: tested,
+                      exceptions: [SceneException(app: "Claude", node: NodeSummary(id: 9, name: "US-Fixed-01", region: "US", protocol: "VLESS"))],
+                      services: [ServiceHealth(appId: "chatgpt", name: "GPT", ok: true, checkedAt: tested),
+                                 ServiceHealth(appId: "claude", name: "Claude", ok: false, checkedAt: tested),
+                                 ServiceHealth(appId: "gemini", name: "Gemini", ok: true, checkedAt: tested)])
+    return HPreview(model: .preview()) {
+        SceneRow(scene: scene, scrubbable: false, showsCoach: false, isProbing: false, pendingTarget: nil)
+    }
 }

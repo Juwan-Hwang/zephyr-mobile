@@ -1,7 +1,7 @@
 // 首页主区（原型 `.hero` + `.sub`）：
 //   "已连接 / 未连接" 超大字 + 连接开关
-//   模式菜单（规则 / 全局 / 直连）+ 连接时长（每秒）或"3 个场景"
-// 只读 connection 与 scenes.count；时长在独立的 ConnectionDuration 小视图里每秒刷新。
+//   模式菜单（规则 / 全局 / 直连）+ 连接时长或"3 个场景"（`.sub`：14pt、间距 14）
+// 只读 connection 与 scenes.count；时长用系统计时 Text（`style: .timer`），不重算 body（REVIEW H-P2-2）。
 
 import SwiftUI
 import ZephyrDesign
@@ -25,13 +25,13 @@ struct HomeHero: View {
                     Task { await model.toggleConnection() }
                 }
             }
-            HStack(spacing: ZTokens.Space.n5) {
+            HStack(spacing: HMetrics.subGap) {
                 ModeMenu()
                 if model.isConnected, let since = model.connection.since {
                     ConnectionDuration(since: since)
                 } else {
                     Text(verbatim: subline)
-                        .zType(.footnote)
+                        .hFont(HMetrics.subFont, relativeTo: .subheadline)
                         .foregroundStyle(subline.isEmpty ? ZTokens.Colors.screenT3 : failureTone)
                         .lineLimit(2)
                 }
@@ -97,12 +97,14 @@ private struct ModeMenu: View {
         } label: {
             HStack(spacing: ZTokens.Space.n1) {
                 Text(verbatim: model.connection.mode.zhLabel)
-                    .zType(.footnote)
-                    .fontWeight(.medium)
+                    .hFont(HMetrics.subFont, relativeTo: .subheadline)
                     .foregroundStyle(ZTokens.Colors.screenT1)
+                // 原型 `.mode svg{opacity:.5}`：箭头与文字同色、半透明。
                 Image(systemName: "chevron.down")
                     .font(.caption2.weight(.semibold))
-                    .foregroundStyle(ZTokens.Colors.screenT3)
+                    .foregroundStyle(ZTokens.Colors.screenT1)
+                    .opacity(0.5)
+                    .accessibilityHidden(true)
             }
             .frame(minHeight: ZTokens.Layout.touchMinIos)
             .contentShape(Rectangle())
@@ -113,20 +115,36 @@ private struct ModeMenu: View {
     }
 }
 
-/// 连接时长：每秒刷新，只重算这一行文字。
+/// 连接时长 "2:14:07"：系统计时 Text 自己按秒走，零 body 重算，锁屏 / 后台恢复也准（REVIEW H-P2-2）。
+/// Preview / 快照注入了冻结时钟（Mock 9:41）时，系统计时会按真实时间走而失真，此时退回静态文字。
 @MainActor
 struct ConnectionDuration: View {
     let since: Int64
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 1)) { _ in
-            let ms = max(0, model.now() - since)
-            Text(verbatim: ZFormat.duration(ms))
-                .zType(.footnote, monospacedDigits: true)
-                .foregroundStyle(ZTokens.Colors.screenT3)
+        let nowMs = model.now()
+        if Self.usesSystemClock(nowMs) {
+            let start = Date(timeIntervalSince1970: Double(since) / 1000)
+            styled(Text(start, style: .timer))
+                // VoiceOver 读取时取计时 Text 的当前值，不会过期。
+                .accessibilityLabel(Text(verbatim: "已连接 ") + Text(start, style: .timer))
+        } else {
+            let ms = max(0, nowMs - since)
+            styled(Text(verbatim: ZFormat.duration(ms)))
                 .accessibilityLabel(Text(verbatim: "已连接 \(Self.spoken(ms))"))
         }
+    }
+
+    private func styled(_ text: Text) -> some View {
+        text
+            .hFont(HMetrics.subFont, relativeTo: .subheadline, monospacedDigits: true)
+            .foregroundStyle(ZTokens.Colors.screenT3)
+    }
+
+    /// 注入的时钟与系统时钟相差 5 秒以内 → 视为系统时钟。
+    static func usesSystemClock(_ injectedNow: Int64) -> Bool {
+        abs(injectedNow - ZFormat.nowMillis()) < 5_000
     }
 
     static func spoken(_ ms: Int64) -> String {

@@ -20,7 +20,7 @@ struct LockRectangularView: View {
                         .lineLimit(1)
                 }
             } else {
-                Text(state.connection.status.title)
+                Text(state.connection.status.displayTitle)
                     .zType(.body)
                     .foregroundStyle(.secondary)
             }

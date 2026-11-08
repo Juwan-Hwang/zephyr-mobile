@@ -5,7 +5,9 @@
 import SwiftUI
 import ZephyrDesign
 import ZephyrKit
+#if DEBUG
 import ZephyrMock
+#endif
 
 @MainActor
 struct TrustedWifiView: View {
@@ -35,13 +37,17 @@ struct TrustedWifiView: View {
                 ZTextField("添加 Wi‑Fi 名称", text: $name, systemImage: "wifi", style: .plain, onSubmit: { add() })
                     .zCardListRow()
             } header: {
+                // 去掉 insetGrouped 自带的页眉内边距，标题与卡片左缘按原型对齐（同 REVIEW L-P2-12）。
                 ZSectionHeader("网络", trailing: names.isEmpty ? nil : "\(names.count) 个")
+                    .listRowInsets(EdgeInsets())
+                    .textCase(nil)
             }
         }
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
         .contentMargins(.horizontal, PageMetrics.margin, for: .scrollContent)
         .zPageBackground()
+        .pageErrorBanner(Bindable(store).lastError)
         .navigationTitle(Text(verbatim: "受信任的 Wi‑Fi"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -71,9 +77,11 @@ struct TrustedWifiView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let store = SettingsStore(engine: MockEngine(seed: 0, clock: .frozen941))
     return NavigationStack { TrustedWifiView(store: store) }
         .task { await store.start() }
         .preferredColorScheme(.dark)
 }
+#endif

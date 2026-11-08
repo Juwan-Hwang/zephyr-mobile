@@ -28,7 +28,7 @@ struct ScenesMediumView: View {
                         Rectangle().fill(ZTokens.Colors.screenHl).frame(height: 1).accessibilityHidden(true)
                     }
                     Link(destination: WidgetLinks.scene(scene.id)) {
-                        SceneRow(scene: scene)
+                        SceneRow(scene: scene, columnNames: rows.map(\.name))
                     }
                 }
             }
@@ -39,15 +39,25 @@ struct ScenesMediumView: View {
 
 private struct SceneRow: View {
     var scene: SharedState.SceneSummary
-    @ScaledMetric(relativeTo: .body) private var nameWidth: CGFloat = 44
+    /// 本组件里所有行的场景名：用来把名字列撑到“最长名”的宽度，三行的徽标列因此对齐（REVIEW-Q1 W-P2-7）。
+    var columnNames: [String]
+    /// 名字列上限：超长的自定义场景名在这里截断，给节点名留出空间（原型 `.sr span` 40，约 3 倍）。
+    @ScaledMetric(relativeTo: .body) private var nameMaxWidth: CGFloat = 120
 
     var body: some View {
         HStack(spacing: ZTokens.Space.n3) {
-            Text(scene.name)
-                .zType(.body)
-                .foregroundStyle(ZTokens.Colors.screenT2)
-                .frame(width: nameWidth, alignment: .leading)
-                .lineLimit(1)
+            // 隐藏的“最长名”占位 + 可见名字叠在一起：不需要测量，宽度天然等于最长者，且随 Dynamic Type 变化。
+            ZStack(alignment: .leading) {
+                ForEach(Array(columnNames.enumerated()), id: \.offset) { _, name in
+                    Text(verbatim: name).zType(.body).lineLimit(1).hidden()
+                }
+                Text(verbatim: scene.name)
+                    .zType(.body)
+                    .foregroundStyle(ZTokens.Colors.screenT2)
+                    .lineLimit(1)
+            }
+            .frame(maxWidth: nameMaxWidth, alignment: .leading)
+            .layoutPriority(1)
             RegionBadge(region: scene.region)
             Text(scene.nodeName)
                 .zType(.body)
