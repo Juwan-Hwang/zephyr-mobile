@@ -1,6 +1,7 @@
-// 按钮（原型 `.btn`：40 高胶囊，14/500；`.ob .foot .btn` 52 高）。
-// primary = 反色实心（深色白底黑字）；ghost = 细微底色；danger = 危险色字；accent = 强调色实心。
-// 按下缩放 0.97 + 轻触感；大字体时高度随字号增长、文字可换行。
+// 按钮（原型 `.btn`：40 高胶囊、14/500、左右 18；`.ob .foot .btn` 52 高、16 号）。
+// primary = `.btn.p`（--t1 底 / --onp 字）；ghost = `.btn.q`（--hl 底 / --t1 字）；danger = --hl 底 / 红字；accent = `.btn.blue` 强调色实心。
+// 视觉高度保持 40（regular），触控区上下各外扩 2pt 到 44（不占布局）；按下缩放 0.97，无触感；
+// 大字体时高度随字号增长、文字可换行。
 
 import SwiftUI
 
@@ -56,23 +57,31 @@ public struct ZButton: View {
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            .zType(size == .large ? .body : .button)
+            .zType(size == .large ? .body : .zControl)
+            .fontWeight(.medium)
             .foregroundStyle(foreground)
-            .padding(.horizontal, size == .large ? ZTokens.Space.n6 : ZTokens.Space.n5)
+            .padding(.horizontal, size == .large ? ZTokens.Space.n6 : ZMetrics.buttonPaddingH)
             .padding(.vertical, ZTokens.Space.n3)
-            .frame(maxWidth: fullWidth ? .infinity : nil,
-                   minHeight: max(size == .large ? largeHeight : regularHeight, ZTokens.Layout.touchMinIos))
+            .frame(maxWidth: fullWidth ? .infinity : nil, minHeight: visualHeight)
             .background(Capsule(style: .continuous).fill(background))
-            .contentShape(Capsule(style: .continuous))
+            // 视觉 40 → 触控 44：外扩的透明区只参与命中，下面的负 padding 把它从布局里去掉。
+            .padding(.vertical, hitOutset)
+            .contentShape(Rectangle())
         }
         .buttonStyle(ZPressStyle(haptic: .none))
+        .padding(.vertical, -hitOutset)
         .accessibilityLabel(Text(title))
         .accessibilityValue(isLoading ? Text(verbatim: "处理中") : Text(verbatim: ""))
     }
 
+    private var visualHeight: CGFloat { size == .large ? largeHeight : regularHeight }
+
+    /// 视觉高度不足 44 时，上下各需外扩的触控量（AX 尺寸下按钮本身已 ≥ 44，为 0）。
+    private var hitOutset: CGFloat { max(0, (ZTokens.Layout.touchMinIos - visualHeight) / 2) }
+
     private var foreground: AnyShapeStyle {
         switch kind {
-        case .primary: return AnyShapeStyle(ZPage.background)
+        case .primary: return AnyShapeStyle(ZTokens.Colors.screenOnPrimary)
         case .ghost: return AnyShapeStyle(ZTokens.Colors.screenT1)
         case .danger: return AnyShapeStyle(ZTokens.Colors.screenRed)
         case .accent: return AnyShapeStyle(ZTokens.Colors.textOnAccent)
@@ -82,7 +91,7 @@ public struct ZButton: View {
     private var background: AnyShapeStyle {
         switch kind {
         case .primary: return AnyShapeStyle(ZTokens.Colors.screenT1)
-        case .ghost, .danger: return AnyShapeStyle(ZTrackFill())
+        case .ghost, .danger: return AnyShapeStyle(ZTokens.Colors.screenHl)
         case .accent: return AnyShapeStyle(ZAccentStyle())
         }
     }

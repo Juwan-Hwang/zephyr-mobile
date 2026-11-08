@@ -8,10 +8,10 @@ struct LockInlineView: View {
 
     var body: some View {
         if state.connection.status == .connected {
-            Label("\(ZFormat.rateString(state.rate.downBps)) · \(state.connection.mode.title)",
+            Label("\(ZFormat.rateString(state.rate.downBps)) · \(state.connection.mode.displayTitle)",
                   systemImage: "bolt.horizontal.fill")
         } else {
-            Label("Zephyr \(state.connection.status.title)", systemImage: "bolt.horizontal")
+            Label("Zephyr \(state.connection.status.displayTitle)", systemImage: "bolt.horizontal")
         }
     }
 }

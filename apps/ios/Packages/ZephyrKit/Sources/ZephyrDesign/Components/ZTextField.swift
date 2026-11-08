@@ -1,5 +1,6 @@
 // 输入框（原型 `.fs`：40 高、圆角 12、--s3 底、左侧放大镜、右侧耗时/计数小字 + 圆形清除）。
 // filled = 独立搜索框（节点页）；plain = 嵌在卡片里的无底色版本（规则测试 `.rt .fs`，48 高、等宽 15）。
+// 点按聚焦：只由背景层（图标、留白、右侧小字下方的空白）响应；TextField 自身的点按（定位光标、长按放大镜）不被拦截。
 
 import SwiftUI
 
@@ -44,6 +45,7 @@ public struct ZTextField: View {
                 Image(systemName: systemImage)
                     .foregroundStyle(ZTokens.Colors.screenT3)
                     .accessibilityHidden(true)
+                    .allowsHitTesting(false)
             }
             field
             if let trailing, !trailing.isEmpty {
@@ -52,6 +54,7 @@ public struct ZTextField: View {
                     .foregroundStyle(ZTokens.Colors.screenT3)
                     .lineLimit(1)
                     .layoutPriority(-1)
+                    .allowsHitTesting(false)
             }
             if !text.isEmpty {
                 Button {
@@ -72,12 +75,18 @@ public struct ZTextField: View {
         .padding(.trailing, text.isEmpty ? ZTokens.Space.n4 : 0)
         .frame(minHeight: style == .filled ? filledHeight : plainHeight)
         .background {
-            if style == .filled {
-                RoundedRectangle(cornerRadius: ZTokens.Radius.surface, style: .continuous).fill(ZTrackFill())
+            // 背景层承接“点空白处聚焦”：TextField 与清除按钮在它上面，命中优先，所以不会和光标定位抢手势。
+            ZStack {
+                if style == .filled {
+                    RoundedRectangle(cornerRadius: ZTokens.Radius.surface, style: .continuous).fill(ZTrackFill())
+                } else {
+                    Color.clear
+                }
             }
+            .contentShape(Rectangle())
+            .onTapGesture { focused = true }
+            .accessibilityHidden(true)
         }
-        .contentShape(Rectangle())
-        .onTapGesture { focused = true }
         .animation(ZMotion.micro, value: text.isEmpty)
     }
 

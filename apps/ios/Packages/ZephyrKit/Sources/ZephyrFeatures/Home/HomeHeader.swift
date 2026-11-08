@@ -17,6 +17,8 @@ struct HomeHeader: View {
                 .frame(height: lockupHeight)
                 .foregroundStyle(ZTokens.Colors.screenT1)
             Spacer(minLength: 0)
+            // 设置入口沿用原型的太阳图形（品牌决定，原型 03/04 一致；REVIEW H-P2-8）。SF 里 sun.max 语义是"亮度"，
+            // 所以 VoiceOver 标签明确为"设置"；若设计改为 gearshape，只改这里的符号名。
             ZIconButton(systemImage: "sun.max", label: "设置") {
                 model.push(.settings)
             }

@@ -3,11 +3,12 @@
 //   ZSheet { … }                 sheet 内部的版式（抓手 + 标题栏 + 内容）
 //   .zSheet(isPresented:) { … }  呈现：detents、圆角 ZTokens.Layout.sheetRadius、背景 screen.s1、强调色透传
 // “完成”默认调用 `dismiss`。
+// 标题：UI 文案用 `ZSheet("场景")`（LocalizedStringKey）；用户数据（场景名、订阅名）用 `ZSheet(verbatim: scene.name)`，不进本地化查表。
 
 import SwiftUI
 
 public struct ZSheet<Accessory: View, Content: View>: View {
-    private let title: LocalizedStringKey
+    private let title: Text
     private let doneTitle: LocalizedStringKey?
     private let onDone: (() -> Void)?
     private let scrolls: Bool
@@ -26,12 +27,33 @@ public struct ZSheet<Accessory: View, Content: View>: View {
                 scrolls: Bool = true,
                 @ViewBuilder accessory: () -> Accessory,
                 @ViewBuilder content: () -> Content) {
+        self.init(title: Text(title), doneTitle: doneTitle, onDone: onDone, scrolls: scrolls,
+                  accessory: accessory(), content: content())
+    }
+
+    /// 标题为用户数据（如场景名 `scene.name`）时用：原样显示，不做本地化查表。
+    public init(verbatim title: String,
+                doneTitle: LocalizedStringKey? = "完成",
+                onDone: (() -> Void)? = nil,
+                scrolls: Bool = true,
+                @ViewBuilder accessory: () -> Accessory,
+                @ViewBuilder content: () -> Content) {
+        self.init(title: Text(verbatim: title), doneTitle: doneTitle, onDone: onDone, scrolls: scrolls,
+                  accessory: accessory(), content: content())
+    }
+
+    private init(title: Text,
+                 doneTitle: LocalizedStringKey?,
+                 onDone: (() -> Void)?,
+                 scrolls: Bool,
+                 accessory: Accessory,
+                 content: Content) {
         self.title = title
         self.doneTitle = doneTitle
         self.onDone = onDone
         self.scrolls = scrolls
-        self.accessory = accessory()
-        self.content = content()
+        self.accessory = accessory
+        self.content = content
     }
 
     public var body: some View {
@@ -54,7 +76,7 @@ public struct ZSheet<Accessory: View, Content: View>: View {
 
     private var header: some View {
         HStack(alignment: .firstTextBaseline, spacing: ZTokens.Space.n3) {
-            Text(title)
+            title
                 .zType(.headline)
                 .fontWeight(.medium)
                 .foregroundStyle(ZTokens.Colors.screenT1)
@@ -87,6 +109,15 @@ public extension ZSheet where Accessory == EmptyView {
          @ViewBuilder content: () -> Content) {
         self.init(title, doneTitle: doneTitle, onDone: onDone, scrolls: scrolls, accessory: { EmptyView() }, content: content)
     }
+
+    /// 标题为用户数据时用（见 `init(verbatim:accessory:content:)`）。
+    init(verbatim title: String,
+         doneTitle: LocalizedStringKey? = "完成",
+         onDone: (() -> Void)? = nil,
+         scrolls: Bool = true,
+         @ViewBuilder content: () -> Content) {
+        self.init(verbatim: title, doneTitle: doneTitle, onDone: onDone, scrolls: scrolls, accessory: { EmptyView() }, content: content)
+    }
 }
 
 // MARK: - 呈现
@@ -105,8 +136,41 @@ public extension View {
         presentationDetents(detents)
             .presentationDragIndicator(.hidden)
             .presentationCornerRadius(ZTokens.Layout.sheetRadius)
-            .presentationBackground(ZTokens.Colors.screenS1)
+            .presentationBackground { ZSheetBackground() }
             .environment(\.zInSheet, true)
+    }
+}
+
+/// sheet 背景：--s1 + 跟随顶部 34pt 圆角的 1px --hl2 细边（原型 `.sheet{border-top:1px solid var(--hl2)}`）。
+/// 细边沿两侧圆角收尾，不再是被圆角裁断的直线。
+private struct ZSheetBackground: View {
+    var body: some View {
+        ZTokens.Colors.screenS1
+            .overlay(alignment: .top) {
+                ZSheetTopEdge(radius: ZTokens.Layout.sheetRadius)
+                    .stroke(ZTokens.Colors.screenHl2, lineWidth: ZMetrics.hairline)
+            }
+            .ignoresSafeArea()
+            .accessibilityHidden(true)
+    }
+}
+
+/// 只有顶边：左侧圆角弧 → 顶边直线 → 右侧圆角弧（开放路径，描边内收半个线宽避免被裁一半）。
+private struct ZSheetTopEdge: Shape {
+    let radius: CGFloat
+
+    func path(in rect: CGRect) -> Path {
+        let inset = ZMetrics.hairline / 2
+        let r = max(0, min(radius, rect.width / 2) - inset)
+        let minX = rect.minX + inset, maxX = rect.maxX - inset, minY = rect.minY + inset
+        var p = Path()
+        p.move(to: CGPoint(x: minX, y: minY + r))
+        p.addArc(center: CGPoint(x: minX + r, y: minY + r), radius: r,
+                 startAngle: .degrees(180), endAngle: .degrees(270), clockwise: false)
+        p.addLine(to: CGPoint(x: maxX - r, y: minY))
+        p.addArc(center: CGPoint(x: maxX - r, y: minY + r), radius: r,
+                 startAngle: .degrees(270), endAngle: .degrees(360), clockwise: false)
+        return p
     }
 }
 

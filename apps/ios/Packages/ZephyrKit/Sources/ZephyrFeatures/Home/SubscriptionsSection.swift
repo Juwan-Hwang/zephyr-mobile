@@ -1,5 +1,6 @@
 // 首页"订阅"区（原型 `.rows.subs`）：标题右侧"今日 1.8 GB ›"打开今日卡片；
 // 卡片列出前两个订阅：名称 + 用量条，右侧剩余流量 + 到期（7 天内到期为警告色）。轻点 → 订阅页。
+// 字号按原型 `.row .n` 17 / `.row .m` 13；到期 1–6 天内用星期（"周一到期"，global.png，REVIEW H-P2-6）。
 
 import SwiftUI
 import ZephyrDesign
@@ -69,7 +70,7 @@ private struct SubscriptionRow: View {
         HStack(alignment: .center, spacing: ZTokens.Space.n5) {
             VStack(alignment: .leading, spacing: ZTokens.Space.n3) {
                 Text(verbatim: sub.name)
-                    .zType(.body)
+                    .zType(.headline).fontWeight(.regular)
                     .foregroundStyle(ZTokens.Colors.screenT1)
                     .lineLimit(1)
                 if let used {
@@ -79,12 +80,12 @@ private struct SubscriptionRow: View {
             VStack(alignment: .trailing, spacing: ZTokens.Space.n1) {
                 if let r = sub.remainingBytes {
                     Text(verbatim: ZFormat.bytes(r))
-                        .zType(.body, monospacedDigits: true)
+                        .zType(.headline, monospacedDigits: true).fontWeight(.regular)
                         .foregroundStyle(ZTokens.Colors.screenT1)
                 }
                 if let e = sub.expiresAt {
-                    Text(verbatim: ZFormat.expiry(e, now: now))
-                        .zType(.caption)
+                    Text(verbatim: HFormat.homeExpiry(e, now: now))
+                        .zType(.footnote)
                         .foregroundStyle(warn ? ZTokens.Colors.screenAmber : ZTokens.Colors.screenT3)
                 }
             }
@@ -100,7 +101,7 @@ private struct SubscriptionRow: View {
         var parts = [sub.name]
         if let r = sub.remainingBytes { parts.append("剩余 \(ZFormat.bytes(r))") }
         if let used { parts.append("已用 \(Int((used * 100).rounded()))%") }
-        if let e = sub.expiresAt { parts.append(ZFormat.expiry(e, now: now)) }
+        if let e = sub.expiresAt { parts.append(HFormat.homeExpiry(e, now: now)) }
         return parts.joined(separator: "，")
     }
 }

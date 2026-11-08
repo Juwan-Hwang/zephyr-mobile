@@ -1,4 +1,5 @@
-// 分段控件（原型 `.seg`：底 --s3、圆角 13、内边距 3；滑块 --s4 圆角 10，320ms cubic-bezier(.16,1,.3,1) 滑动）。
+// 分段控件（原型 `.seg`：底 --s3、圆角 13、内边距 3、文字 13.5 t2 / 选中 t1；滑块 --s4 圆角 10、阴影 0 2 6 rgba(0,0,0,.4)，
+// 320ms cubic-bezier(.16,1,.3,1) 滑动）。
 // 用于场景 sheet “订阅分组 | Zephyr 优选”、连接轨迹 “不变 / 直连 / 视频 / 其他”。
 // 切换给 selection 触感；Reduce Motion 下滑块直接跳位。AX 大字体且段数 > 2 时改为纵向排列。
 
@@ -37,7 +38,7 @@ public struct ZSegmented<Value: Hashable>: View {
     }
 
     public var body: some View {
-        let outer = ZTokens.Radius.surface + ZMetrics.segmentInset
+        let outer = ZMetrics.segmentRadius
         Group {
             if dynamicTypeSize.isAccessibilitySize && segments.count > 2 {
                 VStack(spacing: 0) { items }
@@ -50,7 +51,7 @@ public struct ZSegmented<Value: Hashable>: View {
         .animation(reduceMotion ? nil : ZMotion.slow, value: selection)
         .sensoryFeedback(.selection, trigger: selection)
         .accessibilityElement(children: .contain)
-        .accessibilityLabel(label.map { Text($0) } ?? Text(verbatim: ""))
+        .modifier(ZOptionalAccessibilityLabel(label: label))
     }
 
     private var items: some View {
@@ -60,8 +61,7 @@ public struct ZSegmented<Value: Hashable>: View {
                 selection = segment.value
             } label: {
                 segment.title
-                    .zType(.footnote)
-                    .fontWeight(isOn ? .medium : .regular)
+                    .zType(.zSegment)
                     .foregroundStyle(isOn ? ZTokens.Colors.screenT1 : ZTokens.Colors.screenT2)
                     .lineLimit(dynamicTypeSize.isAccessibilitySize ? 2 : 1)
                     .minimumScaleFactor(0.8)
@@ -70,9 +70,10 @@ public struct ZSegmented<Value: Hashable>: View {
                     .frame(maxWidth: .infinity, minHeight: height)
                     .background {
                         if isOn {
-                            RoundedRectangle(cornerRadius: ZTokens.Radius.surface, style: .continuous)
+                            RoundedRectangle(cornerRadius: ZMetrics.segmentKnobRadius, style: .continuous)
                                 .fill(ZKnobFill())
-                                .shadow(color: .black.opacity(0.25), radius: 3, y: 2)
+                                .shadow(color: .black.opacity(ZMetrics.segmentShadowOpacity),
+                                        radius: ZMetrics.segmentShadowRadius, y: ZMetrics.segmentShadowY)
                                 .matchedGeometryEffect(id: "knob", in: knob)
                         }
                     }
@@ -80,6 +81,19 @@ public struct ZSegmented<Value: Hashable>: View {
             }
             .buttonStyle(.plain)
             .accessibilityAddTraits(isOn ? .isSelected : [])
+        }
+    }
+}
+
+/// 只有在提供了名称时才设置 VoiceOver label（空字符串 label 会让 VoiceOver 读出空白容器名）。
+private struct ZOptionalAccessibilityLabel: ViewModifier {
+    let label: LocalizedStringKey?
+
+    func body(content: Content) -> some View {
+        if let label {
+            content.accessibilityLabel(Text(label))
+        } else {
+            content
         }
     }
 }

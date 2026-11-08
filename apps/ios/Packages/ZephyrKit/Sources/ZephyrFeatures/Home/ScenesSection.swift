@@ -13,8 +13,11 @@ struct ScenesSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            ZSectionHeader("场景", trailing: model.connection.mode == .global ? nil : model.scenesTestedText)
-                .homeSectionInsets()
+            // "2 小时前检测"按分钟刷新；只有这一行随时间重算（REVIEW H-P2-7）。
+            TimelineView(.everyMinute) { _ in
+                ZSectionHeader("场景", trailing: model.connection.mode == .global ? nil : model.scenesTestedText)
+            }
+            .homeSectionInsets()
             if model.connection.mode == .global {
                 GlobalModeCard()
             } else if model.scenes.isEmpty {
@@ -34,11 +37,14 @@ struct ScenesSection: View {
                 ForEach(Array(model.scenes.enumerated()), id: \.element.id) { idx, scene in
                     if idx > 0 { ZDivider() }
                     let pending = model.pendingChange?.sceneId == scene.id ? model.pendingChange : nil
+                    let coach = scene.id == firstScrubbable && model.isConnected
                     SceneRow(scene: scene,
                              scrubbable: Self.isScrubbable(scene),
-                             showsCoach: scene.id == firstScrubbable && model.isConnected,
+                             showsCoach: coach,
                              isProbing: model.retesting.contains(scene.id),
                              pendingTarget: pending?.to)
+                        // 提示气泡画在行下沿之外；抬高层级，盖住下一行之前的分隔线（原型 `.coach` 用 --s1 底，REVIEW H-P2-4）。
+                        .zIndex(coach ? 1 : 0)
                     if let pending {
                         SceneChangeConfirm(change: pending, sceneName: scene.name)
                             .transition(.opacity.combined(with: .move(edge: .top)))
