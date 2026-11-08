@@ -1,5 +1,8 @@
 package com.zephyr.design.components
 
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
@@ -45,15 +48,21 @@ fun ZToggle(
     val knob = size.height - inset * 2
     val x by animateDpAsState(if (checked) size.width - knob - inset * 2 else 0.dp, ZAnim.bouncy(), label = "knob")
     val hf = LocalHapticFeedback.current
+    // Review D-P1-3: the label reaches TalkBack; off uses ToggleOff. Layout keeps the drawn size (rows are ≥ 56 dp).
     Box(
         modifier
-            .size(size.width, size.height)
-            .clip(CircleShape)
-            .background(track)
             .toggleable(
                 value = checked, enabled = enabled, role = Role.Switch,
                 interactionSource = remember { MutableInteractionSource() }, indication = null,
-            ) { hf.performHapticFeedback(HapticFeedbackType.ToggleOn); onCheckedChange(it) }
+            ) { v -> hf.performHapticFeedback(if (v) HapticFeedbackType.ToggleOn else HapticFeedbackType.ToggleOff); onCheckedChange(v) }
+            .semantics { contentDescription?.let { this.contentDescription = it } },
+        contentAlignment = Alignment.Center,
+    ) {
+    Box(
+        Modifier
+            .size(size.width, size.height)
+            .clip(CircleShape)
+            .background(track)
             .padding(inset),
         contentAlignment = Alignment.CenterStart,
     ) {
@@ -64,5 +73,6 @@ fun ZToggle(
                 .shadow(2.dp, CircleShape)
                 .background(Color.White, CircleShape),
         )
+    }
     }
 }
