@@ -2,6 +2,7 @@
 // 用假的 TunnelPort，不需要 NetworkExtension；MihomoClient 指向不存在的 socket。
 
 import XCTest
+import Network
 import ZephyrKit
 
 final class FakeTunnel: TunnelPort, @unchecked Sendable {
@@ -178,7 +179,7 @@ final class CoreEngineLiveTests: XCTestCase {
         let ids = page.rows.map(\.id)
         XCTAssertFalse(ids.isEmpty)
         await e.testLatency(ids: ids)
-        XCTAssertTrue(t.urlTestInputs.isEmpty, "未连接不测")
+        XCTAssertTrue(t.urlTestInputs.isEmpty, "未连接不走扩展（改测 TCP 握手）")
         try await e.connect()
         var it = e.latencyUpdates().makeAsyncIterator()
         await e.testLatency(ids: ids + ids)
@@ -323,6 +324,22 @@ final class CoreEngineLiveTests: XCTestCase {
         f.status = .connected
         let st2 = await f.currentStatus()
         XCTAssertEqual(st2, .connected)
+    }
+
+    /// 未连接时的 TCP 握手测速：本机监听端口可测出耗时，无人监听的端口为 -1。
+    func testTcpHandshake() async throws {
+        let listener = try NWListener(using: .tcp, on: .any)
+        listener.newConnectionHandler = { c in c.start(queue: .global()); c.cancel() }
+        let ready = expectation(description: "listener")
+        listener.stateUpdateHandler = { if case .ready = $0 { ready.fulfill() } }
+        listener.start(queue: .global())
+        await fulfillment(of: [ready], timeout: 5)
+        let port = try XCTUnwrap(listener.port?.rawValue)
+        let ms = await CoreEngine.tcpHandshake(host: "127.0.0.1", port: port)
+        XCTAssertGreaterThanOrEqual(ms, 1)
+        listener.cancel()
+        let closed = await CoreEngine.tcpHandshake(host: "127.0.0.1", port: 1, timeout: 2)
+        XCTAssertEqual(closed, -1)
     }
 
     func testMemberIdIsStable() {

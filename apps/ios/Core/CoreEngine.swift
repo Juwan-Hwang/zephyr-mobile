@@ -33,7 +33,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     private var remapped: [UInt64: UInt64] = [:]
     private var subsWatchers: [UUID: AsyncStream<[ZephyrKit.Subscription]>.Continuation] = [:]
     private var sceneWatchers: [UUID: AsyncStream<[ZephyrKit.Scene]>.Continuation] = [:]
-    private var latencyWatchers: [UUID: AsyncStream<[LatencyUpdate]>.Continuation] = [:]
+    var latencyWatchers: [UUID: AsyncStream<[LatencyUpdate]>.Continuation] = [:]
     private var settingsWatchers: [UUID: AsyncStream<ZephyrKit.Settings>.Continuation] = [:]
     private var cachedSettings: ZephyrKit.Settings?
     private let settingsURL: URL
@@ -102,7 +102,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     // MARK: - 基础设施
 
     /// 在后台队列执行阻塞 FFI，并把 MobileError 映射为 ZephyrError。
-    private func run<T: Sendable>(_ notFound: ErrorCode = .nodeNotFound, _ body: @escaping @Sendable () throws -> T) async throws -> T {
+    func run<T: Sendable>(_ notFound: ErrorCode = .nodeNotFound, _ body: @escaping @Sendable () throws -> T) async throws -> T {
         try await withCheckedThrowingContinuation { (k: CheckedContinuation<T, Error>) in
             queue.async {
                 do { k.resume(returning: try body()) } catch let e as MobileError {
@@ -131,7 +131,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         }
     }
 
-    private func locked<T>(_ body: () -> T) -> T { lock.lock(); defer { lock.unlock() }; return body() }
+    func locked<T>(_ body: () -> T) -> T { lock.lock(); defer { lock.unlock() }; return body() }
 
     private func invalidateNodes() { locked { nodesReady = nil } }
 
@@ -441,12 +441,12 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     }
 
     /// 契约 §5：分批（≤512）由核心给出代理定义，扩展里 zm_url_test 实测，结果入核心延迟缓存并推给 latencyUpdates。
-    /// 隧道未连接时不测（App 进程未链接 mihomo；未连接时的测速见 docs/perf.md 待办）。
+    /// 隧道未连接时改测 TCP 握手（契约 §14.u，CoreEngine+TcpPing.swift）。
     public func testLatency(ids: [NodeId]) async {
         guard let c = await nodes() else { return await fallback.testLatency(ids: ids) }
-        guard let t = tunnel, await isTunnelConnected(t) else { return }
         var seen = Set<NodeId>()
         let unique = ids.filter { seen.insert($0).inserted }
+        guard let t = tunnel, await isTunnelConnected(t) else { return await tcpPing(c, ids: unique) }
         for start in stride(from: 0, to: unique.count, by: 512) {
             if Task.isCancelled { return }
             let chunk = Array(unique[start..<min(start + 512, unique.count)])

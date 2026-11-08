@@ -390,3 +390,8 @@ record SceneFailover { failed: NodeRow, failureCount: UInt32, apply: SceneApply 
 - 平台把 dat 下载到 `path`（失败不覆盖旧文件），再调 `compileGeo(kind, nowMillis) -> UInt32`（编译的层数）。核心只读映射 dat，只抽取用到的分类；Regex 域名跳过；带 reverse_match 的 geoip 分类跳过。
 - 层序号接在规则集之后；订阅变化时与规则集一起清理过期层。
 - iOS：`refreshRuleProviders` 末尾自动执行。Android：导入/更新订阅后同样调用 geoSources → 下载 → compileGeo。
+
+### 14.u 未连接时的测速（2026-11-08，只追加）
+- 隧道已连接：照旧 `latencyTestBatch` → 扩展/服务内 `zm_url_test` → `recordUrlTest`（经代理的真实 URL 测试）。
+- 隧道未连接：`tcpPingTargets(ids ≤ 512) -> [TcpTarget{id, host, port}]`，平台在 App 进程内并发（建议 32）测 TCP 握手，超时 3 s 记 -1，用 `recordLatencies` 写回并推 latencyUpdates。host 不脱敏，仅进程内使用、不展示。基于 UDP 的协议（hysteria/hysteria2/hy2/tuic/wireguard/wg）不返回目标，保持「未测」（UI 在 testLatency 返回后把没有结果的节点退回未测）。握手名额进程级共享。
+- 两种结果写入同一延迟缓存，最新一次覆盖；握手时间不含代理协议开销，UI 不区分。

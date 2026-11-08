@@ -873,6 +873,8 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -1029,6 +1031,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_sync_subscription_rules(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_tcp_ping_targets(`ptr`: Pointer,`ids`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_test_rule(`ptr`: Pointer,`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_tested_count(`ptr`: Pointer,`nowMillis`: Long,`maxAgeMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
@@ -1277,6 +1281,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_sync_subscription_rules(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_tcp_ping_targets(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_tested_count(
@@ -1493,6 +1499,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_sync_subscription_rules() != 47083.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_tcp_ping_targets() != 53458.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_test_rule() != 8556.toShort()) {
@@ -2613,6 +2622,13 @@ public interface MobileCoreInterface {
      */
     fun `syncSubscriptionRules`()
     
+    /**
+     * 隧道未连接时的测速目标（契约 §14.u）：平台直接测到 server:port 的 TCP 握手时间，结果用 recordLatencies 写回。
+     * 只在本进程内使用，不展示，server 不脱敏。基于 UDP 的协议（hysteria/hysteria2/hy2/tuic/wireguard/wg）无法 TCP 握手，跳过。
+     * 超过 512 个报错；找不到定义的 id 跳过。
+     */
+    fun `tcpPingTargets`(`ids`: List<kotlin.ULong>): List<TcpTarget>
+    
     fun `testRule`(`input`: kotlin.String): RuleTrace
     
     /**
@@ -3469,6 +3485,24 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
 }
     }
     
+    
+
+    
+    /**
+     * 隧道未连接时的测速目标（契约 §14.u）：平台直接测到 server:port 的 TCP 握手时间，结果用 recordLatencies 写回。
+     * 只在本进程内使用，不展示，server 不脱敏。基于 UDP 的协议（hysteria/hysteria2/hy2/tuic/wireguard/wg）无法 TCP 握手，跳过。
+     * 超过 512 个报错；找不到定义的 id 跳过。
+     */
+    @Throws(MobileException::class)override fun `tcpPingTargets`(`ids`: List<kotlin.ULong>): List<TcpTarget> {
+            return FfiConverterSequenceTypeTcpTarget.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_tcp_ping_targets(
+        it, FfiConverterSequenceULong.lower(`ids`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -5370,6 +5404,42 @@ public object FfiConverterTypeSubscriptionsSummary: FfiConverterRustBuffer<Subsc
 
 
 
+data class TcpTarget (
+    var `id`: kotlin.ULong, 
+    var `host`: kotlin.String, 
+    var `port`: kotlin.UShort
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeTcpTarget: FfiConverterRustBuffer<TcpTarget> {
+    override fun read(buf: ByteBuffer): TcpTarget {
+        return TcpTarget(
+            FfiConverterULong.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterUShort.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: TcpTarget) = (
+            FfiConverterULong.allocationSize(value.`id`) +
+            FfiConverterString.allocationSize(value.`host`) +
+            FfiConverterUShort.allocationSize(value.`port`)
+    )
+
+    override fun write(value: TcpTarget, buf: ByteBuffer) {
+            FfiConverterULong.write(value.`id`, buf)
+            FfiConverterString.write(value.`host`, buf)
+            FfiConverterUShort.write(value.`port`, buf)
+    }
+}
+
+
+
 data class TunConfig (
     var `stack`: TunStackKind, 
     var `mtu`: kotlin.Int, 
@@ -7022,6 +7092,34 @@ public object FfiConverterSequenceTypeSubscriptionSource: FfiConverterRustBuffer
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeSubscriptionSource.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeTcpTarget: FfiConverterRustBuffer<List<TcpTarget>> {
+    override fun read(buf: ByteBuffer): List<TcpTarget> {
+        val len = buf.getInt()
+        return List<TcpTarget>(len) {
+            FfiConverterTypeTcpTarget.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<TcpTarget>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeTcpTarget.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<TcpTarget>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeTcpTarget.write(it, buf)
         }
     }
 }
