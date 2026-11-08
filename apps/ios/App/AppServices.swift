@@ -51,6 +51,7 @@ final class AppServices {
             Task { @MainActor in self?.drainCommands(model: model) }
         }
         drainCommands(model: model)
+        SubscriptionAutoUpdater.shared.start()
     }
 
     // MARK: 扩展投递的命令
