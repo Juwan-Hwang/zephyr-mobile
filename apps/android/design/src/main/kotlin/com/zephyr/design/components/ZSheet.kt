@@ -1,5 +1,10 @@
 package com.zephyr.design.components
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.heightIn
 import androidx.activity.compose.PredictiveBackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
@@ -83,9 +88,15 @@ fun BoxScope.ZSheet(
                 drag.animateTo(0f, ZAnim.standard())
             }
         }
+        // Review D-P1-1: like the prototype (.sheet{top:58px}, .sh-body{overflow-y:auto}) the sheet stops 58 dp below
+        // the status bar and its body scrolls; handle and title stay put.
+        val density = androidx.compose.ui.platform.LocalDensity.current
+        val screenH = with(density) { androidx.compose.ui.platform.LocalWindowInfo.current.containerSize.height.toDp() }
+        val topInset = with(density) { WindowInsets.statusBars.getTop(this).toDp() }
         Column(
             modifier
                 .fillMaxWidth()
+                .then(if (screenH > 0.dp) Modifier.heightIn(max = screenH - topInset - 58.dp) else Modifier)
                 .offset { IntOffset(0, drag.value.coerceAtLeast(0f).roundToInt()) }
                 .graphicsLayer { val p = (drag.value / 1600f).coerceIn(0f, 0.04f); scaleX = 1 - p; scaleY = 1 - p }
                 .clip(ZTheme.shapes.sheet)
@@ -106,11 +117,11 @@ fun BoxScope.ZSheet(
                 ZText(title, style = ZTheme.type.headline)
                 Spacer(Modifier.weight(1f))
                 if (trailing != null) {
-                    ZText(trailing, Modifier.zPressable(onClick = onDismiss).padding(12.dp), style = ZTheme.type.body, color = c.text2)
+                    ZText(trailing, Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).zPressable(onClick = onDismiss).padding(12.dp), style = ZTheme.type.body, color = c.text2)
                 }
             }
             Spacer(Modifier.height(4.dp))
-            content()
+            Column(Modifier.weight(1f, fill = false).verticalScroll(androidx.compose.foundation.rememberScrollState()), content = content)
         }
     }
 }

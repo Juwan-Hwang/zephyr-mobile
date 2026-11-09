@@ -29,16 +29,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.zephyr.app.di.AppGraph
 import com.zephyr.design.components.ZButton
-import com.zephyr.design.components.ZDivider
-import com.zephyr.design.components.ZListGroup
 import com.zephyr.design.components.ZSearchField
-import com.zephyr.design.components.ZSettingsRow
 import com.zephyr.design.components.ZText
 import com.zephyr.design.components.zPressable
 import com.zephyr.design.theme.ZAnim
 import com.zephyr.design.theme.ZTheme
 import com.zephyr.engine.ImportSource
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
+import com.zephyr.engine.SceneSource
+import com.zephyr.app.ui.subs.ImportOptions
+import com.zephyr.app.ui.subs.rememberSubscriptionImporter
+import com.zephyr.design.format.ZFormat
 
 /** Two-step onboarding (prototype ob1/ob2): add a subscription, then choose 简单 / 优选. */
 @Composable
@@ -47,24 +50,35 @@ fun OnboardingScreen(onDone: () -> Unit) {
     var step by remember { mutableIntStateOf(0) }
     var added by remember { mutableStateOf("") }
     var url by remember { mutableStateOf("") }
+    var showField by remember { mutableStateOf(false) }
     var mode by remember { mutableIntStateOf(1) }
+    var saving by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    // Review L-P1-2: same import path as the sheet; failures are shown; the chosen mode is written before finishing.
+    val imp = rememberSubscriptionImporter { s -> added = "${s.name}（${ZFormat.grouped(s.nodeCount)} 个节点）"; step = 1 }
     Column(Modifier.fillMaxSize().background(c.bg).statusBarsPadding().navigationBarsPadding().padding(top = 24.dp)) {
         ZText("${step + 1} / 2", Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
         AnimatedContent(step, transitionSpec = { (slideInHorizontally(ZAnim.slow()) { it / 3 } + fadeIn(ZAnim.standard())) togetherWith (slideOutHorizontally(ZAnim.standard()) { -it / 3 } + fadeOut(ZAnim.micro())) }, label = "ob") { s ->
             Column(Modifier.fillMaxWidth()) {
                 if (s == 0) {
                     ZText("添加订阅", Modifier.padding(22.dp), style = ZTheme.type.title)
-                    ZSearchField(url, { url = it }, "粘贴链接", Modifier.padding(horizontal = 16.dp), onSubmit = {
-                        scope.launch { runCatching { AppGraph.engine.importSubscription(ImportSource.URL, url) }.onSuccess { added = "${it.name}（${it.nodeCount} 个节点）"; step = 1 } }
-                    })
-                    Spacer(Modifier.height(16.dp))
-                    ZListGroup {
-                        ZSettingsRow("扫描二维码", chevron = true, onClick = {})
-                        ZDivider(); ZSettingsRow("从电脑上的 Zephyr 导入", chevron = true, onClick = {})
-                        ZDivider(); ZSettingsRow("从文件导入", chevron = true, onClick = {})
-                        ZDivider(); ZSettingsRow("先看看示例", subtitle = "使用演示数据", chevron = true, onClick = { added = "Nebula Cloud（312 个节点）"; step = 1 })
+                    if (showField) {
+                        Column(Modifier.padding(horizontal = 16.dp)) {
+                            ZSearchField(url, { url = it; imp.error = null }, "粘贴订阅链接", onSubmit = { imp.submit(ImportSource.URL, url) })
+                            Spacer(Modifier.height(12.dp))
+                            ZButton(if (imp.busy) "正在添加…" else "添加", { imp.submit(ImportSource.URL, url) }, Modifier.fillMaxWidth(), enabled = url.isNotBlank() && !imp.busy)
+                        }
+                        Spacer(Modifier.height(16.dp))
                     }
+                    ImportOptions(imp, clipboard = false, paste = if (showField) null else ({
+                        // Prefill from the clipboard when it holds a link; otherwise open the field to paste by hand.
+                        val t = imp.clipboardText().also { imp.error = null }
+                        if (t != null && (t.startsWith("https://") || t.startsWith("http://"))) { url = t; imp.submit(ImportSource.CLIPBOARD, t) }
+                        showField = true
+                    }))
+                    if (imp.busy && !showField) ZText("正在添加…", Modifier.padding(horizontal = 22.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.text2)
+                    imp.error?.let { ZText(it, Modifier.padding(horizontal = 22.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.danger) }
+                    imp.hint?.let { ZText(it, Modifier.padding(horizontal = 22.dp, vertical = 4.dp), style = ZTheme.type.footnote, color = c.text2) }
                     ZText("订阅与流量数据仅保存在此设备上。", Modifier.padding(22.dp), style = ZTheme.type.footnote, color = c.text3)
                 } else {
                     ZText("已添加 $added", Modifier.padding(horizontal = 22.dp, vertical = 12.dp), style = ZTheme.type.callout, color = c.connected)
@@ -78,10 +92,27 @@ fun OnboardingScreen(onDone: () -> Unit) {
         }
         Spacer(Modifier.weight(1f))
         if (step == 1) {
-            ZButton("继续", { scope.launch { AppGraph.settings.setOnboarded(); onDone() } }, Modifier.fillMaxWidth().padding(horizontal = 16.dp))
+            ZButton("继续", {
+                if (!saving) scope.launch {
+                    saving = true
+                    applyOnboardingMode(simple = mode == 0)
+                    AppGraph.settings.setOnboarded(); onDone()
+                }
+            }, Modifier.fillMaxWidth().padding(horizontal = 16.dp), enabled = !saving)
             ZText("可随时在设置中更改。", Modifier.fillMaxWidth().padding(12.dp), style = ZTheme.type.footnote.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = c.text3)
         }
     }
+}
+
+/**
+ * 简单 = every scene follows the subscription's own group; 优选 = Zephyr picks from tested nodes.
+ * Fresh install: no exit has been used yet, so switching AI here is not an exit change the user must confirm.
+ */
+private suspend fun applyOnboardingMode(simple: Boolean) {
+    val engine = AppGraph.engine
+    val source = if (simple) SceneSource.SUBSCRIPTION_GROUP else SceneSource.AUTO
+    val scenes = runCatching { withTimeoutOrNull(2_000) { engine.scenes().first() } }.getOrNull().orEmpty()
+    scenes.filter { it.source != source }.forEach { runCatching { engine.setSceneSource(it.id, source) } }
 }
 
 @Composable

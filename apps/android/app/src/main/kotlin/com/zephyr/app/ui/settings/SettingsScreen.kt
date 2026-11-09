@@ -63,7 +63,7 @@ fun SettingsScreen(back: String, onBack: () -> Unit) {
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
             ZSectionHeader("连接")
             ZListGroup {
-                ZSettingsRow("按需连接", trailing = { ZToggle(s.onDemand, { v -> set { it.copy(onDemand = v) } }) })
+                ZSettingsRow("按需连接", trailing = { ZToggle(s.onDemand, { v -> set { it.copy(onDemand = v) } }, contentDescription = "按需连接") })
                 ZDivider()
                 ZSettingsRow("受信任的 Wi‑Fi", subtitle = "连接后自动断开", value = s.trustedWifi.joinToString("、").ifEmpty { "无" })
                 ZDivider()
@@ -75,7 +75,7 @@ fun SettingsScreen(back: String, onBack: () -> Unit) {
             }
             ZSectionHeader("检测", Modifier.padding(top = 12.dp))
             ZListGroup {
-                ZSettingsRow("仅在 Wi‑Fi 下测速", trailing = { ZToggle(s.testOnWifiOnly, { v -> set { it.copy(testOnWifiOnly = v) } }) })
+                ZSettingsRow("仅在 Wi‑Fi 下测速", trailing = { ZToggle(s.testOnWifiOnly, { v -> set { it.copy(testOnWifiOnly = v) } }, contentDescription = "仅在 Wi‑Fi 下测速") })
                 ZDivider()
                 ZSettingsRow("结果保留", value = "${s.latencyTtlHours} 小时", chevron = true, onClick = {
                     set { it.copy(latencyTtlHours = when (it.latencyTtlHours) { 6 -> 24; 24 -> 72; else -> 6 }) }
@@ -121,7 +121,7 @@ fun SettingsScreen(back: String, onBack: () -> Unit) {
             }
             ZSectionHeader("隐私", Modifier.padding(top = 12.dp))
             ZListGroup {
-                ZSettingsRow("共享诊断数据", trailing = { ZToggle(s.shareDiagnostics, { v -> set { it.copy(shareDiagnostics = v) } }) })
+                ZSettingsRow("共享诊断数据", trailing = { ZToggle(s.shareDiagnostics, { v -> set { it.copy(shareDiagnostics = v) } }, contentDescription = "共享诊断数据") })
             }
             ZText("订阅、节点与流量数据仅保存在此设备上。", Modifier.padding(horizontal = 22.dp, vertical = 10.dp), style = ZTheme.type.footnote, color = c.text3)
             ZText("Zephyr ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})", Modifier.fillMaxWidth().padding(vertical = 24.dp), style = ZTheme.type.footnote.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = c.text4)
