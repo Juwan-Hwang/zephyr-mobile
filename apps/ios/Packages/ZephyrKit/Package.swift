@@ -13,9 +13,11 @@ var products: [Product] = [
     .library(name: "ZephyrKit", targets: ["ZephyrKit"]),
     .library(name: "ZephyrMock", targets: ["ZephyrMock"]),
 ]
+// 纯 Swift 目标开启完整并发检查（Swift 5 语言模式下为警告，REVIEW-Q2 X-P1-8）。
+let strict: [SwiftSetting] = [.enableExperimentalFeature("StrictConcurrency")]
 var targets: [Target] = [
-    .target(name: "ZephyrKit"),
-    .target(name: "ZephyrMock", dependencies: ["ZephyrKit"]),
+    .target(name: "ZephyrKit", swiftSettings: strict),
+    .target(name: "ZephyrMock", dependencies: ["ZephyrKit"], swiftSettings: strict),
     .testTarget(name: "ZephyrKitTests", dependencies: ["ZephyrKit"]),
     .testTarget(name: "ZephyrMockTests", dependencies: ["ZephyrMock"]),
 ]

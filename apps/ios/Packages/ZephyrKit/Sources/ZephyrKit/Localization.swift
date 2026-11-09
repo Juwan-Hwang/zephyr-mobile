@@ -6,7 +6,7 @@ import Foundation
 
 public enum ZL {
     /// nil = 不查表（测试）；App / Widgets 在启动时设为 `.main`。
-    public static var bundle: Bundle?
+    nonisolated(unsafe) public static var bundle: Bundle?
 
     /// 直接查表。缺译文时回落到键本身（中文原文）。
     public static func tr(_ key: String) -> String {

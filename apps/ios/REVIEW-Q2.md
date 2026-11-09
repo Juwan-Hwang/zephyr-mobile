@@ -17,6 +17,7 @@
 
 - 2026-11-09 PR agent/ios/review-q2e 续（快照首批人工审核，取自 harvest 的 115 张 CI 渲染图）：对照 design/prototype/shots 发现并修复——① 快照渲染器重复计入模拟器安全区（页面标题下移约 59pt、小组件上下被裁）：改为量出宿主自带安全区后只补差值；② 速率数字/曲线/延迟药丸在截图瞬间处于 numericText 滚动与缓入中（“2.8”的 8 模糊、曲线几乎平）：新增环境值 `zStaticRendering`（仅快照注入）关闭这些动画，并在渲染期间关闭 UIKit 动画；③ 小组件“x 分钟前”随真实时钟变化，快照夹具去掉该行；④ 首页顶栏/底部指令栏在 AX5 下占据半屏：限定到 AX2/AX1；⑤ 节点行协议列（TUIC/Hy2…）在截图中缺失：加 NodeCellTests 断言布局（若 CI 失败再追根）。其余页面（资料库、规则、设置、订阅、引导、今日卡、锁屏/灵动岛）与原型一致，待重录后入库。快照入库仍需再取一轮干净图（修复 ①② 之后）。
 - 2026-11-09 SharedBroadcast：上游流改为 subscribe 内同步创建，修复 CI 红的 testTwoSubscribersShareOneUpstream。
+- 2026-11-09 PR agent/ios/review-q2g：X-P1-8 部分（ZephyrKit/ZephyrMock 开启 StrictConcurrency 完整检查，零警告）。
 
 ## P0
 
