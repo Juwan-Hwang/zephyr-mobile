@@ -117,7 +117,7 @@ fun TodayScreen(onClose: () -> Unit) {
             TodayStyle.entries.forEach { s ->
                 val border by animateColorAsState(if (s == style) c.text2 else c.hairlineStrong, ZAnim.standard(), label = "b")
                 Row(
-                    Modifier.clip(ZTheme.shapes.pill).border(1.dp, border, ZTheme.shapes.pill).zPressable(haptic = true) { style = s }.padding(start = 6.dp, end = 16.dp, top = 6.dp, bottom = 6.dp),
+                    Modifier.clip(ZTheme.shapes.pill).border(1.dp, border, ZTheme.shapes.pill).zPressable(haptic = s != style) { style = s }.padding(start = 6.dp, end = 16.dp, top = 6.dp, bottom = 6.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(Modifier.size(28.dp).clip(CircleShape).background(s.bg).border(1.dp, c.hairlineStrong, CircleShape))

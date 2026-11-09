@@ -119,9 +119,9 @@ fun SubscriptionsScreen(back: String = "资料库", onBack: () -> Unit, onImport
                     scope.launch { engine.updateSettings(settings.copy(autoUpdateHours = next)) }
                 })
                 ZDivider()
-                ZSettingsRow("仅在 Wi‑Fi 下更新", trailing = { ZToggle(settings.updateOnWifiOnly, { v -> scope.launch { engine.updateSettings(settings.copy(updateOnWifiOnly = v)) } }, contentDescription = "仅在 Wi‑Fi 下更新") })
+                ZSettingsRow("仅在 Wi‑Fi 下更新", checked = settings.updateOnWifiOnly, onCheckedChange = { v -> scope.launch { engine.updateSettings(settings.copy(updateOnWifiOnly = v)) } })
                 ZDivider()
-                ZSettingsRow("更新前显示更改", trailing = { ZToggle(settings.showChangesBeforeUpdate, { v -> scope.launch { engine.updateSettings(settings.copy(showChangesBeforeUpdate = v)) } }, contentDescription = "更新前显示更改") })
+                ZSettingsRow("更新前显示更改", checked = settings.showChangesBeforeUpdate, onCheckedChange = { v -> scope.launch { engine.updateSettings(settings.copy(showChangesBeforeUpdate = v)) } })
                 ZDivider()
                 ZSettingsRow("立即全部更新", onClick = { scope.launch { updating = true; runCatching { engine.updateAll() }; updating = false } }, value = if (updating) "正在更新…" else null)
             }

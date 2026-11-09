@@ -40,7 +40,7 @@ fun ZButton(
             .clip(shape)
             .background(bg, shape)
             .then(if (kind == ZButtonKind.Secondary) Modifier.border(1.dp, c.hairline, shape) else Modifier)
-            .zPressable(enabled = enabled, haptic = kind != ZButtonKind.Ghost, onClick = onClick)
+            .zPressable(enabled = enabled, onClick = onClick)
             .padding(horizontal = 22.dp, vertical = 14.dp),
         contentAlignment = Alignment.Center,
     ) {

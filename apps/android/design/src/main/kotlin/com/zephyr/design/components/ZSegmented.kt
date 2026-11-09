@@ -51,7 +51,7 @@ fun ZSegmented(
                         .weight(1f)
                         .fillMaxHeight()
                         .semantics { this.selected = i == selected }
-                        .zPressable(role = Role.Tab, haptic = true) { onSelect(i) },
+                        .zPressable(role = Role.Tab, haptic = i != selected) { onSelect(i) },
                     contentAlignment = Alignment.Center,
                 ) {
                     ZText(label, style = ZTheme.type.footnote, color = if (i == selected) c.text1 else c.text2, maxLines = 1)

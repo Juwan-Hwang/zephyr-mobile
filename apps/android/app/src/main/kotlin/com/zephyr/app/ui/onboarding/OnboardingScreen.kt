@@ -121,7 +121,7 @@ private fun Choice(title: String, body: String, selected: Boolean, onClick: () -
     Box(
         Modifier.padding(horizontal = 16.dp).fillMaxWidth().background(c.surface2, ZTheme.shapes.card)
             .border(if (selected) 2.dp else 1.dp, if (selected) c.accent else c.hairline, ZTheme.shapes.card)
-            .zPressable(haptic = true, onClick = onClick).padding(20.dp),
+            .zPressable(haptic = !selected, onClick = onClick).padding(20.dp),
     ) {
         Column {
             ZText(title, style = ZTheme.type.headline)
