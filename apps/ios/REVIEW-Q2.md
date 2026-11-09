@@ -31,7 +31,7 @@
 - **Q2-X-P1-4 withDeadline 超时无效** [已修] — 任务组会等全部子任务；改为两个非结构化任务竞速 + 一次性 continuation（`CoreEngine+Live.swift`），单测 `CoreTests/WithDeadlineTests.swift`。
 - **Q2-X-P1-5 多项设置不生效** [部分已修：自动更新、按需连接、受信任 Wi‑Fi] — 按需连接 / 受信任 Wi‑Fi 自动断开（无 NEOnDemandRule）、订阅自动更新（dueSubscriptions/后台任务未用）、仅 Wi‑Fi 测速、延迟 TTL 写死、自动故障转移（reportSceneProbe 未调用）；场景 sheet “每日检测”不属实。
 - **Q2-X-P1-6 控制中心/小组件连接用旧配置** [已修] — `TunnelController.setConnected` 不重新生成 config.yaml，首次从小组件连接失败；`reloadTunnelIfRunning` 断开时不写配置。
-- **Q2-X-P1-7 PacketTunnel 内存与电量** [部分已修：IPv6 路由、睡眠定时器；配置多份拷贝待做] — 配置被复制 5–6 次；1 Hz 定时器睡眠时仍唤醒；IPv6 关闭时未声明 IPv6 路由导致绕过隧道（隐私泄露）。
+- **Q2-X-P1-7 PacketTunnel 内存与电量** [已修：IPv6 路由、睡眠定时器、MappedFile 映射读取配置] — 配置被复制 5–6 次；1 Hz 定时器睡眠时仍唤醒；IPv6 关闭时未声明 IPv6 路由导致绕过隧道（隐私泄露）。
 - **Q2-X-P1-8 测试不守门** — `__Snapshots__` 空且录制模式 missing，永不比对；快照 bundle 无 TEST_HOST；`layer.render` 丢模糊材质；容差 0.99/0.98 偏松；缺 AppModel、SharedStatePublisher、AppServices 链接解析、LiveActivity 测试；SPM target 无严格并发设置，App 仍 Swift 5 模式。
 - **Q2-X-P1-9 本地化** [部分已修] — App 与 Widgets 的 `Localizable.xcstrings` 已生成（zh-Hans 源 + en，373 key，含复数），`Text(verbatim:)` 用户文案已改可本地化，`InfoPlist.xcstrings`（相机/相册/本地网络说明）、project.yml `knownRegions`/`CFBundleLocalizations` 已加。剩余：返回 String 的文案（ErrorText、HFormat、ZSettingsRow(verbatim:)、AppShortcuts、Live Activity 状态文字）需改 `String(localized:)`；英文版快照；伪语言（加长）布局测试。
 - **Q2-X-P1-10 对比度与显示辅助** [部分已修：增强对比度；浅色 t3 基色等 A 的 tokens；降低透明度由系统材质处理] — 浅色 t3 仅 2.8:1、深色 3.7:1；不支持增强对比度、降低透明度、不以颜色区分。
@@ -46,13 +46,13 @@
 ## P2
 
 - ~~启动屏颜色与 App 背景不一致~~ [已修]
-- 无深色/着色 App 图标变体（AppIcon-Light 资源与 `ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES`）。
+- [已修] 无深色/着色 App 图标变体（AppIcon-Light 资源与 `ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES`）。
 - ~~`NSLocalNetworkUsageDescription` 与只绑 localhost 矛盾~~ [已修]；缺 `ITSAppUsesNonExemptEncryption`（待用户决定）。
 - ~~代理凭据存 UserDefaults，应进 Keychain~~ [已修]
 - ~~CoreEngine queries/remapped 无限增长~~ [已修]；~~协议默认 no-op~~ [已修]。
 - ~~DarwinObservation deinit 与回调竞态~~ [已修]；~~CoreEngine `queries`/`remapped` 字典无限增长~~ [已修]。
 - ~~`updateAll` 吞错误且重载隧道 N 次~~ [已修]；订阅导入无进度/取消；无日志/诊断 UI；~~`importFile` 主线程读文件~~ [已修]。
-- 协议扩展里 `setSceneSource`/`overrideHost` 默认静默 no-op（应改为必须实现或抛 unsupported）。
+- [已修] 协议扩展里 `setSceneSource`/`overrideHost` 默认静默 no-op（应改为必须实现或抛 unsupported）。
 - 原型“检测中 138/512”进度未显示；~~时钟格式忽略 12/24 小时~~ [已修]。
 - CI 性能测试用墙钟易抖；覆盖率只统计 App target。
 - 11-08 子代理遗留：~~RuleAddSheet 接 overrideHost~~ [已修]；NodeRowStore 失败重试（L-P2-8）；订阅/节点/规则错误横幅（L-P2-11）；其余文件 #if DEBUG 包裹 Mock（L-P2-5）；引导节奏（L-P2-2）；registerForTraitChanges（L-P2-7）；L-P2-12/13/4；深链来源（H-P2-21：AppModel.pendingLink、确认弹窗、小组件 URL 令牌）；H-P2-10/11/14/15/16/18/19/20；D：ZTrafficStat/ZSparkline 颜色改 accent/screenUp、ZLatencyPill 注释、SceneSheet 改 ZSheet(verbatim:)、Features 采用 ZGroupCard。
