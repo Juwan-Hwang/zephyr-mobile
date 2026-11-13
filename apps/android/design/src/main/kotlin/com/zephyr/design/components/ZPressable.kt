@@ -16,7 +16,10 @@ import androidx.compose.ui.semantics.Role
 import com.zephyr.design.theme.ZAnim
 import com.zephyr.design.tokens.ZMotion
 
-/** Press-to-shrink (0.97, tokens `motion.press-scale`) with optional haptic tick. */
+/**
+ * Press-to-shrink (0.97, tokens `motion.press-scale`). [haptic] = a light tick; review D-P1-2: only pass it
+ * when the press changes a selection (prototype vibrates only while scrubbing), never for plain buttons.
+ */
 fun Modifier.zPressable(
     enabled: Boolean = true,
     haptic: Boolean = false,
@@ -31,7 +34,7 @@ fun Modifier.zPressable(
     this
         .graphicsLayer { scaleX = scale; scaleY = scale }
         .clickable(source, indication = null, enabled = enabled, onClickLabel = label, role = role) {
-            if (haptic) hf.performHapticFeedback(HapticFeedbackType.ContextClick)
+            if (haptic) hf.performHapticFeedback(HapticFeedbackType.SegmentTick)
             onClick()
         }
 }

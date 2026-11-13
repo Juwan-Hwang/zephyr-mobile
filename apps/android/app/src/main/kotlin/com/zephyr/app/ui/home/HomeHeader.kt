@@ -135,7 +135,7 @@ private fun ModePicker(mode: ProxyMode, onMode: (ProxyMode) -> Unit) {
                     Column(Modifier.padding(vertical = 6.dp)) {
                         ProxyMode.entries.forEach { m ->
                             Row(
-                                Modifier.fillMaxWidth().zPressable(haptic = true) { open = false; onMode(m) }.padding(horizontal = 16.dp, vertical = 12.dp),
+                                Modifier.fillMaxWidth().zPressable(haptic = m != mode) { open = false; onMode(m) }.padding(horizontal = 16.dp, vertical = 12.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Column(Modifier.weight(1f)) {

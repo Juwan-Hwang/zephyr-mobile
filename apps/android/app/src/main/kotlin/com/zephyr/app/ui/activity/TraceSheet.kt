@@ -78,7 +78,7 @@ fun BoxScope.TraceSheet(host: String?, onDismiss: () -> Unit) {
         ZSegmented(opts, sel, { apply(it, persistent) }, Modifier.padding(horizontal = 16.dp))
         Spacer(Modifier.height(16.dp))
         ZListGroup {
-            ZSettingsRow("始终应用", subtitle = "关闭时仅更改本次连接", trailing = { ZToggle(persistent, { v -> apply(sel, v) }, contentDescription = "始终应用") })
+            ZSettingsRow("始终应用", subtitle = "关闭时仅更改本次连接", checked = persistent, onCheckedChange = { v -> apply(sel, v) })
         }
         Spacer(Modifier.height(12.dp))
     }

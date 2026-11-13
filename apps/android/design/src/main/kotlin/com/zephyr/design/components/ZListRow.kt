@@ -1,5 +1,7 @@
 package com.zephyr.design.components
 
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -43,13 +45,22 @@ fun ZSettingsRow(
     chevron: Boolean = false,
     onClick: (() -> Unit)? = null,
     trailing: (@Composable () -> Unit)? = null,
+    checked: Boolean? = null,
+    onCheckedChange: ((Boolean) -> Unit)? = null,
 ) {
     val c = ZTheme.colors
+    val hf = androidx.compose.ui.platform.LocalHapticFeedback.current
+    // Review D-P1-3: a switch row toggles from anywhere on the row (≥ 56 dp target) and reads as one
+    // "title, switch, on/off" node; the drawn switch itself is hidden from accessibility.
+    val toggle = if (checked != null && onCheckedChange != null) Modifier.toggleable(checked, role = Role.Switch) { v ->
+        hf.performHapticFeedback(if (v) androidx.compose.ui.hapticfeedback.HapticFeedbackType.ToggleOn else androidx.compose.ui.hapticfeedback.HapticFeedbackType.ToggleOff)
+        onCheckedChange(v)
+    } else null
     Row(
         modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = 56.dp)
-            .then(if (onClick != null) Modifier.clickable(role = Role.Button, onClick = onClick) else Modifier)
+            .then(toggle ?: if (onClick != null) Modifier.clickable(role = Role.Button, onClick = onClick) else Modifier)
             .padding(horizontal = 20.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -62,6 +73,10 @@ fun ZSettingsRow(
             ZText(value, style = ZTheme.type.body, color = c.text3, maxLines = 1)
         }
         if (trailing != null) { Spacer(Modifier.width(12.dp)); trailing() }
+        if (toggle != null) {
+            Spacer(Modifier.width(12.dp))
+            ZToggle(checked!!, { onCheckedChange!!(it) }, Modifier.clearAndSetSemantics {})
+        }
         if (chevron) { Spacer(Modifier.width(6.dp)); ZIcon(ZIcons.ChevronRight, tint = c.text4, size = 16.dp) }
     }
 }

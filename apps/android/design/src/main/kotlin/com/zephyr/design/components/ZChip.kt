@@ -33,7 +33,7 @@ fun ZChip(label: String, selected: Boolean, onClick: () -> Unit, modifier: Modif
             .background(bg)
             .border(1.dp, if (selected) c.text1 else c.hairlineStrong, ZTheme.shapes.pill)
             .semantics { this.selected = selected }
-            .zPressable(role = Role.Tab, haptic = true, onClick = onClick)
+            .zPressable(role = Role.Tab, haptic = !selected, onClick = onClick)
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
