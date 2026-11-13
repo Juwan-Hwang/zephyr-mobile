@@ -114,11 +114,14 @@ fun HomeContent(
             }
             item("traffic") {
                 AnimatedVisibility(connected, enter = expandVertically(ZAnim.slow()) + fadeIn(ZAnim.slow()), exit = shrinkVertically(ZAnim.standard()) + fadeOut(ZAnim.micro())) {
+                    // Review H-P2-3: the whole wind block (numbers + curve) opens recent connections, like prototype `.wind`.
                     Column {
                         val l = live()
                         Spacer(Modifier.height(36.dp))
-                        ZTrafficStat(l.traffic.downBps, l.traffic.upBps, Modifier.padding(horizontal = 22.dp).zPressable(label = "最近连接", onClick = actions.onActivity))
-                        ZSparkline(l.spark, Modifier.fillMaxWidth().height(72.dp), description = "最近 90 秒下载速率")
+                        Column(Modifier.zPressable(label = "最近连接", onClick = actions.onActivity)) {
+                            ZTrafficStat(l.traffic.downBps, l.traffic.upBps, Modifier.padding(horizontal = 22.dp))
+                            ZSparkline(l.spark, Modifier.fillMaxWidth().height(72.dp), description = "最近 90 秒下载速率", panMillis = 120, headDot = true)
+                        }
                     }
                 }
                 // Review H-P2-2: idle keeps the wind's dotted baseline (prototype 969: 3px, dash 2/8, at 94% of 150).

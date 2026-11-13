@@ -1,7 +1,11 @@
 package com.zephyr.design.components
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -12,6 +16,8 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
@@ -29,7 +35,16 @@ fun ZSparkline(
     fill: Boolean = true,
     strokeWidth: Float = 2.2f,
     description: String? = null,
+    /** Review H-P2-3: slide each new sample in over this many ms (0 = jump) and mark the newest point. */
+    panMillis: Int = 0,
+    headDot: Boolean = false,
 ) {
+    val shift = remember { Animatable(0f) }
+    if (panMillis > 0) LaunchedEffect(values) {
+        // Start one step to the right and glide left; animation runs only while this is composed/visible.
+        shift.snapTo(1f)
+        shift.animateTo(0f, tween(panMillis, easing = LinearEasing))
+    }
     Canvas(
         modifier
             .semantics { if (description != null) contentDescription = description }
@@ -37,6 +52,8 @@ fun ZSparkline(
                 val n = values.size
                 val line = Path()
                 val area = Path()
+                var head = Offset.Unspecified
+                var step = 0f
                 if (n >= 2) {
                     val max = (values.max()).coerceAtLeast(1e-3f) * 1.15f
                     val min = 0f
@@ -54,14 +71,22 @@ fun ZSparkline(
                         val p0 = pts[i]; val p1 = pts[i + 1]
                         line.cubicTo(p0.x + dx / 3, p0.y + m[i] * dx / 3, p1.x - dx / 3, p1.y - m[i + 1] * dx / 3, p1.x, p1.y)
                     }
+                    head = pts[n - 1]; step = dx
                     area.addPath(line)
                     area.lineTo(w, h); area.lineTo(0f, h); area.close()
                 }
                 val brush = Brush.verticalGradient(listOf(color.copy(alpha = 0.28f), color.copy(alpha = 0f)))
                 val stroke = Stroke(width = strokeWidth.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round)
+                val dotR = 3.5.dp.toPx()
                 onDrawBehind {
-                    if (fill) drawPath(area, brush)
-                    drawPath(line, color, style = stroke)
+                    val tx = if (panMillis > 0) shift.value * step else 0f
+                    clipRect {
+                        translate(left = tx) {
+                            if (fill) drawPath(area, brush)
+                            drawPath(line, color, style = stroke)
+                            if (headDot && head != Offset.Unspecified) drawCircle(color, dotR, head.copy(x = head.x - tx))
+                        }
+                    }
                 }
             },
     ) {}
