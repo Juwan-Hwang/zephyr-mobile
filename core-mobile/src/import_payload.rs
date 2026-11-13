@@ -249,4 +249,38 @@ mod tests {
         let d = b64(&format!(r#"{{"v":1,"subs":[{}]}}"#, many.join(",")));
         assert!(parse_import_payload(format!("zephyr://import?d={d}")).is_err());
     }
+
+    /// contract/fixtures/import-payload-v1.json 逐条比对（两端 Mock / UI 预解析共用同一份样本）。
+    #[test]
+    fn fixtures() {
+        let doc: serde_json::Value = serde_json::from_str(include_str!("../../contract/fixtures/import-payload-v1.json")).unwrap();
+        for case in doc["cases"].as_array().unwrap() {
+            let id = case["id"].as_str().unwrap();
+            let got = parse_import_payload(case["input"].as_str().unwrap().to_string());
+            if let Some(ok) = case.get("ok") {
+                let p = got.unwrap_or_else(|e| panic!("{id}: {e}"));
+                let kind = match p.kind {
+                    ImportPayloadKind::Zephyr => "zephyr",
+                    ImportPayloadKind::ClashInstall => "clashInstall",
+                    ImportPayloadKind::Url => "url",
+                };
+                assert_eq!(kind, ok["kind"].as_str().unwrap(), "{id}");
+                let want = ok["items"].as_array().unwrap();
+                assert_eq!(p.items.len(), want.len(), "{id}");
+                for (g, w) in p.items.iter().zip(want) {
+                    assert_eq!(g.name.as_deref(), w["name"].as_str(), "{id}");
+                    assert_eq!(g.url, w["url"].as_str().unwrap(), "{id}");
+                    assert_eq!(g.auto_update_hours.map(i64::from), w["autoUpdateHours"].as_i64(), "{id}");
+                }
+            } else {
+                let e = got.err().unwrap_or_else(|| panic!("{id}: 应失败"));
+                let code = match e {
+                    MobileError::Invalid(_) => "invalid",
+                    MobileError::SubscriptionInvalid(_) => "subscription_invalid",
+                    other => panic!("{id}: 意外错误 {other}"),
+                };
+                assert_eq!(code, case["err"].as_str().unwrap(), "{id}");
+            }
+        }
+    }
 }

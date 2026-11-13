@@ -419,3 +419,6 @@ parseImportPayload(payload: String) throws -> ImportPayload                 // �
 校验：url 走桌面 `validate_subscription_url_basic`，name 走 `validate_subscription_name`，auto ∈ [0, 720]。`v` > 1 → `Invalid("导入码版本 vN 过新，请更新 Zephyr")`；其余不识别 → `Invalid`。
 平台流程：`parseImportPayload` → 多条时列出确认 → 每条按 §14 拉取 → `importSubscription(item.name ?? "", item.url, fetched, item.autoUpdateHours ?? 默认, …)`。MockEngine 对 `qr/clipboard` 也应先过同一规则（形态 1–4 之外报错）。
 桌面端生成二维码的实现不在本仓库（不改 Zephyr 公开仓库）；格式以本节为准，桌面侧按此出码即可。
+
+### 15.a 校验样本（2026-11-14，只追加）
+`contract/fixtures/import-payload-v1.json`：§15 四种形态 + 典型拒绝的输入→期望输出（`ok.kind` ∈ `zephyr|clashInstall|url`，`err` ∈ `invalid|subscription_invalid`）。core-mobile `import_payload::tests::fixtures` 逐条比对；两端 MockEngine / UI 预解析（如扫码即时提示）应以同一份样本做单测，保证 Mock 与真核心行为一致。

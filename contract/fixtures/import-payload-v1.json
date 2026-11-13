@@ -1,0 +1,159 @@
+{
+  "_doc": "contract §15 parseImportPayload 校验样本。iOS/Android 的 MockEngine 或 UI 侧预解析须与此一致；core-mobile 单测 import_payload::tests::fixtures 逐条比对。err 取 ErrorCode 的错误类别（invalid / subscription_invalid）。",
+  "version": 1,
+  "cases": [
+    {
+      "id": "bare-https",
+      "input": "  https://sub.example.com/api?token=abc  ",
+      "ok": {
+        "kind": "url",
+        "items": [
+          {
+            "name": null,
+            "url": "https://sub.example.com/api?token=abc",
+            "autoUpdateHours": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "zephyr-single",
+      "input": "zephyr://import?url=https%3A%2F%2Fsub.example.com%2Fa%3Ftoken%3Dx%26y%3D1&name=Nebula%20Cloud&auto=12",
+      "ok": {
+        "kind": "zephyr",
+        "items": [
+          {
+            "name": "Nebula Cloud",
+            "url": "https://sub.example.com/a?token=x&y=1",
+            "autoUpdateHours": 12
+          }
+        ]
+      }
+    },
+    {
+      "id": "zephyr-single-plus-space",
+      "input": "zephyr://import?url=https%3A%2F%2Fa.example.com%2Fs&name=My+Sub",
+      "ok": {
+        "kind": "zephyr",
+        "items": [
+          {
+            "name": "My Sub",
+            "url": "https://a.example.com/s",
+            "autoUpdateHours": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "zephyr-batch",
+      "input": "ZEPHYR://import/?v=1&d=eyJ2IjoxLCJzdWJzIjpbeyJuYW1lIjoiTmVidWxhIENsb3VkIiwidXJsIjoiaHR0cHM6Ly9hLmV4YW1wbGUuY29tL3M_dG9rZW49MSJ9LHsidXJsIjoiaHR0cHM6Ly9iLmV4YW1wbGUuY29tL3MiLCJhdXRvIjoyNH1dfQ",
+      "ok": {
+        "kind": "zephyr",
+        "items": [
+          {
+            "name": "Nebula Cloud",
+            "url": "https://a.example.com/s?token=1",
+            "autoUpdateHours": null
+          },
+          {
+            "name": null,
+            "url": "https://b.example.com/s",
+            "autoUpdateHours": 24
+          }
+        ]
+      }
+    },
+    {
+      "id": "clash",
+      "input": "clash://install-config?url=https%3A%2F%2Fx.example.com%2Fs&name=X",
+      "ok": {
+        "kind": "clashInstall",
+        "items": [
+          {
+            "name": "X",
+            "url": "https://x.example.com/s",
+            "autoUpdateHours": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "clashmeta",
+      "input": "clashmeta://install-config?url=https%3A%2F%2Fx.example.com%2Fs",
+      "ok": {
+        "kind": "clashInstall",
+        "items": [
+          {
+            "name": null,
+            "url": "https://x.example.com/s",
+            "autoUpdateHours": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "mihomo",
+      "input": "mihomo://install-config?url=https%3A%2F%2Fx.example.com%2Fs#frag",
+      "ok": {
+        "kind": "clashInstall",
+        "items": [
+          {
+            "name": null,
+            "url": "https://x.example.com/s",
+            "autoUpdateHours": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "empty",
+      "input": "   ",
+      "err": "invalid"
+    },
+    {
+      "id": "garbage",
+      "input": "hello",
+      "err": "invalid"
+    },
+    {
+      "id": "future-version",
+      "input": "zephyr://import?v=2&url=https%3A%2F%2Fa.example.com",
+      "err": "invalid"
+    },
+    {
+      "id": "missing-url",
+      "input": "zephyr://import?name=x",
+      "err": "invalid"
+    },
+    {
+      "id": "ftp-url",
+      "input": "zephyr://import?url=ftp%3A%2F%2Fa.example.com",
+      "err": "subscription_invalid"
+    },
+    {
+      "id": "auto-not-int",
+      "input": "zephyr://import?url=https%3A%2F%2Fa.example.com&auto=abc",
+      "err": "invalid"
+    },
+    {
+      "id": "auto-out-of-range",
+      "input": "zephyr://import?url=https%3A%2F%2Fa.example.com&auto=721",
+      "err": "invalid"
+    },
+    {
+      "id": "bad-percent",
+      "input": "zephyr://import?url=https%3A%2",
+      "err": "invalid"
+    },
+    {
+      "id": "bad-base64",
+      "input": "zephyr://import?d=!!!",
+      "err": "invalid"
+    },
+    {
+      "id": "too-many",
+      "input": "zephyr://import?d=eyJ2IjoxLCJzdWJzIjpbeyJ1cmwiOiJodHRwczovL3MwLmV4YW1wbGUuY29tLyJ9LHsidXJsIjoiaHR0cHM6Ly9zMS5leGFtcGxlLmNvbS8ifSx7InVybCI6Imh0dHBzOi8vczIuZXhhbXBsZS5jb20vIn0seyJ1cmwiOiJodHRwczovL3MzLmV4YW1wbGUuY29tLyJ9LHsidXJsIjoiaHR0cHM6Ly9zNC5leGFtcGxlLmNvbS8ifSx7InVybCI6Imh0dHBzOi8vczUuZXhhbXBsZS5jb20vIn0seyJ1cmwiOiJodHRwczovL3M2LmV4YW1wbGUuY29tLyJ9LHsidXJsIjoiaHR0cHM6Ly9zNy5leGFtcGxlLmNvbS8ifSx7InVybCI6Imh0dHBzOi8vczguZXhhbXBsZS5jb20vIn0seyJ1cmwiOiJodHRwczovL3M5LmV4YW1wbGUuY29tLyJ9LHsidXJsIjoiaHR0cHM6Ly9zMTAuZXhhbXBsZS5jb20vIn0seyJ1cmwiOiJodHRwczovL3MxMS5leGFtcGxlLmNvbS8ifSx7InVybCI6Imh0dHBzOi8vczEyLmV4YW1wbGUuY29tLyJ9LHsidXJsIjoiaHR0cHM6Ly9zMTMuZXhhbXBsZS5jb20vIn0seyJ1cmwiOiJodHRwczovL3MxNC5leGFtcGxlLmNvbS8ifSx7InVybCI6Imh0dHBzOi8vczE1LmV4YW1wbGUuY29tLyJ9LHsidXJsIjoiaHR0cHM6Ly9zMTYuZXhhbXBsZS5jb20vIn0seyJ1cmwiOiJodHRwczovL3MxNy5leGFtcGxlLmNvbS8ifSx7InVybCI6Imh0dHBzOi8vczE4LmV4YW1wbGUuY29tLyJ9LHsidXJsIjoiaHR0cHM6Ly9zMTkuZXhhbXBsZS5jb20vIn0seyJ1cmwiOiJodHRwczovL3MyMC5leGFtcGxlLmNvbS8ifV19",
+      "err": "invalid"
+    }
+  ]
+}
