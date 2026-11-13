@@ -33,6 +33,7 @@
 - 第二十三批（PR agent/android/notif-accent-w4）：✅ W-P2-4（常驻通知 `setColor` 已随强调色（c855b51 落地未登记）；本批补上首条“连接中…”通知也用上次强调色，不再先闪蓝）。
 - 第二十五批（PR agent/android/global-card-h15）：✅ H-P2-15（全局卡按钮随 D-P2-4 变为 Compact 40/14；标题 15、说明 13/1.5 间距 5、卡片内边距 16，对应 `.gb`）。重录 homeGlobal 两张基线。
 - 第二十四批（PR agent/android/scene-type-h4）：✅ H-P2-4（场景行名称 17/−0.01em、元信息 13（间距 3）、节点 15、锁定说明 12（间距 5）、锁图标 12dp ×0.85 透明；行内边距 15/16）。重录 home 十张基线。
+- 第二十六批（PR agent/android/sheet-d3）：✅ D-P2-3（Sheet 遮罩改黑色 50%、浅色 30%（`.veil` ×0.6），不再用乳白 cmdbg；顶边 1dp `--hl2` 线；标题 500）。重录含 Sheet 的基线。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览

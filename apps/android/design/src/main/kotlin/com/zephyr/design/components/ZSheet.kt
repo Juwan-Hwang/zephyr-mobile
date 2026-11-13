@@ -41,6 +41,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.dismiss
 import androidx.compose.ui.semantics.paneTitle
@@ -104,6 +105,11 @@ fun BoxScope.ZSheet(
                 .graphicsLayer { val p = (drag.value / 1600f).coerceIn(0f, 0.04f); scaleX = 1 - p; scaleY = 1 - p }
                 .clip(ZTheme.shapes.sheet)
                 .background(c.surface1)
+                // `.sheet{border-top:1px solid var(--hl2)}` (review D-P2-3): a 1 dp hairline along the top edge only.
+                .drawWithContent {
+                    drawContent()
+                    drawLine(c.hairlineStrong, androidx.compose.ui.geometry.Offset(0f, 0.5f), androidx.compose.ui.geometry.Offset(size.width, 0.5f), 1.dp.toPx())
+                }
                 .semantics { paneTitle = title; dismiss { onDismiss(); true } }
                 .draggable(
                     rememberDraggableState { d -> scope.launch { drag.snapTo((drag.value + d).coerceAtLeast(0f)) } },
@@ -118,7 +124,7 @@ fun BoxScope.ZSheet(
                 Box(Modifier.size(width = 36.dp, height = 5.dp).clip(ZTheme.shapes.pill).background(c.text4))
             }
             Row(Modifier.fillMaxWidth().padding(start = 22.dp, end = 10.dp, top = 12.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                ZText(title, style = ZTheme.type.headline)
+                ZText(title, style = ZTheme.type.headline.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Medium)) // `.sh-top h2` 500
                 Spacer(Modifier.weight(1f))
                 if (trailing != null) {
                     ZText(trailing, Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).zPressable(onClick = onDismiss).padding(12.dp), style = ZTheme.type.body, color = c.text2)
