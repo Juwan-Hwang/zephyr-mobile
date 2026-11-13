@@ -52,6 +52,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     let connectionBroadcast = SharedBroadcast<ConnectionState>(replayLatest: true)
     /// 场景出口探测的共享上游：无论几处订阅只跑一份探测循环。
     let failoverBroadcast = SharedBroadcast<SceneFailoverNotice>()
+    let failoverState = FailoverState()
     private var members: [NodeId: String] = [:]
 
     /// 真机的系统隧道；nil = 模拟器 / 单测，实时数据走 fallback。
@@ -525,7 +526,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         }
         let ids = page.rows.map(\.id)
         let now = clock()
-        let lat = await runQuiet { c.cachedLatencies(ids: ids, nowMillis: now, maxAgeMillis: 30 * 60 * 1000) }
+        let maxAge = latencyFreshMillis   // 与 testedCount / 最快节点同一有效期，测过的节点不会在列表里“消失”
+        let lat = await runQuiet { c.cachedLatencies(ids: ids, nowMillis: now, maxAgeMillis: maxAge) }
         let rows = zip(page.rows, lat).map { r, ms -> NodeSummary in var s = CoreEngine.row(r); s.latencyMs = ms; return s }
         return ZephyrKit.NodePage(rows: rows, offset: Int64(page.offset), total: Int64(page.total))
     }
@@ -940,7 +942,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         return loadSettings()
     }
 
-    private func loadSettings() -> ZephyrKit.Settings {
+    func loadSettings() -> ZephyrKit.Settings {
         if let s = locked({ cachedSettings }) { return s }
         let s = (try? Data(contentsOf: settingsURL)).flatMap { try? SharedJSON.decoder.decode(ZephyrKit.Settings.self, from: $0) }
             ?? CoreEngine.defaultSettings
