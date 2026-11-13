@@ -11,7 +11,6 @@ import os
 
 @MainActor
 final class LiveActivityController {
-    static let minUpdateInterval: TimeInterval = 5
     static let staleAfter: TimeInterval = 120
 
     private var activity: Activity<ZephyrActivityAttributes>?
@@ -24,27 +23,15 @@ final class LiveActivityController {
     }
 
     func sync(_ state: SharedState, significant: Bool) {
-        switch state.connection.status {
-        case .connected:
-            let content = ZephyrActivityAttributes.ContentState(state)
-            if let activity, activity.activityState == .active {
-                if significant || shouldUpdate(to: content) { update(activity, content) }
-            } else {
-                start(content, accent: state.accent)
-            }
-        case .disconnected, .failed:
-            end()
-        case .connecting, .disconnecting:
-            break
+        let content = ZephyrActivityAttributes.ContentState(state)
+        let active = activity.map { $0.activityState == .active } ?? false
+        switch LiveActivityPolicy.action(status: state.connection.status, significant: significant, hasActiveActivity: active,
+                                         content: content, last: lastContent, lastUpdate: lastUpdate, now: Date()) {
+        case .start: start(content, accent: state.accent)
+        case .update: if let activity { update(activity, content) }
+        case .end: end()
+        case .keep: break
         }
-    }
-
-    private func shouldUpdate(to content: ZephyrActivityAttributes.ContentState) -> Bool {
-        guard Date().timeIntervalSince(lastUpdate) >= Self.minUpdateInterval else { return false }
-        guard let last = lastContent else { return true }
-        if last.scenes != content.scenes || last.mode != content.mode || last.status != content.status { return true }
-        let base = max(Double(last.downBps), 1)
-        return abs(Double(content.downBps) - Double(last.downBps)) / base >= 0.05
     }
 
     private func start(_ content: ZephyrActivityAttributes.ContentState, accent: String) {

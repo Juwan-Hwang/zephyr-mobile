@@ -299,6 +299,8 @@ targets:
         group: PacketTunnel
       - path: App/ImportRequest.swift
         group: App
+      - path: Shared/LiveActivity
+        group: Shared
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.tests
