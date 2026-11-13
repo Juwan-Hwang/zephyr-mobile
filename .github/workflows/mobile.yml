@@ -1,6 +1,7 @@
 name: mobile
 on:
-  push: { branches: [main, 'agent/**'] }
+  # agent/** 分支走 pull_request 即可；push 只跑 main，避免每次推送双跑（macOS 队列是瓶颈）
+  push: { branches: [main] }
   pull_request:
   workflow_dispatch:
 concurrency:
@@ -14,10 +15,24 @@ jobs:
       android: ${{ steps.d.outputs.android }}
     steps:
       - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
       - id: d
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
         run: |
-          echo "ios=$([ -f apps/ios/project.yml ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
-          echo "android=$([ -f apps/android/settings.gradle.kts ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          ios=$([ -f apps/ios/project.yml ] && echo true || echo false)
+          android=$([ -f apps/android/settings.gradle.kts ] && echo true || echo false)
+          # PR 只跑受影响的平台：共享层（core/mihomo/tokens/contract/tools/CI）改动两端都跑
+          if [ -n "$BASE" ]; then
+            changed=$(git diff --name-only "$BASE"...HEAD)
+            shared='^(core-mobile/|mihomo-mobile/|tokens/|contract/|tools/|vendor/|\.github/|\.gitmodules$)'
+            if ! echo "$changed" | grep -qE "$shared"; then
+              echo "$changed" | grep -q '^apps/ios/' || ios=false
+              echo "$changed" | grep -q '^apps/android/' || android=false
+            fi
+          fi
+          echo "ios=$ios" >> "$GITHUB_OUTPUT"
+          echo "android=$android" >> "$GITHUB_OUTPUT"
   contract:
     runs-on: ubuntu-latest
     steps:
@@ -64,11 +79,20 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with: { workspaces: core-mobile }
+      - id: nk
+        name: 原生库缓存键（core-mobile / mihomo-mobile / zephyr 子模块 / 构建脚本）
+        run: echo "key=$(git rev-parse HEAD:vendor/zephyr)-${{ hashFiles('core-mobile/src/**', 'core-mobile/Cargo.*', 'core-mobile/bindings/**', 'mihomo-mobile/**', 'tools/build-ios-xcframework.sh', 'tools/build-mihomo.sh') }}" >> "$GITHUB_OUTPUT"
+      - id: ncache
+        uses: actions/cache@v4
+        with: { path: build/ios, key: 'ios-native-${{ steps.nk.outputs.key }}' }
       - name: ZephyrMobileCore.xcframework（→ build/ios）
+        if: steps.ncache.outputs.cache-hit != 'true'
         run: tools/build-ios-xcframework.sh
       - uses: actions/setup-go@v5
+        if: steps.ncache.outputs.cache-hit != 'true'
         with: { go-version: '1.27', cache-dependency-path: mihomo-mobile/go.sum }
       - name: Zmihomo.xcframework（→ build/ios）
+        if: steps.ncache.outputs.cache-hit != 'true'
         run: tools/build-mihomo.sh ios
       - run: brew install xcodegen
       - name: generate
@@ -103,11 +127,20 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with: { workspaces: core-mobile }
+      - id: nk
+        name: 原生库缓存键（core-mobile / mihomo-mobile / zephyr 子模块 / 构建脚本）
+        run: echo "key=$(git rev-parse HEAD:vendor/zephyr)-${{ hashFiles('core-mobile/src/**', 'core-mobile/Cargo.*', 'core-mobile/bindings/**', 'mihomo-mobile/**', 'tools/build-android-libs.sh', 'tools/build-mihomo.sh') }}" >> "$GITHUB_OUTPUT"
+      - id: ncache
+        uses: actions/cache@v4
+        with: { path: apps/android/core-engine/src/main/jniLibs, key: 'android-native-${{ steps.nk.outputs.key }}' }
       - name: core-mobile .so（→ core-engine/src/main/jniLibs，不入库）
+        if: steps.ncache.outputs.cache-hit != 'true'
         run: cargo install cargo-ndk --locked && ABIS="arm64-v8a x86_64" tools/build-android-libs.sh
       - uses: actions/setup-go@v5
+        if: steps.ncache.outputs.cache-hit != 'true'
         with: { go-version: '1.27', cache-dependency-path: mihomo-mobile/go.sum }
       - name: libzmihomo.so（→ jniLibs，不入库）
+        if: steps.ncache.outputs.cache-hit != 'true'
         run: ABIS="arm64-v8a x86_64" tools/build-mihomo.sh android
       - name: build, unit test, paparazzi verify
         working-directory: apps/android
