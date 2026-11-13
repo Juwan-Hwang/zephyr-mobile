@@ -447,6 +447,29 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         if let t = tunnel { await reloadTunnelIfRunning(t) }
     }
 
+    /// 该域名当前生效的覆写（核心 hostOverride），轨迹页分段回填用。
+    public func hostOverride(host: String) async -> HostOverrideInfo? {
+        guard let c = core else { return nil }
+        let h = host
+        return await runQuiet {
+            c.hostOverride(host: h).map { o in
+                let target: ZephyrKit.TraceTarget = switch o.target { case .unchanged: .unchanged; case .direct: .direct; case .scene: .scene }
+                return HostOverrideInfo(target: target, sceneId: o.sceneId, persistent: o.persistent)
+            }
+        }
+    }
+
+    /// 轨迹实测（REVIEW-Q2 X-P1-13）：mihomo 对该域名最近连接的真实规则与策略链；未连接 / 无记录为 nil。
+    public func hostTrace(host: String) async -> HostTraceInfo? {
+        guard let t = tunnel, await isTunnelConnected(t) else { return nil }
+        let h = host
+        return try? await mihomo(t.controllerSocketPath) { m in
+            let x = try m.hostTrace(host: h)
+            return HostTraceInfo(host: x.host, lastSeenAt: x.lastSeenAt, connections: x.connections, totalBytes: x.totalBytes,
+                                 rule: x.rule, chain: x.chain, scene: x.scene, node: x.node)
+        }
+    }
+
     // MARK: - §4 策略组（mihomo 实时数据，在 PacketTunnel）
 
     public func policyGroups() -> AsyncStream<[ZephyrKit.PolicyGroup]> {

@@ -20,6 +20,7 @@
 - 2026-11-09 PR agent/ios/review-q2g：X-P1-8 部分（ZephyrKit/ZephyrMock 开启 StrictConcurrency 完整检查，零警告）。
 - 2026-11-14 PR agent/ios/review-q2i：[已修] X-P1-3 余项（`SharedBroadcast(replayLatest:)`：场景与连接状态流共享一个上游，场景只有一份 5 s 轮询，晚到订阅者立即拿到最新值；单测补回放/不回放两例）。
 - 2026-11-14 PR agent/ios/review-q2j：[已修] X-P1-5 余项——延迟有效期取设置 `latencyTtlHours`（CoreEngine.latencyFreshMillis，此前写死 24 h）；场景自动切换：`ZephyrEngine.sceneFailovers()` + `CoreEngine+Failover.swift`，App 前台且隧道已连接时每 60 s 一轮，按策略组 `selected` 测可达性后 `reportSceneProbe`，核心返回切换即 `selectInGroup`（不重载），首页吐司“已自动切换到 xx（撤销）”；AI 场景只提示不上报、不切换（§14.y，与 Android 同规则）。AppModelTests 补两例。
+- 2026-11-14 PR agent/ios/trace-live：[已修] X-P1-13（`ZephyrEngine.hostTrace(host:)` → MihomoClient.hostTrace；TraceSteps 以实测规则 / 场景 / 节点为准，“经由 <中间组>”，与预测规则不一致标“实际匹配”；lede 用实测连接数与流量）、X-P1-12 余项（`hostOverride(host:)` 回填覆写分段）。TraceStepsTests 补四例。
 
 ## P0
 
@@ -39,8 +40,8 @@
 - **Q2-X-P1-9 本地化** [部分已修] — App 与 Widgets 的 `Localizable.xcstrings` 已生成（zh-Hans 源 + en，373 key，含复数），`Text(verbatim:)` 用户文案已改可本地化，`InfoPlist.xcstrings`（相机/相册/本地网络说明）、project.yml `knownRegions`/`CFBundleLocalizations` 已加。剩余：返回 String 的文案（ErrorText、HFormat、ZSettingsRow(verbatim:)、AppShortcuts、Live Activity 状态文字）需改 `String(localized:)`；英文版快照；伪语言（加长）布局测试。
 - **Q2-X-P1-10 对比度与显示辅助** [部分已修：增强对比度；浅色 t3 基色等 A 的 tokens；降低透明度由系统材质处理] — 浅色 t3 仅 2.8:1、深色 3.7:1；不支持增强对比度、降低透明度、不以颜色区分。
 - **Q2-X-P1-11 “从桌面 Zephyr 导入”在真引擎必败** — `CoreEngine.swift:~529` 拒绝非 URL 二维码。
-- **Q2-X-P1-12 新接口未接 UI** [已修] — SceneSheet 来源分段 → `AppModel.setSceneSource`；TraceView 底部 `TraceOverrideSection` → `AppModel.overrideHost`（直连/场景、始终应用、撤销吐司）；`CoreEngine.connectionState()` 在全局模式补 `globalNodeId`（冷启动即有出口节点，setGlobalNode 后重发）；Scene.services 行此前已接。剩余：RuleAddSheet 接 overrideHost；契约 `hostOverride` 读接口〔等 A〕用于回填当前覆写。
-- **Q2-X-P1-13 连接轨迹用 App 侧 testRule 预测，不是 mihomo 实际匹配** 〔等 A：connectionTrace/recentHosts〕。
+- **Q2-X-P1-12 新接口未接 UI** [已修] — SceneSheet 来源分段 → `AppModel.setSceneSource`；TraceView 底部 `TraceOverrideSection` → `AppModel.overrideHost`（直连/场景、始终应用、撤销吐司）；`CoreEngine.connectionState()` 在全局模式补 `globalNodeId`（冷启动即有出口节点，setGlobalNode 后重发）；Scene.services 行此前已接。剩余：RuleAddSheet 接 overrideHost；~~`hostOverride` 读接口回填当前覆写~~ [已修：TraceOverrideSection 打开时回填分段与“始终应用”]。
+- **Q2-X-P1-13 连接轨迹用 App 侧 testRule 预测，不是 mihomo 实际匹配** [已修：隧道连接时用 MihomoClient.hostTrace 实测（规则、策略链、节点），预测仅作回落]。
 - **Q2-X-P1-14 MobileCore 在 App.init 主线程同步初始化，拖慢冷启动** [已修] — 建议移到后台 Task，先呈现启动画面。
 - **Q2-X-P1-15 场景延迟算作“显著变化”，反复 reload 全部小组件时间线** [已修：只比较场景集合/出口/延迟档位]。
 - **Q2-X-P1-16 scenePhase .inactive 会切断流量流** [已修：仅 .background 暂停]。

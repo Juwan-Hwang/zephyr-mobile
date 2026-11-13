@@ -78,4 +78,39 @@ final class TraceStepsTests: XCTestCase {
         XCTAssertEqual(s.map(\.label), ["规则", "策略"])
         XCTAssertEqual(s[1].value, "Proxy")
     }
+
+    // MARK: mihomo 实测（REVIEW-Q2 X-P1-13）
+
+    private func live(rule: String = "DOMAIN-SUFFIX,claude.ai", chain: [String], scene: String?, node: String) -> HostTraceInfo {
+        HostTraceInfo(host: "claude.ai", lastSeenAt: now - 3000, connections: 17, totalBytes: 2_100_000, rule: rule,
+                      chain: chain, scene: scene, node: node)
+    }
+
+    func testLiveTraceUsesMeasuredNodeAndVia() {
+        let s = TraceSteps.build(trace: trace("ai", scene: ai), layers: layers, scenes: [ai], latest: nil, now: now,
+                                 live: live(chain: ["ai", "US Fixed IP", "新加坡 02"], scene: "ai", node: "新加坡 02"))
+        XCTAssertEqual(s.map(\.value).prefix(3), ["DOMAIN-SUFFIX, claude.ai", "AI", "新加坡 02"])
+        XCTAssertEqual(s[0].detail, "来自 Nebula Cloud", "实测与预测同一条规则时沿用层名")
+        XCTAssertEqual(s[2].detail, "经由 US Fixed IP")
+    }
+
+    func testLiveTraceExceptionWins() {
+        let s = TraceSteps.build(trace: trace("ai", scene: ai), layers: layers, scenes: [ai], latest: nil, now: now,
+                                 live: live(chain: ["ai", "US-Fixed-01"], scene: "ai", node: "US-Fixed-01"))
+        XCTAssertEqual(s[2].value, "US-Fixed-01")
+        XCTAssertEqual(s[2].detail, "Claude 例外 · 固定")
+    }
+
+    func testLiveTraceDisagreesWithPrediction() {
+        let s = TraceSteps.build(trace: trace("ai", scene: ai), layers: layers, scenes: [ai], latest: nil, now: now,
+                                 live: live(rule: "MATCH", chain: ["DIRECT"], scene: nil, node: "DIRECT"))
+        XCTAssertEqual(s[0].value, "MATCH")
+        XCTAssertEqual(s[0].detail, "实际匹配")
+        XCTAssertEqual(s.last?.value, "直连", "实测直连时不再显示预测的场景")
+    }
+
+    func testViaNeedsMiddleGroup() {
+        XCTAssertNil(live(chain: ["ai", "新加坡 02"], scene: "ai", node: "新加坡 02").via)
+        XCTAssertEqual(live(chain: ["ai", "A", "B", "n"], scene: "ai", node: "n").via, "A · B")
+    }
 }

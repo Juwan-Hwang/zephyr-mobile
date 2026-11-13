@@ -74,6 +74,10 @@ public protocol ZephyrEngine: AnyObject, Sendable {
     // MARK: §8 连接、日志、设置
     /// 最多 200 条最新。
     func activeConnections() -> AsyncStream<[ConnectionInfo]>
+    /// 契约 §13 轨迹实测：mihomo 对该域名最近连接的真实匹配；隧道未连接或无记录为 nil（UI 回落到 testRule 预测）。
+    func hostTrace(host: String) async -> HostTraceInfo?
+    /// 契约 §13 / §14：该域名当前生效的覆写；无覆写为 nil。
+    func hostOverride(host: String) async -> HostOverrideInfo?
     func closeConnection(id: String) async throws
     func closeAll() async throws
     func logs(minLevel: LogLevel) -> AsyncStream<LogLine>
@@ -133,4 +137,7 @@ public extension ZephyrEngine {
     func overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Bool) async throws {
         throw ZephyrError(code: .internal, message: "overrideHost unsupported")
     }
+    /// 只读查询：没有实现即“无数据”（Mock / 预览走 testRule 预测，分段从“不变”开始）。
+    func hostTrace(host: String) async -> HostTraceInfo? { nil }
+    func hostOverride(host: String) async -> HostOverrideInfo? { nil }
 }

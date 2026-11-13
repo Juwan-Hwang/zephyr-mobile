@@ -1,6 +1,9 @@
 // 连接轨迹（原型 09，截图 trace.png）的步骤：规则 → 场景 → 节点 → 出口。
 //
-// 契约 §13 的 connectionTrace(host:) 尚未进入 Swift 协议（见 NOTES-H.md），这里用已有数据拼出：
+// 隧道连接且 mihomo 有该域名的记录时，以实测为准（engine.hostTrace，REVIEW-Q2 X-P1-13）：
+//   规则 = mihomo 实际命中的规则（与 testRule 预测一致时附“来自 <层名>”，不一致标“实际匹配”）
+//   场景 = 实测 scene；节点 = 策略链末端（含例外），中间组作“经由 …”
+// 否则用预测拼出：
 //   规则 = engine.testRule(input: host)（命中层名来自 ruleStats().layers）
 //   场景 = RuleTrace.scene，或按 policy（场景 id）在当前 scenes 里找
 //   节点 = 该域名最近一条活动连接的 node（含例外），否则场景当前节点
@@ -32,10 +35,11 @@ enum TraceSteps {
     ///   - scenes: 当前场景列表（trace.scene 为空时按 policy 查）。
     ///   - latest: 该域名最近一条活动连接（拿实际出口节点名，含例外）。
     ///   - now: 当前时间（毫秒），出口"x 小时前检测"用。
+    ///   - live: mihomo 实测（hostTrace）；有则规则 / 场景 / 节点以它为准。
     static func build(trace: RuleTrace, layers: [RuleLayer], scenes: [ZephyrKit.Scene],
-                      latest: RecentHost?, now: Int64) -> [TraceStep] {
-        var steps = [ruleStep(trace, layers: layers)]
-        let policy = trace.policy.uppercased()
+                      latest: RecentHost?, now: Int64, live: HostTraceInfo? = nil) -> [TraceStep] {
+        var steps = [ruleStep(trace, layers: layers, live: live)]
+        let policy = (live.map(\.node) ?? trace.policy).uppercased()
         if policy == reject {
             steps.append(TraceStep(label: ZL.tr("结果"), value: ZL.tr("已拦截"), detail: ZL.tr("请求在本机被丢弃，不会发出"), marker: .danger))
             return steps
@@ -44,22 +48,28 @@ enum TraceSteps {
             steps.append(TraceStep(label: ZL.tr("出口"), value: ZL.tr("直连"), detail: ZL.tr("不经过代理，使用本机网络"), marker: .success))
             return steps
         }
-        guard let scene = trace.scene ?? scenes.first(where: { $0.id == trace.policy }) else {
-            // 策略组 / 未知策略：只显示策略名。
-            steps.append(TraceStep(label: ZL.tr("策略"), value: trace.policy, marker: .success))
+        let liveScene = live?.scene.flatMap { id in scenes.first { $0.id == id } }
+        let predicted = trace.scene ?? scenes.first(where: { $0.id == trace.policy })
+        guard let scene = live == nil ? predicted : liveScene else {
+            // 策略组 / 未知策略：只显示策略名（实测时为策略链）。
+            let value = live.map { $0.chain.isEmpty ? $0.node : $0.chain.joined(separator: " → ") } ?? trace.policy
+            steps.append(TraceStep(label: ZL.tr("策略"), value: value, marker: .success))
             return steps
         }
         steps.append(TraceStep(label: ZL.tr("场景"), value: scene.name, detail: sourceText(scene.source)))
 
-        let (node, exception) = resolveNode(scene: scene, latest: latest)
+        let actual = live?.node ?? latest?.node
+        let (node, exception) = resolveNode(scene: scene, actualNode: actual)
         var nodeDetail: String?
         if let exception {
             nodeDetail = ZL.s("%@ 例外 · 固定", exception.app)
+        } else if let via = live?.via {
+            nodeDetail = ZL.s("经由 %@", via)
         } else if let node {
             nodeDetail = [node.latencyMs.map { ZFormat.latency($0) }, node.tag, node.protocol.isEmpty ? nil : node.protocol]
                 .compactMap { $0 }.joined(separator: " · ")
         }
-        let nodeName = node?.name ?? latest?.node ?? scene.selected.name
+        let nodeName = node?.name ?? actual ?? scene.selected.name
         steps.append(TraceStep(label: ZL.tr("节点"), value: nodeName, detail: nodeDetail?.isEmpty == true ? nil : nodeDetail,
                                regionCode: node?.region))
 
@@ -87,7 +97,11 @@ enum TraceSteps {
         }
     }
 
-    private static func ruleStep(_ t: RuleTrace, layers: [RuleLayer]) -> TraceStep {
+    private static func ruleStep(_ t: RuleTrace, layers: [RuleLayer], live: HostTraceInfo?) -> TraceStep {
+        if let live, normalized(live.rule) != normalized(t.rule) {
+            // 实测与预测不一致（如运行中的配置尚未重载）：以实测为准，不冒用预测的层名。
+            return TraceStep(label: ZL.tr("规则"), value: ruleText(live.rule), detail: ZL.tr("实际匹配"), monospaced: true)
+        }
         let detail: String
         if let i = t.layerIndex {
             let name = layers.first { $0.index == i }?.name ?? ZL.f("第 %lld 层", Int64(i))
@@ -98,9 +112,13 @@ enum TraceSteps {
         return TraceStep(label: ZL.tr("规则"), value: ruleText(t.rule), detail: detail, monospaced: true)
     }
 
-    /// 实际节点：最近连接的节点名若命中场景例外 → 例外节点；命中当前节点 → 当前节点；否则只有名字。
-    private static func resolveNode(scene: ZephyrKit.Scene, latest: RecentHost?) -> (NodeSummary?, SceneException?) {
-        guard let name = latest?.node, name != direct else { return (scene.selected, nil) }
+    private static func normalized(_ rule: String) -> String {
+        rule.replacingOccurrences(of: " ", with: "").lowercased()
+    }
+
+    /// 实际节点：实测 / 最近连接的节点名若命中场景例外 → 例外节点；命中当前节点 → 当前节点；否则只有名字。
+    private static func resolveNode(scene: ZephyrKit.Scene, actualNode: String?) -> (NodeSummary?, SceneException?) {
+        guard let name = actualNode, name != direct else { return (scene.selected, nil) }
         if let ex = scene.exceptions.first(where: { $0.node.name == name }) { return (ex.node, ex) }
         if scene.selected.name == name { return (scene.selected, nil) }
         return (nil, nil)

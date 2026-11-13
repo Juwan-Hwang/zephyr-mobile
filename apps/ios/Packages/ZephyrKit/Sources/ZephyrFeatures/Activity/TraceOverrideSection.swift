@@ -4,7 +4,7 @@
 //   └ 关闭时仅更改本次连接       ┘
 //
 // 选中即 overrideHost(host, target, sceneId, persistent: 始终应用)（契约 §13）；成功后给可撤销吐司（撤销 = .unchanged）。
-// 契约没有 hostOverride 读接口，打开时无法回填当前覆写，分段从“不变”开始。
+// 打开时用 engine.hostOverride(host:) 回填当前覆写（分段与“始终应用”）；没有覆写从“不变”开始。
 
 import SwiftUI
 import ZephyrDesign
@@ -59,6 +59,20 @@ struct TraceOverrideSection: View {
             .padding(.top, ZTokens.Space.n5)
         }
         .accessibilityElement(children: .contain)
+        .task(id: host) { await backfill() }
+    }
+
+    /// 回填当前覆写；用户已经开始操作则不覆盖。
+    private func backfill() async {
+        guard let o = await model.engine.hostOverride(host: host), !busy, selection == .unchanged else { return }
+        switch o.target {
+        case .unchanged: return
+        case .direct: selection = .direct
+        case .scene:
+            guard let id = o.sceneId else { return }
+            selection = .scene(id)
+        }
+        always = o.persistent
     }
 
     private func choose(_ new: Target, force: Bool = false) {

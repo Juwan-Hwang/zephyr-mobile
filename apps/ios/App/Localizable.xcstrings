@@ -1793,6 +1793,16 @@
         }
       }
     },
+    "实际匹配" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actual match"
+          }
+        }
+      }
+    },
     "导入" : {
       "localizations" : {
         "en" : {
@@ -3549,6 +3559,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Route"
+          }
+        }
+      }
+    },
+    "经由 %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Via %@"
           }
         }
       }
