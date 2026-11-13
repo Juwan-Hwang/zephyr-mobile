@@ -114,8 +114,10 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
             NavHost(
                 nav, startDestination = if (startOnboarding) Onboarding else Home,
                 enterTransition = { slideInHorizontally(ZAnim.slow()) { it / 4 } + fadeIn(ZAnim.standard()) },
-                exitTransition = { fadeOut(ZAnim.micro()) },
-                popEnterTransition = { fadeIn(ZAnim.standard()) },
+                // Review A-P2-8: the page underneath moves too, so a predictive-back drag (which seeks these
+                // transitions) previews it sliding back in from the left instead of a flat cross-fade.
+                exitTransition = { slideOutHorizontally(ZAnim.slow()) { -it / 10 } + fadeOut(ZAnim.standard()) },
+                popEnterTransition = { slideInHorizontally(ZAnim.standard()) { -it / 10 } + fadeIn(ZAnim.standard()) },
                 popExitTransition = { slideOutHorizontally(ZAnim.standard()) { it / 4 } + fadeOut(ZAnim.standard()) },
             ) {
                 composable<Home> {
