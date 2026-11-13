@@ -57,7 +57,7 @@ struct TraceView: View {
                 .padding(.top, ZTokens.Space.n6 + ZTokens.Space.n1 / 2)
 
             if let trace, failure == nil {
-                TraceOverrideSection(host: host, currentSceneId: live.map { $0.scene ?? $0.node } ?? trace.scene?.id ?? trace.policy)
+                TraceOverrideSection(host: host, currentSceneId: currentSceneId(trace))
             }
         }
         .padding(.horizontal, HMetrics.homeInset)
@@ -134,6 +134,15 @@ struct TraceView: View {
         return ZL.f("%1$@ · %2$lld 个连接 · %3$@", ZFormat.relative(r.lastSeenAt, now: model.now()) as NSString, Int64(r.connections), ZFormat.bytes(r.totalBytes) as NSString)
     }
 
+    /// 当前命中的场景 id：实测优先（组名映射回场景；实测直连 = "DIRECT"），否则预测。
+    private func currentSceneId(_ trace: RuleTrace) -> String? {
+        if let live {
+            if live.node.uppercased() == TraceSteps.direct || live.node.uppercased() == TraceSteps.reject { return live.node.uppercased() }
+            if let s = TraceSteps.scene(forGroup: live.scene, in: model.scenes) { return s.id }
+        }
+        return trace.scene?.id ?? trace.policy
+    }
+
     private func marker(_ m: TraceStep.Marker) -> ZChainMarker {
         switch m {
         case .hollow: .hollow
@@ -150,9 +159,14 @@ struct TraceView: View {
         async let measured = engine.hostTrace(host: host)
         do {
             let t = try await engine.testRule(input: host)
-            layers = await stats.layers
-            live = await measured
-            trace = t
+            let l = await stats.layers
+            guard !Task.isCancelled, host == self.host else { return }   // 已切到别的域名：丢弃旧结果
+            layers = l
+            live = nil
+            trace = t   // 先显示预测，不让可能卡住的控制面请求挡住页面
+            let m = await measured
+            guard !Task.isCancelled, host == self.host else { return }
+            live = m
         } catch let e as ZephyrError {
             _ = await stats
             _ = await measured

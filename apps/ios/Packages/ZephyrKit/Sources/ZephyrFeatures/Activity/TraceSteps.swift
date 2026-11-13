@@ -48,7 +48,7 @@ enum TraceSteps {
             steps.append(TraceStep(label: ZL.tr("出口"), value: ZL.tr("直连"), detail: ZL.tr("不经过代理，使用本机网络"), marker: .success))
             return steps
         }
-        let liveScene = live?.scene.flatMap { id in scenes.first { $0.id == id } }
+        let liveScene = live.flatMap { scene(forGroup: $0.scene, in: scenes) }
         let predicted = trace.scene ?? scenes.first(where: { $0.id == trace.policy })
         guard let scene = live == nil ? predicted : liveScene else {
             // 策略组 / 未知策略：只显示策略名（实测时为策略链）。
@@ -73,7 +73,9 @@ enum TraceSteps {
         steps.append(TraceStep(label: ZL.tr("节点"), value: nodeName, detail: nodeDetail?.isEmpty == true ? nil : nodeDetail,
                                regionCode: node?.region))
 
-        let ip = exception == nil ? (trace.exitIp ?? scene.exitIp) : nil
+        // 实测走的不是场景当前节点（例外 / 用户刚换 / 热备切换）时，场景记录的出口 IP 不属于它，不冒用。
+        let measuredOther = live != nil && node?.id != scene.selected.id
+        let ip = exception == nil && !measuredOther ? (trace.exitIp ?? scene.exitIp) : nil
         var exitDetail: [String] = []
         if let r = node?.region { exitDetail.append(HRegionName.name(r)) }
         if exception == nil, let t = scene.testedAt { exitDetail.append(ZL.s("%@检测", ZFormat.relative(t, now: now))) }
@@ -100,7 +102,7 @@ enum TraceSteps {
     private static func ruleStep(_ t: RuleTrace, layers: [RuleLayer], live: HostTraceInfo?) -> TraceStep {
         if let live, normalized(live.rule) != normalized(t.rule) {
             // 实测与预测不一致（如运行中的配置尚未重载）：以实测为准，不冒用预测的层名。
-            return TraceStep(label: ZL.tr("规则"), value: ruleText(live.rule), detail: ZL.tr("实际匹配"), monospaced: true)
+            return TraceStep(label: ZL.tr("规则"), value: ruleText(configRule(live.rule)), detail: ZL.tr("实际匹配"), monospaced: true)
         }
         let detail: String
         if let i = t.layerIndex {
@@ -112,8 +114,40 @@ enum TraceSteps {
         return TraceStep(label: ZL.tr("规则"), value: ruleText(t.rule), detail: detail, monospaced: true)
     }
 
-    private static func normalized(_ rule: String) -> String {
-        rule.replacingOccurrences(of: " ", with: "").lowercased()
+    /// 规则比较用：类型去掉 `-`/`_` 并小写（mihomo 报 `DomainSuffix`，testRule 报 `DOMAIN-SUFFIX`），
+    /// 只比较类型与载荷两段（忽略 `no-resolve` 之类的参数）。
+    static func normalized(_ rule: String) -> String {
+        let parts = rule.split(separator: ",", omittingEmptySubsequences: false).map { $0.trimmingCharacters(in: .whitespaces) }
+        let type = (parts.first ?? "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "_", with: "").lowercased()
+        let payload = parts.count > 1 ? parts[1].lowercased() : ""
+        return type + "," + payload
+    }
+
+    /// mihomo 的规则类型名（CamelCase）→ 配置写法，显示用。
+    private static let mihomoTypes: [String: String] = [
+        "domain": "DOMAIN", "domainsuffix": "DOMAIN-SUFFIX", "domainkeyword": "DOMAIN-KEYWORD", "domainregex": "DOMAIN-REGEX",
+        "geosite": "GEOSITE", "geoip": "GEOIP", "ipcidr": "IP-CIDR", "ipcidr6": "IP-CIDR6", "ipsuffix": "IP-SUFFIX", "ipasn": "IP-ASN",
+        "srcipcidr": "SRC-IP-CIDR", "srcport": "SRC-PORT", "dstport": "DST-PORT", "processname": "PROCESS-NAME",
+        "processpath": "PROCESS-PATH", "ruleset": "RULE-SET", "match": "MATCH", "network": "NETWORK",
+    ]
+
+    /// "DomainSuffix,claude.ai" → "DOMAIN-SUFFIX,claude.ai"；未知类型原样大写。
+    static func configRule(_ mihomoRule: String) -> String {
+        var parts = mihomoRule.split(separator: ",", omittingEmptySubsequences: false).map(String.init)
+        guard let t = parts.first else { return mihomoRule }
+        let key = t.trimmingCharacters(in: .whitespaces).lowercased()
+        parts[0] = mihomoTypes[key] ?? t.uppercased()
+        return parts.joined(separator: ",")
+    }
+
+    /// mihomo 顶层组名 → 场景。核心的组名是 `Zephyr·<场景名>`，例外组 `Zephyr·<场景名>·<应用>`（core-mobile scenes.rs group_name）。
+    static func scene(forGroup group: String?, in scenes: [ZephyrKit.Scene]) -> ZephyrKit.Scene? {
+        guard let group else { return nil }
+        let prefix = "Zephyr·"
+        guard group.hasPrefix(prefix) else { return scenes.first { $0.id == group || $0.name == group } }
+        let rest = group.dropFirst(prefix.count)
+        // 场景名本身可能含“·”：取最长的匹配
+        return scenes.filter { rest == $0.name || rest.hasPrefix($0.name + "·") }.max { $0.name.count < $1.name.count }
     }
 
     /// 实际节点：实测 / 最近连接的节点名若命中场景例外 → 例外节点；命中当前节点 → 当前节点；否则只有名字。
