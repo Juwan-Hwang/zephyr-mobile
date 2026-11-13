@@ -91,7 +91,11 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: String = "资料
             }
             ZText(listOfNotNull(ui.subscriptionCount.takeIf { it > 0 }?.let { "来自 $it 个订阅" }, "${ui.regionCount} 个地区").joinToString(" · "), Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
             Spacer(Modifier.height(18.dp))
-            ZSearchField(ui.query, { vm.setQuery(it) }, "地区、城市或线路", Modifier.padding(horizontal = 16.dp))
+            var composing by remember { mutableStateOf(false) }
+            ZSearchField(
+                ui.query, { vm.setQuery(it, composing = composing) }, "地区、城市或线路", Modifier.padding(horizontal = 16.dp),
+                onComposingChange = { composing = it; if (!it) vm.setQuery(ui.query) },
+            )
             if (ui.query.isNotBlank() && result != null) {
                 ZText("${ZFormat.grouped(result.total)} 个 · ${ZFormat.micros(result.tookMicros)}", Modifier.padding(start = 22.dp, top = 8.dp), style = ZTheme.type.caption, color = c.text3)
             }
@@ -108,6 +112,10 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: String = "资料
                     ZEmptyState("无结果", Modifier.align(Alignment.Center), message = "没有与“${ui.query.trim()}”匹配的节点")
                 } else {
                     val epoch by vm.pageEpoch
+                    LaunchedEffect(list, result) {
+                        snapshotFlow { list.layoutInfo.visibleItemsInfo.let { v -> if (v.isEmpty()) IntRange.EMPTY else v.first().index..v.last().index } }
+                            .collect { vm.prefetch(it) }
+                    }
                     LazyColumn(
                         state = list,
                         modifier = Modifier.fillMaxSize().semantics { collectionInfo = CollectionInfo(rowCount, 1) },

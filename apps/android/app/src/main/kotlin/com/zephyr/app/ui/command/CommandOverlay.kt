@@ -75,6 +75,10 @@ sealed interface CommandAction {
 fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (CommandAction) -> Unit) {
     val c = ZTheme.colors
     var input by remember { mutableStateOf("") }
+    // Node suggestions follow committed text only: no lookups on pinyin letters mid-composition (review H-P2-12).
+    var composing by remember { mutableStateOf(false) }
+    var committed by remember { mutableStateOf("") }
+    androidx.compose.runtime.LaunchedEffect(input, composing) { if (!composing) committed = input }
     val focus = remember { FocusRequester() }
     val parsed = remember(input) { CommandParser.parse(input) }
     val planner = remember { CommandPlanner(AppGraph.engine) }
@@ -84,9 +88,9 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
         delay(80) // debounce: one engine round-trip per pause, not per keystroke
         value = planner.plan(parsed)
     }
-    val nodes by produceState<Pair<NodeQueryResult, List<NodeSummary>>?>(null, input, visible, parsed.hasChips) {
+    val nodes by produceState<Pair<NodeQueryResult, List<NodeSummary>>?>(null, committed, visible, parsed.hasChips) {
         value = null
-        val q = input.trim()
+        val q = committed.trim()
         if (!visible || q.isEmpty() || parsed.hasChips) return@produceState
         delay(120)
         value = runCatching {
@@ -106,7 +110,7 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
         Column(Modifier.fillMaxSize().statusBarsPadding().imePadding().padding(horizontal = 12.dp).verticalScroll(rememberScrollState())) {
             Spacer(Modifier.height(12.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                ZSearchField(input, { input = it }, "搜索或输入指令", Modifier.weight(1f), focusRequester = focus,
+                ZSearchField(input, { input = it }, "搜索或输入指令", Modifier.weight(1f), focusRequester = focus, onComposingChange = { composing = it },
                     onSubmit = { plan?.let(apply) }, visualTransformation = transform)
                 Spacer(Modifier.width(4.dp))
                 ZText("取消", Modifier.zPressable(onClick = onDismiss).padding(horizontal = 8.dp, vertical = 14.dp), style = ZTheme.type.body, color = c.accent)

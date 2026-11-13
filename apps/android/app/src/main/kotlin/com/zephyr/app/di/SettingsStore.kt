@@ -25,6 +25,9 @@ class SettingsStore(private val context: Context, private val engine: ZephyrEngi
     private val keyOnboarded = stringPreferencesKey("onboarded")
 
     val onboarded = context.store.data.map { it[keyOnboarded] == "1" }
+    private val keyScrubHint = stringPreferencesKey("scrub_hint_seen")
+    val scrubHintSeen = context.store.data.map { it[keyScrubHint] == "1" }
+    suspend fun setScrubHintSeen() { context.store.edit { it[keyScrubHint] = "1" } }
 
     init {
         scope.launch {

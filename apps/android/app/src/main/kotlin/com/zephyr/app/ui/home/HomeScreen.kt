@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -100,7 +102,8 @@ fun HomeContent(
     val list = rememberLazyListState()
 
     Box(Modifier.fillMaxSize().background(c.bg)) {
-        LazyColumn(state = list, contentPadding = PaddingValues(bottom = 120.dp), modifier = Modifier.fillMaxSize()) {
+        LazyColumn(state = list, // Review A-P2-5: clear the command bar plus the 3-button nav bar.
+            contentPadding = PaddingValues(bottom = 120.dp + WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()), modifier = Modifier.fillMaxSize()) {
             item("inset") { Spacer(Modifier.windowInsetsTopHeight(WindowInsets.statusBars).padding(top = 8.dp)) }
             item("top") { Spacer(Modifier.height(12.dp)); HomeTopBar(conn.status, actions.onSettings) }
             item("status") {
