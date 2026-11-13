@@ -48,7 +48,7 @@ public enum ZTokens {
         /// 超时 -1（= screen.red）
         public static let latencyTimeout = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.2706, blue: 0.2275, alpha: 1.0), light: UIColor(red: 1.0, green: 0.2314, blue: 0.1882, alpha: 1.0))
         /// 未测（= screen.t3）
-        public static let latencyUnknown = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.4), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.4))
+        public static let latencyUnknown = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.4), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.55))
         public static let screenBg = ZDynamicColor.make(dark: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), light: UIColor(red: 0.949, green: 0.949, blue: 0.9686, alpha: 1.0))
         /// 卡片
         public static let screenS1 = ZDynamicColor.make(dark: UIColor(red: 0.0471, green: 0.0471, blue: 0.0549, alpha: 1.0), light: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0))
@@ -64,7 +64,8 @@ public enum ZTokens {
         public static let screenHl2 = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.13), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.12))
         public static let screenT1 = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.95), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.9))
         public static let screenT2 = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.6), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.58))
-        public static let screenT3 = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.4), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.4))
+        /// 浅色 0.55：白底 4.74:1、#F2F2F7 底 4.63:1，满足 WCAG AA
+        public static let screenT3 = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.4), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.55))
         public static let screenT4 = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.2), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.18))
         public static let screenGreen = ZDynamicColor.make(dark: UIColor(red: 0.1882, green: 0.8196, blue: 0.3451, alpha: 1.0), light: UIColor(red: 0.2039, green: 0.7804, blue: 0.349, alpha: 1.0))
         public static let screenAmber = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.8392, blue: 0.0392, alpha: 1.0), light: UIColor(red: 1.0, green: 0.6235, blue: 0.0392, alpha: 1.0))
