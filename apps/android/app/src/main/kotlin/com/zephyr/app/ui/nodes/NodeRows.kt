@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -27,11 +28,21 @@ import com.zephyr.design.theme.ZTheme
 import com.zephyr.engine.NodeSummary
 import com.zephyr.engine.RegionSection
 
-/** Fixed 52dp node row: name (query terms highlighted, ×1.5 dimmed) · protocol · latency. */
+/** Large-text mode (prototype `.device.xl`, same 1.3× threshold as SceneCard). */
+@Composable
+private fun isXl(): Boolean = LocalDensity.current.fontScale >= 1.3f
+
+/**
+ * Fixed-height node row: name (query terms highlighted, ×1.5 dimmed) · protocol · latency.
+ * Review L-P2-3: 52 dp normally; in large-text mode the prototype (`.device.xl .vr`, 550) grows the row to 66,
+ * hides the protocol column and widens latency to 66 — the name gets the room instead of being clipped.
+ */
 @Composable
 fun NodeRowView(n: NodeSummary?, highlights: List<String>, testedLatency: Int?, testing: Boolean) {
     val c = ZTheme.colors
-    Row(Modifier.fillMaxWidth().height(52.dp).padding(start = 22.dp), verticalAlignment = Alignment.CenterVertically) {
+    val xl = isXl()
+    val sp = ZTheme.spacing
+    Row(Modifier.fillMaxWidth().height(if (xl) sp.rowHeightLarge else sp.rowHeight).padding(start = 22.dp), verticalAlignment = Alignment.CenterVertically) {
         if (n == null) {
             ZSkeleton(Modifier.width(180.dp).height(14.dp))
             Spacer(Modifier.weight(1f))
@@ -39,9 +50,11 @@ fun NodeRowView(n: NodeSummary?, highlights: List<String>, testedLatency: Int?, 
         }
         val name = remember(n.name, highlights, c) { highlighted(n.name, highlights, c.accent, c.text3) }
         ZText(name, Modifier.weight(1f), style = ZTheme.type.body, maxLines = 1)
-        ZText(n.protocol, style = ZTheme.type.monoSmall, color = c.text3, maxLines = 1)
-        Spacer(Modifier.width(14.dp))
-        ZLatency(testedLatency ?: n.latencyMs, testing, Modifier.width(64.dp), style = ZTheme.type.mono.copy(textAlign = androidx.compose.ui.text.style.TextAlign.End))
+        if (!xl) {
+            ZText(n.protocol, style = ZTheme.type.monoSmall, color = c.text3, maxLines = 1)
+            Spacer(Modifier.width(14.dp))
+        }
+        ZLatency(testedLatency ?: n.latencyMs, testing, Modifier.width(if (xl) 66.dp else 64.dp), style = ZTheme.type.mono.copy(textAlign = androidx.compose.ui.text.style.TextAlign.End))
     }
     Box(Modifier.fillMaxWidth().padding(start = 22.dp).height(1.dp).background(c.hairline))
 }
@@ -49,7 +62,7 @@ fun NodeRowView(n: NodeSummary?, highlights: List<String>, testedLatency: Int?, 
 @Composable
 fun SectionHeaderRow(s: RegionSection) {
     val c = ZTheme.colors
-    Row(Modifier.fillMaxWidth().height(52.dp).padding(start = 22.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(Modifier.fillMaxWidth().height(if (isXl()) ZTheme.spacing.rowHeightLarge else ZTheme.spacing.rowHeight).padding(start = 22.dp), verticalAlignment = Alignment.CenterVertically) {
         ZRegionBadge(s.region)
         Spacer(Modifier.width(12.dp))
         ZText(s.name, Modifier.weight(1f), style = ZTheme.type.bodyStrong)

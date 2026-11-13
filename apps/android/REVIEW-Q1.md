@@ -27,6 +27,7 @@
 - 第十七批（PR agent/android/press-d2）：✅ D-P2-2 高光部分（按压高光改用 tokens screen.pressed：深色 3% 白 / 浅色 3% 黑，浅色模式可见；ZIndication 按主题提供）。整行缩放 0.97 未改。
 - 第十八批（PR agent/android/confirm-h6）：✅ H-P2-6（出口确认卡实色 s3 + hl 描边、圆角 16、内边距 14、标题 14sp、6dp 琥珀点；IP 行箭头 t4、目标 IP t1；按钮 40dp 胶囊、间距 8、触控区 48；无受影响服务时文案改“更改 X 场景的出口 IP？”）。快照未覆盖确认态，无基线变化。
 - 第十九批（PR agent/android/segmented-d6）：✅ D-P2-6（ZSegmented 对齐原型 `.seg`：外圆角 13、内边距 3、段高 34、13.5sp；滑块圆角 10 + 柔和投影；滑动 .32s `--e` 曲线无回弹）。重录 trace 两张基线。
+- 第二十批（PR agent/android/rows-xl-l3）：✅ L-P2-3（大字模式 fontScale≥1.3，与 SceneCard 同阈值：节点行/分区头高 66（`rowHeightLarge`），隐藏协议列，延迟列 66；常规模式仍 52，节点页基线不变）。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览
