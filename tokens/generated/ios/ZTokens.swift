@@ -231,8 +231,8 @@ public enum ZTokens {
         public static let pressScale: Double = 0.97
         /// 滚动停止后测可见行延迟
         public static let settleDelay: Double = 0.4
-        /// "已换到 东京 03 · 撤销" 吐司停留
-        public static let undoWindow: Double = 4
+        /// "已切换至 东京 03 · 撤销" 吐司停留（原型 index.html:993 setTimeout 5000）
+        public static let undoWindow: Double = 5
         public static let spring = Animation.spring(response: springResponse, dampingFraction: springDamping)
         public static let glowRadius: CGFloat = 28
         public static let glowAlpha: Double = 0.35
