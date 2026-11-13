@@ -30,6 +30,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zephyr.design.components.ZIconButton
 import com.zephyr.design.components.ZIcons
@@ -119,7 +121,16 @@ fun HomeContent(
                         ZSparkline(l.spark, Modifier.fillMaxWidth().height(72.dp), description = "最近 90 秒下载速率")
                     }
                 }
-                if (!connected) Spacer(Modifier.height(150.dp))
+                // Review H-P2-2: idle keeps the wind's dotted baseline (prototype 969: 3px, dash 2/8, at 94% of 150).
+                if (!connected) {
+                    val idle = if (c.bg.luminance() > 0.5f) androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.15f) else androidx.compose.ui.graphics.Color.White.copy(alpha = 0.12f)
+                    androidx.compose.foundation.Canvas(Modifier.fillMaxWidth().height(150.dp).clearAndSetSemantics {}) {
+                        val y = size.height * 0.94f
+                        drawLine(idle, androidx.compose.ui.geometry.Offset(0f, y), androidx.compose.ui.geometry.Offset(size.width, y), strokeWidth = 3.dp.toPx(),
+                            cap = androidx.compose.ui.graphics.StrokeCap.Round,
+                            pathEffect = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(2.dp.toPx(), 8.dp.toPx())))
+                    }
+                }
             }
             item("scenes-h") {
                 Spacer(Modifier.height(28.dp))
