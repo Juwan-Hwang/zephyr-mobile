@@ -135,7 +135,10 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                 composable<Today>(
                     enterTransition = { slideInVertically(ZAnim.slow()) { it / 3 } + fadeIn(ZAnim.standard()) },
                     popExitTransition = { slideOutVertically(ZAnim.standard()) { it / 3 } + fadeOut(ZAnim.standard()) },
-                ) { TodayScreen { nav.popBackStack() } }
+                ) {
+                    // 今日 is always a black page (review H-P2-13): run its buttons and text on the dark palette.
+                    ZephyrTheme(dark = true, accent = ZAccent.valueOf(settings.accent.name)) { TodayScreen { nav.popBackStack() } }
+                }
                 composable<Onboarding>(enterTransition = { EnterTransition.None }, exitTransition = { ExitTransition.None }) {
                     OnboardingScreen { nav.navigate(Home) { popUpTo(Onboarding) { inclusive = true } } }
                 }

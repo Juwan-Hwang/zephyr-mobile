@@ -16,6 +16,7 @@
 - 第六批（PR agent/android/platform-p1）：✅ A-P1-1（AppRoot 随 App 外观设置 isAppearanceLightStatusBars/NavigationBars）；✅ A-P1-2（ZSheet 改为 windowInsetsPadding(ime ∪ navigationBars)，导入 sheet 不再被键盘盖住）；✅ A-P1-3（Android 9 声明 WRITE_EXTERNAL_STORAGE maxSdk 28 并运行时申请；29+ 走 IS_PENDING；失败删除半成品并提示“无法存储图像”，成功“已存储到相册”）；✅ A-P1-4（深链只预填导入 sheet，需用户点“添加”，仅接受 http(s)；savedInstanceState 非空不重复处理并清空 intent；MainActivity 不再接受 ACTION_CONNECT，磁贴/小组件/通知改走不导出的 VpnPermissionActivity）；✅ W-P1-1（小组件不再显示冻结的速率：大字“已连接/Zephyr”+“规则 · 节点 / 全局 · 节点 / 直连 / 连接中 / 未连接”+今日用量；整卡打开 App，只有独立 36dp 电源按钮切换；连接期间每 60 s 刷新一次）；✅ L-P2-12（导入成功吐司“已添加 X（N 个节点）”）。
 - 第七批（PR agent/android/polish-p2a）：✅ W-P2-1（通知改用系统计时器显示时长；速率只在亮屏且 ≥2 s 才刷新，状态变化立即刷新；颜色跟随 App 主题色）；✅ W-P2-2（全局模式下磁贴/通知显示全局节点，直连不显示节点）；✅ A-P2-7（release 不再 profileable，仅 debug 清单保留）；✅ L-P2-4（节点测速同一时刻只跑一个，旧结果丢弃）；✅ L-P2-9（订阅页“…前更新/…后到期”每分钟刷新）；✅ H-P2-8/9 文案（“连接中…”、“刚刚检测/…前检测”）。本地 compileDebugKotlin 通过。
 - 第八批（PR agent/android/polish-p2b）：✅ A-P2-1（MainActivity 不再 runBlocking 读 DataStore，改为 lifecycleScope 异步读取后 setContent）；✅ A-P2-6（engine.connect() 失败也写入 FAILED + 错误码，首页显示原因而不是静默回到“未连接”）；W-P1-3 已确认 subtitle/startActivityAndCollapse 有 API 守卫。本地 compileDebugKotlin 通过。
+- 第九批（PR agent/android/today-h13）：✅ H-P2-13（今日页底色恒为黑色，页内按钮走深色主题、状态栏图标浅色；三套卡片底色改为原型 #02040A / #F6EEE6 / #ECEDEF；数字 84sp ExtraLight、单位 18sp）。流线动画（原型标注可选）未做。本地 compileDebugKotlin 通过。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览
