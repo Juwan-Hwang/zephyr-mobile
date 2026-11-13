@@ -82,19 +82,25 @@ fun SubscriptionsCard(subs: List<Subscription>, now: Long, onOpen: () -> Unit) {
             val soon = s.expiresAt != null && s.expiresAt!! - now < 3 * 86_400_000L
             Row(Modifier.fillMaxWidth().zPressable(onClick = onOpen).padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight), maxLines = 1)
+                    ZText(s.name, style = ZTheme.type.body, maxLines = 1)
                     Spacer(Modifier.height(12.dp))
                     val used = s.usedBytes; val total = s.totalBytes
                     ZProgressBar(if (used != null && total != null && total > 0) used.toFloat() / total else 0f, color = if (soon) c.warning else c.text3)
                 }
                 Spacer(Modifier.width(48.dp))
                 Column(horizontalAlignment = Alignment.End) {
-                    s.remainingBytes?.let { ZText(ZFormat.bytesText(it), style = ZTheme.type.numeric.copy(fontSize = ZTheme.type.headline.fontSize)) }
+                    s.remainingBytes?.let { ZText(ZFormat.bytesText(it), style = ZTheme.type.numeric) }
                     s.expiresAt?.let {
                         Spacer(Modifier.height(4.dp))
-                        ZText(ZFormat.expires(it, now), style = ZTheme.type.footnote, color = if (soon) c.warning else c.text3)
+                        ZText(ZFormat.expires(it, now, weekday = true), style = ZTheme.type.caption, color = if (soon) c.warning else c.text3)
                     }
                 }
+            }
+        }
+        if (subs.size > 3) {
+            ZDivider(inset = false)
+            Row(Modifier.fillMaxWidth().zPressable(onClick = onOpen).padding(horizontal = 18.dp, vertical = 14.dp)) {
+                ZText("更多 ${subs.size - 3} 个订阅", style = ZTheme.type.footnote, color = c.text3)
             }
         }
     }
