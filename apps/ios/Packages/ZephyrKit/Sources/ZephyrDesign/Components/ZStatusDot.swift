@@ -57,17 +57,6 @@ public struct ZStatusDot: View {
     }
 }
 
-#Preview("不以颜色区分") {
-    ZPreviewCanvas {
-        HStack(spacing: ZTokens.Space.n6) {
-            ZStatusDot(isOn: false)
-            ZStatusDot(isOn: true)
-            ZStatusDot(isOn: true, color: ZTokens.Colors.screenAmber)
-        }
-        .environment(\.accessibilityDifferentiateWithoutColor, true)
-    }
-}
-
 #Preview("浅色") {
     ZPreviewCanvas(scheme: .light) {
         HStack(spacing: ZTokens.Space.n6) {
