@@ -10,12 +10,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import com.zephyr.app.di.AppGraph
 import com.zephyr.app.ui.nav.AppRoot
-import com.zephyr.engine.ImportSource
+import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
+    /** Subscription link from a clash:// or zephyr:// deep link, waiting in the import sheet for the user to tap 添加. */
+    private val pendingImport = mutableStateOf<String?>(null)
+
     private val vpnPermission = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { r ->
         if (r.resultCode == RESULT_OK) AppGraph.connection.connect()
     }
@@ -44,9 +47,15 @@ class MainActivity : ComponentActivity() {
         // DataStore read is a few ms on first frame; avoids a flash of onboarding for returning users.
         val onboard = !AppGraph.demo && runBlocking { !AppGraph.settings.onboarded.first() }
         setContent {
-            AppRoot(onToggle = { on -> if (on) requestConnect() else AppGraph.connection.disconnect() }, startOnboarding = onboard)
+            AppRoot(
+                onToggle = { on -> if (on) requestConnect() else AppGraph.connection.disconnect() },
+                startOnboarding = onboard,
+                pendingImport = pendingImport.value,
+                onImportShown = { pendingImport.value = null },
+            )
         }
-        handle(intent)
+        // Rotation / process recreation re-delivers the launch intent: handle it once only (review A-P1-4).
+        if (savedInstanceState == null) handle(intent)
         askNotificationsAfterFirstConnect()
     }
 
@@ -60,16 +69,14 @@ class MainActivity : ComponentActivity() {
         if (ask != null) vpnPermission.launch(ask) else AppGraph.connection.connect()
     }
 
-    /** ACTION_CONNECT from tile/widget; clash://install-config?url=… and zephyr://import?url=… deep links. */
+    /**
+     * clash://install-config?url=… and zephyr://import?url=… are BROWSABLE, so any web page can fire them. They only
+     * prefill the import sheet; nothing is imported until the user taps 添加 (review A-P1-4). Connecting from the
+     * tile/widget goes through the non-exported VpnPermissionActivity, so this exported Activity takes no connect action.
+     */
     private fun handle(intent: Intent?) {
-        when {
-            intent?.action == ACTION_CONNECT -> requestConnect()
-            intent?.data != null -> {
-                val url = intent.data?.getQueryParameter("url") ?: return
-                lifecycleScope.launch { runCatching { AppGraph.engine.importSubscription(ImportSource.URL, url) } }
-            }
-        }
+        val url = intent?.takeIf { it.action == Intent.ACTION_VIEW }?.data?.getQueryParameter("url")?.trim()
+        if (!url.isNullOrEmpty() && (url.startsWith("https://") || url.startsWith("http://"))) pendingImport.value = url
+        setIntent(Intent(this, MainActivity::class.java))
     }
-
-    companion object { const val ACTION_CONNECT = "com.zephyr.app.ACTION_CONNECT" }
 }

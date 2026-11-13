@@ -79,6 +79,18 @@ fun TodayScreen(onClose: () -> Unit) {
     val scope = rememberCoroutineScope()
     val ctx = LocalContext.current
     val c = ZTheme.colors
+    // Result of 存储图像, shown in place of the footnote for a few seconds (review A-P1-3: errors are no longer silent).
+    var saved by remember { mutableStateOf<String?>(null) }
+    val doSave: () -> Unit = {
+        scope.launch {
+            saved = runCatching { save(ctx, layer.toImageBitmap().asAndroidBitmap()) }.fold({ "已存储到相册" }, { "无法存储图像" })
+            kotlinx.coroutines.delay(3_000); saved = null
+        }
+    }
+    // Android 9 needs WRITE_EXTERNAL_STORAGE for MediaStore inserts; 10+ needs nothing.
+    val storagePermission = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),
+    ) { granted -> if (granted) doSave() else saved = "需要存储权限才能保存图像" }
     Column(Modifier.fillMaxSize().background(c.bg).statusBarsPadding().navigationBarsPadding()) {
         Row(Modifier.fillMaxWidth().padding(8.dp)) { Spacer(Modifier.weight(1f)); ZIconButton(ZIcons.Close, "关闭", onClose, tint = c.text2) }
         val u = usage
@@ -129,9 +141,13 @@ fun TodayScreen(onClose: () -> Unit) {
         Spacer(Modifier.height(20.dp))
         Row(Modifier.padding(horizontal = 22.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             ZButton("分享", { scope.launch { val b = layer.toImageBitmap().asAndroidBitmap(); share(ctx, b) } }, Modifier.weight(1f))
-            ZButton("存储图像", { scope.launch { save(ctx, layer.toImageBitmap().asAndroidBitmap()) } }, Modifier.weight(1f), kind = ZButtonKind.Secondary)
+            ZButton("存储图像", {
+                val needs = Build.VERSION.SDK_INT < 29 &&
+                    ctx.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != android.content.pm.PackageManager.PERMISSION_GRANTED
+                if (needs) storagePermission.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) else doSave()
+            }, Modifier.weight(1f), kind = ZButtonKind.Secondary)
         }
-        ZText("图案由今天的流量生成，不含节点名称与 IP 地址。", Modifier.fillMaxWidth().padding(16.dp), style = ZTheme.type.footnote.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = c.text3)
+        ZText(saved ?: "图案由今天的流量生成，不含节点名称与 IP 地址。", Modifier.fillMaxWidth().padding(16.dp), style = ZTheme.type.footnote.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = c.text3)
     }
 }
 
@@ -180,13 +196,24 @@ private suspend fun share(ctx: android.content.Context, bmp: Bitmap) {
     ctx.startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).setType("image/png").putExtra(Intent.EXTRA_STREAM, uri).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION), null))
 }
 
+/** Writes the card to Pictures/Zephyr. API 29+: IS_PENDING until the PNG is complete, so galleries never see half a file. */
 private suspend fun save(ctx: android.content.Context, bmp: Bitmap) = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
     val values = ContentValues().apply {
         put(MediaStore.Images.Media.DISPLAY_NAME, "Zephyr-${System.currentTimeMillis()}.png")
         put(MediaStore.Images.Media.MIME_TYPE, "image/png")
-        if (Build.VERSION.SDK_INT >= 29) put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Zephyr")
+        if (Build.VERSION.SDK_INT >= 29) {
+            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Zephyr")
+            put(MediaStore.Images.Media.IS_PENDING, 1)
+        }
     }
-    ctx.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)?.let { uri ->
-        ctx.contentResolver.openOutputStream(uri)?.use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
+    val cr = ctx.contentResolver
+    val uri = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values) ?: error("MediaStore insert failed")
+    try {
+        val ok = cr.openOutputStream(uri)?.use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) } ?: false
+        check(ok) { "PNG encode failed" }
+        if (Build.VERSION.SDK_INT >= 29) cr.update(uri, ContentValues().apply { put(MediaStore.Images.Media.IS_PENDING, 0) }, null, null)
+    } catch (e: Throwable) {
+        runCatching { cr.delete(uri, null, null) }
+        throw e
     }
 }

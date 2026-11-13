@@ -30,10 +30,12 @@ import com.zephyr.engine.ImportSource
 
 /** "添加订阅" (prototype ob1): paste link · scan QR · import from desktop Zephyr · file. */
 @Composable
-fun BoxScope.ImportSheet(visible: Boolean, onDismiss: () -> Unit, onDone: (String) -> Unit) {
+fun BoxScope.ImportSheet(visible: Boolean, onDismiss: () -> Unit, prefill: String? = null, onDone: (String) -> Unit) {
     val c = ZTheme.colors
     var url by remember { mutableStateOf("") }
     val imp = rememberSubscriptionImporter { s -> url = ""; onDone("已添加 ${s.name}（${s.nodeCount} 个节点）") }
+    // Deep links land here pre-filled and wait for 添加 (review A-P1-4).
+    androidx.compose.runtime.LaunchedEffect(prefill) { if (prefill != null) { url = prefill; imp.error = null } }
     ZSheet(visible, onDismiss, "添加订阅", trailing = "取消") {
         Column(Modifier.padding(horizontal = 16.dp)) {
             ZSearchField(url, { url = it; imp.error = null }, "粘贴订阅链接", onSubmit = { imp.submit(ImportSource.URL, url) })

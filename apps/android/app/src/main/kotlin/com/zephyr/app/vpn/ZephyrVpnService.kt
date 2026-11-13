@@ -32,6 +32,7 @@ class ZephyrVpnService : VpnService() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private var tun: ParcelFileDescriptor? = null
     private var watcher: Job? = null
+    private var widgetTicker: Job? = null
     private var bridge: TunBridge = TunBridge.Simulated
     private val engine get() = AppGraph.engine
 
@@ -80,7 +81,12 @@ class ZephyrVpnService : VpnService() {
                 postOngoing(n)
             }
         }
-        scope.launch { ZephyrTileService.requestRefresh(this@ZephyrVpnService); ZephyrWidget.refreshAll(this@ZephyrVpnService) }
+        // Widget: once now, then once a minute (today's usage, exits). Cancelled with the watcher on stop (review W-P1-1).
+        widgetTicker?.cancel()
+        widgetTicker = scope.launch {
+            ZephyrTileService.requestRefresh(this@ZephyrVpnService)
+            while (true) { ZephyrWidget.refreshAll(this@ZephyrVpnService); kotlinx.coroutines.delay(ZephyrWidget.LIVE_REFRESH_MS) }
+        }
         (engine as? com.zephyr.engine.core.CoreEngine)?.let { core ->
             prober?.cancel()
             // Scene exits are probed once a minute while connected; core's failover tracker decides when to switch.
@@ -107,6 +113,7 @@ class ZephyrVpnService : VpnService() {
 
     private suspend fun stop() {
         prober?.cancel(); prober = null
+        widgetTicker?.cancel(); widgetTicker = null
         watcher?.cancel()
         runCatching { engine.disconnect() }
         (engine as? com.zephyr.engine.core.CoreEngine)?.flushUsage()
