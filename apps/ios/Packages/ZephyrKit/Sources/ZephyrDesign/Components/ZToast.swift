@@ -1,5 +1,5 @@
 // 吐司（原型 `.toast`：52 高、圆角 18、--s4 底、14 号字；右侧强调色动作 “撤销”；底部 2pt 强调色进度条线性耗尽）。
-// 停留时长默认 ZTokens.Motion.undoWindow（4s）。出现时 VoiceOver 播报；Reduce Motion 下只淡入淡出。
+// 停留时长默认 ZTokens.Motion.undoWindow（5s，与原型一致）。出现时 VoiceOver 播报；Reduce Motion 下只淡入淡出。
 
 import SwiftUI
 

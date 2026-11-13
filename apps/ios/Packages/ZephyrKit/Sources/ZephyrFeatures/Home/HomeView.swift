@@ -38,7 +38,7 @@ public struct HomeView: View {
                     HomeBottomFade().frame(height: dockClearance).ignoresSafeArea(edges: .bottom)
                 }
         }
-        // D 的吐司：停留 undoWindow（4s）、底部进度条耗尽、VoiceOver 播报；位于指令栏上方。
+        // D 的吐司：停留 undoWindow（5s）、底部进度条耗尽、VoiceOver 播报；位于指令栏上方。
         .zToast(model.sheet == nil ? $model.toast : .constant(nil), bottomInset: toastInset)
         .sensoryFeedback(.success, trigger: model.toast?.id) { _, new in new != nil }
         .zPageBackground()
