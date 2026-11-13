@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.zephyr.app.di.AppGraph
 import com.zephyr.app.ui.common.LocalNow
 import com.zephyr.design.components.ZListGroup
@@ -57,10 +58,12 @@ internal fun androidx.compose.foundation.layout.ColumnScope.TraceBody(host: Stri
     var reload by remember { mutableStateOf(0) }
     val trace by produceState<ConnectionTrace?>(null, host, reload) { value = host?.let { runCatching { engine.connectionTrace(it) }.getOrNull() } }
     val scope = rememberCoroutineScope()
+    var overrideError by remember(host) { mutableStateOf<String?>(null) }
     run {
         val t = trace ?: return
         Column(Modifier.padding(horizontal = 22.dp)) {
-            ZText(t.host, style = ZTheme.type.hero.copy(fontSize = ZTheme.type.title.fontSize * 1.5f), maxLines = 1)
+            // Review H-P2-10: prototype `.tr h2` is 300 32px, not the hero face.
+            ZText(t.host, style = ZTheme.type.title.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Light, fontSize = 32.sp, lineHeight = 38.sp), maxLines = 1)
             ZText("${ZFormat.ago(t.lastSeenAt, now)} · ${t.connections} 个连接 · ${ZFormat.bytesText(t.totalBytes)}", style = ZTheme.type.callout, color = c.text3)
             Spacer(Modifier.height(24.dp))
             val sceneName = t.scene?.let { id -> scenes.firstOrNull { it.id == id }?.name ?: id }
@@ -78,10 +81,12 @@ internal fun androidx.compose.foundation.layout.ColumnScope.TraceBody(host: Stri
         val persistent = ov?.persistent ?: false
         fun apply(i: Int, keep: Boolean) = scope.launch {
             val (target, sid) = when (i) { 0 -> TraceTarget.UNCHANGED to null; 1 -> TraceTarget.DIRECT to null; else -> TraceTarget.SCENE to others[i - 2].id }
-            runCatching { engine.overrideHost(t.host, target, sid, keep) }
+            // Review H-P2-10: a failed override is shown instead of silently swallowed.
+            overrideError = runCatching { engine.overrideHost(t.host, target, sid, keep) }.exceptionOrNull()?.let { "未能更改：${it.message ?: "请重试"}" }
             reload++
         }
         ZSegmented(opts, sel, { apply(it, persistent) }, Modifier.padding(horizontal = 16.dp))
+        overrideError?.let { ZText(it, Modifier.padding(horizontal = 26.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.danger) }
         Spacer(Modifier.height(16.dp))
         ZListGroup {
             ZSettingsRow("始终应用", subtitle = "关闭时仅更改本次连接", checked = persistent, onCheckedChange = { v -> apply(sel, v) })
@@ -95,9 +100,9 @@ private fun Step(label: String, value: String, detail: String?, mono: Boolean = 
     val c = ZTheme.colors
     Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
         Box(Modifier.width(20.dp).fillMaxHeight()) {
-            if (!last) Box(Modifier.align(Alignment.TopCenter).padding(top = 14.dp).width(1.dp).fillMaxHeight().background(c.hairlineStrong))
+            if (!last) Box(Modifier.align(Alignment.TopCenter).padding(top = 13.dp).width(1.dp).fillMaxHeight().background(c.hairlineStrong))
             Box(
-                Modifier.padding(top = 2.dp).size(14.dp).align(Alignment.TopCenter)
+                Modifier.padding(top = 2.dp).size(11.dp).align(Alignment.TopCenter)
                     .then(if (last) Modifier.background(c.connected, CircleShape) else Modifier.border(1.5.dp, c.text3, CircleShape)),
             )
         }
