@@ -42,6 +42,10 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     private var samples: [TrafficSample] = []
     /// 流量流的共享上游（AppModel / SharedStatePublisher 共用一次轮询）。
     let trafficBroadcast = SharedBroadcast<TrafficSample>()
+    /// 场景与连接状态是状态流：App 内多处订阅（AppModel、SharedStatePublisher、LibraryModel…）共享同一个上游，
+    /// 场景只有一份 5 s 轮询（REVIEW-Q2 X-P1-3）；晚到者立即拿到最新值。
+    let sceneBroadcast = SharedBroadcast<[ZephyrKit.Scene]>(replayLatest: true)
+    let connectionBroadcast = SharedBroadcast<ConnectionState>(replayLatest: true)
     private var members: [NodeId: String] = [:]
 
     /// 真机的系统隧道；nil = 模拟器 / 单测，实时数据走 fallback。
@@ -167,7 +171,12 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     // MARK: - §1 连接与模式（VPN 生命周期属 PacketTunnel；此处转发）
 
     public func connectionState() -> AsyncStream<ConnectionState> {
-        if let t = tunnel { return liveConnectionState(t) }
+        if let t = tunnel {
+            return connectionBroadcast.subscribe { [weak self] in
+                guard let self else { return AsyncStream { $0.finish() } }
+                return self.liveConnectionState(t)
+            }
+        }
         return fallback.connectionState()
     }
 
@@ -272,6 +281,14 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
 
     public func scenes() -> AsyncStream<[ZephyrKit.Scene]> {
         guard core != nil else { return mockData ? fallback.scenes() : CoreEngine.just([]) }
+        return sceneBroadcast.subscribe { [weak self] in
+            guard let self else { return AsyncStream { $0.finish() } }
+            return self.pollScenes()
+        }
+    }
+
+    /// 场景上游：只由 sceneBroadcast 在 0→1 个订阅者时创建一次。
+    private func pollScenes() -> AsyncStream<[ZephyrKit.Scene]> {
         let id = UUID()
         let (stream, cont) = AsyncStream<[ZephyrKit.Scene]>.makeStream(bufferingPolicy: .bufferingNewest(1))
         locked { sceneWatchers[id] = cont }

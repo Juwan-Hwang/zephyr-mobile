@@ -2,7 +2,9 @@
 //
 // 流量流此前由 AppModel 与 SharedStatePublisher 各自订阅，每个订阅者各自 1 Hz 向扩展发 provider message；
 // 现在第一个订阅者启动上游、最后一个取消时停止上游，期间所有订阅者共享同一次轮询。
-// 不回放历史值：晚到的订阅者从下一次采样开始（流量是瞬时量，回放旧值反而误导）。
+// 默认不回放历史值：晚到的订阅者从下一次采样开始（流量是瞬时量，回放旧值反而误导）。
+// `replayLatest: true` 用于状态类流（场景、连接状态）：晚到的订阅者立即收到当前最新值，
+// 上游停止（最后一个订阅者离开或上游结束）时清空，避免下次订阅拿到过期状态。
 
 import Foundation
 
@@ -12,6 +14,12 @@ final class SharedBroadcast<Element: Sendable>: @unchecked Sendable {
     private var pump: Task<Void, Never>?
     /// 每次启动上游递增；已被取消的旧上游收尾时不得清掉新一代订阅者。
     private var generation = 0
+    private let replayLatest: Bool
+    private var latest: Element?
+
+    init(replayLatest: Bool = false) {
+        self.replayLatest = replayLatest
+    }
 
     /// 订阅者数量（测试用）。
     var subscriberCount: Int { lock.lock(); defer { lock.unlock() }; return subscribers.count }
@@ -22,6 +30,7 @@ final class SharedBroadcast<Element: Sendable>: @unchecked Sendable {
         let (stream, continuation) = AsyncStream<Element>.makeStream(bufferingPolicy: .bufferingNewest(1))
         lock.lock()
         subscribers[id] = continuation
+        if replayLatest, let latest { continuation.yield(latest) }
         let needsPump = pump == nil
         if needsPump {
             generation += 1
@@ -43,6 +52,7 @@ final class SharedBroadcast<Element: Sendable>: @unchecked Sendable {
 
     private func emit(_ value: Element) {
         lock.lock()
+        if replayLatest { latest = value }
         let targets = Array(subscribers.values)
         lock.unlock()
         for c in targets { c.yield(value) }
@@ -54,6 +64,7 @@ final class SharedBroadcast<Element: Sendable>: @unchecked Sendable {
         let targets = Array(subscribers.values)
         subscribers = [:]
         pump = nil
+        latest = nil
         lock.unlock()
         for c in targets { c.finish() }
     }
@@ -62,7 +73,7 @@ final class SharedBroadcast<Element: Sendable>: @unchecked Sendable {
         lock.lock()
         subscribers.removeValue(forKey: id)
         var stale: Task<Void, Never>?
-        if subscribers.isEmpty { stale = pump; pump = nil }
+        if subscribers.isEmpty { stale = pump; pump = nil; latest = nil }
         lock.unlock()
         stale?.cancel()
     }
