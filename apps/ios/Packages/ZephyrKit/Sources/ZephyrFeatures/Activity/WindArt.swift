@@ -12,6 +12,7 @@
 // 线的静态参数（起点、长度、透明度、线宽）按尺寸缓存，每帧只重算路径。
 
 import SwiftUI
+import ZephyrDesign
 
 struct WindArt: Equatable, Sendable {
     struct Line: Equatable, Sendable {
@@ -115,10 +116,12 @@ struct WindArtCanvas: View {
 
     @State private var cache = WindArtCache()
     @State private var start = Date()
+    /// 快照渲染：不挂 TimelineView，固定画 t 时刻（否则帧随墙钟变化，参考图对不上）。
+    @Environment(\.zStaticRendering) private var still
 
     var body: some View {
         Group {
-            if animated {
+            if animated && !still {
                 TimelineView(.animation(minimumInterval: 1.0 / 30)) { tl in
                     artFrame(t: t + tl.date.timeIntervalSince(start) * WindArt.speed, asynchronous: true)
                 }

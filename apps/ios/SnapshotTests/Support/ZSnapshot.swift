@@ -135,7 +135,8 @@ func zAssertSnapshot<V: View>(
             return
         }
         XCTContext.runActivity(named: "已录制快照 \(reference.lastPathComponent)") { activity in
-            let attachment = XCTAttachment(image: image)
+            // 附写盘的 PNG 原字节（XCTAttachment(image:) 会重新编码，色彩与 alpha 可能与参考图不同，CI 收图后对不上）。
+            let attachment = XCTAttachment(data: (try? Data(contentsOf: reference)) ?? Data(), uniformTypeIdentifier: "public.png")
             attachment.name = reference.lastPathComponent
             attachment.lifetime = .keepAlways
             activity.add(attachment)
@@ -257,10 +258,17 @@ enum ZSnapshotRenderer {
         }
         CATransaction.flush()
 
+        // 确定性出图：sRGB 8 位（.standard，不随模拟器色域走 P3/扩展范围）、不透明底。
+        // 半透明边缘像素在 premultiplied alpha 下的取整会随机器漂移（参考图入库后首轮 CI 有 1px 边框/环形指示点不一致），
+        // 先铺一层系统背景再渲染，所有像素 alpha = 1。
         let format = UIGraphicsImageRendererFormat(for: host.traitCollection)
         format.scale = ZSnapshotConfig.scale
-        format.opaque = false
+        format.opaque = true
+        format.preferredRange = .standard
+        let background = UIColor.systemBackground.resolvedColor(with: host.traitCollection)
         let image = UIGraphicsImageRenderer(size: size, format: format).image { ctx in
+            background.setFill()
+            ctx.fill(CGRect(origin: .zero, size: size))
             host.view.layer.render(in: ctx.cgContext)
         }
 
