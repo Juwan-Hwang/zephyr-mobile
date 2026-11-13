@@ -21,6 +21,7 @@
 - 第十一批（PR agent/android/polish-p2d）：✅ A-P2-3（API 31+ 用 UiModeManager.setApplicationNightMode 同步 App 外观，启动窗口/启动画面不再闪一帧系统主题）；✅ A-P2-8（页面间预测性返回：下层页 exit/popEnter 改为向左 1/10 位移 + 淡入淡出，返回手势预览能看到上一页跟随；清单已开 enableOnBackInvokedCallback）；✅ L-P2-10（设置页“本地代理端口 / 结果保留 / 外观”点一下不再循环切换，改为弹出选项列表并标出当前值；行外观不变）；L-P1-3 复核：订阅页“其他 N 个”、设置页“受信任的 Wi‑Fi”已无 chevron/空点击，资料库三行进入设置页。
 - 第十二批（PR agent/android/widget-w23）：✅ W-P2-3 部分（中号小组件场景行补上次测得延迟“61 ms”；去掉无配置 Activity 的 reconfigurable 声明；电源按钮已有）。未做：“今日 + 24 小时柱状图”中号布局。
 - 第十三批（PR agent/android/design-d2）：✅ D-P2-10（ZProgressBar 2dp、底色 hl）；✅ D-P2-11 尺寸部分（单位与上行速率 13sp）；✅ D-P2-5（ZChip 30dp 高、13sp、未选中 t2）；✅ D-P2-8（小号地区徽标 600 10.5sp、圆角 5、min 28×20）；✅ H-P2-7（首页订阅 2–6 天内到期显示星期“周一到期”；订阅名 16、剩余 15、到期 12；超过 3 个时显示“更多 N 个订阅”）；快照已重录（本地 Paparazzi verify 通过）。
+- 第十四批（PR agent/android/activity-h9）：✅ H-P2-9 文案部分（活动 sheet 标题改“最近连接”，副标题分隔符改“ · ”）；快照已重录。轨迹改为同一 sheet 内切换仍待做。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览
