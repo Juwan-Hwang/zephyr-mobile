@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.zephyr.design.components.ZButton
 import com.zephyr.design.components.ZButtonKind
 import com.zephyr.design.components.ZCard
@@ -36,10 +37,11 @@ fun GlobalModeCard(
     onConfirm: () -> Unit,
 ) {
     val c = ZTheme.colors
-    ZCard(Modifier.padding(horizontal = 16.dp), padding = 18.dp) {
-        ZText("全局模式", style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight))
-        Spacer(Modifier.height(6.dp))
-        ZText(if (node != null) "所有流量均经由${node.name}。场景已暂停。" else "所有流量均经由同一节点。场景已暂停。", style = ZTheme.type.callout, color = c.text3)
+    // Review H-P2-15: prototype `.gb` padding 16, `.h` 15, `.k` 13 / 1.5 with 5 px gap; buttons are Compact ZButtons (D-P2-4).
+    ZCard(Modifier.padding(horizontal = 16.dp), padding = 16.dp) {
+        ZText("全局模式", style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight, fontSize = 15.sp))
+        Spacer(Modifier.height(5.dp))
+        ZText(if (node != null) "所有流量均经由${node.name}。场景已暂停。" else "所有流量均经由同一节点。场景已暂停。", style = ZTheme.type.callout.copy(fontSize = 13.sp, lineHeight = 19.5.sp), color = c.text3)
         Spacer(Modifier.height(14.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             ZButton("使用规则模式", onUseRule, Modifier.weight(1f))
