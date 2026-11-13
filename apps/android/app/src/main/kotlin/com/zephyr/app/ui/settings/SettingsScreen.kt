@@ -67,19 +67,20 @@ fun SettingsScreen(back: String, onBack: () -> Unit) {
                 ZDivider()
                 ZSettingsRow("受信任的 Wi‑Fi", subtitle = "连接后自动断开", value = s.trustedWifi.joinToString("、").ifEmpty { "无" })
                 ZDivider()
-                ZSettingsRow(
-                    "本地代理端口", subtitle = "127.0.0.1:${s.localProxyPort}" + if (s.localProxyAuth) " · 需要密码" else "",
-                    value = if (s.localProxyEnabled) "开" else "关", chevron = true,
-                    onClick = { set { it.copy(localProxyEnabled = !it.localProxyEnabled) } },
+                ChoiceRow(
+                    "本地代理端口", listOf(true to "开", false to "关"), s.localProxyEnabled,
+                    onSelect = { v -> set { it.copy(localProxyEnabled = v) } },
+                    subtitle = "127.0.0.1:${s.localProxyPort}" + if (s.localProxyAuth) " · 需要密码" else "",
                 )
             }
             ZSectionHeader("检测", Modifier.padding(top = 12.dp))
             ZListGroup {
                 ZSettingsRow("仅在 Wi‑Fi 下测速", checked = s.testOnWifiOnly, onCheckedChange = { v -> set { it.copy(testOnWifiOnly = v) } })
                 ZDivider()
-                ZSettingsRow("结果保留", value = "${s.latencyTtlHours} 小时", chevron = true, onClick = {
-                    set { it.copy(latencyTtlHours = when (it.latencyTtlHours) { 6 -> 24; 24 -> 72; else -> 6 }) }
-                })
+                ChoiceRow(
+                    "结果保留", (listOf(6, 24, 72) + s.latencyTtlHours).distinct().sorted().map { it to "$it 小时" }, s.latencyTtlHours,
+                    onSelect = { h -> set { it.copy(latencyTtlHours = h) } },
+                )
             }
             ZSectionHeader("存储", Modifier.padding(top = 12.dp))
             ZListGroup {
@@ -93,9 +94,10 @@ fun SettingsScreen(back: String, onBack: () -> Unit) {
             }
             ZSectionHeader("外观", Modifier.padding(top = 12.dp))
             ZListGroup {
-                ZSettingsRow("外观", value = when (s.appearance) { Appearance.SYSTEM -> "跟随系统"; Appearance.DARK -> "深色"; Appearance.LIGHT -> "浅色" }, chevron = true, onClick = {
-                    set { it.copy(appearance = Appearance.entries[(it.appearance.ordinal + 1) % Appearance.entries.size]) }
-                })
+                ChoiceRow(
+                    "外观", listOf(Appearance.SYSTEM to "跟随系统", Appearance.DARK to "深色", Appearance.LIGHT to "浅色"), s.appearance,
+                    onSelect = { a -> set { it.copy(appearance = a) } },
+                )
                 ZDivider()
                 Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 14.dp), verticalAlignment = Alignment.CenterVertically) {
                     ZText("强调色", Modifier.weight(1f), style = ZTheme.type.body)
