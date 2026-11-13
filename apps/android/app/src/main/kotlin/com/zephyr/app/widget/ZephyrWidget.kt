@@ -87,7 +87,7 @@ class ZephyrWidget : GlanceAppWidget() {
         val bg = ColorProvider(day = Color(0xFFFFFFFF), night = Color(0xFF141417))
         val t1 = ColorProvider(day = Color(0xE6000000), night = Color(0xF2FFFFFF))
         val t2 = ColorProvider(day = Color(0x94000000), night = Color(0x99FFFFFF))
-        val t3 = ColorProvider(day = Color(0x66000000), night = Color(0x66FFFFFF))
+        val t3 = ColorProvider(day = Color(0x8C000000), night = Color(0x66FFFFFF)) // light 0.55 (tokens screen.t3, WCAG AA)
         val green = ColorProvider(day = Color(0xFF34C759), night = Color(0xFF30D158))
         val pwBg = ColorProvider(day = Color(0x0F000000), night = Color(0x1AFFFFFF))
         val accent = ColorProvider(day = Color(0xFF007AFF), night = Color(0xFF0A84FF))
