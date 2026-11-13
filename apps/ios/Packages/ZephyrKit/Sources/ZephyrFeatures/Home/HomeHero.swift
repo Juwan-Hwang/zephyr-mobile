@@ -128,7 +128,7 @@ struct ConnectionDuration: View {
             let start = Date(timeIntervalSince1970: Double(since) / 1000)
             styled(Text(start, style: .timer))
                 // VoiceOver 读取时取计时 Text 的当前值，不会过期。
-                .accessibilityLabel(Text(verbatim: "已连接 ") + Text(start, style: .timer))
+                .accessibilityLabel(Text(verbatim: ZL.tr("已连接") + " ") + Text(start, style: .timer))
         } else {
             let ms = max(0, nowMs - since)
             styled(Text(verbatim: ZFormat.duration(ms)))

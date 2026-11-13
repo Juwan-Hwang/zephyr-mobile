@@ -40,7 +40,7 @@ struct RuleAddSheet: View {
     private var host: String? { Self.normalizedHost(target) }
 
     private var segments: [ZSegment<Choice>] {
-        var out = [ZSegment(Choice.direct, verbatim: "直连")]
+        var out = [ZSegment(Choice.direct, verbatim: ZL.tr("直连"))]
         for s in scenes.prefix(Self.maxScenes) { out.append(ZSegment(.scene(s.id), verbatim: s.name)) }
         return out
     }
