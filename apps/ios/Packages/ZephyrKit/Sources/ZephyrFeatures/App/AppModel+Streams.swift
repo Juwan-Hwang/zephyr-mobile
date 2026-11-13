@@ -40,6 +40,12 @@ extension AppModel {
                 self.settings = s
             }
         })
+        streamTasks.append(Task { [weak self] in
+            for await notice in engine.sceneFailovers() {
+                guard let self else { return }
+                self.apply(failover: notice)
+            }
+        })
         Task { await refreshUsage() }
     }
 
@@ -76,6 +82,24 @@ extension AppModel {
             if new.status == .disconnected { traffic.clear(); pendingChange = nil }
             reconcileTraffic()
         }
+    }
+
+    /// 场景出口探测事件 → 提示（契约 v0.2 场景自动切换、§14.y）。
+    /// 已自动切换：给撤销（再 apply 旧节点）；AI 场景未切换：只提示，不给操作。
+    func apply(failover n: SceneFailoverNotice) {
+        guard let to = n.switchedTo else {
+            showUndo(ZL.s("%@ 出口无响应，出口 IP 不会自动更换", n.sceneName))
+            return
+        }
+        let engine = self.engine
+        let sceneId = n.sceneId
+        var undo: (@MainActor @Sendable () async -> Void)?
+        if let prev = n.previousNodeId {
+            undo = { [weak self] in
+                do { try await engine.applySceneChange(sceneId: sceneId, nodeId: prev) } catch { self?.report(error) }
+            }
+        }
+        showUndo(ZL.s("%1$@ 出口无响应，已自动切换到 %2$@", n.sceneName, to), undo: undo)
     }
 
     /// 前台且已连接 → 订阅流量；否则取消。

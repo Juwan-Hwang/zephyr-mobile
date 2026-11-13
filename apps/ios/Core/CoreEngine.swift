@@ -16,10 +16,10 @@ import ZephyrMock
 
 public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
 
-    private let core: MobileCore?
+    let core: MobileCore?
     private let fallback: any ZephyrEngine
     private let mockData: Bool
-    private let clock: @Sendable () -> Int64
+    let clock: @Sendable () -> Int64
     private let fetcher: @Sendable (URL) async throws -> FetchedBody
     /// 二进制下载（geosite.dat / geoip.dat）：(远端, 本地目标)。
     private let downloader: @Sendable (URL, URL) async throws -> Void
@@ -50,6 +50,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     /// 场景只有一份 5 s 轮询（REVIEW-Q2 X-P1-3）；晚到者立即拿到最新值。
     let sceneBroadcast = SharedBroadcast<[ZephyrKit.Scene]>(replayLatest: true)
     let connectionBroadcast = SharedBroadcast<ConnectionState>(replayLatest: true)
+    /// 场景出口探测的共享上游：无论几处订阅只跑一份探测循环。
+    let failoverBroadcast = SharedBroadcast<SceneFailoverNotice>()
     private var members: [NodeId: String] = [:]
 
     /// 真机的系统隧道；nil = 模拟器 / 单测，实时数据走 fallback。
@@ -155,7 +157,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     }
 
     /// 有节点数据时返回核心，否则 nil（调用方回落）。
-    private func nodes() async -> MobileCore? {
+    func nodes() async -> MobileCore? {
         guard let c = core else { return nil }
         if let ready = locked({ nodesReady }) { return ready ? c : nil }
         let ok = await runQuiet { ((try? c.nodeIndex())?.total ?? 0) > 0 }
@@ -263,7 +265,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         return locked { samples.filter { $0.at >= since } }
     }
     /// 今日用量：字节与在线时长来自扩展的账本（UsageLedger）；地区数 = 当前各场景/全局出口的不同地区；
-    /// 最快 = 延迟缓存里 24 h 内最快节点。
+    /// 最快 = 延迟缓存里有效期内（设置“延迟结果保留”）最快的节点。
     public func usageToday() async -> UsageSummary {
         guard let t = tunnel else { return await fallback.usageToday() }
         let ledger = await t.usageToday()
@@ -272,7 +274,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         var fastest: Int32?
         if let c = core {
             let now = clock()
-            let fresh = CoreEngine.latencyFreshMillis
+            let fresh = latencyFreshMillis
             let top = await runQuiet { (try? c.fastestNodes(query: "", limit: 1, nowMillis: now, maxAgeMillis: fresh)) ?? [] }
             fastest = top.first.map(\.latencyMs).flatMap { $0 > 0 ? $0 : nil }
             if let g = c.globalNode(), let r = try? await run(.nodeNotFound, { try c.nodeDetail(id: g) }) { regions.insert(r.row.region) }
@@ -333,7 +335,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         return try await run(.sceneNotFound) { try c.scenes(nowMillis: now) }.map(CoreEngine.scene)
     }
 
-    private func bumpScenes() async {
+    func bumpScenes() async {
         let seq = locked { () -> Int in sceneReadSeq += 1; return sceneReadSeq }
         guard let v = try? await readScenes() else { return }
         locked {
@@ -470,7 +472,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
             return mockData ? await fallback.nodeIndex() : ZephyrKit.NodeIndex(total: 0, sections: [], testedCount: 0)
         }
         guard let i = try? await run(.nodeNotFound, { try c.nodeIndex() }) else { return ZephyrKit.NodeIndex(total: 0, sections: [], testedCount: 0) }
-        let tested = await runQuiet { c.testedCount(nowMillis: self.clock(), maxAgeMillis: CoreEngine.latencyFreshMillis) }
+        let fresh = latencyFreshMillis
+        let tested = await runQuiet { c.testedCount(nowMillis: self.clock(), maxAgeMillis: fresh) }
         return ZephyrKit.NodeIndex(total: Int64(i.total), sections: i.sections.map(CoreEngine.section), testedCount: Int64(tested))
     }
 
@@ -527,7 +530,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         return ZephyrKit.NodePage(rows: rows, offset: Int64(page.offset), total: Int64(page.total))
     }
 
-    static let latencyFreshMillis: Int64 = 24 * 3_600_000
+    /// 延迟结果的有效期 = 设置里的“延迟结果保留”（REVIEW-Q2 X-P1-5，此前写死 24 h）。
+    var latencyFreshMillis: Int64 { Int64(max(1, loadSettings().latencyTtlHours)) * 3_600_000 }
 
     public func node(id: NodeId) async throws -> ZephyrKit.NodeDetail {
         guard let c = await nodes() else {
@@ -965,11 +969,12 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         return await liveCommandSuggestions(input: input)
     }
 
-    /// 结果集里 24 h 内最快的节点（带延迟）；没有测速数据为 nil。
+    /// 结果集里有效期（设置“延迟结果保留”）内最快的节点（带延迟）；没有测速数据为 nil。
     func fastest(query: String) async -> NodeSummary? {
         guard let c = core else { return nil }
         let now = clock()
-        let top = await runQuiet { (try? c.fastestNodes(query: query, limit: 1, nowMillis: now, maxAgeMillis: CoreEngine.latencyFreshMillis)) ?? [] }
+        let fresh = latencyFreshMillis
+        let top = await runQuiet { (try? c.fastestNodes(query: query, limit: 1, nowMillis: now, maxAgeMillis: fresh)) ?? [] }
         guard let r = top.first, r.latencyMs > 0 else { return nil }
         var s = CoreEngine.row(r.row)
         s.latencyMs = r.latencyMs

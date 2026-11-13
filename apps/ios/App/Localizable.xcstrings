@@ -31,6 +31,16 @@
         }
       }
     },
+    "%1$@ 出口无响应，已自动切换到 %2$@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ exit wasn't responding. Switched to %2$@."
+          }
+        }
+      }
+    },
     "%1$@ 等 %2$lld 个" : {
       "localizations" : {
         "en" : {
@@ -127,6 +137,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ will stay the same."
+          }
+        }
+      }
+    },
+    "%@ 出口无响应，出口 IP 不会自动更换" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ exit isn't responding. The exit IP won't change automatically."
           }
         }
       }

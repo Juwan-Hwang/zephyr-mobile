@@ -1,6 +1,6 @@
 // 命令搜索（契约 §9）的真实实现：规则走 Rust 规则引擎、节点查询与最快节点走 mmap 节点库，≤ 8 条。
 // 规则与 Mock 一致：像域名/IP → test_rule；"全局/规则/直连" → switch_mode；"连接/断开" → toggle_connection；
-// 命中地区/城市/运营商/标签 → open_node_query + 该结果里 24 h 内最快节点 switch_node；页面名 → open_page。
+// 命中地区/城市/运营商/标签 → open_node_query + 该结果里有效期内最快节点 switch_node；页面名 → open_page。
 
 import Foundation
 import ZephyrKit
