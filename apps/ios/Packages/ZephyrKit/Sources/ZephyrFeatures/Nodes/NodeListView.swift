@@ -40,6 +40,7 @@ final class NodeListView: UIView, UICollectionViewDataSource, UICollectionViewDe
         self.style = NodeListStyle.make(traits: UITraitCollection.current, accent: ZTokens.Accent.blue.color)
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         super.init(frame: .zero)
+        registerForTraitChanges([UITraitPreferredContentSizeCategory.self, UITraitUserInterfaceStyle.self, UITraitDisplayScale.self]) { (self: NodeListView, _) in self.applyStyle() }
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false   // 物理指示条只反映窗口；位置看底部 “n / total” 与索引条
         collectionView.alwaysBounceVertical = true
@@ -144,16 +145,6 @@ final class NodeListView: UIView, UICollectionViewDataSource, UICollectionViewDe
             reconfigureVisible()
         }
         updateChrome()
-    }
-
-    override func traitCollectionDidChange(_ previous: UITraitCollection?) {
-        super.traitCollectionDidChange(previous)
-        guard let previous else { applyStyle(); return }
-        if previous.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory
-            || previous.userInterfaceStyle != traitCollection.userInterfaceStyle
-            || previous.displayScale != traitCollection.displayScale {
-            applyStyle()
-        }
     }
 
     // MARK: 布局

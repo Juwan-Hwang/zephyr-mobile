@@ -20,6 +20,7 @@ final class NodeCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        registerForTraitChanges([UITraitPreferredContentSizeCategory.self]) { (self: NodeCell, _) in self.setNeedsLayout() }
         contentView.layer.addSublayer(separator)
         contentView.layer.addSublayer(skeleton)
         skeleton.cornerRadius = 4
@@ -126,10 +127,5 @@ final class NodeCell: UICollectionViewCell {
             right -= pw + gap
         }
         nameLabel.frame = CGRect(x: lead + 2, y: 0, width: max(0, right - lead - 2), height: b.height).integral
-    }
-
-    override func traitCollectionDidChange(_ previous: UITraitCollection?) {
-        super.traitCollectionDidChange(previous)
-        setNeedsLayout()
     }
 }
