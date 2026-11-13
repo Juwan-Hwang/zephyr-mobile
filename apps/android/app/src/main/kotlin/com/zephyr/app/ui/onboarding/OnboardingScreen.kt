@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -47,11 +48,11 @@ import com.zephyr.design.format.ZFormat
 @Composable
 fun OnboardingScreen(onDone: () -> Unit) {
     val c = ZTheme.colors
-    var step by remember { mutableIntStateOf(0) }
-    var added by remember { mutableStateOf("") }
-    var url by remember { mutableStateOf("") }
-    var showField by remember { mutableStateOf(false) }
-    var mode by remember { mutableIntStateOf(1) }
+    var step by rememberSaveable { mutableIntStateOf(0) }
+    var added by rememberSaveable { mutableStateOf("") }
+    var url by rememberSaveable { mutableStateOf("") }
+    var showField by rememberSaveable { mutableStateOf(false) }
+    var mode by rememberSaveable { mutableIntStateOf(1) }
     var saving by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     // Review L-P1-2: same import path as the sheet; failures are shown; the chosen mode is written before finishing.

@@ -17,6 +17,7 @@
 - 第七批（PR agent/android/polish-p2a）：✅ W-P2-1（通知改用系统计时器显示时长；速率只在亮屏且 ≥2 s 才刷新，状态变化立即刷新；颜色跟随 App 主题色）；✅ W-P2-2（全局模式下磁贴/通知显示全局节点，直连不显示节点）；✅ A-P2-7（release 不再 profileable，仅 debug 清单保留）；✅ L-P2-4（节点测速同一时刻只跑一个，旧结果丢弃）；✅ L-P2-9（订阅页“…前更新/…后到期”每分钟刷新）；✅ H-P2-8/9 文案（“连接中…”、“刚刚检测/…前检测”）。本地 compileDebugKotlin 通过。
 - 第八批（PR agent/android/polish-p2b）：✅ A-P2-1（MainActivity 不再 runBlocking 读 DataStore，改为 lifecycleScope 异步读取后 setContent）；✅ A-P2-6（engine.connect() 失败也写入 FAILED + 错误码，首页显示原因而不是静默回到“未连接”）；W-P1-3 已确认 subtitle/startActivityAndCollapse 有 API 守卫。本地 compileDebugKotlin 通过。
 - 第九批（PR agent/android/today-h13）：✅ H-P2-13（今日页底色恒为黑色，页内按钮走深色主题、状态栏图标浅色；三套卡片底色改为原型 #02040A / #F6EEE6 / #ECEDEF；数字 84sp ExtraLight、单位 18sp）。流线动画（原型标注可选）未做。本地 compileDebugKotlin 通过。
+- 第十批（PR agent/android/polish-p2c）：✅ A-P2-4（首页各 sheet/指令层、引导步骤改 rememberSaveable，旋转/折叠/进程重建不丢）；✅ A-P2-5（首页列表底部留白叠加导航栏 inset）；✅ L-P2-13（PageScaffold 处理横屏挖孔水平 inset）；D-P1-1 复核：ZSheet 已有最大高度与正文滚动。本地 compileDebugKotlin 通过。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览

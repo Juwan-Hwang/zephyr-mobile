@@ -24,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -89,14 +90,15 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
     }
     ZephyrTheme(dark = dark, accent = ZAccent.valueOf(settings.accent.name)) {
         val nav = rememberNavController()
-        var library by remember { mutableStateOf(false) }
+        // Review A-P2-4: overlays survive rotation / fold / process death.
+        var library by rememberSaveable { mutableStateOf(false) }
         val backTo: (String) -> Unit = { label -> nav.popBackStack(); if (label == "资料库") library = true }
         var scene by remember { mutableStateOf<Scene?>(null) }
-        var activity by remember { mutableStateOf(false) }
-        var traceHost by remember { mutableStateOf<String?>(null) }
-        var command by remember { mutableStateOf(false) }
-        var import by remember { mutableStateOf(false) }
-        var importPrefill by remember { mutableStateOf<String?>(null) }
+        var activity by rememberSaveable { mutableStateOf(false) }
+        var traceHost by rememberSaveable { mutableStateOf<String?>(null) }
+        var command by rememberSaveable { mutableStateOf(false) }
+        var import by rememberSaveable { mutableStateOf(false) }
+        var importPrefill by rememberSaveable { mutableStateOf<String?>(null) }
         // A deep link only opens the sheet with the link filled in; the user still taps 添加 (review A-P1-4).
         androidx.compose.runtime.LaunchedEffect(pendingImport) {
             if (pendingImport != null) { importPrefill = pendingImport; import = true; onImportShown() }
