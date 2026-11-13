@@ -40,7 +40,7 @@ final class SharedBroadcast<Element: Sendable>: @unchecked Sendable {
             pump = Task { [weak self] in
                 for await value in source {
                     guard let self else { return }
-                    self.emit(value)
+                    self.emit(value, generation: mine)
                 }
                 self?.finishAll(generation: mine)
             }
@@ -50,8 +50,11 @@ final class SharedBroadcast<Element: Sendable>: @unchecked Sendable {
         return stream
     }
 
-    private func emit(_ value: Element) {
+    /// 只接受当前一代上游的值：最后一个订阅者离开后旧上游可能还有一个值在途，
+    /// 不能让它写进 latest 或发给新一代订阅者（PR #38 评审）。
+    private func emit(_ value: Element, generation g: Int) {
         lock.lock()
+        guard g == generation, pump != nil else { lock.unlock(); return }
         if replayLatest { latest = value }
         let targets = Array(subscribers.values)
         lock.unlock()

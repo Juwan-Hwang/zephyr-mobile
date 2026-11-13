@@ -34,6 +34,10 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     private var queryOrder: [UInt64] = []
     private var subsWatchers: [UUID: AsyncStream<[ZephyrKit.Subscription]>.Continuation] = [:]
     private var sceneWatchers: [UUID: AsyncStream<[ZephyrKit.Scene]>.Continuation] = [:]
+    /// 场景快照序号：每次读取前取号，发布时只接受比已发布更新的号，
+    /// 避免轮询中途读到的旧快照在 bumpScenes 发布新状态后再覆盖回去（PR #38 评审）。
+    private var sceneReadSeq = 0
+    private var scenePublishedSeq = 0
     var latencyWatchers: [UUID: AsyncStream<[LatencyUpdate]>.Continuation] = [:]
     private var settingsWatchers: [UUID: AsyncStream<ZephyrKit.Settings>.Continuation] = [:]
     private var globalWatchers: [UUID: AsyncStream<Void>.Continuation] = [:]
@@ -302,7 +306,16 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
             var last: [ZephyrKit.Scene]?
             while !Task.isCancelled {
                 if await self.nodes() != nil {
-                    if let v = try? await self.readScenes(), v != last { last = v; cont.yield(v) }
+                    let seq = self.locked { () -> Int in self.sceneReadSeq += 1; return self.sceneReadSeq }
+                    if let v = try? await self.readScenes(), v != last {
+                        let fresh = self.locked { () -> Bool in
+                            guard seq > self.scenePublishedSeq else { return false }
+                            self.scenePublishedSeq = seq
+                            cont.yield(v)
+                            return true
+                        }
+                        if fresh { last = v }
+                    }
                     try? await Task.sleep(nanoseconds: 5_000_000_000)
                 } else {
                     if last != [] { last = []; cont.yield([]) }
@@ -321,8 +334,13 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     }
 
     private func bumpScenes() async {
+        let seq = locked { () -> Int in sceneReadSeq += 1; return sceneReadSeq }
         guard let v = try? await readScenes() else { return }
-        for c in locked({ Array(sceneWatchers.values) }) { c.yield(v) }
+        locked {
+            guard seq > scenePublishedSeq else { return }   // 更新的读取已发布
+            scenePublishedSeq = seq
+            for c in sceneWatchers.values { c.yield(v) }
+        }
     }
 
     public func sceneCandidates(sceneId: String, region: String?) async throws -> [NodeSummary] {
