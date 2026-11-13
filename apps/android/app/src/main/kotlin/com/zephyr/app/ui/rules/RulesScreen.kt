@@ -29,6 +29,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.border
+import androidx.compose.ui.unit.sp
 import com.zephyr.app.di.AppGraph
 import com.zephyr.app.ui.common.PageScaffold
 import com.zephyr.design.components.ZCard
@@ -66,7 +69,7 @@ fun RulesScreen(initial: String, back: String = "资料库", onBack: () -> Unit)
             }
             ZText("${stats?.layers?.size ?: 7} 层 · 已编译 · 磁盘占用 ${ZFormat.bytesText(stats?.diskBytes ?: 0)}", Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
             Spacer(Modifier.height(18.dp))
-            ZSearchField(q, { q = it }, "输入域名或 IP", Modifier.padding(horizontal = 16.dp))
+            ZSearchField(q, { q = it }, "测试域名或 IP", Modifier.padding(horizontal = 16.dp))
             Spacer(Modifier.height(12.dp))
             ZCard(Modifier.padding(horizontal = 16.dp), padding = 18.dp) {
                 AnimatedContent(trace, transitionSpec = { fadeIn(ZAnim.standard()) togetherWith fadeOut(ZAnim.micro()) }, label = "trace") { t ->
@@ -99,7 +102,7 @@ private fun kindLabel(k: LayerKind) = when (k) { LayerKind.OVERRIDE -> "覆写";
 @Composable
 private fun LayerRow(ix: Int, name: String, note: String, kind: String?, count: String, hit: Boolean, accent: Boolean) {
     val c = ZTheme.colors
-    val bg by animateColorAsState(if (hit) c.accentSoft else c.bg.copy(alpha = 0f), ZAnim.standard(), label = "hit")
+    val bg by animateColorAsState(if (hit) c.accent.copy(alpha = 0.09f) else c.bg.copy(alpha = 0f), ZAnim.standard(), label = "hit")
     Row(Modifier.fillMaxWidth().background(bg).padding(horizontal = 18.dp, vertical = 14.dp), verticalAlignment = Alignment.CenterVertically) {
         ZText("$ix", Modifier.width(24.dp), style = ZTheme.type.mono, color = if (hit) c.accent else c.text3)
         Column(Modifier.weight(1f)) {
@@ -107,7 +110,8 @@ private fun LayerRow(ix: Int, name: String, note: String, kind: String?, count: 
             ZText(note, style = ZTheme.type.caption, color = c.text3, maxLines = 1)
         }
         if (kind != null) {
-            ZText(kind, Modifier.background(if (accent) c.accentSoft else c.surface3, ZTheme.shapes.control).padding(horizontal = 8.dp, vertical = 3.dp), style = ZTheme.type.caption, color = if (accent) c.accent else c.text2)
+            // Review L-P2-8: prototype layer tag is a 1px outline, 10px mono.
+            ZText(kind, Modifier.border(1.dp, if (accent) c.accent else c.hairlineStrong, ZTheme.shapes.control).padding(horizontal = 7.dp, vertical = 2.dp), style = ZTheme.type.monoSmall.copy(fontSize = 10.sp), color = if (accent) c.accent else c.text2)
             Spacer(Modifier.width(12.dp))
         }
         ZText(count, style = ZTheme.type.monoSmall, color = c.text2)
@@ -123,10 +127,10 @@ private fun Chain(t: RuleTrace, stats: RuleStats?) {
         if (layer != null) Step("第 ${layer.index + 1} 层 · ${layer.name}", t.rule, mono = true, badge = t.ruleNo?.let { "#" + ZFormat.grouped(it) })
         else Step("第 ${(stats?.layers?.size ?: 7) + 1} 层 · 其余流量", "MATCH", mono = true)
         when (t.policy) {
-            "DIRECT" -> Step("出口", "直连")
-            "REJECT" -> Step("结果", "已拦截")
+            "DIRECT" -> Step("出口", "直连", last = true)
+            "REJECT" -> Step("结果", "已拦截", last = true)
             else -> t.scene?.let { s ->
-                Step("场景 · ${s.name}", s.selected.name, region = s.selected.region)
+                Step("场景 · ${s.name}", s.selected.name, region = s.selected.region, last = t.exitIp == null)
                 t.exitIp?.let { Step("出口 IP", it, mono = true, last = true) }
             }
         }
@@ -138,10 +142,14 @@ private fun Chain(t: RuleTrace, stats: RuleStats?) {
 @Composable
 private fun Step(label: String, value: String, mono: Boolean = false, badge: String? = null, region: String? = null, last: Boolean = false) {
     val c = ZTheme.colors
-    Row(Modifier.fillMaxWidth().padding(bottom = 12.dp)) {
-        Box(Modifier.padding(top = 6.dp).size(7.dp).background(c.accent, CircleShape))
+    // Review L-P2-8: hollow dots joined by a vertical line; the final step is solid accent.
+    Row(Modifier.fillMaxWidth().height(androidx.compose.foundation.layout.IntrinsicSize.Min)) {
+        Box(Modifier.width(9.dp).fillMaxHeight()) {
+            if (!last) Box(Modifier.align(Alignment.TopCenter).padding(top = 14.dp).width(1.dp).fillMaxHeight().background(c.hairlineStrong))
+            Box(Modifier.align(Alignment.TopCenter).padding(top = 5.dp).size(9.dp).then(if (last) Modifier.background(c.accent, CircleShape) else Modifier.border(1.5.dp, c.text3, CircleShape)))
+        }
         Spacer(Modifier.width(12.dp))
-        Column(Modifier.weight(1f)) {
+        Column(Modifier.weight(1f).padding(bottom = 12.dp)) {
             ZText(label, style = ZTheme.type.caption, color = c.text3)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (region != null) { ZRegionBadge(region); Spacer(Modifier.width(8.dp)) }
@@ -150,6 +158,5 @@ private fun Step(label: String, value: String, mono: Boolean = false, badge: Str
         }
         if (badge != null) ZText(badge, style = ZTheme.type.monoSmall, color = c.text3)
     }
-    @Suppress("UNUSED_EXPRESSION") last
 }
 
