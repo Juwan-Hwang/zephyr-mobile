@@ -23,6 +23,7 @@
 - 2026-11-14 PR agent/ios/trace-live：[已修] X-P1-13（`ZephyrEngine.hostTrace(host:)` → MihomoClient.hostTrace；TraceSteps 以实测规则 / 场景 / 节点为准，“经由 <中间组>”，与预测规则不一致标“实际匹配”；lede 用实测连接数与流量）、X-P1-12 余项（`hostOverride(host:)` 回填覆写分段）。TraceStepsTests 补四例。
 
 - 2026-11-14 PR agent/ios/link-tests：X-P1-8 部分——新增不托管测试 target `ZephyrAppTests`，`SharedStatePublisherTests` 覆盖：显著变化判定（连接状态/模式、场景形状 vs 延迟数值）、场景截 4 个、断开速率归零且时间戳刷新、首写立即落盘 / 5 s 节流 / 显著变化带出排队速率、只合并脏字段、盘上更新的速率胜出并回填内存与 onChange、用量映射。AppServices 链接解析（`ImportRequest.subscriptionURL`）已由 `Shared/Tests/ImportRequestTests` 覆盖，核对确认。
+- 2026-11-14 PR agent/ios/no-color-only：X-P1-10 部分——「不以颜色区分」开启时 ZStatusDot 以形状编码三态（关空心环、开实心圆、覆盖色警示态实心菱形），首页连接点与订阅差异卡受益；延迟读数本身带数字/“超时”文字，无需改。
 
 - 2026-11-14 PR agent/ios/l10n-q2b（base #51）：X-P1-9 余项——指令预览卡标题/摘要/脚注、轨迹覆写分段“不变/直连”、节点索引条与地区筛选读屏、场景候选“固定”读屏、扫码取景框读屏、订阅卡“剩余”默认值、地区筛选“全部”改走 `ZL`，xcstrings 补英文。ErrorText/HFormat/AppShortcuts 已在先前批次完成（核对）。
 
@@ -42,7 +43,7 @@
 - **Q2-X-P1-7 PacketTunnel 内存与电量** [已修：IPv6 路由、睡眠定时器、MappedFile 映射读取配置] — 配置被复制 5–6 次；1 Hz 定时器睡眠时仍唤醒；IPv6 关闭时未声明 IPv6 路由导致绕过隧道（隐私泄露）。
 - **Q2-X-P1-8 测试不守门** — `__Snapshots__` 空且录制模式 missing，永不比对；快照 bundle 无 TEST_HOST；`layer.render` 丢模糊材质；容差 0.99/0.98 偏松；缺 AppModel、SharedStatePublisher、AppServices 链接解析、LiveActivity 测试；SPM target 无严格并发设置，App 仍 Swift 5 模式。
 - **Q2-X-P1-9 本地化** [部分已修] — App 与 Widgets 的 `Localizable.xcstrings` 已生成（zh-Hans 源 + en，373 key，含复数），`Text(verbatim:)` 用户文案已改可本地化，`InfoPlist.xcstrings`（相机/相册/本地网络说明）、project.yml `knownRegions`/`CFBundleLocalizations` 已加。剩余：返回 String 的文案（ErrorText、HFormat、ZSettingsRow(verbatim:)、AppShortcuts、Live Activity 状态文字）需改 `String(localized:)`；英文版快照；伪语言（加长）布局测试。
-- **Q2-X-P1-10 对比度与显示辅助** [部分已修：增强对比度；浅色 t3 基色等 A 的 tokens；降低透明度由系统材质处理] — 浅色 t3 仅 2.8:1、深色 3.7:1；不支持增强对比度、降低透明度、不以颜色区分。
+- **Q2-X-P1-10 对比度与显示辅助** [部分已修：增强对比度；不以颜色区分（ZStatusDot 关=空心环/开=实心圆/警示=菱形）；浅色 t3 基色等 A 的 tokens；降低透明度由系统材质处理] — 浅色 t3 仅 2.8:1、深色 3.7:1；不支持增强对比度、降低透明度、不以颜色区分。
 - **Q2-X-P1-11 “从桌面 Zephyr 导入”在真引擎必败** — `CoreEngine.swift:~529` 拒绝非 URL 二维码。
 - **Q2-X-P1-12 新接口未接 UI** [已修] — SceneSheet 来源分段 → `AppModel.setSceneSource`；TraceView 底部 `TraceOverrideSection` → `AppModel.overrideHost`（直连/场景、始终应用、撤销吐司）；`CoreEngine.connectionState()` 在全局模式补 `globalNodeId`（冷启动即有出口节点，setGlobalNode 后重发）；Scene.services 行此前已接。剩余：RuleAddSheet 接 overrideHost；~~`hostOverride` 读接口回填当前覆写~~ [已修：TraceOverrideSection 打开时回填分段与“始终应用”]。
 - **Q2-X-P1-13 连接轨迹用 App 侧 testRule 预测，不是 mihomo 实际匹配** [已修：隧道连接时用 MihomoClient.hostTrace 实测（规则、策略链、节点），预测仅作回落]。

@@ -1,4 +1,5 @@
 // 连接状态点（原型 `.wm i`）：关 = 20% 灰；开 = 绿色 + 4pt 浅绿外环。颜色变化 400ms 内淡入。
+// 「辅助功能 › 不以颜色区分」（X-P1-10）：关 = 空心环；开 = 实心圆；覆盖色（警示态）= 实心菱形——三态靠形状即可分辨。
 
 import SwiftUI
 
@@ -12,18 +13,37 @@ public struct ZStatusDot: View {
         self.color = color
     }
 
+    @Environment(\.accessibilityDifferentiateWithoutColor) private var noColorOnly
+
     public var body: some View {
         let on = color ?? ZSwitchColor.on
-        Circle()
-            .fill(isOn ? AnyShapeStyle(on) : AnyShapeStyle(ZQuaternaryText()))
-            .frame(width: ZMetrics.statusDot, height: ZMetrics.statusDot)
-            .background {
+        Group {
+            if noColorOnly {
+                shapeCoded(on: on)
+            } else {
                 Circle()
-                    .fill(on.opacity(isOn ? 0.14 : 0))
-                    .padding(-ZMetrics.statusRing)
+                    .fill(isOn ? AnyShapeStyle(on) : AnyShapeStyle(ZQuaternaryText()))
             }
-            .animation(ZMotion.standard, value: isOn)
-            .accessibilityHidden(true)
+        }
+        .frame(width: ZMetrics.statusDot, height: ZMetrics.statusDot)
+        .background {
+            Circle()
+                .fill(on.opacity(isOn ? 0.14 : 0))
+                .padding(-ZMetrics.statusRing)
+        }
+        .animation(ZMotion.standard, value: isOn)
+        .accessibilityHidden(true)
+    }
+
+    @ViewBuilder
+    private func shapeCoded(on: Color) -> some View {
+        if !isOn {
+            Circle().strokeBorder(ZQuaternaryText(), lineWidth: 1.5)
+        } else if color != nil {
+            Rectangle().fill(on).rotationEffect(.degrees(45)).scaleEffect(0.78)
+        } else {
+            Circle().fill(on)
+        }
     }
 }
 
