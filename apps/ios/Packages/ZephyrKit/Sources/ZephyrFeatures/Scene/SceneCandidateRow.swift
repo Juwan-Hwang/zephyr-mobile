@@ -47,7 +47,7 @@ struct SceneCandidateRow: View {
 
     private var a11y: String {
         var s = "\(HRegionName.name(node.region)) \(node.name)，\(ZFormat.latency(node.latencyMs))"
-        if let pinnedFor { s += "，\(pinnedFor) 固定" }
+        if let pinnedFor { s += ZL.s("，%@ 固定", pinnedFor) }
         return s
     }
 }

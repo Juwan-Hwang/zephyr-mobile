@@ -55,22 +55,22 @@ struct CommandPreviewCard: View {
 
     /// "Gemini 使用日本节点"；识别不出服务/地区时用引擎给的标题。
     private var title: String {
-        if let svc = parse.serviceName, let rg = parse.regionName { return "\(svc) 使用\(rg)节点" }
+        if let svc = parse.serviceName, let rg = parse.regionName { return ZL.s("%1$@ 使用%2$@节点", svc, rg) }
         return preview.suggestion.title
     }
 
     /// "3 个可用，将使用东京 03。"
     private var summary: String {
         guard let node = preview.node else { return preview.suggestion.subtitle ?? "" }
-        if let n = preview.candidateCount, n > 0 { return "\(n) 个可用，将使用\(node.name)。" }
-        return "将使用\(node.name)（\(ZFormat.latency(node.latencyMs))）。"
+        if let n = preview.candidateCount, n > 0 { return ZL.s("%1$@ 个可用，将使用%2$@。", "\(n)", node.name) }
+        return ZL.s("将使用%1$@（%2$@）。", node.name, ZFormat.latency(node.latencyMs))
     }
 
     /// "日本节点均不可用时，Gemini 将暂停。"（AI 场景）/ "…将使用场景中的其他节点。"（其他场景）
     private var footnote: String? {
         guard let rg = parse.regionName else { return nil }
-        if preview.sceneId == "ai", let svc = parse.serviceName { return "\(rg)节点均不可用时，\(svc) 将暂停。" }
-        if preview.sceneId != nil { return "\(rg)节点均不可用时，将使用场景中的其他节点。" }
+        if preview.sceneId == "ai", let svc = parse.serviceName { return ZL.s("%1$@节点均不可用时，%2$@ 将暂停。", rg, svc) }
+        if preview.sceneId != nil { return ZL.s("%@节点均不可用时，将使用场景中的其他节点。", rg) }
         return nil
     }
 }

@@ -4,6 +4,7 @@
 // 与 ZGroupCard 一样不带背景：放进 `ZCard(padding: 0)`，行间 ZDivider。AX 尺寸上下堆叠。
 
 import SwiftUI
+import ZephyrKit
 
 public struct ZProfileCard: View {
     private let name: String
@@ -24,7 +25,7 @@ public struct ZProfileCard: View {
     public init(name: String,
                 detail: String? = nil,
                 remaining: String? = nil,
-                remainingCaption: String? = "剩余",
+                remainingCaption: String? = ZL.tr("剩余"),
                 usage: Double? = nil,
                 isWarning: Bool = false,
                 showsChevron: Bool = false) {
