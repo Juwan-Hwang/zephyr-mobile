@@ -20,6 +20,8 @@
 - 2026-11-09 PR agent/ios/review-q2g：X-P1-8 部分（ZephyrKit/ZephyrMock 开启 StrictConcurrency 完整检查，零警告）。
 - 2026-11-14 PR agent/ios/review-q2i：[已修] X-P1-3 余项（`SharedBroadcast(replayLatest:)`：场景与连接状态流共享一个上游，场景只有一份 5 s 轮询，晚到订阅者立即拿到最新值；单测补回放/不回放两例）。
 
+- 2026-11-14 PR agent/ios/link-tests：X-P1-8 部分——新增不托管测试 target `ZephyrAppTests`，`SharedStatePublisherTests` 覆盖：显著变化判定（连接状态/模式、场景形状 vs 延迟数值）、场景截 4 个、断开速率归零且时间戳刷新、首写立即落盘 / 5 s 节流 / 显著变化带出排队速率、只合并脏字段、盘上更新的速率胜出并回填内存与 onChange、用量映射。AppServices 链接解析（`ImportRequest.subscriptionURL`）已由 `Shared/Tests/ImportRequestTests` 覆盖，核对确认。
+
 ## P0
 
 - **Q2-X-P0-1 无隐私清单** [已修] — `App/` `PacketTunnel/` `Widgets/` 各加 `PrivacyInfo.xcprivacy`（UserDefaults CA92.1、文件时间戳 C617.1、磁盘空间 85F4.1、系统启动时间 35F9.1；不追踪、不收集）。随 target 资源打包。
