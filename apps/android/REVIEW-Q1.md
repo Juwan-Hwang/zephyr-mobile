@@ -28,6 +28,7 @@
 - 第十八批（PR agent/android/confirm-h6）：✅ H-P2-6（出口确认卡实色 s3 + hl 描边、圆角 16、内边距 14、标题 14sp、6dp 琥珀点；IP 行箭头 t4、目标 IP t1；按钮 40dp 胶囊、间距 8、触控区 48；无受影响服务时文案改“更改 X 场景的出口 IP？”）。快照未覆盖确认态，无基线变化。
 - 第十九批（PR agent/android/segmented-d6）：✅ D-P2-6（ZSegmented 对齐原型 `.seg`：外圆角 13、内边距 3、段高 34、13.5sp；滑块圆角 10 + 柔和投影；滑动 .32s `--e` 曲线无回弹）。重录 trace 两张基线。
 - 第二十批（PR agent/android/rows-xl-l3）：✅ L-P2-3（大字模式 fontScale≥1.3，与 SceneCard 同阈值：节点行/分区头高 66（`rowHeightLarge`），隐藏协议列，延迟列 66；常规模式仍 52，节点页基线不变）。
+- 第二十一批（PR agent/android/search-l7）：✅ L-P2-7 大部（“N 个 · 耗时”移入搜索框右侧 mono 12 t3，ZSearchField 新增 `trailing`；吸顶分区头 86% 底；索引条每个字母可被 TalkBack 读出并点按跳转）。余项：吸顶头背景模糊（Compose 无背景模糊）、气泡“位置 / 总数”格式。重录 nodesSearch 两张基线。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览
