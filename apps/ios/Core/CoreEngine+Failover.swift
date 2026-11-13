@@ -75,7 +75,7 @@ extension CoreEngine {
             let group = sc.group
             guard let tested = try? await mihomo(path, {
                 try $0.testGroup(group: group, url: CoreEngine.failoverProbeURL, timeoutMs: 5000)
-                    .map { (name: $0.name, ms: $0.latencyMs) }
+                    .map { (name: $0.name, ms: Int($0.latencyMs ?? 0)) }
             }) else { continue }
             // 全组都不通：探测本身不可用，不算节点失败。
             guard tested.contains(where: { $0.ms > 0 }) else { continue }
