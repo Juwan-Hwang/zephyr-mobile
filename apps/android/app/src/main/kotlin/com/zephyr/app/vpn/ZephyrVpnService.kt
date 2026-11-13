@@ -71,13 +71,28 @@ class ZephyrVpnService : VpnService() {
     private fun watch() {
         watcher?.cancel()
         watcher = scope.launch {
+            val power = getSystemService(android.os.PowerManager::class.java)
+            var lastKey: Any? = null
+            var lastAt = 0L
             combine(
                 engine.connectionState(),
                 engine.traffic().onStart { emit(TrafficSample(0, 0, 0)) },
                 engine.scenes(),
-            ) { c, t, sc -> Triple(c, t, sc) }.collect { (c, t, sc) ->
+                engine.settings(),
+            ) { c, t, sc, st -> arrayOf(c, t, sc, st) }.collect { a ->
+                val c = a[0] as com.zephyr.engine.ConnectionState
+                val t = a[1] as TrafficSample
+                @Suppress("UNCHECKED_CAST") val sc = a[2] as List<com.zephyr.engine.Scene>
+                val st = a[3] as com.zephyr.engine.Settings
                 if (c.status == ConnectionStatus.DISCONNECTED) return@collect
-                val n: Notification = Notifications.ongoing(this@ZephyrVpnService, c, t, sc, connecting = c.status == ConnectionStatus.CONNECTING)
+                // Review W-P2-1: state changes (mode, exits, accent) always post; pure speed samples only while the
+                // screen is on and at most every MIN_POST_MS, so a locked phone isn't woken every second.
+                val key = listOf(c.status, c.mode, c.globalNodeId, c.since, sc.map { it.selected.id }, st.accent)
+                val now = android.os.SystemClock.elapsedRealtime()
+                if (key == lastKey && (!power.isInteractive || now - lastAt < Notifications.MIN_POST_MS)) return@collect
+                lastKey = key; lastAt = now
+                val global = if (c.mode == com.zephyr.engine.ProxyMode.GLOBAL) c.globalNodeId?.let { id -> runCatching { engine.node(id).summary.name }.getOrNull() } else null
+                val n: Notification = Notifications.ongoing(this@ZephyrVpnService, c, t, sc, connecting = c.status == ConnectionStatus.CONNECTING, accent = st.accent, globalNode = global)
                 postOngoing(n)
             }
         }

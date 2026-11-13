@@ -10,6 +10,8 @@ import androidx.core.app.NotificationCompat
 import com.zephyr.app.MainActivity
 import com.zephyr.app.R
 import com.zephyr.design.format.ZFormat
+import androidx.compose.ui.graphics.toArgb
+import com.zephyr.design.theme.darkVariant
 import com.zephyr.engine.ConnectionState
 import com.zephyr.engine.ProxyMode
 import com.zephyr.engine.Scene
@@ -18,13 +20,15 @@ import com.zephyr.engine.TrafficSample
 /**
  * Ongoing notification copy follows prototype `and`:
  * title "Zephyr · 2:14:07", text "2.8 MB/s ↓ · 194 KB/s ↑", big text adds "AI 东京 03 · 视频 香港 HKT · 其他 TW-Fixed-01",
- * actions 断开连接 / 全局模式. Silent, low importance, no badge — it updates every second.
+ * actions 断开连接 / 全局模式. Silent, low importance, no badge. Uptime is a chronometer; the speed line is re-posted
+ * only while the screen is on and at most every [MIN_POST_MS].
  */
 object Notifications {
     const val CH_VPN = "vpn"
     const val CH_ALERTS = "alerts"
     const val ID_ONGOING = 1
     const val ID_EXPIRY = 2
+    const val MIN_POST_MS = 2_000L
 
     fun ensureChannels(ctx: Context) {
         val nm = ctx.getSystemService(NotificationManager::class.java)
@@ -40,7 +44,10 @@ object Notifications {
         )
     }
 
-    fun ongoing(ctx: Context, c: ConnectionState?, t: TrafficSample?, scenes: List<Scene>, connecting: Boolean): Notification {
+    fun ongoing(
+        ctx: Context, c: ConnectionState?, t: TrafficSample?, scenes: List<Scene>, connecting: Boolean,
+        accent: com.zephyr.engine.Accent = com.zephyr.engine.Accent.BLUE, globalNode: String? = null,
+    ): Notification {
         val open = PendingIntent.getActivity(ctx, 0, Intent(ctx, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         val b = NotificationCompat.Builder(ctx, CH_VPN)
             .setSmallIcon(R.drawable.ic_stat_zephyr)
@@ -51,17 +58,19 @@ object Notifications {
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .setContentIntent(open)
-            .setColor(0xFF0A84FF.toInt())
+            // Follows the App's accent (review W-P2-4).
+            .setColor(com.zephyr.design.tokens.ZAccent.valueOf(accent.name).darkVariant().toArgb())
         if (connecting || c == null) {
-            return b.setContentTitle("Zephyr").setContentText("正在连接…").build()
+            return b.setContentTitle("Zephyr").setContentText("连接中…").build()
         }
-        val uptime = c.since?.let { ZFormat.duration(System.currentTimeMillis() - it) } ?: ""
         val down = t?.let { ZFormat.rate(it.downBps) } ?: ("0" to "B")
         val up = t?.let { ZFormat.rate(it.upBps) } ?: ("0" to "B")
         val speed = "${down.first} ${down.second}/s ↓ · ${up.first} ${up.second}/s ↑"
-        val route = if (c.mode == ProxyMode.GLOBAL) "全局 · 所有流量经由同一节点" else scenes.joinToString(" · ") { "${it.name} ${it.selected.name}" }
+        val route = if (c.mode == ProxyMode.GLOBAL) "全局 · ${globalNode ?: "所有流量经由同一节点"}" else scenes.joinToString(" · ") { "${it.name} ${it.selected.name}" }
+        // Uptime is a system chronometer (review W-P2-1): it ticks without us re-posting the notification every second.
+        c.since?.let { b.setWhen(it).setShowWhen(true).setUsesChronometer(true) }
         return b
-            .setContentTitle(if (uptime.isNotEmpty()) "Zephyr · $uptime" else "Zephyr")
+            .setContentTitle("Zephyr")
             .setContentText(speed)
             .setStyle(NotificationCompat.BigTextStyle().bigText("$speed\n$route"))
             .addAction(0, ctx.getString(R.string.action_disconnect), action(ctx, ZephyrVpnService.ACTION_DISCONNECT))

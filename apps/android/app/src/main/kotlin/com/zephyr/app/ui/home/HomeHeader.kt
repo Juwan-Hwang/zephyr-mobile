@@ -89,7 +89,7 @@ fun HomeStatus(
                 ZText(
                     when (s) {
                         ConnectionStatus.CONNECTED -> "已连接"
-                        ConnectionStatus.CONNECTING -> "正在连接"
+                        ConnectionStatus.CONNECTING -> "连接中"
                         ConnectionStatus.DISCONNECTING -> "正在断开"
                         ConnectionStatus.FAILED -> "连接失败"
                         ConnectionStatus.DISCONNECTED -> "未连接"
