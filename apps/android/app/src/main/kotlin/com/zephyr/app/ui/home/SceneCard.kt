@@ -1,5 +1,8 @@
 package com.zephyr.app.ui.home
 
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.unit.em
+import androidx.compose.ui.unit.sp
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -155,7 +158,7 @@ private fun SceneRow(
                 )
             }
             .zPressable(label = "${s.name} 场景详情", onClick = onOpen)
-            .padding(horizontal = 18.dp, vertical = 18.dp),
+            .padding(horizontal = 16.dp, vertical = 15.dp), // review H-P2-4: `.row` 15/16
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // Prototype 19 (xl): at large font sizes the row stacks — name, count, [badge] node, pin line — left-aligned,
@@ -163,8 +166,9 @@ private fun SceneRow(
         val stacked = androidx.compose.ui.platform.LocalDensity.current.fontScale >= 1.3f
         val lines = if (stacked) 2 else 1
         val left: @Composable (Modifier) -> Unit = { m -> Column(m) {
-            ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight, fontSize = ZTheme.type.headline.fontSize * 1.1f), maxLines = lines)
-            Spacer(Modifier.height(6.dp))
+            // Review H-P2-4: prototype `.row .n` 17 / −0.01em, `.m` 13 with 3 px gap, `.ex` 15, `.pin` 12 with 5 px gap.
+            ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight, fontSize = 17.sp, letterSpacing = (-0.01).em), maxLines = lines)
+            Spacer(Modifier.height(3.dp))
             val down = s.services.filter { !it.ok }
             ZText(
                 when {
@@ -172,7 +176,7 @@ private fun SceneRow(
                     s.source == SceneSource.SUBSCRIPTION_GROUP -> "订阅分组"
                     else -> "${s.available} 个可用"
                 },
-                style = ZTheme.type.callout, color = if (down.isNotEmpty()) c.danger else c.text3, maxLines = lines,
+                style = ZTheme.type.callout.copy(fontSize = 13.sp), color = if (down.isNotEmpty()) c.danger else c.text3, maxLines = lines,
             )
         }
         }
@@ -185,7 +189,7 @@ private fun SceneRow(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     ZRegionBadge(n.region, Modifier.graphicsLayer { scaleX = pop.value; scaleY = pop.value }, active = scrubbing)
                     Spacer(Modifier.width(10.dp))
-                    ZText(n.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight), maxLines = lines)
+                    ZText(n.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight, fontSize = 15.sp), maxLines = lines)
                 }
             }
             // Prototype 11 (zero): "Claude 不可用" left, "GPT、Gemini 正常" right, replacing the pin line.
@@ -193,10 +197,10 @@ private fun SceneRow(
             val serviceLine = if (s.services.any { !it.ok } && up.isNotEmpty()) "${up.joinToString("、") { it.name }} 正常" else null
             val sub = serviceLine ?: s.exceptions.firstOrNull()?.let { "${it.app}：${it.node.name}" } ?: s.note
             if (sub != null) {
-                Spacer(Modifier.height(6.dp))
+                Spacer(Modifier.height(5.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (serviceLine == null && s.exceptions.isNotEmpty()) { ZIcon(ZIcons.Lock, tint = c.warning, size = 13.dp); Spacer(Modifier.width(6.dp)) }
-                    ZText(sub, style = ZTheme.type.callout, color = c.text3, maxLines = lines)
+                    if (serviceLine == null && s.exceptions.isNotEmpty()) { ZIcon(ZIcons.Lock, Modifier.alpha(0.85f), tint = c.warning, size = 12.dp); Spacer(Modifier.width(6.dp)) }
+                    ZText(sub, style = ZTheme.type.callout.copy(fontSize = 12.sp), color = c.text3, maxLines = lines)
                 }
             }
         }
