@@ -22,6 +22,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.ui.layout.layout
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -70,21 +73,19 @@ fun SceneCard(
     var hinted by remember(hint.seen) { mutableStateOf(hint.seen) }
     ZCard(Modifier.padding(horizontal = 16.dp)) {
         scenes.forEachIndexed { i, s ->
-            if (i > 0 && (scenes[i - 1].kind != SceneKind.AI || pending?.scene?.id == scenes[i - 1].id)) ZDivider(inset = false)
+            if (i > 0) {
+                ZDivider(inset = false)
+                // Review H-P2-5: prototype `.coach` (122) floats on the divider under the AI row, masking it with the
+                // card colour and nudging 6 dp left every 2.4 s; it takes no height, so the card never grows.
+                val prev = scenes[i - 1]
+                if (prev.kind == SceneKind.AI && !hinted && pending == null) ScrubCoach()
+            }
             if (s.source != SceneSource.SUBSCRIPTION_GROUP) androidx.compose.runtime.LaunchedEffect(s.id, s.selected.id, s.source) { onPrefetch(s) }
             SceneRow(
                 s, slots[s.id].orEmpty(), pendingNode = pending?.takeIf { it.scene.id == s.id }?.node,
                 onScrubStart = { if (!hinted) { hinted = true; hint.markSeen() }; if (pending != null) onCancel() },
                 onPick = { n -> onPick(s, n) }, onOpen = { onOpen(s) },
             )
-            if (s.kind == SceneKind.AI && !hinted && pending == null) {
-                ZText(
-                    "左右滑动以切换地区",
-                    Modifier.fillMaxWidth().padding(bottom = 6.dp),
-                    style = ZTheme.type.footnote.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center),
-                    color = ZTheme.colors.accent,
-                )
-            }
             AnimatedVisibility(
                 pending?.scene?.id == s.id,
                 enter = expandVertically(ZAnim.slow()) + fadeIn(ZAnim.standard()),
@@ -249,4 +250,34 @@ private fun ExitConfirm(p: PendingChange, onConfirm: () -> Unit, onCancel: () ->
             ZButton("取消", onCancel, Modifier.weight(1f), kind = ZButtonKind.Secondary)
         }
     }
+}
+
+@Composable
+private fun ScrubCoach() {
+    val nudge = androidx.compose.animation.core.rememberInfiniteTransition(label = "coach")
+    val dx by nudge.animateFloat(
+        0f, 0f,
+        androidx.compose.animation.core.infiniteRepeatable(
+            androidx.compose.animation.core.keyframes {
+                durationMillis = 2400
+                0f at 0; -6f at 720; 0f at 2400
+            },
+        ),
+        label = "nudge",
+    )
+    ZText(
+        "左右滑动以切换地区",
+        Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(Alignment.CenterHorizontally)
+            .layout { m, c ->
+                val p = m.measure(c.copy(minHeight = 0, maxHeight = androidx.compose.ui.unit.Constraints.Infinity))
+                layout(c.maxWidth, 0) { p.place((c.maxWidth - p.width) / 2, -p.height / 2) }
+            }
+            .graphicsLayer { translationX = dx * density }
+            .background(ZTheme.colors.surface2)
+            .padding(horizontal = 8.dp),
+        style = ZTheme.type.footnote.copy(fontSize = androidx.compose.ui.unit.TextUnit(11f, androidx.compose.ui.unit.TextUnitType.Sp)),
+        color = ZTheme.colors.accent,
+    )
 }

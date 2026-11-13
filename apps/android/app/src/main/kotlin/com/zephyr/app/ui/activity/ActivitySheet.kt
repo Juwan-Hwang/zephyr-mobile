@@ -28,11 +28,23 @@ import com.zephyr.design.theme.ZTheme
 
 /** "最近连接" (prototype `actSheet`): recent hosts aggregated by domain; tap → trace. Android can name the app. */
 @Composable
-fun BoxScope.ActivitySheet(visible: Boolean, onDismiss: () -> Unit, onHost: (String) -> Unit) {
+fun BoxScope.ActivitySheet(visible: Boolean, onDismiss: () -> Unit, trace: String? = null, onHost: (String?) -> Unit) {
     val flow = remember { AppGraph.engine.recentHosts(5) }
     val hosts by flow.collectWhile(visible, emptyList())
     val c = ZTheme.colors
-    ZSheet(visible, onDismiss, "最近连接") {
+    // Review H-P2-9: like the prototype, tapping a host turns this same sheet into its trace (one scrim, one sheet);
+    // back / "‹ 最近连接" returns to the list, "完成" or the scrim closes everything.
+    ZSheet(visible, onDismiss, if (trace == null) "最近连接" else "") {
+        if (trace != null) {
+            androidx.activity.compose.BackHandler { onHost(null) }
+            ZText(
+                "‹ 最近连接",
+                Modifier.padding(start = 10.dp).zPressable(label = "返回最近连接") { onHost(null) }.padding(horizontal = 12.dp, vertical = 8.dp),
+                style = ZTheme.type.body, color = c.accent,
+            )
+            TraceBody(trace)
+            return@ZSheet
+        }
         if (hosts.isEmpty()) {
             ZText("连接后这里会显示最近访问的域名。", Modifier.padding(22.dp), style = ZTheme.type.footnote, color = c.text3)
             return@ZSheet
