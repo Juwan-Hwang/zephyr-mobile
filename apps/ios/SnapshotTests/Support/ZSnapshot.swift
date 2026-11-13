@@ -2,15 +2,15 @@
 //
 // 与库自带 assertSnapshot 的区别：
 //  1. 参考图缺失时录制并 **不判失败**（首跑 CI / 新增用例不会红），图同时作为 XCTAttachment 进 xcresult；
-//     参考图存在时正常断言（precision 0.99 / perceptual 0.98，容忍不同机器的抗锯齿差异）。
+//     参考图存在时正常断言（precision 0.995 / perceptual 0.99；参考图由 CI 同一模拟器录制，只需容忍抗锯齿抖动）。
 //  2. 自己托管渲染：UIHostingController 放进 393×852（iPhone 16）的 UIWindow，等 `.task` / 异步数据落定
 //     （`settle`）后再用 layer.render 出图。库的 `.image(on:)` 不会等 `.task`，NodesView / RulesView 会拍成空页。
 //  3. 参考图统一放 SnapshotTests/__Snapshots__/<测试文件名>/<测试名>.<名字>.png（与库默认命名规则一致）。
 //
-// 录制模式：环境变量 ZEPHYR_SNAPSHOT_RECORD（优先）或 SNAPSHOT_RECORD（scheme 的 test action 已设为 missing）
+// 录制模式：环境变量 ZEPHYR_SNAPSHOT_RECORD（优先）或 SNAPSHOT_RECORD（scheme 的 test action 设为 never：参考图已入库）
 //   missing（默认）缺图录制、不失败；有图断言
 //   all             全部重录、不失败（改了视觉之后用）
-//   never           缺图直接失败（参考图入库后可在 CI 打开，防止漏录）
+//   never           缺图直接失败（scheme 默认；新增用例本地用 TEST_RUNNER_ZEPHYR_SNAPSHOT_RECORD=missing 录制后入库）
 
 import SnapshotTesting
 import SwiftUI
@@ -66,8 +66,8 @@ enum ZSnapshotLayout: Sendable {
 enum ZSnapshotConfig {
     /// 出图倍率。固定 2x：与模拟器无关、参考图体积可控（3x 约大 2.25 倍）。
     static let scale: CGFloat = 2
-    static let precision: Float = 0.99
-    static let perceptualPrecision: Float = 0.98
+    static let precision: Float = 0.995
+    static let perceptualPrecision: Float = 0.99
 
     enum Record: String { case missing, all, never }
 
