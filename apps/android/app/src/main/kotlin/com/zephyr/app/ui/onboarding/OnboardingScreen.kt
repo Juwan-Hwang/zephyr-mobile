@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.zephyr.app.di.AppGraph
 import com.zephyr.design.components.ZButton
+import com.zephyr.design.components.ZButtonSize
 import com.zephyr.design.components.ZSearchField
 import com.zephyr.design.components.ZText
 import com.zephyr.design.components.zPressable
@@ -99,7 +100,7 @@ fun OnboardingScreen(onDone: () -> Unit) {
                     applyOnboardingMode(simple = mode == 0)
                     AppGraph.settings.setOnboarded(); onDone()
                 }
-            }, Modifier.fillMaxWidth().padding(horizontal = 16.dp), enabled = !saving)
+            }, Modifier.fillMaxWidth().padding(horizontal = 16.dp), enabled = !saving, size = ZButtonSize.Large)
             ZText("可随时在设置中更改。", Modifier.fillMaxWidth().padding(12.dp), style = ZTheme.type.footnote.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = c.text3)
         }
     }
