@@ -6,6 +6,7 @@
 
 import UIKit
 import ZephyrDesign
+import ZephyrKit
 
 final class NodeIndexRail: UIView {
     enum Phase { case began, changed, ended }
@@ -29,9 +30,9 @@ final class NodeIndexRail: UIView {
         isMultipleTouchEnabled = false
         isExclusiveTouch = true
         isAccessibilityElement = true
-        accessibilityLabel = "地区索引"
+        accessibilityLabel = ZL.tr("地区索引")
         accessibilityTraits = .adjustable
-        accessibilityHint = "上下轻扫切换地区"
+        accessibilityHint = ZL.tr("上下轻扫切换地区")
     }
 
     @available(*, unavailable) required init?(coder: NSCoder) { fatalError() }

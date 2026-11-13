@@ -31,6 +31,26 @@
         }
       }
     },
+    "%1$@ 个可用，将使用%2$@。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ available. Will use %2$@."
+          }
+        }
+      }
+    },
+    "%1$@ 使用%2$@节点" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ via %2$@ nodes"
+          }
+        }
+      }
+    },
     "%1$@ 出口无响应，已自动切换到 %2$@" : {
       "localizations" : {
         "en" : {
@@ -47,6 +67,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@, %2$lld networks"
+          }
+        }
+      }
+    },
+    "%1$@节点均不可用时，%2$@ 将暂停。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If all %1$@ nodes are down, %2$@ will pause."
+          }
+        }
+      }
+    },
+    "%1$@，%2$@个节点" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@, %2$@ nodes"
           }
         }
       }
@@ -1819,6 +1859,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import subscription?"
+          }
+        }
+      }
+    },
+    "将使用%1$@（%2$@）。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Will use %1$@ (%2$@)."
           }
         }
       }

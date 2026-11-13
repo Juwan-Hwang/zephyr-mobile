@@ -12,7 +12,7 @@ struct RegionChips: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: ZTokens.Space.n3) {
-                chip(code: "", title: "全部", count: nil)
+                chip(code: "", title: ZL.tr("全部"), count: nil)
                 ForEach(sections) { s in
                     chip(code: s.region, title: s.region, count: CompactCount.chip(s.count))
                 }
@@ -48,7 +48,7 @@ struct RegionChips: View {
             .padding(.vertical, ZTokens.Space.n1)   // 触控区扩到 ≥ 38pt，视觉仍为 30pt
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(count.map { "\(title)，\($0)个节点" } ?? title)
+        .accessibilityLabel(count.map { ZL.s("%1$@，%2$@个节点", title, "\($0)") } ?? title)
         .accessibilityAddTraits(on ? .isSelected : [])
     }
 }

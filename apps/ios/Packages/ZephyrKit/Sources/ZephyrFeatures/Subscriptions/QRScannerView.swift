@@ -3,6 +3,7 @@
 import AVFoundation
 import SwiftUI
 import UIKit
+import ZephyrKit
 
 struct QRScannerView: UIViewRepresentable {
     let scanner: QRCodeScanner
@@ -18,7 +19,7 @@ struct QRScannerView: UIViewRepresentable {
         v.previewLayer.videoGravity = .resizeAspectFill
         v.backgroundColor = .black
         v.isAccessibilityElement = true
-        v.accessibilityLabel = "相机取景框"
+        v.accessibilityLabel = ZL.tr("相机取景框")
         return v
     }
 

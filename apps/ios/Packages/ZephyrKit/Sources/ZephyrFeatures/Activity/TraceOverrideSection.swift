@@ -26,8 +26,8 @@ struct TraceOverrideSection: View {
     private static let maxScenes = 2
 
     private var segments: [ZSegment<Target>] {
-        var out = [ZSegment(Target.unchanged, verbatim: "不变")]
-        if currentSceneId?.uppercased() != "DIRECT" { out.append(ZSegment(.direct, verbatim: "直连")) }
+        var out = [ZSegment(Target.unchanged, verbatim: ZL.tr("不变"))]
+        if currentSceneId?.uppercased() != "DIRECT" { out.append(ZSegment(.direct, verbatim: ZL.tr("直连"))) }
         for s in model.scenes.filter({ $0.id != currentSceneId }).prefix(Self.maxScenes) {
             out.append(ZSegment(.scene(s.id), verbatim: s.name))
         }
