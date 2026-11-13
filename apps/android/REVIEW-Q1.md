@@ -23,6 +23,7 @@
 - 第十三批（PR agent/android/design-d2）：✅ D-P2-10（ZProgressBar 2dp、底色 hl）；✅ D-P2-11 尺寸部分（单位与上行速率 13sp）；✅ D-P2-5（ZChip 30dp 高、13sp、未选中 t2）；✅ D-P2-8（小号地区徽标 600 10.5sp、圆角 5、min 28×20）；✅ H-P2-7（首页订阅 2–6 天内到期显示星期“周一到期”；订阅名 16、剩余 15、到期 12；超过 3 个时显示“更多 N 个订阅”）；快照已重录（本地 Paparazzi verify 通过）。
 - 第十四批（PR agent/android/activity-h9）：✅ H-P2-9 文案部分（活动 sheet 标题改“最近连接”，副标题分隔符改“ · ”）；快照已重录。轨迹改为同一 sheet 内切换仍待做。
 - 第十五批（PR agent/android/light-t3-baseline，配合 A 的 #37）：✅ 小组件浅色 t3 跟随 tokens screen.t3 0.55（0x8C000000）；按新 t3 重录 13 张浅色 Paparazzi 基线，深色基线不变；本地 verify/record 通过。
+- 第十六批（PR agent/android/coach-h5）：✅ H-P2-5 剩余（滑动提示改为浮在 AI 行下分隔线上、卡片色遮线、2.4 s 左推 6dp，不再撑高卡片；分隔线恒在，提示消失后不再丢线；已读状态此前已持久化）；✅ H-P2-9 剩余（轨迹在“最近连接”同一张 sheet 内打开，单层遮罩，返回键/“‹ 最近连接”回列表）。首页 10 张快照已重录。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览
