@@ -76,15 +76,15 @@ final class AppServices {
     /// clash://install-config?url=<订阅地址>[&name=…]、mihomo://install-config?url=…
     /// 只弹出确认（显示域名；http 另加警告），用户点“导入”后才真正导入。zephyr:// 交给 RootView 里的 AppModel.handle(url:)，这里忽略。
     func handleExternal(url: URL, model: AppModel) {
-        guard let payload = Self.subscriptionURL(from: url) else { return }
-        importPrompt.request = ImportRequest(payload: payload)
+        guard let request = ImportRequest.from(url: url) else { return }
+        importPrompt.request = request
     }
 
     func confirmImport(_ request: ImportRequest, model: AppModel) {
         importPrompt.request = nil
         Task {
             do {
-                _ = try await engine.importSubscription(source: .url, payload: request.payload)
+                _ = try await engine.importSubscription(source: request.isDesktopSync ? .qr : .url, payload: request.payload)
                 model.push(.subscriptions)
             } catch let error as ZephyrError {
                 model.lastError = error
