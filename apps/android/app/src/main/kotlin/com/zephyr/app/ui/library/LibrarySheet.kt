@@ -31,9 +31,12 @@ enum class LibraryDest { Nodes, Subscriptions, Rules, Scenes, Settings, Widgets,
 @Composable
 fun BoxScope.LibrarySheet(visible: Boolean, onDismiss: () -> Unit, onOpen: (LibraryDest) -> Unit) {
     val e = AppGraph.engine
-    val nodes by produceState(0L, visible) { if (visible) value = runCatching { e.nodeIndex().total }.getOrDefault(value) }
-    val subs by produceState(0, visible) { if (visible) value = runCatching { e.subscriptionsSummary().count }.getOrDefault(value) }
-    val rules by produceState(0L, visible) { if (visible) value = runCatching { e.ruleStats().total }.getOrDefault(value) }
+    // Review L-P2-2: counts re-read whenever the subscription list changes while the sheet is open (import / update /
+    // delete), not just once per open. The list flow is only collected while visible (H-P1-6).
+    val subList by remember { e.subscriptions() }.collectWhile(visible, emptyList())
+    val nodes by produceState(0L, visible, subList) { if (visible) value = runCatching { e.nodeIndex().total }.getOrDefault(value) }
+    val subs by produceState(0, visible, subList) { if (visible) value = runCatching { e.subscriptionsSummary().count }.getOrDefault(value) }
+    val rules by produceState(0L, visible, subList) { if (visible) value = runCatching { e.ruleStats().total }.getOrDefault(value) }
     val scenes by remember { e.scenes() }.collectWhile(visible, emptyList())
     val settings by e.settings().collectAsState(Settings())
     ZSheet(visible, onDismiss, "资料库") {
