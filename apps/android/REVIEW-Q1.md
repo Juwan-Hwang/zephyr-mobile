@@ -35,6 +35,7 @@
 - 第二十四批（PR agent/android/scene-type-h4）：✅ H-P2-4（场景行名称 17/−0.01em、元信息 13（间距 3）、节点 15、锁定说明 12（间距 5）、锁图标 12dp ×0.85 透明；行内边距 15/16）。重录 home 十张基线。
 - 第二十六批（PR agent/android/sheet-d3）：✅ D-P2-3（Sheet 遮罩改黑色 50%、浅色 30%（`.veil` ×0.6），不再用乳白 cmdbg；顶边 1dp `--hl2` 线；标题 500）。重录含 Sheet 的基线。
 - 第二十七批（PR agent/android/library-l2）：✅ L-P2-2（资料库计数在 sheet 打开期间随订阅列表变化重取——导入/更新/删除后即时刷新；仅可见时收集）。文案“小组件与快捷开关”保留（Android 无控制中心），入口进设置页的小组件/快捷开关说明。
+- 第二十八批（PR agent/android/onboarding-l11）：✅ L-P2-11（引导页加品牌标 `.obmk`；标题 300 34/1.18 −0.03em；选项卡 s1 底、选中 7% 强调色底 + 单选圆点 `.rd`（选中 7dp 实边），`Role.RadioButton` + selected 语义；第 2 步系统返回回到第 1 步；步骤状态 rememberSaveable，旋转不丢）。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览
