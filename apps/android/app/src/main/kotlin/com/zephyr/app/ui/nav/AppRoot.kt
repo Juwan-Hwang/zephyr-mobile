@@ -72,9 +72,21 @@ import kotlinx.coroutines.launch
 
 /** Root: theme from settings, nav graph, and the home-level overlays (library, scene, activity, command, import). */
 @Composable
-fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean) {
+fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport: String? = null, onImportShown: () -> Unit = {}) {
     val settings by AppGraph.engine.settings().collectAsState(Settings())
     val dark = when (settings.appearance) { Appearance.SYSTEM -> isSystemInDarkTheme(); Appearance.DARK -> true; Appearance.LIGHT -> false }
+    // System bar icons follow the App's appearance, not the system's (review A-P1-1): a forced light App on a dark
+    // system would otherwise draw white status icons on #F2F2F7.
+    val view = androidx.compose.ui.platform.LocalView.current
+    if (!view.isInEditMode) {
+        androidx.compose.runtime.SideEffect {
+            val window = (view.context as? android.app.Activity)?.window ?: return@SideEffect
+            androidx.core.view.WindowCompat.getInsetsController(window, view).apply {
+                isAppearanceLightStatusBars = !dark
+                isAppearanceLightNavigationBars = !dark
+            }
+        }
+    }
     ZephyrTheme(dark = dark, accent = ZAccent.valueOf(settings.accent.name)) {
         val nav = rememberNavController()
         var library by remember { mutableStateOf(false) }
@@ -84,6 +96,11 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean) {
         var traceHost by remember { mutableStateOf<String?>(null) }
         var command by remember { mutableStateOf(false) }
         var import by remember { mutableStateOf(false) }
+        var importPrefill by remember { mutableStateOf<String?>(null) }
+        // A deep link only opens the sheet with the link filled in; the user still taps 添加 (review A-P1-4).
+        androidx.compose.runtime.LaunchedEffect(pendingImport) {
+            if (pendingImport != null) { importPrefill = pendingImport; import = true; onImportShown() }
+        }
         val home: HomeViewModel = viewModel { HomeViewModel() }
 
         Box(Modifier.fillMaxSize().background(ZTheme.colors.bg)) {
@@ -148,7 +165,7 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean) {
             )
             ActivitySheet(activity, { activity = false }) { traceHost = it }
             TraceSheet(traceHost) { traceHost = null }
-            ImportSheet(import, { import = false }) { import = false }
+            ImportSheet(import, { import = false; importPrefill = null }, prefill = importPrefill) { import = false; importPrefill = null; home.notify(it) }
             // Toasts sit above every sheet and the command layer, so an undo or a failover notice is never hidden.
             val toast by home.toast.collectAsStateWithLifecycle()
             ZToast(

@@ -21,12 +21,8 @@ class ConnectionController(private val context: Context, private val engine: Zep
 
     fun connect() {
         if (permissionIntent() != null) {
-            // Surfaces without an Activity (tile/widget) bounce through MainActivity to ask.
-            context.startActivity(
-                Intent(context, com.zephyr.app.MainActivity::class.java)
-                    .setAction(com.zephyr.app.MainActivity.ACTION_CONNECT)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-            )
+            // Surfaces without an Activity (tile/widget) bounce through the non-exported consent trampoline.
+            context.startActivity(Intent(context, VpnPermissionActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
             return
         }
         ContextCompat.startForegroundService(context, Intent(context, ZephyrVpnService::class.java).setAction(ZephyrVpnService.ACTION_CONNECT))

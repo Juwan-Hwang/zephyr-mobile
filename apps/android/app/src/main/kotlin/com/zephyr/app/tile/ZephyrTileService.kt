@@ -52,8 +52,7 @@ class ZephyrTileService : TileService() {
         AppGraph.init(this)
         if (AppGraph.connection.permissionIntent() != null) {
             // Needs an Activity to grant VPN permission.
-            val intent = android.content.Intent(this, com.zephyr.app.MainActivity::class.java)
-                .setAction(com.zephyr.app.MainActivity.ACTION_CONNECT)
+            val intent = android.content.Intent(this, com.zephyr.app.vpn.VpnPermissionActivity::class.java)
                 .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
             if (android.os.Build.VERSION.SDK_INT >= 34) {
                 startActivityAndCollapse(

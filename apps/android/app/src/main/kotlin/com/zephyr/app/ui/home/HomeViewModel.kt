@@ -244,6 +244,9 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         }
     }
 
+    /** Plain notice without undo (e.g. "已添加 Orbit（512 个节点）" after an import, review L-P2-12). */
+    fun notify(msg: String) = showToast(msg, null, null)
+
     private fun showToast(msg: String, sceneId: String?, prev: NodeId?, undo: (suspend () -> Unit)? = null) {
         toastJob?.cancel()
         val serial = ++toastSerial
