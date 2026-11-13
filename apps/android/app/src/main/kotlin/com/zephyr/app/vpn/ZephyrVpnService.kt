@@ -63,7 +63,12 @@ class ZephyrVpnService : VpnService() {
                     fail(com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.CORE_CRASHED, err)); return@launch
                 }
             }
-            runCatching { engine.connect() }.onFailure { stop(); return@launch }
+            runCatching { engine.connect() }.onFailure { t ->
+                // Review A-P2-6: surface why, instead of silently falling back to "未连接".
+                val e = (t as? com.zephyr.engine.ZephyrException)?.error
+                    ?: com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.CORE_CRASHED, t.message ?: t.javaClass.simpleName)
+                fail(e); return@launch
+            }
             watch()
         }
     }
