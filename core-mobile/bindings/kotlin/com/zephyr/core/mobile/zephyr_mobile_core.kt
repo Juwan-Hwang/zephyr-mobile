@@ -875,6 +875,8 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -1043,6 +1045,8 @@ internal interface UniffiLib : Library {
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_func_core_greeting(uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_func_parse_import_payload(`payload`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun ffi_zephyr_mobile_core_rustbuffer_alloc(`size`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun ffi_zephyr_mobile_core_rustbuffer_from_bytes(`bytes`: ForeignBytes.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -1156,6 +1160,8 @@ internal interface UniffiLib : Library {
     fun ffi_zephyr_mobile_core_rust_future_complete_void(`handle`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
     fun uniffi_zephyr_mobile_core_checksum_func_core_greeting(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_func_parse_import_payload(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_active_connections(
     ): Short
@@ -1313,6 +1319,9 @@ private fun uniffiCheckContractApiVersion(lib: UniffiLib) {
 @Suppress("UNUSED_PARAMETER")
 private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_func_core_greeting() != 3481.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_func_parse_import_payload() != 49370.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_active_connections() != 8862.toShort()) {
@@ -4114,6 +4123,83 @@ public object FfiConverterTypeHostTrace: FfiConverterRustBuffer<HostTrace> {
 
 
 
+data class ImportItem (
+    /**
+     * 订阅名；载荷未给则 None（平台层用脱敏 URL 兜底，与 importSubscription 一致）
+     */
+    var `name`: kotlin.String?, 
+    /**
+     * 完整订阅 URL（仅 http/https）
+     */
+    var `url`: kotlin.String, 
+    /**
+     * 自动更新间隔（小时）；载荷未给则 None（平台层用默认值）
+     */
+    var `autoUpdateHours`: kotlin.Int?
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeImportItem: FfiConverterRustBuffer<ImportItem> {
+    override fun read(buf: ByteBuffer): ImportItem {
+        return ImportItem(
+            FfiConverterOptionalString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterOptionalInt.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ImportItem) = (
+            FfiConverterOptionalString.allocationSize(value.`name`) +
+            FfiConverterString.allocationSize(value.`url`) +
+            FfiConverterOptionalInt.allocationSize(value.`autoUpdateHours`)
+    )
+
+    override fun write(value: ImportItem, buf: ByteBuffer) {
+            FfiConverterOptionalString.write(value.`name`, buf)
+            FfiConverterString.write(value.`url`, buf)
+            FfiConverterOptionalInt.write(value.`autoUpdateHours`, buf)
+    }
+}
+
+
+
+data class ImportPayload (
+    var `kind`: ImportPayloadKind, 
+    var `items`: List<ImportItem>
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeImportPayload: FfiConverterRustBuffer<ImportPayload> {
+    override fun read(buf: ByteBuffer): ImportPayload {
+        return ImportPayload(
+            FfiConverterTypeImportPayloadKind.read(buf),
+            FfiConverterSequenceTypeImportItem.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ImportPayload) = (
+            FfiConverterTypeImportPayloadKind.allocationSize(value.`kind`) +
+            FfiConverterSequenceTypeImportItem.allocationSize(value.`items`)
+    )
+
+    override fun write(value: ImportPayload, buf: ByteBuffer) {
+            FfiConverterTypeImportPayloadKind.write(value.`kind`, buf)
+            FfiConverterSequenceTypeImportItem.write(value.`items`, buf)
+    }
+}
+
+
+
 data class LatencySample (
     var `id`: kotlin.ULong, 
     /**
@@ -5596,6 +5682,46 @@ public object FfiConverterTypeGroupType: FfiConverterRustBuffer<GroupType> {
 
 
 
+enum class ImportPayloadKind {
+    
+    /**
+     * zephyr://import（桌面同步）
+     */
+    ZEPHYR,
+    /**
+     * clash:// / clashmeta:// / mihomo:// install-config
+     */
+    CLASH_INSTALL,
+    /**
+     * 裸 http(s) 链接
+     */
+    URL;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeImportPayloadKind: FfiConverterRustBuffer<ImportPayloadKind> {
+    override fun read(buf: ByteBuffer) = try {
+        ImportPayloadKind.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: ImportPayloadKind) = 4UL
+
+    override fun write(value: ImportPayloadKind, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+
 enum class LayerKind {
     
     OVERRIDE,
@@ -6738,6 +6864,34 @@ public object FfiConverterSequenceTypeHostActivity: FfiConverterRustBuffer<List<
 /**
  * @suppress
  */
+public object FfiConverterSequenceTypeImportItem: FfiConverterRustBuffer<List<ImportItem>> {
+    override fun read(buf: ByteBuffer): List<ImportItem> {
+        val len = buf.getInt()
+        return List<ImportItem>(len) {
+            FfiConverterTypeImportItem.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<ImportItem>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeImportItem.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<ImportItem>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeImportItem.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterSequenceTypeLatencySample: FfiConverterRustBuffer<List<LatencySample>> {
     override fun read(buf: ByteBuffer): List<LatencySample> {
         val len = buf.getInt()
@@ -7197,6 +7351,19 @@ public object FfiConverterMapStringString: FfiConverterRustBuffer<Map<kotlin.Str
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_func_core_greeting(
         _status)
+}
+    )
+    }
+    
+
+        /**
+         * contract §15：`parseImportPayload(payload) -> ImportPayload`。无法识别 / 校验失败 → `Invalid` / `SubscriptionInvalid`。
+         */
+    @Throws(MobileException::class) fun `parseImportPayload`(`payload`: kotlin.String): ImportPayload {
+            return FfiConverterTypeImportPayload.lift(
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_func_parse_import_payload(
+        FfiConverterString.lower(`payload`),_status)
 }
     )
     }

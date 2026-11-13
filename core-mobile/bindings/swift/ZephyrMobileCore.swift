@@ -2870,6 +2870,164 @@ public func FfiConverterTypeHostTrace_lower(_ value: HostTrace) -> RustBuffer {
 }
 
 
+public struct ImportItem {
+    /**
+     * 订阅名；载荷未给则 None（平台层用脱敏 URL 兜底，与 importSubscription 一致）
+     */
+    public var name: String?
+    /**
+     * 完整订阅 URL（仅 http/https）
+     */
+    public var url: String
+    /**
+     * 自动更新间隔（小时）；载荷未给则 None（平台层用默认值）
+     */
+    public var autoUpdateHours: Int32?
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(
+        /**
+         * 订阅名；载荷未给则 None（平台层用脱敏 URL 兜底，与 importSubscription 一致）
+         */name: String?, 
+        /**
+         * 完整订阅 URL（仅 http/https）
+         */url: String, 
+        /**
+         * 自动更新间隔（小时）；载荷未给则 None（平台层用默认值）
+         */autoUpdateHours: Int32?) {
+        self.name = name
+        self.url = url
+        self.autoUpdateHours = autoUpdateHours
+    }
+}
+
+
+
+extension ImportItem: Equatable, Hashable {
+    public static func ==(lhs: ImportItem, rhs: ImportItem) -> Bool {
+        if lhs.name != rhs.name {
+            return false
+        }
+        if lhs.url != rhs.url {
+            return false
+        }
+        if lhs.autoUpdateHours != rhs.autoUpdateHours {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(url)
+        hasher.combine(autoUpdateHours)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeImportItem: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ImportItem {
+        return
+            try ImportItem(
+                name: FfiConverterOptionString.read(from: &buf), 
+                url: FfiConverterString.read(from: &buf), 
+                autoUpdateHours: FfiConverterOptionInt32.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: ImportItem, into buf: inout [UInt8]) {
+        FfiConverterOptionString.write(value.name, into: &buf)
+        FfiConverterString.write(value.url, into: &buf)
+        FfiConverterOptionInt32.write(value.autoUpdateHours, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeImportItem_lift(_ buf: RustBuffer) throws -> ImportItem {
+    return try FfiConverterTypeImportItem.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeImportItem_lower(_ value: ImportItem) -> RustBuffer {
+    return FfiConverterTypeImportItem.lower(value)
+}
+
+
+public struct ImportPayload {
+    public var kind: ImportPayloadKind
+    public var items: [ImportItem]
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(kind: ImportPayloadKind, items: [ImportItem]) {
+        self.kind = kind
+        self.items = items
+    }
+}
+
+
+
+extension ImportPayload: Equatable, Hashable {
+    public static func ==(lhs: ImportPayload, rhs: ImportPayload) -> Bool {
+        if lhs.kind != rhs.kind {
+            return false
+        }
+        if lhs.items != rhs.items {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(kind)
+        hasher.combine(items)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeImportPayload: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ImportPayload {
+        return
+            try ImportPayload(
+                kind: FfiConverterTypeImportPayloadKind.read(from: &buf), 
+                items: FfiConverterSequenceTypeImportItem.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: ImportPayload, into buf: inout [UInt8]) {
+        FfiConverterTypeImportPayloadKind.write(value.kind, into: &buf)
+        FfiConverterSequenceTypeImportItem.write(value.items, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeImportPayload_lift(_ buf: RustBuffer) throws -> ImportPayload {
+    return try FfiConverterTypeImportPayload.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeImportPayload_lower(_ value: ImportPayload) -> RustBuffer {
+    return FfiConverterTypeImportPayload.lower(value)
+}
+
+
 public struct LatencySample {
     public var id: UInt64
     /**
@@ -5898,6 +6056,86 @@ extension GroupType: Equatable, Hashable {}
 // Note that we don't yet support `indirect` for enums.
 // See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
 
+public enum ImportPayloadKind {
+    
+    /**
+     * zephyr://import（桌面同步）
+     */
+    case zephyr
+    /**
+     * clash:// / clashmeta:// / mihomo:// install-config
+     */
+    case clashInstall
+    /**
+     * 裸 http(s) 链接
+     */
+    case url
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeImportPayloadKind: FfiConverterRustBuffer {
+    typealias SwiftType = ImportPayloadKind
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ImportPayloadKind {
+        let variant: Int32 = try readInt(&buf)
+        switch variant {
+        
+        case 1: return .zephyr
+        
+        case 2: return .clashInstall
+        
+        case 3: return .url
+        
+        default: throw UniffiInternalError.unexpectedEnumCase
+        }
+    }
+
+    public static func write(_ value: ImportPayloadKind, into buf: inout [UInt8]) {
+        switch value {
+        
+        
+        case .zephyr:
+            writeInt(&buf, Int32(1))
+        
+        
+        case .clashInstall:
+            writeInt(&buf, Int32(2))
+        
+        
+        case .url:
+            writeInt(&buf, Int32(3))
+        
+        }
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeImportPayloadKind_lift(_ buf: RustBuffer) throws -> ImportPayloadKind {
+    return try FfiConverterTypeImportPayloadKind.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeImportPayloadKind_lower(_ value: ImportPayloadKind) -> RustBuffer {
+    return FfiConverterTypeImportPayloadKind.lower(value)
+}
+
+
+
+extension ImportPayloadKind: Equatable, Hashable {}
+
+
+
+// Note that we don't yet support `indirect` for enums.
+// See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
+
 public enum LayerKind {
     
     case override
@@ -7078,6 +7316,31 @@ fileprivate struct FfiConverterSequenceTypeHostActivity: FfiConverterRustBuffer 
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterSequenceTypeImportItem: FfiConverterRustBuffer {
+    typealias SwiftType = [ImportItem]
+
+    public static func write(_ value: [ImportItem], into buf: inout [UInt8]) {
+        let len = Int32(value.count)
+        writeInt(&buf, len)
+        for item in value {
+            FfiConverterTypeImportItem.write(item, into: &buf)
+        }
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [ImportItem] {
+        let len: Int32 = try readInt(&buf)
+        var seq = [ImportItem]()
+        seq.reserveCapacity(Int(len))
+        for _ in 0 ..< len {
+            seq.append(try FfiConverterTypeImportItem.read(from: &buf))
+        }
+        return seq
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterSequenceTypeLatencySample: FfiConverterRustBuffer {
     typealias SwiftType = [LatencySample]
 
@@ -7484,6 +7747,16 @@ public func coreGreeting() -> String {
     )
 })
 }
+/**
+ * contract §15：`parseImportPayload(payload) -> ImportPayload`。无法识别 / 校验失败 → `Invalid` / `SubscriptionInvalid`。
+ */
+public func parseImportPayload(payload: String)throws  -> ImportPayload {
+    return try  FfiConverterTypeImportPayload.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_func_parse_import_payload(
+        FfiConverterString.lower(payload),$0
+    )
+})
+}
 
 private enum InitializationResult {
     case ok
@@ -7501,6 +7774,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.contractVersionMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_func_core_greeting() != 3481) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_func_parse_import_payload() != 49370) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_active_connections() != 8862) {
