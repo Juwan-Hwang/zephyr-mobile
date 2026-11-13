@@ -18,6 +18,7 @@
 - 2026-11-09 PR agent/ios/review-q2e 续（快照首批人工审核，取自 harvest 的 115 张 CI 渲染图）：对照 design/prototype/shots 发现并修复——① 快照渲染器重复计入模拟器安全区（页面标题下移约 59pt、小组件上下被裁）：改为量出宿主自带安全区后只补差值；② 速率数字/曲线/延迟药丸在截图瞬间处于 numericText 滚动与缓入中（“2.8”的 8 模糊、曲线几乎平）：新增环境值 `zStaticRendering`（仅快照注入）关闭这些动画，并在渲染期间关闭 UIKit 动画；③ 小组件“x 分钟前”随真实时钟变化，快照夹具去掉该行；④ 首页顶栏/底部指令栏在 AX5 下占据半屏：限定到 AX2/AX1；⑤ 节点行协议列（TUIC/Hy2…）在截图中缺失：加 NodeCellTests 断言布局（若 CI 失败再追根）。其余页面（资料库、规则、设置、订阅、引导、今日卡、锁屏/灵动岛）与原型一致，待重录后入库。快照入库仍需再取一轮干净图（修复 ①② 之后）。
 - 2026-11-09 SharedBroadcast：上游流改为 subscribe 内同步创建，修复 CI 红的 testTwoSubscribersShareOneUpstream。
 - 2026-11-09 PR agent/ios/review-q2g：X-P1-8 部分（ZephyrKit/ZephyrMock 开启 StrictConcurrency 完整检查，零警告）。
+- 2026-11-14 PR agent/ios/review-q2i：[已修] X-P1-3 余项（`SharedBroadcast(replayLatest:)`：场景与连接状态流共享一个上游，场景只有一份 5 s 轮询，晚到订阅者立即拿到最新值；单测补回放/不回放两例）。
 
 ## P0
 
@@ -28,7 +29,7 @@
 
 - **Q2-X-P1-1 任意链接静默导入订阅** [已修] — `App/AppServices.swift:~202`：`clash://` / `mihomo://install-config` 无确认、接受明文 http。建议先弹审核 sheet（域名、协议、http 警告）。
 - **Q2-X-P1-2 App 覆盖隧道写的共享状态** — 〔A 已在 #23 修复并经 B 复核〕保留编号。
-- **Q2-X-P1-3 每秒重载 VPN 配置** [部分已修：manager 缓存；事件流重复订阅待做] — `TunnelController.activeSession` 每条 provider 消息都 loadAllFromPreferences；`SharedStatePublisher` 常驻流量订阅；场景/设置/连接流被 AppModel、Publisher、LibraryModel 重复订阅。建议缓存 manager，由 AppModel 扇出。
+- **Q2-X-P1-3 每秒重载 VPN 配置** [已修：manager 缓存；流量/场景/连接状态流经 SharedBroadcast 共享上游；设置/订阅流为推送式无轮询] — `TunnelController.activeSession` 每条 provider 消息都 loadAllFromPreferences；`SharedStatePublisher` 常驻流量订阅；场景/设置/连接流被 AppModel、Publisher、LibraryModel 重复订阅。建议缓存 manager，由 AppModel 扇出。
 - **Q2-X-P1-4 withDeadline 超时无效** [已修] — 任务组会等全部子任务；改为两个非结构化任务竞速 + 一次性 continuation（`CoreEngine+Live.swift`），单测 `CoreTests/WithDeadlineTests.swift`。
 - **Q2-X-P1-5 多项设置不生效** [部分已修：自动更新、按需连接、受信任 Wi‑Fi] — 按需连接 / 受信任 Wi‑Fi 自动断开（无 NEOnDemandRule）、订阅自动更新（dueSubscriptions/后台任务未用）、仅 Wi‑Fi 测速、延迟 TTL 写死、自动故障转移（reportSceneProbe 未调用）；场景 sheet “每日检测”不属实。
 - **Q2-X-P1-6 控制中心/小组件连接用旧配置** [已修] — `TunnelController.setConnected` 不重新生成 config.yaml，首次从小组件连接失败；`reloadTunnelIfRunning` 断开时不写配置。
