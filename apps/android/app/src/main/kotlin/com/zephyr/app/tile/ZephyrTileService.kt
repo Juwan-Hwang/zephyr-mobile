@@ -32,9 +32,14 @@ class ZephyrTileService : TileService() {
                 tile.label = getString(R.string.app_name)
                 tile.icon = Icon.createWithResource(this@ZephyrTileService, R.drawable.ic_stat_zephyr)
                 val mode = when (c.mode) { ProxyMode.RULE -> "规则"; ProxyMode.GLOBAL -> "全局"; ProxyMode.DIRECT -> "直连" }
-                val node = scenes.firstOrNull()?.selected?.name
+                // Global mode routes everything through the GLOBAL node, not the first scene's exit (review W-P2-2).
+                val node = when (c.mode) {
+                    ProxyMode.GLOBAL -> c.globalNodeId?.let { id -> runCatching { AppGraph.engine.node(id).summary.name }.getOrNull() }
+                    ProxyMode.DIRECT -> null
+                    ProxyMode.RULE -> scenes.firstOrNull()?.selected?.name
+                }
                 val sub = when (c.status) {
-                    ConnectionStatus.CONNECTING -> "正在连接…"
+                    ConnectionStatus.CONNECTING -> "连接中…"
                     ConnectionStatus.CONNECTED -> listOfNotNull(mode, node).joinToString(" · ")
                     else -> getString(R.string.tile_off)
                 }

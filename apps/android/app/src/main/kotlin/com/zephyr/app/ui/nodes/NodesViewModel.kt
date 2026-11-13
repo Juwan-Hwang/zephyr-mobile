@@ -14,6 +14,7 @@ import com.zephyr.engine.RegionSection
 import com.zephyr.engine.ZephyrEngine
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -67,7 +68,7 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
             _ui.value = _ui.value.copy(total = idx.total, regionCount = idx.sections.size, testedCount = idx.testedCount, chips = chips, subscriptionCount = subs)
         }
         viewModelScope.launch {
-            queryFlow.debounce(80).distinctUntilChanged().collect { q -> if (q != null) run(q) }
+            queryFlow.debounce(80).distinctUntilChanged().collect { q -> if (q != null && q != lastRun) launchRun(q) }
         }
         viewModelScope.launch {
             engine.latencyUpdates().collect { batch ->
@@ -79,11 +80,23 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
 
     fun setQuery(q: String, immediate: Boolean = false) {
         _ui.value = _ui.value.copy(query = q)
-        if (immediate) viewModelScope.launch { run(q) } else queryFlow.value = q
+        queryFlow.value = q
+        if (immediate) launchRun(q)
+    }
+
+    // One query in flight at a time: a chip tap and the debounced text query used to race, and a slower earlier
+    // result could land last and overwrite the newer one (review L-P2-4).
+    private var runJob: Job? = null
+    private var lastRun: String? = null
+    private fun launchRun(q: String) {
+        runJob?.cancel()
+        lastRun = q
+        runJob = viewModelScope.launch { run(q) }
     }
 
     private suspend fun run(q: String) {
         val r = engine.queryNodes(q)
+        kotlinx.coroutines.currentCoroutineContext().ensureActive() // superseded by a newer query
         token = r.token
         pages.evictAll(); inflight.clear()
         _ui.value = _ui.value.copy(result = r)

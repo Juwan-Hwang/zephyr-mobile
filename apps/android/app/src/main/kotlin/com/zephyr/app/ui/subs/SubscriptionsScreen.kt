@@ -53,7 +53,8 @@ fun SubscriptionsScreen(back: String = "资料库", onBack: () -> Unit, onImport
     val summary by produceState(SubscriptionsSummary(0, 0), subs) { value = engine.subscriptionsSummary() }
     val scope = rememberCoroutineScope()
     val clock = com.zephyr.app.ui.common.LocalNow.current
-    val now = remember { clock() }
+    // Ticks once a minute so "2 小时前" / "26 天后到期" stay true while the page is open (review L-P2-9).
+    val now by androidx.compose.runtime.produceState(clock()) { while (true) { kotlinx.coroutines.delay(60_000); value = clock() } }
     var updating by remember { mutableStateOf(false) }
 
     PageScaffold(back, "订阅", onBack, trailing = { ZIconButton(ZIcons.Plus, "添加订阅", onImport, tint = c.accent) }) {

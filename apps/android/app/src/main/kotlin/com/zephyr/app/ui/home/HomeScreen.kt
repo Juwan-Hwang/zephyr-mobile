@@ -121,7 +121,7 @@ fun HomeContent(
             item("scenes-h") {
                 Spacer(Modifier.height(28.dp))
                 val tested = scenes.mapNotNull { it.testedAt }.maxOrNull()
-                ZSectionHeader("场景", trailing = if (conn.mode == ProxyMode.GLOBAL) null else tested?.let { ZFormat.ago(it, ui.now).replace("前", "前检测") })
+                ZSectionHeader("场景", trailing = if (conn.mode == ProxyMode.GLOBAL) null else tested?.let { ZFormat.ago(it, ui.now).let { a -> if (a == "刚刚") "刚刚检测" else a.replace("前", "前检测") } })
             }
             item("scenes") {
                 if (conn.mode == ProxyMode.GLOBAL) {
