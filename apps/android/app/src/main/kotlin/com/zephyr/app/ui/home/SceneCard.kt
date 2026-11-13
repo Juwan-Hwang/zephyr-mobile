@@ -220,34 +220,62 @@ private fun SceneRow(
 
 @Composable
 private fun ExitConfirm(p: PendingChange, onConfirm: () -> Unit, onCancel: () -> Unit) {
+    // Review H-P2-6: prototype `.cf` (129-133): solid s3 + 1 dp --hl border, radius 16, padding 14, 14 sp title,
+    // 6 dp amber dot, mono 12.5 IP line with a t4 arrow and the target IP in t1, 40 dp pill buttons 8 dp apart.
     val c = ZTheme.colors
     val apps = p.change.affectedApps
+    val shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
     Column(
         Modifier
-            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+            .padding(start = 16.dp, end = 16.dp, bottom = 14.dp)
             .fillMaxWidth()
-            .background(c.surface3.copy(alpha = 0.5f), ZTheme.shapes.surface)
-            .border(1.dp, c.hairlineStrong, ZTheme.shapes.surface)
-            .padding(16.dp),
+            .background(c.surface3, shape)
+            .border(1.dp, c.hairline, shape)
+            .padding(14.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.size(8.dp).background(c.warning, CircleShape))
-            Spacer(Modifier.width(10.dp))
+            Box(Modifier.size(6.dp).background(c.warning, CircleShape))
+            Spacer(Modifier.width(8.dp))
             ZText(
-                if (apps.isNotEmpty()) "更改 ${apps.joinToString(" 和 ")} 的出口 IP？" else "更改 ${p.scene.name} 的出口 IP？",
-                style = ZTheme.type.body,
+                if (apps.isNotEmpty()) "更改 ${apps.joinToString(" 和 ")} 的出口 IP？" else "更改 ${p.scene.name} 场景的出口 IP？",
+                style = ZTheme.type.body.copy(fontSize = androidx.compose.ui.unit.TextUnit(14f, androidx.compose.ui.unit.TextUnitType.Sp)),
             )
         }
-        Spacer(Modifier.height(8.dp))
-        ZText("${p.change.fromRegion} ${p.change.fromIp ?: "—"}  →  ${p.change.toRegion} ${p.change.toIp ?: "—"}", style = ZTheme.type.mono, color = c.text2)
+        Spacer(Modifier.height(6.dp))
+        val mono = ZTheme.type.mono.copy(fontSize = androidx.compose.ui.unit.TextUnit(12.5f, androidx.compose.ui.unit.TextUnitType.Sp))
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            ZText("${p.change.fromRegion} ${p.change.fromIp ?: "—"}", style = mono, color = c.text2, maxLines = 1)
+            ZText("→", style = mono, color = c.text4)
+            ZText("${p.change.toRegion} ${p.change.toIp ?: "—"}", style = mono, color = c.text1, maxLines = 1)
+        }
         if (p.change.unchangedApps.isNotEmpty()) {
             Spacer(Modifier.height(6.dp))
-            ZText("${p.change.unchangedApps.joinToString("、")} 保持不变。", style = ZTheme.type.footnote, color = c.text3)
+            ZText("${p.change.unchangedApps.joinToString("、")} 保持不变。", style = ZTheme.type.footnote.copy(fontSize = androidx.compose.ui.unit.TextUnit(12f, androidx.compose.ui.unit.TextUnitType.Sp)), color = c.text3)
         }
-        Spacer(Modifier.height(14.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            ZButton("更改", onConfirm, Modifier.weight(1f))
-            ZButton("取消", onCancel, Modifier.weight(1f), kind = ZButtonKind.Secondary)
+        Spacer(Modifier.height(8.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            CompactButton("更改", c.primaryButton, c.onPrimaryButton, onConfirm, Modifier.weight(1f))
+            CompactButton("取消", c.hairline, c.text1, onCancel, Modifier.weight(1f))
+        }
+    }
+}
+
+/** Prototype `.btn` (135): 40 dp pill, 14/500; the 48 dp touch target extends invisibly around it. */
+@Composable
+private fun CompactButton(text: String, bg: androidx.compose.ui.graphics.Color, fg: androidx.compose.ui.graphics.Color, onClick: () -> Unit, modifier: Modifier) {
+    Box(
+        modifier.height(48.dp).zPressable(label = text, onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        Box(Modifier.fillMaxWidth().height(40.dp).background(bg, ZTheme.shapes.pill), contentAlignment = Alignment.Center) {
+            ZText(
+                text,
+                style = ZTheme.type.body.copy(
+                    fontSize = androidx.compose.ui.unit.TextUnit(14f, androidx.compose.ui.unit.TextUnitType.Sp),
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
+                ),
+                color = fg,
+            )
         }
     }
 }
