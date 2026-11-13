@@ -50,6 +50,8 @@ jobs:
         run: node tokens/build.mjs --check
       - name: fixtures 与原型一致
         run: node tools/gen-mock-fixtures.js && git diff --exit-code contract/fixtures
+      - name: command parse fixtures match prototype
+        run: node tools/gen-command-parse-fixtures.mjs --check
   core:
     runs-on: ubuntu-latest
     steps:

@@ -1,0 +1,575 @@
+{
+  "$comment": "由 tools/gen-command-parse-fixtures.mjs 从原型 parse() 生成，勿手改。start/len 为 UTF-16 下标（本样本均为 BMP 字符，等同字符下标）。scope ∈ AI|视频|其他。见契约 §15.b。",
+  "version": 1,
+  "cases": [
+    {
+      "input": "Gemini 走日本",
+      "service": "Gemini",
+      "scope": "AI",
+      "region": {
+        "name": "日本",
+        "code": "JP"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 6,
+          "kind": "service",
+          "text": "Gemini"
+        },
+        {
+          "start": 8,
+          "len": 2,
+          "kind": "region",
+          "text": "日本"
+        }
+      ]
+    },
+    {
+      "input": "GitHub 直连",
+      "service": "GitHub",
+      "scope": "其他",
+      "region": null,
+      "action": "直连",
+      "tokens": [
+        {
+          "start": 0,
+          "len": 6,
+          "kind": "service",
+          "text": "GitHub"
+        },
+        {
+          "start": 7,
+          "len": 2,
+          "kind": "action",
+          "text": "直连"
+        }
+      ]
+    },
+    {
+      "input": "视频只用 4K 节点",
+      "service": "视频",
+      "scope": "视频",
+      "region": null,
+      "action": "4K",
+      "tokens": [
+        {
+          "start": 0,
+          "len": 2,
+          "kind": "service",
+          "text": "视频"
+        },
+        {
+          "start": 5,
+          "len": 2,
+          "kind": "action",
+          "text": "4K"
+        }
+      ]
+    },
+    {
+      "input": "香港",
+      "service": null,
+      "scope": null,
+      "region": {
+        "name": "香港",
+        "code": "HK"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 2,
+          "kind": "region",
+          "text": "香港"
+        }
+      ]
+    },
+    {
+      "input": "",
+      "service": null,
+      "scope": null,
+      "region": null,
+      "action": null,
+      "tokens": []
+    },
+    {
+      "input": "Claude 走美国",
+      "service": "Claude",
+      "scope": "AI",
+      "region": {
+        "name": "美国",
+        "code": "US"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 6,
+          "kind": "service",
+          "text": "Claude"
+        },
+        {
+          "start": 8,
+          "len": 2,
+          "kind": "region",
+          "text": "美国"
+        }
+      ]
+    },
+    {
+      "input": "ChatGPT 用新加坡",
+      "service": "GPT",
+      "scope": "AI",
+      "region": {
+        "name": "新加坡",
+        "code": "SG"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 7,
+          "kind": "service",
+          "text": "ChatGPT"
+        },
+        {
+          "start": 9,
+          "len": 3,
+          "kind": "region",
+          "text": "新加坡"
+        }
+      ]
+    },
+    {
+      "input": "netflix 香港",
+      "service": "Netflix",
+      "scope": "视频",
+      "region": {
+        "name": "香港",
+        "code": "HK"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 7,
+          "kind": "service",
+          "text": "netflix"
+        },
+        {
+          "start": 8,
+          "len": 2,
+          "kind": "region",
+          "text": "香港"
+        }
+      ]
+    },
+    {
+      "input": "YouTube 4K",
+      "service": "YouTube",
+      "scope": "视频",
+      "region": null,
+      "action": "4K",
+      "tokens": [
+        {
+          "start": 0,
+          "len": 7,
+          "kind": "service",
+          "text": "YouTube"
+        },
+        {
+          "start": 8,
+          "len": 2,
+          "kind": "action",
+          "text": "4K"
+        }
+      ]
+    },
+    {
+      "input": "Disney+ 台湾",
+      "service": "Disney+",
+      "scope": "视频",
+      "region": {
+        "name": "台湾",
+        "code": "TW"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 7,
+          "kind": "service",
+          "text": "Disney+"
+        },
+        {
+          "start": 8,
+          "len": 2,
+          "kind": "region",
+          "text": "台湾"
+        }
+      ]
+    },
+    {
+      "input": "telegram 直连",
+      "service": "Telegram",
+      "scope": "其他",
+      "region": null,
+      "action": "直连",
+      "tokens": [
+        {
+          "start": 0,
+          "len": 8,
+          "kind": "service",
+          "text": "telegram"
+        },
+        {
+          "start": 9,
+          "len": 2,
+          "kind": "action",
+          "text": "直连"
+        }
+      ]
+    },
+    {
+      "input": "奈飞 东京",
+      "service": "Netflix",
+      "scope": "视频",
+      "region": {
+        "name": "日本",
+        "code": "JP"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 2,
+          "kind": "service",
+          "text": "奈飞"
+        },
+        {
+          "start": 3,
+          "len": 2,
+          "kind": "region",
+          "text": "东京"
+        }
+      ]
+    },
+    {
+      "input": "油管 不走代理",
+      "service": "YouTube",
+      "scope": "视频",
+      "region": null,
+      "action": "直连",
+      "tokens": [
+        {
+          "start": 0,
+          "len": 2,
+          "kind": "service",
+          "text": "油管"
+        },
+        {
+          "start": 3,
+          "len": 4,
+          "kind": "action",
+          "text": "不走代理"
+        }
+      ]
+    },
+    {
+      "input": "谷歌AI 大阪",
+      "service": "Gemini",
+      "scope": "AI",
+      "region": {
+        "name": "日本",
+        "code": "JP"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 4,
+          "kind": "service",
+          "text": "谷歌AI"
+        },
+        {
+          "start": 5,
+          "len": 2,
+          "kind": "region",
+          "text": "大阪"
+        }
+      ]
+    },
+    {
+      "input": "GEMINI JAPAN",
+      "service": "Gemini",
+      "scope": "AI",
+      "region": {
+        "name": "日本",
+        "code": "JP"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 6,
+          "kind": "service",
+          "text": "GEMINI"
+        },
+        {
+          "start": 7,
+          "len": 5,
+          "kind": "region",
+          "text": "JAPAN"
+        }
+      ]
+    },
+    {
+      "input": "openai tokyo",
+      "service": "GPT",
+      "scope": "AI",
+      "region": {
+        "name": "日本",
+        "code": "JP"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 6,
+          "kind": "service",
+          "text": "openai"
+        },
+        {
+          "start": 7,
+          "len": 5,
+          "kind": "region",
+          "text": "tokyo"
+        }
+      ]
+    },
+    {
+      "input": "github direct",
+      "service": "GitHub",
+      "scope": "其他",
+      "region": null,
+      "action": "直连",
+      "tokens": [
+        {
+          "start": 0,
+          "len": 6,
+          "kind": "service",
+          "text": "github"
+        },
+        {
+          "start": 7,
+          "len": 6,
+          "kind": "action",
+          "text": "direct"
+        }
+      ]
+    },
+    {
+      "input": "视频 英国",
+      "service": "视频",
+      "scope": "视频",
+      "region": {
+        "name": "英国",
+        "code": "GB"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 2,
+          "kind": "service",
+          "text": "视频"
+        },
+        {
+          "start": 3,
+          "len": 2,
+          "kind": "region",
+          "text": "英国"
+        }
+      ]
+    },
+    {
+      "input": "gpt 伦敦",
+      "service": "GPT",
+      "scope": "AI",
+      "region": {
+        "name": "英国",
+        "code": "GB"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 3,
+          "kind": "service",
+          "text": "gpt"
+        },
+        {
+          "start": 4,
+          "len": 2,
+          "kind": "region",
+          "text": "伦敦"
+        }
+      ]
+    },
+    {
+      "input": "claude us",
+      "service": "Claude",
+      "scope": "AI",
+      "region": {
+        "name": "美国",
+        "code": "US"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 6,
+          "kind": "service",
+          "text": "claude"
+        },
+        {
+          "start": 7,
+          "len": 2,
+          "kind": "region",
+          "text": "us"
+        }
+      ]
+    },
+    {
+      "input": "claude plus",
+      "service": "Claude",
+      "scope": "AI",
+      "region": null,
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 6,
+          "kind": "service",
+          "text": "claude"
+        }
+      ]
+    },
+    {
+      "input": "chatgpt sg",
+      "service": "GPT",
+      "scope": "AI",
+      "region": {
+        "name": "新加坡",
+        "code": "SG"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 7,
+          "kind": "service",
+          "text": "chatgpt"
+        },
+        {
+          "start": 8,
+          "len": 2,
+          "kind": "region",
+          "text": "sg"
+        }
+      ]
+    },
+    {
+      "input": "disney 狮城",
+      "service": "Disney+",
+      "scope": "视频",
+      "region": {
+        "name": "新加坡",
+        "code": "SG"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 6,
+          "kind": "service",
+          "text": "disney"
+        },
+        {
+          "start": 7,
+          "len": 2,
+          "kind": "region",
+          "text": "狮城"
+        }
+      ]
+    },
+    {
+      "input": "电报 台北",
+      "service": "Telegram",
+      "scope": "其他",
+      "region": {
+        "name": "台湾",
+        "code": "TW"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 2,
+          "kind": "service",
+          "text": "电报"
+        },
+        {
+          "start": 3,
+          "len": 2,
+          "kind": "region",
+          "text": "台北"
+        }
+      ]
+    },
+    {
+      "input": "tw",
+      "service": null,
+      "scope": null,
+      "region": {
+        "name": "台湾",
+        "code": "TW"
+      },
+      "action": null,
+      "tokens": [
+        {
+          "start": 0,
+          "len": 2,
+          "kind": "region",
+          "text": "tw"
+        }
+      ]
+    },
+    {
+      "input": "example.com",
+      "service": null,
+      "scope": null,
+      "region": null,
+      "action": null,
+      "tokens": []
+    },
+    {
+      "input": "1.1.1.1",
+      "service": null,
+      "scope": null,
+      "region": null,
+      "action": null,
+      "tokens": []
+    },
+    {
+      "input": "随便看看",
+      "service": null,
+      "scope": null,
+      "region": null,
+      "action": null,
+      "tokens": []
+    }
+  ]
+}

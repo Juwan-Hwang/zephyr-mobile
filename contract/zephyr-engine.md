@@ -422,3 +422,8 @@ parseImportPayload(payload: String) throws -> ImportPayload                 // �
 
 ### 15.a 校验样本（2026-11-14，只追加）
 `contract/fixtures/import-payload-v1.json`：§15 四种形态 + 典型拒绝的输入→期望输出（`ok.kind` ∈ `zephyr|clashInstall|url`，`err` ∈ `invalid|subscription_invalid`）。core-mobile `import_payload::tests::fixtures` 逐条比对；两端 MockEngine / UI 预解析（如扫码即时提示）应以同一份样本做单测，保证 Mock 与真核心行为一致。
+
+### 15.b 指令解析样本（2026-11-14，只追加）
+回应 Android REVIEW-Q1 H-P1-9。§9 `commandSuggestions` 仍由引擎决定执行什么；输入框下划线与"服务 / 地区 / 范围 / 操作"卡片由平台本地 token 化（iOS `CommandTokenizer`、Android `CommandParser`），两端以原型 `parse()` 为准。
+`contract/fixtures/command-parse-v1.json`（`tools/gen-command-parse-fixtures.mjs` 从 `design/prototype/index.html` 直接抽出 `SVC/RGN/ACT/parse()` 生成，`--check` 校验未漂移）：每条 `input` → `service`（显示名）、`scope`（AI|视频|其他）、`region{name,code}`、`action`（直连|4K）、`tokens[{start,len,kind,text}]`（kind ∈ service|region|action，UTF-16 下标）。两端单测应逐条比对。
+平台可在样本之外做更严的改进（如两字母码只认独立单词），但样本内条目结果须一致；`视频|流媒体` 的下划线按实际匹配长度（原型固定 2 字为笔误，样本不收录）。
