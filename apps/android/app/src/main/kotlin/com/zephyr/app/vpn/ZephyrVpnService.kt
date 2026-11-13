@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
  * and mirrors state to the QS tile and widget.
  */
 class ZephyrVpnService : VpnService() {
+
     private var prober: kotlinx.coroutines.Job? = null
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private var tun: ParcelFileDescriptor? = null
@@ -46,7 +47,8 @@ class ZephyrVpnService : VpnService() {
     }
 
     private fun start() {
-        val first = Notifications.ongoing(this, null, null, emptyList(), connecting = true)
+        // Review W-P2-4: the very first "连接中…" post uses the last known accent too, not a hard-coded blue.
+        val first = Notifications.ongoing(this, null, null, emptyList(), connecting = true, accent = lastAccent)
         ServiceCompat.startForeground(this, Notifications.ID_ONGOING, first, fgsType())
         scope.launch {
             val s = engine.settings().first()
@@ -95,7 +97,7 @@ class ZephyrVpnService : VpnService() {
                 val key = listOf(c.status, c.mode, c.globalNodeId, c.since, sc.map { it.selected.id }, st.accent)
                 val now = android.os.SystemClock.elapsedRealtime()
                 if (key == lastKey && (!power.isInteractive || now - lastAt < Notifications.MIN_POST_MS)) return@collect
-                lastKey = key; lastAt = now
+                lastKey = key; lastAt = now; lastAccent = st.accent
                 val global = if (c.mode == com.zephyr.engine.ProxyMode.GLOBAL) c.globalNodeId?.let { id -> runCatching { engine.node(id).summary.name }.getOrNull() } else null
                 val n: Notification = Notifications.ongoing(this@ZephyrVpnService, c, t, sc, connecting = c.status == ConnectionStatus.CONNECTING, accent = st.accent, globalNode = global)
                 postOngoing(n)
@@ -163,6 +165,8 @@ class ZephyrVpnService : VpnService() {
         if (Build.VERSION.SDK_INT >= 34) ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE else 0
 
     companion object {
+        /** Last accent seen while connected; process-lifetime cache for the first foreground post (review W-P2-4). */
+        @Volatile var lastAccent: com.zephyr.engine.Accent = com.zephyr.engine.Accent.BLUE
         private const val PROBE_EVERY_MS = 60_000L
         const val ACTION_CONNECT = "com.zephyr.app.CONNECT"
         const val ACTION_DISCONNECT = "com.zephyr.app.DISCONNECT"
