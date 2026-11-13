@@ -34,7 +34,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.zephyr.app.di.AppGraph
 import com.zephyr.app.ui.activity.ActivitySheet
-import com.zephyr.app.ui.activity.TraceSheet
 import com.zephyr.app.ui.command.CommandAction
 import com.zephyr.app.ui.command.CommandOverlay
 import com.zephyr.app.ui.home.HomeActions
@@ -175,8 +174,7 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                 onPick = { s, n -> scene = null; home.pick(s, n) },
                 onSource = { s, src -> home.setSource(s, src); if (s.kind == com.zephyr.engine.SceneKind.AI && src == com.zephyr.engine.SceneSource.AUTO) scene = null },
             )
-            ActivitySheet(activity, { activity = false }) { traceHost = it }
-            TraceSheet(traceHost) { traceHost = null }
+            ActivitySheet(activity, { activity = false; traceHost = null }, traceHost) { traceHost = it }
             ImportSheet(import, { import = false; importPrefill = null }, prefill = importPrefill) { import = false; importPrefill = null; home.notify(it) }
             // Toasts sit above every sheet and the command layer, so an undo or a failover notice is never hidden.
             val toast by home.toast.collectAsStateWithLifecycle()

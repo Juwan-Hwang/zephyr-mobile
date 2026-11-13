@@ -44,6 +44,12 @@ import kotlinx.coroutines.launch
 /** Connection trace (prototype `trace`): 规则 → 场景 → 节点 → 出口, plus a one-off or permanent override. */
 @Composable
 fun BoxScope.TraceSheet(host: String?, onDismiss: () -> Unit) {
+    ZSheet(host != null, onDismiss, "") { TraceBody(host) }
+}
+
+/** Trace content, shared by the stand-alone sheet and the in-place step inside "最近连接" (review H-P2-9). */
+@Composable
+internal fun androidx.compose.foundation.layout.ColumnScope.TraceBody(host: String?) {
     val engine = AppGraph.engine
     val c = ZTheme.colors
     val now = LocalNow.current()
@@ -51,8 +57,8 @@ fun BoxScope.TraceSheet(host: String?, onDismiss: () -> Unit) {
     var reload by remember { mutableStateOf(0) }
     val trace by produceState<ConnectionTrace?>(null, host, reload) { value = host?.let { runCatching { engine.connectionTrace(it) }.getOrNull() } }
     val scope = rememberCoroutineScope()
-    ZSheet(host != null, onDismiss, "") {
-        val t = trace ?: return@ZSheet
+    run {
+        val t = trace ?: return
         Column(Modifier.padding(horizontal = 22.dp)) {
             ZText(t.host, style = ZTheme.type.hero.copy(fontSize = ZTheme.type.title.fontSize * 1.5f), maxLines = 1)
             ZText("${ZFormat.ago(t.lastSeenAt, now)} · ${t.connections} 个连接 · ${ZFormat.bytesText(t.totalBytes)}", style = ZTheme.type.callout, color = c.text3)
