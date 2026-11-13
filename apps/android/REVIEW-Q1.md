@@ -30,6 +30,7 @@
 - 第二十批（PR agent/android/rows-xl-l3）：✅ L-P2-3（大字模式 fontScale≥1.3，与 SceneCard 同阈值：节点行/分区头高 66（`rowHeightLarge`），隐藏协议列，延迟列 66；常规模式仍 52，节点页基线不变）。
 - 第二十一批（PR agent/android/search-l7）：✅ L-P2-7 大部（“N 个 · 耗时”移入搜索框右侧 mono 12 t3，ZSearchField 新增 `trailing`；吸顶分区头 86% 底；索引条每个字母可被 TalkBack 读出并点按跳转）。余项：吸顶头背景模糊（Compose 无背景模糊）、气泡“位置 / 总数”格式。重录 nodesSearch 两张基线。
 - 第二十二批（PR agent/android/button-d4）：✅ D-P2-4（ZButton 默认 Compact：视觉高 40、触控区 48、14/500、左右 18；Secondary 改 `--hl` 底无描边；新增 `ZButtonSize.Large` 52dp/16sp 仅用于引导页“继续”，对应原型 `.ob .foot .btn`）。重录 homeGlobal 两张基线。
+- 第二十三批（PR agent/android/notif-accent-w4）：✅ W-P2-4（常驻通知 `setColor` 已随强调色（c855b51 落地未登记）；本批补上首条“连接中…”通知也用上次强调色，不再先闪蓝）。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览
