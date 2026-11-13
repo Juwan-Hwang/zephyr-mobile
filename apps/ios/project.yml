@@ -14,6 +14,7 @@
 #   PacketTunnel           NEPacketTunnelProvider（mihomo 以静态库嵌入；当前链接桩实现）
 #   ZephyrWidgets          WidgetKit：主屏/锁屏小组件、实时活动 + 灵动岛、iOS 18 控制中心开关
 #   ZephyrTests            单测：Shared/Core、PacketTunnel 的纯逻辑部分（不托管于 App）
+#   ZephyrAppTests         单测：App 侧纯逻辑（SharedStatePublisher 映射/节流/合并），不托管
 #   ZephyrSnapshotTests    swift-snapshot-testing：页面/组件/小组件 × 深浅 × AX5 × 强调色
 # scheme Zephyr 的 test 还跑本地包的 ZephyrKitTests / ZephyrMockTests。
 
@@ -331,6 +332,27 @@ targets:
       - package: ZephyrKit
         product: ZephyrMock
 
+  # App 侧纯逻辑（不托管）：直接编译被测的 App 源文件 + Shared/Core（REVIEW-Q2 X-P1-8）。
+  ZephyrAppTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: AppTests
+      - path: App/SharedStatePublisher.swift
+        group: App
+      - path: Shared/Core
+        group: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.app-tests
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - package: ZephyrKit
+        product: ZephyrKit
+      - package: ZephyrKit
+        product: ZephyrMock
+      - sdk: WidgetKit.framework
+
   ZephyrSnapshotTests:
     type: bundle.unit-test
     platform: iOS
@@ -378,6 +400,7 @@ schemes:
         ZephyrWidgets: all
         ZephyrTests: [test]
         ZephyrCoreTests: [test]
+        ZephyrAppTests: [test]
         ZephyrSnapshotTests: [test]
     run:
       config: Debug
@@ -395,6 +418,8 @@ schemes:
           parallelizable: true
         - name: ZephyrCoreTests
           parallelizable: false
+        - name: ZephyrAppTests
+          parallelizable: true
         - name: ZephyrSnapshotTests
           parallelizable: false
         - package: ZephyrKit/ZephyrKitTests
