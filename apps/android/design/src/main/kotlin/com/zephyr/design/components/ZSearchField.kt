@@ -12,6 +12,12 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,8 +39,17 @@ fun ZSearchField(
     onSubmit: (() -> Unit)? = null,
     /** Styles the text without a mirror layer, so IME composition and scrolling stay native. */
     visualTransformation: androidx.compose.ui.text.input.VisualTransformation = androidx.compose.ui.text.input.VisualTransformation.None,
+    /**
+     * Called with true while an IME (e.g. pinyin) is composing and false once the text is committed, so callers can
+     * skip querying on half-typed Latin letters (review L-P2-5 / H-P2-12). [onValueChange] still gets every edit.
+     */
+    onComposingChange: ((Boolean) -> Unit)? = null,
 ) {
     val c = ZTheme.colors
+    // Hold the full TextFieldValue so the composition range survives; adopt external text changes (clear, chip tap).
+    var field by remember { mutableStateOf(TextFieldValue(value, TextRange(value.length))) }
+    val shown = if (field.text == value) field else TextFieldValue(value, TextRange(value.length))
+    var composing by remember { mutableStateOf(false) }
     Row(
         modifier
             .fillMaxWidth()
@@ -49,8 +64,13 @@ fun ZSearchField(
         Box(Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
             if (value.isEmpty()) ZText(placeholder, style = ZTheme.type.body, color = c.text3, maxLines = 1)
             BasicTextField(
-                value = value,
-                onValueChange = onValueChange,
+                value = shown,
+                onValueChange = { v ->
+                    field = v
+                    val now = v.composition != null
+                    if (now != composing) { composing = now; onComposingChange?.invoke(now) }
+                    if (v.text != value) onValueChange(v.text)
+                },
                 singleLine = true,
                 textStyle = ZTheme.type.body.copy(color = c.text1),
                 cursorBrush = SolidColor(c.accent),

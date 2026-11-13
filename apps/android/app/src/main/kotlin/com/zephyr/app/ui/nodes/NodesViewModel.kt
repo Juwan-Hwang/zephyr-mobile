@@ -78,8 +78,10 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
         }
     }
 
-    fun setQuery(q: String, immediate: Boolean = false) {
+    /** [composing]: an IME is mid-composition, so show the text but don't query half-typed letters (review L-P2-5). */
+    fun setQuery(q: String, immediate: Boolean = false, composing: Boolean = false) {
         _ui.value = _ui.value.copy(query = q)
+        if (composing) return
         queryFlow.value = q
         if (immediate) launchRun(q)
     }
