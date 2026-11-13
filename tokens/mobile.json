@@ -30,7 +30,7 @@
     "spring-damping":  { "value": "0.82" },
     "press-scale":     { "value": "0.97" },
     "settle-delay":    { "value": "400ms", "comment": "滚动停止后测可见行延迟" },
-    "undo-window":     { "value": "4s",    "comment": "\"已换到 东京 03 · 撤销\" 吐司停留" }
+    "undo-window":     { "value": "5s",    "comment": "\"已切换至 东京 03 · 撤销\" 吐司停留（原型 index.html:993 setTimeout 5000）" }
   },
   "latency": {
     "$comment": "按原型（克制）：< 200ms 中性次级灰，>= 200ms 琥珀，超时红，未测更淡。不再用红黄绿四档。",

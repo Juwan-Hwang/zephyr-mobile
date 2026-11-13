@@ -340,8 +340,8 @@ object ZMotion {
     const val pressScale: Float = 0.97f
     /** 滚动停止后测可见行延迟 */
     const val settleDelay: Float = 400f  // ms
-    /** "已换到 东京 03 · 撤销" 吐司停留 */
-    const val undoWindow: Float = 4000f  // ms
+    /** "已切换至 东京 03 · 撤销" 吐司停留（原型 index.html:993 setTimeout 5000） */
+    const val undoWindow: Float = 5000f  // ms
     /** SwiftUI spring(response, damping) 换算为 Compose spring：stiffness = (2π / response)²，dampingRatio = damping */
     val springStiffness: Float = ((2 * Math.PI / springResponse) * (2 * Math.PI / springResponse)).toFloat()
     val springDampingRatio: Float = springDamping
