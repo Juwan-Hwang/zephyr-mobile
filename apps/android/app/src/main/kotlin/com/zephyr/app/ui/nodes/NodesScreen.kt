@@ -1,5 +1,8 @@
 package com.zephyr.app.ui.nodes
 
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
@@ -95,10 +98,8 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: String = "资料
             ZSearchField(
                 ui.query, { vm.setQuery(it, composing = composing) }, "地区、城市或线路", Modifier.padding(horizontal = 16.dp),
                 onComposingChange = { composing = it; if (!it) vm.setQuery(ui.query) },
+                trailing = if (ui.query.isNotBlank() && result != null) "${ZFormat.grouped(result.total)} 个 · ${ZFormat.micros(result.tookMicros)}" else null,
             )
-            if (ui.query.isNotBlank() && result != null) {
-                ZText("${ZFormat.grouped(result.total)} 个 · ${ZFormat.micros(result.tookMicros)}", Modifier.padding(start = 22.dp, top = 8.dp), style = ZTheme.type.caption, color = c.text3)
-            }
             Spacer(Modifier.height(12.dp))
             LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 item { ZChip("全部", ui.query.isBlank(), { vm.setQuery("", true) }) }
@@ -153,7 +154,7 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: String = "资料
 private fun PinnedHeader(vm: NodesViewModel, list: androidx.compose.foundation.lazy.LazyListState) {
     val show by remember { derivedStateOf { list.firstVisibleItemIndex > 0 || list.firstVisibleItemScrollOffset > 20 } }
     val sec by remember { derivedStateOf { vm.sectionAt(list.firstVisibleItemIndex) } }
-    if (show) sec?.let { Box(Modifier.background(ZTheme.colors.bg).padding(end = 34.dp)) { SectionHeaderRow(it) } }
+    if (show) sec?.let { Box(Modifier.background(ZTheme.colors.bg.copy(alpha = 0.86f)).padding(end = 34.dp)) { SectionHeaderRow(it) } }
 }
 
 @Composable
@@ -194,7 +195,8 @@ private fun androidx.compose.foundation.layout.BoxScope.RegionRail(codes: List<S
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        codes.forEach { ZText(it, style = ZTheme.type.monoSmall.copy(fontSize = ZTheme.type.caption.fontSize * 0.92f), color = c.accent) }
+        // Review L-P2-7: the rail is a drag target only; give TalkBack one tap-to-jump action per region instead.
+        codes.forEachIndexed { i, code -> ZText(code, Modifier.semantics { contentDescription = "跳到 $code"; role = androidx.compose.ui.semantics.Role.Button; onClick { onScrub((i + 0.5f) / codes.size); true } }, style = ZTheme.type.monoSmall.copy(fontSize = ZTheme.type.caption.fontSize * 0.92f), color = c.accent) }
     }
     bubble?.let { (sec, y) ->
         ZSurface(

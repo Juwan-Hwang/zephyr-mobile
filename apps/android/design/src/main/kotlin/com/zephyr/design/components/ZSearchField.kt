@@ -29,6 +29,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.zephyr.design.theme.ZTheme
 
 /** Search field (prototype `.fs`): 48dp rounded, magnifier, clear button when non-empty. */
@@ -47,6 +48,8 @@ fun ZSearchField(
      * skip querying on half-typed Latin letters (review L-P2-5 / H-P2-12). [onValueChange] still gets every edit.
      */
     onComposingChange: ((Boolean) -> Unit)? = null,
+    /** Review L-P2-7: small mono status at the right edge inside the field (prototype `.fs .tm`, e.g. "1,204 个 · 0.04 ms"). */
+    trailing: String? = null,
 ) {
     val c = ZTheme.colors
     // Hold the full TextFieldValue so the composition range survives; adopt external text changes (clear, chip tap).
@@ -84,6 +87,10 @@ fun ZSearchField(
                 visualTransformation = visualTransformation,
                 modifier = Modifier.fillMaxWidth().semantics { contentDescription = placeholder }.then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier),
             )
+        }
+        if (trailing != null) {
+            Spacer(Modifier.width(8.dp))
+            ZText(trailing, style = ZTheme.type.monoSmall.copy(fontSize = 12.sp), color = c.text3, maxLines = 1)
         }
         if (value.isNotEmpty()) {
             ZIconButton(ZIcons.Close, "清除", { onValueChange("") }, tint = c.text2, iconSize = 16.dp, size = 40.dp)
