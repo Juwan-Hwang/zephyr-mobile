@@ -16,8 +16,9 @@ struct LockCircularView: View {
     var body: some View {
         let on = state.connection.status == .connected
         let rate = ZFormat.rate(on ? state.rate.downBps : 0)
+        // 原型 shots/lock.png：容量环（无指示点），环内只有数值 + 单位；底部不放“下行”标签（76pt 下会与单位重叠），读屏文案已含“下行”。
         Gauge(value: Self.fraction(on ? state.rate.downBps : 0)) {
-            Text("下行")
+            EmptyView()
         } currentValueLabel: {
             VStack(spacing: ZTokens.Space.n0) {
                 Text(verbatim: on ? rate.value : "—")
@@ -28,7 +29,7 @@ struct LockCircularView: View {
                     .minimumScaleFactor(0.5)
             }
         }
-        .gaugeStyle(.accessoryCircular)
+        .gaugeStyle(.accessoryCircularCapacity)
         .accessibilityLabel(on ? String(localized: "Zephyr 下行 \(ZFormat.rateString(state.rate.downBps))") : String(localized: "Zephyr 未连接"))
     }
 }
