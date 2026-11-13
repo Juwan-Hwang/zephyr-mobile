@@ -34,6 +34,7 @@ class SettingsStore(private val context: Context, private val engine: ZephyrEngi
             context.store.data.first()[keySettings]?.let { raw ->
                 runCatching { json.decodeFromString(Settings.serializer(), raw) }.getOrNull()?.let { engine.updateSettings(it) }
             }
+            launch { engine.settings().collect { s -> syncSystemNightMode(s.appearance) } }
             engine.settings().drop(1).collect { s ->
                 context.store.edit { it[keySettings] = json.encodeToString(Settings.serializer(), s) }
             }
@@ -41,4 +42,21 @@ class SettingsStore(private val context: Context, private val engine: ZephyrEngi
     }
 
     suspend fun setOnboarded() { context.store.edit { it[keyOnboarded] = "1" } }
+
+    /**
+     * Review A-P2-3: tell the system the app's own appearance so the launch window and splash screen draw in it
+     * (API 31+). Without this a forced dark/light app flashes one frame of the system theme on cold start.
+     */
+    private var lastNightMode = -1
+    private fun syncSystemNightMode(a: com.zephyr.engine.Appearance) {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S) return
+        val mode = when (a) {
+            com.zephyr.engine.Appearance.DARK -> android.app.UiModeManager.MODE_NIGHT_YES
+            com.zephyr.engine.Appearance.LIGHT -> android.app.UiModeManager.MODE_NIGHT_NO
+            com.zephyr.engine.Appearance.SYSTEM -> android.app.UiModeManager.MODE_NIGHT_AUTO
+        }
+        if (mode == lastNightMode) return
+        lastNightMode = mode
+        runCatching { context.getSystemService(android.app.UiModeManager::class.java)?.setApplicationNightMode(mode) }
+    }
 }
