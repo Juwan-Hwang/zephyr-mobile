@@ -70,11 +70,12 @@ data class ZTypography(
                 lineHeight = (line ?: (size * 1.3f).toInt()).sp, letterSpacing = track, fontFeatureSettings = features,
             )
 
+        // Review D-P2-9: tracking/weights follow the prototype (status 67, hero 85, .cbig 385, .lc b 290, .sec 98).
         val default = ZTypography(
-            status = s(44, FontWeight.ExtraLight, 50, (-0.01).em),
-            hero = s(56, FontWeight.ExtraLight, 60, (-0.02).em, TNUM),
-            display = s(88, FontWeight.Thin, 92, (-0.03).em, TNUM),
-            number = s(30, FontWeight.Light, 36, (-0.01).em, TNUM),
+            status = s(44, FontWeight.ExtraLight, 50, (-0.035).em),
+            hero = s(56, FontWeight.ExtraLight, 60, (-0.045).em, TNUM),
+            display = s(84, FontWeight.ExtraLight, 88, (-0.06).em, TNUM),
+            number = s(30, FontWeight.ExtraLight, 36, (-0.03).em, TNUM),
             title = s(30, FontWeight.SemiBold, 36, (-0.01).em),
             headline = s(17, FontWeight.SemiBold, 22),
             body = s(16, FontWeight.Normal, 22),
@@ -82,7 +83,7 @@ data class ZTypography(
             callout = s(15, FontWeight.Normal, 20),
             footnote = s(13, FontWeight.Normal, 18),
             caption = s(12, FontWeight.Normal, 16),
-            sectionLabel = s(14, FontWeight.Medium, 18),
+            sectionLabel = s(13, FontWeight.Medium, 18),
             button = s(15, FontWeight.SemiBold, 20),
             mono = s(14, FontWeight.Normal, 20, family = MonoFamily, features = "zero"),
             monoSmall = s(12, FontWeight.Normal, 16, family = MonoFamily, features = "zero"),
