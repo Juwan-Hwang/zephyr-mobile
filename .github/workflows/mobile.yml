@@ -3,6 +3,11 @@ on:
   push: { branches: [main, 'agent/**'] }
   pull_request:
   workflow_dispatch:
+    inputs:
+      record_android_snapshots:
+        description: 'Android：重录 Paparazzi 基线（tokens 改动后用），录出的图作为 artifact android-snapshots 上传，人工审核后入库'
+        type: boolean
+        default: false
 concurrency:
   group: mobile-${{ github.ref }}
   cancel-in-progress: true
@@ -110,8 +115,16 @@ jobs:
       - name: libzmihomo.so（→ jniLibs，不入库）
         run: ABIS="arm64-v8a x86_64" tools/build-mihomo.sh android
       - name: build, unit test, paparazzi verify
+        if: ${{ !inputs.record_android_snapshots }}
         working-directory: apps/android
         run: ./gradlew --no-daemon -Pzephyr.rust=true assembleDebug testDebugUnitTest verifyPaparazziDebug
+      - name: paparazzi record（手动触发）
+        if: ${{ inputs.record_android_snapshots }}
+        working-directory: apps/android
+        run: ./gradlew --no-daemon -Pzephyr.rust=true recordPaparazziDebug
+      - if: ${{ inputs.record_android_snapshots }}
+        uses: actions/upload-artifact@v4
+        with: { name: android-snapshots, path: apps/android/**/src/test/snapshots/images }
       - if: failure()
         uses: actions/upload-artifact@v4
         with: { name: paparazzi-failures, path: apps/android/**/build/paparazzi/failures }
