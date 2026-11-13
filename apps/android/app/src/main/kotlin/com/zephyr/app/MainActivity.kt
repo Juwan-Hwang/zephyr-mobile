@@ -13,7 +13,6 @@ import com.zephyr.app.ui.nav.AppRoot
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
     /** Subscription link from a clash:// or zephyr:// deep link, waiting in the import sheet for the user to tap 添加. */
@@ -44,15 +43,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
-        // DataStore read is a few ms on first frame; avoids a flash of onboarding for returning users.
-        val onboard = !AppGraph.demo && runBlocking { !AppGraph.settings.onboarded.first() }
-        setContent {
-            AppRoot(
-                onToggle = { on -> if (on) requestConnect() else AppGraph.connection.disconnect() },
-                startOnboarding = onboard,
-                pendingImport = pendingImport.value,
-                onImportShown = { pendingImport.value = null },
-            )
+        // Review A-P2-1: read the onboarding flag off the main thread; the window background shows until the first
+        // frame, so returning users still never see a flash of onboarding.
+        lifecycleScope.launch {
+            val onboard = !AppGraph.demo && !AppGraph.settings.onboarded.first()
+            setContent {
+                AppRoot(
+                    onToggle = { on -> if (on) requestConnect() else AppGraph.connection.disconnect() },
+                    startOnboarding = onboard,
+                    pendingImport = pendingImport.value,
+                    onImportShown = { pendingImport.value = null },
+                )
+            }
         }
         // Rotation / process recreation re-delivers the launch intent: handle it once only (review A-P1-4).
         if (savedInstanceState == null) handle(intent)
