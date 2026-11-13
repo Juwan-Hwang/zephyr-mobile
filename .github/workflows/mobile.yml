@@ -6,7 +6,8 @@ on:
   workflow_dispatch:
 concurrency:
   group: mobile-${{ github.ref }}
-  cancel-in-progress: true
+  # main 每次合并都要有完整结果（排队而非互相取消）；PR 分支新推送取消旧的
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 jobs:
   detect:
     runs-on: ubuntu-latest
