@@ -214,6 +214,7 @@ v0.1 追加：`stale_token`（查询句柄已淘汰，UI 重新 queryNodes 即�
 ## 12. 版本
 - v0（2026-11-06）首版。后续加字段只追加、不改名；破坏性改动升 v1 并在看板公告。
 - v0.1（2026-11-06 14:20）追加 §13：类型命名、Dns/Tun 设置、stale_token / subscription_not_found、IPv6 规则测试、连接轨迹。
+- v0.3（2026-11-14）追加 §15：导入载荷 / 桌面同步二维码格式（parseImportPayload）。
 
 ## 13. v0.1 追加（2026-11-06 14:20，只追加不改名）
 采纳 iOS NOTES-K 的命名，两端照此：
@@ -400,3 +401,21 @@ record SceneFailover { failed: NodeRow, failureCount: UInt32, apply: SceneApply 
 - 第 1 层：名称「Zephyr 覆写」，说明「在订阅之上」（此前说明为「订阅更新时保留」）。
 - 第 2 层：名称为生效订阅的名称（如「Nebula Cloud」），说明「订阅规则」，kind = subscription（此前名称与说明对调）。订阅名为空时名称回退为「订阅规则」。平台识别订阅层应看 kind，不看名称。
 - 已有安装在下次导入/更新/删除订阅（或场景变更重建覆写层）时自然更新为新文案。
+
+## 15. v0.3 追加（2026-11-14 02:50，core-mobile 已实现，只追加）：导入载荷 / 桌面"同步到手机"二维码
+回应 iOS REVIEW-Q2 X-P1-11。§7 `ImportSource.qr / clipboard` 的 payload 不再由平台各自猜，统一交给核心解析：
+```
+enum ImportPayloadKind { zephyr, clashInstall, url }
+record ImportItem { name: String?, url: String, autoUpdateHours: Int32? }   // url 为完整 http(s) 链接（未脱敏，只在内存里交给拉取）
+record ImportPayload { kind: ImportPayloadKind, items: [ImportItem] }       // 1 ≤ items ≤ 20
+parseImportPayload(payload: String) throws -> ImportPayload                 // 顶层函数（非 MobileCore 方法），纯解析不联网
+```
+接受的形态（scheme/host 大小写不敏感，载荷 ≤ 4096 字节）：
+1. **桌面同步 v1，单条**：`zephyr://import?url=<pct>&name=<pct>&auto=<小时>`；`v` 省略即 1。桌面"同步到手机"默认出这个。
+2. **桌面同步 v1，多条**：`zephyr://import?v=1&d=<base64url 无填充(JSON)>`，JSON = `{"v":1,"subs":[{"name":"…","url":"…","auto":12}]}`；`name`、`auto` 可省。
+3. **社区通用**：`clash://install-config?url=…&name=…`，`clashmeta://`、`mihomo://` 同。
+4. **裸链接**：`http(s)://…`。
+
+校验：url 走桌面 `validate_subscription_url_basic`，name 走 `validate_subscription_name`，auto ∈ [0, 720]。`v` > 1 → `Invalid("导入码版本 vN 过新，请更新 Zephyr")`；其余不识别 → `Invalid`。
+平台流程：`parseImportPayload` → 多条时列出确认 → 每条按 §14 拉取 → `importSubscription(item.name ?? "", item.url, fetched, item.autoUpdateHours ?? 默认, …)`。MockEngine 对 `qr/clipboard` 也应先过同一规则（形态 1–4 之外报错）。
+桌面端生成二维码的实现不在本仓库（不改 Zephyr 公开仓库）；格式以本节为准，桌面侧按此出码即可。

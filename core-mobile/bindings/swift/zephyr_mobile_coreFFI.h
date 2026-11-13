@@ -637,6 +637,11 @@ RustBuffer uniffi_zephyr_mobile_core_fn_func_core_greeting(RustCallStatus *_Nonn
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_FUNC_PARSE_IMPORT_PAYLOAD
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_FUNC_PARSE_IMPORT_PAYLOAD
+RustBuffer uniffi_zephyr_mobile_core_fn_func_parse_import_payload(RustBuffer payload, RustCallStatus *_Nonnull out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_FFI_ZEPHYR_MOBILE_CORE_RUSTBUFFER_ALLOC
 #define UNIFFI_FFIDEF_FFI_ZEPHYR_MOBILE_CORE_RUSTBUFFER_ALLOC
 RustBuffer ffi_zephyr_mobile_core_rustbuffer_alloc(uint64_t size, RustCallStatus *_Nonnull out_status
@@ -920,6 +925,12 @@ void ffi_zephyr_mobile_core_rust_future_complete_void(uint64_t handle, RustCallS
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_FUNC_CORE_GREETING
 #define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_FUNC_CORE_GREETING
 uint16_t uniffi_zephyr_mobile_core_checksum_func_core_greeting(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_FUNC_PARSE_IMPORT_PAYLOAD
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_FUNC_PARSE_IMPORT_PAYLOAD
+uint16_t uniffi_zephyr_mobile_core_checksum_func_parse_import_payload(void
     
 );
 #endif

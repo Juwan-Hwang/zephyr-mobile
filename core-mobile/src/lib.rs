@@ -6,12 +6,14 @@
 //! - `subscription`：Clash YAML → 节点；`regions`：地区识别；`diff`：订阅差异
 //! - `engine`：UniFFI 对象 `MobileCore`
 //! - `mock`：原型数据生成器移植（基准与一致性测试）
+//! - `import_payload`：二维码 / 剪贴板导入载荷解析（contract §15）
 
 uniffi::setup_scaffolding!("zephyr_mobile_core");
 
 pub mod diff;
 pub mod engine;
 pub mod geo;
+pub mod import_payload;
 pub mod error;
 pub mod latency;
 pub mod mihomo;
