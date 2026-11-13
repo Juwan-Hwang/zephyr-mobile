@@ -111,6 +111,16 @@
         }
       }
     },
+    "%@（仅 Wi‑Fi）" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ (Wi‑Fi only)"
+          }
+        }
+      }
+    },
     "%@ 不可用" : {
       "localizations" : {
         "en" : {

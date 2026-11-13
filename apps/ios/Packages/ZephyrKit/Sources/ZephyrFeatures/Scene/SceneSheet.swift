@@ -121,7 +121,7 @@ struct SceneSheet: View {
                     DetailRow(title: ex.app, value: ZL.s("%@（固定）", ex.node.name))
                     ZDivider()
                 }
-                DetailRow(title: ZL.tr("检测频率"), value: ZL.tr(model.settings?.testOnWifiOnly == false ? "每天" : "每天（仅 Wi‑Fi）"))
+                DetailRow(title: ZL.tr("检测频率"), value: Self.retestFrequency(model.settings))
                 ZDivider()
                 Button {
                     Task { await model.retest(sceneId: scene.id) }
@@ -195,4 +195,14 @@ private struct DetailRow: View {
 #Preview("场景详情 · AX5") {
     HPreview(model: .preview()) { SceneSheet(sceneId: "ai") }
         .dynamicTypeSize(.accessibility5)
+}
+
+extension SceneSheet {
+    /// “检测频率”行：结果超过延迟有效期（设置 › 延迟结果保留）后，回前台 / 后台刷新时自动重测（SceneRetestPlanner）。
+    /// 24 小时仍说“每天”；其余按小时数，不再固定写“每天”（X-P1-5）。
+    static func retestFrequency(_ settings: ZephyrKit.Settings?) -> String {
+        let hours = Int64(max(1, settings?.latencyTtlHours ?? 24))
+        let base = hours == 24 ? ZL.tr("每天") : ZL.f("每 %lld 小时", hours)
+        return settings?.testOnWifiOnly == false ? base : ZL.s("%@（仅 Wi‑Fi）", base)
+    }
 }
