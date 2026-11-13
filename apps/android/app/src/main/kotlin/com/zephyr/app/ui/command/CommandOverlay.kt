@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -102,7 +103,11 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
     val apply: (CommandPlan) -> Unit = { p -> if (p !is CommandPlan.NoNodes) onAction(CommandAction.Apply(p)) }
 
     AnimatedVisibility(visible, enter = fadeIn(ZAnim.standard()), exit = fadeOut(ZAnim.standard())) {
-        Box(Modifier.fillMaxSize().background(c.bg.copy(alpha = 0.86f)).zPressable(label = "关闭", onClick = onDismiss))
+        // Review H-P2-11: tapping the scrim dismisses without the press-scale of zPressable (the whole screen shrank).
+        Box(Modifier.fillMaxSize().background(c.bg.copy(alpha = 0.86f)).clickable(
+            interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }, indication = null,
+            onClickLabel = "关闭", onClick = onDismiss,
+        ))
     }
     AnimatedVisibility(visible, enter = slideInVertically(ZAnim.slow()) { -it / 6 } + fadeIn(ZAnim.standard()), exit = fadeOut(ZAnim.micro())) {
         BackHandler(visible) { onDismiss() }
@@ -111,7 +116,7 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
             Spacer(Modifier.height(12.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 ZSearchField(input, { input = it }, "搜索或输入指令", Modifier.weight(1f), focusRequester = focus, onComposingChange = { composing = it },
-                    onSubmit = { plan?.let(apply) }, visualTransformation = transform)
+                    onSubmit = { plan?.let(apply) }, visualTransformation = transform, large = true)
                 Spacer(Modifier.width(4.dp))
                 ZText("取消", Modifier.zPressable(onClick = onDismiss).padding(horizontal = 8.dp, vertical = 14.dp), style = ZTheme.type.body, color = c.accent)
             }

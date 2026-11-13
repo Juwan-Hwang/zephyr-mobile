@@ -1,6 +1,7 @@
 package com.zephyr.design.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -50,6 +51,8 @@ fun ZSearchField(
     onComposingChange: ((Boolean) -> Unit)? = null,
     /** Review L-P2-7: small mono status at the right edge inside the field (prototype `.fs .tm`, e.g. "1,204 个 · 0.04 ms"). */
     trailing: String? = null,
+    /** Review H-P2-11: command-bar variant (prototype `.cin`): 56dp tall, fully rounded, `--hl2` outline. */
+    large: Boolean = false,
 ) {
     val c = ZTheme.colors
     // Hold the full TextFieldValue so the composition range survives; adopt external text changes (clear, chip tap).
@@ -59,10 +62,11 @@ fun ZSearchField(
     Row(
         modifier
             .fillMaxWidth()
-            .height(48.dp)
-            .clip(ZTheme.shapes.surface)
+            .height(if (large) 56.dp else 48.dp)
+            .clip(if (large) androidx.compose.foundation.shape.RoundedCornerShape(28.dp) else ZTheme.shapes.surface)
             .background(c.surface3)
-            .padding(start = 14.dp, end = 4.dp),
+            .then(if (large) Modifier.border(1.dp, c.hairlineStrong, androidx.compose.foundation.shape.RoundedCornerShape(28.dp)) else Modifier)
+            .padding(start = if (large) 20.dp else 14.dp, end = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ZIcon(ZIcons.Search, tint = c.text2, size = 20.dp)
