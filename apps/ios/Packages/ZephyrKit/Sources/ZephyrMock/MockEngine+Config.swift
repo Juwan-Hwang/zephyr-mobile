@@ -39,15 +39,23 @@ extension MockEngine {
     public func importSubscription(source: ImportSource, payload: String) async throws -> Subscription {
         let p = payload.trimmingCharacters(in: .whitespacesAndNewlines)
         var host = "本地配置"
+        var isFile = source == .file
         switch source {
-        case .url, .clipboard, .qr:
+        case .url:
             guard let u = URL(string: p), let scheme = u.scheme?.lowercased(), ["http", "https"].contains(scheme),
                   let h = u.host, !h.isEmpty else {
                 throw ZephyrError(code: .subscriptionInvalid, message: "not an http(s) url")
             }
             host = h
+        case .clipboard where ParsedImport.looksLikeConfig(p):
+            isFile = true
+        case .clipboard, .qr:
+            // 与真核心同一规则（契约 §15）：桌面同步码 / clash 安装链接 / 裸链接；多条时 Mock 只导第一条。
+            let parsed = try ParsedImport.parseOrThrowEngineError(p)
+            let first = parsed.items[0]
+            host = first.name ?? URL(string: first.url)?.host ?? host
         case .file:
-            guard p.contains("proxies:") || p.contains("proxy-providers:") else {
+            guard ParsedImport.looksLikeConfig(p) else {
                 throw ZephyrError(code: .subscriptionInvalid, message: "not a clash/mihomo config")
             }
         }
@@ -58,7 +66,7 @@ extension MockEngine {
             var acc: Int64 = 0
             for u in p.unicodeScalars { acc = (acc &* 31 &+ Int64(u.value)) & 0xFFFF_FFFF }
             let h = MockNodes.hsh(10, acc)
-            let sub = Subscription(id: "import-\(s.importCount)", name: host, url: source == .file ? nil : "https://\(host)/••••••",
+            let sub = Subscription(id: "import-\(s.importCount)", name: host, url: isFile ? nil : "https://\(host)/••••••",
                                    nodeCount: Int64(1000 + h % 5000), usedBytes: 0, totalBytes: 100_000_000_000,
                                    remainingBytes: 100_000_000_000, expiresAt: now + 30 * 86_400_000, updatedAt: now,
                                    autoUpdateHours: s.settings.autoUpdateHours, lastDiff: nil)

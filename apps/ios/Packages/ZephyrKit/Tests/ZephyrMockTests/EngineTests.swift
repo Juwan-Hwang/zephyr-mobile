@@ -138,6 +138,12 @@ final class EngineTests: XCTestCase {
         do { let v = await e.subscriptionsSummary().count; XCTAssertEqual(v, 214) }
         do { _ = try await e.importSubscription(source: .clipboard, payload: "hello"); XCTFail() }
         catch let err as ZephyrError { XCTAssertEqual(err.code, .subscriptionInvalid) }
+        // 契约 §15：桌面"同步到手机"二维码
+        let synced = try await e.importSubscription(source: .qr, payload: "zephyr://import?url=https%3A%2F%2Fa.example.com%2Fs&name=Nebula%20Sync&auto=6")
+        XCTAssertEqual(synced.name, "Nebula Sync")
+        try await e.deleteSubscription(id: synced.id)
+        do { _ = try await e.importSubscription(source: .qr, payload: "zephyr://import?v=2&url=https%3A%2F%2Fa.example.com"); XCTFail("新版本导入码应拒绝") }
+        catch let err as ZephyrError { XCTAssertEqual(err.code, .subscriptionInvalid) }
         do { let v = try await e.updateAll().count; XCTAssertEqual(v, 214) }
 
         let st = await e.storage()

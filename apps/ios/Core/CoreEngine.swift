@@ -654,16 +654,37 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         guard let c = core else { return try await fallback.importSubscription(source: source, payload: payload) }
         let p = payload.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !p.isEmpty else { throw ZephyrError(code: .subscriptionInvalid, message: "empty") }
-        let url = CoreEngine.httpURL(p)
-        if (source == .url || source == .qr) && url == nil { throw ZephyrError(code: .subscriptionInvalid, message: "not a subscription link") }
-        let got: FetchedBody
-        if let url { got = try await fetch(url) } else { got = FetchedBody(body: p) }
-        let name = got.fileName.map { ($0 as NSString).deletingPathExtension }.flatMap { $0.isEmpty ? nil : $0 }
-            ?? CoreEngine.defaultName(url)
-        let fetched = FetchedSubscription(body: got.body, userinfo: got.userInfo, nowMillis: clock())
-        let urlString = url?.absoluteString
-        let s = try await run(.subscriptionInvalid) {
-            try c.importSubscription(name: name, url: urlString, fetched: fetched, autoUpdateHours: 12, progress: nil)
+
+        // 二维码 / 剪贴板：交给核心按契约 §15 解析（桌面"同步到手机"码、clash:// 安装链接、裸链接），可能一次多条。
+        // 剪贴板粘的是整份 Clash / mihomo 配置时按本地配置导入（§7 file 同一路径）。
+        var items: [(name: String?, url: URL?, auto: Int32?)]
+        let pastedConfig = source == .clipboard && ParsedImport.looksLikeConfig(p)
+        if source == .qr || (source == .clipboard && !pastedConfig) {
+            let parsed: [(name: String?, url: String, auto: Int32?)]
+            do {
+                parsed = try await run(.subscriptionInvalid) {
+                    try parseImportPayload(payload: p).items.map { (name: $0.name, url: $0.url, auto: $0.autoUpdateHours) }
+                }
+            } catch let e as ZephyrError where e.code == .ruleInputInvalid {
+                // 核心的 Invalid 默认映射到规则输入错误；导入场景统一报订阅无效（UI 文案“不是订阅链接或导入码”）。
+                throw ZephyrError(code: .subscriptionInvalid, message: e.message)
+            }
+            items = try parsed.map { it in
+                guard let u = CoreEngine.httpURL(it.url) else { throw ZephyrError(code: .subscriptionInvalid, message: "not a subscription link") }
+                return (name: it.name, url: u, auto: it.auto)
+            }
+        } else if source == .url {
+            guard let url = CoreEngine.httpURL(p) else { throw ZephyrError(code: .subscriptionInvalid, message: "not a subscription link") }
+            items = [(name: nil, url: url, auto: nil)]
+        } else {
+            items = [(name: nil, url: CoreEngine.httpURL(p), auto: nil)]
+        }
+
+        var first: ZephyrKit.Subscription?
+        for it in items {
+            if Task.isCancelled { break }
+            let s = try await importOne(c, url: it.url, body: p, name: it.name, autoUpdateHours: it.auto ?? 12)
+            if first == nil { first = s }
         }
         invalidateNodes()
         await publishSubs()
@@ -671,6 +692,23 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         scheduleRuleProviderRefresh()
         // 首个订阅导入后就写出配置：控制中心 / 小组件的连接开关由扩展直接启动隧道，不能等到 App 里点连接（X-P1-6）。
         if let t = tunnel { await reloadTunnelIfRunning(t) }
+        guard let first else { throw ZephyrError(code: .cancelled) }
+        return first
+    }
+
+    /// 拉取（有 url 时）并导入一条。名字：载荷给的 > 响应的文件名 > 脱敏域名。
+    private func importOne(_ c: MobileCore, url: URL?, body: String, name: String?,
+                           autoUpdateHours: Int32) async throws -> ZephyrKit.Subscription {
+        let got: FetchedBody
+        if let url { got = try await fetch(url) } else { got = FetchedBody(body: body) }
+        let name = name
+            ?? got.fileName.map { ($0 as NSString).deletingPathExtension }.flatMap { $0.isEmpty ? nil : $0 }
+            ?? CoreEngine.defaultName(url)
+        let fetched = FetchedSubscription(body: got.body, userinfo: got.userInfo, nowMillis: clock())
+        let urlString = url?.absoluteString
+        let s = try await run(.subscriptionInvalid) {
+            try c.importSubscription(name: name, url: urlString, fetched: fetched, autoUpdateHours: autoUpdateHours, progress: nil)
+        }
         return CoreEngine.sub(s)
     }
 

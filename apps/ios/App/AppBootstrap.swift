@@ -45,13 +45,13 @@ final class AppBootstrap {
             if case .loading = phase { queued.append(url) }
             return
         }
-        // zephyr:// 已由 RootView 自己的 onOpenURL 处理，避免重复。
-        guard url.scheme?.lowercased() != "zephyr" else { return }
+        // zephyr:// 已由 RootView 自己的 onOpenURL 处理，避免重复；桌面同步码 zephyr://import 例外（导入走确认弹窗）。
+        guard url.scheme?.lowercased() != "zephyr" || ImportRequest.isDesktopSync(url) else { return }
         route(url, model: model, services: services)
     }
 
     private func route(_ url: URL, model: AppModel, services: AppServices) {
-        if url.scheme?.lowercased() == "zephyr" {
+        if url.scheme?.lowercased() == "zephyr", !ImportRequest.isDesktopSync(url) {
             model.handle(url: url)
         } else {
             services.handleExternal(url: url, model: model)
