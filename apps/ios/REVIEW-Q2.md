@@ -27,6 +27,7 @@
 
 - 2026-11-14 PR agent/ios/l10n-q2b（base #51）：X-P1-9 余项——指令预览卡标题/摘要/脚注、轨迹覆写分段“不变/直连”、节点索引条与地区筛选读屏、场景候选“固定”读屏、扫码取景框读屏、订阅卡“剩余”默认值、地区筛选“全部”改走 `ZL`，xcstrings 补英文。ErrorText/HFormat/AppShortcuts 已在先前批次完成（核对）。
 - 2026-11-14 PR agent/ios/scene-freq：X-P1-5 收尾——场景 sheet“检测频率”不再固定“每天”，按设置 `latencyTtlHours` 显示（24 h = 每天，否则“每 N 小时”），仅 Wi‑Fi 时加后缀；补英文。
+- 2026-11-14 PR agent/ios/snapshot-refs 续：首轮 CI 22/115 不一致，查明三处不确定性并修复——今日卡流线背景 TimelineView 随墙钟（WindArt 在 zStaticRendering 下画固定帧）、半透明边缘像素取整漂移（出图改 sRGB 8 位不透明底）、参考图取自 XCTAttachment(image:) 重编码（录制附件改附写盘原字节）；锁屏圆形小组件改容量环、去掉与单位重叠的“下行”标签（对齐原型 lock.png）。参考图按新渲染重新收取。
 
 ## P0
 
