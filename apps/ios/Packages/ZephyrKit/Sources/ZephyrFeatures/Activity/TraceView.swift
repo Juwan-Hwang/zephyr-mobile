@@ -7,7 +7,8 @@
 //   ● 出口  203.0.113.24               美国 · 2 小时前检测
 //   本次连接 [不变|直连|视频|其他]  始终应用（TraceOverrideSection，overrideHost）
 //
-// 数据：engine.testRule(input: host) + ruleStats().layers + 当前 scenes + 该域名最近一条活动连接（TraceSteps）。
+// 数据：engine.hostTrace(host:)（mihomo 实测，隧道连接时）+ engine.testRule(input: host) + ruleStats().layers + 当前 scenes
+//       + 该域名最近一条活动连接（TraceSteps）。
 // 动效：步骤逐个从左淡入（80ms 起、每步 +60ms，原型 playTrace）；竖线上一段光沿链路流动（原型 `.rail i`）。
 // Reduce Motion：直接显示、光点静止隐藏。
 
@@ -26,13 +27,14 @@ struct TraceView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var trace: RuleTrace?
+    @State private var live: HostTraceInfo?
     @State private var layers: [RuleLayer] = []
     @State private var failure: ZephyrError?
     @State private var shown = false
 
     private var steps: [TraceStep] {
         guard let trace else { return [] }
-        return TraceSteps.build(trace: trace, layers: layers, scenes: model.scenes, latest: recent, now: model.now())
+        return TraceSteps.build(trace: trace, layers: layers, scenes: model.scenes, latest: recent, now: model.now(), live: live)
     }
 
     var body: some View {
@@ -55,7 +57,7 @@ struct TraceView: View {
                 .padding(.top, ZTokens.Space.n6 + ZTokens.Space.n1 / 2)
 
             if let trace, failure == nil {
-                TraceOverrideSection(host: host, currentSceneId: trace.scene?.id ?? trace.policy)
+                TraceOverrideSection(host: host, currentSceneId: currentSceneId(trace))
             }
         }
         .padding(.horizontal, HMetrics.homeInset)
@@ -125,8 +127,20 @@ struct TraceView: View {
     // MARK: 逻辑
 
     private var lede: String {
+        if let l = live {
+            return ZL.f("%1$@ · %2$lld 个连接 · %3$@", ZFormat.relative(l.lastSeenAt, now: model.now()) as NSString, Int64(l.connections), ZFormat.bytes(l.totalBytes) as NSString)
+        }
         guard let r = recent else { return ZL.tr("暂无活动连接") }
         return ZL.f("%1$@ · %2$lld 个连接 · %3$@", ZFormat.relative(r.lastSeenAt, now: model.now()) as NSString, Int64(r.connections), ZFormat.bytes(r.totalBytes) as NSString)
+    }
+
+    /// 当前命中的场景 id：实测优先（组名映射回场景；实测直连 = "DIRECT"），否则预测。
+    private func currentSceneId(_ trace: RuleTrace) -> String? {
+        if let live {
+            if live.node.uppercased() == TraceSteps.direct || live.node.uppercased() == TraceSteps.reject { return live.node.uppercased() }
+            if let s = TraceSteps.scene(forGroup: live.scene, in: model.scenes) { return s.id }
+        }
+        return trace.scene?.id ?? trace.policy
     }
 
     private func marker(_ m: TraceStep.Marker) -> ZChainMarker {
@@ -140,16 +154,26 @@ struct TraceView: View {
     private func load() async {
         failure = nil
         let engine = model.engine
+        let host = self.host
         async let stats = engine.ruleStats()
+        async let measured = engine.hostTrace(host: host)
         do {
             let t = try await engine.testRule(input: host)
-            layers = await stats.layers
-            trace = t
+            let l = await stats.layers
+            guard !Task.isCancelled, host == self.host else { return }   // 已切到别的域名：丢弃旧结果
+            layers = l
+            live = nil
+            trace = t   // 先显示预测，不让可能卡住的控制面请求挡住页面
+            let m = await measured
+            guard !Task.isCancelled, host == self.host else { return }
+            live = m
         } catch let e as ZephyrError {
             _ = await stats
+            _ = await measured
             failure = e
         } catch {
             _ = await stats
+            _ = await measured
             failure = ZephyrError(code: .internal, message: String(describing: error))
         }
     }

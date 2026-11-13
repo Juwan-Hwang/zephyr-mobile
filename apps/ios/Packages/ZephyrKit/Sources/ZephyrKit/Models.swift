@@ -607,3 +607,39 @@ public struct CommandSuggestion: Sendable, Hashable, Codable {
         self.kind = kind; self.title = title; self.subtitle = subtitle; self.payload = payload
     }
 }
+
+/// 契约 §13 connectionTrace 的实测部分：mihomo 对该域名最近连接的真实匹配（MihomoClient.hostTrace，REVIEW-Q2 X-P1-13）。
+public struct HostTraceInfo: Sendable, Hashable {
+    public var host: String
+    public var lastSeenAt: Int64
+    public var connections: Int32
+    public var totalBytes: Int64
+    /// 实际命中的规则，如 "DOMAIN-SUFFIX,claude.ai"。
+    public var rule: String
+    /// 策略链，自顶层组到出口节点（["AI", "US Fixed IP", "US-Fixed-01"]）。
+    public var chain: [String]
+    /// 场景 id；直连 / 非场景策略为 nil。
+    public var scene: String?
+    /// 出口节点名；"DIRECT" = 直连，"REJECT" = 拦截。
+    public var node: String
+    public init(host: String, lastSeenAt: Int64, connections: Int32, totalBytes: Int64, rule: String,
+                chain: [String], scene: String?, node: String) {
+        self.host = host; self.lastSeenAt = lastSeenAt; self.connections = connections; self.totalBytes = totalBytes
+        self.rule = rule; self.chain = chain; self.scene = scene; self.node = node
+    }
+    /// 顶层组与出口之间的中间组（"US Fixed IP"）；没有为 nil。
+    public var via: String? {
+        guard chain.count > 2 else { return nil }
+        return chain.dropFirst().dropLast().joined(separator: " · ")
+    }
+}
+
+/// 契约 §13 TraceOverride：该域名当前生效的覆写（hostOverride 读接口，用于轨迹页回填）。
+public struct HostOverrideInfo: Sendable, Hashable {
+    public var target: TraceTarget
+    public var sceneId: String?
+    public var persistent: Bool
+    public init(target: TraceTarget, sceneId: String? = nil, persistent: Bool) {
+        self.target = target; self.sceneId = sceneId; self.persistent = persistent
+    }
+}

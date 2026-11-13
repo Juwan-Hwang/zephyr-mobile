@@ -4,7 +4,7 @@
 //   └ 关闭时仅更改本次连接       ┘
 //
 // 选中即 overrideHost(host, target, sceneId, persistent: 始终应用)（契约 §13）；成功后给可撤销吐司（撤销 = .unchanged）。
-// 契约没有 hostOverride 读接口，打开时无法回填当前覆写，分段从“不变”开始。
+// 打开时用 engine.hostOverride(host:) 回填当前覆写（分段与“始终应用”）；没有覆写从“不变”开始。
 
 import SwiftUI
 import ZephyrDesign
@@ -19,6 +19,8 @@ struct TraceOverrideSection: View {
     @State private var always = false
     @State private var selection: Target = .unchanged
     @State private var busy = false
+    /// 用户已动过分段或开关：回填不再覆盖。
+    @State private var touched = false
 
     fileprivate enum Target: Hashable { case unchanged, direct, scene(String) }
 
@@ -26,8 +28,8 @@ struct TraceOverrideSection: View {
     private static let maxScenes = 2
 
     private var segments: [ZSegment<Target>] {
-        var out = [ZSegment(Target.unchanged, verbatim: "不变")]
-        if currentSceneId?.uppercased() != "DIRECT" { out.append(ZSegment(.direct, verbatim: "直连")) }
+        var out = [ZSegment(Target.unchanged, verbatim: ZL.tr("不变"))]
+        if currentSceneId?.uppercased() != "DIRECT" { out.append(ZSegment(.direct, verbatim: ZL.tr("直连"))) }
         for s in model.scenes.filter({ $0.id != currentSceneId }).prefix(Self.maxScenes) {
             out.append(ZSegment(.scene(s.id), verbatim: s.name))
         }
@@ -49,7 +51,7 @@ struct TraceOverrideSection: View {
                 .disabled(busy)
 
             ZCard(cornerRadius: HMetrics.cardRadius) {
-                ZToggle(isOn: Binding(get: { always }, set: { always = $0; if selection != .unchanged { choose(selection, force: true) } })) {
+                ZToggle(isOn: Binding(get: { always }, set: { touched = true; always = $0; if selection != .unchanged { choose(selection, force: true) } })) {
                     VStack(alignment: .leading, spacing: ZTokens.Space.n1 / 2) {
                         Text("始终应用").zType(.body).foregroundStyle(ZTokens.Colors.screenT1)
                         Text("关闭时仅更改本次连接").zType(.caption).foregroundStyle(ZColor.t3)
@@ -59,10 +61,29 @@ struct TraceOverrideSection: View {
             .padding(.top, ZTokens.Space.n5)
         }
         .accessibilityElement(children: .contain)
+        .task(id: host) { await backfill() }
+    }
+
+    /// 回填当前覆写；用户已经开始操作则不覆盖。
+    private func backfill() async {
+        guard let o = await model.engine.hostOverride(host: host), !touched, !busy else { return }
+        let target: Target
+        switch o.target {
+        case .unchanged: return
+        case .direct: target = .direct
+        case .scene:
+            guard let id = o.sceneId else { return }
+            target = .scene(id)
+        }
+        // 只回填分段里实际有的选项，避免选中一个看不见的段。
+        guard segments.contains(where: { $0.value == target }) else { return }
+        selection = target
+        always = o.persistent
     }
 
     private func choose(_ new: Target, force: Bool = false) {
         guard new != selection || force, !busy else { return }
+        touched = true
         let previous = selection
         selection = new
         busy = true
