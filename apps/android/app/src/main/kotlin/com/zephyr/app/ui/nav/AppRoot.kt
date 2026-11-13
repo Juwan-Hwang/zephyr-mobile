@@ -88,7 +88,12 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
             }
         }
     }
+    // Review H-P2-5: the scrub coach line retires for good after the first scrub. Start as seen so it never flashes.
+    val scrubSeen by remember { if (AppGraph.hasSettings) AppGraph.settings.scrubHintSeen else kotlinx.coroutines.flow.flowOf(true) }.collectAsState(true)
+    val hintScope = androidx.compose.runtime.rememberCoroutineScope()
+    val scrubHint = remember(scrubSeen) { com.zephyr.app.ui.common.ScrubHint(scrubSeen) { if (AppGraph.hasSettings) hintScope.launch { AppGraph.settings.setScrubHintSeen() } } }
     ZephyrTheme(dark = dark, accent = ZAccent.valueOf(settings.accent.name)) {
+        androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalScrubHint provides scrubHint) {
         val nav = rememberNavController()
         // Review A-P2-4: overlays survive rotation / fold / process death.
         var library by rememberSaveable { mutableStateOf(false) }
@@ -189,5 +194,6 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                 }
             }
         }
+    }
     }
 }

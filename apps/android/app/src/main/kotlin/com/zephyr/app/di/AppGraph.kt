@@ -22,6 +22,8 @@ object AppGraph {
     lateinit var engine: ZephyrEngine; private set
     lateinit var settings: SettingsStore; private set
     lateinit var connection: ConnectionController; private set
+    /** False under [override] (screenshot tests / previews), where no SettingsStore exists. */
+    val hasSettings: Boolean get() = ::settings.isInitialized
     val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     @Volatile private var ready = false
 

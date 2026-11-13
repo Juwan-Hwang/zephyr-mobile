@@ -66,14 +66,15 @@ fun SceneCard(
     onCancel: () -> Unit,
     onOpen: (Scene) -> Unit,
 ) {
-    var hinted by remember { mutableStateOf(false) }
+    val hint = com.zephyr.app.ui.common.LocalScrubHint.current
+    var hinted by remember(hint.seen) { mutableStateOf(hint.seen) }
     ZCard(Modifier.padding(horizontal = 16.dp)) {
         scenes.forEachIndexed { i, s ->
             if (i > 0 && (scenes[i - 1].kind != SceneKind.AI || pending?.scene?.id == scenes[i - 1].id)) ZDivider(inset = false)
             if (s.source != SceneSource.SUBSCRIPTION_GROUP) androidx.compose.runtime.LaunchedEffect(s.id, s.selected.id, s.source) { onPrefetch(s) }
             SceneRow(
                 s, slots[s.id].orEmpty(), pendingNode = pending?.takeIf { it.scene.id == s.id }?.node,
-                onScrubStart = { hinted = true; if (pending != null) onCancel() },
+                onScrubStart = { if (!hinted) { hinted = true; hint.markSeen() }; if (pending != null) onCancel() },
                 onPick = { n -> onPick(s, n) }, onOpen = { onOpen(s) },
             )
             if (s.kind == SceneKind.AI && !hinted && pending == null) {
