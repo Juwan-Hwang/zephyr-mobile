@@ -16,13 +16,14 @@ import kotlinx.coroutines.launch
 /**
  * Platform-neutral press feedback: a soft highlight wash (prototype `--hl`) instead of Material ripples,
  * so Android and iOS feel the same. Fades in over 60 ms, out over 200 ms.
+ * Review D-P2-2: the wash is tokens `screen.pressed` (dark 3% white / light 3% black) so it shows in light mode too.
  */
-object ZIndication : IndicationNodeFactory {
-    override fun create(interactionSource: InteractionSource): DelegatableNode = Node(interactionSource)
-    override fun hashCode(): Int = -1
-    override fun equals(other: Any?) = other === this
+class ZIndication(private val wash: Color) : IndicationNodeFactory {
+    override fun create(interactionSource: InteractionSource): DelegatableNode = Node(interactionSource, wash)
+    override fun hashCode(): Int = wash.hashCode()
+    override fun equals(other: Any?) = other is ZIndication && other.wash == wash
 
-    private class Node(private val source: InteractionSource) : Modifier.Node(), DrawModifierNode {
+    private class Node(private val source: InteractionSource, private val wash: Color) : Modifier.Node(), DrawModifierNode {
         private val alpha = Animatable(0f)
 
         override fun onAttach() {
@@ -40,7 +41,7 @@ object ZIndication : IndicationNodeFactory {
         override fun ContentDrawScope.draw() {
             drawContent()
             val a = alpha.value
-            if (a > 0f) drawRect(Color.White.copy(alpha = 0.075f * a))
+            if (a > 0f) drawRect(wash.copy(alpha = wash.alpha * a))
             invalidateIfAnimating()
         }
 

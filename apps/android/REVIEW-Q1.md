@@ -24,6 +24,7 @@
 - 第十四批（PR agent/android/activity-h9）：✅ H-P2-9 文案部分（活动 sheet 标题改“最近连接”，副标题分隔符改“ · ”）；快照已重录。轨迹改为同一 sheet 内切换仍待做。
 - 第十五批（PR agent/android/light-t3-baseline，配合 A 的 #37）：✅ 小组件浅色 t3 跟随 tokens screen.t3 0.55（0x8C000000）；按新 t3 重录 13 张浅色 Paparazzi 基线，深色基线不变；本地 verify/record 通过。
 - 第十六批（PR agent/android/coach-h5）：✅ H-P2-5 剩余（滑动提示改为浮在 AI 行下分隔线上、卡片色遮线、2.4 s 左推 6dp，不再撑高卡片；分隔线恒在，提示消失后不再丢线；已读状态此前已持久化）；✅ H-P2-9 剩余（轨迹在“最近连接”同一张 sheet 内打开，单层遮罩，返回键/“‹ 最近连接”回列表）。首页 10 张快照已重录。
+- 第十七批（PR agent/android/press-d2）：✅ D-P2-2 高光部分（按压高光改用 tokens screen.pressed：深色 3% 白 / 浅色 3% 黑，浅色模式可见；ZIndication 按主题提供）。整行缩放 0.97 未改。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览
