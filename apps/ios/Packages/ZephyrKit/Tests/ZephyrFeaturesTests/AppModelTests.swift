@@ -110,4 +110,21 @@ final class AppModelTests: XCTestCase {
         let changed = await until { model.connection.mode == .direct }
         XCTAssertTrue(changed)
     }
+
+    // MARK: 场景自动切换提示（契约 v0.2、§14.y）
+
+    func testFailoverSwitchedShowsUndoToast() {
+        let model = AppModel.preview(connected: true, frozen: true)
+        model.apply(failover: SceneFailoverNotice(sceneId: "video", sceneName: "视频", failedNode: "香港 01",
+                                                  switchedTo: "香港 02", previousNodeId: 7))
+        XCTAssertEqual(model.toast?.message, "视频 出口无响应，已自动切换到 香港 02")
+        XCTAssertNotNil(model.toast?.actionTitle, "已切换应可撤销")
+    }
+
+    func testFailoverAINotSwitchedOnlyInforms() {
+        let model = AppModel.preview(connected: true, frozen: true)
+        model.apply(failover: SceneFailoverNotice(sceneId: "ai", sceneName: "AI", failedNode: "美国 01"))
+        XCTAssertEqual(model.toast?.message, "AI 出口无响应，出口 IP 不会自动更换")
+        XCTAssertNil(model.toast?.actionTitle, "AI 出口不自动更换，也不给操作")
+    }
 }

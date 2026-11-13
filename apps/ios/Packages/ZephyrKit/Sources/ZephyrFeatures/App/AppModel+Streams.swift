@@ -49,6 +49,8 @@ extension AppModel {
         streamTasks.removeAll()
         trafficTask?.cancel()
         trafficTask = nil
+        failoverTask?.cancel()
+        failoverTask = nil
         started = false
     }
 
@@ -59,6 +61,7 @@ extension AppModel {
         guard fg != isForeground else { return }
         isForeground = fg
         reconcileTraffic()
+        reconcileFailover()
         if fg { Task { await refreshUsage() } }
     }
 
@@ -75,6 +78,45 @@ extension AppModel {
         if old.status != new.status {
             if new.status == .disconnected { traffic.clear(); pendingChange = nil }
             reconcileTraffic()
+            reconcileFailover()
+        }
+    }
+
+    /// 场景出口探测事件 → 提示（契约 v0.2 场景自动切换、§14.y）。
+    /// 已自动切换：给撤销（再 apply 旧节点）；AI 场景未切换：只提示，不给操作。
+    func apply(failover n: SceneFailoverNotice) {
+        guard let to = n.switchedTo else {
+            showUndo(ZL.s("%@ 出口无响应，出口 IP 不会自动更换", n.sceneName))
+            return
+        }
+        let engine = self.engine
+        let sceneId = n.sceneId
+        var undo: (@MainActor @Sendable () async -> Void)?
+        if let prev = n.previousNodeId {
+            undo = { [weak self] in
+                // 吐司期间用户又换了节点：撤销不应覆盖那次选择。
+                guard let self, self.scenes.first(where: { $0.id == sceneId })?.selected.name == to else { return }
+                do { try await engine.applySceneChange(sceneId: sceneId, nodeId: prev) } catch { self.report(error) }
+            }
+        }
+        showUndo(ZL.s("%1$@ 出口无响应，已自动切换到 %2$@", n.sceneName, to), undo: undo)
+    }
+
+    /// 场景出口探测：与流量同样只在“前台且已连接”时订阅（后台不探测、不自动切换）。
+    func reconcileFailover() {
+        let want = isForeground && connection.status == .connected
+        if want, failoverTask == nil {
+            let engine = self.engine
+            failoverTask = Task { [weak self] in
+                for await notice in engine.sceneFailovers() {
+                    guard let self, !Task.isCancelled else { return }
+                    self.apply(failover: notice)
+                }
+                if !Task.isCancelled { self?.failoverTask = nil }
+            }
+        } else if !want, let t = failoverTask {
+            t.cancel()
+            failoverTask = nil
         }
     }
 

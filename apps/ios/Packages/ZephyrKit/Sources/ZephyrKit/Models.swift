@@ -133,6 +133,21 @@ public struct ServiceHealth: Sendable, Hashable, Codable {
     enum CodingKeys: String, CodingKey { case name, ok; case appId = "app_id", checkedAt = "checked_at" }
 }
 
+/// 契约 v0.2「场景自动切换」+ §14.y：一轮出口探测里某场景的已选节点无响应。
+/// `switchedTo == nil`：未自动切换（AI 场景，出口 IP 只能由用户确认后更改），只提示；
+/// 否则核心已在热备内切换并已在 mihomo 里选中，`previousNodeId` 用于撤销。
+public struct SceneFailoverNotice: Sendable, Hashable {
+    public var sceneId: String
+    public var sceneName: String
+    public var failedNode: String
+    public var switchedTo: String?
+    public var previousNodeId: NodeId?
+    public init(sceneId: String, sceneName: String, failedNode: String, switchedTo: String? = nil, previousNodeId: NodeId? = nil) {
+        self.sceneId = sceneId; self.sceneName = sceneName; self.failedNode = failedNode
+        self.switchedTo = switchedTo; self.previousNodeId = previousNodeId
+    }
+}
+
 /// 契约 §13 overrideHost 的目标；unchanged = 清除覆写。
 public enum TraceTarget: String, Sendable, Hashable, Codable, CaseIterable {
     case unchanged, direct, scene

@@ -67,6 +67,7 @@ public final class AppModel {
     // MARK: 内部
     @ObservationIgnored var streamTasks: [Task<Void, Never>] = []
     @ObservationIgnored var trafficTask: Task<Void, Never>?
+    @ObservationIgnored var failoverTask: Task<Void, Never>?
     @ObservationIgnored var isForeground = true
     @ObservationIgnored var started = false
 

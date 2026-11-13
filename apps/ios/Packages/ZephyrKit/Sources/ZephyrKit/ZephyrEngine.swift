@@ -24,6 +24,8 @@ public protocol ZephyrEngine: AnyObject, Sendable {
 
     // MARK: §3 场景
     func scenes() -> AsyncStream<[Scene]>
+    /// 场景出口自动探测的结果（契约 v0.2 场景自动切换）。只在隧道连接期间有事件；不支持的引擎返回立即结束的流。
+    func sceneFailovers() -> AsyncStream<SceneFailoverNotice>
     /// 按延迟排序，最多 50。
     func sceneCandidates(sceneId: String, region: String?) async throws -> [NodeSummary]
     func previewSceneChange(sceneId: String, nodeId: NodeId) async throws -> ExitChange
@@ -122,6 +124,8 @@ public extension Array where Element == RegionSection {
 // MARK: - 契约 §13 / §14.z 新增方法的默认实现（Mock 未实现前不影响编译；CoreEngine 有真实实现）
 
 public extension ZephyrEngine {
+    /// 只读事件流：没有实现即没有事件（Mock / 预览不探测）。
+    func sceneFailovers() -> AsyncStream<SceneFailoverNotice> { AsyncStream { $0.finish() } }
     // 默认抛“不支持”，不再静默成功（UI 会提示失败而不是假装生效，REVIEW-Q2 P2）。
     func setSceneSource(sceneId: String, source: SceneSource) async throws {
         throw ZephyrError(code: .internal, message: "setSceneSource unsupported")
