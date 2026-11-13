@@ -604,7 +604,6 @@ impl NodeStore {
             tokens.push(c.string()?);
         }
         let dict_lc = dict.iter().map(|s| s.to_lowercase()).collect();
-        drop(c);
         Ok(Self { map, count, dict, dict_lc, regions, records_off, names_off, index, tokens })
     }
 
