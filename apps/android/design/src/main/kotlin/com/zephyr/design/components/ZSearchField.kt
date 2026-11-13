@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
@@ -62,7 +65,9 @@ fun ZSearchField(
         ZIcon(ZIcons.Search, tint = c.text2, size = 20.dp)
         Spacer(Modifier.width(10.dp))
         Box(Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
-            if (value.isEmpty()) ZText(placeholder, style = ZTheme.type.body, color = c.text3, maxLines = 1)
+            // Review D-P2-7: the placeholder is drawn here but announced as the field's own name, so TalkBack still
+            // says what the field is for once text has been typed.
+            if (value.isEmpty()) ZText(placeholder, Modifier.clearAndSetSemantics {}, style = ZTheme.type.body, color = c.text3, maxLines = 1)
             BasicTextField(
                 value = shown,
                 onValueChange = { v ->
@@ -77,7 +82,7 @@ fun ZSearchField(
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = KeyboardActions(onSearch = { onSubmit?.invoke() }),
                 visualTransformation = visualTransformation,
-                modifier = Modifier.fillMaxWidth().then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier),
+                modifier = Modifier.fillMaxWidth().semantics { contentDescription = placeholder }.then(if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier),
             )
         }
         if (value.isNotEmpty()) {
