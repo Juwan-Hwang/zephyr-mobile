@@ -121,6 +121,16 @@ struct SharedState: Codable, Sendable, Hashable {
 
     // MARK: 场景
 
+    /// 场景列表的“形状”：只有场景集合、出口节点或延迟档位（未测 / 超时 / 正常）变化才算显著变化；
+    /// 延迟数值每次测速都会变，不能因此反复 reload 全部小组件时间线（REVIEW-Q2 X-P1-15）。
+    static func scenesShape(_ list: [SceneSummary]) -> [String] {
+        list.map { s in
+            let tier = s.latencyMs.map { $0 < 0 ? "x" : "ok" } ?? "n"
+            return "\(s.id)|\(s.name)|\(s.region)|\(s.nodeName)|\(tier)"
+        }
+    }
+
+
     struct SceneSummary: Codable, Sendable, Hashable, Identifiable {
         /// "ai" | "video" | "other" | uuid
         var id: String
