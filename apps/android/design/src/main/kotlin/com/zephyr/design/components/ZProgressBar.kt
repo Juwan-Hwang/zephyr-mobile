@@ -18,16 +18,16 @@ import androidx.compose.ui.unit.dp
 import com.zephyr.design.theme.ZAnim
 import com.zephyr.design.theme.ZTheme
 
-/** 3dp usage bar (subscription traffic). */
+/** 2dp usage bar (subscription traffic). */
 @Composable
 fun ZProgressBar(progress: Float, modifier: Modifier = Modifier, color: Color = ZTheme.colors.text2) {
     val p by animateFloatAsState(progress.coerceIn(0f, 1f), ZAnim.slow(), label = "progress")
     Box(
         modifier
             .fillMaxWidth()
-            .height(3.dp)
+            .height(2.dp)
             .clip(ZTheme.shapes.pill)
-            .background(ZTheme.colors.surface4)
+            .background(ZTheme.colors.hairline)
             .semantics { progressBarRangeInfo = ProgressBarRangeInfo(p, 0f..1f) },
     ) {
         Box(Modifier.fillMaxHeight().fillMaxWidth(p).clip(ZTheme.shapes.pill).background(color))

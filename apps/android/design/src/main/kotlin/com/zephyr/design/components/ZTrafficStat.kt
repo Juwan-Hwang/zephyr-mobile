@@ -31,12 +31,12 @@ fun ZTrafficStat(downBps: Long, upBps: Long, modifier: Modifier = Modifier) {
         Row(verticalAlignment = Alignment.Bottom) {
             RollingNumber(dv)
             Spacer(Modifier.width(10.dp))
-            ZText("$du/s", Modifier.padding(bottom = 8.dp), style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight), color = c.text3)
+            ZText("$du/s", Modifier.padding(bottom = 8.dp), style = ZTheme.type.footnote, color = c.text3)
             Spacer(Modifier.width(4.dp))
             ZIcon(ZIcons.ArrowDown, Modifier.padding(bottom = 10.dp), tint = c.download, size = 18.dp)
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
-            ZText("$uv $uu/s", style = ZTheme.type.numeric.copy(fontSize = ZTheme.type.headline.fontSize), color = c.text2)
+            ZText("$uv $uu/s", style = ZTheme.type.numeric.copy(fontSize = ZTheme.type.footnote.fontSize), color = c.text2)
             Spacer(Modifier.width(4.dp))
             ZIcon(ZIcons.ArrowUp, tint = c.upload, size = 16.dp)
         }
