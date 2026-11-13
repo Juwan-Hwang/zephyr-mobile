@@ -54,6 +54,8 @@ import com.zephyr.design.components.ZIcons
 import com.zephyr.design.components.ZText
 import com.zephyr.design.components.zPressable
 import com.zephyr.design.format.ZFormat
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.zephyr.design.theme.ZAnim
 import com.zephyr.design.theme.ZTheme
 import com.zephyr.engine.UsageSummary
@@ -65,10 +67,13 @@ import kotlin.math.PI
 import kotlin.math.sin
 
 enum class TodayStyle(val label: String, val bg: Color, val line: Color, val fg: Color) {
-    Night("夜", Color(0xFF05060A), Color(0xFF3BA4FF), Color.White),
-    Dawn("晨", Color(0xFFF1ECE6), Color(0xFFE07A4F), Color(0xFF1B1B1F)),
-    Mist("雾", Color(0xFFE6ECF4), Color(0xFF6C8DB8), Color(0xFF1B1B1F)),
+    Night("夜", Color(0xFF02040A), Color(0xFF3BA4FF), Color.White),
+    Dawn("晨", Color(0xFFF6EEE6), Color(0xFFE07A4F), Color(0xFF1B1B1F)),
+    Mist("雾", Color(0xFFECEDEF), Color(0xFF6C8DB8), Color(0xFF1B1B1F)),
 }
+
+private val PageBg = Color.Black
+private val PageFg = Color.White
 
 /** "今日" share card (prototype `today`): flow-field art generated from today's hourly traffic — no node names, no IPs. */
 @Composable
@@ -79,6 +84,20 @@ fun TodayScreen(onClose: () -> Unit) {
     val scope = rememberCoroutineScope()
     val ctx = LocalContext.current
     val c = ZTheme.colors
+    // Black page: light status/nav bar icons while it is open, restored on leave.
+    val view = androidx.compose.ui.platform.LocalView.current
+    androidx.compose.runtime.DisposableEffect(view) {
+        val window = (view.context as? android.app.Activity)?.window
+        val ctl = window?.let { androidx.core.view.WindowCompat.getInsetsController(it, view) }
+        val wasLight = ctl?.isAppearanceLightStatusBars
+        val wasLightNav = ctl?.isAppearanceLightNavigationBars
+        ctl?.isAppearanceLightStatusBars = false
+        ctl?.isAppearanceLightNavigationBars = false
+        onDispose {
+            if (wasLight != null) ctl.isAppearanceLightStatusBars = wasLight
+            if (wasLightNav != null) ctl.isAppearanceLightNavigationBars = wasLightNav
+        }
+    }
     // Result of 存储图像, shown in place of the footnote for a few seconds (review A-P1-3: errors are no longer silent).
     var saved by remember { mutableStateOf<String?>(null) }
     val doSave: () -> Unit = {
@@ -91,13 +110,14 @@ fun TodayScreen(onClose: () -> Unit) {
     val storagePermission = androidx.activity.compose.rememberLauncherForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),
     ) { granted -> if (granted) doSave() else saved = "需要存储权限才能保存图像" }
-    Column(Modifier.fillMaxSize().background(c.bg).statusBarsPadding().navigationBarsPadding()) {
-        Row(Modifier.fillMaxWidth().padding(8.dp)) { Spacer(Modifier.weight(1f)); ZIconButton(ZIcons.Close, "关闭", onClose, tint = c.text2) }
+    // Review H-P2-13: the prototype's 今日 page is always black, whatever the app theme.
+    Column(Modifier.fillMaxSize().background(PageBg).statusBarsPadding().navigationBarsPadding()) {
+        Row(Modifier.fillMaxWidth().padding(8.dp)) { Spacer(Modifier.weight(1f)); ZIconButton(ZIcons.Close, "关闭", onClose, tint = PageFg.copy(alpha = 0.6f)) }
         val u = usage
         Box(
             Modifier.padding(horizontal = 22.dp).fillMaxWidth().aspectRatio(0.68f)
                 .drawWithContent { layer.record { this@drawWithContent.drawContent() }; drawLayer(layer) }
-                .clip(ZTheme.shapes.card).background(style.bg).border(1.dp, c.hairline, ZTheme.shapes.card),
+                .clip(ZTheme.shapes.card).background(style.bg).border(1.dp, PageFg.copy(alpha = 0.10f), ZTheme.shapes.card),
         ) {
             if (u != null) Flow(u.hourly, style)
             Column(Modifier.align(Alignment.BottomStart).padding(24.dp)) {
@@ -105,9 +125,9 @@ fun TodayScreen(onClose: () -> Unit) {
                 ZText(date, style = ZTheme.type.footnote, color = style.fg.copy(alpha = 0.6f))
                 val (v, unit) = ZFormat.bytes(u?.todayBytes ?: 0)
                 Row(verticalAlignment = Alignment.Bottom) {
-                    ZText(v, style = ZTheme.type.display, color = style.fg)
+                    ZText(v, style = ZTheme.type.display.copy(fontSize = 84.sp, lineHeight = 88.sp, fontWeight = FontWeight.ExtraLight), color = style.fg)
                     Spacer(Modifier.width(8.dp))
-                    ZText(unit, Modifier.padding(bottom = 14.dp), style = ZTheme.type.title.copy(fontWeight = ZTheme.type.body.fontWeight), color = style.fg.copy(alpha = 0.6f))
+                    ZText(unit, Modifier.padding(bottom = 14.dp), style = ZTheme.type.title.copy(fontSize = 18.sp, fontWeight = ZTheme.type.body.fontWeight), color = style.fg.copy(alpha = 0.6f))
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(36.dp)) {
                     Stat("${u?.regionsToday ?: 0}", "个地区", style.fg)
@@ -127,14 +147,14 @@ fun TodayScreen(onClose: () -> Unit) {
         Spacer(Modifier.height(20.dp))
         Row(Modifier.align(Alignment.CenterHorizontally), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             TodayStyle.entries.forEach { s ->
-                val border by animateColorAsState(if (s == style) c.text2 else c.hairlineStrong, ZAnim.standard(), label = "b")
+                val border by animateColorAsState(if (s == style) PageFg.copy(alpha = 0.6f) else PageFg.copy(alpha = 0.16f), ZAnim.standard(), label = "b")
                 Row(
                     Modifier.clip(ZTheme.shapes.pill).border(1.dp, border, ZTheme.shapes.pill).zPressable(haptic = s != style) { style = s }.padding(start = 6.dp, end = 16.dp, top = 6.dp, bottom = 6.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Box(Modifier.size(28.dp).clip(CircleShape).background(s.bg).border(1.dp, c.hairlineStrong, CircleShape))
+                    Box(Modifier.size(28.dp).clip(CircleShape).background(s.bg).border(1.dp, PageFg.copy(alpha = 0.16f), CircleShape))
                     Spacer(Modifier.width(10.dp))
-                    ZText(s.label, style = ZTheme.type.callout)
+                    ZText(s.label, style = ZTheme.type.callout, color = PageFg)
                 }
             }
         }
@@ -147,7 +167,7 @@ fun TodayScreen(onClose: () -> Unit) {
                 if (needs) storagePermission.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) else doSave()
             }, Modifier.weight(1f), kind = ZButtonKind.Secondary)
         }
-        ZText(saved ?: "图案由今天的流量生成，不含节点名称与 IP 地址。", Modifier.fillMaxWidth().padding(16.dp), style = ZTheme.type.footnote.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = c.text3)
+        ZText(saved ?: "图案由今天的流量生成，不含节点名称与 IP 地址。", Modifier.fillMaxWidth().padding(16.dp), style = ZTheme.type.footnote.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = PageFg.copy(alpha = 0.45f))
     }
 }
 
