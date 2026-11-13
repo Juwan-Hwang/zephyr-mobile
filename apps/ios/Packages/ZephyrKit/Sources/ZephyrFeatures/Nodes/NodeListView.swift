@@ -147,8 +147,6 @@ final class NodeListView: UIView, UICollectionViewDataSource, UICollectionViewDe
         updateChrome()
     }
 
-    }
-
     // MARK: 布局
 
     var viewportHeight: CGFloat { max(style.rowHeight, collectionView.bounds.height - layout.bottomInset) }
