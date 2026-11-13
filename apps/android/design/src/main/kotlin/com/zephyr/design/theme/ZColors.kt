@@ -72,7 +72,8 @@ data class ZThemeColors(
             download = t.colorDownload,
             upload = t.screenUp,
             glass = t.screenGlass,
-            scrim = t.screenCmdBg,
+            // Review D-P2-3: prototype `.veil` rgba(0,0,0,.5), light ×0.6 — never the milky command backdrop.
+            scrim = Color.Black.copy(alpha = if (t.isDark) 0.5f else 0.3f),
             onPrimaryButton = t.screenOnPrimary,
             primaryButton = t.screenPrimary,
         )
