@@ -67,7 +67,7 @@ providers.gradleProperty("zephyr.testJava").orNull?.let { java ->
         javaLauncher.unset()
         executable = java
         // ByteBuddy (Paparazzi) must self-attach: it can't spawn a helper JVM through qemu.
-        jvmArgs("-Djdk.attach.allowAttachSelf=true", "-XX:+EnableDynamicAgentLoading")
+        jvmArgs("-Duser.timezone=UTC", "-Djdk.attach.allowAttachSelf=true", "-XX:+EnableDynamicAgentLoading")
     }
 }
 

@@ -57,16 +57,25 @@ object ZFormat {
         }
     }
 
-    /** Expiry: "26 天后到期" / "明天到期" / "已过期". */
-    fun expires(at: Long, now: Long): String {
+    /**
+     * Expiry: "26 天后到期" / "明天到期" / "已过期". With [weekday], expiries 2–6 days out
+     * read as the weekday in the device zone ("周一到期", review H-P2-7).
+     */
+    fun expires(at: Long, now: Long, weekday: Boolean = false): String {
         val days = Math.floorDiv(at - now, 86_400_000L)
         return when {
             at < now -> "已过期"
             days == 0L -> "今天到期"
             days == 1L -> "明天到期"
+            weekday && days < 7 -> {
+                val dow = java.time.Instant.ofEpochMilli(at).atZone(java.time.ZoneId.systemDefault()).dayOfWeek.value
+                "${WEEKDAYS[dow - 1]}到期"
+            }
             else -> "$days 天后到期"
         }
     }
+
+    private val WEEKDAYS = arrayOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")
 
     fun micros(us: Long): String = if (us < 1000) String.format(Locale.US, "%.2f ms", us / 1000.0) else String.format(Locale.US, "%.1f ms", us / 1000.0)
 }
