@@ -81,15 +81,17 @@ fun ZephyrTheme(
     content: @Composable () -> Unit,
 ) {
     val colors = remember(dark, accent) { (if (dark) ZThemeColors.dark else ZThemeColors.light).withAccent(accent) }
+    val tokens = if (dark) ZColors.Dark else ZColors.Light
+    val indication = remember(tokens.screenPressed) { ZIndication(tokens.screenPressed) }
     val selection = remember(colors) { TextSelectionColors(colors.accent, colors.accent.copy(alpha = 0.3f)) }
     CompositionLocalProvider(
         LocalColors provides colors,
-        LocalZColors provides if (dark) ZColors.Dark else ZColors.Light,
+        LocalZColors provides tokens,
         LocalType provides ZTypography.default,
         LocalSpacing provides ZSpacing(),
         LocalShapes provides ZShapes(),
         LocalTextSelectionColors provides selection,
-        LocalIndication provides ZIndication,
+        LocalIndication provides indication,
         content = content,
     )
 }
