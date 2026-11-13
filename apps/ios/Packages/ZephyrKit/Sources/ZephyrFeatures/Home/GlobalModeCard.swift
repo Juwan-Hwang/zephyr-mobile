@@ -20,7 +20,7 @@ struct GlobalModeCard: View {
         ZCard(cornerRadius: HMetrics.cardRadius) {
             VStack(alignment: .leading, spacing: ZTokens.Space.n1) {
                 Text("全局模式").zType(.body).foregroundStyle(ZTokens.Colors.screenT1)
-                Text(verbatim: "所有流量均经由\(model.globalNode?.name ?? "当前节点")。场景已暂停。")
+                Text(verbatim: ZL.s("所有流量均经由%@。场景已暂停。", model.globalNode?.name ?? ZL.tr("当前节点")))
                     .zType(.footnote).foregroundStyle(ZColor.t3)
                     .fixedSize(horizontal: false, vertical: true)
                 HStack(spacing: ZTokens.Space.n3) {
