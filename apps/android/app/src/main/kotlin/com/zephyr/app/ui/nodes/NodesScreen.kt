@@ -112,6 +112,10 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: String = "资料
                     ZEmptyState("无结果", Modifier.align(Alignment.Center), message = "没有与“${ui.query.trim()}”匹配的节点")
                 } else {
                     val epoch by vm.pageEpoch
+                    LaunchedEffect(list, result) {
+                        snapshotFlow { list.layoutInfo.visibleItemsInfo.let { v -> if (v.isEmpty()) IntRange.EMPTY else v.first().index..v.last().index } }
+                            .collect { vm.prefetch(it) }
+                    }
                     LazyColumn(
                         state = list,
                         modifier = Modifier.fillMaxSize().semantics { collectionInfo = CollectionInfo(rowCount, 1) },

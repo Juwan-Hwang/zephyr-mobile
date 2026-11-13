@@ -125,11 +125,20 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
         null -> null
     }
 
+    /** Pure read, safe during composition; pages are fetched by [prefetch] (review L-P2-6). */
     fun node(ordinal: Long): NodeSummary? {
         val page = ordinal / PAGE
-        val p = pages[page]
-        if (p == null) { load(page); return null }
-        return p.getOrNull((ordinal - page * PAGE).toInt())
+        return pages[page]?.getOrNull((ordinal - page * PAGE).toInt())
+    }
+
+    /** Load the pages covering visible [rows] plus one ahead; called from a LaunchedEffect, never from composition. */
+    fun prefetch(rows: IntRange) {
+        if (rows.isEmpty()) return
+        val ords = rows.mapNotNull { (rowAt(it) as? NodeRow.Node)?.ordinal }
+        if (ords.isEmpty()) return
+        val first = ords.min() / PAGE
+        val last = ords.max() / PAGE
+        for (p in first..last + 1) if (pages[p] == null) load(p)
     }
 
     private fun load(page: Long) {
