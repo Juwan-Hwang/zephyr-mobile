@@ -247,12 +247,15 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
     /** Plain notice without undo (e.g. "已添加 Orbit（512 个节点）" after an import, review L-P2-12). */
     fun notify(msg: String) = showToast(msg, null, null)
 
+    /** Undo window in ms; AppRoot stretches it with TalkBack's recommended timeout (review H-P2-14). */
+    var toastWindowMs: Long = com.zephyr.design.tokens.ZMotion.undoWindow.toLong()
+
     private fun showToast(msg: String, sceneId: String?, prev: NodeId?, undo: (suspend () -> Unit)? = null) {
         toastJob?.cancel()
         val serial = ++toastSerial
         _ui.update { it.copy(toast = UndoToast(msg, sceneId, prev, serial, undo)) }
         toastJob = viewModelScope.launch {
-            delay(com.zephyr.design.tokens.ZMotion.undoWindow.toLong())
+            delay(toastWindowMs)
             _ui.update { if (it.toast?.serial == serial) it.copy(toast = null) else it }
         }
     }

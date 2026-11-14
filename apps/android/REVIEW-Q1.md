@@ -46,6 +46,7 @@
 - H-P2-1：首页模式/时长行改 14sp（原型 .sub），时长 t3；模式仍用弹出菜单（平台习惯，点按循环待设计确认）。
 - L-P2-1：库页统计块最小高 110、数字顶/说明底、说明 14sp、圆角 20、间距 10；大字号下数字缩小适配而非省略。
 - D-P2-1：ZSurface/ZCard/ZListGroup 增加 level（s1/s2）与 shape；首页场景/全局/订阅卡改 s1 + 22dp，库页分组 s1 + 18dp，sheet 列表保持 s2。
+- 第三十二批（PR agent/android/undo-drain）：✅ H-P2-14（撤销窗口取 tokens 5 s；带“撤销”的吐司底部 2dp 强调色倒计时条，与 iOS ZToast 一致；TalkBack 开启时按 calculateRecommendedTimeoutMillis 延长窗口与倒计时）。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览
