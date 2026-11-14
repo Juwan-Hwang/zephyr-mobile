@@ -232,6 +232,45 @@ impl MobileCore {
         }
         Ok(f)
     }
+
+    /// 扫描目标（§15.d）：查询结果里该测的节点 id，先未测、再按上次测速时间从旧到新；
+    /// max_age 内已测的不返回（max_age ≤ 0：只返回从未测过的）。limit 上限 512（一批 latencyTestBatch）。
+    /// 只看结果集前 65536 个节点，千万级库里也是毫秒级；平台按返回个数显示“正在检测 done/total”。
+    pub fn scan_targets(&self, query: String, limit: u32, now_millis: i64, max_age_millis: i64) -> Result<Vec<u64>, MobileError> {
+        const WINDOW: u64 = 65_536;
+        const PAGE: u32 = 4_096;
+        let limit = (limit as usize).min(URL_TEST_BATCH);
+        if limit == 0 {
+            return Ok(vec![]);
+        }
+        let s = self.store()?;
+        let (bm, _) = s.timed_query(&query);
+        let total = bm.len().min(WINDOW);
+        let mut untested = Vec::new();
+        let mut stale: Vec<(i64, u64)> = Vec::new();
+        let c = self.latency.lock();
+        let mut off = 0;
+        while off < total && untested.len() < limit {
+            let rows = s.page(&bm, off, PAGE.min((total - off) as u32));
+            if rows.is_empty() {
+                break;
+            }
+            off += rows.len() as u64;
+            for r in rows {
+                match c.get(r.id, 0, 0) {
+                    None => untested.push(r.id),
+                    Some((_, at)) if max_age_millis > 0 && now_millis - at > max_age_millis => stale.push((at, r.id)),
+                    Some(_) => {}
+                }
+            }
+        }
+        drop(c);
+        untested.truncate(limit);
+        stale.sort_unstable();
+        let rest = limit - untested.len();
+        untested.extend(stale.into_iter().take(rest).map(|x| x.1));
+        Ok(untested)
+    }
 }
 
 #[cfg(test)]
@@ -268,6 +307,23 @@ mod tests {
         // 新鲜度：只看 1.5 s 内的 → 只剩刚记的那条超时
         let f = core.node_funnel(3000, 1500, 300).unwrap();
         assert_eq!((f.tested, f.reachable), (1, 0));
+    }
+
+    #[test]
+    fn scan_targets_order() {
+        let (_d, core, _sub, rows) = crate::scene_api::tests::setup();
+        // setup：5 个节点里 4 个在 1000 测过
+        let all = core.scan_targets(String::new(), 10, 2000, 0).unwrap();
+        assert_eq!(all.len(), 1, "max_age ≤ 0 只要未测的");
+        assert!(!rows.iter().take(4).any(|r| all.contains(&r.id)));
+        core.record_latencies(vec![LatencySample { id: rows[0].id, ms: 30, at: 1500 }]).unwrap();
+        // 新鲜度 600 ms：1000 测的算过期，1500 的不算；未测在前，过期按时间从旧到新
+        let t = core.scan_targets(String::new(), 10, 2000, 600).unwrap();
+        assert_eq!(t.len(), 4);
+        assert_eq!(t[0], all[0]);
+        assert!(!t.contains(&rows[0].id));
+        assert_eq!(core.scan_targets(String::new(), 2, 2000, 600).unwrap().len(), 2);
+        assert!(core.scan_targets(String::new(), 0, 2000, 600).unwrap().is_empty());
     }
 
     #[test]

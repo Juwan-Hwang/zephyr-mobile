@@ -879,6 +879,8 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -1008,6 +1010,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_stats(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_runtime_config(`ptr`: Pointer,`subscriptionId`: RustBuffer.ByValue,`options`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scan_targets(`ptr`: Pointer,`query`: RustBuffer.ByValue,`limit`: Int,`nowMillis`: Long,`maxAgeMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_candidates(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`region`: RustBuffer.ByValue,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
@@ -1265,6 +1269,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_runtime_config(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scan_targets(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_candidates(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_exit_probe(
@@ -1475,6 +1481,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_runtime_config() != 46462.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_scan_targets() != 51767.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_candidates() != 42848.toShort()) {
@@ -2586,6 +2595,13 @@ public interface MobileCoreInterface {
     fun `runtimeConfig`(`subscriptionId`: kotlin.String, `options`: RuntimeOptions): kotlin.String
     
     /**
+     * 扫描目标（§15.d）：查询结果里该测的节点 id，先未测、再按上次测速时间从旧到新；
+     * max_age 内已测的不返回（max_age ≤ 0：只返回从未测过的）。limit 上限 512（一批 latencyTestBatch）。
+     * 只看结果集前 65536 个节点，千万级库里也是毫秒级；平台按返回个数显示“正在检测 done/total”。
+     */
+    fun `scanTargets`(`query`: kotlin.String, `limit`: kotlin.UInt, `nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long): List<kotlin.ULong>
+    
+    /**
      * 左右滑动切地区；region 为空时用当前节点所在地区。按 smart 分数排序，最多 50。
      */
     fun `sceneCandidates`(`sceneId`: kotlin.String, `region`: kotlin.String?, `nowMillis`: kotlin.Long): List<RankedNode>
@@ -3313,6 +3329,24 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_runtime_config(
         it, FfiConverterString.lower(`subscriptionId`),FfiConverterTypeRuntimeOptions.lower(`options`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 扫描目标（§15.d）：查询结果里该测的节点 id，先未测、再按上次测速时间从旧到新；
+     * max_age 内已测的不返回（max_age ≤ 0：只返回从未测过的）。limit 上限 512（一批 latencyTestBatch）。
+     * 只看结果集前 65536 个节点，千万级库里也是毫秒级；平台按返回个数显示“正在检测 done/total”。
+     */
+    @Throws(MobileException::class)override fun `scanTargets`(`query`: kotlin.String, `limit`: kotlin.UInt, `nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long): List<kotlin.ULong> {
+            return FfiConverterSequenceULong.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_scan_targets(
+        it, FfiConverterString.lower(`query`),FfiConverterUInt.lower(`limit`),FfiConverterLong.lower(`nowMillis`),FfiConverterLong.lower(`maxAgeMillis`),_status)
 }
     }
     )

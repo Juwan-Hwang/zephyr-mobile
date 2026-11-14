@@ -1010,6 +1010,13 @@ public protocol MobileCoreProtocol : AnyObject {
     func runtimeConfig(subscriptionId: String, options: RuntimeOptions) throws  -> String
     
     /**
+     * 扫描目标（§15.d）：查询结果里该测的节点 id，先未测、再按上次测速时间从旧到新；
+     * max_age 内已测的不返回（max_age ≤ 0：只返回从未测过的）。limit 上限 512（一批 latencyTestBatch）。
+     * 只看结果集前 65536 个节点，千万级库里也是毫秒级；平台按返回个数显示“正在检测 done/total”。
+     */
+    func scanTargets(query: String, limit: UInt32, nowMillis: Int64, maxAgeMillis: Int64) throws  -> [UInt64]
+    
+    /**
      * 左右滑动切地区；region 为空时用当前节点所在地区。按 smart 分数排序，最多 50。
      */
     func sceneCandidates(sceneId: String, region: String?, nowMillis: Int64) throws  -> [RankedNode]
@@ -1564,6 +1571,22 @@ open func runtimeConfig(subscriptionId: String, options: RuntimeOptions)throws  
     uniffi_zephyr_mobile_core_fn_method_mobilecore_runtime_config(self.uniffiClonePointer(),
         FfiConverterString.lower(subscriptionId),
         FfiConverterTypeRuntimeOptions.lower(options),$0
+    )
+})
+}
+    
+    /**
+     * 扫描目标（§15.d）：查询结果里该测的节点 id，先未测、再按上次测速时间从旧到新；
+     * max_age 内已测的不返回（max_age ≤ 0：只返回从未测过的）。limit 上限 512（一批 latencyTestBatch）。
+     * 只看结果集前 65536 个节点，千万级库里也是毫秒级；平台按返回个数显示“正在检测 done/total”。
+     */
+open func scanTargets(query: String, limit: UInt32, nowMillis: Int64, maxAgeMillis: Int64)throws  -> [UInt64] {
+    return try  FfiConverterSequenceUInt64.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_scan_targets(self.uniffiClonePointer(),
+        FfiConverterString.lower(query),
+        FfiConverterUInt32.lower(limit),
+        FfiConverterInt64.lower(nowMillis),
+        FfiConverterInt64.lower(maxAgeMillis),$0
     )
 })
 }
@@ -8074,6 +8097,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_runtime_config() != 46462) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_scan_targets() != 51767) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_candidates() != 42848) {
