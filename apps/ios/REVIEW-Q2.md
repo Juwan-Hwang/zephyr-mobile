@@ -64,7 +64,7 @@
 - ~~代理凭据存 UserDefaults，应进 Keychain~~ [已修]
 - ~~CoreEngine queries/remapped 无限增长~~ [已修]；~~协议默认 no-op~~ [已修]。
 - ~~DarwinObservation deinit 与回调竞态~~ [已修]；~~CoreEngine `queries`/`remapped` 字典无限增长~~ [已修]。
-- ~~`updateAll` 吞错误且重载隧道 N 次~~ [已修]；订阅导入无进度/取消；无日志/诊断 UI；~~`importFile` 主线程读文件~~ [已修]。
+- ~~`updateAll` 吞错误且重载隧道 N 次~~ [已修]；订阅导入无进度/取消；~~无日志/诊断 UI~~ [已修：设置 › 诊断 › 日志，级别筛选/暂停/清空/分享]；~~`importFile` 主线程读文件~~ [已修]。
 - [已修] 协议扩展里 `setSceneSource`/`overrideHost` 默认静默 no-op（应改为必须实现或抛 unsupported）。
 - [已修] L-P2-7 registerForTraitChanges；L-P2-8 已有重试。
 - 原型“检测中 138/512”进度未显示；~~时钟格式忽略 12/24 小时~~ [已修]。
