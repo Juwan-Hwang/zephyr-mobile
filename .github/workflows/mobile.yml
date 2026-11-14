@@ -92,15 +92,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-        with: { workspaces: core-mobile }
       - id: nk
         name: 原生库缓存键（core-mobile / mihomo-mobile / zephyr 子模块 / 构建脚本）
         run: echo "key=$(git rev-parse HEAD:vendor/zephyr)-${{ hashFiles('core-mobile/src/**', 'core-mobile/Cargo.*', 'core-mobile/bindings/**', 'mihomo-mobile/**', 'tools/build-ios-xcframework.sh', 'tools/build-mihomo.sh') }}" >> "$GITHUB_OUTPUT"
       - id: ncache
         uses: actions/cache@v4
         with: { path: build/ios, key: 'ios-native-${{ steps.nk.outputs.key }}' }
+      - uses: dtolnay/rust-toolchain@stable
+        if: steps.ncache.outputs.cache-hit != 'true'
+      - uses: Swatinem/rust-cache@v2
+        if: steps.ncache.outputs.cache-hit != 'true'
+        with: { workspaces: core-mobile }
       - name: ZephyrMobileCore.xcframework（→ build/ios）
         if: steps.ncache.outputs.cache-hit != 'true'
         run: tools/build-ios-xcframework.sh
@@ -157,15 +159,17 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - name: Android SDK platform 37
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37.0" "build-tools;37.0.0" >/dev/null || yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37" >/dev/null
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-        with: { workspaces: core-mobile }
       - id: nk
         name: 原生库缓存键（core-mobile / mihomo-mobile / zephyr 子模块 / 构建脚本）
         run: echo "key=$(git rev-parse HEAD:vendor/zephyr)-${{ hashFiles('core-mobile/src/**', 'core-mobile/Cargo.*', 'core-mobile/bindings/**', 'mihomo-mobile/**', 'tools/build-android-libs.sh', 'tools/build-mihomo.sh') }}" >> "$GITHUB_OUTPUT"
       - id: ncache
         uses: actions/cache@v4
         with: { path: apps/android/core-engine/src/main/jniLibs, key: 'android-native-${{ steps.nk.outputs.key }}' }
+      - uses: dtolnay/rust-toolchain@stable
+        if: steps.ncache.outputs.cache-hit != 'true'
+      - uses: Swatinem/rust-cache@v2
+        if: steps.ncache.outputs.cache-hit != 'true'
+        with: { workspaces: core-mobile }
       - name: core-mobile .so（→ core-engine/src/main/jniLibs，不入库）
         if: steps.ncache.outputs.cache-hit != 'true'
         run: cargo install cargo-ndk --locked && ABIS="arm64-v8a x86_64" tools/build-android-libs.sh
