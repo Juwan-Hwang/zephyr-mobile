@@ -7,8 +7,8 @@
 //   候选列表（点选切换，触感）
 //   例外 / 检测频率 / 重新检测
 //
-// 契约 v0 只有 sceneCandidates（≤ 50）与 Scene.available；"检测自 2 个订阅中的 512 个节点"和
-// 按服务的漏斗需要契约补充（见 NOTES-H.md），这里用候选数据推出能确定的三级漏斗。
+// lede 与漏斗取契约 §15.c nodeFunnel：“检测自 N 个订阅中的 M 个节点”，漏斗 全部 → 已测速 → 可连通 → 延迟低于 300 ms。
+// 按服务的两级（可访问 GPT …）核心不探测，不显示。引擎返回 nil 时退回候选推出的三级漏斗（REVIEW-Q1 H-P2-9）。
 
 import SwiftUI
 import ZephyrDesign
@@ -20,6 +20,7 @@ struct SceneSheet: View {
     @Environment(AppModel.self) private var model
     @State private var candidates: [NodeSummary] = []
     @State private var loaded = false
+    @State private var nodeFunnel: NodeFunnel?
     @State private var selecting: NodeId?
 
     var body: some View {
@@ -77,7 +78,9 @@ struct SceneSheet: View {
             }
         }
         .task(id: scene.testedAt) {
+            async let funnel = model.engine.nodeFunnel(maxAgeMs: Self.funnelMaxAgeMs, thresholdMs: 300)
             candidates = await model.sceneCandidates(sceneId)
+            nodeFunnel = await funnel
             loaded = true
         }
         .sensoryFeedback(.selection, trigger: scene.selected.id)
@@ -155,13 +158,33 @@ struct SceneSheet: View {
 
     private func lede(_ scene: Scene) -> String {
         var parts: [String] = []
-        if loaded, !candidates.isEmpty { parts.append(ZL.f("检测自 %lld 个候选节点", Int64(candidates.count))) }
+        if loaded, let f = nodeFunnel, f.poolSize > 0 {
+            parts.append(ZL.f("检测自 %lld 个订阅中的 %lld 个节点", Int64(f.sourceCount), Int64(f.poolSize)))
+        } else if loaded, !candidates.isEmpty {
+            parts.append(ZL.f("检测自 %lld 个候选节点", Int64(candidates.count)))
+        }
         if let t = scene.testedAt { parts.append(ZL.s("%@检测", ZFormat.relative(t, now: model.now()))) }
         return parts.isEmpty ? " " : parts.joined(separator: " · ")
     }
 
-    /// 由候选推出的三级漏斗：候选 → 延迟低于 300 ms → 全部可访问（Scene.available）。
+    /// 漏斗新鲜度与场景候选一致：24 h（契约 §15.c）。
+    static let funnelMaxAgeMs: Int64 = 24 * 3_600_000
+
+    /// 契约漏斗四级；无数据时用候选推出的三级。
     private func funnel(_ scene: Scene) -> [FunnelStep] {
+        if let f = nodeFunnel, f.poolSize > 0 { return Self.steps(f) }
+        return candidateFunnel(scene)
+    }
+
+    static func steps(_ f: NodeFunnel) -> [FunnelStep] {
+        [FunnelStep(count: f.poolSize, label: ZL.tr("全部")),
+         FunnelStep(count: f.tested, label: ZL.tr("已测速")),
+         FunnelStep(count: f.reachable, label: ZL.tr("可连通")),
+         FunnelStep(count: f.underThreshold, label: ZL.f("延迟低于 %lld ms", Int64(f.thresholdMs)))]
+    }
+
+    /// 由候选推出的三级漏斗：候选 → 延迟低于 300 ms → 全部可访问（Scene.available）。
+    private func candidateFunnel(_ scene: Scene) -> [FunnelStep] {
         let fast = candidates.filter { ($0.latencyMs ?? .max) >= 0 && ($0.latencyMs ?? .max) < 300 }.count
         return [FunnelStep(count: candidates.count, label: ZL.tr("全部候选")),
                 FunnelStep(count: fast, label: ZL.tr("延迟低于 300 ms")),

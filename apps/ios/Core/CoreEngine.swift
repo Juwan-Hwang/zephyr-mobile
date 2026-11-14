@@ -353,6 +353,17 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
             .map { r in var s = CoreEngine.row(r.row); s.latencyMs = r.latencyMs > 0 ? r.latencyMs : nil; return s }
     }
 
+    /// 契约 §15.c。节点库未就绪或核心报错时返回 nil（场景 sheet 隐藏漏斗数据，不编造）。
+    public func nodeFunnel(maxAgeMs: Int64, thresholdMs: Int32) async -> ZephyrKit.NodeFunnel? {
+        guard let c = await nodes() else { return mockData ? await fallback.nodeFunnel(maxAgeMs: maxAgeMs, thresholdMs: thresholdMs) : nil }
+        let now = clock()
+        return await runQuiet { () -> ZephyrKit.NodeFunnel? in
+            guard let f = try? c.nodeFunnel(nowMillis: now, maxAgeMillis: maxAgeMs, thresholdMs: thresholdMs) else { return nil }
+            return ZephyrKit.NodeFunnel(sourceCount: Int(f.sourceCount), poolSize: Int(f.poolSize), tested: Int(f.tested),
+                                        reachable: Int(f.reachable), underThreshold: Int(f.underThreshold), thresholdMs: Int(f.thresholdMs))
+        }
+    }
+
     public func previewSceneChange(sceneId: String, nodeId: NodeId) async throws -> ZephyrKit.ExitChange {
         guard let c = await nodes() else { return try await demo(.sceneNotFound) { try await fallback.previewSceneChange(sceneId: sceneId, nodeId: nodeId) } }
         let x = try await run(.sceneNotFound) { try c.previewSceneChange(sceneId: sceneId, nodeId: nodeId) }

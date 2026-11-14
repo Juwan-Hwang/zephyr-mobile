@@ -11,6 +11,10 @@ struct PinnedNode: Sendable {
 
 enum MockFixtures {
 
+    /// 原型场景 sheet lede“检测自 2 个订阅中的 512 个节点”（契约 §15.c Mock 约定）。
+    static let funnelSourceCount = 2
+    static let funnelPoolSize = 512
+
     static func pinnedId(_ region: String, _ k: UInt64) -> NodeId {
         UInt64(MockNodes.regionIndex(code: region)!) * MockNodes.idStride + 90_000_000 + k
     }

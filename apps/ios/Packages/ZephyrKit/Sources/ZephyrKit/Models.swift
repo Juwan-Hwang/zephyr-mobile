@@ -576,6 +576,21 @@ extension Settings {
     }
 }
 
+/// 契约 §15.c `nodeFunnel`：场景 sheet 的 lede 与漏斗计数。每个节点只看最近一次样本；
+/// `tested` 含超时；`reachable` = ms ≥ 0；`underThreshold` = 0 ≤ ms < thresholdMs。
+public struct NodeFunnel: Sendable, Hashable, Codable {
+    public var sourceCount: Int
+    public var poolSize: Int
+    public var tested: Int
+    public var reachable: Int
+    public var underThreshold: Int
+    public var thresholdMs: Int
+    public init(sourceCount: Int, poolSize: Int, tested: Int, reachable: Int, underThreshold: Int, thresholdMs: Int) {
+        self.sourceCount = sourceCount; self.poolSize = poolSize; self.tested = tested
+        self.reachable = reachable; self.underThreshold = underThreshold; self.thresholdMs = thresholdMs
+    }
+}
+
 /// 契约 §8 `storage()` 的返回 `{ nodesBytes, rulesBytes, freeBytes }`。
 public struct StorageInfo: Sendable, Hashable, Codable {
     public var nodesBytes: Int64
