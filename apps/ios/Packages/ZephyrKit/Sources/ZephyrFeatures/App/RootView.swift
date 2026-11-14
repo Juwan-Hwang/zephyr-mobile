@@ -19,6 +19,17 @@ public struct RootView: View {
         _model = State(initialValue: model)
     }
 
+    /// `model.sheet` 拆成两路呈现：`.today` 走 fullScreenCover，其余走 sheet。
+    private var sheetRoute: Binding<SheetRoute?> {
+        Binding(get: { model.sheet == .today ? nil : model.sheet },
+                set: { if model.sheet != .today { model.sheet = $0 } })
+    }
+
+    private var coverRoute: Binding<SheetRoute?> {
+        Binding(get: { model.sheet == .today ? .today : nil },
+                set: { if model.sheet == .today { model.sheet = $0 } })
+    }
+
     public var body: some View {
         @Bindable var model = model
         NavigationStack(path: $model.path) {
@@ -28,7 +39,11 @@ public struct RootView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(for: Route.self) { RouteDestination(route: $0) }
         }
-        .sheet(item: $model.sheet, onDismiss: { model.presentPendingSheet() }) { route in
+        .sheet(item: sheetRoute, onDismiss: { model.presentPendingSheet() }) { route in
+            SheetHost(route: route, accent: accent)
+        }
+        // 今日卡片是全屏纯黑页 + 右上 ✕，没有抓手与 sheet 底（原型 14 / today.png，REVIEW H-P2-11）。
+        .fullScreenCover(item: coverRoute, onDismiss: { model.presentPendingSheet() }) { route in
             SheetHost(route: route, accent: accent)
         }
         .overlay {
@@ -122,7 +137,7 @@ struct SheetHost: View {
                 .zSheetPresentation()
         case .today:
             TodayCardView()
-                .zSheetPresentation()
+                .background(ZTokens.Colors.screenBg.ignoresSafeArea())
         }
     }
 }
