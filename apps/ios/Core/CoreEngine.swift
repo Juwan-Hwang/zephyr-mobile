@@ -90,6 +90,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         self.fetcher = fetcher ?? CoreEngine.httpFetch
         self.downloader = downloader ?? CoreEngine.httpDownload
         self.tunnel = tunnel
+        // 契约 §15.e：核心的测速有效期进程内有效，启动时按设置下发（设置变更时在 updateSettings 里再下发）。
+        core?.setLatencyTtlHours(hours: UInt32(max(1, loadSettings().latencyTtlHours)))
     }
 
     func now() -> Int64 { clock() }
@@ -1023,6 +1025,9 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
             return Array(settingsWatchers.values)
         }
         for w in watchers { w.yield(patch) }
+        if old.latencyTtlHours != patch.latencyTtlHours {
+            core?.setLatencyTtlHours(hours: UInt32(max(1, patch.latencyTtlHours)))
+        }
         // 影响 mihomo 配置的字段变了：隧道运行中热重载。
         if let t = tunnel, CoreEngine.affectsRuntime(old, patch) { await reloadTunnelIfRunning(t) }
         if let t = tunnel, old.onDemand != patch.onDemand || old.trustedWifi != patch.trustedWifi
@@ -1126,7 +1131,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         return ZephyrKit.Scene(id: s.id, kind: kind, name: s.name, available: s.available, selected: selected, exitIp: s.exitIp,
                                source: source, testedAt: s.testedAt, note: s.note,
                                exceptions: s.exceptions.compactMap { e in e.node.map { ZephyrKit.SceneException(app: e.app, node: row($0)) } },
-                               services: s.services.map { ZephyrKit.ServiceHealth(appId: $0.appId, name: $0.name, ok: $0.ok, checkedAt: $0.checkedAt) })
+                               services: s.services.map { ZephyrKit.ServiceHealth(appId: $0.appId, name: $0.name, ok: $0.ok, checkedAt: $0.checkedAt) },
+                               scanQuery: s.scanQuery)
     }
 }
 
