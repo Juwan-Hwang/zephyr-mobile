@@ -50,6 +50,7 @@
 - 第三十三批（PR agent/android/rules-plus）：✅ L-P2-8 收尾（规则页右上“+”：搜索框有域名时打开与轨迹页同一张覆写面板，空时聚焦搜索框）。拍板记录：H-P2-1 保留弹出菜单（Material 平台习惯，点按循环在三态间无预览、易误触），记为接受的偏离；A-P2-2 保留 specialUse/"vpn"（systemExempted 仅限始终开启 VPN，不适用一般连接），上架时提交特殊用途声明；D-P1-4 接受系统回落（Android 13 及以下无 300 字重时用 Regular），不打包 CJK 字体以免体积增加。
 - 第三十四批（PR agent/android/cmd-blur）：✅ H-P2-10 收尾（轨迹步骤逐步出现 80 ms + i×60 ms、左移 8dp 淡入；竖线 40dp 强调色流光 1.8 s 循环，与 iOS TraceRailFlow 一致；预览/截图取最终帧）。✅ H-P2-11 收尾（API 31+ 指令层下方页面模糊 30dp，遮罩 .72；更低版本保持 .86 无模糊）。
 - 第二十批（PR agent/android/touch48）：✅ D-P1-3 收尾：页面返回键节点高度 ≥48dp（52dp 标题行内居中，视觉不变）；撤销/分段等小于 48dp 的可点元素依赖 Compose 指针命中自动外扩到 ViewConfiguration.minimumTouchTargetSize（48dp），不改布局。
+- 第二十一批（PR agent/android/activity-trace）：✅ W-P2-3 剩余：新增“Zephyr 今日用量”中号小组件（今日流量 + 24 小时柱状图，按最忙小时归一，空小时 2dp 占位），随 refreshAll 一并刷新。H-P2-9 轨迹同 sheet 切换已在 afa2efc 完成（第十四批“仍待做”作废）。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览
