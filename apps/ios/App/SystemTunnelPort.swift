@@ -17,7 +17,8 @@ final class SystemTunnelPort: TunnelPort, @unchecked Sendable {
 
     func states() -> AsyncStream<ConnectionState> {
         AsyncStream(bufferingPolicy: .bufferingNewest(1)) { k in
-            let token = NotificationCenter.default.addObserver(forName: .NEVPNStatusDidChange, object: nil, queue: nil) { note in
+            // 观察者令牌只用于 removeObserver（线程安全），终止回调里引用它。
+            nonisolated(unsafe) let token = NotificationCenter.default.addObserver(forName: .NEVPNStatusDidChange, object: nil, queue: nil) { note in
                 guard let conn = note.object as? NEVPNConnection else { return }
                 k.yield(Self.state(conn.status, since: conn.connectedDate))
             }

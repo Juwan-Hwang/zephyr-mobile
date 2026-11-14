@@ -40,7 +40,8 @@ enum DarwinNotifier {
 final class DarwinObservation: @unchecked Sendable {
     /// 注册给系统的上下文：独立的堆对象，持有对观察者的弱引用。
     /// 之前直接传 `passUnretained(self)`，观察者释放的同时若有通知在途，回调会访问已释放对象（REVIEW-Q2 P2）。
-    private final class Token {
+    /// 只有弱引用（原子读写），C 回调线程读取安全。
+    private final class Token: @unchecked Sendable {
         weak var owner: DarwinObservation?
         init(_ owner: DarwinObservation) { self.owner = owner }
     }
