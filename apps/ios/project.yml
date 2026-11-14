@@ -376,8 +376,9 @@ targets:
       - path: Shared/LiveActivity
         group: Shared
       # X-P1-9：英文 / 伪语言快照查这里编出的 en.lproj（测试不挂宿主 App，Bundle.main 没有译文）。
+      # 与 Zephyr target 的 App 目录同组，避免“file reference is a member of multiple groups”的工程警告。
       - path: App/Localizable.xcstrings
-        group: Shared
+        group: App
         buildPhase: resources
     settings:
       base:
