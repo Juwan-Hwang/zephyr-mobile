@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -111,9 +112,12 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
         }
         val home: HomeViewModel = viewModel { HomeViewModel() }
 
+        // Review H-P2-11: 原型 --cmdbg .72 + blur 30。API 31+ 模糊指令层下面的页面；更低版本 blur 无效，遮罩保持 .86。
+        val cmdBlur by androidx.compose.animation.core.animateDpAsState(if (command) 30.dp else 0.dp, ZAnim.standard(), label = "cmdBlur")
         Box(Modifier.fillMaxSize().background(ZTheme.colors.bg)) {
             NavHost(
                 nav, startDestination = if (startOnboarding) Onboarding else Home,
+                modifier = if (cmdBlur > 0.dp) Modifier.blur(cmdBlur) else Modifier,
                 enterTransition = { slideInHorizontally(ZAnim.slow()) { it / 4 } + fadeIn(ZAnim.standard()) },
                 // Review A-P2-8: the page underneath moves too, so a predictive-back drag (which seeks these
                 // transitions) previews it sliding back in from the left instead of a flat cross-fade.
