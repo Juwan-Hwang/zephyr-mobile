@@ -48,7 +48,7 @@ enum TunFileDescriptor {
         guard rc == 0 else { return nil }
         return buffer.withUnsafeBufferPointer { ptr in
             guard let base = ptr.baseAddress else { return nil }
-            return String(validatingUTF8: base)
+            return String(validatingCString: base)
         }
     }
 
