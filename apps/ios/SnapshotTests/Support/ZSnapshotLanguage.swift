@@ -78,6 +78,13 @@ final class ZSnapshotLocalizedBundle {
                     try? fm.removeItem(at: file)
                     (pseudo as NSDictionary).write(to: file, atomically: true)
                 }
+                for file in (try? fm.contentsOfDirectory(at: lproj, includingPropertiesForKeys: nil)) ?? []
+                where file.pathExtension == "stringsdict" {
+                    guard let table = NSDictionary(contentsOf: file) as? [String: Any] else { continue }
+                    let pseudo = table.mapValues(ZPseudo.transformPluralEntry)
+                    try? fm.removeItem(at: file)
+                    (pseudo as NSDictionary).write(to: file, atomically: true)
+                }
             }
         } catch {
             return nil
@@ -111,8 +118,8 @@ enum ZPseudo {
         "A": "Å", "E": "É", "I": "Í", "O": "Ö", "U": "Ü", "Y": "Ý", "C": "Ç", "N": "Ñ",
     ]
 
-    /// 占位符：%%、%@、%lld、%d、%.1f、%1$@ 等。
-    private static let placeholder = try! NSRegularExpression(pattern: #"%(?:%|(?:\d+\$)?[-+ #0]*\d*(?:\.\d+)?(?:hh|h|ll|l|q|z|t|j)?[@a-zA-Z])"#)
+    /// 占位符：%%、%@、%lld、%d、%.1f、%1$@、stringsdict 变量 %#@count@ 等。
+    private static let placeholder = try! NSRegularExpression(pattern: #"%(?:%|#@\w+@|(?:\d+\$)?[-+ #0]*\d*(?:\.\d+)?(?:hh|h|ll|l|q|z|t|j)?[@a-zA-Z])"#)
 
     static func transform(_ s: String) -> String {
         guard !s.isEmpty else { return s }
@@ -129,6 +136,26 @@ enum ZPseudo {
         out += accent(ns.substring(from: cursor), letters: &letters)
         let pad = String(repeating: "~", count: max(1, Int((Double(letters) * 0.4).rounded(.up))))
         return "⟦\(out)\(pad)⟧"
+    }
+
+    /// stringsdict 的一条：变量字典里的复数分支（zero/one/two/few/many/other）逐条变换；
+    /// 格式键 NSStringLocalizedFormatKey 与类型键原样保留，变量名不能动。
+    static func transformPluralEntry(_ entry: Any) -> Any {
+        guard let dict = entry as? [String: Any] else { return entry }
+        let branches: Set<String> = ["zero", "one", "two", "few", "many", "other"]
+        return dict.reduce(into: [String: Any]()) { out, kv in
+            if let variable = kv.value as? [String: Any] {
+                out[kv.key] = variable.reduce(into: [String: Any]()) { v, item in
+                    if branches.contains(item.key), let text = item.value as? String {
+                        v[item.key] = transform(text)
+                    } else {
+                        v[item.key] = item.value
+                    }
+                }
+            } else {
+                out[kv.key] = kv.value
+            }
+        }
     }
 
     private static func accent(_ s: String, letters: inout Int) -> String {
