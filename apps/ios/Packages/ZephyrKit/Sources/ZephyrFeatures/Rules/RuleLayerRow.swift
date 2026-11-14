@@ -13,6 +13,7 @@ struct RuleLayerRow: View {
     var count: String
     var isHit: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
 
     var body: some View {
         ZSettingsRow(verbatim: name, subtitle: note, index: ordinal, isHighlighted: isHit) {
@@ -23,7 +24,7 @@ struct RuleLayerRow: View {
                 .zMono(.body)
                 .foregroundStyle(kind == nil ? ZColor.t3 : ZColor.t2)
         }
-        .animation(ZMotion.motion(ZMotion.standard, reduceMotion: reduceMotion), value: isHit)
+        .animation(ZMotion.motion(ZMotion.standard, reduceMotion: reduceMotion || still), value: isHit)
         .accessibilityValue(Text(isHit ? LocalizedStringKey("已命中") : LocalizedStringKey("")))
     }
 

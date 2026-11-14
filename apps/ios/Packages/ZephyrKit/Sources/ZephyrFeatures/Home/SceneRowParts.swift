@@ -11,6 +11,7 @@ struct ProbeBar: View {
     /// 有扫描进度时为确定进度（原型 scan：`.bar i` width = done/total）；nil = 来回滑动的不定进度。
     var fraction: Double? = nil
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
     @State private var phase: CGFloat = 0
 
     var body: some View {
@@ -21,7 +22,7 @@ struct ProbeBar: View {
                 if let fraction {
                     Capsule().fill(ZAccentStyle())
                         .frame(width: w * CGFloat(fraction))
-                        .animation(reduceMotion ? nil : .easeOut(duration: ZTokens.Time.slow), value: fraction)
+                        .animation((reduceMotion || still) ? nil : .easeOut(duration: ZTokens.Time.slow), value: fraction)
                 } else {
                     Capsule().fill(ZAccentStyle())
                         .frame(width: w * 0.3)

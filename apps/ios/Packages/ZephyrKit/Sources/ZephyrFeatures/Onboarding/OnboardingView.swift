@@ -28,6 +28,7 @@ public struct OnboardingView: View {
     @State private var choice: OnboardingChoice = .best
     @State private var finishing = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
     /// 引导大标题：随 Dynamic Type 缩放，封顶 52pt 以免 AX5 下单行溢出（REVIEW-Q2 无障碍）。
     @ScaledMetric(relativeTo: .largeTitle) private var rawTitleSize: CGFloat = 34
     private var titleSize: CGFloat { min(rawTitleSize, 52) }
@@ -62,7 +63,7 @@ public struct OnboardingView: View {
                     .transition(transition)
             }
         }
-        .animation(ZMotion.gentle(ZMotion.page, reduceMotion: reduceMotion), value: added?.id)
+        .animation(still ? nil : ZMotion.gentle(ZMotion.page, reduceMotion: reduceMotion), value: added?.id)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .zPageBackground()
         .subscriptionImportFlow(method: $method, importer: importer) { sub in added = sub }

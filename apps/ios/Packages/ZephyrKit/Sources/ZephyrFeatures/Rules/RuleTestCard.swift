@@ -10,6 +10,7 @@ struct RuleTestCard: View {
     var took: String?
     var invalid: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
 
     var body: some View {
         ZCard(padding: 0, cornerRadius: ZTokens.Radius.md + ZTokens.Space.n1 / 2) {
@@ -37,7 +38,7 @@ struct RuleTestCard: View {
                 .padding(.horizontal, ZTokens.Space.n5)
                 .padding(.top, ZTokens.Space.n4)
                 .padding(.bottom, ZTokens.Space.n5)
-                .animation(ZMotion.motion(ZMotion.micro, reduceMotion: reduceMotion), value: steps)
+                .animation(ZMotion.motion(ZMotion.micro, reduceMotion: reduceMotion || still), value: steps)
             }
         }
     }

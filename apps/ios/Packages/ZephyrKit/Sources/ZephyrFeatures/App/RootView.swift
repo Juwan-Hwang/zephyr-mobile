@@ -12,6 +12,7 @@ import ZephyrKit
 public struct RootView: View {
     @State private var model: AppModel
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// 首启引导是否已完成（原型 01–03）。老用户（已有订阅）首帧即视为完成。
     @AppStorage("onboarding.done") private var onboardingDone = false
 
@@ -63,7 +64,8 @@ public struct RootView: View {
             if !empty { onboardingDone = true }
         }
         .onChange(of: model.path.isEmpty) { _, empty in if empty { model.pathDidChange() } }
-        .animation(ZMotion.slow, value: model.isCommandPresented)
+        // 指令层滑入属于位移动画，Reduce Motion 时关闭。
+        .animation(ZMotion.motion(ZMotion.slow, reduceMotion: reduceMotion), value: model.isCommandPresented)
         .environment(model)
         .zAccent(accent)
         .preferredColorScheme(colorScheme)

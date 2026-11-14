@@ -10,6 +10,7 @@ struct CommandResults: View {
     let onRun: (CommandSuggestion) -> Void
     let onApply: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -38,8 +39,8 @@ struct CommandResults: View {
                 }
             }
         }
-        .animation(reduceMotion ? nil : ZMotion.slow, value: model.preview)
-        .animation(reduceMotion ? nil : ZMotion.standard, value: model.suggestions)
+        .animation((reduceMotion || still) ? nil : ZMotion.slow, value: model.preview)
+        .animation((reduceMotion || still) ? nil : ZMotion.standard, value: model.suggestions)
     }
 
     private func label(_ s: String) -> some View {

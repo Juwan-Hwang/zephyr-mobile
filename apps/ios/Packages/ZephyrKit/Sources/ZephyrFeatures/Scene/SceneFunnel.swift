@@ -14,6 +14,7 @@ struct FunnelStep: Hashable, Identifiable {
 struct SceneFunnel: View {
     let steps: [FunnelStep]
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
     @State private var shown = false
 
     var body: some View {
@@ -31,7 +32,7 @@ struct SceneFunnel: View {
                             .fill(last ? AnyShapeStyle(ZAccentStyle()) : AnyShapeStyle(ZKnobFill()))
                             .frame(width: barWidth(step.count, max: maxCount), height: HMetrics.funnelBar)
                             .scaleEffect(x: shown || reduceMotion ? 1 : 0.001, anchor: .leading)
-                            .animation(reduceMotion ? nil : ZMotion.page.delay(0.12 + Double(i) * 0.09), value: shown)
+                            .animation((reduceMotion || still) ? nil : ZMotion.page.delay(0.12 + Double(i) * 0.09), value: shown)
                         Text(verbatim: step.label)
                             .zType(.footnote)
                             .foregroundStyle(last ? ZColor.t2 : ZColor.t3)
