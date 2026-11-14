@@ -10,7 +10,9 @@
 import SwiftUI
 import ZephyrDesign
 import ZephyrKit
+#if DEBUG
 import ZephyrMock
+#endif
 
 @MainActor
 public struct SubscriptionsView: View {
@@ -127,6 +129,7 @@ public struct SubscriptionsView: View {
     }
 }
 
+#if DEBUG
 #Preview("订阅") {
     NavigationStack {
         SubscriptionsView(engine: MockEngine(seed: 0, clock: .frozen941), now: { MockClock.frozen941.now() })
@@ -149,3 +152,4 @@ public struct SubscriptionsView: View {
     .environment(\.dynamicTypeSize, .accessibility5)
     .preferredColorScheme(.dark)
 }
+#endif

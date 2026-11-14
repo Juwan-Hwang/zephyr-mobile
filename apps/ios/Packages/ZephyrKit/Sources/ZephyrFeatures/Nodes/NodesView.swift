@@ -6,7 +6,9 @@
 import SwiftUI
 import ZephyrDesign
 import ZephyrKit
+#if DEBUG
 import ZephyrMock
+#endif
 
 @MainActor
 public struct NodesView: View {
@@ -72,6 +74,7 @@ public struct NodesView: View {
     }
 }
 
+#if DEBUG
 #Preview("节点") {
     NavigationStack { NodesView(engine: MockEngine(seed: 0, clock: .frozen941)) }
 }
@@ -85,3 +88,4 @@ public struct NodesView: View {
         .preferredColorScheme(.light)
         .environment(\.dynamicTypeSize, .accessibility2)
 }
+#endif

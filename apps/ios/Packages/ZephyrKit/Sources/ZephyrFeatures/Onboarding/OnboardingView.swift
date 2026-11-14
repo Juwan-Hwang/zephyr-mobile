@@ -7,7 +7,9 @@
 import SwiftUI
 import ZephyrDesign
 import ZephyrKit
+#if DEBUG
 import ZephyrMock
+#endif
 
 /// 引导第 2 步的选择。
 public enum OnboardingChoice: String, Sendable, Hashable, CaseIterable {
@@ -193,6 +195,7 @@ public struct OnboardingView: View {
     }
 }
 
+#if DEBUG
 #Preview("1 / 2 添加订阅") {
     OnboardingView(engine: MockEngine(seed: 0, clock: .frozen941)) {}
         .preferredColorScheme(.dark)
@@ -210,3 +213,4 @@ public struct OnboardingView: View {
         .environment(\.dynamicTypeSize, .accessibility5)
         .preferredColorScheme(.light)
 }
+#endif

@@ -4,7 +4,9 @@
 import SwiftUI
 import ZephyrDesign
 import ZephyrKit
+#if DEBUG
 import ZephyrMock
+#endif
 
 @MainActor
 public struct RulesView: View {
@@ -70,6 +72,7 @@ public struct RulesView: View {
     }
 }
 
+#if DEBUG
 #Preview("规则") {
     NavigationStack { RulesView(engine: MockEngine(seed: 0, clock: .frozen941)) }
 }
@@ -83,3 +86,4 @@ public struct RulesView: View {
         .preferredColorScheme(.light)
         .environment(\.dynamicTypeSize, .accessibility2)
 }
+#endif

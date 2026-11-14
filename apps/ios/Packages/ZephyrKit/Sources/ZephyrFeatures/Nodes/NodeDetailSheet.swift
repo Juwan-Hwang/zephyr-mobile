@@ -3,7 +3,9 @@
 import SwiftUI
 import ZephyrDesign
 import ZephyrKit
+#if DEBUG
 import ZephyrMock
+#endif
 
 struct NodeDetailSheet: View {
     let engine: any ZephyrEngine
@@ -61,9 +63,11 @@ struct NodeDetailSheet: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NodeDetailSheet(engine: MockEngine(seed: 0, clock: .frozen941),
                     node: NodeSummary(id: 100_000_000, name: "东京 NTT IPLC 01", region: "JP", city: "东京",
                                       carrier: "NTT", tag: "IPLC", protocol: "VLESS", latencyMs: 76),
                     onTest: {})
 }
+#endif
