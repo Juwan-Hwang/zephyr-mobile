@@ -241,6 +241,24 @@ extension MockEngine {
                                   "UDP": h % 4 == 0 ? "不支持" : "支持"])
     }
 
+    /// 契约 §15.d Mock：total 按一批 512 给，done 定时递增（冻结时钟下立即走完）。
+    public func scanLatency(query: String) -> AsyncStream<ScanProgress> {
+        let clock = self.clock
+        return AsyncStream { cont in
+            let task = Task {
+                let total = 512
+                var done = 0
+                while done < total, !Task.isCancelled {
+                    await clock.sleep(ms: 150)
+                    done = min(total, done + 64)
+                    cont.yield(ScanProgress(done: done, total: total))
+                }
+                cont.finish()
+            }
+            cont.onTermination = { _ in task.cancel() }
+        }
+    }
+
     public func testLatency(ids: [NodeId]) async {
         let now = clock.now()
         var plan: [(delay: Int64, update: LatencyUpdate)] = []

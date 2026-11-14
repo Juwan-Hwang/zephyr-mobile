@@ -57,6 +57,9 @@ public protocol ZephyrEngine: AnyObject, Sendable {
     /// 只测可见行（UI 停止滚动 400ms 后调用），≤ 100 个。
     func testLatency(ids: [NodeId]) async
     func latencyUpdates() -> AsyncStream<[LatencyUpdate]>
+    /// 契约 §15.d：按 scanTargets 选出该测的节点（未测优先、再按最旧），64 个一组测速，每组回来推一次进度；
+    /// 测完或取消时结束。返回空 = 无需扫描（流立即结束）。query 同 queryNodes（全库用空串）。
+    func scanLatency(query: String) -> AsyncStream<ScanProgress>
 
     // MARK: §6 规则
     func ruleStats() async -> RuleStats
@@ -142,4 +145,6 @@ public extension ZephyrEngine {
     /// 只读查询：没有实现即“无数据”（Mock / 预览走 testRule 预测，分段从“不变”开始）。
     func hostTrace(host: String) async -> HostTraceInfo? { nil }
     func hostOverride(host: String) async -> HostOverrideInfo? { nil }
+    /// 没有实现即无需扫描。
+    func scanLatency(query: String) -> AsyncStream<ScanProgress> { AsyncStream { $0.finish() } }
 }

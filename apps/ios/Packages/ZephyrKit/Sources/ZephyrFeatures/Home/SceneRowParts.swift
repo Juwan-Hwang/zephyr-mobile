@@ -8,6 +8,8 @@ import ZephyrKit
 /// 契约补上后改为确定进度（见 NOTES-H.md）。Reduce Motion 下静止显示 30%。
 @MainActor
 struct ProbeBar: View {
+    /// 有扫描进度时为确定进度（原型 scan：`.bar i` width = done/total）；nil = 来回滑动的不定进度。
+    var fraction: Double? = nil
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var phase: CGFloat = 0
 
@@ -16,9 +18,15 @@ struct ProbeBar: View {
             let w = geo.size.width
             ZStack(alignment: .leading) {
                 Capsule().fill(ZTokens.Colors.screenHl2)
-                Capsule().fill(ZAccentStyle())
-                    .frame(width: w * 0.3)
-                    .offset(x: reduceMotion ? 0 : phase * w * 0.7)
+                if let fraction {
+                    Capsule().fill(ZAccentStyle())
+                        .frame(width: w * CGFloat(fraction))
+                        .animation(reduceMotion ? nil : .easeOut(duration: ZTokens.Time.slow), value: fraction)
+                } else {
+                    Capsule().fill(ZAccentStyle())
+                        .frame(width: w * 0.3)
+                        .offset(x: reduceMotion ? 0 : phase * w * 0.7)
+                }
             }
         }
         .frame(height: HMetrics.barThin)

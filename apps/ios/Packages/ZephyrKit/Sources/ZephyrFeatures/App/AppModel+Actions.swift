@@ -115,14 +115,22 @@ extension AppModel {
         } catch { report(error) }
     }
 
-    /// 重新检测场景池（首页"检测中"变体）。
+    /// 重新检测场景池（首页"检测中"变体）：服务探测与节点扫描（契约 §15.d）并行，
+    /// 扫描进度写进 `scan`（首页“正在检测 138/512”+ 行内进度条），两者都结束才退出“检测中”。
     public func retest(sceneId: String) async {
         retesting.insert(sceneId)
         defer { retesting.remove(sceneId) }
+        let engine = self.engine
+        let scanning = scan == nil
+        let scanTask: Task<Void, Never>? = scanning ? Task { [weak self] in
+            for await p in engine.scanLatency(query: "") { self?.scan = p }
+            self?.scan = nil
+        } : nil
         do {
             let s = try await engine.retestScene(sceneId: sceneId)
             if let i = scenes.firstIndex(where: { $0.id == s.id }) { scenes[i] = s }
         } catch { report(error) }
+        await scanTask?.value
     }
 
     /// 场景节点来源：订阅分组 ↔ Zephyr 优选（契约 §14.z setSceneSource）。场景流会随核心更新回写。

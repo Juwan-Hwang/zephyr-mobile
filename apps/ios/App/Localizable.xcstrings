@@ -3395,6 +3395,16 @@
         }
       }
     },
+    "正在检测 %1$@/%2$@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Testing %1$@/%2$@"
+          }
+        }
+      }
+    },
     "正在测速" : {
       "localizations" : {
         "en" : {

@@ -92,7 +92,7 @@ struct SceneRow: View {
             VStack(alignment: .leading, spacing: ZTokens.Space.n2) {
                 Text(verbatim: scene.available > 0 ? ZL.f("%d 个可用 · 检测中", scene.available) : ZL.tr("检测中"))
                     .zType(.footnote).foregroundStyle(ZColor.t3)
-                ProbeBar().frame(width: HMetrics.probeBarWidth)
+                ProbeBar(fraction: model.scan?.fraction).frame(width: HMetrics.probeBarWidth)
             }
         } else if let down = services.unavailableText {
             Text(verbatim: down).zType(.footnote).foregroundStyle(ZTokens.Colors.screenRed)

@@ -35,6 +35,8 @@ public final class AppModel {
     public internal(set) var globalNode: NodeSummary?
     /// 正在重新检测的场景 id（首页"检测中"变体）。
     public internal(set) var retesting: Set<String> = []
+    /// 重新检测时的节点扫描进度（契约 §15.d，平台本地）：首页“正在检测 done/total”与场景行进度条；nil = 未在扫描。
+    public internal(set) var scan: ScanProgress?
     /// 首页左右滑动切换地区用：场景 id → 每个地区延迟最低的候选（按延迟升序）。
     public internal(set) var regionChoices: [String: [NodeSummary]] = [:]
     /// 待确认的场景切换（"更改 GPT 和 Gemini 的出口 IP？"）。
@@ -86,6 +88,7 @@ public final class AppModel {
 
     /// 首页"场景"区右侧："2 小时前检测" / "正在检测…"。
     public var scenesTestedText: String? {
+        if let scan, scan.total > 0 { return ZL.s("正在检测 %1$@/%2$@", "\(scan.done)", "\(scan.total)") }
         if !retesting.isEmpty { return ZL.tr("正在检测…") }
         guard let t = scenes.compactMap(\.testedAt).max() else { return nil }
         return ZL.s("%@检测", ZFormat.relative(t, now: now()))

@@ -601,6 +601,35 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         }
     }
 
+    /// 契约 §15.d：scanTargets 选出这一轮该测的节点（≤512，未测优先、再按最旧；有效期内已测的跳过），
+    /// 64 个一组走 testLatency（隧道连着用 zm_url_test，否则 TCP 握手），每组回来推一次进度。
+    public func scanLatency(query: String) -> AsyncStream<ZephyrKit.ScanProgress> {
+        AsyncStream { cont in
+            let task = Task { [weak self] in
+                defer { cont.finish() }
+                guard let self else { return }
+                guard let c = await self.nodes() else {
+                    if self.mockData { for await p in self.fallback.scanLatency(query: query) { cont.yield(p) } }
+                    return
+                }
+                let now = self.clock()
+                let maxAge = self.latencyFreshMillis
+                guard let ids = try? await self.run(.nodeNotFound, { try c.scanTargets(query: query, limit: 512, nowMillis: now, maxAgeMillis: maxAge) }),
+                      !ids.isEmpty else { return }
+                var done = 0
+                cont.yield(ZephyrKit.ScanProgress(done: 0, total: ids.count))
+                for start in stride(from: 0, to: ids.count, by: 64) {
+                    if Task.isCancelled { return }
+                    let chunk = Array(ids[start..<min(start + 64, ids.count)])
+                    await self.testLatency(ids: chunk)
+                    done += chunk.count
+                    cont.yield(ZephyrKit.ScanProgress(done: done, total: ids.count))
+                }
+            }
+            cont.onTermination = { _ in task.cancel() }
+        }
+    }
+
     public func latencyUpdates() -> AsyncStream<[LatencyUpdate]> {
         guard core != nil else { return fallback.latencyUpdates() }
         let id = UUID()
