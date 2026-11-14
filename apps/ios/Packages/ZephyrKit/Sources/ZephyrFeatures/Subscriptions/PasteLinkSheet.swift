@@ -50,7 +50,7 @@ struct PasteLinkSheet: View {
             .navigationTitle("粘贴链接")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("取消") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) { Button("取消") { importer.cancel(); dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
                     if importer.isImporting {
                         ProgressView()
@@ -64,6 +64,7 @@ struct PasteLinkSheet: View {
         }
         .presentationDetents([.medium])
         .onAppear { importer.reset(); focused = true }
+        .onDisappear { importer.cancel() }
     }
 
     private func submit() {

@@ -102,6 +102,8 @@ public struct OnboardingView: View {
             HStack(spacing: ZTokens.Space.n3) {
                 ProgressView()
                 Text("正在导入…").zType(.footnote).foregroundStyle(ZColor.t3)
+                Spacer(minLength: 0)
+                Button { importer.cancel() } label: { Text("取消").zType(.footnote) }
             }
             .padding(.top, ZTokens.Space.n4)
         } else if method == nil, let err = importer.errorMessage {

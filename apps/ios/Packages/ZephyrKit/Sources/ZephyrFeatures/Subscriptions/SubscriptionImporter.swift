@@ -40,6 +40,9 @@ final class SubscriptionImporter {
 
     @ObservationIgnored let engine: any ZephyrEngine
     private(set) var phase: Phase = .idle
+    /// 每次导入递增；取消或新一次导入后，旧请求的结果被丢弃（引擎调用本身可能无法中途打断，REVIEW-Q2 P2）。
+    @ObservationIgnored private var generation = 0
+    @ObservationIgnored private var current: Task<Subscription, Error>?
 
     init(engine: any ZephyrEngine) { self.engine = engine }
 
@@ -47,6 +50,15 @@ final class SubscriptionImporter {
     var errorMessage: String? { if case .failed(let m) = phase { m } else { nil } }
 
     func reset() { phase = .idle }
+
+    /// 取消进行中的导入：回到 idle，晚到的结果不会写入 phase，也不会返回给调用方。
+    func cancel() {
+        guard isImporting else { return }
+        generation += 1
+        current?.cancel()
+        current = nil
+        phase = .idle
+    }
 
     @discardableResult
     func importLink(_ text: String, fromClipboard: Bool = false) async -> Subscription? {
@@ -79,17 +91,41 @@ final class SubscriptionImporter {
     }
 
     private func run(_ source: ImportSource, _ payload: String) async -> Subscription? {
+        generation += 1
+        let mine = generation
+        current?.cancel()
         phase = .importing
-        do {
+        let engine = engine
+        let task = Task { () async throws -> Subscription in
+            let existing = await Self.currentIds(engine)
             let sub = try await engine.importSubscription(source: source, payload: payload)
+            // 取消时引擎调用可能已完成：新建的订阅撤回，已存在的（引擎去重返回旧条目）保持不动。
+            if Task.isCancelled {
+                if !existing.contains(sub.id) { try? await engine.deleteSubscription(id: sub.id) }
+                throw CancellationError()
+            }
+            return sub
+        }
+        current = task
+        let result = await task.result
+        guard mine == generation else { return nil }
+        current = nil
+        switch result {
+        case .success(let sub):
             phase = .done(sub)
             return sub
-        } catch let e as ZephyrError {
+        case .failure(let e as ZephyrError):
             phase = .failed(Self.message(for: e.code))
-        } catch {
+        case .failure:
             phase = .failed(ZL.tr("导入失败"))
         }
         return nil
+    }
+
+    /// 导入前已有的订阅 id（订阅流首个值）。
+    private nonisolated static func currentIds(_ engine: any ZephyrEngine) async -> Set<String> {
+        for await list in engine.subscriptions() { return Set(list.map(\.id)) }
+        return []
     }
 
     static func message(for code: ErrorCode) -> String {
