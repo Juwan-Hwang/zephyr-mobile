@@ -1,6 +1,26 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+    "节点载入失败" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't load nodes"
+          }
+        }
+      }
+    },
+    "请检查网络后重试" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check your connection and try again"
+          }
+        }
+      }
+    },
     "已关闭 %lld 个连接" : {
       "localizations" : {
         "en" : {

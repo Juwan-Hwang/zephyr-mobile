@@ -31,7 +31,11 @@ public struct NodesView: View {
             NodeListRepresentable(model: model, rowMap: model.rowMap, generation: model.generation,
                                   accent: model.accent.color) { selected = $0 }
                 .overlay {
-                    if model.isEmptyResult { NodesEmptyState(query: model.query) }
+                    if model.failed {
+                        NodesErrorState { model.runQuery() }
+                    } else if model.isEmptyResult {
+                        NodesEmptyState(query: model.query)
+                    }
                 }
                 .padding(.top, ZTokens.Space.n4)
                 .ignoresSafeArea(.container, edges: .bottom)
