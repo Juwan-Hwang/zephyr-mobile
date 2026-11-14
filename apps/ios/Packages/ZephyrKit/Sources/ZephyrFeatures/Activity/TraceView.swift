@@ -26,6 +26,7 @@ struct TraceView: View {
 
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
     @State private var trace: RuleTrace?
     @State private var live: HostTraceInfo?
     @State private var layers: [RuleLayer] = []
@@ -101,7 +102,7 @@ struct TraceView: View {
                                marker: marker(s.marker), style: .regular)
                         .opacity(shown || reduceMotion ? 1 : 0)
                         .offset(x: shown || reduceMotion ? 0 : -ZTokens.Space.n2)
-                        .animation(reduceMotion ? nil : ZMotion.slow.delay(0.08 + Double(i) * 0.06), value: shown)
+                        .animation((reduceMotion || still) ? nil : ZMotion.slow.delay(0.08 + Double(i) * 0.06), value: shown)
                 }
             }
             .overlay(alignment: .topLeading) {

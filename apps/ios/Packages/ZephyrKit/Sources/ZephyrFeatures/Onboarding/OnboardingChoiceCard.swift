@@ -11,6 +11,7 @@ struct OnboardingChoiceCard: View {
     var action: () -> Void
     @ScaledMetric(relativeTo: .body) private var radio: CGFloat = ZTokens.Space.n6 - ZTokens.Space.n1 / 2
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
 
     private var radius: CGFloat { ZTokens.Radius.overlay - ZTokens.Space.n1 / 2 }
 
@@ -42,7 +43,7 @@ struct OnboardingChoiceCard: View {
                 RoundedRectangle(cornerRadius: radius, style: .continuous)
                     .strokeBorder(isOn ? AnyShapeStyle(ZAccentStyle()) : AnyShapeStyle(Color.clear), lineWidth: 1)
             }
-            .animation(ZMotion.motion(ZMotion.standard, reduceMotion: reduceMotion), value: isOn)
+            .animation(ZMotion.motion(ZMotion.standard, reduceMotion: reduceMotion || still), value: isOn)
             .contentShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
         }
         .buttonStyle(ZPressStyle(haptic: .selection))

@@ -39,6 +39,7 @@ public struct ZProgressBar: View {
     private let label: LocalizedStringKey?
     @Environment(\.zAccent) private var accent
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
 
     /// 单值进度：`value` 0...1。
     public init(value: Double, tone: ZProgressTone = .neutral, thickness: ZProgressThickness = .thin, label: LocalizedStringKey? = nil) {
@@ -68,7 +69,7 @@ public struct ZProgressBar: View {
         .frame(height: thickness.height)
         .background(ZTokens.Colors.screenHl)
         .clipShape(Capsule(style: .continuous))
-        .animation(reduceMotion ? nil : ZMotion.slow, value: segments.map(\.fraction))
+        .animation((reduceMotion || still) ? nil : ZMotion.slow, value: segments.map(\.fraction))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(label.map { Text($0) } ?? Text("进度"))
         .accessibilityValue(Text(verbatim: "\(Int((clamp(segments.reduce(0) { $0 + $1.fraction }) * 100).rounded()))%"))

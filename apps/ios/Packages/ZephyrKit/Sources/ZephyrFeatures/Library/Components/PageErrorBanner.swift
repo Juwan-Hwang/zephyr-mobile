@@ -52,6 +52,7 @@ private struct PageErrorBannerModifier: ViewModifier {
     @Binding var error: PageError?
     var isActive: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
 
     func body(content: Content) -> some View {
         content
@@ -65,7 +66,7 @@ private struct PageErrorBannerModifier: ViewModifier {
                             .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .opacity))
                     }
                 }
-                .animation(ZMotion.gentle(ZMotion.slow, reduceMotion: reduceMotion), value: isActive ? error?.id : nil)
+                .animation(still ? nil : ZMotion.gentle(ZMotion.slow, reduceMotion: reduceMotion), value: isActive ? error?.id : nil)
             }
             .task(id: isActive ? error?.id : nil) {
                 guard isActive, let e = error else { return }

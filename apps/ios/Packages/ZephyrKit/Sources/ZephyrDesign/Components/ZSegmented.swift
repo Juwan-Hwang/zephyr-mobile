@@ -27,6 +27,7 @@ public struct ZSegmented<Value: Hashable>: View {
     private let label: LocalizedStringKey?
     @Namespace private var knob
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ScaledMetric(relativeTo: .subheadline) private var height: CGFloat = ZMetrics.segmentHeight
 
@@ -48,7 +49,7 @@ public struct ZSegmented<Value: Hashable>: View {
         }
         .padding(ZMetrics.segmentInset)
         .background(RoundedRectangle(cornerRadius: outer, style: .continuous).fill(ZTrackFill()))
-        .animation(reduceMotion ? nil : ZMotion.slow, value: selection)
+        .animation((reduceMotion || still) ? nil : ZMotion.slow, value: selection)
         .sensoryFeedback(.selection, trigger: selection)
         .accessibilityElement(children: .contain)
         .modifier(ZOptionalAccessibilityLabel(label: label))

@@ -73,7 +73,7 @@ struct TodayCardView: View {
     private var card: some View {
         if let u = model.usage {
             TodayCard(usage: u, dateText: dateText, theme: theme, animated: !reduceMotion)
-                .animation(ZMotion.gentle(ZMotion.page, reduceMotion: reduceMotion), value: theme)
+                .animation(still ? nil : ZMotion.gentle(ZMotion.page, reduceMotion: reduceMotion), value: theme)
         } else {
             RoundedRectangle(cornerRadius: HMetrics.todayCardRadius, style: .continuous)
                 .fill(theme.background)
