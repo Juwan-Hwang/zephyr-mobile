@@ -2,6 +2,7 @@
 //
 // 高频数据（页缓存、延迟、滚动位置）在 NodeRowStore / NodeListView 里，不经过 Observation。
 
+import Network
 import Observation
 import SwiftUI
 import ZephyrDesign
@@ -48,10 +49,35 @@ final class NodesModel {
         subscriptionCount = s.count
         store.setTestedBase(i.testedCount)
         listView?.footer.set(tested: store.testedCount)
+        let pathTask = Task { @MainActor [weak self] in
+            for await path in NWPathMonitor() {
+                guard let self else { return }
+                self.metered = Self.isMetered(path)
+                self.updateAutoTestGate()
+            }
+        }
+        defer { pathTask.cancel() }
         for await settings in engine.settings() {
             let a = ZTokens.Accent(rawValue: settings.accent.rawValue) ?? .blue
             if a != accent { accent = a }
+            testOnWifiOnly = settings.testOnWifiOnly
+            updateAutoTestGate()
         }
+    }
+
+    // MARK: 仅在 Wi‑Fi 下测速（REVIEW-Q2 X-P1-5）
+
+    @ObservationIgnored private var testOnWifiOnly = true
+    /// 当前路径是否计费（蜂窝、个人热点、低数据模式）。未知时按不计费处理，避免首帧误禁。
+    @ObservationIgnored private var metered = false
+
+    nonisolated static func isMetered(_ path: NWPath) -> Bool { path.isExpensive || path.isConstrained }
+
+    /// 滚动自动测速是否允许：纯函数，便于单测。
+    nonisolated static func autoTestAllowed(wifiOnly: Bool, metered: Bool) -> Bool { !(wifiOnly && metered) }
+
+    private func updateAutoTestGate() {
+        store.autoTestAllowed = Self.autoTestAllowed(wifiOnly: testOnWifiOnly, metered: metered)
     }
 
     /// 最近一次真正发给引擎的查询（chip 立即查后，随之而来的 onChange 去抖查询据此跳过）。
