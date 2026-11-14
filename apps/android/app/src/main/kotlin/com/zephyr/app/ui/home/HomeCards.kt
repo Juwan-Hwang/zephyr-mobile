@@ -15,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.zephyr.design.components.ZSurfaceLevel
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.zephyr.design.components.ZButton
 import com.zephyr.design.components.ZButtonKind
 import com.zephyr.design.components.ZCard
@@ -38,7 +40,7 @@ fun GlobalModeCard(
 ) {
     val c = ZTheme.colors
     // Review H-P2-15: prototype `.gb` padding 16, `.h` 15, `.k` 13 / 1.5 with 5 px gap; buttons are Compact ZButtons (D-P2-4).
-    ZCard(Modifier.padding(horizontal = 16.dp), padding = 16.dp) {
+    ZCard(Modifier.padding(horizontal = 16.dp), padding = 16.dp, level = ZSurfaceLevel.S1, shape = RoundedCornerShape(22.dp)) {
         ZText("全局模式", style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight, fontSize = 15.sp))
         Spacer(Modifier.height(5.dp))
         ZText(if (node != null) "所有流量均经由${node.name}。场景已暂停。" else "所有流量均经由同一节点。场景已暂停。", style = ZTheme.type.callout.copy(fontSize = 13.sp, lineHeight = 19.5.sp), color = c.text3)
@@ -78,7 +80,7 @@ fun GlobalModeCard(
 @Composable
 fun SubscriptionsCard(subs: List<Subscription>, now: Long, onOpen: () -> Unit) {
     val c = ZTheme.colors
-    ZCard(Modifier.padding(horizontal = 16.dp)) {
+    ZCard(Modifier.padding(horizontal = 16.dp), level = ZSurfaceLevel.S1, shape = RoundedCornerShape(22.dp)) {
         subs.take(3).forEachIndexed { i, s ->
             if (i > 0) ZDivider(inset = false)
             val soon = s.expiresAt != null && s.expiresAt!! - now < 3 * 86_400_000L

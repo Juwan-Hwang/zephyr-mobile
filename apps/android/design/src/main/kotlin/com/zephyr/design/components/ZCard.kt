@@ -18,9 +18,11 @@ fun ZCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     padding: Dp = 0.dp,
+    level: ZSurfaceLevel = ZSurfaceLevel.S2,
+    shape: androidx.compose.ui.graphics.Shape = ZTheme.shapes.card,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    ZSurface(modifier.fillMaxWidth(), shape = ZTheme.shapes.card) {
+    ZSurface(modifier.fillMaxWidth(), shape = shape, level = level) {
         Column(
             Modifier
                 .fillMaxWidth()

@@ -44,6 +44,8 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.zephyr.design.components.ZSurfaceLevel
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.zephyr.design.components.ZButton
 import com.zephyr.design.components.ZButtonKind
 import com.zephyr.design.components.ZCard
@@ -74,7 +76,7 @@ fun SceneCard(
 ) {
     val hint = com.zephyr.app.ui.common.LocalScrubHint.current
     var hinted by remember(hint.seen) { mutableStateOf(hint.seen) }
-    ZCard(Modifier.padding(horizontal = 16.dp)) {
+    ZCard(Modifier.padding(horizontal = 16.dp), level = ZSurfaceLevel.S1, shape = RoundedCornerShape(22.dp)) {
         scenes.forEachIndexed { i, s ->
             if (i > 0) {
                 ZDivider(inset = false)
