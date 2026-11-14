@@ -881,6 +881,10 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -963,6 +967,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_latency_test_batch(`ptr`: Pointer,`ids`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_latency_ttl_hours(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+    ): Int
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_load_rules(`ptr`: Pointer,`finalPolicy`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_node_detail(`ptr`: Pointer,`id`: Long,uniffi_out_err: UniffiRustCallStatus, 
@@ -1027,6 +1033,8 @@ internal interface UniffiLib : Library {
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_global_node(`ptr`: Pointer,`nodeId`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_latency_ttl_hours(`ptr`: Pointer,`hours`: Int,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_exception(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`appId`: RustBuffer.ByValue,`nodeId`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_source(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`source`: RustBuffer.ByValue,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
@@ -1221,6 +1229,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_latency_test_batch(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_latency_ttl_hours(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_load_rules(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_detail(
@@ -1284,6 +1294,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_failover_policy(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_global_node(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_latency_ttl_hours(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception(
     ): Short
@@ -1411,6 +1423,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_latency_test_batch() != 344.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_latency_ttl_hours() != 28451.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_load_rules() != 40179.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -1505,6 +1520,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_global_node() != 52568.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_latency_ttl_hours() != 22838.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception() != 4651.toShort()) {
@@ -2489,6 +2507,8 @@ public interface MobileCoreInterface {
      */
     fun `latencyTestBatch`(`ids`: List<kotlin.ULong>): kotlin.String
     
+    fun `latencyTtlHours`(): kotlin.UInt
+    
     /**
      * 重新加载 rules/ 下全部层（按文件名序），final_policy 为 MATCH 的去向（通常是场景 "other"）。
      */
@@ -2631,6 +2651,12 @@ public interface MobileCoreInterface {
      * 然后**总是** selectInGroup("GLOBAL", member)。
      */
     fun `setGlobalNode`(`nodeId`: kotlin.ULong): SceneApply
+    
+    /**
+     * 用户设置"测速结果有效期"（latencyTtlHours）。影响场景候选、自动选点、热备与 Scene.available；
+     * 进程内有效，平台启动时与设置变更时调用。0 = 恢复默认 24 h。（§15.e）
+     */
+    fun `setLatencyTtlHours`(`hours`: kotlin.UInt)
     
     /**
      * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
@@ -2966,6 +2992,18 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_latency_test_batch(
         it, FfiConverterSequenceULong.lower(`ids`),_status)
+}
+    }
+    )
+    }
+    
+
+    override fun `latencyTtlHours`(): kotlin.UInt {
+            return FfiConverterUInt.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_latency_ttl_hours(
+        it, _status)
 }
     }
     )
@@ -3457,6 +3495,21 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     }
     )
     }
+    
+
+    
+    /**
+     * 用户设置"测速结果有效期"（latencyTtlHours）。影响场景候选、自动选点、热备与 Scene.available；
+     * 进程内有效，平台启动时与设置变更时调用。0 = 恢复默认 24 h。（§15.e）
+     */override fun `setLatencyTtlHours`(`hours`: kotlin.UInt)
+        = 
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_set_latency_ttl_hours(
+        it, FfiConverterUInt.lower(`hours`),_status)
+}
+    }
+    
     
 
     
@@ -5160,7 +5213,12 @@ data class Scene (
     /**
      * mihomo 中的组名（MihomoClient.selectInGroup 用）
      */
-    var `group`: kotlin.String
+    var `group`: kotlin.String, 
+    /**
+     * 场景重测用的 scanTargets / fastestNodes 查询（§15.e）：当前节点所在地区，未选节点时为空串（全库）。
+     * 与 `available`、sceneCandidates(region = nil) 用的是同一个查询。
+     */
+    var `scanQuery`: kotlin.String
 ) {
     
     companion object
@@ -5186,6 +5244,7 @@ public object FfiConverterTypeScene: FfiConverterRustBuffer<Scene> {
             FfiConverterSequenceTypeSceneExceptionView.read(buf),
             FfiConverterSequenceTypeServiceHealth.read(buf),
             FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
         )
     }
 
@@ -5203,7 +5262,8 @@ public object FfiConverterTypeScene: FfiConverterRustBuffer<Scene> {
             FfiConverterOptionalString.allocationSize(value.`note`) +
             FfiConverterSequenceTypeSceneExceptionView.allocationSize(value.`exceptions`) +
             FfiConverterSequenceTypeServiceHealth.allocationSize(value.`services`) +
-            FfiConverterString.allocationSize(value.`group`)
+            FfiConverterString.allocationSize(value.`group`) +
+            FfiConverterString.allocationSize(value.`scanQuery`)
     )
 
     override fun write(value: Scene, buf: ByteBuffer) {
@@ -5221,6 +5281,7 @@ public object FfiConverterTypeScene: FfiConverterRustBuffer<Scene> {
             FfiConverterSequenceTypeSceneExceptionView.write(value.`exceptions`, buf)
             FfiConverterSequenceTypeServiceHealth.write(value.`services`, buf)
             FfiConverterString.write(value.`group`, buf)
+            FfiConverterString.write(value.`scanQuery`, buf)
     }
 }
 

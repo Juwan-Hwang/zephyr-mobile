@@ -904,6 +904,8 @@ public protocol MobileCoreProtocol : AnyObject {
      */
     func latencyTestBatch(ids: [UInt64]) throws  -> String
     
+    func latencyTtlHours()  -> UInt32
+    
     /**
      * 重新加载 rules/ 下全部层（按文件名序），final_policy 为 MATCH 的去向（通常是场景 "other"）。
      */
@@ -1046,6 +1048,12 @@ public protocol MobileCoreProtocol : AnyObject {
      * 然后**总是** selectInGroup("GLOBAL", member)。
      */
     func setGlobalNode(nodeId: UInt64) throws  -> SceneApply
+    
+    /**
+     * 用户设置"测速结果有效期"（latencyTtlHours）。影响场景候选、自动选点、热备与 Scene.available；
+     * 进程内有效，平台启动时与设置变更时调用。0 = 恢复默认 24 h。（§15.e）
+     */
+    func setLatencyTtlHours(hours: UInt32) 
     
     /**
      * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
@@ -1305,6 +1313,13 @@ open func latencyTestBatch(ids: [UInt64])throws  -> String {
     return try  FfiConverterString.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_latency_test_batch(self.uniffiClonePointer(),
         FfiConverterSequenceUInt64.lower(ids),$0
+    )
+})
+}
+    
+open func latencyTtlHours() -> UInt32 {
+    return try!  FfiConverterUInt32.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_latency_ttl_hours(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -1663,6 +1678,17 @@ open func setGlobalNode(nodeId: UInt64)throws  -> SceneApply {
         FfiConverterUInt64.lower(nodeId),$0
     )
 })
+}
+    
+    /**
+     * 用户设置"测速结果有效期"（latencyTtlHours）。影响场景候选、自动选点、热备与 Scene.available；
+     * 进程内有效，平台启动时与设置变更时调用。0 = 恢复默认 24 h。（§15.e）
+     */
+open func setLatencyTtlHours(hours: UInt32) {try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_set_latency_ttl_hours(self.uniffiClonePointer(),
+        FfiConverterUInt32.lower(hours),$0
+    )
+}
 }
     
     /**
@@ -4862,6 +4888,11 @@ public struct Scene {
      * mihomo 中的组名（MihomoClient.selectInGroup 用）
      */
     public var group: String
+    /**
+     * 场景重测用的 scanTargets / fastestNodes 查询（§15.e）：当前节点所在地区，未选节点时为空串（全库）。
+     * 与 `available`、sceneCandidates(region = nil) 用的是同一个查询。
+     */
+    public var scanQuery: String
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
@@ -4874,7 +4905,11 @@ public struct Scene {
          */services: [ServiceHealth], 
         /**
          * mihomo 中的组名（MihomoClient.selectInGroup 用）
-         */group: String) {
+         */group: String, 
+        /**
+         * 场景重测用的 scanTargets / fastestNodes 查询（§15.e）：当前节点所在地区，未选节点时为空串（全库）。
+         * 与 `available`、sceneCandidates(region = nil) 用的是同一个查询。
+         */scanQuery: String) {
         self.id = id
         self.kind = kind
         self.name = name
@@ -4889,6 +4924,7 @@ public struct Scene {
         self.exceptions = exceptions
         self.services = services
         self.group = group
+        self.scanQuery = scanQuery
     }
 }
 
@@ -4938,6 +4974,9 @@ extension Scene: Equatable, Hashable {
         if lhs.group != rhs.group {
             return false
         }
+        if lhs.scanQuery != rhs.scanQuery {
+            return false
+        }
         return true
     }
 
@@ -4956,6 +4995,7 @@ extension Scene: Equatable, Hashable {
         hasher.combine(exceptions)
         hasher.combine(services)
         hasher.combine(group)
+        hasher.combine(scanQuery)
     }
 }
 
@@ -4980,7 +5020,8 @@ public struct FfiConverterTypeScene: FfiConverterRustBuffer {
                 note: FfiConverterOptionString.read(from: &buf), 
                 exceptions: FfiConverterSequenceTypeSceneExceptionView.read(from: &buf), 
                 services: FfiConverterSequenceTypeServiceHealth.read(from: &buf), 
-                group: FfiConverterString.read(from: &buf)
+                group: FfiConverterString.read(from: &buf), 
+                scanQuery: FfiConverterString.read(from: &buf)
         )
     }
 
@@ -4999,6 +5040,7 @@ public struct FfiConverterTypeScene: FfiConverterRustBuffer {
         FfiConverterSequenceTypeSceneExceptionView.write(value.exceptions, into: &buf)
         FfiConverterSequenceTypeServiceHealth.write(value.services, into: &buf)
         FfiConverterString.write(value.group, into: &buf)
+        FfiConverterString.write(value.scanQuery, into: &buf)
     }
 }
 
@@ -8027,6 +8069,9 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_latency_test_batch() != 344) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_latency_ttl_hours() != 28451) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_load_rules() != 40179) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -8121,6 +8166,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_global_node() != 52568) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_latency_ttl_hours() != 22838) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception() != 4651) {
