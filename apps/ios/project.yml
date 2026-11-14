@@ -372,6 +372,10 @@ targets:
         group: Shared
       - path: Shared/LiveActivity
         group: Shared
+      # X-P1-9：英文 / 伪语言快照查这里编出的 en.lproj（测试不挂宿主 App，Bundle.main 没有译文）。
+      - path: App/Localizable.xcstrings
+        group: Shared
+        buildPhase: resources
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.snapshot-tests
