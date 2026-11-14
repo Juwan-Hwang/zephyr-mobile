@@ -25,6 +25,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import com.zephyr.design.theme.ZAnim
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -67,10 +71,16 @@ internal fun androidx.compose.foundation.layout.ColumnScope.TraceBody(host: Stri
             ZText("${ZFormat.ago(t.lastSeenAt, now)} · ${t.connections} 个连接 · ${ZFormat.bytesText(t.totalBytes)}", style = ZTheme.type.callout, color = c.text3)
             Spacer(Modifier.height(24.dp))
             val sceneName = t.scene?.let { id -> scenes.firstOrNull { it.id == id }?.name ?: id }
-            Step("规则", t.rule.replace(",", ", "), t.ruleSource?.let { "来自 $it" }, mono = true)
-            Step("场景", sceneName ?: "直连", t.sceneSource)
-            t.node?.let { Step("节点", it.name, t.via?.let { v -> "经由 $v" }) }
-            Step("出口", t.exitIp ?: "本机网络", listOfNotNull(t.exitRegion, t.exitStableDays?.let { "$it 天未变化" }).joinToString(" · ").ifEmpty { null }, mono = t.exitIp != null, last = true)
+            // Review H-P2-10: 逐步出现（原型 256-258；iOS TraceView 0.08 s + i × 0.06 s）+ 竖线流光（原型 1006，iOS TraceRailFlow）。
+            Box {
+                Column {
+                    Step(0, "规则", t.rule.replace(",", ", "), t.ruleSource?.let { "来自 $it" }, mono = true)
+                    Step(1, "场景", sceneName ?: "直连", t.sceneSource)
+                    t.node?.let { Step(2, "节点", it.name, t.via?.let { v -> "经由 $v" }) }
+                    Step(3, "出口", t.exitIp ?: "本机网络", listOfNotNull(t.exitRegion, t.exitStableDays?.let { "$it 天未变化" }).joinToString(" · ").ifEmpty { null }, mono = t.exitIp != null, last = true)
+                }
+                TraceRailFlow(Modifier.matchParentSize())
+            }
         }
         Spacer(Modifier.height(16.dp))
         ZText("本次连接", Modifier.padding(horizontal = 26.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.text3)
@@ -96,9 +106,19 @@ internal fun androidx.compose.foundation.layout.ColumnScope.TraceBody(host: Stri
 }
 
 @Composable
-private fun Step(label: String, value: String, detail: String?, mono: Boolean = false, last: Boolean = false) {
+private fun Step(index: Int, label: String, value: String, detail: String?, mono: Boolean = false, last: Boolean = false) {
     val c = ZTheme.colors
-    Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
+    val still = androidx.compose.ui.platform.LocalInspectionMode.current // previews/Paparazzi: final frame
+    val shown = remember { androidx.compose.animation.core.Animatable(if (still) 1f else 0f) }
+    androidx.compose.runtime.LaunchedEffect(Unit) {
+        if (still) return@LaunchedEffect
+        kotlinx.coroutines.delay(80L + index * 60L)
+        shown.animateTo(1f, ZAnim.slow())
+    }
+    Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min).graphicsLayer {
+        alpha = shown.value
+        translationX = (1f - shown.value) * -8.dp.toPx()
+    }) {
         Box(Modifier.width(20.dp).fillMaxHeight()) {
             if (!last) Box(Modifier.align(Alignment.TopCenter).padding(top = 13.dp).width(1.dp).fillMaxHeight().background(c.hairlineStrong))
             Box(
@@ -112,5 +132,28 @@ private fun Step(label: String, value: String, detail: String?, mono: Boolean = 
             ZText(value, style = if (mono) ZTheme.type.mono.copy(fontSize = ZTheme.type.headline.fontSize) else ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight))
             detail?.let { ZText(it, style = ZTheme.type.callout, color = c.text3) }
         }
+    }
+}
+
+/** A 40dp accent glint sliding down the step rail every 1.8 s (iOS TraceRailFlow parity). */
+@Composable
+private fun TraceRailFlow(modifier: Modifier) {
+    if (androidx.compose.ui.platform.LocalInspectionMode.current) return
+    val accent = ZTheme.colors.accent
+    val t by androidx.compose.animation.core.rememberInfiniteTransition(label = "rail").animateFloat(
+        0f, 1f,
+        androidx.compose.animation.core.infiniteRepeatable<Float>(androidx.compose.animation.core.tween<Float>(1800, easing = androidx.compose.animation.core.FastOutSlowInEasing)),
+        label = "railT",
+    )
+    androidx.compose.foundation.Canvas(modifier.clearAndSetSemantics {}) {
+        val seg = 40.dp.toPx(); val x = 10.dp.toPx(); val top = 13.dp.toPx(); val bottom = size.height - 48.dp.toPx()
+        if (bottom <= top) return@Canvas
+        val y = top - seg + (bottom - top + seg) * t
+        val y0 = y.coerceAtLeast(top); val y1 = (y + seg).coerceAtMost(bottom)
+        if (y1 <= y0) return@Canvas
+        drawLine(
+            androidx.compose.ui.graphics.Brush.verticalGradient(listOf(accent.copy(alpha = 0f), accent, accent.copy(alpha = 0f)), startY = y, endY = y + seg),
+            androidx.compose.ui.geometry.Offset(x, y0), androidx.compose.ui.geometry.Offset(x, y1), strokeWidth = 1.5.dp.toPx(),
+        )
     }
 }
