@@ -101,7 +101,7 @@ func zAssertSnapshots<V: View>(
     file: StaticString = #filePath,
     testName: String = #function,
     line: UInt = #line,
-    make: (ZSnapshotVariant) async throws -> V
+    make: @MainActor (ZSnapshotVariant) async throws -> V
 ) async rethrows {
     for variant in variants {
         // 语言要在构造视图之前切换（模型与视图初始化里可能已经取了 ZL 文案），断言完恢复中文。
