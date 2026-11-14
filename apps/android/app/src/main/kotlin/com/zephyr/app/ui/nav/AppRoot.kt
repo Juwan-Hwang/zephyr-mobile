@@ -67,6 +67,7 @@ import kotlinx.coroutines.launch
 @Serializable data class Rules(val query: String = "", val back: String = "资料库")
 @Serializable data class Subs(val back: String = "资料库")
 @Serializable data class SettingsRoute(val back: String = "资料库")
+@Serializable object Logs
 @Serializable object Today
 @Serializable object Onboarding
 
@@ -139,7 +140,8 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                 composable<Nodes> { e -> val r = e.toRoute<Nodes>(); NodesScreen(viewModel { NodesViewModel() }, r.query, back = r.back, onBack = { backTo(r.back) }, onImport = { import = true }) }
                 composable<Rules> { e -> val r = e.toRoute<Rules>(); RulesScreen(r.query, back = r.back) { backTo(r.back) } }
                 composable<Subs> { e -> val r = e.toRoute<Subs>(); SubscriptionsScreen(back = r.back, onBack = { backTo(r.back) }, onImport = { import = true }) }
-                composable<SettingsRoute> { e -> val r = e.toRoute<SettingsRoute>(); SettingsScreen(r.back) { backTo(r.back) } }
+                composable<SettingsRoute> { e -> val r = e.toRoute<SettingsRoute>(); SettingsScreen(r.back, onLogs = { nav.navigate(Logs) }) { backTo(r.back) } }
+                composable<Logs> { com.zephyr.app.ui.settings.LogsScreen { nav.popBackStack() } }
                 composable<Today>(
                     enterTransition = { slideInVertically(ZAnim.slow()) { it / 3 } + fadeIn(ZAnim.standard()) },
                     popExitTransition = { slideOutVertically(ZAnim.standard()) { it / 3 } + fadeOut(ZAnim.standard()) },
