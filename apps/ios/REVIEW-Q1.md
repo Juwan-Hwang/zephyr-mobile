@@ -13,6 +13,7 @@
 - 同 PR 另修 H-P1-6（指令框改 UITextField 属性下划线，拼音组合期间不回写）。待做 P1：仅 H-P1-5（需契约 Scene.services）；真机验证待做（拼音、光标）。
 
 - 2026-11-08 PR agent/ios/review-q1c：✅ D-P2-8（分区标题 t2/500）、H-P2-12（轨迹流光 30fps）、H-P2-17（指令框聚焦补一拍）、L-P2-6（延迟阈值 ≥）、L-P2-9（地区 chip 触感只触发一次）。其余 P2 持续按批处理；需视觉核对的项等快照图（CI 目前不上传 __Snapshots__）。
+- 2026-11-14 复核：其余条目的修复记录统一见 REVIEW-Q2.md（含 H-P2-21 深链来源确认 / DeepLinkPolicy、H-P2-22）。代码核对后 Q1 仅 D-P2-10 保留为已记录的限制；H-P1-5 已随契约 §14.z Scene.services 落地（Home/SceneServices.swift）。
 
 ## 总览
 

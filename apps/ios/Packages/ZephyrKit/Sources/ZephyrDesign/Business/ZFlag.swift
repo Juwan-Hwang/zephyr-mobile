@@ -13,6 +13,7 @@ public enum ZFlagSize: Sendable {
 }
 
 public struct ZFlag: View {
+    @Environment(\.zStaticRendering) private var still
     private let code: String
     private let size: ZFlagSize
     private let isHighlighted: Bool
@@ -43,7 +44,7 @@ public struct ZFlag: View {
                                    lineWidth: ZMetrics.hairline)
             }
             .scaleEffect(isHighlighted && !reduceMotion ? ZMetrics.flagTickScale : 1)
-            .animation(ZMotion.micro, value: isHighlighted)
+            .animation(still ? nil : ZMotion.micro, value: isHighlighted)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text(verbatim: Self.regionName(code)))
     }

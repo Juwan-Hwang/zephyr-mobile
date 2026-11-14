@@ -90,6 +90,7 @@ public extension View {
 }
 
 private struct ZToastPresenter: ViewModifier {
+    @Environment(\.zStaticRendering) private var still
     @Binding var item: ZToastItem?
     let bottomInset: CGFloat
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -106,7 +107,7 @@ private struct ZToastPresenter: ViewModifier {
                             .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
                     }
                 }
-                .animation(ZMotion.gentle(ZMotion.slow, reduceMotion: reduceMotion), value: item?.id)
+                .animation(still ? nil : ZMotion.gentle(ZMotion.slow, reduceMotion: reduceMotion), value: item?.id)
             }
             .task(id: item?.id) {
                 guard let current = item else { return }

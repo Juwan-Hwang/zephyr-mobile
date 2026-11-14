@@ -9,6 +9,7 @@ import ZephyrKit
 
 @MainActor
 struct ScenesSection: View {
+    @Environment(\.zStaticRendering) private var still
     @Environment(AppModel.self) private var model
 
     var body: some View {
@@ -27,7 +28,7 @@ struct ScenesSection: View {
                 card
             }
         }
-        .animation(ZMotion.slow, value: model.connection.mode)
+        .animation(still ? nil : ZMotion.slow, value: model.connection.mode)
     }
 
     private var card: some View {
@@ -51,7 +52,7 @@ struct ScenesSection: View {
                     }
                 }
             }
-            .animation(ZMotion.slow, value: model.pendingChange)
+            .animation(still ? nil : ZMotion.slow, value: model.pendingChange)
         }
         .opacity(model.isOn ? 1 : 0.55)
         .padding(.horizontal, HMetrics.cardInset)

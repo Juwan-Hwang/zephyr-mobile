@@ -21,6 +21,7 @@ struct TodayCardView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
     @AppStorage("today.theme") private var themeRaw = TodayTheme.night.rawValue
     @State private var exported: Image?
     @State private var exportedPNG: Data?
@@ -56,9 +57,13 @@ struct TodayCardView: View {
         .task { await model.refreshUsage() }
         // 导出图延后到 sheet 弹出动画结束、usage 稳定后再渲染（去抖），PNG 编码离开主线程（REVIEW H-P1-7）。
         .task(id: RenderKey(usage: model.usage, theme: theme)) {
-            try? await Task.sleep(nanoseconds: 450_000_000)
-            guard !Task.isCancelled else { return }
-            await render()
+            // 快照（zStaticRendering）：不去抖、不编码 PNG，固定为“分享就绪、存储图像未就绪”这一帧。
+            // 否则 0.45 s 去抖 + 后台编码与 settle 0.6 s 赛跑，存储按钮时灰时亮（today-dark-orange 偶发，#136）。
+            if !still {
+                try? await Task.sleep(nanoseconds: 450_000_000)
+                guard !Task.isCancelled else { return }
+            }
+            await render(encodePNG: !still)
         }
     }
 
@@ -112,7 +117,7 @@ struct TodayCardView: View {
         var theme: TodayTheme
     }
 
-    private func render() async {
+    private func render(encodePNG: Bool = true) async {
         guard let u = model.usage else { exported = nil; exportedPNG = nil; return }
         let size = HMetrics.todayCardSize
         let content = TodayCard(usage: u, dateText: dateText, theme: theme, animated: false)
@@ -124,6 +129,7 @@ struct TodayCardView: View {
         r.proposedSize = ProposedViewSize(size)
         guard let ui = r.uiImage else { return }
         exported = Image(uiImage: ui)
+        guard encodePNG else { return }
         let png = await Task.detached(priority: .utility) { ui.pngData() }.value
         guard !Task.isCancelled else { return }
         exportedPNG = png
