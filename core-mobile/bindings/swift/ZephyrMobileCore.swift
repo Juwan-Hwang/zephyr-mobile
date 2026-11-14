@@ -911,6 +911,11 @@ public protocol MobileCoreProtocol : AnyObject {
     
     func nodeDetail(id: UInt64) throws  -> NodeDetail
     
+    /**
+     * 漏斗计数（§15.c）。只看每个节点最近一次样本；max_age ≤ 0 不限新鲜度；threshold_ms ≤ 0 按 300。
+     */
+    func nodeFunnel(nowMillis: Int64, maxAgeMillis: Int64, thresholdMs: Int32) throws  -> NodeFunnel
+    
     func nodeIndex() throws  -> NodeIndex
     
     /**
@@ -1312,6 +1317,19 @@ open func nodeDetail(id: UInt64)throws  -> NodeDetail {
     return try  FfiConverterTypeNodeDetail.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_node_detail(self.uniffiClonePointer(),
         FfiConverterUInt64.lower(id),$0
+    )
+})
+}
+    
+    /**
+     * 漏斗计数（§15.c）。只看每个节点最近一次样本；max_age ≤ 0 不限新鲜度；threshold_ms ≤ 0 按 300。
+     */
+open func nodeFunnel(nowMillis: Int64, maxAgeMillis: Int64, thresholdMs: Int32)throws  -> NodeFunnel {
+    return try  FfiConverterTypeNodeFunnel.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_node_funnel(self.uniffiClonePointer(),
+        FfiConverterInt64.lower(nowMillis),
+        FfiConverterInt64.lower(maxAgeMillis),
+        FfiConverterInt32.lower(thresholdMs),$0
     )
 })
 }
@@ -3381,6 +3399,138 @@ public func FfiConverterTypeNodeDiff_lift(_ buf: RustBuffer) throws -> NodeDiff 
 #endif
 public func FfiConverterTypeNodeDiff_lower(_ value: NodeDiff) -> RustBuffer {
     return FfiConverterTypeNodeDiff.lower(value)
+}
+
+
+/**
+ * 场景 sheet 漏斗（原型"检测自 2 个订阅中的 512 个节点 → 延迟低于 300 ms → …"），契约 §15.c。
+ * 只给核心真实知道的级；"可访问 GPT"等按服务的级需要逐节点探测，核心没有，平台不显示。
+ */
+public struct NodeFunnel {
+    /**
+     * 订阅数
+     */
+    public var sourceCount: UInt32
+    /**
+     * 节点库总数
+     */
+    public var poolSize: UInt64
+    /**
+     * max_age 内测过（含超时）且仍在库中的节点数
+     */
+    public var tested: UInt64
+    /**
+     * 其中测速成功（ms ≥ 0）
+     */
+    public var reachable: UInt64
+    /**
+     * 其中 ms < threshold_ms
+     */
+    public var underThreshold: UInt64
+    public var thresholdMs: Int32
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(
+        /**
+         * 订阅数
+         */sourceCount: UInt32, 
+        /**
+         * 节点库总数
+         */poolSize: UInt64, 
+        /**
+         * max_age 内测过（含超时）且仍在库中的节点数
+         */tested: UInt64, 
+        /**
+         * 其中测速成功（ms ≥ 0）
+         */reachable: UInt64, 
+        /**
+         * 其中 ms < threshold_ms
+         */underThreshold: UInt64, thresholdMs: Int32) {
+        self.sourceCount = sourceCount
+        self.poolSize = poolSize
+        self.tested = tested
+        self.reachable = reachable
+        self.underThreshold = underThreshold
+        self.thresholdMs = thresholdMs
+    }
+}
+
+
+
+extension NodeFunnel: Equatable, Hashable {
+    public static func ==(lhs: NodeFunnel, rhs: NodeFunnel) -> Bool {
+        if lhs.sourceCount != rhs.sourceCount {
+            return false
+        }
+        if lhs.poolSize != rhs.poolSize {
+            return false
+        }
+        if lhs.tested != rhs.tested {
+            return false
+        }
+        if lhs.reachable != rhs.reachable {
+            return false
+        }
+        if lhs.underThreshold != rhs.underThreshold {
+            return false
+        }
+        if lhs.thresholdMs != rhs.thresholdMs {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(sourceCount)
+        hasher.combine(poolSize)
+        hasher.combine(tested)
+        hasher.combine(reachable)
+        hasher.combine(underThreshold)
+        hasher.combine(thresholdMs)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeNodeFunnel: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> NodeFunnel {
+        return
+            try NodeFunnel(
+                sourceCount: FfiConverterUInt32.read(from: &buf), 
+                poolSize: FfiConverterUInt64.read(from: &buf), 
+                tested: FfiConverterUInt64.read(from: &buf), 
+                reachable: FfiConverterUInt64.read(from: &buf), 
+                underThreshold: FfiConverterUInt64.read(from: &buf), 
+                thresholdMs: FfiConverterInt32.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: NodeFunnel, into buf: inout [UInt8]) {
+        FfiConverterUInt32.write(value.sourceCount, into: &buf)
+        FfiConverterUInt64.write(value.poolSize, into: &buf)
+        FfiConverterUInt64.write(value.tested, into: &buf)
+        FfiConverterUInt64.write(value.reachable, into: &buf)
+        FfiConverterUInt64.write(value.underThreshold, into: &buf)
+        FfiConverterInt32.write(value.thresholdMs, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeNodeFunnel_lift(_ buf: RustBuffer) throws -> NodeFunnel {
+    return try FfiConverterTypeNodeFunnel.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeNodeFunnel_lower(_ value: NodeFunnel) -> RustBuffer {
+    return FfiConverterTypeNodeFunnel.lower(value)
 }
 
 
@@ -7858,6 +8008,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_detail() != 17464) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_funnel() != 52687) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_index() != 24911) {

@@ -427,3 +427,13 @@ parseImportPayload(payload: String) throws -> ImportPayload                 // �
 回应 Android REVIEW-Q1 H-P1-9。§9 `commandSuggestions` 仍由引擎决定执行什么；输入框下划线与"服务 / 地区 / 范围 / 操作"卡片由平台本地 token 化（iOS `CommandTokenizer`、Android `CommandParser`），两端以原型 `parse()` 为准。
 `contract/fixtures/command-parse-v1.json`（`tools/gen-command-parse-fixtures.mjs` 从 `design/prototype/index.html` 直接抽出 `SVC/RGN/ACT/parse()` 生成，`--check` 校验未漂移）：每条 `input` → `service`（显示名）、`scope`（AI|视频|其他）、`region{name,code}`、`action`（直连|4K）、`tokens[{start,len,kind,text}]`（kind ∈ service|region|action，UTF-16 下标）。两端单测应逐条比对。
 平台可在样本之外做更严的改进（如两字母码只认独立单词），但样本内条目结果须一致；`视频|流媒体` 的下划线按实际匹配长度（原型固定 2 字为笔误，样本不收录）。
+
+### 15.c 场景漏斗计数（2026-11-14，core-mobile 已实现，只追加）
+回应 Android REVIEW-Q1 H-P1-8 / iOS REVIEW-Q1 H-P2-9（场景 sheet 漏斗与"检测自 N 个订阅中的 M 个节点"不能编造）：
+```
+record NodeFunnel { sourceCount: UInt32, poolSize: UInt64, tested: UInt64, reachable: UInt64, underThreshold: UInt64, thresholdMs: Int32 }
+nodeFunnel(nowMillis, maxAgeMillis, thresholdMs) throws -> NodeFunnel   // maxAge ≤ 0 不限新鲜度；thresholdMs ≤ 0 按 300
+```
+每个节点只看最近一次样本；`tested` 含超时、只数仍在库中的节点；`reachable` = ms ≥ 0；`underThreshold` = 0 ≤ ms < thresholdMs。
+建议文案：lede"检测自 {sourceCount} 个订阅中的 {poolSize} 个节点"；漏斗"全部 {poolSize} → 已测速 {tested} → 可连通 {reachable} → 延迟低于 {thresholdMs} ms {underThreshold}"，新鲜度与场景候选一致用 24 h。
+原型里"可访问 GPT / 可访问 GPT、Claude 和 Gemini"需要逐节点按服务探测，核心不做（§14.z 只探测场景出口），平台不显示这两级。Mock：sourceCount / poolSize 取原型 lede（2 / 512），其余按 mock 延迟表现算，不另编数字。
