@@ -36,7 +36,8 @@ fun BoxScope.ImportSheet(visible: Boolean, onDismiss: () -> Unit, prefill: Strin
     val imp = rememberSubscriptionImporter { s -> url = ""; onDone("已添加 ${s.name}（${s.nodeCount} 个节点）") }
     // Deep links land here pre-filled and wait for 添加 (review A-P1-4).
     androidx.compose.runtime.LaunchedEffect(prefill) { if (prefill != null) { url = prefill; imp.error = null } }
-    ZSheet(visible, onDismiss, "添加订阅", trailing = "取消") {
+    // iOS #99 parity: 取消 and a swipe-down both abandon an import in flight.
+    ZSheet(visible, { imp.cancel(); onDismiss() }, "添加订阅", trailing = "取消") {
         Column(Modifier.padding(horizontal = 16.dp)) {
             ZSearchField(url, { url = it; imp.error = null }, "粘贴订阅链接", onSubmit = { imp.submit(ImportSource.URL, url) })
             imp.error?.let { ZText(it, Modifier.padding(start = 6.dp, top = 6.dp), style = ZTheme.type.footnote, color = c.danger) }
