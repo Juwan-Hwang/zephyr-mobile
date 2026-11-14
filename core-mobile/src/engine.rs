@@ -77,6 +77,8 @@ pub struct MobileCore {
     pub(crate) scenes: Mutex<crate::scenes::SceneStore>,
     /// 场景自动切换：复用桌面端 failover 策略（clash-prism-core FailoverTracker），每场景一个
     pub(crate) failover: Mutex<crate::failover::FailoverState>,
+    /// 场景候选/自动选点/热备/"n 个可用"视为新鲜的测速年龄（毫秒），跟随用户设置 latencyTtlHours（§15.e）
+    pub(crate) latency_ttl_ms: std::sync::atomic::AtomicI64,
 }
 
 impl MobileCore {
@@ -198,6 +200,7 @@ impl MobileCore {
             fp_pos: Mutex::new(load_positions(&dir_for_subs, gen)),
             scenes: Mutex::new(crate::scenes::SceneStore::open(&dir_for_subs)?),
             failover: Mutex::new(crate::failover::FailoverState::open(&dir_for_subs)),
+            latency_ttl_ms: std::sync::atomic::AtomicI64::new(crate::scene_api::DEFAULT_LATENCY_TTL_MS),
         }))
     }
 

@@ -7,8 +7,8 @@ use crate::runtime_config::ScenePlan;
 use crate::scenes::{self, HostOverride, SceneKind, SceneRec, SceneSource, TraceTarget};
 use rustc_hash::FxHashSet;
 
-/// 场景出口候选：只要 24 h 内测过的。
-const FRESH_MS: i64 = 24 * 3_600_000;
+/// 场景出口候选默认只要 24 h 内测过的；平台用 setLatencyTtlHours 跟随用户设置（§15.e）。
+pub(crate) const DEFAULT_LATENCY_TTL_MS: i64 = 24 * 3_600_000;
 /// 组内热备数：切到这些节点不需要重载 mihomo。
 const STANDBY: usize = 8;
 
@@ -38,6 +38,9 @@ pub struct Scene {
     pub services: Vec<ServiceHealth>,
     /// mihomo 中的组名（MihomoClient.selectInGroup 用）
     pub group: String,
+    /// 场景重测用的 scanTargets / fastestNodes 查询（§15.e）：当前节点所在地区，未选节点时为空串（全库）。
+    /// 与 `available`、sceneCandidates(region = nil) 用的是同一个查询。
+    pub scan_query: String,
 }
 
 #[derive(Debug, Clone, PartialEq, uniffi::Record)]
@@ -108,6 +111,10 @@ fn dir_bytes(p: &std::path::Path) -> i64 {
 }
 
 impl MobileCore {
+    pub(crate) fn fresh_ms(&self) -> i64 {
+        self.latency_ttl_ms.load(std::sync::atomic::Ordering::Relaxed)
+    }
+
     fn rows_by_id(&self, ids: &[u64]) -> Result<rustc_hash::FxHashMap<u64, NodeRow>, MobileError> {
         let st = self.store()?;
         let pos = self.positions(&st, ids);
@@ -124,9 +131,10 @@ impl MobileCore {
 
     fn view(&self, s: &SceneRec, rows: &rustc_hash::FxHashMap<u64, NodeRow>, now: i64) -> Scene {
         let selected = s.selected.and_then(|id| rows.get(&id).cloned());
+        let scan_query = selected.as_ref().map(|r| r.region.clone()).unwrap_or_default();
         let available = selected
             .as_ref()
-            .and_then(|r| self.fastest_nodes(r.region.clone(), 50, now, FRESH_MS).ok())
+            .and_then(|r| self.fastest_nodes(r.region.clone(), 50, now, self.fresh_ms()).ok())
             .map(|v| v.iter().filter(|x| x.latency_ms >= 0).count() as i32)
             .unwrap_or(0);
         let lat = s.selected.and_then(|id| self.latency.lock().get(id, now, 0).map(|x| x.0));
@@ -148,6 +156,7 @@ impl MobileCore {
                 .map(|(a, n)| SceneExceptionView { app_id: a.clone(), app: scenes::app(a).map_or(a.clone(), |x| x.name.to_string()), node: rows.get(n).cloned() })
                 .collect(),
             group: scenes::group_name(s),
+            scan_query,
             services: s
                 .services
                 .iter()
@@ -260,6 +269,17 @@ impl MobileCore {
 
 #[uniffi::export]
 impl MobileCore {
+    /// 用户设置"测速结果有效期"（latencyTtlHours）。影响场景候选、自动选点、热备与 Scene.available；
+    /// 进程内有效，平台启动时与设置变更时调用。0 = 恢复默认 24 h。（§15.e）
+    pub fn set_latency_ttl_hours(&self, hours: u32) {
+        let ms = if hours == 0 { DEFAULT_LATENCY_TTL_MS } else { hours as i64 * 3_600_000 };
+        self.latency_ttl_ms.store(ms, std::sync::atomic::Ordering::Relaxed);
+    }
+
+    pub fn latency_ttl_hours(&self) -> u32 {
+        (self.fresh_ms() / 3_600_000) as u32
+    }
+
     pub fn scenes(&self, now_millis: i64) -> Result<Vec<Scene>, MobileError> {
         let recs = self.scenes.lock().scenes.clone();
         let ids: Vec<u64> = recs.iter().flat_map(|s| s.selected.into_iter().chain(s.exceptions.iter().map(|e| e.1))).collect();
@@ -277,7 +297,7 @@ impl MobileCore {
                 None => return Ok(vec![]),
             },
         };
-        self.fastest_nodes(region, 50, now_millis, FRESH_MS)
+        self.fastest_nodes(region, 50, now_millis, self.fresh_ms())
     }
 
     pub fn preview_scene_change(&self, scene_id: String, node_id: u64) -> Result<ExitChange, MobileError> {
@@ -291,7 +311,7 @@ impl MobileCore {
 
     pub fn apply_scene_change(&self, scene_id: String, node_id: u64, now_millis: i64) -> Result<SceneApply, MobileError> {
         let to = self.row_by_id(node_id)?;
-        let standby: Vec<u64> = self.fastest_nodes(to.region.clone(), STANDBY as u32 + 1, now_millis, FRESH_MS)?.into_iter().map(|r| r.row.id).filter(|&id| id != node_id).take(STANDBY).collect();
+        let standby: Vec<u64> = self.fastest_nodes(to.region.clone(), STANDBY as u32 + 1, now_millis, self.fresh_ms())?.into_iter().map(|r| r.row.id).filter(|&id| id != node_id).take(STANDBY).collect();
         let mut sc = self.scenes.lock();
         let s = sc.get_mut(&scene_id)?;
         let hot = s.selected == Some(node_id) || s.standby.contains(&node_id);
@@ -420,7 +440,7 @@ impl MobileCore {
             Some(id) => self.row_by_id(id).map(|r| r.region).unwrap_or_default(),
             None => String::new(),
         };
-        let best = self.fastest_nodes(region, 1, now_millis, FRESH_MS)?.into_iter().find(|r| r.latency_ms >= 0).map(|r| r.row.id);
+        let best = self.fastest_nodes(region, 1, now_millis, self.fresh_ms())?.into_iter().find(|r| r.latency_ms >= 0).map(|r| r.row.id);
         let Some(best) = best.filter(|&b| Some(b) != selected) else { return Ok(None) };
         let apply = self.apply_scene_change(scene_id.clone(), best, now_millis)?;
         let mut sc = self.scenes.lock();
@@ -518,6 +538,25 @@ pub(crate) mod tests {
         let s: Vec<LatencySample> = rows.iter().enumerate().map(|(k, r)| LatencySample { id: r.id, ms: 50 + 10 * k as i32, at: 1000 }).collect();
         core.record_latencies(s).unwrap();
         (d, core, sa.id, rows)
+    }
+
+    #[test]
+    fn latency_ttl_and_scan_query() {
+        let (_d, core, _sub, rows) = setup();
+        let now = 1000 + 2 * 3_600_000; // 样本 2 h 前
+        core.apply_scene_change("ai".into(), rows[0].id, now).unwrap();
+        let ai = |c: &MobileCore| c.scenes(now).unwrap().into_iter().find(|s| s.id == "ai").unwrap();
+        assert_eq!(core.latency_ttl_hours(), 24);
+        assert_eq!(ai(&core).scan_query, rows[0].region);
+        assert!(ai(&core).available > 0);
+        assert!(!core.scene_candidates("ai".into(), None, now).unwrap().is_empty());
+        core.set_latency_ttl_hours(1);
+        assert_eq!(core.latency_ttl_hours(), 1);
+        assert_eq!(ai(&core).available, 0);
+        assert!(core.scene_candidates("ai".into(), None, now).unwrap().is_empty());
+        core.set_latency_ttl_hours(0);
+        assert_eq!(core.latency_ttl_hours(), 24);
+        assert!(!core.scene_candidates("ai".into(), None, now).unwrap().is_empty());
     }
 
     #[test]

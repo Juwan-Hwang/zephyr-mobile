@@ -448,3 +448,14 @@ struct ScanProgress { done: Int, total: Int }                            // 平�
 - query 同 queryNodes（场景重测用地区代码，如 "JP"；全库用空串）。
 - 平台：`total = 返回个数`；按 64 个一组走 latencyTestBatch → zm_url_test → recordUrlTest（未连接时 tcpPingTargets → recordLatencies），每组回来 `done += 本组个数` 并刷新行内进度；`done == total` 或取消时清空 `scan`。返回空数组 = 无需扫描，不显示进度。
 - 文案：“正在检测 {done}/{total}”。Mock：按 mock-v0 节点数给 total，done 定时递增即可。
+
+### 15.e 测速有效期与场景重测查询（2026-11-15，core-mobile 已实现，只追加）
+回应 iOS（看板 #1）“`scene_api` FRESH_MS 写死 24 h，不跟 `latencyTtlHours`”与“§15.d 场景重测的 query 怎么定”。
+```
+setLatencyTtlHours(hours: UInt32)      // 0 = 恢复默认 24；进程内有效，平台启动时与设置变更时调用
+latencyTtlHours() -> UInt32
+record Scene { …, scanQuery: String }  // 追加字段
+```
+- 有效期影响：`sceneCandidates`、`applySceneChange` 的组内热备、场景自动选点（auto 场景换最快）、`Scene.available`（“n 个可用”）。节点页 / `fastestNodes` / `nodeFunnel` / `scanTargets` 仍由调用方传 `maxAgeMillis`，平台传同一个设置值即可两边一致。
+- `Scene.scanQuery`：当前节点所在地区（与 `available`、`sceneCandidates(region = nil)` 同一查询）；未选节点时为空串（全库）。场景重测：`scanTargets(scene.scanQuery, 512, now, ttl)`。
+- Mock：`scanQuery` 取所选节点地区，`latencyTtlHours` 记在内存即可。
