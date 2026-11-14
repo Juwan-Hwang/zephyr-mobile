@@ -42,6 +42,7 @@
 - 第三十二批（PR agent/android/idle-h2）：✅ H-P2-2（未连接时 150dp 区域画出原型的虚线基线：3dp、2/8 虚线、位于 94% 高度，深色白 12%/浅色黑 15%；`.idle` 文案在原型中为空，未加）。
 - 第三十三批（PR agent/android/type-d9）：✅ D-P2-9（status −0.035em；hero −0.045em；display 84/200/−0.06em；number 200/−0.03em；sectionLabel 13sp；全部基线重录）。
 - D-P2-12：去掉未落地的 en 声明（localeFilters / locales_config / values-en），界面文案仍为中文硬编码；完整外化到 strings.xml 留待产品确认是否做英文版。
+- H-P2-3：首页整块“风”（数字+曲线）可点开最近连接；ZSparkline 新样本 120 ms 线性平移 + 头部圆点（动画仅在组合可见时运行）。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览
