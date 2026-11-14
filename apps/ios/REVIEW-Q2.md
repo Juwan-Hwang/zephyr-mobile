@@ -43,12 +43,12 @@
 - **Q2-X-P1-5 多项设置不生效** [已修：自动更新、按需连接、受信任 Wi‑Fi、仅 Wi‑Fi 测速、延迟 TTL、自动故障转移；“每日检测”文案（检测频率按延迟有效期显示，24 h 仍为“每天”）] — 按需连接 / 受信任 Wi‑Fi 自动断开（无 NEOnDemandRule）、订阅自动更新（dueSubscriptions/后台任务未用）、仅 Wi‑Fi 测速、延迟 TTL 写死、自动故障转移（reportSceneProbe 未调用）；场景 sheet “每日检测”不属实。
 - **Q2-X-P1-6 控制中心/小组件连接用旧配置** [已修] — `TunnelController.setConnected` 不重新生成 config.yaml，首次从小组件连接失败；`reloadTunnelIfRunning` 断开时不写配置。
 - **Q2-X-P1-7 PacketTunnel 内存与电量** [已修：IPv6 路由、睡眠定时器、MappedFile 映射读取配置] — 配置被复制 5–6 次；1 Hz 定时器睡眠时仍唤醒；IPv6 关闭时未声明 IPv6 路由导致绕过隧道（隐私泄露）。
-- **Q2-X-P1-8 测试不守门** — `__Snapshots__` 空且录制模式 missing，永不比对；快照 bundle 无 TEST_HOST；`layer.render` 丢模糊材质；容差 0.99/0.98 偏松；缺 AppModel、SharedStatePublisher、AppServices 链接解析、LiveActivity 测试；SPM target 无严格并发设置，App 仍 Swift 5 模式。
+- **Q2-X-P1-8 测试不守门** [已修：参考图入库（#58）且录制模式 never、缺图即失败；容差 0.995/0.98；AppModel / SharedStatePublisher / 链接解析 / LiveActivityPolicy 单测与实时活动快照；SPM 目标严格并发 complete；App、PacketTunnel、Widgets 已切 Swift 6（#92–#94，并发警告清零）。快照 bundle 不托管为有意设计，语言变体经临时 en.lproj bundle 覆盖（#88）。余：layer.render 不含系统模糊材质，改 drawHierarchy 需全量重录，暂列已知限制] — `__Snapshots__` 空且录制模式 missing，永不比对；快照 bundle 无 TEST_HOST；`layer.render` 丢模糊材质；容差 0.99/0.98 偏松；缺 AppModel、SharedStatePublisher、AppServices 链接解析、LiveActivity 测试；SPM target 无严格并发设置，App 仍 Swift 5 模式。
 - **Q2-X-P1-9 本地化** [已修，余漏网文案见下] — App 与 Widgets 的 `Localizable.xcstrings` 已生成（zh-Hans 源 + en，373 key，含复数），`Text(verbatim:)` 用户文案已改可本地化，`InfoPlist.xcstrings`（相机/相册/本地网络说明）、project.yml `knownRegions`/`CFBundleLocalizations` 已加。剩余：返回 String 的文案（ErrorText、HFormat、ZSettingsRow(verbatim:)、AppShortcuts、Live Activity 状态文字）需改 `String(localized:)`；英文版快照；伪语言（加长）布局测试。
   - 2026-11-14 PR #88：英文 / 伪语言快照（首页、设置、订阅、引导、连接 en-dark 与 pseudo-dark，首页加 pseudo-dark-ax5）。快照渲染期间 `+mainBundle` 返回只含 en.lproj 的临时 bundle，SwiftUI 字面量与 `ZL` 都查到英文。伪语言图暴露的漏网文案（下一批）：引导页标题“添加订阅”与脚注“订阅与流量数据仅保存在此设备上。”、设置“应用图标”“跟随系统”“24 小时”“无需密码”“家”、订阅“每 12 小时”。
 - **Q2-X-P1-10 对比度与显示辅助** [部分已修：增强对比度；不以颜色区分（ZStatusDot 关=空心环/开=实心圆/警示=菱形）；浅色 t3 基色等 A 的 tokens；降低透明度由系统材质处理] — 浅色 t3 仅 2.8:1、深色 3.7:1；不支持增强对比度、降低透明度、不以颜色区分。
 - **Q2-X-P1-10 对比度与显示辅助** [部分已修：增强对比度；浅色 t3 已由 A 在 f1fa0ce 提到 0.55（WCAG AA）；降低透明度由系统材质处理] — 浅色 t3 仅 2.8:1、深色 3.7:1；不支持增强对比度、降低透明度、不以颜色区分。
-- **Q2-X-P1-11 “从桌面 Zephyr 导入”在真引擎必败** — `CoreEngine.swift:~529` 拒绝非 URL 二维码。
+- **Q2-X-P1-11 “从桌面 Zephyr 导入”在真引擎必败** [已修：#54 按契约 §15 解析桌面导入码] — `CoreEngine.swift:~529` 拒绝非 URL 二维码。
 - **Q2-X-P1-12 新接口未接 UI** [已修] — SceneSheet 来源分段 → `AppModel.setSceneSource`；TraceView 底部 `TraceOverrideSection` → `AppModel.overrideHost`（直连/场景、始终应用、撤销吐司）；`CoreEngine.connectionState()` 在全局模式补 `globalNodeId`（冷启动即有出口节点，setGlobalNode 后重发）；Scene.services 行此前已接。剩余：RuleAddSheet 接 overrideHost；~~`hostOverride` 读接口回填当前覆写~~ [已修：TraceOverrideSection 打开时回填分段与“始终应用”]。
 - **Q2-X-P1-13 连接轨迹用 App 侧 testRule 预测，不是 mihomo 实际匹配** [已修：隧道连接时用 MihomoClient.hostTrace 实测（规则、策略链、节点），预测仅作回落]。
 - **Q2-X-P1-14 MobileCore 在 App.init 主线程同步初始化，拖慢冷启动** [已修] — 建议移到后台 Task，先呈现启动画面。
