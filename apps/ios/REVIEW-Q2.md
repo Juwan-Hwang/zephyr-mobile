@@ -81,3 +81,5 @@
 - 2026-11-14 H-P2-11 [已修 #121]：今日卡片改 fullScreenCover，纯黑全屏 + ✕。
 - 2026-11-14 L-P2-2 [已修 #123]：引导“1 / 2”距标志 60 → 28pt，onboarding 快照 6 张重录。
 - 2026-11-14 L-P2-12 [已修 #129]：订阅页分组标题 listRowInsets 归零 + listSectionSpacing(0)，标题距屏 22pt，subscriptions 快照 5 张重录。
+- 2026-11-14 L-P2-11 [已修 #131，收尾]：约定“错误 = 顶部横幅（PageErrorBanner），成功 / 可撤销 = 底部吐司”。订阅页错误改走横幅；首页 ErrorBanner 桥接 AppModel.lastError 复用 PageErrorBanner，只剩一套实现；SubscriptionsErrorTests 3 个。
+- 2026-11-14 Q1 复核：除下列外 Q1 各项均已在代码中落地（注释带 REVIEW 编号）。D-P2-10〔不改，记限制〕：Package.swift 的 `.macOS(.v14)` 供 Mac 主机 `swift test` 跑 ZephyrKit/ZephyrMock；ZephyrDesign/Features 31 个文件用 UIKit，Mac 主机上请只跑 `swift test --filter 'ZephyrKitTests|ZephyrMockTests'`，界面目标一律经 xcodebuild iOS 目标构建。清单无法按目标平台裁剪（Xcode 在 macOS 主机上解析清单），故不改。
