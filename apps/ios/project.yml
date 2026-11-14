@@ -418,8 +418,15 @@ schemes:
     test:
       config: Debug
       gatherCoverageData: true
+      # 覆盖率覆盖 App、扩展与 ZephyrKit 各库（原先只统计 App target，REVIEW-Q2 P2）。
       coverageTargets:
         - Zephyr
+        - PacketTunnel
+        - ZephyrWidgets
+        - package: ZephyrKit/ZephyrKit
+        - package: ZephyrKit/ZephyrMock
+        - package: ZephyrKit/ZephyrDesign
+        - package: ZephyrKit/ZephyrFeatures
       targets:
         - name: ZephyrTests
           parallelizable: true
