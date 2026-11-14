@@ -48,6 +48,7 @@
 - D-P2-1：ZSurface/ZCard/ZListGroup 增加 level（s1/s2）与 shape；首页场景/全局/订阅卡改 s1 + 22dp，库页分组 s1 + 18dp，sheet 列表保持 s2。
 - 第三十二批（PR agent/android/undo-drain）：✅ H-P2-14（撤销窗口取 tokens 5 s；带“撤销”的吐司底部 2dp 强调色倒计时条，与 iOS ZToast 一致；TalkBack 开启时按 calculateRecommendedTimeoutMillis 延长窗口与倒计时）。
 - 第三十三批（PR agent/android/rules-plus）：✅ L-P2-8 收尾（规则页右上“+”：搜索框有域名时打开与轨迹页同一张覆写面板，空时聚焦搜索框）。拍板记录：H-P2-1 保留弹出菜单（Material 平台习惯，点按循环在三态间无预览、易误触），记为接受的偏离；A-P2-2 保留 specialUse/"vpn"（systemExempted 仅限始终开启 VPN，不适用一般连接），上架时提交特殊用途声明；D-P1-4 接受系统回落（Android 13 及以下无 300 字重时用 Regular），不打包 CJK 字体以免体积增加。
+- 第三十四批（PR agent/android/cmd-blur）：✅ H-P2-10 收尾（轨迹步骤逐步出现 80 ms + i×60 ms、左移 8dp 淡入；竖线 40dp 强调色流光 1.8 s 循环，与 iOS TraceRailFlow 一致；预览/截图取最终帧）。✅ H-P2-11 收尾（API 31+ 指令层下方页面模糊 30dp，遮罩 .72；更低版本保持 .86 无模糊）。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览

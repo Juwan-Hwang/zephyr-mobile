@@ -104,7 +104,7 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
 
     AnimatedVisibility(visible, enter = fadeIn(ZAnim.standard()), exit = fadeOut(ZAnim.standard())) {
         // Review H-P2-11: tapping the scrim dismisses without the press-scale of zPressable (the whole screen shrank).
-        Box(Modifier.fillMaxSize().background(c.bg.copy(alpha = 0.86f)).clickable(
+        Box(Modifier.fillMaxSize().background(c.bg.copy(alpha = if (android.os.Build.VERSION.SDK_INT >= 31) 0.72f else 0.86f)).clickable(
             interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }, indication = null,
             onClickLabel = "关闭", onClick = onDismiss,
         ))
