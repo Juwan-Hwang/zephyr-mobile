@@ -40,12 +40,12 @@ fun BoxScope.LibrarySheet(visible: Boolean, onDismiss: () -> Unit, onOpen: (Libr
     val scenes by remember { e.scenes() }.collectWhile(visible, emptyList())
     val settings by e.settings().collectAsState(Settings())
     ZSheet(visible, onDismiss, "资料库") {
-        Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             ZStatTile(ZFormat.compactZh(nodes), "节点", Modifier.weight(1f)) { onOpen(LibraryDest.Nodes) }
             ZStatTile(ZFormat.grouped(subs.toLong()), "订阅", Modifier.weight(1f)) { onOpen(LibraryDest.Subscriptions) }
         }
-        Spacer(Modifier.height(12.dp))
-        Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        Spacer(Modifier.height(10.dp))
+        Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             ZStatTile(ZFormat.compactZh(rules), "规则", Modifier.weight(1f)) { onOpen(LibraryDest.Rules) }
             ZStatTile("${scenes.size}", "场景", Modifier.weight(1f)) { onOpen(LibraryDest.Scenes) }
         }
