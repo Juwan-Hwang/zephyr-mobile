@@ -134,6 +134,7 @@ targets:
       path: App/Zephyr.entitlements
     settings:
       base:
+        SWIFT_VERSION: "6.0"  # X-P1-8：App 与扩展切 Swift 6 语言模式（测试与 UniFFI 目标仍 5）
         PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile
         PRODUCT_NAME: Zephyr
         INFOPLIST_FILE: App/Info.plist
@@ -219,6 +220,7 @@ targets:
       path: PacketTunnel/PacketTunnel.entitlements
     settings:
       base:
+        SWIFT_VERSION: "6.0"  # X-P1-8：App 与扩展切 Swift 6 语言模式（测试与 UniFFI 目标仍 5）
         PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.PacketTunnel
         PRODUCT_NAME: PacketTunnel
         INFOPLIST_FILE: PacketTunnel/Info.plist
@@ -262,6 +264,7 @@ targets:
       path: Widgets/ZephyrWidgets.entitlements
     settings:
       base:
+        SWIFT_VERSION: "6.0"  # X-P1-8：App 与扩展切 Swift 6 语言模式（测试与 UniFFI 目标仍 5）
         PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.Widgets
         PRODUCT_NAME: ZephyrWidgets
         INFOPLIST_FILE: Widgets/Info.plist
