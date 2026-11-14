@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
     inputs:
       record_android_snapshots:
-        description: 'Android：重录 Paparazzi 基线（tokens 改动后用），录出的图作为 artifact android-snapshots 上传，人工审核后入库'
+        description: 'Android：重录 Paparazzi 基线（tokens 改动后用），录出的图作为 artifact android-snapshots 上传，人工审核后入库（本地套用：tools/apply-snapshot-artifacts.sh <run-id> --android [--dark-only]）'
         type: boolean
         default: false
       record_ios_snapshots:
-        description: 'iOS：重录全部快照参考图（ZEPHYR_SNAPSHOT_RECORD=all，tokens 改动后用），录出的图作为 artifact ios-snapshots 上传，人工审核后入库'
+        description: 'iOS：重录全部快照参考图（ZEPHYR_SNAPSHOT_RECORD=all，tokens 改动后用），录出的图作为 artifact ios-snapshots 上传，人工审核后入库（本地套用：tools/apply-snapshot-artifacts.sh <run-id> --ios [--dark-only]）'
         type: boolean
         default: false
 concurrency:
