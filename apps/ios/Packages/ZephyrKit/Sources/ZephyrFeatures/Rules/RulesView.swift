@@ -46,7 +46,7 @@ public struct RulesView: View {
             RuleAddSheet(engine: model.engine) { Task { await model.start() } }
         }
         .task { await model.start() }
-        .onChange(of: model.input) { model.runTest() }
+        .onChange(of: model.input) { model.runTest(debounced: true) }
         .pageAccent(engine: model.engine)
     }
 
