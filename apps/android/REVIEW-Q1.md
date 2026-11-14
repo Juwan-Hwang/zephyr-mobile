@@ -43,6 +43,7 @@
 - 第三十三批（PR agent/android/type-d9）：✅ D-P2-9（status −0.035em；hero −0.045em；display 84/200/−0.06em；number 200/−0.03em；sectionLabel 13sp；全部基线重录）。
 - D-P2-12：去掉未落地的 en 声明（localeFilters / locales_config / values-en），界面文案仍为中文硬编码；完整外化到 strings.xml 留待产品确认是否做英文版。
 - H-P2-3：首页整块“风”（数字+曲线）可点开最近连接；ZSparkline 新样本 120 ms 线性平移 + 头部圆点（动画仅在组合可见时运行）。
+- H-P2-1：首页模式/时长行改 14sp（原型 .sub），时长 t3；模式仍用弹出菜单（平台习惯，点按循环待设计确认）。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览

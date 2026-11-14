@@ -30,6 +30,7 @@ import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.zephyr.app.ui.common.ZephyrLockup
@@ -111,7 +112,7 @@ fun HomeStatus(
                     connection.status == ConnectionStatus.CONNECTED && since != null -> ZFormat.duration(now - since)
                     else -> "$sceneCount 个场景"
                 },
-                style = ZTheme.type.numeric.copy(fontSize = ZTheme.type.headline.fontSize),
+                style = ZTheme.type.numeric.copy(fontSize = 14.sp), // Review H-P2-1: prototype .sub 14px, t3
                 color = c.text3,
             )
         }
@@ -125,9 +126,9 @@ private fun ModePicker(mode: ProxyMode, onMode: (ProxyMode) -> Unit) {
     val rot by animateFloatAsState(if (open) 180f else 0f, ZAnim.standard(), label = "chev")
     Box {
         Row(Modifier.zPressable(label = "切换模式") { open = true }.padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
-            ZText(mode.label, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.bodyStrong.fontWeight))
+            ZText(mode.label, style = ZTheme.type.bodyStrong.copy(fontSize = 14.sp, lineHeight = 20.sp))
             Spacer(Modifier.width(4.dp))
-            ZIcon(ZIcons.ChevronDown, Modifier.then(Modifier), tint = c.text2, size = 16.dp)
+            ZIcon(ZIcons.ChevronDown, Modifier.then(Modifier), tint = c.text2, size = 14.dp)
         }
         if (open) {
             Popup(onDismissRequest = { open = false }, properties = PopupProperties(focusable = true)) {
