@@ -77,6 +77,28 @@ final class AppModelTests: XCTestCase {
         XCTAssertEqual(model.commandPrefill, "")
     }
 
+    /// L-P2-4：换浮层先收起，onDismiss 后再呈现排队的目标。
+    func testPresentWhileSheetShownQueuesUntilDismissed() {
+        let model = AppModel.preview(connected: true, frozen: true)
+        model.present(.library)
+        XCTAssertEqual(model.sheet, .library)
+        model.present(.today)
+        XCTAssertNil(model.sheet, "先收起当前浮层")
+        model.presentPendingSheet()
+        XCTAssertEqual(model.sheet, .today)
+        model.presentPendingSheet()
+        XCTAssertEqual(model.sheet, .today, "排队目标只呈现一次")
+    }
+
+    func testPushDropsQueuedSheet() {
+        let model = AppModel.preview(connected: true, frozen: true)
+        model.present(.library)
+        model.present(.today)
+        model.push(.settings)
+        model.presentPendingSheet()
+        XCTAssertNil(model.sheet, "推入页面后不再弹出排队的浮层")
+    }
+
     func testPopToHomeResetsNavigationState() {
         let model = AppModel.preview(connected: true, frozen: true)
         model.sheet = .library

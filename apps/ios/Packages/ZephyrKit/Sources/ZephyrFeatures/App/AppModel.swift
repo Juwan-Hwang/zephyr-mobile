@@ -49,6 +49,8 @@ public final class AppModel {
     public var returnsToLibrary = false
     /// 当前浮层。
     public var sheet: SheetRoute?
+    /// 换浮层时排队的下一个（见 present(_:)）。
+    @ObservationIgnored public internal(set) var pendingSheet: SheetRoute?
     /// 指令全屏层是否展开（原型 07）。
     public var isCommandPresented = false
     /// 打开指令层时预填的文字（深链 zephyr://command?q=…）。
