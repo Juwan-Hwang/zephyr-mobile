@@ -22,6 +22,7 @@ public struct ZRateText: Sendable, Equatable {
 }
 
 public struct ZTrafficStat: View {
+    @Environment(\.zStaticRendering) private var still
     private let down: ZRateText
     private let up: ZRateText
     private let isActive: Bool
@@ -57,7 +58,7 @@ public struct ZTrafficStat: View {
                     .opacity(isActive ? 0 : 1)
             }
         }
-        .animation(ZMotion.standard, value: isActive)
+        .animation(still ? nil : ZMotion.standard, value: isActive)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(spoken)
     }

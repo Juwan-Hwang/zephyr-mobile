@@ -8,6 +8,7 @@ import ZephyrKit
 @MainActor
 struct TrafficPanel: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.zStaticRendering) private var still
 
     var body: some View {
         let on = model.isConnected
@@ -21,7 +22,7 @@ struct TrafficPanel: View {
                     .padding(.horizontal, HMetrics.homeInset)
                     .padding(.top, ZTokens.Space.n2)
                     .opacity(on ? 1 : 0)
-                    .animation(ZMotion.slow, value: on)
+                    .animation(still ? nil : ZMotion.slow, value: on)
             }
             .frame(minHeight: HMetrics.chartHeight)
             .contentShape(Rectangle())

@@ -66,6 +66,9 @@ private struct ZConnectSwitch: View {
     let isPressed: Bool
     @Environment(\.zAccent) private var accent
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// 快照：根上的 `transaction { animation = nil }` 盖不住下面显式的 `.animation(_:value:)`，
+    /// 模型在截图前从 connecting 变到 on 时，旋钮与光晕会停在弹簧中途（home-connected-dark 偶发 1 次，#133）。
+    @Environment(\.zStaticRendering) private var still
     @ScaledMetric(relativeTo: .title) private var scaledWidth: CGFloat = ZMetrics.connectWidth
 
     var body: some View {
@@ -103,8 +106,8 @@ private struct ZConnectSwitch: View {
                 radius: glowing ? ZTokens.Motion.glowRadius : 0)
         .frame(minWidth: ZTokens.Layout.touchMinIos, minHeight: ZTokens.Layout.touchMinIos)
         .contentShape(Capsule(style: .continuous))
-        .animation(ZMotion.gentle(ZMotion.spring, reduceMotion: reduceMotion), value: phase)
-        .animation(ZMotion.micro, value: isPressed)
+        .animation(still ? nil : ZMotion.gentle(ZMotion.spring, reduceMotion: reduceMotion), value: phase)
+        .animation(still ? nil : ZMotion.micro, value: isPressed)
         .sensoryFeedback(.impact(weight: .medium), trigger: isPressed) { _, new in new }
     }
 }

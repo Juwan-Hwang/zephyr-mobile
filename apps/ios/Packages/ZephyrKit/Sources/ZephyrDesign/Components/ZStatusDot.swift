@@ -14,6 +14,7 @@ public struct ZStatusDot: View {
     }
 
     @Environment(\.accessibilityDifferentiateWithoutColor) private var noColorOnly
+    @Environment(\.zStaticRendering) private var still
 
     public var body: some View {
         let on = color ?? ZSwitchColor.on
@@ -31,7 +32,7 @@ public struct ZStatusDot: View {
                 .fill(on.opacity(isOn ? 0.14 : 0))
                 .padding(-ZMetrics.statusRing)
         }
-        .animation(ZMotion.standard, value: isOn)
+        .animation(still ? nil : ZMotion.standard, value: isOn)
         .accessibilityHidden(true)
     }
 

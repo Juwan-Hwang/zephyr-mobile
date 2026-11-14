@@ -12,6 +12,7 @@ struct HomeHero: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dynamicTypeSize) private var dynamicType
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.zStaticRendering) private var still
 
     var body: some View {
         VStack(alignment: .leading, spacing: ZTokens.Space.n4) {
@@ -52,7 +53,7 @@ struct HomeHero: View {
                     insertion: .opacity.combined(with: .offset(y: 10)),
                     removal: .opacity.combined(with: .offset(y: -10))))
         }
-        .animation(ZMotion.slow, value: statusTitle)
+        .animation(still ? nil : ZMotion.slow, value: statusTitle)
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isHeader)
     }
