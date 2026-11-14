@@ -61,7 +61,7 @@ final class CommandModel {
         let sceneId = await resolveScene(hint: sceneHint, nodeId: nodeId, title: s.title)
         p.sceneId = sceneId
         if let sceneId {
-            let pool = await app.sceneCandidates(sceneId, region: parse.regionCode)
+            let pool = await quietCandidates(sceneId, region: parse.regionCode)
             p.candidateCount = parse.regionCode == nil ? nil : pool.count
             p.node = pool.first { $0.id == nodeId }
             p.exit = try? await app.engine.previewSceneChange(sceneId: sceneId, nodeId: nodeId)
@@ -77,9 +77,14 @@ final class CommandModel {
         if let s = app.scenes.first(where: { title.hasPrefix($0.name + " ") }) { return s.id }
         if app.connection.mode == .global { return nil }
         for s in app.scenes where s.source != .subscriptionGroup {
-            if await app.sceneCandidates(s.id).contains(where: { $0.id == nodeId }) { return s.id }
+            if await quietCandidates(s.id).contains(where: { $0.id == nodeId }) { return s.id }
         }
         return nil
+    }
+
+    /// 指令层随输入预取候选：失败只当作没有候选，不写 lastError 弹横幅（REVIEW-Q1 H-P2-18）。
+    private func quietCandidates(_ sceneId: String, region: String? = nil) async -> [NodeSummary] {
+        (try? await app.engine.sceneCandidates(sceneId: sceneId, region: region)) ?? []
     }
 
     /// "123" → (nil, 123)；"ai:123" → ("ai", 123)
