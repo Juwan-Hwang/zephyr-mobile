@@ -47,6 +47,17 @@ final class ZSnapshotLocalizedBundle: Bundle, @unchecked Sendable {
         }
     }
 
+    /// iOS 18.4+ 的 SwiftUI 按环境 locale 调这个重载解析 `Text("中文")`（LocalizedStringKey），
+    /// 只覆写三参数版本时 ZL 文案能翻译、SwiftUI 字面量仍是中文（#88 首轮收图）。
+    @available(iOS 18.4, *)
+    override func localizedString(forKey key: String, value: String?, table tableName: String?,
+                                  localizations: [Locale.Language]) -> String {
+        guard Self.language != .zh else {
+            return super.localizedString(forKey: key, value: value, table: tableName, localizations: localizations)
+        }
+        return localizedString(forKey: key, value: value, table: tableName)
+    }
+
     /// 切换语言；返回之前的语言，调用方负责恢复。
     @MainActor @discardableResult
     static func use(_ language: ZSnapshotLanguage) -> ZSnapshotLanguage {
