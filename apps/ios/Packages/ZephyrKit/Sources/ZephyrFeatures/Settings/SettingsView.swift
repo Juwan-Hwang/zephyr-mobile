@@ -1,4 +1,4 @@
-// SettingsView — 设置页（原型 25）。分组：连接 / 检测 / 存储 / 外观 / 隐私；页脚“数据仅保存在此设备上”与版本号。
+// SettingsView — 设置页（原型 25）。分组：连接 / 检测 / 存储 / 外观 / 隐私 / 诊断（日志）；页脚“数据仅保存在此设备上”与版本号。
 // 每次改动都经 SettingsStore 全量写回 updateSettings(patch:)；失败回滚并以顶部横幅提示（与首页一致，REVIEW L-P2-11）。
 // 强调色与深浅色写回后由 RootView 读取 AppModel.settings 统一应用到整个 App。
 // “应用图标”不是引擎设置，走 AppIconModel → UIApplication.setAlternateIconName（REVIEW L-P2-14）。
@@ -38,6 +38,7 @@ public struct SettingsView: View {
                     ZSettingsGroup("存储") { StorageCard(info: storage) }
                     appearance
                     privacy.disabled(store.settings == nil)
+                    diagnostics
                 }
                 .padding(.horizontal, PageMetrics.margin)
                 PageFootnote("订阅、节点与流量数据仅保存在此设备上。")
@@ -154,6 +155,17 @@ public struct SettingsView: View {
         ZSettingsGroup("隐私") {
             ZSettingsRow("分享今日卡片时附带图案", subtitle: ZL.tr("图案由今天的流量生成，不含节点名称与 IP"),
                          isOn: store.binding(\.shareAnonymousPattern, fallback: false))
+        }
+    }
+
+    // MARK: 诊断
+
+    private var diagnostics: some View {
+        ZSettingsGroup("诊断") {
+            NavigationLink { LogsView(engine: store.engine) } label: {
+                ZSettingsRow("日志", subtitle: ZL.tr("隧道与核心的运行日志"), accessory: .chevron)
+            }
+            .buttonStyle(ZRowButtonStyle())
         }
     }
 

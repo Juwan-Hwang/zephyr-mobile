@@ -29,7 +29,7 @@ products += [
 targets += [
     .target(name: "ZephyrDesign", dependencies: ["ZephyrKit"], resources: [.process("Resources")]),
     .target(name: "ZephyrFeatures", dependencies: ["ZephyrKit", "ZephyrMock", "ZephyrDesign"]),
-    .testTarget(name: "ZephyrFeaturesTests", dependencies: ["ZephyrFeatures", "ZephyrKit"]),
+    .testTarget(name: "ZephyrFeaturesTests", dependencies: ["ZephyrFeatures", "ZephyrKit", "ZephyrMock"]),
 ]
 #endif
 
