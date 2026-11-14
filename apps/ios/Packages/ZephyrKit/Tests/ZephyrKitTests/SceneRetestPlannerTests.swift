@@ -35,4 +35,15 @@ final class SceneRetestPlannerTests: XCTestCase {
                                          lastAttempt: ["ai": now - 10 * 60_000, "video": now - 31 * 60_000])
         XCTAssertEqual(due, ["video"])
     }
+
+    /// 契约 §15.e：scanQuery 未给时取所选节点地区；未选节点（地区为空）即全库。
+    func testScanQueryDefaultsToSelectedRegion() {
+        XCTAssertEqual(scene("ai", tested: nil).scanQuery, "JP")
+        let none = ZephyrKit.Scene(id: "x", kind: .other, name: "x", available: 0,
+                                   selected: NodeSummary(id: 0, name: "未选择", region: "", protocol: ""), source: .auto)
+        XCTAssertEqual(none.scanQuery, "")
+        let explicit = ZephyrKit.Scene(id: "y", kind: .other, name: "y", available: 0,
+                                       selected: NodeSummary(id: 1, name: "n", region: "JP", protocol: "VLESS"), source: .auto, scanQuery: "SG")
+        XCTAssertEqual(explicit.scanQuery, "SG")
+    }
 }

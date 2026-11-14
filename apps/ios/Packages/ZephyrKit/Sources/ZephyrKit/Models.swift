@@ -173,13 +173,17 @@ public struct Scene: Sendable, Hashable, Codable, Identifiable {
     public var exceptions: [SceneException]
     /// 未探测过的服务不出现；空 = 不显示服务行（契约 §14.z）。不参与编码（fixture 无此字段）。
     public var services: [ServiceHealth] = []
+    /// 契约 §15.e：场景重测用的查询（当前节点所在地区；未选节点为空串 = 全库），传给 `scanLatency(query:)`。
+    /// 不参与编码（fixture 无此字段）；未给时取所选节点地区，与核心语义一致。
+    public var scanQuery: String = ""
 
     public init(id: String, kind: SceneKind, name: String, available: Int32, selected: NodeSummary, exitIp: String? = nil,
                 source: SceneSource, testedAt: Int64? = nil, note: String? = nil, exceptions: [SceneException] = [],
-                services: [ServiceHealth] = []) {
+                services: [ServiceHealth] = [], scanQuery: String? = nil) {
         self.id = id; self.kind = kind; self.name = name; self.available = available; self.selected = selected
         self.exitIp = exitIp; self.source = source; self.testedAt = testedAt; self.note = note; self.exceptions = exceptions
         self.services = services
+        self.scanQuery = scanQuery ?? selected.region
     }
     enum CodingKeys: String, CodingKey {
         case id, kind, name, available, selected, source, note, exceptions

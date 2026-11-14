@@ -122,8 +122,10 @@ extension AppModel {
         defer { retesting.remove(sceneId) }
         let engine = self.engine
         let scanning = scan == nil
+        // 契约 §15.e：按场景当前节点地区扫（未选节点为空串 = 全库）。
+        let query = scenes.first(where: { $0.id == sceneId })?.scanQuery ?? ""
         let scanTask: Task<Void, Never>? = scanning ? Task { [weak self] in
-            for await p in engine.scanLatency(query: "") { self?.scan = p }
+            for await p in engine.scanLatency(query: query) { self?.scan = p }
             self?.scan = nil
         } : nil
         do {

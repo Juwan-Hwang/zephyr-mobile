@@ -399,4 +399,17 @@ final class CoreEngineLiveTests: XCTestCase {
         XCTAssertNotEqual(CoreEngine.memberId(group: "Proxy", name: "香港 01"), CoreEngine.memberId(group: "Video", name: "香港 01"))
         XCTAssertNotEqual(CoreEngine.memberId(group: "ab", name: "c"), CoreEngine.memberId(group: "a", name: "bc"))
     }
+
+    /// 契约 §15.e：核心测速有效期启动时按设置下发，设置变更时跟随；场景带 scanQuery。
+    func testLatencyTtlFollowsSettings() async throws {
+        let (e, _) = make()
+        let core = try XCTUnwrap(e.core)
+        XCTAssertEqual(core.latencyTtlHours(), 24)
+        var s = e.loadSettings()
+        s.latencyTtlHours = 6
+        try await e.updateSettings(patch: s)
+        XCTAssertEqual(core.latencyTtlHours(), 6)
+        let reopened = CoreEngine(dataDir: dir.appendingPathComponent("core"), mockData: false)
+        XCTAssertEqual(reopened.core?.latencyTtlHours(), 6, "重启后按落盘设置下发")
+    }
 }
