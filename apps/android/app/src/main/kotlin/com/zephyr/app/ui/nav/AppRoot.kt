@@ -176,7 +176,7 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                 onPick = { s, n -> scene = null; home.pick(s, n) },
                 onSource = { s, src -> home.setSource(s, src); if (s.kind == com.zephyr.engine.SceneKind.AI && src == com.zephyr.engine.SceneSource.AUTO) scene = null },
             )
-            ActivitySheet(activity, { activity = false; traceHost = null }, traceHost) { traceHost = it }
+            ActivitySheet(activity, { activity = false; traceHost = null }, traceHost, onNotice = { home.notify(it) }) { traceHost = it }
             ImportSheet(import, { import = false; importPrefill = null }, prefill = importPrefill) { import = false; importPrefill = null; home.notify(it) }
             // Toasts sit above every sheet and the command layer, so an undo or a failover notice is never hidden.
             val toast by home.toast.collectAsStateWithLifecycle()

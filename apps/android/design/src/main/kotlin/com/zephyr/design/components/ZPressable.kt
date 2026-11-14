@@ -1,7 +1,9 @@
 package com.zephyr.design.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.runtime.Composable
@@ -25,6 +27,8 @@ fun Modifier.zPressable(
     haptic: Boolean = false,
     role: Role = Role.Button,
     label: String? = null,
+    longClickLabel: String? = null,
+    onLongClick: (() -> Unit)? = null,
     onClick: () -> Unit,
 ): Modifier = composed {
     val source = remember { MutableInteractionSource() }
@@ -33,8 +37,18 @@ fun Modifier.zPressable(
     val hf = LocalHapticFeedback.current
     this
         .graphicsLayer { scaleX = scale; scaleY = scale }
-        .clickable(source, indication = null, enabled = enabled, onClickLabel = label, role = role) {
-            if (haptic) hf.performHapticFeedback(HapticFeedbackType.SegmentTick)
-            onClick()
-        }
+        .then(
+            if (onLongClick == null) Modifier.clickable(source, indication = null, enabled = enabled, onClickLabel = label, role = role) {
+                if (haptic) hf.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                onClick()
+            }
+            else @OptIn(ExperimentalFoundationApi::class) Modifier.combinedClickable(
+                source, indication = null, enabled = enabled, onClickLabel = label, role = role,
+                onLongClickLabel = longClickLabel,
+                onLongClick = { hf.performHapticFeedback(HapticFeedbackType.LongPress); onLongClick() },
+            ) {
+                if (haptic) hf.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                onClick()
+            },
+        )
 }
