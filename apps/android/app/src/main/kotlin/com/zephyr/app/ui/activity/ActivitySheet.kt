@@ -56,6 +56,7 @@ fun BoxScope.ActivitySheet(visible: Boolean, onDismiss: () -> Unit, trace: Strin
                 if (i > 0) ZDivider()
                 Row(
                     Modifier.fillMaxWidth().zPressable(
+                        row = true,
                         label = "${x.host} 连接详情", longClickLabel = "关闭 ${x.host} 的连接",
                         // iOS H-P2-14 parity: long-press closes this host's live connections and says how it went.
                         onLongClick = { scope.launch { onNotice(closeHostConnections(AppGraph.engine, x.host)) } },

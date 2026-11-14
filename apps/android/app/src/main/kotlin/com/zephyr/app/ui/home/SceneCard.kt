@@ -159,7 +159,7 @@ private fun SceneRow(
                     slots.getOrNull(current - 1)?.let { n -> CustomAccessibilityAction("上一个地区：${n.name}") { onPick(n); true } },
                 )
             }
-            .zPressable(label = "${s.name} 场景详情", onClick = onOpen)
+            .zPressable(row = true, label = "${s.name} 场景详情", onClick = onOpen)
             .padding(horizontal = 16.dp, vertical = 15.dp), // review H-P2-4: `.row` 15/16
         verticalAlignment = Alignment.CenterVertically,
     ) {
