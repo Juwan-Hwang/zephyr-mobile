@@ -142,9 +142,15 @@ final class NodeRowStore {
 
     // MARK: 测速
 
+    /// 自动测速（滚动停下后的可见行）是否允许。“仅在 Wi‑Fi 下测速”开启且当前为计费网络时为 false；
+    /// 用户手动触发的测速（详情页“测速”）不受影响（REVIEW-Q2 X-P1-5）。
+    var autoTestAllowed = true
+
     /// 停止滚动 400ms 后：对可见、无缓存延迟的节点测速。返回实际提交的 id（已标记为测试中）。
+    /// automatic = true 表示由滚动自动触发，受 autoTestAllowed 约束。
     @discardableResult
-    func testVisible(_ nodes: [NodeSummary]) -> [NodeId] {
+    func testVisible(_ nodes: [NodeSummary], automatic: Bool = false) -> [NodeId] {
+        if automatic && !autoTestAllowed { return [] }
         var ids: [NodeId] = []
         for n in nodes where ids.count < Self.maxTestBatch {
             if latency[n.id] != nil || n.latencyMs != nil { continue }

@@ -132,7 +132,7 @@ extension NodeListView {
                   let n = store.node(atOrdinal: o) else { continue }
             nodes.append(n)
         }
-        store.testVisible(nodes)
+        store.testVisible(nodes, automatic: true)
     }
 
     // MARK: 索引条
