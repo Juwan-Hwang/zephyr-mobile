@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name" translatable="false">Zephyr</string>
     <string name="widget_label">Zephyr 状态</string>
+    <string name="widget_usage_label">Zephyr 今日用量</string>
+    <string name="widget_usage_description">今日流量与 24 小时分布</string>
     <string name="widget_description">连接状态、实时速率与场景</string>
     <string name="channel_vpn">连接状态</string>
     <string name="channel_vpn_desc">已连接时常驻显示速率与场景</string>

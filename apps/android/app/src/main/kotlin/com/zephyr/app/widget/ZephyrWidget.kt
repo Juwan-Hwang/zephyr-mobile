@@ -145,7 +145,10 @@ class ZephyrWidget : GlanceAppWidget() {
         val SMALL = DpSize(110.dp, 110.dp)
         val MEDIUM = DpSize(250.dp, 110.dp)
 
-        suspend fun refreshAll(ctx: Context) { runCatching { ZephyrWidget().updateAll(ctx) } }
+        suspend fun refreshAll(ctx: Context) {
+            runCatching { ZephyrWidget().updateAll(ctx) }
+            runCatching { ZephyrUsageWidget().updateAll(ctx) }
+        }
 
         /** While connected the service refreshes at most this often (today's usage, scene exits); never per sample. */
         const val LIVE_REFRESH_MS = 60_000L
