@@ -1,6 +1,60 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+    "已关闭 %lld 个连接" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Closed %lld connection"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Closed %lld connections"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld 个连接未能关闭" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld connection couldn't be closed"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld connections couldn't be closed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "连接未能关闭" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't close connections"
+          }
+        }
+      }
+    },
     "诊断" : {
       "localizations" : {
         "en" : {

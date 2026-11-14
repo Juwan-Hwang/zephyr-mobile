@@ -39,3 +39,12 @@ final class RecentHostTests: XCTestCase {
         XCTAssertEqual(RecentHost.aggregate([]), [])
     }
 }
+
+@MainActor
+final class CloseConnectionsMessageTests: XCTestCase {
+    func testMessages() {
+        XCTAssertEqual(ActivitySheet.closeMessage(closed: 3, total: 3), "已关闭 3 个连接")
+        XCTAssertEqual(ActivitySheet.closeMessage(closed: 0, total: 2), "连接未能关闭")
+        XCTAssertEqual(ActivitySheet.closeMessage(closed: 1, total: 3), "2 个连接未能关闭")
+    }
+}

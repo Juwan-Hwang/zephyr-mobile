@@ -24,6 +24,8 @@ struct ActivitySheet: View {
 
     /// 连接流每次推送时聚合一次并缓存（REVIEW H-P2-13），body 内不再重复聚合。
     @State private var hosts: [RecentHost] = []
+    /// 关闭连接后的结果提示（REVIEW H-P2-14）。
+    @State private var toast: ZToastItem?
 
     /// 标题：列表页"刚才"，轨迹页留空（轨迹自带域名大标题）。
     private var title: LocalizedStringKey {
@@ -47,6 +49,7 @@ struct ActivitySheet: View {
             content
         }
         .task { await observe() }
+        .zToast($toast, bottomInset: ZTokens.Space.n6)
     }
 
     @ViewBuilder
@@ -177,8 +180,17 @@ struct ActivitySheet: View {
         let engine = model.engine
         let ids = h.connectionIds
         Task {
-            for id in ids { try? await engine.closeConnection(id: id) }
+            var closed = 0
+            for id in ids where (try? await engine.closeConnection(id: id)) != nil { closed += 1 }
+            toast = ZToastItem(Self.closeMessage(closed: closed, total: ids.count))
         }
+    }
+
+    /// “已关闭 3 个连接” / “2 个连接未能关闭” / “连接未能关闭”。
+    static func closeMessage(closed: Int, total: Int) -> String {
+        if closed == total { return ZL.f("已关闭 %lld 个连接", Int64(closed)) }
+        if closed == 0 { return ZL.tr("连接未能关闭") }
+        return ZL.f("%lld 个连接未能关闭", Int64(total - closed))
     }
 }
 
