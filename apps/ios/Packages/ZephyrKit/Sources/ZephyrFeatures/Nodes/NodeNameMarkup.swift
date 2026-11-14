@@ -4,6 +4,7 @@
 // 名称末尾的 " ×1.5" 拆为小号等宽灰字。
 
 import Foundation
+import ZephyrKit
 
 struct NodeNameMarkup: Equatable, Sendable {
     /// 去掉倍率后缀后的主体名称
@@ -42,7 +43,8 @@ struct NodeNameMarkup: Equatable, Sendable {
     }
 }
 
-/// 中文紧凑计数：312 万 / 1,311 万 / 1.04 亿（原型 chips 与资料库卡片）。
+/// 紧凑计数（原型 chips 与资料库卡片）。中文界面：312 万 / 1,311 万 / 1.04 亿；
+/// 其他语言：312K / 13.1M / 1.04B（“万 / 亿”在英文界面里没有意义）。按 `ZL.usesChineseUnits` 选择。
 enum CompactCount {
     /// 千分位分组（不依赖 NumberFormatter，热路径零分配开销小）。
     static func grouped(_ v: Int64) -> String {
@@ -68,8 +70,32 @@ enum CompactCount {
         return String(format: "%.2f 亿", yi)
     }
 
-    /// chips 用："312 万"（原型 (count/1e4).toFixed(0)），不足 1 万时显示原数。
+    /// 资料库卡片用：按界面语言选单位。
+    static func local(_ n: Int64) -> String { ZL.usesChineseUnits ? zh(n) : en(n) }
+
+    /// 英文紧凑格式：不足 10 万显示原数；312K；13.1M（≥ 100M 不带小数）；1.04B。
+    static func en(_ n: Int64) -> String {
+        if n < 100_000 { return grouped(n) }
+        if n < 1_000_000 { return "\(Int64((Double(n) / 1_000).rounded()))K" }
+        if n < 1_000_000_000 {
+            let m = Double(n) / 1_000_000
+            return m < 100 ? String(format: "%.1fM", m) : "\(Int64(m.rounded()))M"
+        }
+        return String(format: "%.2fB", Double(n) / 1_000_000_000)
+    }
+
+    /// chips 用："312 万"（原型 (count/1e4).toFixed(0)），不足 1 万时显示原数；英文界面 "312K" / "3.1M"。
     static func chip(_ n: Int64) -> String {
+        ZL.usesChineseUnits ? chipZh(n) : chipEn(n)
+    }
+
+    static func chipZh(_ n: Int64) -> String {
         n < 10_000 ? zh(n) : "\(Int64((Double(n) / 10_000).rounded())) 万"
+    }
+
+    static func chipEn(_ n: Int64) -> String {
+        if n < 10_000 { return grouped(n) }
+        if n < 1_000_000 { return "\(Int64((Double(n) / 1_000).rounded()))K" }
+        return String(format: "%.1fM", Double(n) / 1_000_000)
     }
 }
