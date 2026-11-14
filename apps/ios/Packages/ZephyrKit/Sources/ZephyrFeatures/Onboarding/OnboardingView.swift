@@ -85,7 +85,8 @@ public struct OnboardingView: View {
                         .frame(height: markHeight)
                         .foregroundStyle(ZTokens.Colors.screenT1)
                         .padding(.top, ZTokens.Space.n5)
-                    stepLabel("1 / 2").padding(.top, ZTokens.Space.n8 + ZTokens.Space.n4)
+                    // 原型 `.step-n` margin-top 28（REVIEW L-P2-2）。
+                    stepLabel("1 / 2").padding(.top, ZTokens.Space.n6 + ZTokens.Space.n1)
                     title("添加订阅")
                     SubscriptionImportOptions { method = $0 }
                         .disabled(importer.isImporting)
