@@ -37,7 +37,7 @@
     "normal":  { "value": "rgba(255, 255, 255, 0.6)", "lightValue": "rgba(0, 0, 0, 0.58)", "comment": "< 200ms（= screen.t2）" },
     "slow":    { "value": "#FFD60A", "lightValue": "#FF9F0A", "comment": ">= 200ms（= screen.amber）" },
     "timeout": { "value": "#FF453A", "lightValue": "#FF3B30", "comment": "超时 -1（= screen.red）" },
-    "unknown": { "value": "rgba(255, 255, 255, 0.4)", "lightValue": "rgba(0, 0, 0, 0.55)", "comment": "未测（= screen.t3）" },
+    "unknown": { "value": "rgba(255, 255, 255, 0.5)", "lightValue": "rgba(0, 0, 0, 0.55)", "comment": "未测（= screen.t3）" },
     "threshold-slow": { "value": "200" }
   },
   "screen": {
@@ -51,7 +51,7 @@
     "hl2":    { "value": "rgba(255, 255, 255, 0.13)", "lightValue": "rgba(0, 0, 0, 0.12)", "comment": "描边" },
     "t1":     { "value": "rgba(255, 255, 255, 0.95)", "lightValue": "rgba(0, 0, 0, 0.9)" },
     "t2":     { "value": "rgba(255, 255, 255, 0.6)", "lightValue": "rgba(0, 0, 0, 0.58)" },
-    "t3":     { "value": "rgba(255, 255, 255, 0.4)", "lightValue": "rgba(0, 0, 0, 0.55)", "comment": "浅色 0.55：白底 4.74:1、#F2F2F7 底 4.63:1，满足 WCAG AA" },
+    "t3":     { "value": "rgba(255, 255, 255, 0.5)", "lightValue": "rgba(0, 0, 0, 0.55)", "comment": "浅色 0.55：白底 4.74:1、#F2F2F7 底 4.63:1；深色 0.5：黑底 5.28:1、#1C1C1E 5.16:1、#2C2C2E 4.69:1；均满足 WCAG AA" },
     "t4":     { "value": "rgba(255, 255, 255, 0.2)", "lightValue": "rgba(0, 0, 0, 0.18)" },
     "green":  { "value": "#30D158", "lightValue": "#34C759" },
     "amber":  { "value": "#FFD60A", "lightValue": "#FF9F0A" },
