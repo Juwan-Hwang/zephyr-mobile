@@ -51,7 +51,7 @@ import com.zephyr.engine.StorageInfo
 import kotlinx.coroutines.launch
 
 @Composable
-fun SettingsScreen(back: String, onBack: () -> Unit) {
+fun SettingsScreen(back: String, onLogs: () -> Unit = {}, onBack: () -> Unit) {
     val engine = AppGraph.engine
     val c = ZTheme.colors
     val s by engine.settings().collectAsState(Settings())
@@ -124,6 +124,10 @@ fun SettingsScreen(back: String, onBack: () -> Unit) {
             ZSectionHeader("隐私", Modifier.padding(top = 12.dp))
             ZListGroup {
                 ZSettingsRow("共享诊断数据", checked = s.shareDiagnostics, onCheckedChange = { v -> set { it.copy(shareDiagnostics = v) } })
+            }
+            ZSectionHeader("诊断", Modifier.padding(top = 12.dp))
+            ZListGroup {
+                ZSettingsRow("日志", chevron = true, onClick = onLogs)
             }
             ZText("订阅、节点与流量数据仅保存在此设备上。", Modifier.padding(horizontal = 22.dp, vertical = 10.dp), style = ZTheme.type.footnote, color = c.text3)
             ZText("Zephyr ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})", Modifier.fillMaxWidth().padding(vertical = 24.dp), style = ZTheme.type.footnote.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = c.text4)
