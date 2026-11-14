@@ -9,6 +9,10 @@ on:
         description: 'Android：重录 Paparazzi 基线（tokens 改动后用），录出的图作为 artifact android-snapshots 上传，人工审核后入库'
         type: boolean
         default: false
+      record_ios_snapshots:
+        description: 'iOS：重录全部快照参考图（ZEPHYR_SNAPSHOT_RECORD=all，tokens 改动后用），录出的图作为 artifact ios-snapshots 上传，人工审核后入库'
+        type: boolean
+        default: false
 concurrency:
   group: mobile-${{ github.ref }}
   # main 每次合并都要有完整结果（排队而非互相取消）；PR 分支新推送取消旧的
@@ -112,6 +116,7 @@ jobs:
         working-directory: apps/ios
         run: xcodegen generate
       - name: build & test
+        if: ${{ !inputs.record_ios_snapshots }}
         working-directory: apps/ios
         run: |
           set -o pipefail
@@ -121,6 +126,22 @@ jobs:
             -destination 'platform=iOS Simulator,name=iPhone 16' \
             -resultBundlePath build/Test.xcresult \
             CODE_SIGNING_ALLOWED=NO test | xcbeautify || exit 1
+      - name: snapshot record（手动触发，只跑 ZephyrSnapshotTests）
+        if: ${{ inputs.record_ios_snapshots }}
+        working-directory: apps/ios
+        env:
+          TEST_RUNNER_ZEPHYR_SNAPSHOT_RECORD: all
+        run: |
+          set -o pipefail
+          PROJ=$(ls -d *.xcodeproj | head -1)
+          SCHEME=${IOS_SCHEME:-Zephyr}
+          xcodebuild -project "$PROJ" -scheme "$SCHEME" \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -only-testing:ZephyrSnapshotTests \
+            CODE_SIGNING_ALLOWED=NO test | xcbeautify || exit 1
+      - if: ${{ inputs.record_ios_snapshots }}
+        uses: actions/upload-artifact@v4
+        with: { name: ios-snapshots, path: apps/ios/SnapshotTests/__Snapshots__ }
       - if: failure()
         uses: actions/upload-artifact@v4
         with: { name: ios-xcresult, path: apps/ios/build/Test.xcresult }
