@@ -369,11 +369,24 @@ final class CoreEngineLiveTests: XCTestCase {
     func testTcpHandshake() async throws {
         let listener = try NWListener(using: .tcp, on: .any)
         listener.newConnectionHandler = { c in c.start(queue: .global()); c.cancel() }
+        // CI 并行模拟器克隆偶尔要 5 s 以上才把 listener 置为 ready（14:07 #107 一次）；放宽到 20 s，
+        // 仍未就绪（或 failed）则跳过：这里测的是 tcpHandshake，不是宿主网络栈。
         let ready = expectation(description: "listener")
-        listener.stateUpdateHandler = { if case .ready = $0 { ready.fulfill() } }
+        ready.assertForOverFulfill = false
+        nonisolated(unsafe) var isReady = false
+        listener.stateUpdateHandler = { state in
+            switch state {
+            case .ready: isReady = true; ready.fulfill()
+            case .failed, .cancelled: ready.fulfill()
+            default: break
+            }
+        }
         listener.start(queue: .global())
-        await fulfillment(of: [ready], timeout: 5)
-        let port = try XCTUnwrap(listener.port?.rawValue)
+        _ = await XCTWaiter.fulfillment(of: [ready], timeout: 20)  // 超时不记失败，下方据 isReady 跳过
+        defer { listener.cancel() }
+        guard isReady, let port = listener.port?.rawValue else {
+            throw XCTSkip("NWListener 未就绪（CI 模拟器偶发），跳过握手断言")
+        }
         let ms = await CoreEngine.tcpHandshake(host: "127.0.0.1", port: port)
         XCTAssertGreaterThanOrEqual(ms, 1)
         listener.cancel()
