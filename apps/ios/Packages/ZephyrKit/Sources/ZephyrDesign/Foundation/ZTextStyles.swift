@@ -55,6 +55,8 @@ public enum ZDisplaySize: Sendable {
     case title
     /// 40pt：ZTokens.TypeStyle.metric
     case metric
+    /// 36pt：追踪页域名
+    case headline
     /// 30pt：资料库统计
     case small
     /// 22pt：ZTokens.TypeStyle.metricSm（diff 数字）
@@ -66,6 +68,7 @@ public enum ZDisplaySize: Sendable {
         case .large: return ZMetrics.displayLarge
         case .title: return ZMetrics.displayTitle
         case .metric: return ZTokens.TypeStyle.metric.size
+        case .headline: return ZMetrics.displayHeadline
         case .small: return ZMetrics.displaySmall
         case .compact: return ZTokens.TypeStyle.metricSm.size
         }
@@ -86,7 +89,7 @@ public enum ZDisplaySize: Sendable {
         case .large: return ZMetrics.displayTrackingLarge
         case .title: return ZMetrics.displayTrackingTitle
         case .metric: return ZMetrics.displayTrackingMetric
-        case .small: return ZMetrics.displayTrackingSmall
+        case .headline, .small: return ZMetrics.displayTrackingSmall
         case .compact: return ZMetrics.displayTrackingCompact
         }
     }

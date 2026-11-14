@@ -15,6 +15,8 @@ public enum ZMetrics {
     static let displayLarge: CGFloat = 56
     /// `.state` / `.pgh .ct b` 44px（状态字 300、页头计数 200）
     static let displayTitle: CGFloat = 44
+    /// 追踪页域名：原型 trace.png 实测 ~36pt / 300（CSS 未单列，REVIEW-Q1 H-P2-15）
+    static let displayHeadline: CGFloat = 36
     /// `.lc b` 资料库统计 30px / 200
     static let displaySmall: CGFloat = 30
     /// 等宽：`.cc` 地区码 10.5px / 600
