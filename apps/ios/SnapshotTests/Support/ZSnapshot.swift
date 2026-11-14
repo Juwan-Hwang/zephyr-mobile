@@ -111,7 +111,9 @@ func zAssertSnapshots<V: View>(
             XCTFail("测试 bundle 里没有 en.lproj（project.yml 应把 App/Localizable.xcstrings 编进 ZephyrSnapshotTests）", file: file, line: line)
             continue
         }
+        ZSnapTiming.mark("make-begin")
         let view = try await make(variant)
+        ZSnapTiming.mark("make-end")
         await zAssertSnapshot(of: view, named: "\(base)-\(variant.name)", variant: variant, layout: layout,
                               settle: settle, file: file, testName: testName, line: line)
     }
@@ -132,6 +134,7 @@ func zAssertSnapshot<V: View>(
     let previousLanguage = ZSnapshotLocalizedBundle.use(variant.language)
     defer { ZSnapshotLocalizedBundle.use(previousLanguage) }
     let image = await ZSnapshotRenderer.render(view, variant: variant, layout: layout, settle: settle)
+    ZSnapTiming.mark("render-end")
     guard image.size.width > 0, image.size.height > 0 else {
         XCTFail("快照 \(name) 渲染出空图（尺寸为 0）", file: file, line: line)
         return
@@ -204,6 +207,16 @@ enum ZSnapshotPaths {
     }
 }
 
+// MARK: - 诊断计时（do not merge）
+
+@MainActor
+enum ZSnapTiming {
+    static var start = ContinuousClock.now
+    static var marks: [String] = []
+    static func reset() { start = .now; marks = [] }
+    static func mark(_ what: String) { marks.append("\(what)@\(ContinuousClock.now - start)") }
+}
+
 // MARK: - 渲染
 
 @MainActor
@@ -218,6 +231,7 @@ enum ZSnapshotRenderer {
             .environment(\.zStaticRendering, true)
             .transaction { $0.animation = nil }
             .zPageBackground()
+        ZSnapTiming.mark("render-begin")
         let host = UIHostingController(rootView: root)
         host.overrideUserInterfaceStyle = variant.interfaceStyle
         host.traitOverrides.preferredContentSizeCategory = variant.contentSizeCategory
@@ -228,6 +242,7 @@ enum ZSnapshotRenderer {
         window.traitOverrides.preferredContentSizeCategory = variant.contentSizeCategory
         window.rootViewController = host
         window.isHidden = false
+        ZSnapTiming.mark("window-shown")
 
         // 快照期间关闭 UIKit 层动画（UICollectionView 更新、布局过渡），与 zStaticRendering 一起保证截图确定。
         let animationsWereEnabled = UIView.areAnimationsEnabled
@@ -267,6 +282,7 @@ enum ZSnapshotRenderer {
         host.view.setNeedsLayout()
         host.view.layoutIfNeeded()
 
+        ZSnapTiming.mark("layout-done")
         // 等 `.task` / 引擎流 / UICollectionView 布局落定（冻结时钟下 MockEngine 不 sleep，几轮 runloop 足够）。
         let steps = max(1, Int((settle / 0.05).rounded(.up)))
         for _ in 0..<steps {
@@ -274,6 +290,7 @@ enum ZSnapshotRenderer {
             host.view.setNeedsLayout()
             host.view.layoutIfNeeded()
         }
+        ZSnapTiming.mark("settled")
         CATransaction.flush()
 
         // 确定性出图：sRGB 8 位（.standard，不随模拟器色域走 P3/扩展范围）、不透明底。
