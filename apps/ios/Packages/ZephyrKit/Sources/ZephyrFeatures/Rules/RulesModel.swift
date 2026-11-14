@@ -40,11 +40,19 @@ final class RulesModel {
         runTest()
     }
 
-    func runTest() {
+    /// 输入框改动走 120 ms 去抖（REVIEW-Q1 L-P2-13，同 L-P1-3）：拼音组字期间每个字母不再各打一次 testRule；
+    /// 首次加载、添加覆写后立即测。
+    static let debounceNanos: UInt64 = 120_000_000
+
+    func runTest(debounced: Bool = false) {
         let q = input.trimmingCharacters(in: .whitespacesAndNewlines)
         testTask?.cancel()
         guard !q.isEmpty else { trace = nil; invalid = false; return }
         testTask = Task { [weak self] in
+            if debounced {
+                try? await Task.sleep(nanoseconds: Self.debounceNanos)
+                guard !Task.isCancelled else { return }
+            }
             guard let self else { return }
             do {
                 let t = try await self.engine.testRule(input: q)
