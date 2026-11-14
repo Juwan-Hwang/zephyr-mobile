@@ -142,32 +142,33 @@ struct SheetHost: View {
     }
 }
 
-/// 引擎错误：顶部短暂横幅，3 秒后消失。
+/// 引擎错误：顶部横幅，与资料库类页面共用 PageErrorBanner（REVIEW L-P2-11：错误一律走横幅，成功 / 撤销走吐司）。
+/// 把 AppModel.lastError 桥成 PageError，3 秒后收起。
 @MainActor
 private struct ErrorBanner: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        ZStack {
-            if let e = model.lastError {
-                Text(verbatim: e.userMessage)
-                    .zType(.footnote)
-                    .foregroundStyle(ZTokens.Colors.screenT1)
-                    .padding(.horizontal, ZTokens.Space.n5)
-                    .padding(.vertical, ZTokens.Space.n3)
-                    .zSurface(.elevated, cornerRadius: ZTokens.Radius.full)
-                    .padding(.top, ZTokens.Space.n3)
-                    .transition(.move(edge: .top).combined(with: .opacity))
-                    .task(id: e) {
-                        HHaptics.warning()
-                        try? await Task.sleep(nanoseconds: 3_000_000_000)
-                        if model.lastError == e { model.lastError = nil }
-                    }
-                    .accessibilityAddTraits(.isStaticText)
-                    .onAppear { UIAccessibility.post(notification: .announcement, argument: e.userMessage) }
-            }
-        }
-        .animation(ZMotion.slow, value: model.lastError)
+        Color.clear
+            .frame(height: 0)
+            .frame(maxWidth: .infinity)
+            .pageErrorBanner(binding)
+    }
+
+    private var binding: Binding<PageError?> {
+        Binding(
+            get: { model.lastError.map { Self.pageError(for: $0) } },
+            set: { if $0 == nil { model.lastError = nil } }
+        )
+    }
+
+    /// 同一个 ZephyrError 每次 get 都要得到同一个 PageError.id，否则横幅每帧重建、计时器反复重启。
+    private static var cache: (ZephyrError, PageError)?
+    private static func pageError(for e: ZephyrError) -> PageError {
+        if let c = cache, c.0 == e { return c.1 }
+        let p = PageError(e.userMessage)
+        cache = (e, p)
+        return p
     }
 }
 
