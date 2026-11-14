@@ -411,12 +411,24 @@ class CoreEngine(
         scenesBump.value++
     }
 
+    /** Contract §15.e: core's scene freshness window follows 设置 › 测速 › 结果保留 (process-local, re-sent on every change). */
+    override suspend fun updateSettings(patch: Settings) {
+        fallback.updateSettings(patch)
+        core?.let { c -> withContext(io) { runCatching { c.setLatencyTtlHours(patch.latencyTtlHours.coerceAtLeast(0).toUInt()) } } }
+        scenesBump.value++
+    }
+
     override suspend fun retestScene(sceneId: String): Scene {
         val c = nodes() ?: return if (mockData) fallback.retestScene(sceneId) else throw noSubscription()
-        val group = withContext(io) { wrap { c.scenes(clock()) } }.firstOrNull { it.id == sceneId }?.group ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
-        live()?.let { l ->
-            runCatching { withContext(io) { l.test(group, LivePort.TEST_URL, 5_000) } }
+        val raw = withContext(io) { wrap { c.scenes(clock()) } }.firstOrNull { it.id == sceneId } ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
+        val l = live()
+        if (l != null) {
+            runCatching { withContext(io) { l.test(raw.group, LivePort.TEST_URL, 5_000) } }
             runCatching { probeServices(listOf(sceneId)) }
+        } else if (raw.scanQuery.isNotEmpty()) {
+            // §15.e: tunnel down → re-measure the scene's region pool (same query as `available`); maxAge 1 ms = everything, stalest first (0 would mean untested only).
+            val ids = runCatching { withContext(io) { c.scanTargets(raw.scanQuery, 100u, clock(), 1L) } }.getOrDefault(emptyList())
+            if (ids.isNotEmpty()) runCatching { testLatency(ids.map { it.toLong() }) }
         }
         scenesBump.value++
         return withContext(io) { wrap { c.scenes(clock()) } }.firstOrNull { it.id == sceneId }?.let(::scene) ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
