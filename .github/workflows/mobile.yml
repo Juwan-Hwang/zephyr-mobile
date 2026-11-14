@@ -56,6 +56,8 @@ jobs:
         run: node tools/gen-mock-fixtures.js && git diff --exit-code contract/fixtures
       - name: command parse fixtures match prototype
         run: node tools/gen-command-parse-fixtures.mjs --check
+      - name: UniFFI 导出均写入契约
+        run: node tools/check-contract-exports.mjs
   core:
     runs-on: ubuntu-latest
     steps:
