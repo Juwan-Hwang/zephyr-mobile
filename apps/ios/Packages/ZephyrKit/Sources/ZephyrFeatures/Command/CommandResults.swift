@@ -54,14 +54,33 @@ struct CommandResults: View {
     private func suggestionList(_ list: [CommandSuggestion]) -> some View {
         ZCard(padding: 0, cornerRadius: ZTokens.Radius.overlay) {
             VStack(spacing: 0) {
-                ForEach(Array(list.enumerated()), id: \.offset) { i, s in
-                    if i > 0 { ZDivider() }
+                // 以建议自身为 id（REVIEW-Q1 H-P2-16）：按下标会让增删动画错位到相邻行。
+                ForEach(Self.keyed(list), id: \.key) { item in
+                    let s = item.suggestion
+                    if item.index > 0 { ZDivider() }
                     Button { onRun(s) } label: { SuggestionRow(s: s) }
                         .buttonStyle(ZRowButtonStyle())
                 }
             }
         }
         .padding(.horizontal, HMetrics.cardInset)
+    }
+
+    struct KeyedSuggestion {
+        let key: String
+        let index: Int
+        let suggestion: CommandSuggestion
+    }
+
+    /// 稳定 id：kind|title|payload；同一建议重复出现时追加 #n 保证唯一。
+    nonisolated static func keyed(_ list: [CommandSuggestion]) -> [KeyedSuggestion] {
+        var seen: [String: Int] = [:]
+        return list.enumerated().map { i, s in
+            let base = "\(s.kind)|\(s.title)|\(s.payload)"
+            let n = seen[base, default: 0]
+            seen[base] = n + 1
+            return KeyedSuggestion(key: n == 0 ? base : "\(base)#\(n)", index: i, suggestion: s)
+        }
     }
 }
 
