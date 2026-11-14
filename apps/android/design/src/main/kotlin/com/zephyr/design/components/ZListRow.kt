@@ -23,8 +23,12 @@ import com.zephyr.design.theme.ZTheme
 
 /** Grouped list container (iOS inset-grouped look, self-drawn on Android — spec §4). */
 @Composable
-fun ZListGroup(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
-    ZSurface(modifier.fillMaxWidth().padding(horizontal = 16.dp), shape = ZTheme.shapes.card) {
+fun ZListGroup(
+    modifier: Modifier = Modifier,
+    level: ZSurfaceLevel = ZSurfaceLevel.S2,
+    shape: androidx.compose.ui.graphics.Shape = ZTheme.shapes.card,
+    content: @Composable ColumnScope.() -> Unit) {
+    ZSurface(modifier.fillMaxWidth().padding(horizontal = 16.dp), shape = shape, level = level) {
         Column(Modifier.fillMaxWidth(), content = content)
     }
 }

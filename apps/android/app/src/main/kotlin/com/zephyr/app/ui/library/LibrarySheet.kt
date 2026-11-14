@@ -17,6 +17,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.zephyr.app.di.AppGraph
+import com.zephyr.design.components.ZSurfaceLevel
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.zephyr.design.components.ZDivider
 import com.zephyr.design.components.ZListGroup
 import com.zephyr.design.components.ZSettingsRow
@@ -50,7 +52,7 @@ fun BoxScope.LibrarySheet(visible: Boolean, onDismiss: () -> Unit, onOpen: (Libr
             ZStatTile("${scenes.size}", "场景", Modifier.weight(1f)) { onOpen(LibraryDest.Scenes) }
         }
         Spacer(Modifier.height(20.dp))
-        ZListGroup {
+        ZListGroup(level = ZSurfaceLevel.S1, shape = RoundedCornerShape(18.dp)) {
             ZSettingsRow("小组件与快捷开关", chevron = true, onClick = { onOpen(LibraryDest.Widgets) })
             ZDivider()
             ZSettingsRow("受信任的 Wi‑Fi", value = settings.trustedWifi.firstOrNull() ?: "无", chevron = true, onClick = { onOpen(LibraryDest.TrustedWifi) })
