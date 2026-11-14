@@ -28,9 +28,11 @@ final class EngineTests: XCTestCase {
         do { let v = await first(e.connectionState())?.status; XCTAssertEqual(v, .disconnected) }
         XCTAssertTrue(e.recentTraffic(seconds: 10).isEmpty)
         let stream = e.connectionState()
-        let t0 = Date()
+        // 单调时钟只断言下限（Mock 用 Task.sleep 模拟握手），不对上限计时，避免 CI 机器负载抖动（REVIEW-Q2 P2）。
+        let clock = ContinuousClock()
+        let t0 = clock.now
         try await e.connect()
-        XCTAssertGreaterThanOrEqual(Date().timeIntervalSince(t0), 0.55)
+        XCTAssertGreaterThanOrEqual(clock.now - t0, .milliseconds(550))
         var seen: [ConnectionStatus] = []
         for await s in stream { seen.append(s.status); if s.status == .connected { break } }
         XCTAssertEqual(seen, [.disconnected, .connecting, .connected])
@@ -192,12 +194,14 @@ final class EngineTests: XCTestCase {
     func testLiveLatencyIsDelayed() async {
         let e = MockEngine(clock: .live)
         let updates = e.latencyUpdates()
-        let t0 = Date()
+        let clock = ContinuousClock()
+        let t0 = clock.now
         await e.testLatency(ids: [MockNodes.id(2, 1), MockNodes.id(2, 2), MockNodes.id(2, 3)])
         var got = 0
         for await b in updates { got += b.count; if got >= 3 { break } }
-        let dt = Date().timeIntervalSince(t0)
-        XCTAssertGreaterThanOrEqual(dt, 0.08); XCTAssertLessThan(dt, 1.0)
+        let dt = clock.now - t0
+        // 下限证明结果确实延迟到达；上限只防挂死，留足 CI 余量（原 1 s 在排队机器上偶发失败）。
+        XCTAssertGreaterThanOrEqual(dt, .milliseconds(80)); XCTAssertLessThan(dt, .seconds(10))
     }
 
     func testGroups() async throws {
