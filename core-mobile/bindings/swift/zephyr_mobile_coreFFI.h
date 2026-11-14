@@ -541,6 +541,11 @@ RustBuffer uniffi_zephyr_mobile_core_fn_method_mobilecore_rule_stats(void*_Nonnu
 RustBuffer uniffi_zephyr_mobile_core_fn_method_mobilecore_runtime_config(void*_Nonnull ptr, RustBuffer subscription_id, RustBuffer options, RustCallStatus *_Nonnull out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_SCAN_TARGETS
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_SCAN_TARGETS
+RustBuffer uniffi_zephyr_mobile_core_fn_method_mobilecore_scan_targets(void*_Nonnull ptr, RustBuffer query, uint32_t limit, int64_t now_millis, int64_t max_age_millis, RustCallStatus *_Nonnull out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_SCENE_CANDIDATES
 #define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_SCENE_CANDIDATES
 RustBuffer uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_candidates(void*_Nonnull ptr, RustBuffer scene_id, RustBuffer region, int64_t now_millis, RustCallStatus *_Nonnull out_status
@@ -1230,6 +1235,12 @@ uint16_t uniffi_zephyr_mobile_core_checksum_method_mobilecore_rule_stats(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_MOBILECORE_RUNTIME_CONFIG
 #define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_MOBILECORE_RUNTIME_CONFIG
 uint16_t uniffi_zephyr_mobile_core_checksum_method_mobilecore_runtime_config(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_MOBILECORE_SCAN_TARGETS
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_MOBILECORE_SCAN_TARGETS
+uint16_t uniffi_zephyr_mobile_core_checksum_method_mobilecore_scan_targets(void
     
 );
 #endif

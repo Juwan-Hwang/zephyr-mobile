@@ -437,3 +437,14 @@ nodeFunnel(nowMillis, maxAgeMillis, thresholdMs) throws -> NodeFunnel   // maxAg
 每个节点只看最近一次样本；`tested` 含超时、只数仍在库中的节点；`reachable` = ms ≥ 0；`underThreshold` = 0 ≤ ms < thresholdMs。
 建议文案：lede"检测自 {sourceCount} 个订阅中的 {poolSize} 个节点"；漏斗"全部 {poolSize} → 已测速 {tested} → 可连通 {reachable} → 延迟低于 {thresholdMs} ms {underThreshold}"，新鲜度与场景候选一致用 24 h。
 原型里"可访问 GPT / 可访问 GPT、Claude 和 Gemini"需要逐节点按服务探测，核心不做（§14.z 只探测场景出口），平台不显示这两级。Mock：sourceCount / poolSize 取原型 lede（2 / 512），其余按 mock 延迟表现算，不另编数字。
+
+### 15.d 扫描目标与扫描进度（2026-11-14，core-mobile 已实现，只追加）
+回应 Android REVIEW-Q1 H-P1-12 / iOS H-P1-5 的 `scan: ScanProgress?`（原型 10“正在检测 138/512”+ 行内进度条）。测速由平台驱动（§14.w / §14.u），所以进度是**平台本地状态**，核心只负责选出"这一轮该测哪些"：
+```
+scanTargets(query, limit, nowMillis, maxAgeMillis) throws -> [UInt64]   // limit ≤ 512（一批 latencyTestBatch）
+struct ScanProgress { done: Int, total: Int }                            // 平台本地，不过 FFI
+```
+- 顺序：查询结果中从未测过的在前（按结果集顺序），再按上次测速时间从旧到新；maxAge 内已测的不返回；maxAge ≤ 0 时只返回从未测过的。只看结果集前 65536 个节点。
+- query 同 queryNodes（场景重测用地区代码，如 "JP"；全库用空串）。
+- 平台：`total = 返回个数`；按 64 个一组走 latencyTestBatch → zm_url_test → recordUrlTest（未连接时 tcpPingTargets → recordLatencies），每组回来 `done += 本组个数` 并刷新行内进度；`done == total` 或取消时清空 `scan`。返回空数组 = 无需扫描，不显示进度。
+- 文案：“正在检测 {done}/{total}”。Mock：按 mock-v0 节点数给 total，done 定时递增即可。
