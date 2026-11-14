@@ -8,6 +8,13 @@ public enum ZL {
     /// nil = 不查表（测试）；App / Widgets 在启动时设为 `.main`。
     nonisolated(unsafe) public static var bundle: Bundle?
 
+    /// 计数单位用“万 / 亿”还是 K / M / B：未设 bundle（测试）或界面语言为中文时用中文单位。
+    /// 按 bundle 实际选中的本地化判断（不是系统语言），与查表结果始终一致。
+    public static var usesChineseUnits: Bool {
+        guard let lang = bundle?.preferredLocalizations.first else { return true }
+        return lang.hasPrefix("zh")
+    }
+
     /// 直接查表。缺译文时回落到键本身（中文原文）。
     public static func tr(_ key: String) -> String {
         guard let bundle else { return key }

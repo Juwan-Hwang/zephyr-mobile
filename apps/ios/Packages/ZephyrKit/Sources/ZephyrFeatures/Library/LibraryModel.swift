@@ -50,8 +50,8 @@ final class LibraryModel {
 
     // MARK: 派生文案
 
-    /// 中文紧凑格式：13,109,802 → "1,311 万"；214 → "214"；103,606,731 → "1.04 亿"。
-    nonisolated static func compact(_ n: Int64?) -> String? { n.map(CompactCount.zh) }
+    /// 紧凑格式：13,109,802 → "1,311 万"（英文界面 "13.1M"）；214 → "214"；103,606,731 → "1.04 亿"（"104M"）。
+    nonisolated static func compact(_ n: Int64?) -> String? { n.map(CompactCount.local) }
 
     /// 受信任 Wi‑Fi 行的值：“家” / “家 等 3 个” / “无” / “关”。
     var trustedWifiText: String? {

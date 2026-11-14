@@ -4706,6 +4706,36 @@
           }
         }
       }
+    },
+    "代理核心无法启动" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proxy core couldn't start"
+          }
+        }
+      }
+    },
+    "请退出后重新打开 Zephyr；若问题持续，请重新安装应用。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit and reopen Zephyr. If the problem continues, reinstall the app."
+          }
+        }
+      }
+    },
+    "开启后仅监听 127.0.0.1，局域网中的其他设备无法连接。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When on, Zephyr listens only on 127.0.0.1, so other devices on your network can't connect."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
