@@ -29,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -182,7 +183,17 @@ private fun Stat(v: String, label: String, fg: Color) {
 /** ~140 flowing strands whose amplitude follows the 24 hourly volumes. Deterministic per day. */
 @Composable
 private fun Flow(hourly: List<Long>, style: TodayStyle) {
+    val ctx = androidx.compose.ui.platform.LocalContext.current
+    fun ctxResolver() = ctx.contentResolver
     val max = (hourly.maxOrNull() ?: 1L).coerceAtLeast(1L).toFloat()
+    // Review H-P2-13 (optional): the prototype drifts its field slowly (t·0.25 rad, ≈70 s a cycle). Phase 0 is the
+    // static drawing, so screenshots and the shared PNG keep their composition; skipped when animations are off.
+    val animOn = remember { android.provider.Settings.Global.getFloat(ctxResolver(), android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) != 0f }
+    val phase = if (animOn) androidx.compose.animation.core.rememberInfiniteTransition(label = "flow").animateFloat(
+        0f, (2 * PI).toFloat(),
+        androidx.compose.animation.core.infiniteRepeatable<Float>(androidx.compose.animation.core.tween<Float>(70_000, easing = androidx.compose.animation.core.LinearEasing)),
+        label = "phase",
+    ).value else 0f
     Canvas(Modifier.fillMaxSize()) {
         val w = size.width; val h = size.height
         val strands = 140
@@ -195,7 +206,7 @@ private fun Flow(hourly: List<Long>, style: TodayStyle) {
             while (x <= w) {
                 val hour = ((x / w) * 23).toInt().coerceIn(0, 23)
                 val amp = (hourly.getOrNull(hour) ?: 0L) / max
-                val y = baseY - sin((x / w) * PI * 1.1 + t * 2.4).toFloat() * h * 0.18f * (0.4f + amp) + t * x * 0.12f
+                val y = baseY - sin((x / w) * PI * 1.1 + t * 2.4 + phase).toFloat() * h * 0.18f * (0.4f + amp) + t * x * 0.12f
                 p.lineTo(x, y)
                 x += 6f
             }
