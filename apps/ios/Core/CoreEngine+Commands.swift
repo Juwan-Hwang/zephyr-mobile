@@ -12,8 +12,17 @@ extension CoreEngine {
     static let commandPages: [(String, String, [String])] = [
         ("节点", "nodes", ["节点", "nodes", "node"]), ("订阅", "subscriptions", ["订阅", "sub", "subscriptions"]),
         ("规则", "rules", ["规则", "rules"]), ("场景", "scenes", ["场景", "scene"]), ("设置", "settings", ["设置", "settings"]),
-        ("连接", "connections", ["连接列表", "connections"]), ("日志", "logs", ["日志", "logs", "log"]), ("今日", "today", ["今日", "today"]),
+        ("连接列表", "connections", ["连接列表", "connections"]), ("日志", "logs", ["日志", "logs", "log"]), ("今日", "today", ["今日", "today"]),
     ]
+
+    /// 每种模式一条完整文案（不拼“切换到 + 模式名 + 模式”），译文才能按语言调整语序。
+    static func switchModeTitle(_ mode: ZephyrKit.ProxyMode) -> String {
+        switch mode {
+        case .global: ZL.tr("切换到全局模式")
+        case .rule: ZL.tr("切换到规则模式")
+        case .direct: ZL.tr("切换到直连模式")
+        }
+    }
 
     static func looksLikeHost(_ q: String) -> Bool {
         guard !q.contains(where: { $0.isWhitespace }), q.count >= 3 else { return false }
@@ -30,50 +39,50 @@ extension CoreEngine {
         var it = connectionState().makeAsyncIterator()
         let state = await it.next()
         let on = state.map { $0.status == .connected || $0.status == .connecting } ?? false
-        let toggle = CommandSuggestion(kind: .toggleConnection, title: on ? "断开连接" : "连接",
-                                       subtitle: on ? "当前已连接" : "当前未连接", payload: on ? "disconnect" : "connect")
+        let toggle = CommandSuggestion(kind: .toggleConnection, title: ZL.tr(on ? "断开连接" : "连接"),
+                                       subtitle: ZL.tr(on ? "当前已连接" : "当前未连接"), payload: on ? "disconnect" : "connect")
         if q.isEmpty {
             var out = [toggle]
             if let best = await fastest(query: "") {
-                out.append(CommandSuggestion(kind: .switchNode, title: "切到 \(best.name)",
+                out.append(CommandSuggestion(kind: .switchNode, title: ZL.s("切到 %@", best.name),
                                              subtitle: "\(best.region) · \(ZFormat.latency(best.latencyMs))", payload: String(best.id)))
             }
-            out.append(CommandSuggestion(kind: .testRule, title: "github.com 走哪条规则？", subtitle: "测试规则", payload: "github.com"))
+            out.append(CommandSuggestion(kind: .testRule, title: ZL.tr("github.com 走哪条规则？"), subtitle: ZL.tr("测试规则"), payload: "github.com"))
             if state?.mode != .global {
-                out.append(CommandSuggestion(kind: .switchMode, title: "切换到全局模式", subtitle: nil, payload: ZephyrKit.ProxyMode.global.rawValue))
+                out.append(CommandSuggestion(kind: .switchMode, title: Self.switchModeTitle(.global), subtitle: nil, payload: ZephyrKit.ProxyMode.global.rawValue))
             }
             let subs = await subscriptionsSummary()
-            out.append(CommandSuggestion(kind: .openPage, title: "订阅", subtitle: "\(subs.count) 个订阅", payload: "subscriptions"))
+            out.append(CommandSuggestion(kind: .openPage, title: "订阅", subtitle: ZL.s("%@ 个订阅", ZFormat.count(Int64(subs.count))), payload: "subscriptions"))
             return out
         }
         var out: [CommandSuggestion] = []
 
         if Self.looksLikeHost(q), let t = try? await testRule(input: q) {
-            let layer = t.layerIndex.map { "第 \($0 + 1) 层" } ?? "其余流量"
+            let layer = t.layerIndex.map { ZL.f("第 %lld 层", Int64($0 + 1)) } ?? ZL.tr("其余流量")
             let result: String = switch t.policy {
-            case "DIRECT": "直连"
-            case "REJECT": "已拦截"
-            default: "场景 · \(t.scene?.name ?? t.policy)"
+            case "DIRECT": ZL.tr("直连")
+            case "REJECT": ZL.tr("已拦截")
+            default: ZL.s("场景 · %@", t.scene?.name ?? t.policy)
             }
-            out.append(CommandSuggestion(kind: .testRule, title: "测试规则 \(t.input)", subtitle: "\(layer) → \(result)", payload: t.input))
+            out.append(CommandSuggestion(kind: .testRule, title: ZL.s("测试规则 %@", t.input), subtitle: "\(layer) → \(result)", payload: t.input))
         }
 
         for m in Self.commandModes where m.2.contains(q) || m.2.contains(where: { $0.hasPrefix(q) && q.count >= 2 }) {
-            out.append(CommandSuggestion(kind: .switchMode, title: "切换到\(m.0)模式", subtitle: nil, payload: m.1.rawValue))
+            out.append(CommandSuggestion(kind: .switchMode, title: Self.switchModeTitle(m.1), subtitle: nil, payload: m.1.rawValue))
         }
         if ["连接", "断开", "connect", "disconnect", "开", "关"].contains(q) { out.append(toggle) }
 
         if !Self.looksLikeHost(q), let r = try? await queryNodes(query: q), r.total > 0, !r.highlights.isEmpty {
-            out.append(CommandSuggestion(kind: .openNodeQuery, title: "在节点库中查找“\(raw)”",
-                                         subtitle: "\(ZFormat.count(r.total)) 个节点", payload: q))
+            out.append(CommandSuggestion(kind: .openNodeQuery, title: ZL.s("在节点库中查找“%@”", raw),
+                                         subtitle: ZL.s("%@ 个节点", ZFormat.count(r.total)), payload: q))
             if let best = await fastest(query: q) {
-                out.append(CommandSuggestion(kind: .switchNode, title: "切到 \(best.name)",
+                out.append(CommandSuggestion(kind: .switchNode, title: ZL.s("切到 %@", best.name),
                                              subtitle: "\(best.region) · \(ZFormat.latency(best.latencyMs))", payload: String(best.id)))
             }
         }
 
         for p in Self.commandPages where p.2.contains(q) {
-            out.append(CommandSuggestion(kind: .openPage, title: p.0, subtitle: nil, payload: p.1))
+            out.append(CommandSuggestion(kind: .openPage, title: ZL.tr(p.0), subtitle: nil, payload: p.1))
         }
         return Array(out.prefix(8))
     }

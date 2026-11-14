@@ -317,6 +317,25 @@ final class CoreEngineLiveTests: XCTestCase {
         XCTAssertTrue(CoreEngine.looksLikeHost("1.2.3.4") && CoreEngine.looksLikeHost("2001:db8::1") && !CoreEngine.looksLikeHost("香港 iplc"))
     }
 
+    /// 命令建议文案走 ZL：未设 bundle 时输出中文原文；每个键都在 App/Localizable.xcstrings 里有英文译文。
+    func testCommandSuggestionStringsLocalized() throws {
+        XCTAssertEqual(CoreEngine.switchModeTitle(.global), "切换到全局模式")
+        XCTAssertEqual(CoreEngine.switchModeTitle(.rule), "切换到规则模式")
+        XCTAssertEqual(CoreEngine.switchModeTitle(.direct), "切换到直连模式")
+        let catalog = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("App/Localizable.xcstrings")
+        let json = try JSONSerialization.jsonObject(with: Data(contentsOf: catalog)) as? [String: Any]
+        let strings = try XCTUnwrap(json?["strings"] as? [String: Any])
+        let keys = ["断开连接", "连接", "当前已连接", "当前未连接", "切到 %@", "github.com 走哪条规则？", "测试规则",
+                    "切换到全局模式", "切换到规则模式", "切换到直连模式", "%@ 个订阅", "第 %lld 层", "其余流量", "直连",
+                    "已拦截", "场景 · %@", "测试规则 %@", "在节点库中查找“%@”", "%@ 个节点"]
+            + CoreEngine.commandPages.map(\.0)
+        for k in keys {
+            let en = ((strings[k] as? [String: Any])?["localizations"] as? [String: Any])?["en"]
+            XCTAssertNotNil(en, "缺英文译文：\(k)")
+        }
+    }
+
     func testRuleProvidersFetchedAndCompiled() async throws {
         let sub = """
         proxies:

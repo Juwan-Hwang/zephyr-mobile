@@ -1,6 +1,136 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+    "断开连接" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disconnect"
+          }
+        }
+      }
+    },
+    "当前已连接" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Currently connected"
+          }
+        }
+      }
+    },
+    "当前未连接" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Currently disconnected"
+          }
+        }
+      }
+    },
+    "切到 %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch to %@"
+          }
+        }
+      }
+    },
+    "github.com 走哪条规则？" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Which rule does github.com use?"
+          }
+        }
+      }
+    },
+    "测试规则" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test Rule"
+          }
+        }
+      }
+    },
+    "切换到全局模式" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch to Global Mode"
+          }
+        }
+      }
+    },
+    "切换到规则模式" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch to Rule Mode"
+          }
+        }
+      }
+    },
+    "切换到直连模式" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch to Direct Mode"
+          }
+        }
+      }
+    },
+    "连接列表" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connections"
+          }
+        }
+      }
+    },
+    "%@ 个订阅" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ subscriptions"
+          }
+        }
+      }
+    },
+    "测试规则 %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test Rule %@"
+          }
+        }
+      }
+    },
+    "在节点库中查找“%@”" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search Node Library for “%@”"
+          }
+        }
+      }
+    },
     "节点载入失败" : {
       "localizations" : {
         "en" : {
