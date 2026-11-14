@@ -27,6 +27,7 @@
 
 - 2026-11-14 PR agent/ios/l10n-q2b（base #51）：X-P1-9 余项——指令预览卡标题/摘要/脚注、轨迹覆写分段“不变/直连”、节点索引条与地区筛选读屏、场景候选“固定”读屏、扫码取景框读屏、订阅卡“剩余”默认值、地区筛选“全部”改走 `ZL`，xcstrings 补英文。ErrorText/HFormat/AppShortcuts 已在先前批次完成（核对）。
 - 2026-11-14 PR agent/ios/scene-freq：X-P1-5 收尾——场景 sheet“检测频率”不再固定“每天”，按设置 `latencyTtlHours` 显示（24 h = 每天，否则“每 N 小时”），仅 Wi‑Fi 时加后缀；补英文。
+- 2026-11-14 PR agent/ios/snapshot-refs 续：首轮 CI 22/115 不一致，查明三处不确定性并修复——今日卡流线背景 TimelineView 随墙钟（WindArt 在 zStaticRendering 下画固定帧）、半透明边缘像素取整漂移（出图改 sRGB 8 位不透明底）、参考图取自 XCTAttachment(image:) 重编码（录制附件改附写盘原字节）；锁屏圆形小组件改容量环、去掉与单位重叠的“下行”标签（对齐原型 lock.png）。参考图按新渲染重新收取。
 
 ## P0
 
@@ -45,6 +46,7 @@
 - **Q2-X-P1-8 测试不守门** — `__Snapshots__` 空且录制模式 missing，永不比对；快照 bundle 无 TEST_HOST；`layer.render` 丢模糊材质；容差 0.99/0.98 偏松；缺 AppModel、SharedStatePublisher、AppServices 链接解析、LiveActivity 测试；SPM target 无严格并发设置，App 仍 Swift 5 模式。
 - **Q2-X-P1-9 本地化** [部分已修] — App 与 Widgets 的 `Localizable.xcstrings` 已生成（zh-Hans 源 + en，373 key，含复数），`Text(verbatim:)` 用户文案已改可本地化，`InfoPlist.xcstrings`（相机/相册/本地网络说明）、project.yml `knownRegions`/`CFBundleLocalizations` 已加。剩余：返回 String 的文案（ErrorText、HFormat、ZSettingsRow(verbatim:)、AppShortcuts、Live Activity 状态文字）需改 `String(localized:)`；英文版快照；伪语言（加长）布局测试。
 - **Q2-X-P1-10 对比度与显示辅助** [部分已修：增强对比度；不以颜色区分（ZStatusDot 关=空心环/开=实心圆/警示=菱形）；浅色 t3 基色等 A 的 tokens；降低透明度由系统材质处理] — 浅色 t3 仅 2.8:1、深色 3.7:1；不支持增强对比度、降低透明度、不以颜色区分。
+- **Q2-X-P1-10 对比度与显示辅助** [部分已修：增强对比度；浅色 t3 已由 A 在 f1fa0ce 提到 0.55（WCAG AA）；降低透明度由系统材质处理] — 浅色 t3 仅 2.8:1、深色 3.7:1；不支持增强对比度、降低透明度、不以颜色区分。
 - **Q2-X-P1-11 “从桌面 Zephyr 导入”在真引擎必败** — `CoreEngine.swift:~529` 拒绝非 URL 二维码。
 - **Q2-X-P1-12 新接口未接 UI** [已修] — SceneSheet 来源分段 → `AppModel.setSceneSource`；TraceView 底部 `TraceOverrideSection` → `AppModel.overrideHost`（直连/场景、始终应用、撤销吐司）；`CoreEngine.connectionState()` 在全局模式补 `globalNodeId`（冷启动即有出口节点，setGlobalNode 后重发）；Scene.services 行此前已接。剩余：RuleAddSheet 接 overrideHost；~~`hostOverride` 读接口回填当前覆写~~ [已修：TraceOverrideSection 打开时回填分段与“始终应用”]。
 - **Q2-X-P1-13 连接轨迹用 App 侧 testRule 预测，不是 mihomo 实际匹配** [已修：隧道连接时用 MihomoClient.hostTrace 实测（规则、策略链、节点），预测仅作回落]。

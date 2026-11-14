@@ -2,15 +2,15 @@
 //
 // 与库自带 assertSnapshot 的区别：
 //  1. 参考图缺失时录制并 **不判失败**（首跑 CI / 新增用例不会红），图同时作为 XCTAttachment 进 xcresult；
-//     参考图存在时正常断言（precision 0.99 / perceptual 0.98，容忍不同机器的抗锯齿差异）。
+//     参考图存在时正常断言（precision 0.995 / perceptual 0.98；参考图由 CI 同一模拟器录制，只需容忍抗锯齿抖动）。
 //  2. 自己托管渲染：UIHostingController 放进 393×852（iPhone 16）的 UIWindow，等 `.task` / 异步数据落定
 //     （`settle`）后再用 layer.render 出图。库的 `.image(on:)` 不会等 `.task`，NodesView / RulesView 会拍成空页。
 //  3. 参考图统一放 SnapshotTests/__Snapshots__/<测试文件名>/<测试名>.<名字>.png（与库默认命名规则一致）。
 //
-// 录制模式：环境变量 ZEPHYR_SNAPSHOT_RECORD（优先）或 SNAPSHOT_RECORD（scheme 的 test action 已设为 missing）
+// 录制模式：环境变量 ZEPHYR_SNAPSHOT_RECORD（优先）或 SNAPSHOT_RECORD（scheme 的 test action 设为 never：参考图已入库）
 //   missing（默认）缺图录制、不失败；有图断言
 //   all             全部重录、不失败（改了视觉之后用）
-//   never           缺图直接失败（参考图入库后可在 CI 打开，防止漏录）
+//   never           缺图直接失败（scheme 默认；新增用例本地用 TEST_RUNNER_ZEPHYR_SNAPSHOT_RECORD=missing 录制后入库）
 
 import SnapshotTesting
 import SwiftUI
@@ -66,8 +66,8 @@ enum ZSnapshotLayout: Sendable {
 enum ZSnapshotConfig {
     /// 出图倍率。固定 2x：与模拟器无关、参考图体积可控（3x 约大 2.25 倍）。
     static let scale: CGFloat = 2
-    static let precision: Float = 0.99
-    static let perceptualPrecision: Float = 0.98
+    static let precision: Float = 0.995
+    static let perceptualPrecision: Float = 0.98  // ΔE≤2：容忍首页开关发光（大半径模糊阴影）跨运行 ±4/255 的 GPU 抖动
 
     enum Record: String { case missing, all, never }
 
@@ -135,7 +135,8 @@ func zAssertSnapshot<V: View>(
             return
         }
         XCTContext.runActivity(named: "已录制快照 \(reference.lastPathComponent)") { activity in
-            let attachment = XCTAttachment(image: image)
+            // 附写盘的 PNG 原字节（XCTAttachment(image:) 会重新编码，色彩与 alpha 可能与参考图不同，CI 收图后对不上）。
+            let attachment = XCTAttachment(data: (try? Data(contentsOf: reference)) ?? Data(), uniformTypeIdentifier: "public.png")
             attachment.name = reference.lastPathComponent
             attachment.lifetime = .keepAlways
             activity.add(attachment)
@@ -257,10 +258,17 @@ enum ZSnapshotRenderer {
         }
         CATransaction.flush()
 
+        // 确定性出图：sRGB 8 位（.standard，不随模拟器色域走 P3/扩展范围）、不透明底。
+        // 半透明边缘像素在 premultiplied alpha 下的取整会随机器漂移（参考图入库后首轮 CI 有 1px 边框/环形指示点不一致），
+        // 先铺一层系统背景再渲染，所有像素 alpha = 1。
         let format = UIGraphicsImageRendererFormat(for: host.traitCollection)
         format.scale = ZSnapshotConfig.scale
-        format.opaque = false
+        format.opaque = true
+        format.preferredRange = .standard
+        let background = UIColor.systemBackground.resolvedColor(with: host.traitCollection)
         let image = UIGraphicsImageRenderer(size: size, format: format).image { ctx in
+            background.setFill()
+            ctx.fill(CGRect(origin: .zero, size: size))
             host.view.layer.render(in: ctx.cgContext)
         }
 
