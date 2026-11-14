@@ -32,13 +32,15 @@ public struct SubscriptionsView: View {
         List {
             Section { header }
             if !model.subscriptions.isEmpty {
-                Section { traffic } header: { ZSectionHeader("流量", trailing: ZL.tr("本月")) }
+                Section { traffic } header: { ZSectionHeader("流量", trailing: ZL.tr("本月")).listRowInsets(EdgeInsets()) }
             } else if model.loaded {
                 Section { empty }
             }
-            Section { updateSettings } header: { ZSectionHeader("更新") }
+            Section { updateSettings } header: { ZSectionHeader("更新").listRowInsets(EdgeInsets()) }
         }
         .listStyle(.insetGrouped)
+        // 分组标题自带原型 `.sec` 的内边距（左右 6 + 卡片 16 = 22、上 24 / 下 8），不再叠系统 header 内边距与分组间距（REVIEW L-P2-12）。
+        .listSectionSpacing(0)
         .scrollContentBackground(.hidden)
         .contentMargins(.horizontal, PageMetrics.margin, for: .scrollContent)
         .environment(\.defaultMinListRowHeight, 0)
