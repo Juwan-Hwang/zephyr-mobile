@@ -14,9 +14,10 @@ struct SceneCandidateRow: View {
     var body: some View {
         HStack(spacing: ZTokens.Space.n4) {
             ZFlag(node.region)
+            // 原型 `.li`：15pt、节点名全部 t1，选中只加粗与勾（REVIEW-Q1 H-P2-10）。
             Text(verbatim: node.name)
-                .zType(.body)
-                .foregroundStyle(isSelected ? ZTokens.Colors.screenT1 : ZColor.t2)
+                .zType(.zRowValue)
+                .foregroundStyle(ZTokens.Colors.screenT1)
                 .fontWeight(isSelected ? .medium : .regular)
                 .lineLimit(1)
             Spacer(minLength: ZTokens.Space.n3)
@@ -32,13 +33,17 @@ struct SceneCandidateRow: View {
                 .foregroundStyle(ZAccentStyle())
                 .opacity(isSelected ? 1 : 0)
         }
-        .padding(.vertical, ZTokens.Space.n4)
-        .padding(.horizontal, ZTokens.Space.n5)
+        .padding(.vertical, Self.verticalPadding)
+        .padding(.horizontal, Self.horizontalPadding)
         .contentShape(Rectangle())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: a11y))
         .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
     }
+
+    /// 原型 `.li { padding: 13px 14px }`。
+    static let verticalPadding: CGFloat = 13
+    static let horizontalPadding: CGFloat = 14
 
     private var latencyColor: Color {
         guard let ms = node.latencyMs else { return ZColor.t3 }
