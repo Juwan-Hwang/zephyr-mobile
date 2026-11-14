@@ -18,7 +18,8 @@ import Foundation
 import NetworkExtension
 import os
 
-final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
+/// 可变状态只在 `queue` 上读写（setState 用锁），系统回调跨线程进入；故以 @unchecked Sendable 声明。
+final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider, @unchecked Sendable {
 
     enum TunnelError: Error, LocalizedError {
         case coreNotLinked
@@ -124,9 +125,10 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
         // 睡眠期间停掉 1 Hz 轮询（定时器唤醒会耗电，REVIEW-Q2 X-P1-7）；核心本身保持连接。
         // 取消并在 wake 时重建，而不是 suspend：suspend/resume 不配对或释放已挂起的源会直接崩溃。
         setState { $0.asleep = true }
+        nonisolated(unsafe) let done = completionHandler   // NE 允许任意线程回调
         queue.async { [weak self] in
             self?.cancelTrafficTimer()
-            completionHandler()
+            done()
         }
     }
 
@@ -155,7 +157,7 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
                 return
             }
             setState { $0.mode = newMode }
-            try? store.update { $0.connection.mode = newMode; $0.tunnel.mode = newMode }
+            _ = try? store.update { $0.connection.mode = newMode; $0.tunnel.mode = newMode }
             completionHandler?(TunnelMessageCodec.encode(response(.ok)))
         case .urlTest(let file, let url, let timeoutMs):
             // 只接受 core 目录下的纯文件名，防路径穿越。
@@ -166,11 +168,12 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
                 return
             }
             let bridge = self.bridge
+            nonisolated(unsafe) let reply = completionHandler   // NE 允许任意线程回调
             DispatchQueue.global(qos: .utility).async { [weak self] in
                 let out = bridge.urlTest(proxiesJSON: json, url: url, timeoutMs: timeoutMs, concurrency: 8)
-                guard let self else { completionHandler?(nil); return }
+                guard let self else { reply?(nil); return }
                 var r = self.response(.ok); r.payload = out
-                completionHandler?(TunnelMessageCodec.encode(r))
+                reply?(TunnelMessageCodec.encode(r))
             }
         case .logs(let since, let minLevel, let limit):
             var r = response(.ok)
@@ -254,7 +257,7 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
             }
         }
         guard shouldPublish else { return }
-        try? store.update { $0.rate.push(down: traffic.down, up: traffic.up, at: now) }
+        _ = try? store.update { $0.rate.push(down: traffic.down, up: traffic.up, at: now) }
         if var l = ledger {
             l.record(total: traffic.upTotal + traffic.downTotal, at: now)
             l.save()
@@ -298,7 +301,7 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     private func publish(status: SharedState.Status, mode: SharedState.Mode, since: Date? = nil, errorCode: String? = nil) {
-        try? store.update {
+        _ = try? store.update {
             $0.connection = SharedState.Connection(status: status, mode: mode, since: since, errorCode: errorCode)
             if status != .connected { $0.rate.downBps = 0; $0.rate.upBps = 0 }
         }
