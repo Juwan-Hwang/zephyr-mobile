@@ -4,6 +4,7 @@
 //! - 域名（DOMAIN / DOMAIN-SUFFIX）：xxh3(kind ‖ 域名) 排序数组，16 B/条，二分查找。查询按标签逐级取后缀，O(标签数 · log n)。
 //! - IPv4 / IPv6 CIDR：区间排序数组，二分查找。
 //! - DOMAIN-KEYWORD：Aho-Corasick（条数少，常驻内存）。
+//!
 //! 层内多条命中取原始序号最小者（与 Clash 自上而下一致）；层间按顺序，先命中先返回。
 //! 文件只读 mmap，RAM 只占页缓存；iOS NE ~50 MB 上限下需真机验证（见 scale-architecture.md）。
 

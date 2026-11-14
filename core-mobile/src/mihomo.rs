@@ -337,7 +337,7 @@ impl MihomoClient {
     /// 活动连接（contract §8：最多 200 条最新）。
     pub fn active_connections(&self, limit: u32) -> Result<Vec<ConnectionInfo>, MobileError> {
         let mut v = self.connections_raw()?;
-        v.sort_by(|a, b| b.started_at.cmp(&a.started_at));
+        v.sort_by_key(|c| std::cmp::Reverse(c.started_at));
         v.truncate(limit.min(200) as usize);
         Ok(v)
     }

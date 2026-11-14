@@ -177,7 +177,7 @@ impl MobileCore {
                 }
                 let host = m.get("server").and_then(scalar)?;
                 let port = m.get("port").and_then(|p| p.as_i64().or_else(|| p.as_str().and_then(|s| s.parse().ok())))?;
-                (!host.is_empty() && (1..=65535).contains(&port)).then(|| TcpTarget { id, host, port: port as u16 })
+                (!host.is_empty() && (1..=65535).contains(&port)).then_some(TcpTarget { id, host, port: port as u16 })
             })
             .collect())
     }
@@ -219,7 +219,7 @@ mod tests {
         assert_eq!(d.row.id, id);
         assert_eq!(d.port, if d.server.starts_with("b0") { 8443 } else { 443 });
         assert!(d.server.contains("***"), "{}", d.server);
-        assert_eq!(d.subscription.is_empty(), false);
+        assert!(!d.subscription.is_empty());
         assert_eq!(d.latency_at, Some(1000), "setup 记录过测速");
         assert!(!format!("{d:?}").contains("password") && !format!("{d:?}").contains("00000000-0000"), "不泄露凭据");
 

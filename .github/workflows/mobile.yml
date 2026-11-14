@@ -58,8 +58,12 @@ jobs:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
       - uses: dtolnay/rust-toolchain@stable
+        with: { components: clippy }
       - uses: Swatinem/rust-cache@v2
         with: { workspaces: core-mobile }
+      - name: clippy 零警告
+        working-directory: core-mobile
+        run: cargo clippy --lib --tests -- -D warnings
       - name: 单测
         working-directory: core-mobile
         run: cargo test --lib
