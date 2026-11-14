@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.WindowInsets
@@ -43,7 +44,7 @@ fun PageScaffold(
         // Review L-P2-13: landscape cutouts take horizontal room too.
         .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))) {
         Row(Modifier.fillMaxWidth().height(52.dp).padding(start = 8.dp, end = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-            Row(Modifier.zPressable(label = "返回$back", onClick = onBack).padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(Modifier.heightIn(min = 48.dp).zPressable(label = "返回$back", onClick = onBack).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
                 ZIcon(ZIcons.Back, tint = c.accent, size = 22.dp)
                 Spacer(Modifier.width(2.dp))
                 ZText(back, style = ZTheme.type.body.copy(fontSize = ZTheme.type.headline.fontSize), color = c.accent)
