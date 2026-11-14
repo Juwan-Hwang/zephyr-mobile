@@ -6,12 +6,30 @@ import ZephyrKit
 extension AppModel {
 
     /// 打开一个浮层（会先收起指令层）。
+    /// 已有另一个浮层时，不直接替换 item（SwiftUI 会边关边开，偶发闪动，REVIEW-Q1 L-P2-4）：
+    /// 先收起当前浮层，记下目标，等 RootView 的 onDismiss 回调 presentPendingSheet() 再呈现。
     public func present(_ route: SheetRoute) {
         isCommandPresented = false
+        if let current = sheet, current != route {
+            pendingSheet = route
+            sheet = nil
+            return
+        }
+        pendingSheet = nil
         sheet = route
     }
 
-    public func dismissSheet() { sheet = nil }
+    /// 浮层收起动画结束（RootView `.sheet(onDismiss:)`）：呈现排队中的浮层。
+    public func presentPendingSheet() {
+        guard sheet == nil, let next = pendingSheet else { return }
+        pendingSheet = nil
+        sheet = next
+    }
+
+    public func dismissSheet() {
+        pendingSheet = nil
+        sheet = nil
+    }
 
     /// 推入一个页面（会先收起浮层与指令层）。L 的页面也用它互相跳转。
     public func push(_ route: Route) {
@@ -20,6 +38,7 @@ extension AppModel {
         else if path.isEmpty { returnsToLibrary = false }
         isCommandPresented = false
         sheet = nil
+        pendingSheet = nil
         path.append(route)
     }
 
@@ -34,12 +53,14 @@ extension AppModel {
         returnsToLibrary = false
         isCommandPresented = false
         sheet = nil
+        pendingSheet = nil
         path.removeAll()
     }
 
     /// 展开指令层（原型 07），可预填。
     public func openCommand(prefill: String = "") {
         sheet = nil
+        pendingSheet = nil
         commandPrefill = prefill
         isCommandPresented = true
     }

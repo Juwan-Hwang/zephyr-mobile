@@ -28,7 +28,7 @@ public struct RootView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(for: Route.self) { RouteDestination(route: $0) }
         }
-        .sheet(item: $model.sheet) { route in
+        .sheet(item: $model.sheet, onDismiss: { model.presentPendingSheet() }) { route in
             SheetHost(route: route, accent: accent)
         }
         .overlay {
