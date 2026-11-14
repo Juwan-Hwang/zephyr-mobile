@@ -2,7 +2,7 @@
 //
 // 与库自带 assertSnapshot 的区别：
 //  1. 参考图缺失时录制并 **不判失败**（首跑 CI / 新增用例不会红），图同时作为 XCTAttachment 进 xcresult；
-//     参考图存在时正常断言（precision 0.995 / perceptual 0.99；参考图由 CI 同一模拟器录制，只需容忍抗锯齿抖动）。
+//     参考图存在时正常断言（precision 0.995 / perceptual 0.98；参考图由 CI 同一模拟器录制，只需容忍抗锯齿抖动）。
 //  2. 自己托管渲染：UIHostingController 放进 393×852（iPhone 16）的 UIWindow，等 `.task` / 异步数据落定
 //     （`settle`）后再用 layer.render 出图。库的 `.image(on:)` 不会等 `.task`，NodesView / RulesView 会拍成空页。
 //  3. 参考图统一放 SnapshotTests/__Snapshots__/<测试文件名>/<测试名>.<名字>.png（与库默认命名规则一致）。
@@ -67,7 +67,7 @@ enum ZSnapshotConfig {
     /// 出图倍率。固定 2x：与模拟器无关、参考图体积可控（3x 约大 2.25 倍）。
     static let scale: CGFloat = 2
     static let precision: Float = 0.995
-    static let perceptualPrecision: Float = 0.99
+    static let perceptualPrecision: Float = 0.98  // ΔE≤2：容忍首页开关发光（大半径模糊阴影）跨运行 ±4/255 的 GPU 抖动
 
     enum Record: String { case missing, all, never }
 
