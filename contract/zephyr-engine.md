@@ -459,3 +459,20 @@ record Scene { …, scanQuery: String }  // 追加字段
 - 有效期影响：`sceneCandidates`、`applySceneChange` 的组内热备、场景自动选点（auto 场景换最快）、`Scene.available`（“n 个可用”）。节点页 / `fastestNodes` / `nodeFunnel` / `scanTargets` 仍由调用方传 `maxAgeMillis`，平台传同一个设置值即可两边一致。
 - `Scene.scanQuery`：当前节点所在地区（与 `available`、`sceneCandidates(region = nil)` 同一查询）；未选节点时为空串（全库）。场景重测：`scanTargets(scene.scanQuery, 512, now, ttl)`。
 - Mock：`scanQuery` 取所选节点地区，`latencyTtlHours` 记在内存即可。
+
+### 15.f 其余 UniFFI 导出（2026-11-15，补记已有实现，只追加）
+以下导出早已存在但契约未列出；`tools/check-contract-exports.mjs`（CI contract job）此后要求每个 `#[uniffi::export]` 方法都在本文出现。
+```
+// 节点库（一般无需直接调用：importSubscription / updateSubscription / deleteSubscription 已自动重建）
+rebuildNodes(sources: [SubscriptionSource]) throws -> BuildReport
+rebuildNodesWithProgress(sources, progress: BuildProgress) throws -> BuildReport   // 回调返回 false 取消，旧库不变
+rebuildFromSubscriptions(progress?) throws -> BuildReport                            // 由已保存的全部订阅正文重建（启动修复用）
+rebuildMockNodes(scale: Double) throws -> BuildReport                                // 开发/演示：原型生成器建库，1.0 = 13,109,802 个
+rebuildMockNodesWithProgress(scale, progress) throws -> BuildReport
+// 规则层（§14.t / §14.v 的底层；平台一般只用 syncSubscriptionRules 之外的高层接口）
+compileRuleLayer(index: UInt32, name, kind: LayerKind, note, defaultPolicy, text) throws -> RuleLayerInfo
+loadRules(finalPolicy: String) throws -> RuleStats                                   // 按文件名序重载 rules/ 全部层
+syncSubscriptionRules() throws                                                       // 生效订阅的 rules → 第 2 层"订阅规则"，随后热加载
+// 链接探针
+coreGreeting() -> String                                                             // zephyr-core 版本，确认链接正常
+```
