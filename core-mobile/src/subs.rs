@@ -291,6 +291,21 @@ impl SubStore {
     }
 }
 
+/// 从订阅正文里取出指定指纹的原始代理定义（生成场景组时注入 mihomo 配置）。
+pub fn proxy_defs(body: &str, wanted: &rustc_hash::FxHashSet<u64>) -> Vec<(u64, serde_yaml::Value)> {
+    let Ok(v) = serde_yaml::from_str::<serde_yaml::Value>(body) else { return vec![] };
+    let Some(list) = v.get("proxies").and_then(|p| p.as_sequence()) else { return vec![] };
+    list.iter()
+        .filter_map(|p| {
+            let server = p.get("server")?.as_str()?.trim();
+            let port = p.get("port").and_then(|x| x.as_u64().or_else(|| x.as_str().and_then(|s| s.parse().ok())))? as u16;
+            let proto = crate::subscription::normalize_protocol(p.get("type")?.as_str()?);
+            let fp = fingerprint(server, port, &proto);
+            wanted.contains(&fp).then(|| (fp, p.clone()))
+        })
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -367,19 +382,4 @@ mod tests {
         assert!(matches!(s3.delete(&sub.id), Err(MobileError::SubscriptionNotFound(_))));
         assert_eq!(SubStore::open(d.path()).unwrap().summary().count, 0);
     }
-}
-
-/// 从订阅正文里取出指定指纹的原始代理定义（生成场景组时注入 mihomo 配置）。
-pub fn proxy_defs(body: &str, wanted: &rustc_hash::FxHashSet<u64>) -> Vec<(u64, serde_yaml::Value)> {
-    let Ok(v) = serde_yaml::from_str::<serde_yaml::Value>(body) else { return vec![] };
-    let Some(list) = v.get("proxies").and_then(|p| p.as_sequence()) else { return vec![] };
-    list.iter()
-        .filter_map(|p| {
-            let server = p.get("server")?.as_str()?.trim();
-            let port = p.get("port").and_then(|x| x.as_u64().or_else(|| x.as_str().and_then(|s| s.parse().ok())))? as u16;
-            let proto = crate::subscription::normalize_protocol(p.get("type")?.as_str()?);
-            let fp = fingerprint(server, port, &proto);
-            wanted.contains(&fp).then(|| (fp, p.clone()))
-        })
-        .collect()
 }

@@ -166,7 +166,7 @@ fn load_positions(dir: &std::path::Path, gen: u64) -> (u64, FxHashMap<u64, u32>)
     if b.len() < 16 || &b[..8] != POS_MAGIC || u64::from_le_bytes(b[8..16].try_into().unwrap()) != gen || gen == 0 {
         return (0, FxHashMap::default());
     }
-    let m = b[16..].chunks_exact(12).map(|c| (u64::from_le_bytes(c[..8].try_into().unwrap()), u32::from_le_bytes(c[8..].try_into().unwrap()))).collect();
+    let m = b[16..].as_chunks::<12>().0.iter().map(|c| (u64::from_le_bytes(c[..8].try_into().unwrap()), u32::from_le_bytes(c[8..].try_into().unwrap()))).collect();
     (gen, m)
 }
 
