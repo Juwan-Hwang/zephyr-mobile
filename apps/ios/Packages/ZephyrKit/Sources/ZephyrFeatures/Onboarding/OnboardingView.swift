@@ -169,8 +169,9 @@ public struct OnboardingView: View {
             .accessibilityLabel(Text("第 \(s.prefix(1)) 步，共 2 步"))
     }
 
+    /// 传入中文原文（目录键），经 `ZL` 本地化。
     private func title(_ s: String) -> some View {
-        Text(verbatim: s)
+        Text(ZL.tr(s))
             .font(.system(size: titleSize, weight: .light))
             .lineSpacing(6)
             .foregroundStyle(ZTokens.Colors.screenT1)
@@ -180,7 +181,7 @@ public struct OnboardingView: View {
     }
 
     private func footnote(_ s: String) -> some View {
-        Text(verbatim: s)
+        Text(ZL.tr(s))
             .zType(.footnote)
             .foregroundStyle(ZColor.t3)
             .multilineTextAlignment(.center)
