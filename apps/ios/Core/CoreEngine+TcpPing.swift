@@ -21,7 +21,7 @@ extension CoreEngine {
         let start = DispatchTime.now()
         return await withCheckedContinuation { (k: CheckedContinuation<Int32, Never>) in
             let done = OneShot()
-            func finish(_ v: Int32) {
+            @Sendable func finish(_ v: Int32) {
                 guard done.fire() else { return }
                 conn.stateUpdateHandler = nil   // 断开 conn → handler → finish → conn 的引用环
                 conn.cancel()

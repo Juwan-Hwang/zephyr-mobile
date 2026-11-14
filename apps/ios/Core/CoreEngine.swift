@@ -536,8 +536,10 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         let off = UInt64(max(0, offset)), lim = UInt32(max(0, min(500, limit)))
         let page: NodePage
         do {
+            // MobileCore（UniFFI）内部自带锁，跨队列调用安全；生成类型未标 Sendable。
+            nonisolated(unsafe) let core = c
             page = try await withCheckedThrowingContinuation { (k: CheckedContinuation<NodePage, Error>) in
-                queue.async { do { k.resume(returning: try c.nodeRows(token: t, offset: off, limit: lim)) } catch { k.resume(throwing: error) } }
+                queue.async { do { k.resume(returning: try core.nodeRows(token: t, offset: off, limit: lim)) } catch { k.resume(throwing: error) } }
             }
         } catch let e as MobileError {
             guard case .StaleToken = e else { throw CoreEngine.map(e) }

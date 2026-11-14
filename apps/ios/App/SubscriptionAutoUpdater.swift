@@ -27,7 +27,9 @@ final class SubscriptionAutoUpdater {
     /// 必须在 App 启动完成前注册（ZephyrApp.init）。测试进程不注册。
     nonisolated static func register() {
         guard ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil else { return }
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: taskIdentifier, using: nil) { task in
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: taskIdentifier, using: nil) { bgTask in
+            // BGTask 未标 Sendable；setTaskCompleted / expirationHandler 系统允许任意线程调用。
+            nonisolated(unsafe) let task = bgTask
             let work = Task { @MainActor in
                 let updated = await SubscriptionAutoUpdater.shared.runBackground()
                 SubscriptionAutoUpdater.shared.schedule()
@@ -113,18 +115,27 @@ final class SubscriptionAutoUpdater {
     }
 }
 
+/// 只放行第一次（路径回调与超时谁先到用谁）。
+private final class ProbeOnce: @unchecked Sendable {
+    private let lock = NSLock()
+    private var fired = false
+    func fire() -> Bool {
+        lock.lock(); defer { lock.unlock() }
+        if fired { return false }
+        fired = true
+        return true
+    }
+}
+
 /// 一次性判断当前网络是否“不计费且不受限”（Wi‑Fi / 以太网）。1.5 秒内没有结果按否处理。
 enum NetworkPathProbe {
     static func isUnmetered() async -> Bool {
         await withCheckedContinuation { (cont: CheckedContinuation<Bool, Never>) in
             let monitor = NWPathMonitor()
             let queue = DispatchQueue(label: "app.zephyr.mobile.pathprobe")
-            let lock = NSLock()
-            var done = false
-            func finish(_ value: Bool) {
-                lock.lock(); defer { lock.unlock() }
-                guard !done else { return }
-                done = true
+            let once = ProbeOnce()
+            @Sendable func finish(_ value: Bool) {
+                guard once.fire() else { return }
                 monitor.cancel()
                 cont.resume(returning: value)
             }
