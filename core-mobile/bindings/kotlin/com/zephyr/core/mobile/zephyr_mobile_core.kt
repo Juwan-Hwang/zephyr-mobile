@@ -877,6 +877,8 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -962,6 +964,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_load_rules(`ptr`: Pointer,`finalPolicy`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_node_detail(`ptr`: Pointer,`id`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_node_funnel(`ptr`: Pointer,`nowMillis`: Long,`maxAgeMillis`: Long,`thresholdMs`: Int,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_node_index(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
@@ -1217,6 +1221,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_detail(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_funnel(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_index(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_rows(
@@ -1403,6 +1409,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_detail() != 17464.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_funnel() != 52687.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_index() != 24911.toShort()) {
@@ -2478,6 +2487,11 @@ public interface MobileCoreInterface {
     
     fun `nodeDetail`(`id`: kotlin.ULong): NodeDetail
     
+    /**
+     * 漏斗计数（§15.c）。只看每个节点最近一次样本；max_age ≤ 0 不限新鲜度；threshold_ms ≤ 0 按 300。
+     */
+    fun `nodeFunnel`(`nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long, `thresholdMs`: kotlin.Int): NodeFunnel
+    
     fun `nodeIndex`(): NodeIndex
     
     /**
@@ -2965,6 +2979,22 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_node_detail(
         it, FfiConverterULong.lower(`id`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 漏斗计数（§15.c）。只看每个节点最近一次样本；max_age ≤ 0 不限新鲜度；threshold_ms ≤ 0 按 300。
+     */
+    @Throws(MobileException::class)override fun `nodeFunnel`(`nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long, `thresholdMs`: kotlin.Int): NodeFunnel {
+            return FfiConverterTypeNodeFunnel.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_node_funnel(
+        it, FfiConverterLong.lower(`nowMillis`),FfiConverterLong.lower(`maxAgeMillis`),FfiConverterInt.lower(`thresholdMs`),_status)
 }
     }
     )
@@ -4369,6 +4399,73 @@ public object FfiConverterTypeNodeDiff: FfiConverterRustBuffer<NodeDiff> {
             FfiConverterULong.write(value.`added`, buf)
             FfiConverterULong.write(value.`removed`, buf)
             FfiConverterULong.write(value.`kept`, buf)
+    }
+}
+
+
+
+/**
+ * 场景 sheet 漏斗（原型"检测自 2 个订阅中的 512 个节点 → 延迟低于 300 ms → …"），契约 §15.c。
+ * 只给核心真实知道的级；"可访问 GPT"等按服务的级需要逐节点探测，核心没有，平台不显示。
+ */
+data class NodeFunnel (
+    /**
+     * 订阅数
+     */
+    var `sourceCount`: kotlin.UInt, 
+    /**
+     * 节点库总数
+     */
+    var `poolSize`: kotlin.ULong, 
+    /**
+     * max_age 内测过（含超时）且仍在库中的节点数
+     */
+    var `tested`: kotlin.ULong, 
+    /**
+     * 其中测速成功（ms ≥ 0）
+     */
+    var `reachable`: kotlin.ULong, 
+    /**
+     * 其中 ms < threshold_ms
+     */
+    var `underThreshold`: kotlin.ULong, 
+    var `thresholdMs`: kotlin.Int
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeNodeFunnel: FfiConverterRustBuffer<NodeFunnel> {
+    override fun read(buf: ByteBuffer): NodeFunnel {
+        return NodeFunnel(
+            FfiConverterUInt.read(buf),
+            FfiConverterULong.read(buf),
+            FfiConverterULong.read(buf),
+            FfiConverterULong.read(buf),
+            FfiConverterULong.read(buf),
+            FfiConverterInt.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: NodeFunnel) = (
+            FfiConverterUInt.allocationSize(value.`sourceCount`) +
+            FfiConverterULong.allocationSize(value.`poolSize`) +
+            FfiConverterULong.allocationSize(value.`tested`) +
+            FfiConverterULong.allocationSize(value.`reachable`) +
+            FfiConverterULong.allocationSize(value.`underThreshold`) +
+            FfiConverterInt.allocationSize(value.`thresholdMs`)
+    )
+
+    override fun write(value: NodeFunnel, buf: ByteBuffer) {
+            FfiConverterUInt.write(value.`sourceCount`, buf)
+            FfiConverterULong.write(value.`poolSize`, buf)
+            FfiConverterULong.write(value.`tested`, buf)
+            FfiConverterULong.write(value.`reachable`, buf)
+            FfiConverterULong.write(value.`underThreshold`, buf)
+            FfiConverterInt.write(value.`thresholdMs`, buf)
     }
 }
 

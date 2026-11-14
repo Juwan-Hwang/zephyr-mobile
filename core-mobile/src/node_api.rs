@@ -99,6 +99,23 @@ impl MobileCore {
     }
 }
 
+/// 场景 sheet 漏斗（原型"检测自 2 个订阅中的 512 个节点 → 延迟低于 300 ms → …"），契约 §15.c。
+/// 只给核心真实知道的级；"可访问 GPT"等按服务的级需要逐节点探测，核心没有，平台不显示。
+#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+pub struct NodeFunnel {
+    /// 订阅数
+    pub source_count: u32,
+    /// 节点库总数
+    pub pool_size: u64,
+    /// max_age 内测过（含超时）且仍在库中的节点数
+    pub tested: u64,
+    /// 其中测速成功（ms ≥ 0）
+    pub reachable: u64,
+    /// 其中 ms < threshold_ms
+    pub under_threshold: u64,
+    pub threshold_ms: i32,
+}
+
 #[derive(Debug, Clone, PartialEq, uniffi::Record)]
 pub struct TcpTarget {
     pub id: u64,
@@ -187,6 +204,34 @@ impl MobileCore {
         let c = self.latency.lock();
         c.map.values().filter(|v| v.last().is_some_and(|&(_, at)| max_age_millis <= 0 || now_millis - at <= max_age_millis)).count() as u64
     }
+
+    /// 漏斗计数（§15.c）。只看每个节点最近一次样本；max_age ≤ 0 不限新鲜度；threshold_ms ≤ 0 按 300。
+    pub fn node_funnel(&self, now_millis: i64, max_age_millis: i64, threshold_ms: i32) -> Result<NodeFunnel, MobileError> {
+        let threshold_ms = if threshold_ms <= 0 { 300 } else { threshold_ms };
+        let source_count = self.subs.lock().entries.len() as u32;
+        let st = self.store()?;
+        let fresh: Vec<(u64, i32)> = {
+            let c = self.latency.lock();
+            c.map
+                .iter()
+                .filter_map(|(&id, v)| v.last().filter(|&&(_, at)| max_age_millis <= 0 || now_millis - at <= max_age_millis).map(|&(ms, _)| (id, ms)))
+                .collect()
+        };
+        // 订阅删除后缓存里可能还有旧指纹：只数仍在库中的
+        let ids: Vec<u64> = fresh.iter().map(|x| x.0).collect();
+        let live: FxHashSet<u64> = self.positions(&st, &ids).into_keys().collect();
+        let mut f = NodeFunnel { source_count, pool_size: st.total(), tested: 0, reachable: 0, under_threshold: 0, threshold_ms };
+        for (_, ms) in fresh.into_iter().filter(|x| live.contains(&x.0)) {
+            f.tested += 1;
+            if ms >= 0 {
+                f.reachable += 1;
+                if ms < threshold_ms {
+                    f.under_threshold += 1;
+                }
+            }
+        }
+        Ok(f)
+    }
 }
 
 #[cfg(test)]
@@ -209,6 +254,20 @@ mod tests {
         assert!(!t.is_empty());
         assert!(t.iter().all(|x| !x.host.contains("***") && x.port > 0));
         assert!(core.tcp_ping_targets(vec![0; 513]).is_err());
+    }
+
+    #[test]
+    fn funnel_counts() {
+        let (_d, core, _sub, rows) = crate::scene_api::tests::setup();
+        let f = core.node_funnel(2000, 0, 75).unwrap();
+        assert_eq!((f.source_count, f.pool_size, f.tested, f.reachable, f.under_threshold, f.threshold_ms), (2, 5, 4, 4, 3, 75));
+        // 超时计入 tested 不计 reachable；不在库中的旧指纹不计
+        core.record_latencies(vec![LatencySample { id: rows[0].id, ms: -1, at: 3000 }, LatencySample { id: 0xdead_beef, ms: 10, at: 3000 }]).unwrap();
+        let f = core.node_funnel(3000, 0, 0).unwrap();
+        assert_eq!((f.tested, f.reachable, f.under_threshold, f.threshold_ms), (4, 3, 3, 300));
+        // 新鲜度：只看 1.5 s 内的 → 只剩刚记的那条超时
+        let f = core.node_funnel(3000, 1500, 300).unwrap();
+        assert_eq!((f.tested, f.reachable), (1, 0));
     }
 
     #[test]

@@ -431,6 +431,11 @@ RustBuffer uniffi_zephyr_mobile_core_fn_method_mobilecore_load_rules(void*_Nonnu
 RustBuffer uniffi_zephyr_mobile_core_fn_method_mobilecore_node_detail(void*_Nonnull ptr, uint64_t id, RustCallStatus *_Nonnull out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_NODE_FUNNEL
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_NODE_FUNNEL
+RustBuffer uniffi_zephyr_mobile_core_fn_method_mobilecore_node_funnel(void*_Nonnull ptr, int64_t now_millis, int64_t max_age_millis, int32_t threshold_ms, RustCallStatus *_Nonnull out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_NODE_INDEX
 #define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_METHOD_MOBILECORE_NODE_INDEX
 RustBuffer uniffi_zephyr_mobile_core_fn_method_mobilecore_node_index(void*_Nonnull ptr, RustCallStatus *_Nonnull out_status
@@ -1093,6 +1098,12 @@ uint16_t uniffi_zephyr_mobile_core_checksum_method_mobilecore_load_rules(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_MOBILECORE_NODE_DETAIL
 #define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_MOBILECORE_NODE_DETAIL
 uint16_t uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_detail(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_MOBILECORE_NODE_FUNNEL
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_METHOD_MOBILECORE_NODE_FUNNEL
+uint16_t uniffi_zephyr_mobile_core_checksum_method_mobilecore_node_funnel(void
     
 );
 #endif
