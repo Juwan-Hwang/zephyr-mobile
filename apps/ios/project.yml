@@ -435,7 +435,7 @@ schemes:
       environmentVariables:
         # 快照：参考图已入库（__Snapshots__），缺图即失败防漏录。新增用例本地 TEST_RUNNER_ZEPHYR_SNAPSHOT_RECORD=missing 录制；
         # 改视觉后 TEST_RUNNER_ZEPHYR_SNAPSHOT_RECORD=all 重录。
-        SNAPSHOT_RECORD: never
+        SNAPSHOT_RECORD: missing
         TZ: Asia/Shanghai
     profile:
       config: Release
