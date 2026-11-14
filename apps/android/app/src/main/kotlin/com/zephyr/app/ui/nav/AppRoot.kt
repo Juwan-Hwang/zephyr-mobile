@@ -20,6 +20,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -180,11 +181,19 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
             ImportSheet(import, { import = false; importPrefill = null }, prefill = importPrefill) { import = false; importPrefill = null; home.notify(it) }
             // Toasts sit above every sheet and the command layer, so an undo or a failover notice is never hidden.
             val toast by home.toast.collectAsStateWithLifecycle()
+            val a11y = androidx.compose.ui.platform.LocalAccessibilityManager.current
+            val window = remember(a11y) {
+                val base = com.zephyr.design.tokens.ZMotion.undoWindow.toLong()
+                a11y?.calculateRecommendedTimeoutMillis(base, containsIcons = false, containsText = true, containsControls = true) ?: base
+            }
+            LaunchedEffect(window) { home.toastWindowMs = window }
             ZToast(
                 visible = toast != null,
                 message = toast?.message ?: "",
                 action = if (toast?.let { it.undoAction != null || (it.sceneId != null && it.previousNodeId != null) } == true) "撤销" else null,
                 onAction = { home.undo() },
+                durationMs = window,
+                key = toast?.serial,
                 modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 84.dp).zIndex(10f),
             )
             CommandOverlay(command, { command = false }) { a ->
