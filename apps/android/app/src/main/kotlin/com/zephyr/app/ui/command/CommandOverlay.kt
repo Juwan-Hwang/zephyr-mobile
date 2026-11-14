@@ -123,7 +123,7 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
             if (input.isBlank()) {
                 Label("建议")
                 CommandParser.EXAMPLES.forEach { ex ->
-                    ZText(ex, Modifier.fillMaxWidth().zPressable(onClick = { input = ex }).padding(horizontal = 14.dp, vertical = 14.dp), style = ZTheme.type.body)
+                    ZText(ex, Modifier.fillMaxWidth().zPressable(row = true, onClick = { input = ex }).padding(horizontal = 14.dp, vertical = 14.dp), style = ZTheme.type.body)
                 }
                 return@Column
             }
@@ -136,13 +136,13 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
                 if (rows.isNotEmpty()) {
                     Label("节点")
                     rows.forEach { n -> NodeLine(n) { onAction(CommandAction.OpenNodes(input.trim())) } }
-                    ZText("在节点库中查看全部 %,d 个".format(r.total), Modifier.fillMaxWidth().zPressable(onClick = { onAction(CommandAction.OpenNodes(input.trim())) }).padding(horizontal = 14.dp, vertical = 12.dp),
+                    ZText("在节点库中查看全部 %,d 个".format(r.total), Modifier.fillMaxWidth().zPressable(row = true, onClick = { onAction(CommandAction.OpenNodes(input.trim())) }).padding(horizontal = 14.dp, vertical = 12.dp),
                         style = ZTheme.type.footnote, color = c.accent)
                 }
             }
             if (looksLikeHost(input)) {
                 Label("规则")
-                ZText("${input.trim()} 走哪里？", Modifier.fillMaxWidth().zPressable(onClick = { onAction(CommandAction.TestRule(input.trim())) }).padding(horizontal = 14.dp, vertical = 14.dp), style = ZTheme.type.body)
+                ZText("${input.trim()} 走哪里？", Modifier.fillMaxWidth().zPressable(row = true, onClick = { onAction(CommandAction.TestRule(input.trim())) }).padding(horizontal = 14.dp, vertical = 14.dp), style = ZTheme.type.body)
             }
             if (!parsed.hasChips && plan == null && nodes?.second.isNullOrEmpty() && !looksLikeHost(input) && nodes != null) {
                 ZText("无结果", Modifier.fillMaxWidth().padding(vertical = 40.dp), style = ZTheme.type.body.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = c.text3)
@@ -239,7 +239,7 @@ private fun IpLine(from: String, to: String) {
 @Composable
 private fun NodeLine(n: NodeSummary, onClick: () -> Unit) {
     val c = ZTheme.colors
-    Row(Modifier.fillMaxWidth().zPressable(onClick = onClick).padding(horizontal = 14.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(Modifier.fillMaxWidth().zPressable(row = true, onClick = onClick).padding(horizontal = 14.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
         ZText(n.region, style = ZTheme.type.monoSmall, color = c.text3)
         Spacer(Modifier.width(10.dp))
         ZText(n.name, Modifier.weight(1f), style = ZTheme.type.body, maxLines = 1)

@@ -84,7 +84,7 @@ fun SubscriptionsCard(subs: List<Subscription>, now: Long, onOpen: () -> Unit) {
         subs.take(3).forEachIndexed { i, s ->
             if (i > 0) ZDivider(inset = false)
             val soon = s.expiresAt != null && s.expiresAt!! - now < 3 * 86_400_000L
-            Row(Modifier.fillMaxWidth().zPressable(onClick = onOpen).padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(Modifier.fillMaxWidth().zPressable(row = true, onClick = onOpen).padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     ZText(s.name, style = ZTheme.type.body, maxLines = 1)
                     Spacer(Modifier.height(12.dp))
@@ -103,7 +103,7 @@ fun SubscriptionsCard(subs: List<Subscription>, now: Long, onOpen: () -> Unit) {
         }
         if (subs.size > 3) {
             ZDivider(inset = false)
-            Row(Modifier.fillMaxWidth().zPressable(onClick = onOpen).padding(horizontal = 18.dp, vertical = 14.dp)) {
+            Row(Modifier.fillMaxWidth().zPressable(row = true, onClick = onOpen).padding(horizontal = 18.dp, vertical = 14.dp)) {
                 ZText("更多 ${subs.size - 3} 个订阅", style = ZTheme.type.footnote, color = c.text3)
             }
         }

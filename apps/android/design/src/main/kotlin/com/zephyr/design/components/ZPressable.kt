@@ -3,6 +3,7 @@ package com.zephyr.design.components
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -21,10 +22,13 @@ import com.zephyr.design.tokens.ZMotion
 /**
  * Press-to-shrink (0.97, tokens `motion.press-scale`). [haptic] = a light tick; review D-P1-2: only pass it
  * when the press changes a selection (prototype vibrates only while scrubbing), never for plain buttons.
+ * [row] = full-width list row (review D-P2-2): no shrink, the themed pressed highlight instead (prototype
+ * `.row:active{background}`); scaling stays for buttons.
  */
 fun Modifier.zPressable(
     enabled: Boolean = true,
     haptic: Boolean = false,
+    row: Boolean = false,
     role: Role = Role.Button,
     label: String? = null,
     longClickLabel: String? = null,
@@ -33,17 +37,18 @@ fun Modifier.zPressable(
 ): Modifier = composed {
     val source = remember { MutableInteractionSource() }
     val pressed by source.collectIsPressedAsState()
-    val scale by animateFloatAsState(if (pressed) ZMotion.pressScale else 1f, ZAnim.micro(), label = "press")
+    val ind = if (row) LocalIndication.current else null
+    val scale by animateFloatAsState(if (pressed && !row) ZMotion.pressScale else 1f, ZAnim.micro(), label = "press")
     val hf = LocalHapticFeedback.current
     this
         .graphicsLayer { scaleX = scale; scaleY = scale }
         .then(
-            if (onLongClick == null) Modifier.clickable(source, indication = null, enabled = enabled, onClickLabel = label, role = role) {
+            if (onLongClick == null) Modifier.clickable(source, indication = ind, enabled = enabled, onClickLabel = label, role = role) {
                 if (haptic) hf.performHapticFeedback(HapticFeedbackType.SegmentTick)
                 onClick()
             }
             else @OptIn(ExperimentalFoundationApi::class) Modifier.combinedClickable(
-                source, indication = null, enabled = enabled, onClickLabel = label, role = role,
+                source, indication = ind, enabled = enabled, onClickLabel = label, role = role,
                 onLongClickLabel = longClickLabel,
                 onLongClick = { hf.performHapticFeedback(HapticFeedbackType.LongPress); onLongClick() },
             ) {
