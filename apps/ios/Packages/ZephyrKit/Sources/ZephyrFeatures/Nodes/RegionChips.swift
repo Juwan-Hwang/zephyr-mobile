@@ -9,6 +9,9 @@ struct RegionChips: View {
     var selected: String
     var onSelect: (String) -> Void
 
+    /// 30pt 视觉 + 2×n1 内边距 = 38pt；外扩 3pt → 44pt。
+    static let hitOutset: CGFloat = 3
+
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: ZTokens.Space.n3) {
@@ -44,8 +47,9 @@ struct RegionChips: View {
             .overlay {
                 Capsule().strokeBorder(on ? .clear : ZTokens.Colors.screenHl2, lineWidth: 1)
             }
-            .contentShape(Capsule())
-            .padding(.vertical, ZTokens.Space.n1)   // 触控区扩到 ≥ 38pt，视觉仍为 30pt
+            .padding(.vertical, ZTokens.Space.n1)
+            // 触控区 30 + 4×2 = 38pt，再向外扩 3pt 到 44pt（HIG 最小触控），不改布局与视觉（REVIEW-Q1 L-P2-9）。
+            .contentShape(Rectangle().inset(by: -Self.hitOutset))
         }
         .buttonStyle(.plain)
         .accessibilityLabel(count.map { ZL.s("%1$@，%2$@个节点", title, "\($0)") } ?? title)
