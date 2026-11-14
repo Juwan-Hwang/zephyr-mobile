@@ -90,7 +90,14 @@ fun OnboardingScreen(onDone: () -> Unit) {
                         if (t != null && (t.startsWith("https://") || t.startsWith("http://"))) { url = t; imp.submit(ImportSource.CLIPBOARD, t) }
                         showField = true
                     }))
-                    if (imp.busy && !showField) ZText("正在添加…", Modifier.padding(horizontal = 22.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.text2)
+                    if (imp.busy) {
+                        // iOS #99 parity: an import in flight can be abandoned without waiting.
+                        androidx.compose.foundation.layout.Row(Modifier.padding(horizontal = 22.dp, vertical = 8.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                            if (!showField) ZText("正在添加…", style = ZTheme.type.footnote, color = c.text2)
+                            Spacer(Modifier.weight(1f))
+                            ZText("取消", Modifier.zPressable(label = "取消导入") { imp.cancel() }.padding(horizontal = 8.dp, vertical = 6.dp), style = ZTheme.type.footnote, color = c.accent)
+                        }
+                    }
                     imp.error?.let { ZText(it, Modifier.padding(horizontal = 22.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.danger) }
                     imp.hint?.let { ZText(it, Modifier.padding(horizontal = 22.dp, vertical = 4.dp), style = ZTheme.type.footnote, color = c.text2) }
                     ZText("订阅与流量数据仅保存在此设备上。", Modifier.padding(22.dp), style = ZTheme.type.footnote, color = c.text3)

@@ -20,6 +20,7 @@ import com.zephyr.engine.Subscription
 import com.zephyr.engine.ZephyrException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -30,28 +31,52 @@ import kotlinx.coroutines.withContext
 @Stable
 class SubscriptionImporter internal constructor(
     private val scope: CoroutineScope,
-    private val ctx: Context,
+    private val ctx: Context?,
     private val done: () -> (Subscription) -> Unit,
+    private val engine: () -> com.zephyr.engine.ZephyrEngine = { AppGraph.engine },
 ) {
     var busy by mutableStateOf(false); private set
     var error by mutableStateOf<String?>(null)
     var hint by mutableStateOf<String?>(null)
     internal var launchPicker: () -> Unit = {}
 
+    /** Bumped by [cancel]; a result from an older generation is late and is dropped (iOS #99 parity). */
+    private var generation = 0
+
     fun submit(src: ImportSource, payload: String) {
         if (busy) return
+        val gen = ++generation
+        busy = true; error = null
         scope.launch {
-            busy = true; error = null
-            try { done()(AppGraph.engine.importSubscription(src, payload)) }
-            catch (e: ZephyrException) { error = message(src, e) }
-            finally { busy = false }
+            val e = engine()
+            // Ids that existed before: a cancelled import never removes one of these (re-adding a known link).
+            val before = runCatching { e.subscriptions().first().map { it.id }.toSet() }.getOrDefault(emptySet())
+            try {
+                val sub = e.importSubscription(src, payload)
+                if (gen != generation) { if (sub.id !in before) runCatching { e.deleteSubscription(sub.id) } }
+                else done()(sub)
+            } catch (x: ZephyrException) {
+                if (gen == generation) error = message(src, x)
+            } finally {
+                if (gen == generation) busy = false
+            }
         }
+    }
+
+    /**
+     * Abandon the running import: the sheet's 取消, a swipe-down, or onboarding's 取消. The UI is idle at once;
+     * if the engine still finishes, a subscription it newly created is withdrawn.
+     */
+    fun cancel() {
+        if (!busy) return
+        generation++
+        busy = false
     }
 
     /** Clipboard text, or null (and an error) when empty. */
     fun clipboardText(): String? {
-        val cm = ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val t = cm.primaryClip?.getItemAt(0)?.coerceToText(ctx)?.toString()?.trim().orEmpty()
+        val cm = ctx?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+        val t = cm?.primaryClip?.getItemAt(0)?.coerceToText(ctx)?.toString()?.trim().orEmpty()
         if (t.isEmpty()) error = "剪贴板是空的"
         return t.ifEmpty { null }
     }
@@ -82,7 +107,7 @@ fun rememberSubscriptionImporter(onDone: (Subscription) -> Unit): SubscriptionIm
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     val latest by rememberUpdatedState(onDone)
-    val imp = remember { SubscriptionImporter(scope, ctx) { latest } }
+    val imp = remember { SubscriptionImporter(scope, ctx, done = { latest }) }
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) scope.launch {
             val text = withContext(Dispatchers.IO) {
