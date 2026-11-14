@@ -18,7 +18,7 @@ final class HomeSnapshotTests: XCTestCase {
     }
 
     func testHomeConnected() async {
-        await zAssertSnapshots(named: "home-connected", variants: ZSnapshotVariant.standardPlusAccent(.green)) { _ in
+        await zAssertSnapshots(named: "home-connected", variants: ZSnapshotVariant.standardPlusAccent(.green) + ZSnapshotVariant.languages + [.pseudoAX5]) { _ in
             home(connected: true)
         }
     }

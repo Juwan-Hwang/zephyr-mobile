@@ -18,7 +18,7 @@ final class ActivitySnapshotTests: XCTestCase {
     }
 
     func testConnectionsSheet() async {
-        await zAssertSnapshots(named: "connections", variants: ZSnapshotVariant.standardPlusAccent(.green, light: true), settle: 0.6) { _ in
+        await zAssertSnapshots(named: "connections", variants: ZSnapshotVariant.standardPlusAccent(.green, light: true) + ZSnapshotVariant.languages, settle: 0.6) { _ in
             ConnectionsSheet(initialTraceID: nil).environment(model())
         }
     }

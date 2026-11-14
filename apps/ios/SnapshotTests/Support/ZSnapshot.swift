@@ -26,6 +26,7 @@ struct ZSnapshotVariant: Sendable, Hashable {
     var colorScheme: ColorScheme
     var dynamicType: DynamicTypeSize
     var accent: ZTokens.Accent
+    var language: ZSnapshotLanguage = .zh
 
     var interfaceStyle: UIUserInterfaceStyle { colorScheme == .dark ? .dark : .light }
     var contentSizeCategory: UIContentSizeCategory { UIContentSizeCategory(dynamicType) }
@@ -39,6 +40,13 @@ struct ZSnapshotVariant: Sendable, Hashable {
         ZSnapshotVariant(name: "\(light ? "light" : "dark")-\(accent.rawValue)",
                          colorScheme: light ? .light : .dark, dynamicType: .large, accent: accent)
     }
+
+    /// 英文 / 伪语言（深色、默认字号）。文件名 `<base>-en-dark` / `<base>-pseudo-dark`。
+    static let englishDark = ZSnapshotVariant(name: "en-dark", colorScheme: .dark, dynamicType: .large, accent: .blue, language: .en)
+    static let pseudoDark = ZSnapshotVariant(name: "pseudo-dark", colorScheme: .dark, dynamicType: .large, accent: .blue, language: .pseudo)
+    /// 伪语言 + AX5：最长文案 × 最大字号，暴露截断与写死高度。
+    static let pseudoAX5 = ZSnapshotVariant(name: "pseudo-dark-ax5", colorScheme: .dark, dynamicType: .accessibility5, accent: .blue, language: .pseudo)
+    static let languages: [ZSnapshotVariant] = [.englishDark, .pseudoDark]
 
     /// 每个用例的基础三件套：深色 / 浅色 / AX5。
     static let standard: [ZSnapshotVariant] = [.dark, .light, .darkAX5]
@@ -96,6 +104,13 @@ func zAssertSnapshots<V: View>(
     make: (ZSnapshotVariant) async throws -> V
 ) async rethrows {
     for variant in variants {
+        // 语言要在构造视图之前切换（模型与视图初始化里可能已经取了 ZL 文案），断言完恢复中文。
+        let previous = ZSnapshotLocalizedBundle.use(variant.language)
+        defer { ZSnapshotLocalizedBundle.use(previous) }
+        if variant.language != .zh, !ZSnapshotLocalizedBundle.hasEnglish {
+            XCTFail("测试 bundle 里没有 en.lproj（project.yml 应把 App/Localizable.xcstrings 编进 ZephyrSnapshotTests）", file: file, line: line)
+            continue
+        }
         let view = try await make(variant)
         await zAssertSnapshot(of: view, named: "\(base)-\(variant.name)", variant: variant, layout: layout,
                               settle: settle, file: file, testName: testName, line: line)
@@ -114,6 +129,8 @@ func zAssertSnapshot<V: View>(
     testName: String = #function,
     line: UInt = #line
 ) async {
+    let previousLanguage = ZSnapshotLocalizedBundle.use(variant.language)
+    defer { ZSnapshotLocalizedBundle.use(previousLanguage) }
     let image = await ZSnapshotRenderer.render(view, variant: variant, layout: layout, settle: settle)
     guard image.size.width > 0, image.size.height > 0 else {
         XCTFail("快照 \(name) 渲染出空图（尺寸为 0）", file: file, line: line)
@@ -194,6 +211,7 @@ enum ZSnapshotRenderer {
     static func render<V: View>(_ view: V, variant: ZSnapshotVariant, layout: ZSnapshotLayout,
                                 settle: TimeInterval) async -> UIImage {
         let root = view
+            .zSnapshotLocale(variant.language.locale)
             .zAccent(variant.accent)
             .dynamicTypeSize(variant.dynamicType)
             .environment(\.colorScheme, variant.colorScheme)
@@ -275,5 +293,13 @@ enum ZSnapshotRenderer {
         window.isHidden = true
         window.rootViewController = nil
         return image
+    }
+}
+
+private extension View {
+    /// 只在英文 / 伪语言变体上注入 locale；中文变体不改环境，现有参考图保持不变。
+    @ViewBuilder
+    func zSnapshotLocale(_ locale: Locale?) -> some View {
+        if let locale { environment(\.locale, locale) } else { self }
     }
 }
