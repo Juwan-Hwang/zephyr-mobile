@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.zephyr.app.di.AppGraph
+import kotlinx.coroutines.launch
 import com.zephyr.design.components.ZDivider
 import com.zephyr.design.components.ZIcon
 import com.zephyr.design.components.ZIcons
@@ -28,7 +29,8 @@ import com.zephyr.design.theme.ZTheme
 
 /** "最近连接" (prototype `actSheet`): recent hosts aggregated by domain; tap → trace. Android can name the app. */
 @Composable
-fun BoxScope.ActivitySheet(visible: Boolean, onDismiss: () -> Unit, trace: String? = null, onHost: (String?) -> Unit) {
+fun BoxScope.ActivitySheet(visible: Boolean, onDismiss: () -> Unit, trace: String? = null, onNotice: (String) -> Unit = {}, onHost: (String?) -> Unit) {
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
     val flow = remember { AppGraph.engine.recentHosts(5) }
     val hosts by flow.collectWhile(visible, emptyList())
     val c = ZTheme.colors
@@ -53,7 +55,11 @@ fun BoxScope.ActivitySheet(visible: Boolean, onDismiss: () -> Unit, trace: Strin
             hosts.forEachIndexed { i, x ->
                 if (i > 0) ZDivider()
                 Row(
-                    Modifier.fillMaxWidth().zPressable(label = "${x.host} 连接详情") { onHost(x.host) }.padding(horizontal = 20.dp, vertical = 14.dp),
+                    Modifier.fillMaxWidth().zPressable(
+                        label = "${x.host} 连接详情", longClickLabel = "关闭 ${x.host} 的连接",
+                        // iOS H-P2-14 parity: long-press closes this host's live connections and says how it went.
+                        onLongClick = { scope.launch { onNotice(closeHostConnections(AppGraph.engine, x.host)) } },
+                    ) { onHost(x.host) }.padding(horizontal = 20.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Column(Modifier.weight(1f)) {
