@@ -18,12 +18,20 @@ final class LanguageSupportTests: XCTestCase {
         defer { ZSnapshotLocalizedBundle.use(previous) }
         XCTAssertEqual(ZL.tr("已连接"), Bundle.main.localizedString(forKey: "已连接", value: nil, table: nil))
         XCTAssertNotEqual(ZL.tr("已连接"), "已连接", "英文变体仍输出中文")
-        print("ZSnapshotLocalizedBundle patched:", ZSnapshotLocalizedBundle.patchedSelectors)
+    }
+
+    func testPseudoBundleTransformsTable() {
+        let previous = ZSnapshotLocalizedBundle.use(.pseudo)
+        defer { ZSnapshotLocalizedBundle.use(previous) }
+        let value = ZL.tr("已连接")
+        XCTAssertTrue(value.hasPrefix("⟦"), value)
+        XCTAssertEqual(Bundle.main.localizedString(forKey: "已连接", value: nil, table: nil), value)
     }
 
     func testChineseIsUntouched() {
         ZSnapshotLocalizedBundle.use(.zh)
         XCTAssertNil(ZL.bundle)
+        XCTAssertFalse(Bundle.main.bundleURL.lastPathComponent.hasPrefix("zephyr-snapshot-"))
         XCTAssertEqual(ZL.tr("已连接"), "已连接")
     }
 }
