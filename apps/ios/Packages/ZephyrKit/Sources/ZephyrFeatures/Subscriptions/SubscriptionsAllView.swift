@@ -4,7 +4,9 @@
 import SwiftUI
 import ZephyrDesign
 import ZephyrKit
+#if DEBUG
 import ZephyrMock
+#endif
 
 @MainActor
 struct SubscriptionsAllView: View {
@@ -50,9 +52,11 @@ struct SubscriptionsAllView: View {
     private var nodeCount: Int64 { filtered.reduce(0) { $0 + $1.nodeCount } }
 }
 
+#if DEBUG
 #Preview {
     let model = SubscriptionsModel(engine: MockEngine(seed: 0, clock: .frozen941), now: { MockClock.frozen941.now() })
     return NavigationStack { SubscriptionsAllView(model: model) }
         .task { await model.start() }
         .preferredColorScheme(.dark)
 }
+#endif

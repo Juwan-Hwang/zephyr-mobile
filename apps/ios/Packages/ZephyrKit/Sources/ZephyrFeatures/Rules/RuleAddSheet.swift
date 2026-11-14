@@ -5,7 +5,9 @@
 import SwiftUI
 import ZephyrDesign
 import ZephyrKit
+#if DEBUG
 import ZephyrMock
+#endif
 
 struct RuleAddSheet: View {
     let engine: any ZephyrEngine
@@ -112,7 +114,9 @@ struct RuleAddSheet: View {
     }
 }
 
+#if DEBUG
 #Preview {
     RuleAddSheet(engine: MockEngine(seed: 0, clock: .frozen941), onAdded: {})
         .preferredColorScheme(.dark)
 }
+#endif

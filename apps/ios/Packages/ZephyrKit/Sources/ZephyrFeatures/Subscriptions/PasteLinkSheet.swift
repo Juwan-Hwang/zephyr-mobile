@@ -3,7 +3,9 @@
 import SwiftUI
 import ZephyrDesign
 import ZephyrKit
+#if DEBUG
 import ZephyrMock
+#endif
 
 struct PasteLinkSheet: View {
     let importer: SubscriptionImporter
@@ -77,6 +79,8 @@ struct PasteLinkSheet: View {
     }
 }
 
+#if DEBUG
 #Preview {
     PasteLinkSheet(importer: SubscriptionImporter(engine: MockEngine(seed: 0, clock: .frozen941)), onImported: { _ in })
 }
+#endif
