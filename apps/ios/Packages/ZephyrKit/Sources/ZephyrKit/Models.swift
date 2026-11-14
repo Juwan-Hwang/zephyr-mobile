@@ -312,6 +312,15 @@ public struct NodePage: Sendable, Hashable, Codable {
     public init(rows: [NodeSummary], offset: Int64, total: Int64) { self.rows = rows; self.offset = offset; self.total = total }
 }
 
+/// 扫描进度（契约 §15.d，平台本地，不过 FFI）：首页“正在检测 done/total”与场景行进度条。
+public struct ScanProgress: Sendable, Hashable {
+    public var done: Int
+    public var total: Int
+    public init(done: Int, total: Int) { self.done = done; self.total = total }
+    /// 0…1，total 为 0 时为 0。
+    public var fraction: Double { total > 0 ? min(1, Double(done) / Double(total)) : 0 }
+}
+
 public struct LatencyUpdate: Sendable, Hashable, Codable {
     public var id: NodeId
     public var latencyMs: Int32

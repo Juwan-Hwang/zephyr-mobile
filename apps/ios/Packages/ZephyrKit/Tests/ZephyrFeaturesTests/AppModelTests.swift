@@ -25,6 +25,24 @@ final class AppModelTests: XCTestCase {
         XCTAssertFalse(model.subscriptions.isEmpty)
     }
 
+    /// 契约 §15.d：重新检测等扫描走完才结束，结束后清空进度，首页回到“…检测”。
+    func testRetestReportsScanProgressThenClears() async {
+        let model = AppModel.preview(connected: true, frozen: true)
+        model.start()
+        _ = await until { !model.scenes.isEmpty }
+        guard let id = model.scenes.first?.id else { return XCTFail("无场景") }
+        await model.retest(sceneId: id)
+        XCTAssertNil(model.scan)
+        XCTAssertFalse(model.retesting.contains(id))
+        XCTAssertNotEqual(model.scenesTestedText, "正在检测…")
+    }
+
+    func testScanProgressFraction() {
+        XCTAssertEqual(ScanProgress(done: 138, total: 512).fraction, 138.0 / 512.0, accuracy: 1e-9)
+        XCTAssertEqual(ScanProgress(done: 0, total: 0).fraction, 0)
+        XCTAssertEqual(ScanProgress(done: 9, total: 8).fraction, 1)
+    }
+
     func testConnectThenDisconnect() async {
         let model = AppModel.preview(connected: false, frozen: true)
         model.start()
