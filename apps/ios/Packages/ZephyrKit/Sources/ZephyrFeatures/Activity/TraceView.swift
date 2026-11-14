@@ -42,7 +42,7 @@ struct TraceView: View {
             if let onBack { backButton(onBack) }
             Text(verbatim: host)
                 .foregroundStyle(ZTokens.Colors.screenT1)
-                .zDisplay(.small, weight: .light)
+                .zDisplay(.headline, weight: .light)
                 .lineLimit(2)
                 .minimumScaleFactor(0.6)
                 .textSelection(.enabled)
