@@ -83,3 +83,6 @@
 - 2026-11-14 L-P2-12 [已修 #129]：订阅页分组标题 listRowInsets 归零 + listSectionSpacing(0)，标题距屏 22pt，subscriptions 快照 5 张重录。
 - 2026-11-14 L-P2-11 [已修 #131，收尾]：约定“错误 = 顶部横幅（PageErrorBanner），成功 / 可撤销 = 底部吐司”。订阅页错误改走横幅；首页 ErrorBanner 桥接 AppModel.lastError 复用 PageErrorBanner，只剩一套实现；SubscriptionsErrorTests 3 个。
 - 2026-11-14 Q1 复核：除下列外 Q1 各项均已在代码中落地（注释带 REVIEW 编号）。D-P2-10〔不改，记限制〕：Package.swift 的 `.macOS(.v14)` 供 Mac 主机 `swift test` 跑 ZephyrKit/ZephyrMock；ZephyrDesign/Features 31 个文件用 UIKit，Mac 主机上请只跑 `swift test --filter 'ZephyrKitTests|ZephyrMockTests'`，界面目标一律经 xcodebuild iOS 目标构建。清单无法按目标平台裁剪（Xcode 在 macOS 主机上解析清单），故不改。
+- 2026-11-14 本地化补漏 [已修 #133]：英文等非中文界面计数单位改 K/M/B（中文保留 万/亿）；补 3 条缺译（核心不可用页、本地代理页脚）。Widgets / PacketTunnel 的 xcstrings 与插值键复扫无缺口。
+- 2026-11-14 快照去抖 [已修 #134]：ZConnectButton、HomeHero 状态标题、ZStatusDot、ZTrafficStat、TrafficPanel 的显式 `.animation` 在 `zStaticRendering` 下关闭（home-connected-dark 偶发停在弹簧中途）。
+- 2026-11-14 快照去抖（续）[已修 #136]：GlobalModeCard、ScenesSection、ZGroupCard、ZFlag、ZTextField、ZToast 同上；TodayCardView 静态渲染下跳过 450 ms 去抖与后台 PNG 编码，固定“分享就绪、存储未就绪”一帧（today-dark-orange 偶发：存储按钮灰/亮与 settle 赛跑）。
