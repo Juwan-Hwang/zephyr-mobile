@@ -9,6 +9,7 @@ public enum ZTextFieldStyle: Sendable {
 }
 
 public struct ZTextField: View {
+    @Environment(\.zStaticRendering) private var still
     private let placeholder: LocalizedStringKey
     @Binding private var text: String
     private let systemImage: String?
@@ -87,7 +88,7 @@ public struct ZTextField: View {
             .onTapGesture { focused = true }
             .accessibilityHidden(true)
         }
-        .animation(ZMotion.micro, value: text.isEmpty)
+        .animation(still ? nil : ZMotion.micro, value: text.isEmpty)
     }
 
     private var field: some View {

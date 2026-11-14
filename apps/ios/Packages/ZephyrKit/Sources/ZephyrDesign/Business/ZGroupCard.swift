@@ -15,6 +15,7 @@ public enum ZGroupTone: Sendable {
 }
 
 public struct ZGroupCard: View {
+    @Environment(\.zStaticRendering) private var still
     private let title: String
     private let subtitle: String
     private let subtitleTone: ZGroupTone
@@ -89,7 +90,7 @@ public struct ZGroupCard: View {
         .background(rowBackground)
         .overlay(alignment: .bottom) { scrubTrack }
         .opacity(isDimmed ? 0.55 : 1)
-        .animation(ZMotion.standard, value: scrubIndex)
+        .animation(still ? nil : ZMotion.standard, value: scrubIndex)
         .accessibilityElement(children: .combine)
     }
 

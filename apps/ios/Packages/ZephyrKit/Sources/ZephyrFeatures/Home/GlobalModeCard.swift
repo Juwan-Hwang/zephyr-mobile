@@ -11,6 +11,7 @@ import ZephyrKit
 
 @MainActor
 struct GlobalModeCard: View {
+    @Environment(\.zStaticRendering) private var still
     @Environment(AppModel.self) private var model
     @State private var expanded = false
     @State private var suggestion: NodeSummary?
@@ -36,7 +37,7 @@ struct GlobalModeCard: View {
             }
         }
         .padding(.horizontal, HMetrics.cardInset)
-        .animation(ZMotion.slow, value: expanded)
+        .animation(still ? nil : ZMotion.slow, value: expanded)
     }
 
     @ViewBuilder
