@@ -28,6 +28,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.zephyr.app.ui.activity.TraceSheet
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.border
@@ -60,7 +62,16 @@ fun RulesScreen(initial: String, back: String = "资料库", onBack: () -> Unit)
         if (q != initial) delay(60) // debounce typing, not the deep-linked first query
         value = runCatching { engine.testRule(q) }.getOrNull()
     }
-    PageScaffold(back = back, title = "规则", onBack = onBack) {
+    // Review L-P2-8: 原型右上“+”。添加覆写走与轨迹页同一张 TraceSheet（目标/场景/保留），以搜索框里的域名为对象。
+    var overrideHost by remember { mutableStateOf<String?>(null) }
+    val focus = remember { androidx.compose.ui.focus.FocusRequester() }
+    androidx.compose.foundation.layout.Box(Modifier.fillMaxSize()) {
+    PageScaffold(back = back, title = "规则", onBack = onBack, trailing = {
+        com.zephyr.design.components.ZIconButton(com.zephyr.design.components.ZIcons.Plus, "为域名添加覆写", {
+            val h = q.trim()
+            if (h.isEmpty()) runCatching { focus.requestFocus() } else overrideHost = h
+        }, tint = c.accent)
+    }) {
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
             Row(Modifier.padding(horizontal = 22.dp), verticalAlignment = Alignment.Bottom) {
                 ZText(ZFormat.grouped(stats?.total ?: 0), style = ZTheme.type.hero.copy(fontSize = ZTheme.type.hero.fontSize * 0.86f))
@@ -69,7 +80,7 @@ fun RulesScreen(initial: String, back: String = "资料库", onBack: () -> Unit)
             }
             ZText("${stats?.layers?.size ?: 7} 层 · 已编译 · 磁盘占用 ${ZFormat.bytesText(stats?.diskBytes ?: 0)}", Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
             Spacer(Modifier.height(18.dp))
-            ZSearchField(q, { q = it }, "测试域名或 IP", Modifier.padding(horizontal = 16.dp))
+            ZSearchField(q, { q = it }, "测试域名或 IP", Modifier.padding(horizontal = 16.dp).focusRequester(focus))
             Spacer(Modifier.height(12.dp))
             ZCard(Modifier.padding(horizontal = 16.dp), padding = 18.dp) {
                 AnimatedContent(trace, transitionSpec = { fadeIn(ZAnim.standard()) togetherWith fadeOut(ZAnim.micro()) }, label = "trace") { t ->
@@ -94,6 +105,8 @@ fun RulesScreen(initial: String, back: String = "资料库", onBack: () -> Unit)
             )
             Spacer(Modifier.height(40.dp))
         }
+    }
+    TraceSheet(overrideHost) { overrideHost = null }
     }
 }
 
