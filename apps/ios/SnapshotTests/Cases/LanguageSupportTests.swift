@@ -28,6 +28,26 @@ final class LanguageSupportTests: XCTestCase {
         XCTAssertEqual(Bundle.main.localizedString(forKey: "已连接", value: nil, table: nil), value)
     }
 
+    func testPseudoPluralKeepsVariables() {
+        let entry: [String: Any] = [
+            "NSStringLocalizedFormatKey": "%#@count@",
+            "count": ["NSStringFormatSpecTypeKey": "NSStringPluralRuleType", "NSStringFormatValueTypeKey": "lld",
+                      "one": "Every Hour", "other": "Every %lld Hours"],
+        ]
+        let out = ZPseudo.transformPluralEntry(entry) as? [String: Any]
+        XCTAssertEqual(out?["NSStringLocalizedFormatKey"] as? String, "%#@count@")
+        let v = out?["count"] as? [String: String]
+        XCTAssertEqual(v?["NSStringFormatValueTypeKey"], "lld")
+        XCTAssertTrue(v?["other"]?.contains("%lld") ?? false)
+        XCTAssertTrue(v?["one"]?.hasPrefix("⟦") ?? false)
+        XCTAssertTrue(ZPseudo.transform("%#@count@").contains("%#@count@"))
+
+        let previous = ZSnapshotLocalizedBundle.use(.pseudo)
+        defer { ZSnapshotLocalizedBundle.use(previous) }
+        let hours = ZL.f("每 %lld 小时", Int64(12))
+        XCTAssertTrue(hours.hasPrefix("⟦") && hours.contains("12"), hours)
+    }
+
     func testChineseIsUntouched() {
         ZSnapshotLocalizedBundle.use(.zh)
         XCTAssertNil(ZL.bundle)
