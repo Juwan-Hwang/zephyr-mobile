@@ -107,7 +107,7 @@ public struct SubscriptionsView: View {
     }
 
     static let defaultInterval: Int32 = 12
-    static let intervals: [MenuOption<Int32>] = [6, 12, 24, 48].map { MenuOption(value: Int32($0), title: ZL.f("每 %lld 小时", Int64($0))) }
+    static var intervals: [MenuOption<Int32>] { [6, 12, 24, 48].map { MenuOption(value: Int32($0), title: ZL.f("每 %lld 小时", Int64($0))) } }
 
     // MARK: 导入
 

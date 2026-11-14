@@ -97,7 +97,8 @@ public struct SettingsView: View {
     }
 
     static let defaultTtl: Int32 = 24
-    static let ttlOptions: [MenuOption<Int32>] = [6, 12, 24, 72].map { MenuOption(value: Int32($0), title: ZL.f("%lld 小时", Int64($0))) }
+    /// 计算属性而非 static let：按当前 `ZL.bundle` 取文案（快照切语言时不被首次访问缓存成中文）。
+    static var ttlOptions: [MenuOption<Int32>] { [6, 12, 24, 72].map { MenuOption(value: Int32($0), title: ZL.f("%lld 小时", Int64($0))) } }
 
     // MARK: 外观
 
@@ -138,11 +139,13 @@ public struct SettingsView: View {
         )
     }
 
-    static let appearanceOptions: [MenuOption<Appearance>] = [
-        MenuOption(value: .system, title: ZL.tr("跟随系统")),
-        MenuOption(value: .dark, title: ZL.tr("深色")),
-        MenuOption(value: .light, title: ZL.tr("浅色")),
-    ]
+    static var appearanceOptions: [MenuOption<Appearance>] {
+        [
+            MenuOption(value: .system, title: ZL.tr("跟随系统")),
+            MenuOption(value: .dark, title: ZL.tr("深色")),
+            MenuOption(value: .light, title: ZL.tr("浅色")),
+        ]
+    }
 
     // MARK: 隐私
 
