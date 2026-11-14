@@ -80,3 +80,4 @@
 - 2026-11-14 H-P2-15 [已修 #119]：追踪页域名 30 → 36pt / 300（新增 ZDisplaySize.headline）。
 - 2026-11-14 H-P2-11 [已修 #121]：今日卡片改 fullScreenCover，纯黑全屏 + ✕。
 - 2026-11-14 L-P2-2 [已修 #123]：引导“1 / 2”距标志 60 → 28pt，onboarding 快照 6 张重录。
+- 2026-11-14 L-P2-12 [已修 #129]：订阅页分组标题 listRowInsets 归零 + listSectionSpacing(0)，标题距屏 22pt，subscriptions 快照 5 张重录。
