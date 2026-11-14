@@ -28,6 +28,8 @@ public protocol ZephyrEngine: AnyObject, Sendable {
     func sceneFailovers() -> AsyncStream<SceneFailoverNotice>
     /// 按延迟排序，最多 50。
     func sceneCandidates(sceneId: String, region: String?) async throws -> [NodeSummary]
+    /// 漏斗计数（契约 §15.c）。`maxAgeMs ≤ 0` 不限新鲜度，`thresholdMs ≤ 0` 按 300；节点库未就绪等情况返回 nil（界面隐藏，不编造）。
+    func nodeFunnel(maxAgeMs: Int64, thresholdMs: Int32) async -> NodeFunnel?
     func previewSceneChange(sceneId: String, nodeId: NodeId) async throws -> ExitChange
     /// UI 支持"撤销"：再 apply 旧节点。
     func applySceneChange(sceneId: String, nodeId: NodeId) async throws

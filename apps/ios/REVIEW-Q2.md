@@ -67,6 +67,7 @@
 - ~~`updateAll` 吞错误且重载隧道 N 次~~ [已修]；~~订阅导入无进度/取消~~ [已修：导入中显示进度并可取消，晚到结果丢弃、新建条目撤回]；~~无日志/诊断 UI~~ [已修：设置 › 诊断 › 日志，级别筛选/暂停/清空/分享]；~~`importFile` 主线程读文件~~ [已修]。
 - [已修] 协议扩展里 `setSceneSource`/`overrideHost` 默认静默 no-op（应改为必须实现或抛 unsupported）。
 - [已修] L-P2-7 registerForTraitChanges；L-P2-8 已有重试。
+- [已修] 场景 sheet lede 与漏斗接契约 §15.c nodeFunnel（REVIEW-Q1 H-P2-9：检测自 N 个订阅中的 M 个节点；全部 → 已测速 → 可连通 → 延迟低于 300 ms；按服务两级不显示）。
 - 原型“检测中 138/512”进度未显示；~~时钟格式忽略 12/24 小时~~ [已修]。
 - ~~CI 性能测试用墙钟易抖；覆盖率只统计 App target~~ [已修：计时改单调时钟、只断言下限、上限仅防挂死；覆盖率加扩展与 ZephyrKit 各库]。
 - 11-08 子代理遗留：~~RuleAddSheet 接 overrideHost~~ [已修]；NodeRowStore 失败重试（L-P2-8）；订阅/节点/规则错误横幅（L-P2-11）；其余文件 #if DEBUG 包裹 Mock（L-P2-5）；引导节奏（L-P2-2）；registerForTraitChanges（L-P2-7）；L-P2-12/13/4；深链来源（H-P2-21：AppModel.pendingLink、确认弹窗、小组件 URL 令牌）；H-P2-10/11/~~14~~[已修：关闭连接后吐司反馈成功/失败数]/15/16/18/19/20；D：ZTrafficStat/ZSparkline 颜色改 accent/screenUp、ZLatencyPill 注释、SceneSheet 改 ZSheet(verbatim:)、Features 采用 ZGroupCard。

@@ -32,6 +32,23 @@ extension MockEngine {
         }
     }
 
+    /// Mock 漏斗（契约 §15.c）：sourceCount / poolSize 取原型 lede（2 / 512），池为各地区轮流取的前 512 个节点，
+    /// 其余按 mock 延迟（已测值优先，否则缓存值）计算，不另编数字。新鲜度在 Mock 中不区分。
+    public func nodeFunnel(maxAgeMs: Int64, thresholdMs: Int32) async -> NodeFunnel? {
+        let threshold = thresholdMs > 0 ? thresholdMs : 300
+        let measured = withState { $0.tested }
+        var tested = 0, reachable = 0, under = 0
+        for i in 0..<MockFixtures.funnelPoolSize {
+            let r = i % MockNodes.regions.count
+            let j = Int64(i / MockNodes.regions.count)
+            guard let ms = measured[MockNodes.id(r, j)] ?? MockNodes.cachedLatency(r, j) else { continue }
+            tested += 1
+            if ms >= 0 { reachable += 1; if ms < threshold { under += 1 } }
+        }
+        return NodeFunnel(sourceCount: MockFixtures.funnelSourceCount, poolSize: MockFixtures.funnelPoolSize,
+                          tested: tested, reachable: reachable, underThreshold: under, thresholdMs: Int(threshold))
+    }
+
     public func sceneCandidates(sceneId: String, region: String?) async throws -> [NodeSummary] {
         guard withState({ s in s.scenes.contains { $0.id == sceneId } }), let pool = pool(sceneId) else {
             throw ZephyrError(code: .sceneNotFound, message: sceneId)

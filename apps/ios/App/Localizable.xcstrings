@@ -55,6 +55,46 @@
         }
       }
     },
+    "检测自 %lld 个订阅中的 %lld 个节点" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tested %2$lld nodes from %1$lld subscriptions"
+          }
+        }
+      }
+    },
+    "已测速" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tested"
+          }
+        }
+      }
+    },
+    "可连通" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reachable"
+          }
+        }
+      }
+    },
+    "延迟低于 %lld ms" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Under %lld ms"
+          }
+        }
+      }
+    },
     "诊断" : {
       "localizations" : {
         "en" : {
