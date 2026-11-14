@@ -36,7 +36,10 @@ final class SubscriptionsModel {
     var review: Review?
     /// 左滑“删除”后待确认的订阅。
     var deleting: Subscription?
+    /// 成功 / 结果提示（底部吐司）。
     var toast: ZToastItem?
+    /// 失败提示（顶部横幅，REVIEW L-P2-11：错误一律走横幅）。
+    var error: PageError?
 
     /// 全部预览时的并发上限：真实引擎的 previewUpdate 会拉取远端订阅。
     static let previewConcurrency = 6
@@ -199,12 +202,6 @@ final class SubscriptionsModel {
     }
 
     func report(_ error: Error) {
-        if error is CancellationError { return }
-        if let z = error as? ZephyrError {
-            if z.code == .cancelled { return }
-            toast = ZToastItem(z.userMessage)
-        } else {
-            toast = ZToastItem(ZL.tr("操作失败"))
-        }
+        if let e = PageError.from(error, fallback: ZL.tr("操作失败")) { self.error = e }
     }
 }
