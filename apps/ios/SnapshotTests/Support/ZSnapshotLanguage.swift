@@ -47,21 +47,40 @@ final class ZSnapshotLocalizedBundle: Bundle, @unchecked Sendable {
         }
     }
 
-    /// iOS 18.4+ 的 SwiftUI 按环境 locale 调这个重载解析 `Text("中文")`（LocalizedStringKey），
-    /// 只覆写三参数版本时 ZL 文案能翻译、SwiftUI 字面量仍是中文（#88 首轮收图）。
-    @available(iOS 18.4, *)
-    override func localizedString(forKey key: String, value: String?, table tableName: String?,
-                                  localizations: [Locale.Language]) -> String {
-        guard Self.language != .zh else {
-            return super.localizedString(forKey: key, value: value, table: tableName, localizations: localizations)
+    /// SwiftUI 解析 `Text("中文")`（LocalizedStringKey）不走三参数的 `localizedString(forKey:value:table:)`：
+    /// #88 首轮收图里 ZL 文案已翻译、SwiftUI 字面量仍是中文。iOS 18.4 的四参数重载是 Swift 扩展、不能 override，
+    /// 这里在运行时给子类补上 NSBundle 所有 `localizedStringForKey:value:table:<X>:` 四参数选择子
+    /// （localizations: / localization: 等），统一转到上面的查表逻辑；中文时转回原实现。
+    private static let installFourArgumentLookups: Void = {
+        var count: UInt32 = 0
+        guard let methods = class_copyMethodList(Bundle.self, &count) else { return }
+        defer { free(methods) }
+        typealias Original = @convention(c) (AnyObject, Selector, NSString?, NSString?, NSString?, AnyObject?) -> NSString
+        for i in 0..<Int(count) {
+            let method = methods[i]
+            let selector = method_getName(method)
+            let name = NSStringFromSelector(selector)
+            guard name.hasPrefix("localizedStringForKey:value:table:"), name.filter({ $0 == ":" }).count == 4,
+                  let types = method_getTypeEncoding(method) else { continue }
+            let original = unsafeBitCast(method_getImplementation(method), to: Original.self)
+            let block: @convention(block) (AnyObject, NSString?, NSString?, NSString?, AnyObject?) -> NSString = { me, key, value, table, extra in
+                guard ZSnapshotLocalizedBundle.language != .zh, let bundle = me as? Bundle, let key else {
+                    return original(me, selector, key, value, table, extra)
+                }
+                return bundle.localizedString(forKey: key as String, value: value as String?, table: table as String?) as NSString
+            }
+            class_addMethod(ZSnapshotLocalizedBundle.self, selector, imp_implementationWithBlock(block), types)
+            ZSnapshotLocalizedBundle.patchedSelectors.append(name)
         }
-        return localizedString(forKey: key, value: value, table: tableName)
-    }
+    }()
+
+    nonisolated(unsafe) static var patchedSelectors: [String] = []
 
     /// 切换语言；返回之前的语言，调用方负责恢复。
     @MainActor @discardableResult
     static func use(_ language: ZSnapshotLanguage) -> ZSnapshotLanguage {
         if language != .zh, !(Bundle.main is ZSnapshotLocalizedBundle) {
+            _ = installFourArgumentLookups
             object_setClass(Bundle.main, ZSnapshotLocalizedBundle.self)
         }
         let previous = Self.language

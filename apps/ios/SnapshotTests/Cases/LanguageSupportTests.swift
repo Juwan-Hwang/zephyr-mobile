@@ -18,6 +18,7 @@ final class LanguageSupportTests: XCTestCase {
         defer { ZSnapshotLocalizedBundle.use(previous) }
         XCTAssertEqual(ZL.tr("已连接"), Bundle.main.localizedString(forKey: "已连接", value: nil, table: nil))
         XCTAssertNotEqual(ZL.tr("已连接"), "已连接", "英文变体仍输出中文")
+        print("ZSnapshotLocalizedBundle patched:", ZSnapshotLocalizedBundle.patchedSelectors)
     }
 
     func testChineseIsUntouched() {
