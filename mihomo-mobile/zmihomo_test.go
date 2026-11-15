@@ -6,9 +6,9 @@ import (
 	"net"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 )
