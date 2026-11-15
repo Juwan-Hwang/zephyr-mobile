@@ -131,9 +131,34 @@ class MockEngine(
     override fun scenes(): Flow<List<Scene>> = sceneState.asStateFlow()
 
     override suspend fun sceneCandidates(sceneId: String, region: String?): List<NodeSummary> {
-        requireScene(sceneId)
-        return MockScenes.pool(region).withLatency()
+        val scene = requireScene(sceneId)
+        return MockScenes.pool(region).filter { scene.nodeFilter == null || isUhd(it) }.withLatency()
     }
+
+    /** §15.h mock: 4K by name, candidates = the unfiltered mock pool of the current region. */
+    override suspend fun previewSceneNodeFilter(sceneId: String, filter: SceneNodeFilter): NodeFilterPreview {
+        val scene = requireScene(sceneId)
+        val region = scene.selected.region.takeIf { scene.selected.id >= 0 }
+        val all = MockScenes.pool(region).withLatency()
+        val keep = all.filter(::isUhd)
+        val kept = scene.selected.id < 0 || isUhd(scene.selected)
+        val suggested = if (kept) null else keep.filter { it.latencyMs != null }.minByOrNull { it.latencyMs!! }
+        return NodeFilterPreview(
+            matching = keep.size, total = all.size, poolMatching = keep.size.toLong(), currentKept = kept,
+            suggested = suggested, change = suggested?.let { previewSceneChange(sceneId, it.id) },
+        )
+    }
+
+    override suspend fun setSceneNodeFilter(sceneId: String, filter: SceneNodeFilter?) {
+        val scene = requireScene(sceneId)
+        if (filter != null) {
+            val region = scene.selected.region.takeIf { scene.selected.id >= 0 }
+            if (MockScenes.pool(region).none(::isUhd)) throw ZephyrException(ErrorCode.RULE_INPUT_INVALID, "no 4K node in region") // = core MobileError.Invalid
+        }
+        sceneState.update { list -> list.map { if (it.id == sceneId) it.copy(nodeFilter = filter) else it } }
+    }
+
+    private fun isUhd(n: NodeSummary) = UHD.containsMatchIn(n.name)
 
     override suspend fun previewSceneChange(sceneId: String, nodeId: NodeId): ExitChange {
         val scene = requireScene(sceneId)
@@ -444,3 +469,5 @@ class MockEngine(
         const val DAY_MS = 86_400_000L
     }
 }
+
+private val UHD = Regex("4K|UHD|8K", RegexOption.IGNORE_CASE)

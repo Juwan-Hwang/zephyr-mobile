@@ -54,7 +54,8 @@
 - 第二十二批（PR agent/android/today-flow）：✅ H-P2-13 流线动画：今日卡流线随相位缓慢漂移（70 s 一周期，同原型 t·0.25），相位 0 即原静态构图，截图与分享 PNG 不变；系统关闭动画时不动。
 - 第二十四批（PR agent/android/row-press）：✅ D-P2-2 缩放部分（zPressable 新增 row：满宽列表行——首页场景行/订阅与用量卡、活动行、指令层结果行、模式菜单项——不再整行缩放 0.97，改用主题按压高光；按钮保留缩放）。快照不含按压态，无基线变化。
 - 第二十五批（PR agent/android/widget-dark-t3）：✅ 跟进 #37：两个小组件夜间 t3 由 0x66FFFFFF 改为 0x80FFFFFF（tokens 深色 screen.t3 0.5，WCAG AA）。小组件无快照，无基线变化。
-- 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
+- 第三十五批（PR agent/android/uhd-filter）：✅ 关闭偏离“视频只用 4K 节点”（契约 §15.h，core #160）：engine 接 previewSceneNodeFilter / setSceneNodeFilter、Scene.nodeFilter（Mock 按名字判定 4K）；CommandPlanner 出计划卡“视频仅使用 4K 节点 · {total} 个中 {matching} 个支持 4K”，当前节点保持不变或给出口 IP from → to 确认行，poolMatching=0 禁用并提示“没有支持 4K 的节点”，已开启时可恢复全部节点，均可撤销；场景 sheet 显示“节点范围：仅 4K 节点”。
+- 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）。
 
 ## 总览
 

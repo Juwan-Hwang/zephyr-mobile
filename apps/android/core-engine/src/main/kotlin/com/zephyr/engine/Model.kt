@@ -102,6 +102,26 @@ data class Scene(
     val exceptions: List<SceneException> = emptyList(),
     /** §14.z ①: per-service reachability ("Claude 不可用 / GPT、Gemini 正常"); empty = no service line. */
     val services: List<ServiceHealth> = emptyList(),
+    /** §15.h: candidate filter ("视频只用 4K 节点"); null = all nodes. Pushed with every scenes() refresh. */
+    val nodeFilter: SceneNodeFilter? = null,
+)
+
+/** Contract §15.h allowed filters (only UHD for now). */
+@Serializable
+enum class SceneNodeFilter { @SerialName("uhd") UHD }
+
+/**
+ * §15.h previewSceneNodeFilter: "{total} 个中 {matching} 个支持 4K". [poolMatching] = 0 means the region has no
+ * 4K node at all (set would fail); [suggested]/[change] are filled only when the current node does not qualify.
+ */
+@Serializable
+data class NodeFilterPreview(
+    val matching: Int,
+    val total: Int,
+    val poolMatching: Long,
+    val currentKept: Boolean,
+    val suggested: NodeSummary?,
+    val change: ExitChange?,
 )
 
 @Serializable

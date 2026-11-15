@@ -24,6 +24,7 @@ import com.zephyr.design.theme.ZTheme
 import com.zephyr.engine.NodeSummary
 import com.zephyr.engine.Scene
 import com.zephyr.engine.SceneKind
+import com.zephyr.engine.SceneNodeFilter
 import com.zephyr.engine.SceneSource
 import kotlinx.coroutines.flow.first
 
@@ -44,7 +45,7 @@ fun BoxScope.SceneSheet(
     ZSheet(scene != null, onDismiss, scene?.name ?: "") {
         val s = scene ?: return@ZSheet
         val subs by produceState(0, s.id) { value = runCatching { AppGraph.engine.subscriptions().first().size }.getOrDefault(0) }
-        val pool by produceState(emptyList<NodeSummary>(), s.id, s.selected.id, s.source) {
+        val pool by produceState(emptyList<NodeSummary>(), s.id, s.selected.id, s.source, s.nodeFilter) {
             value = runCatching { AppGraph.engine.sceneCandidates(s.id, null) }.getOrDefault(emptyList())
                 .sortedBy { it.latencyMs ?: Int.MAX_VALUE }.take(12)
         }
@@ -79,6 +80,8 @@ fun BoxScope.SceneSheet(
         }
         ZListGroup {
             ZSettingsRow("节点不可用时", value = if (s.kind == SceneKind.AI) "询问" else "自动切换")
+            // §15.h: set by the command "视频只用 4K 节点"; candidates and auto-pick above are already filtered.
+            if (s.nodeFilter == SceneNodeFilter.UHD) { ZDivider(); ZSettingsRow("节点范围", value = "仅 4K 节点") }
             s.exceptions.forEach { e -> ZDivider(); ZSettingsRow(e.app, value = "${e.node.name}（固定）") }
         }
         ZText(

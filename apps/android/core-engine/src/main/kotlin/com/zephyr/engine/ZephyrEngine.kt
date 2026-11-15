@@ -47,6 +47,17 @@ interface ZephyrEngine {
     suspend fun setSceneException(sceneId: String, appId: String, nodeId: NodeId?): Unit =
         throw ZephyrException(ErrorCode.INTERNAL, "setSceneException unsupported")
 
+    /** §15.h: what filtering this scene's candidates would keep; call before [setSceneNodeFilter]. */
+    suspend fun previewSceneNodeFilter(sceneId: String, filter: SceneNodeFilter): NodeFilterPreview =
+        throw ZephyrException(ErrorCode.INTERNAL, "previewSceneNodeFilter unsupported")
+
+    /**
+     * §15.h: persists the filter (null clears). Never moves the current node; the caller applies the preview's
+     * `suggested` with [applySceneChange] after the user confirmed the exit-IP line.
+     */
+    suspend fun setSceneNodeFilter(sceneId: String, filter: SceneNodeFilter?): Unit =
+        throw ZephyrException(ErrorCode.INTERNAL, "setSceneNodeFilter unsupported")
+
     // 4. Policy groups
     fun policyGroups(): Flow<List<PolicyGroup>>
     suspend fun groupMembers(group: String, offset: Int, limit: Int): NodePage

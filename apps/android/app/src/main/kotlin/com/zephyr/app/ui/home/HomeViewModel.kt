@@ -240,6 +240,24 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
                     engine.overrideHost(plan.host, com.zephyr.engine.TraceTarget.UNCHANGED, null, persistent = true)
                 }
             }.onFailure { showToast("未能应用：${plan.who}", null, null) }
+            is com.zephyr.app.ui.command.CommandPlan.Uhd -> runCatching {
+                // §15.h: the filter never moves the node by itself; a previewed (and here confirmed) suggestion does.
+                val sid = plan.scene.id
+                val was = plan.scene.nodeFilter
+                if (plan.clear) {
+                    engine.setSceneNodeFilter(sid, null)
+                    showToast("${plan.who}现使用全部节点", null, null) { engine.setSceneNodeFilter(sid, was) }
+                } else {
+                    engine.setSceneNodeFilter(sid, com.zephyr.engine.SceneNodeFilter.UHD)
+                    val to = plan.preview?.takeIf { !it.currentKept }?.suggested
+                    val prev = plan.scene.selected.id.takeIf { it >= 0 }
+                    if (to != null) engine.applySceneChange(sid, to.id)
+                    showToast(if (to != null) "${plan.who}现使用${to.name}（仅 4K）" else "${plan.who}现仅使用 4K 节点", null, null) {
+                        engine.setSceneNodeFilter(sid, was)
+                        if (to != null && prev != null) engine.applySceneChange(sid, prev)
+                    }
+                }
+            }.onFailure { showToast("未能应用：${plan.who}", null, null) }
             is com.zephyr.app.ui.command.CommandPlan.NoNodes -> Unit
         }
     }

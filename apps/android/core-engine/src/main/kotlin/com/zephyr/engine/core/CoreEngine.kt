@@ -411,6 +411,26 @@ class CoreEngine(
         scenesBump.value++
     }
 
+    override suspend fun previewSceneNodeFilter(sceneId: String, filter: SceneNodeFilter): NodeFilterPreview {
+        val c = nodes() ?: return if (mockData) fallback.previewSceneNodeFilter(sceneId, filter) else throw noSubscription()
+        val p = withContext(io) { sceneCall { c.previewSceneNodeFilter(sceneId, coreFilter(filter), clock()) } }
+        return NodeFilterPreview(
+            matching = p.matching.toInt(), total = p.total.toInt(), poolMatching = p.poolMatching.toLong(), currentKept = p.currentKept,
+            suggested = p.suggested?.let(::row),
+            change = p.change?.let { x -> ExitChange(x.sceneId, x.fromRegion ?: "", x.fromIp, x.toRegion, x.toIp, x.affectedApps, x.unchangedApps) },
+        )
+    }
+
+    override suspend fun setSceneNodeFilter(sceneId: String, filter: SceneNodeFilter?) {
+        val c = nodes() ?: return if (mockData) fallback.setSceneNodeFilter(sceneId, filter) else throw noSubscription()
+        withContext(io) { sceneCall { c.setSceneNodeFilter(sceneId, filter?.let(::coreFilter)) } }
+        // Hot-standby members of the scene group change with the filter; the current node does not (§15.h).
+        reloadIfRunning()
+        scenesBump.value++
+    }
+
+    private fun coreFilter(f: SceneNodeFilter) = when (f) { SceneNodeFilter.UHD -> com.zephyr.core.mobile.SceneNodeFilter.UHD }
+
     /** Contract §15.e: core's scene freshness window follows 设置 › 测速 › 结果保留 (process-local, re-sent on every change). */
     override suspend fun updateSettings(patch: Settings) {
         fallback.updateSettings(patch)
@@ -485,6 +505,7 @@ class CoreEngine(
         testedAt = s.testedAt, note = s.note,
         exceptions = s.exceptions.mapNotNull { e -> e.node?.let { SceneException(e.app, row(it), e.appId) } },
         services = s.services.map { ServiceHealth(it.appId, it.name, it.ok, it.checkedAt) },
+        nodeFilter = s.nodeFilter?.let { when (it) { com.zephyr.core.mobile.SceneNodeFilter.UHD -> SceneNodeFilter.UHD } },
     )
 
     private inline fun <T> sceneCall(block: () -> T): T = try { block() } catch (e: MobileException) {
