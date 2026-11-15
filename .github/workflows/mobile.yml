@@ -138,6 +138,7 @@ jobs:
           SCHEME=${IOS_SCHEME:-Zephyr}
           xcodebuild -project "$PROJ" -scheme "$SCHEME" \
             -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -parallel-testing-enabled NO \
             -resultBundlePath build/Test.xcresult \
             CODE_SIGNING_ALLOWED=NO test | xcbeautify || exit 1
       - name: snapshot record（手动触发，只跑 ZephyrSnapshotTests）
@@ -151,6 +152,7 @@ jobs:
           SCHEME=${IOS_SCHEME:-Zephyr}
           xcodebuild -project "$PROJ" -scheme "$SCHEME" \
             -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -parallel-testing-enabled NO \
             -only-testing:ZephyrSnapshotTests \
             CODE_SIGNING_ALLOWED=NO test | xcbeautify || exit 1
       - if: ${{ inputs.record_ios_snapshots }}
