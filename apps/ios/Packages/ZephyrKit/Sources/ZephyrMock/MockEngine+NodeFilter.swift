@@ -1,5 +1,5 @@
 // MockEngine 契约 §15.h 场景节点过滤（“视频只用 4K 节点”）。
-// 与核心同口径：4K 按名字判定（含 4K / UHD / 8K，不区分大小写）；preview 按 mock 候选算，change 复用 previewSceneChange。
+// 与核心同口径：4K 按名字判定（含 4K / UHD / 8K，仅 ASCII 不区分大小写）；preview 按 mock 候选算，change 复用 previewSceneChange。
 // 不主动切当前节点（§14.y）；当前池里没有 4K 节点时 set 抛错、场景不变。
 
 import Foundation
@@ -7,10 +7,13 @@ import ZephyrKit
 
 extension MockEngine {
 
-    /// 名字推断 4K（同 core-mobile subscription.rs parse_tag）。
+    /// 名字推断 4K（共享样本 contract/fixtures/uhd-names-v1.json）：仅 ASCII 不区分大小写，按 UTF-8 字节匹配。
+    /// 不用 String.contains：Swift 字符串按 Unicode 规范等价比较，开尔文符号 U+212A 会等同 ASCII K。
     static func isUHD(_ name: String) -> Bool {
-        let n = name.uppercased()
-        return n.contains("4K") || n.contains("UHD") || n.contains("8K")
+        let b = name.utf8.map { (0x61...0x7A).contains($0) ? $0 - 0x20 : $0 }
+        return [Array("4K".utf8), Array("UHD".utf8), Array("8K".utf8)].contains { k in
+            b.count >= k.count && (0...(b.count - k.count)).contains { b[$0..<($0 + k.count)].elementsEqual(k) }
+        }
     }
 
     static func matches(_ node: NodeSummary, _ filter: SceneNodeFilter?) -> Bool {
