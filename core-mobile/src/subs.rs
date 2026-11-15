@@ -4,8 +4,10 @@
 //! 核心只接收「正文 + subscription-userinfo 响应头」。这样 iOS 扩展里不需要 TLS 栈，也便于后台刷新。
 //!
 //! 磁盘布局（data_dir 下）：
-//!   subs/index.json      元数据数组（原子写：tmp + rename）
-//!   subs/<id>.yaml       每个订阅最近一次成功的正文
+//! ```text
+//! subs/index.json      元数据数组（原子写：tmp + rename）
+//! subs/<id>.yaml       每个订阅最近一次成功的正文
+//! ```
 
 use crate::error::MobileError;
 use crate::nodes::fingerprint;
