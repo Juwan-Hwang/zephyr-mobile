@@ -28,10 +28,12 @@ final class UHDFixtureTests: XCTestCase {
         }
     }
 
-    /// 仅 ASCII：非 ASCII 字符经大小写映射后也不应凑成 4K（开尔文符号 U+212A、全角小写 ｋ）。
+    /// 仅 ASCII：非 ASCII 字符经大小写映射或规范等价也不应凑成 4K（开尔文符号 U+212A、全角小写 ｋ）。
     func testNonASCIIDoesNotFold() {
-        XCTAssertFalse(MockEngine.isUHD("4\u{212A}"))
-        XCTAssertFalse(MockEngine.isUHD("４ｋ"))
+        XCTAssertFalse(MockEngine.isUHD("U\u{0048}\u{0301}D"), "H 带组合重音")
+        XCTAssertTrue(MockEngine.isUHD("x8k"))
+        XCTAssertFalse(MockEngine.isUHD("4\u{212A}"), "开尔文符号 U+212A 与 K 规范等价，但非 ASCII")
+        XCTAssertFalse(MockEngine.isUHD("４ｋ"), "全角")
         XCTAssertTrue(MockEngine.isUHD("uHd"))
     }
 }
