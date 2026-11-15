@@ -496,7 +496,7 @@ record HostActivity { host, scene?, node, connections: Int32, totalBytes: Int64,
 record HostTrace { host, lastSeenAt, connections, totalBytes, rule, chain: [String], scene?, node }    // hostTrace；chain 自顶层组到出口节点
 ```
 
-### 15.h 场景节点过滤：视频只用 4K 节点（2026-11-15，契约先行，core-mobile 待实现，只追加）
+### 15.h 场景节点过滤：视频只用 4K 节点（2026-11-15，core-mobile 已实现，只追加）
 原型指令“视频只用 4K 节点”（index.html 1046–1055：“视频仅使用 4K 节点 · 22 个中 14 个支持 4K”）。看板 #1 上 Android / iOS 均同意，本节合并两端意见。
 ```
 enum SceneNodeFilter { uhd }                     // 允许值只此一个；以后加 streaming 等再追加枚举项。null = 不过滤
