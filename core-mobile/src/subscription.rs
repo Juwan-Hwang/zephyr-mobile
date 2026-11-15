@@ -23,6 +23,16 @@ pub fn parse_multiplier(name: &str) -> u8 {
     0
 }
 
+/// §15.h：名字含 4K / UHD / 8K（不区分大小写）视为支持 4K。
+pub fn is_uhd(name: &str) -> bool {
+    is_uhd_lower(&name.to_lowercase())
+}
+
+/// 已小写的名字或名称词元。
+pub fn is_uhd_lower(lc: &str) -> bool {
+    ["4k", "uhd", "8k"].iter().any(|k| lc.contains(k))
+}
+
 pub fn parse_tag(name: &str) -> Option<String> {
     let up = name.to_uppercase();
     TAGS.iter().find(|t| up.contains(&t.to_uppercase())).map(|t| t.to_string())

@@ -4,7 +4,7 @@ use crate::engine::{MobileCore, RankedNode};
 use crate::error::MobileError;
 use crate::nodes::NodeRow;
 use crate::runtime_config::ScenePlan;
-use crate::scenes::{self, HostOverride, SceneKind, SceneRec, SceneSource, TraceTarget};
+use crate::scenes::{self, HostOverride, SceneKind, SceneNodeFilter, SceneRec, SceneSource, TraceTarget};
 use rustc_hash::FxHashSet;
 
 /// 场景出口候选默认只要 24 h 内测过的；平台用 setLatencyTtlHours 跟随用户设置（§15.e）。
@@ -41,6 +41,25 @@ pub struct Scene {
     /// 场景重测用的 scanTargets / fastestNodes 查询（§15.e）：当前节点所在地区，未选节点时为空串（全库）。
     /// 与 `available`、sceneCandidates(region = nil) 用的是同一个查询。
     pub scan_query: String,
+    /// §15.h 节点过滤；null = 不过滤
+    pub node_filter: Option<SceneNodeFilter>,
+}
+
+/// §15.h previewSceneNodeFilter 的结果。
+#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+pub struct NodeFilterPreview {
+    /// 候选中满足过滤的个数
+    pub matching: u32,
+    /// 不加过滤时的候选个数（与 Scene.available 同口径）
+    pub total: u32,
+    /// 当前地区节点库中满足过滤的个数（不看测速）
+    pub pool_matching: u64,
+    /// 当前节点满足过滤，或场景尚未选节点
+    pub current_kept: bool,
+    /// current_kept = false 时满足过滤的最快候选
+    pub suggested: Option<NodeRow>,
+    /// = previewSceneChange(sceneId, suggested.id)
+    pub change: Option<ExitChange>,
 }
 
 #[derive(Debug, Clone, PartialEq, uniffi::Record)]
@@ -129,12 +148,17 @@ impl MobileCore {
         self.rows_by_id(&[id])?.remove(&id).ok_or_else(|| MobileError::NotFound(format!("node {id:x}")))
     }
 
+    /// 场景地区内按 smart 分数排序的已测节点，遵守场景的节点过滤（§15.h）。
+    fn ranked(&self, region: &str, filter: Option<SceneNodeFilter>, limit: u32, now: i64) -> Result<Vec<RankedNode>, MobileError> {
+        self.fastest_nodes_in(region, filter == Some(SceneNodeFilter::Uhd), limit, now, self.fresh_ms())
+    }
+
     fn view(&self, s: &SceneRec, rows: &rustc_hash::FxHashMap<u64, NodeRow>, now: i64) -> Scene {
         let selected = s.selected.and_then(|id| rows.get(&id).cloned());
         let scan_query = selected.as_ref().map(|r| r.region.clone()).unwrap_or_default();
         let available = selected
             .as_ref()
-            .and_then(|r| self.fastest_nodes(r.region.clone(), 50, now, self.fresh_ms()).ok())
+            .and_then(|r| self.ranked(&r.region, s.node_filter, 50, now).ok())
             .map(|v| v.iter().filter(|x| x.latency_ms >= 0).count() as i32)
             .unwrap_or(0);
         let lat = s.selected.and_then(|id| self.latency.lock().get(id, now, 0).map(|x| x.0));
@@ -161,6 +185,7 @@ impl MobileCore {
                 .collect(),
             group: scenes::group_name(s),
             scan_query,
+            node_filter: s.node_filter,
             services: s
                 .services
                 .iter()
@@ -301,7 +326,11 @@ impl MobileCore {
 
     /// 左右滑动切地区；region 为空时用当前节点所在地区。按 smart 分数排序，最多 50。
     pub fn scene_candidates(&self, scene_id: String, region: Option<String>, now_millis: i64) -> Result<Vec<RankedNode>, MobileError> {
-        let sel = self.scenes.lock().get(&scene_id)?.selected;
+        let (sel, filter) = {
+            let sc = self.scenes.lock();
+            let s = sc.get(&scene_id)?;
+            (s.selected, s.node_filter)
+        };
         let region = match region {
             Some(r) => r,
             None => match sel {
@@ -309,7 +338,7 @@ impl MobileCore {
                 None => return Ok(vec![]),
             },
         };
-        self.fastest_nodes(region, 50, now_millis, self.fresh_ms())
+        self.ranked(&region, filter, 50, now_millis)
     }
 
     pub fn preview_scene_change(&self, scene_id: String, node_id: u64) -> Result<ExitChange, MobileError> {
@@ -331,13 +360,9 @@ impl MobileCore {
 
     pub fn apply_scene_change(&self, scene_id: String, node_id: u64, now_millis: i64) -> Result<SceneApply, MobileError> {
         let to = self.row_by_id(node_id)?;
-        let standby: Vec<u64> = self
-            .fastest_nodes(to.region.clone(), STANDBY as u32 + 1, now_millis, self.fresh_ms())?
-            .into_iter()
-            .map(|r| r.row.id)
-            .filter(|&id| id != node_id)
-            .take(STANDBY)
-            .collect();
+        let filter = self.scenes.lock().get(&scene_id)?.node_filter;
+        let standby: Vec<u64> =
+            self.ranked(&to.region, filter, STANDBY as u32 + 1, now_millis)?.into_iter().map(|r| r.row.id).filter(|&id| id != node_id).take(STANDBY).collect();
         let mut sc = self.scenes.lock();
         let s = sc.get_mut(&scene_id)?;
         let hot = s.selected == Some(node_id) || s.standby.contains(&node_id);
@@ -451,11 +476,11 @@ impl MobileCore {
     /// Auto：立即换到延迟缓存里最优的节点（当前地区优先，无选择时全库），返回需要平台执行的动作；
     /// 已是最优或没有测速数据时返回 None。Manual / SubscriptionGroup：只记录。
     pub fn set_scene_source(&self, scene_id: String, source: SceneSource, now_millis: i64) -> Result<Option<SceneApply>, MobileError> {
-        let selected = {
+        let (selected, filter) = {
             let mut sc = self.scenes.lock();
             let s = sc.get_mut(&scene_id)?;
             s.source = source;
-            let sel = s.selected;
+            let sel = (s.selected, s.node_filter);
             sc.save()?;
             sel
         };
@@ -466,13 +491,58 @@ impl MobileCore {
             Some(id) => self.row_by_id(id).map(|r| r.region).unwrap_or_default(),
             None => String::new(),
         };
-        let best = self.fastest_nodes(region, 1, now_millis, self.fresh_ms())?.into_iter().find(|r| r.latency_ms >= 0).map(|r| r.row.id);
+        let best = self.ranked(&region, filter, 1, now_millis)?.into_iter().find(|r| r.latency_ms >= 0).map(|r| r.row.id);
         let Some(best) = best.filter(|&b| Some(b) != selected) else { return Ok(None) };
         let apply = self.apply_scene_change(scene_id.clone(), best, now_millis)?;
         let mut sc = self.scenes.lock();
         sc.get_mut(&scene_id)?.source = SceneSource::Auto;
         sc.save()?;
         Ok(Some(apply))
+    }
+
+    /// §15.h 预览节点过滤："22 个中 14 个支持 4K"；当前节点不满足时给出最快的满足候选与出口变化。
+    pub fn preview_scene_node_filter(&self, scene_id: String, filter: SceneNodeFilter, now_millis: i64) -> Result<NodeFilterPreview, MobileError> {
+        let sel = self.scenes.lock().get(&scene_id)?.selected;
+        let cur = match sel {
+            Some(id) if self.store().is_ok() => self.row_by_id(id).ok(),
+            _ => None,
+        };
+        let region = cur.as_ref().map(|r| r.region.clone()).unwrap_or_default();
+        let ok = |v: &[RankedNode]| v.iter().filter(|x| x.latency_ms >= 0).count() as u32;
+        let (all, hits, pool_matching) = match self.store() {
+            Ok(st) => {
+                let all = self.ranked(&region, None, 50, now_millis)?;
+                let hits = self.ranked(&region, Some(filter), 50, now_millis)?;
+                let (bm, _) = st.timed_query(&region);
+                (all, hits, bm.intersection_len(&st.uhd_bitmap()))
+            }
+            Err(_) => (vec![], vec![], 0),
+        };
+        let current_kept = cur.as_ref().is_none_or(|r| r.uhd);
+        let suggested = if current_kept { None } else { hits.iter().find(|x| x.latency_ms >= 0).map(|x| x.row.clone()) };
+        let change = match &suggested {
+            Some(r) => Some(self.preview_scene_change(scene_id, r.id)?),
+            None => None,
+        };
+        Ok(NodeFilterPreview { matching: ok(&hits), total: ok(&all), pool_matching, current_kept, suggested, change })
+    }
+
+    /// §15.h 设置 / 清除节点过滤（持久化）。不切走当前节点；当前地区没有满足过滤的节点时报 Invalid。
+    pub fn set_scene_node_filter(&self, scene_id: String, filter: Option<SceneNodeFilter>) -> Result<(), MobileError> {
+        let sel = self.scenes.lock().get(&scene_id)?.selected;
+        if filter == Some(SceneNodeFilter::Uhd) {
+            let st = self.store()?;
+            let region = match sel {
+                Some(id) => self.row_by_id(id).map(|r| r.region).unwrap_or_default(),
+                None => String::new(),
+            };
+            if st.timed_query(&region).0.intersection_len(&st.uhd_bitmap()) == 0 {
+                return Err(MobileError::Invalid("没有支持 4K 的节点".into()));
+            }
+        }
+        let mut sc = self.scenes.lock();
+        sc.get_mut(&scene_id)?.node_filter = filter;
+        sc.save()
     }
 
     /// 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
@@ -564,6 +634,55 @@ pub(crate) mod tests {
         let s: Vec<LatencySample> = rows.iter().enumerate().map(|(k, r)| LatencySample { id: r.id, ms: 50 + 10 * k as i32, at: 1000 }).collect();
         core.record_latencies(s).unwrap();
         (d, core, sa.id, rows)
+    }
+
+    #[test]
+    fn scene_node_filter_uhd() {
+        let d = tempfile::tempdir().unwrap();
+        let core = MobileCore::new(d.path().to_string_lossy().into()).unwrap();
+        let mut a = String::from("proxies:\n");
+        for (i, n) in ["美国 01", "美国 4K 02", "美国-Netflix|uhd 03", "美国 04", "日本 01"].iter().enumerate() {
+            a += &format!("  - {{name: \"{n}\", server: a{i}.example, port: 443, type: trojan, password: p}}\n");
+        }
+        let f = FetchedSubscription { body: a, userinfo: None, now_millis: 1 };
+        core.import_subscription("A".into(), None, f, 0, None).unwrap();
+        let q = core.query_nodes("".into()).unwrap();
+        let rows = core.node_rows(q.token, 0, 10).unwrap().rows;
+        let by = |n: &str| rows.iter().find(|r| r.name == n).unwrap().clone();
+        assert!(by("美国 4K 02").uhd && by("美国-Netflix|uhd 03").uhd && !by("美国 01").uhd);
+        // 非 4K 最快
+        let lat = [("美国 01", 20), ("美国 4K 02", 80), ("美国-Netflix|uhd 03", 60), ("美国 04", 30), ("日本 01", 10)];
+        core.record_latencies(lat.iter().map(|&(n, ms)| LatencySample { id: by(n).id, ms, at: 1000 }).collect()).unwrap();
+        let now = 2000;
+        core.apply_scene_change("video".into(), by("美国 01").id, now).unwrap();
+
+        let p = core.preview_scene_node_filter("video".into(), SceneNodeFilter::Uhd, now).unwrap();
+        assert_eq!((p.matching, p.total, p.pool_matching, p.current_kept), (2, 4, 2, false));
+        assert_eq!(p.suggested.as_ref().map(|r| r.name.as_str()), Some("美国-Netflix|uhd 03"));
+        assert_eq!(p.change.as_ref().map(|c| c.to_region.as_str()), Some("US"));
+
+        core.set_scene_node_filter("video".into(), Some(SceneNodeFilter::Uhd)).unwrap();
+        let v = core.scenes(now).unwrap().into_iter().find(|s| s.id == "video").unwrap();
+        // 不切走当前节点
+        assert_eq!((v.node_filter, v.selected.map(|r| r.id), v.available), (Some(SceneNodeFilter::Uhd), Some(by("美国 01").id), 2));
+        let c = core.scene_candidates("video".into(), None, now).unwrap();
+        assert!(c.len() == 2 && c.iter().all(|r| r.row.uhd));
+        // 换到 4K 节点后热备也只有 4K
+        core.apply_scene_change("video".into(), by("美国 4K 02").id, now).unwrap();
+        let p = core.preview_scene_node_filter("video".into(), SceneNodeFilter::Uhd, now).unwrap();
+        assert!(p.current_kept && p.suggested.is_none() && p.change.is_none());
+
+        // 持久化
+        let core2 = MobileCore::new(d.path().to_string_lossy().into()).unwrap();
+        assert_eq!(core2.scenes(now).unwrap().into_iter().find(|s| s.id == "video").unwrap().node_filter, Some(SceneNodeFilter::Uhd));
+
+        // 日本没有 4K：报错，场景不变
+        core.apply_scene_change("ai".into(), by("日本 01").id, now).unwrap();
+        assert_eq!(core.preview_scene_node_filter("ai".into(), SceneNodeFilter::Uhd, now).unwrap().pool_matching, 0);
+        assert!(matches!(core.set_scene_node_filter("ai".into(), Some(SceneNodeFilter::Uhd)), Err(MobileError::Invalid(_))));
+        assert_eq!(core.scenes(now).unwrap().into_iter().find(|s| s.id == "ai").unwrap().node_filter, None);
+        core.set_scene_node_filter("video".into(), None).unwrap();
+        assert!(matches!(core.set_scene_node_filter("nope".into(), None), Err(MobileError::SceneNotFound(_))));
     }
 
     #[test]
