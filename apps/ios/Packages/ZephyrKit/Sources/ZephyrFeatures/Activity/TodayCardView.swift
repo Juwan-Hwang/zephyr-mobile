@@ -54,6 +54,8 @@ struct TodayCardView: View {
                     .padding(.bottom, ZTokens.Space.n8)
             }
         }
+        // 全屏覆盖没有下拉关闭，VoiceOver 双指 Z 形擦除也要能退出（同指令层）。
+        .accessibilityAction(.escape) { dismiss() }
         .task { await model.refreshUsage() }
         // 导出图延后到 sheet 弹出动画结束、usage 稳定后再渲染（去抖），PNG 编码离开主线程（REVIEW H-P1-7）。
         .task(id: RenderKey(usage: model.usage, theme: theme)) {
