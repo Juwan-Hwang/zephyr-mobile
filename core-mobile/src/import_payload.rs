@@ -100,10 +100,13 @@ fn strip_scheme_host<'a>(orig: &'a str, lower: &str, prefixes: &[&str]) -> Optio
 }
 
 fn query_pairs(q: &str) -> Result<Vec<(String, String)>, MobileError> {
-    q.split('&').filter(|s| !s.is_empty()).map(|kv| {
-        let (k, v) = kv.split_once('=').unwrap_or((kv, ""));
-        Ok((pct_decode(k)?, pct_decode(v)?))
-    }).collect()
+    q.split('&')
+        .filter(|s| !s.is_empty())
+        .map(|kv| {
+            let (k, v) = kv.split_once('=').unwrap_or((kv, ""));
+            Ok((pct_decode(k)?, pct_decode(v)?))
+        })
+        .collect()
 }
 
 fn get<'a>(pairs: &'a [(String, String)], key: &str) -> Option<&'a str> {
@@ -117,9 +120,8 @@ fn parse_zephyr(q: &str) -> Result<Vec<ImportItem>, MobileError> {
         Some(v) => return Err(MobileError::Invalid(format!("导入码版本 v{v} 过新，请更新 Zephyr"))),
     }
     if let Some(d) = get(&pairs, "d") {
-        let raw = base64::engine::general_purpose::URL_SAFE_NO_PAD
-            .decode(d.trim_end_matches('='))
-            .map_err(|_| MobileError::Invalid("导入码数据损坏".into()))?;
+        let raw =
+            base64::engine::general_purpose::URL_SAFE_NO_PAD.decode(d.trim_end_matches('=')).map_err(|_| MobileError::Invalid("导入码数据损坏".into()))?;
         let batch: BatchJson = serde_json::from_slice(&raw).map_err(|_| MobileError::Invalid("导入码数据损坏".into()))?;
         if batch.v != 1 {
             return Err(MobileError::Invalid(format!("导入码版本 v{} 过新，请更新 Zephyr", batch.v)));

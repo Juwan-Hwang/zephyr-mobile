@@ -13,14 +13,36 @@ pub fn diff_sorted(old: &[u64], new: &[u64]) -> NodeDiff {
     let (mut added, mut removed, mut kept) = (0u64, 0u64, 0u64);
     while i < old.len() || j < new.len() {
         // 跳过重复
-        if i > 0 && i < old.len() && old[i] == old[i - 1] { i += 1; continue; }
-        if j > 0 && j < new.len() && new[j] == new[j - 1] { j += 1; continue; }
+        if i > 0 && i < old.len() && old[i] == old[i - 1] {
+            i += 1;
+            continue;
+        }
+        if j > 0 && j < new.len() && new[j] == new[j - 1] {
+            j += 1;
+            continue;
+        }
         match (old.get(i), new.get(j)) {
-            (Some(a), Some(b)) if a == b => { kept += 1; i += 1; j += 1; }
-            (Some(a), Some(b)) if a < b => { removed += 1; i += 1; }
-            (Some(_), Some(_)) => { added += 1; j += 1; }
-            (Some(_), None) => { removed += 1; i += 1; }
-            (None, Some(_)) => { added += 1; j += 1; }
+            (Some(a), Some(b)) if a == b => {
+                kept += 1;
+                i += 1;
+                j += 1;
+            }
+            (Some(a), Some(b)) if a < b => {
+                removed += 1;
+                i += 1;
+            }
+            (Some(_), Some(_)) => {
+                added += 1;
+                j += 1;
+            }
+            (Some(_), None) => {
+                removed += 1;
+                i += 1;
+            }
+            (None, Some(_)) => {
+                added += 1;
+                j += 1;
+            }
             (None, None) => break,
         }
     }

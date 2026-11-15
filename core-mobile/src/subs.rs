@@ -361,7 +361,10 @@ mod tests {
         assert!(!sub.url.as_deref().unwrap().contains("token"));
         assert_eq!(s.full_url(&sub.id).unwrap().as_deref(), Some("https://sub.example.com/s?token=T"));
 
-        let v2 = y(&[("香港 01", "a.example", 443), ("日本 01 改名", "b.example", 443), ("新加坡 01", "d.example", 443), ("新加坡 02", "e.example", 443)], &["DOMAIN,x.com,P", "DOMAIN,y.com,P", "MATCH,P"]);
+        let v2 = y(
+            &[("香港 01", "a.example", 443), ("日本 01 改名", "b.example", 443), ("新加坡 01", "d.example", 443), ("新加坡 02", "e.example", 443)],
+            &["DOMAIN,x.com,P", "DOMAIN,y.com,P", "MATCH,P"],
+        );
         let p = s.preview(&sub.id, &f(v2.clone(), 2000)).unwrap();
         assert_eq!((p.added_nodes, p.removed_nodes, p.rule_changes), (2, 1, 1), "改名不算增删（指纹=server+port+协议）");
         assert_eq!(s.list()[0].node_count, 3, "预览不落盘");

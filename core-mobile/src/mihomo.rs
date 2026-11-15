@@ -131,8 +131,10 @@ pub fn parse_response(raw: &[u8]) -> Result<(u16, String), MobileError> {
     let split = raw.windows(4).position(|w| w == b"\r\n\r\n").ok_or_else(|| MobileError::Io("http: 响应不完整".into()))?;
     let head = String::from_utf8_lossy(&raw[..split]);
     let mut lines = head.split("\r\n");
-    let status: u16 = lines.next().and_then(|l| l.split_whitespace().nth(1)).and_then(|c| c.parse().ok()).ok_or_else(|| MobileError::Io("http: 状态行".into()))?;
-    let headers: HashMap<String, String> = lines.filter_map(|l| l.split_once(':')).map(|(k, v)| (k.trim().to_ascii_lowercase(), v.trim().to_string())).collect();
+    let status: u16 =
+        lines.next().and_then(|l| l.split_whitespace().nth(1)).and_then(|c| c.parse().ok()).ok_or_else(|| MobileError::Io("http: 状态行".into()))?;
+    let headers: HashMap<String, String> =
+        lines.filter_map(|l| l.split_once(':')).map(|(k, v)| (k.trim().to_ascii_lowercase(), v.trim().to_string())).collect();
     let body = &raw[split + 4..];
     let body = if headers.get("transfer-encoding").is_some_and(|v| v.eq_ignore_ascii_case("chunked")) {
         let mut out = Vec::new();
@@ -237,7 +239,8 @@ fn last_delay(p: &Value) -> Option<(i32, i64)> {
 fn conn_from(v: &Value) -> Option<ConnectionInfo> {
     let m = v.get("metadata")?;
     let host = m.get("host").and_then(|x| x.as_str()).filter(|x| !x.is_empty()).or_else(|| m.get("destinationIP").and_then(|x| x.as_str()))?.to_string();
-    let chains: Vec<String> = v.get("chains").and_then(|c| c.as_array()).map(|a| a.iter().filter_map(|x| x.as_str().map(String::from)).collect()).unwrap_or_default();
+    let chains: Vec<String> =
+        v.get("chains").and_then(|c| c.as_array()).map(|a| a.iter().filter_map(|x| x.as_str().map(String::from)).collect()).unwrap_or_default();
     let rule = v.get("rule").and_then(|x| x.as_str()).unwrap_or("");
     let payload = v.get("rulePayload").and_then(|x| x.as_str()).unwrap_or("");
     Some(ConnectionInfo {
@@ -275,7 +278,12 @@ impl MihomoClient {
     pub fn policy_groups(&self) -> Result<Vec<PolicyGroup>, MobileError> {
         let v = self.http.json("GET", "/proxies", None)?;
         let proxies = v.get("proxies").and_then(|p| p.as_object()).ok_or_else(|| MobileError::Io("mihomo: proxies".into()))?;
-        let order: Vec<String> = proxies.get("GLOBAL").and_then(|g| g.get("all")).and_then(|a| a.as_array()).map(|a| a.iter().filter_map(|x| x.as_str().map(String::from)).collect()).unwrap_or_default();
+        let order: Vec<String> = proxies
+            .get("GLOBAL")
+            .and_then(|g| g.get("all"))
+            .and_then(|a| a.as_array())
+            .map(|a| a.iter().filter_map(|x| x.as_str().map(String::from)).collect())
+            .unwrap_or_default();
         let mut names: Vec<&String> = proxies.keys().filter(|k| k.as_str() != "GLOBAL").collect();
         names.sort_by_key(|n| (order.iter().position(|o| o == *n).unwrap_or(usize::MAX), (*n).clone()));
         Ok(names
@@ -328,7 +336,15 @@ impl MihomoClient {
         let v = self.http.json("GET", &format!("/group/{}/delay?url={}&timeout={timeout_ms}", enc(&group), enc(&url)), None)?;
         let mut out: Vec<GroupMember> = v
             .as_object()
-            .map(|o| o.iter().map(|(k, d)| GroupMember { name: k.clone(), proxy_type: String::new(), latency_ms: Some(d.as_i64().filter(|&x| x > 0).map(|x| x as i32).unwrap_or(-1)) }).collect())
+            .map(|o| {
+                o.iter()
+                    .map(|(k, d)| GroupMember {
+                        name: k.clone(),
+                        proxy_type: String::new(),
+                        latency_ms: Some(d.as_i64().filter(|&x| x > 0).map(|x| x as i32).unwrap_or(-1)),
+                    })
+                    .collect()
+            })
             .unwrap_or_default();
         out.sort_by_key(|m| (m.latency_ms.map(|x| if x < 0 { i32::MAX } else { x }), m.name.clone()));
         Ok(out)
@@ -378,7 +394,14 @@ impl MihomoClient {
 pub fn aggregate_hosts(conns: &[ConnectionInfo], limit: usize) -> Vec<HostActivity> {
     let mut by: HashMap<&str, HostActivity> = HashMap::new();
     for c in conns {
-        let e = by.entry(c.host.as_str()).or_insert_with(|| HostActivity { host: c.host.clone(), scene: c.scene.clone(), node: c.node.clone(), connections: 0, total_bytes: 0, last_seen_at: 0 });
+        let e = by.entry(c.host.as_str()).or_insert_with(|| HostActivity {
+            host: c.host.clone(),
+            scene: c.scene.clone(),
+            node: c.node.clone(),
+            connections: 0,
+            total_bytes: 0,
+            last_seen_at: 0,
+        });
         e.connections += 1;
         e.total_bytes += c.up_bytes + c.down_bytes;
         if c.started_at >= e.last_seen_at {
@@ -396,9 +419,13 @@ pub fn aggregate_hosts(conns: &[ConnectionInfo], limit: usize) -> Vec<HostActivi
 pub fn trace_from(raw: &Value, host: &str) -> Result<HostTrace, MobileError> {
     let arr = raw.get("connections").and_then(|c| c.as_array()).cloned().unwrap_or_default();
     let mine: Vec<&Value> = arr.iter().filter(|v| conn_from(v).is_some_and(|c| c.host == host)).collect();
-    let latest = mine.iter().max_by_key(|v| v.get("start").and_then(|s| s.as_str()).and_then(rfc3339_millis).unwrap_or(0)).ok_or_else(|| MobileError::NotFound(format!("host {host}")))?;
+    let latest = mine
+        .iter()
+        .max_by_key(|v| v.get("start").and_then(|s| s.as_str()).and_then(rfc3339_millis).unwrap_or(0))
+        .ok_or_else(|| MobileError::NotFound(format!("host {host}")))?;
     let c = conn_from(latest).unwrap();
-    let mut chain: Vec<String> = latest.get("chains").and_then(|c| c.as_array()).map(|a| a.iter().filter_map(|x| x.as_str().map(String::from)).collect()).unwrap_or_default();
+    let mut chain: Vec<String> =
+        latest.get("chains").and_then(|c| c.as_array()).map(|a| a.iter().filter_map(|x| x.as_str().map(String::from)).collect()).unwrap_or_default();
     chain.reverse();
     let conns: Vec<ConnectionInfo> = mine.iter().filter_map(|v| conn_from(v)).collect();
     Ok(HostTrace {

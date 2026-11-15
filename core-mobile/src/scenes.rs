@@ -47,13 +47,43 @@ pub struct App {
 
 /// 内置应用目录：场景路由与"影响哪些应用"的文案都来自这里。
 pub const APPS: &[App] = &[
-    App { id: "chatgpt", name: "ChatGPT", kind: SceneKind::Ai, domains: &["openai.com", "chatgpt.com", "oaistatic.com", "oaiusercontent.com", "sora.com"], probe: Some("https://chatgpt.com/") },
-    App { id: "claude", name: "Claude", kind: SceneKind::Ai, domains: &["claude.ai", "anthropic.com", "claudeusercontent.com"], probe: Some("https://claude.ai/") },
-    App { id: "gemini", name: "Gemini", kind: SceneKind::Ai, domains: &["gemini.google.com", "generativelanguage.googleapis.com", "aistudio.google.com", "makersuite.google.com"], probe: Some("https://gemini.google.com/") },
+    App {
+        id: "chatgpt",
+        name: "ChatGPT",
+        kind: SceneKind::Ai,
+        domains: &["openai.com", "chatgpt.com", "oaistatic.com", "oaiusercontent.com", "sora.com"],
+        probe: Some("https://chatgpt.com/"),
+    },
+    App {
+        id: "claude",
+        name: "Claude",
+        kind: SceneKind::Ai,
+        domains: &["claude.ai", "anthropic.com", "claudeusercontent.com"],
+        probe: Some("https://claude.ai/"),
+    },
+    App {
+        id: "gemini",
+        name: "Gemini",
+        kind: SceneKind::Ai,
+        domains: &["gemini.google.com", "generativelanguage.googleapis.com", "aistudio.google.com", "makersuite.google.com"],
+        probe: Some("https://gemini.google.com/"),
+    },
     App { id: "perplexity", name: "Perplexity", kind: SceneKind::Ai, domains: &["perplexity.ai"], probe: None },
     App { id: "grok", name: "Grok", kind: SceneKind::Ai, domains: &["grok.com", "x.ai"], probe: None },
-    App { id: "netflix", name: "Netflix", kind: SceneKind::Video, domains: &["netflix.com", "netflix.net", "nflxvideo.net", "nflximg.net", "nflxext.com", "nflxso.net"], probe: Some("https://www.netflix.com/") },
-    App { id: "youtube", name: "YouTube", kind: SceneKind::Video, domains: &["youtube.com", "googlevideo.com", "ytimg.com", "youtu.be", "youtube-nocookie.com"], probe: Some("https://www.youtube.com/") },
+    App {
+        id: "netflix",
+        name: "Netflix",
+        kind: SceneKind::Video,
+        domains: &["netflix.com", "netflix.net", "nflxvideo.net", "nflximg.net", "nflxext.com", "nflxso.net"],
+        probe: Some("https://www.netflix.com/"),
+    },
+    App {
+        id: "youtube",
+        name: "YouTube",
+        kind: SceneKind::Video,
+        domains: &["youtube.com", "googlevideo.com", "ytimg.com", "youtu.be", "youtube-nocookie.com"],
+        probe: Some("https://www.youtube.com/"),
+    },
     App { id: "disney", name: "Disney+", kind: SceneKind::Video, domains: &["disneyplus.com", "disney-plus.net", "dssott.com", "bamgrid.com"], probe: None },
     App { id: "max", name: "Max", kind: SceneKind::Video, domains: &["max.com", "hbomax.com", "hbomaxcdn.com"], probe: None },
     App { id: "primevideo", name: "Prime Video", kind: SceneKind::Video, domains: &["primevideo.com", "aiv-cdn.net", "aiv-delivery.net"], probe: None },
@@ -202,7 +232,12 @@ impl SceneStore {
 
     /// 生成配置时用：需要放进 mihomo 的全部节点。
     pub fn referenced_nodes(&self) -> Vec<u64> {
-        let mut v: Vec<u64> = self.scenes.iter().flat_map(|s| s.selected.iter().chain(s.standby.iter()).copied().chain(s.exceptions.iter().map(|e| e.1))).chain(self.global).collect();
+        let mut v: Vec<u64> = self
+            .scenes
+            .iter()
+            .flat_map(|s| s.selected.iter().chain(s.standby.iter()).copied().chain(s.exceptions.iter().map(|e| e.1)))
+            .chain(self.global)
+            .collect();
         v.sort_unstable();
         v.dedup();
         v

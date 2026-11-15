@@ -153,14 +153,23 @@ impl MobileCore {
             exceptions: s
                 .exceptions
                 .iter()
-                .map(|(a, n)| SceneExceptionView { app_id: a.clone(), app: scenes::app(a).map_or(a.clone(), |x| x.name.to_string()), node: rows.get(n).cloned() })
+                .map(|(a, n)| SceneExceptionView {
+                    app_id: a.clone(),
+                    app: scenes::app(a).map_or(a.clone(), |x| x.name.to_string()),
+                    node: rows.get(n).cloned(),
+                })
                 .collect(),
             group: scenes::group_name(s),
             scan_query,
             services: s
                 .services
                 .iter()
-                .map(|r| ServiceHealth { app_id: r.app_id.clone(), name: scenes::app(&r.app_id).map_or(r.app_id.clone(), |a| a.name.to_string()), ok: r.ok, checked_at: r.checked_at })
+                .map(|r| ServiceHealth {
+                    app_id: r.app_id.clone(),
+                    name: scenes::app(&r.app_id).map_or(r.app_id.clone(), |a| a.name.to_string()),
+                    ok: r.ok,
+                    checked_at: r.checked_at,
+                })
                 .collect(),
         }
     }
@@ -245,7 +254,10 @@ impl MobileCore {
         for o in &sc.overrides {
             let p = match o.target {
                 TraceTarget::Direct => "DIRECT".to_string(),
-                TraceTarget::Scene => match o.scene_id.clone() { Some(x) => x, None => continue },
+                TraceTarget::Scene => match o.scene_id.clone() {
+                    Some(x) => x,
+                    None => continue,
+                },
                 TraceTarget::Unchanged => continue,
             };
             text += &format!("DOMAIN-SUFFIX,{},{p}\n", o.host);
@@ -306,12 +318,26 @@ impl MobileCore {
         let s = sc.get(&scene_id)?;
         let from_region = s.exit_region.clone().or_else(|| s.selected.and_then(|id| self.row_by_id(id).ok()).map(|r| r.region));
         let (affected, unchanged) = sc.apps_split(s);
-        Ok(ExitChange { scene_id: Some(scene_id), from_region, from_ip: s.exit_ip.clone(), to_region: to.region, to_ip: None, affected_apps: affected, unchanged_apps: unchanged })
+        Ok(ExitChange {
+            scene_id: Some(scene_id),
+            from_region,
+            from_ip: s.exit_ip.clone(),
+            to_region: to.region,
+            to_ip: None,
+            affected_apps: affected,
+            unchanged_apps: unchanged,
+        })
     }
 
     pub fn apply_scene_change(&self, scene_id: String, node_id: u64, now_millis: i64) -> Result<SceneApply, MobileError> {
         let to = self.row_by_id(node_id)?;
-        let standby: Vec<u64> = self.fastest_nodes(to.region.clone(), STANDBY as u32 + 1, now_millis, self.fresh_ms())?.into_iter().map(|r| r.row.id).filter(|&id| id != node_id).take(STANDBY).collect();
+        let standby: Vec<u64> = self
+            .fastest_nodes(to.region.clone(), STANDBY as u32 + 1, now_millis, self.fresh_ms())?
+            .into_iter()
+            .map(|r| r.row.id)
+            .filter(|&id| id != node_id)
+            .take(STANDBY)
+            .collect();
         let mut sc = self.scenes.lock();
         let s = sc.get_mut(&scene_id)?;
         let hot = s.selected == Some(node_id) || s.standby.contains(&node_id);

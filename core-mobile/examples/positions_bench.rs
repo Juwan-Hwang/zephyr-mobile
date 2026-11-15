@@ -21,7 +21,7 @@ fn main() {
     let t = Instant::now();
     core.record_latencies(s).unwrap();
     println!("record_latencies 2000（含行号补齐，后台线程）{:?}", t.elapsed());
-        for i in 0..2 {
+    for i in 0..2 {
         let t = Instant::now();
         let v = core.fastest_nodes(String::new(), 50, 1000, i64::MAX / 4).unwrap();
         println!("fastest_nodes #{i}: {} rows {:?}", v.len(), t.elapsed());

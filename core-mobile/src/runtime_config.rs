@@ -69,11 +69,14 @@ fn s(v: &str) -> Value {
 
 fn overlay(o: &RuntimeOptions) -> Value {
     let mut m = Mapping::new();
-    m.insert(s("mode"), s(match o.mode {
-        ProxyMode::Rule => "rule",
-        ProxyMode::Global => "global",
-        ProxyMode::Direct => "direct",
-    }));
+    m.insert(
+        s("mode"),
+        s(match o.mode {
+            ProxyMode::Rule => "rule",
+            ProxyMode::Global => "global",
+            ProxyMode::Direct => "direct",
+        }),
+    );
     m.insert(s("log-level"), s(&o.log_level));
     m.insert(s("ipv6"), Value::Bool(o.dns.ipv6 || o.tun.ipv6));
     m.insert(s("allow-lan"), Value::Bool(false));
@@ -88,10 +91,13 @@ fn overlay(o: &RuntimeOptions) -> Value {
     if let Some(lp) = o.local_proxy.as_ref().filter(|lp| lp.port >= 1024) {
         m.insert(s("mixed-port"), Value::Number(lp.port.into()));
         m.insert(s("bind-address"), s("127.0.0.1"));
-        m.insert(s("authentication"), match &lp.auth {
-            Some(a) if a.contains(':') => Value::Sequence(vec![s(a)]),
-            _ => Value::Null,
-        });
+        m.insert(
+            s("authentication"),
+            match &lp.auth {
+                Some(a) if a.contains(':') => Value::Sequence(vec![s(a)]),
+                _ => Value::Null,
+            },
+        );
     }
     profile.insert(s("store-selected"), Value::Bool(true));
     profile.insert(s("store-fake-ip"), Value::Bool(o.dns.fake_ip));
@@ -113,11 +119,14 @@ fn overlay(o: &RuntimeOptions) -> Value {
     match o.tun.file_descriptor {
         Some(fd) => {
             tun.insert(s("enable"), Value::Bool(true));
-            tun.insert(s("stack"), s(match o.tun.stack {
-                TunStackKind::System => "system",
-                TunStackKind::Gvisor => "gvisor",
-                TunStackKind::Mixed => "mixed",
-            }));
+            tun.insert(
+                s("stack"),
+                s(match o.tun.stack {
+                    TunStackKind::System => "system",
+                    TunStackKind::Gvisor => "gvisor",
+                    TunStackKind::Mixed => "mixed",
+                }),
+            );
             tun.insert(s("file-descriptor"), Value::Number(fd.into()));
             tun.insert(s("mtu"), Value::Number(o.tun.mtu.clamp(1280, 65535).into()));
             tun.insert(s("inet6-address"), if o.tun.ipv6 { Value::Sequence(vec![s("fdfe:dcba:9876::1/126")]) } else { Value::Null });

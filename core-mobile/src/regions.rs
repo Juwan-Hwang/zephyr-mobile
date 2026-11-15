@@ -1,7 +1,27 @@
 //! 地区识别：从节点名推断 ISO 3166 代码。覆盖国旗 emoji、中文名、英文名/代码、常见城市。
 
 const TABLE: &[(&str, &str, &[&str])] = &[
-    ("US", "美国", &["美国", "united states", "usa", "los angeles", "洛杉矶", "圣何塞", "san jose", "西雅图", "seattle", "纽约", "new york", "达拉斯", "dallas", "硅谷", "芝加哥"]),
+    (
+        "US",
+        "美国",
+        &[
+            "美国",
+            "united states",
+            "usa",
+            "los angeles",
+            "洛杉矶",
+            "圣何塞",
+            "san jose",
+            "西雅图",
+            "seattle",
+            "纽约",
+            "new york",
+            "达拉斯",
+            "dallas",
+            "硅谷",
+            "芝加哥",
+        ],
+    ),
     ("JP", "日本", &["日本", "japan", "东京", "tokyo", "大阪", "osaka"]),
     ("HK", "香港", &["香港", "hong kong", "hongkong"]),
     ("SG", "新加坡", &["新加坡", "狮城", "singapore"]),
