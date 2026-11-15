@@ -92,6 +92,22 @@ pub(crate) fn normalize_protocol(t: &str) -> String {
 
 #[cfg(test)]
 mod tests {
+
+    /// contract/fixtures/uhd-names-v1.json：§15.h 4K 名字判定共享样本，两端 Mock 应逐条比对。
+    /// 同时校验整名判定（NodeRow.uhd）与名称词元判定（uhd_bitmap）口径一致。
+    #[test]
+    fn uhd_fixtures() {
+        let doc: serde_json::Value = serde_json::from_str(include_str!("../../contract/fixtures/uhd-names-v1.json")).unwrap();
+        let cases = doc["cases"].as_array().unwrap();
+        assert!(cases.len() >= 10);
+        for c in cases {
+            let name = c["name"].as_str().unwrap();
+            let want = c["uhd"].as_bool().unwrap();
+            assert_eq!(is_uhd(name), want, "is_uhd({name:?})");
+            let by_token = crate::nodes::name_tokens(name).iter().any(|t| is_uhd_lower(t));
+            assert_eq!(by_token, want, "name_tokens({name:?})");
+        }
+    }
     use super::*;
     #[test]
     fn parses_clash_yaml() {
