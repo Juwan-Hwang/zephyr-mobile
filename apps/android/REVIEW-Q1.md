@@ -57,6 +57,7 @@
 - 第三十五批（PR agent/android/uhd-filter）：✅ 关闭偏离“视频只用 4K 节点”（契约 §15.h，core #160）：engine 接 previewSceneNodeFilter / setSceneNodeFilter、Scene.nodeFilter（Mock 按名字判定 4K）；CommandPlanner 出计划卡“视频仅使用 4K 节点 · {total} 个中 {matching} 个支持 4K”，当前节点保持不变或给出口 IP from → to 确认行，poolMatching=0 禁用并提示“没有支持 4K 的节点”，已开启时可恢复全部节点，均可撤销；场景 sheet 显示“节点范围：仅 4K 节点”。
 - 第四十批（PR agent/android/subs-l9）：✅ L-P2-9 剩余（订阅页“自动更新 ›”改为弹出 6/12/24 小时选项，不再点一下循环；增减数字改原型 300 22px）。左滑更新/删除仍待做。
 - 第四十一批（PR agent/android/uhd-fixture）：✅ §15.h 跟进 A #165：Mock 4K 名字判定抽为 isUhdName，新增 UhdNamesFixtureTest 逐条比对 contract/fixtures/uhd-names-v1.json。
+- 第四十二批（PR agent/android/uhd-ascii）：✅ 跟进 A #176：isUhdName 改仅 ASCII 折叠（U+212A 不算 4K）；core-engine Test task 声明 contract/fixtures 为输入，fixture 变化会使缓存失效。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）。
 
 ## 总览
