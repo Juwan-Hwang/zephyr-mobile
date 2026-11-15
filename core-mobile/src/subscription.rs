@@ -23,9 +23,9 @@ pub fn parse_multiplier(name: &str) -> u8 {
     0
 }
 
-/// §15.h：名字含 4K / UHD / 8K（不区分大小写）视为支持 4K。
+/// §15.h：名字含 4K / UHD / 8K（仅 ASCII 不区分大小写；开尔文符号 U+212A、全角不算）视为支持 4K。
 pub fn is_uhd(name: &str) -> bool {
-    is_uhd_lower(&name.to_lowercase())
+    is_uhd_lower(&name.to_ascii_lowercase())
 }
 
 /// 已小写的名字或名称词元。
