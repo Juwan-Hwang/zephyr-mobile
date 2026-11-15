@@ -101,6 +101,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
+      - name: 预启动模拟器（与原生库构建并行，减少首个快照测试的冷启动等待）
+        run: xcrun simctl boot 'iPhone 16' || true
       - id: nk
         name: 原生库缓存键（core-mobile / mihomo-mobile / zephyr 子模块 / 构建脚本）
         run: echo "key=$(git rev-parse HEAD:vendor/zephyr)-${{ hashFiles('core-mobile/src/**', 'core-mobile/Cargo.*', 'core-mobile/bindings/**', 'mihomo-mobile/**', 'tools/build-ios-xcframework.sh', 'tools/build-mihomo.sh') }}" >> "$GITHUB_OUTPUT"
@@ -131,6 +133,7 @@ jobs:
         working-directory: apps/ios
         run: |
           set -o pipefail
+          xcrun simctl bootstatus 'iPhone 16' -b || true
           PROJ=$(find . -maxdepth 1 -name '*.xcodeproj' | head -1)
           SCHEME=${IOS_SCHEME:-Zephyr}
           xcodebuild -project "$PROJ" -scheme "$SCHEME" \
