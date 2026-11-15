@@ -851,3 +851,28 @@ impl NodeStore {
         self.regions.iter().map(|r| (r.code.clone(), r.len as u64)).collect()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{fold_lower, normalize_token};
+    use crate::subscription::is_uhd;
+
+    /// §15.h：非 ASCII 字符小写后落入 ASCII 的保留原字符；其余与 `to_lowercase` 一致。
+    #[test]
+    fn fold_lower_keeps_non_ascii_that_folds_into_ascii() {
+        assert_eq!(fold_lower("香港 4K UHD"), "香港 4k uhd");
+        assert_eq!(fold_lower("4\u{212A}"), "4\u{212A}");
+        assert_eq!(fold_lower("\u{0130}stanbul"), "\u{0130}stanbul");
+        assert_eq!(fold_lower("ÉCOLE Ωmega"), "école ωmega");
+        assert_eq!(fold_lower("４Ｋ"), "４ｋ");
+    }
+
+    /// 词元判定与整名判定同口径，保证 `uhd_bitmap`（按词元）与 `NodeRow.uhd`（按整名）一致。
+    #[test]
+    fn token_uhd_agrees_with_name_uhd() {
+        for name in ["4K", "4k", "4\u{212A}", "UHD", "uhd", "8K", "４Ｋ", "Netflix-4K", "4KB"] {
+            let tok = normalize_token(name).unwrap();
+            assert_eq!(is_uhd(&tok), is_uhd(name), "{name:?} → {tok:?}");
+        }
+    }
+}
