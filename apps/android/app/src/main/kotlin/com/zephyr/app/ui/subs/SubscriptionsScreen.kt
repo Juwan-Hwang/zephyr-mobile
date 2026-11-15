@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,6 +56,9 @@ fun SubscriptionsScreen(back: String = "资料库", onBack: () -> Unit, onImport
     val scope = rememberCoroutineScope()
     val clock = com.zephyr.app.ui.common.LocalNow.current
     // Ticks once a minute so "2 小时前" / "26 天后到期" stay true while the page is open (review L-P2-9).
+    var busyId by remember { mutableStateOf<String?>(null) }
+    var pendingDelete by remember { mutableStateOf<String?>(null) }
+    var error by remember { mutableStateOf<String?>(null) }
     val now by androidx.compose.runtime.produceState(clock()) { while (true) { kotlinx.coroutines.delay(60_000); value = clock() } }
     var updating by remember { mutableStateOf(false) }
 
@@ -92,6 +96,20 @@ fun SubscriptionsScreen(back: String = "资料库", onBack: () -> Unit, onImport
                 subs.forEachIndexed { i, s ->
                     if (i > 0) ZDivider(inset = false)
                     val soon = (s.expiresAt ?: Long.MAX_VALUE) - now < 3 * 86_400_000L
+                    val armed = pendingDelete == s.id
+                    SwipeActionsRow(
+                        listOf(
+                            SwipeAction(if (busyId == s.id) "更新中" else "更新", c.accent) {
+                                scope.launch { busyId = s.id; runCatching { engine.updateSubscription(s.id) }.onFailure { error = "无法更新 ${s.name}" }; busyId = null }
+                            },
+                            // Destructive: first tap arms, second tap deletes (no engine undo for deleteSubscription).
+                            SwipeAction(if (armed) "确认删除" else "删除", c.danger) {
+                                if (!armed) pendingDelete = s.id
+                                else scope.launch { pendingDelete = null; runCatching { engine.deleteSubscription(s.id) }.onFailure { error = "无法删除 ${s.name}" } }
+                            },
+                        ),
+                        resetKey = subs.size,
+                    ) {
                     Row(Modifier.fillMaxWidth().padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
                             ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight))
@@ -106,12 +124,17 @@ fun SubscriptionsScreen(back: String = "资料库", onBack: () -> Unit, onImport
                             ZText("剩余", style = ZTheme.type.footnote, color = c.text3)
                         }
                     }
+                    }
                 }
                 val others = summary.count - subs.size
                 if (others > 0) {
                     ZDivider(inset = false)
                     ZSettingsRow("其他 $others 个", subtitle = "${ZFormat.grouped(summary.totalNodes - subs.sumOf { it.nodeCount })} 个节点")
                 }
+            }
+            error?.let { e ->
+                LaunchedEffect(e) { kotlinx.coroutines.delay(4_000); error = null }
+                ZText(e, Modifier.padding(horizontal = 22.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.danger)
             }
             Spacer(Modifier.height(18.dp))
             ZSectionHeader("更新")
