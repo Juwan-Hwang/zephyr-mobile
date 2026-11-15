@@ -176,18 +176,46 @@ public struct Scene: Sendable, Hashable, Codable, Identifiable {
     /// 契约 §15.e：场景重测用的查询（当前节点所在地区；未选节点为空串 = 全库），传给 `scanLatency(query:)`。
     /// 不参与编码（fixture 无此字段）；未给时取所选节点地区，与核心语义一致。
     public var scanQuery: String = ""
+    /// 契约 §15.h：场景节点过滤；nil = 不过滤。不参与编码（fixture 无此字段）。
+    public var nodeFilter: SceneNodeFilter? = nil
 
     public init(id: String, kind: SceneKind, name: String, available: Int32, selected: NodeSummary, exitIp: String? = nil,
                 source: SceneSource, testedAt: Int64? = nil, note: String? = nil, exceptions: [SceneException] = [],
-                services: [ServiceHealth] = [], scanQuery: String? = nil) {
+                services: [ServiceHealth] = [], scanQuery: String? = nil, nodeFilter: SceneNodeFilter? = nil) {
         self.id = id; self.kind = kind; self.name = name; self.available = available; self.selected = selected
         self.exitIp = exitIp; self.source = source; self.testedAt = testedAt; self.note = note; self.exceptions = exceptions
         self.services = services
         self.scanQuery = scanQuery ?? selected.region
+        self.nodeFilter = nodeFilter
     }
     enum CodingKeys: String, CodingKey {
         case id, kind, name, available, selected, source, note, exceptions
         case exitIp = "exit_ip", testedAt = "tested_at"
+    }
+}
+
+/// 契约 §15.h：场景节点过滤（允许值只此一个；nil = 不过滤）。
+public enum SceneNodeFilter: String, Sendable, Hashable, Codable, CaseIterable {
+    case uhd
+}
+
+/// 契约 §15.h previewSceneNodeFilter 的结果（“22 个中 14 个支持 4K，当前节点保持不变”）。
+public struct NodeFilterPreview: Sendable, Hashable {
+    /// 候选中满足过滤的个数。
+    public var matching: Int
+    /// 不加过滤时的候选个数（与 Scene.available 同口径）。
+    public var total: Int
+    /// 当前地区节点库中满足过滤的个数（不看测速）；0 = 根本没有 4K 节点，平台禁用指令。
+    public var poolMatching: Int64
+    /// 当前节点满足过滤，或场景尚未选节点。
+    public var currentKept: Bool
+    /// currentKept = false 时：满足过滤的最快候选；没有已测候选时为 nil。
+    public var suggested: NodeSummary?
+    /// = previewSceneChange(sceneId, suggested.id)。
+    public var change: ExitChange?
+    public init(matching: Int, total: Int, poolMatching: Int64, currentKept: Bool, suggested: NodeSummary? = nil, change: ExitChange? = nil) {
+        self.matching = matching; self.total = total; self.poolMatching = poolMatching; self.currentKept = currentKept
+        self.suggested = suggested; self.change = change
     }
 }
 
@@ -255,11 +283,14 @@ public struct NodeSummary: Sendable, Hashable, Codable, Identifiable {
     public var multiplier: Float?
     /// 只给缓存值。nil = 未测/过期，-1 = 超时。
     public var latencyMs: Int32?
+    /// 契约 §15.h：支持 4K（名字含 4K / UHD / 8K）。不参与编码（fixture 无此字段）。
+    public var uhd: Bool = false
 
     public init(id: NodeId, name: String, region: String, city: String? = nil, carrier: String? = nil, tag: String? = nil,
-                protocol: String, multiplier: Float? = nil, latencyMs: Int32? = nil) {
+                protocol: String, multiplier: Float? = nil, latencyMs: Int32? = nil, uhd: Bool = false) {
         self.id = id; self.name = name; self.region = region; self.city = city; self.carrier = carrier
         self.tag = tag; self.protocol = `protocol`; self.multiplier = multiplier; self.latencyMs = latencyMs
+        self.uhd = uhd
     }
     enum CodingKeys: String, CodingKey {
         case id, name, region, city, carrier, tag, `protocol`, multiplier

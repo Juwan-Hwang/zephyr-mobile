@@ -77,7 +77,8 @@ struct SceneSheet: View {
                     .padding(.bottom, ZTokens.Space.n8)
             }
         }
-        .task(id: scene.testedAt) {
+        // 过滤变化（契约 §15.h）也要重取候选与漏斗。
+        .task(id: "\(scene.testedAt ?? 0)|\(scene.nodeFilter?.rawValue ?? "")") {
             async let funnel = model.engine.nodeFunnel(maxAgeMs: Self.funnelMaxAgeMs, thresholdMs: 300)
             candidates = await model.sceneCandidates(sceneId)
             nodeFunnel = await funnel
@@ -120,6 +121,17 @@ struct SceneSheet: View {
     private func detailList(_ scene: Scene) -> some View {
         ZCard(padding: 0, cornerRadius: HMetrics.cardRadius) {
             VStack(spacing: 0) {
+                if scene.nodeFilter == .uhd {
+                    // 契约 §15.h：“仅 4K 节点”标记；点按取消（不切当前节点，给可撤销吐司）。
+                    Button {
+                        Task { await model.applySceneNodeFilter(sceneId: scene.id, filter: nil) }
+                    } label: {
+                        DetailRow(title: ZL.tr("仅 4K 节点"), value: ZL.tr("取消"))
+                    }
+                    .buttonStyle(ZRowButtonStyle())
+                    .accessibilityHint(Text("取消后恢复使用全部节点"))
+                    ZDivider()
+                }
                 ForEach(Array(scene.exceptions.enumerated()), id: \.offset) { _, ex in
                     DetailRow(title: ex.app, value: ZL.s("%@（固定）", ex.node.name))
                     ZDivider()
@@ -158,6 +170,7 @@ struct SceneSheet: View {
 
     private func lede(_ scene: Scene) -> String {
         var parts: [String] = []
+        if scene.nodeFilter == .uhd { parts.append(ZL.tr("仅 4K 节点")) }
         if loaded, let f = nodeFunnel, f.poolSize > 0 {
             parts.append(ZL.f("检测自 %lld 个订阅中的 %lld 个节点", Int64(f.sourceCount), Int64(f.poolSize)))
         } else if loaded, !candidates.isEmpty {

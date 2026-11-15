@@ -22,6 +22,11 @@ struct CommandResults: View {
                     label(ZL.tr("指令"))
                     TokenChips(tokens: model.parse.tokens)
                 }
+                if let f = model.filterPreview {
+                    CommandFilterCard(preview: f, isApplying: model.isApplying, onApply: onApply)
+                        .padding(.top, ZTokens.Space.n4)
+                        .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 8)))
+                }
                 if let p = model.preview {
                     CommandPreviewCard(preview: p, parse: model.parse, isApplying: model.isApplying, onApply: onApply)
                         .padding(.top, ZTokens.Space.n4)
@@ -31,7 +36,7 @@ struct CommandResults: View {
                 if !rest.isEmpty {
                     label(ZL.tr(model.preview == nil && model.parse.isEmpty ? "结果" : "更多"))
                     suggestionList(rest)
-                } else if model.preview == nil {
+                } else if model.preview == nil && model.filterPreview == nil {
                     Text("无结果")
                         .zType(.body).foregroundStyle(ZColor.t3)
                         .frame(maxWidth: .infinity)
@@ -40,6 +45,7 @@ struct CommandResults: View {
             }
         }
         .animation((reduceMotion || still) ? nil : ZMotion.slow, value: model.preview)
+        .animation((reduceMotion || still) ? nil : ZMotion.slow, value: model.filterPreview)
         .animation((reduceMotion || still) ? nil : ZMotion.standard, value: model.suggestions)
     }
 

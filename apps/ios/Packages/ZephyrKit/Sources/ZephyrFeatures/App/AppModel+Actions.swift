@@ -136,6 +136,36 @@ extension AppModel {
     }
 
     /// 场景节点来源：订阅分组 ↔ Zephyr 优选（契约 §14.z setSceneSource）。场景流会随核心更新回写。
+    /// 契约 §15.h：设置 / 清除场景节点过滤（“视频只用 4K 节点”）。核心不切当前节点；`switchTo` 只在用户已在
+    /// 预览卡上看过出口 IP 变化并点“应用”时传入（§14.y，不自动切换）。成功给可撤销吐司，失败走横幅。
+    @discardableResult
+    public func applySceneNodeFilter(sceneId: String, filter: SceneNodeFilter?, switchTo node: NodeSummary? = nil) async -> Bool {
+        guard let before = scene(id: sceneId) else { return false }
+        do { try await engine.setSceneNodeFilter(sceneId: sceneId, filter: filter) } catch { report(error); return false }
+        var switched = false
+        if let node, node.id != before.selected.id {
+            do { try await engine.applySceneChange(sceneId: sceneId, nodeId: node.id); switched = true } catch { report(error) }
+        }
+        let message: String
+        if filter == nil {
+            message = ZL.s("%@已取消仅 4K 节点", before.name)
+        } else if switched, let node {
+            message = ZL.s("%1$@仅使用 4K 节点，已切换至%2$@", before.name, node.name)
+        } else {
+            message = ZL.s("%@仅使用 4K 节点", before.name)
+        }
+        let didSwitch = switched
+        showUndo(message) { [weak self] in
+            guard let self else { return }
+            do {
+                // 先恢复过滤（清除总是成功），再换回原节点，避免旧节点被过滤挡住。
+                try await self.engine.setSceneNodeFilter(sceneId: sceneId, filter: before.nodeFilter)
+                if didSwitch { try await self.engine.applySceneChange(sceneId: sceneId, nodeId: before.selected.id) }
+            } catch { self.report(error) }
+        }
+        return true
+    }
+
     public func setSceneSource(sceneId: String, source: SceneSource) async {
         guard let current = scene(id: sceneId)?.source, current != source else { return }
         do { try await engine.setSceneSource(sceneId: sceneId, source: source) } catch { report(error) }

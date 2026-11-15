@@ -7,6 +7,13 @@ final class CommandTokenizerTests: XCTestCase {
 
     private func kinds(_ p: CommandParse) -> [CommandToken.Kind] { p.tokens.map(\.kind) }
 
+    func testUHDAction() {
+        let p = CommandTokenizer.parse("视频只用 4K 节点")
+        XCTAssertTrue(p.wantsUHD)
+        XCTAssertEqual(p.sceneId, "video")
+        XCTAssertFalse(CommandTokenizer.parse("Gemini 走日本").wantsUHD)
+    }
+
     func testEmpty() {
         let p = CommandTokenizer.parse("")
         XCTAssertTrue(p.isEmpty)

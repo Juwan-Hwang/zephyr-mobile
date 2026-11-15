@@ -62,7 +62,7 @@ struct CommandView: View {
 
     private func submit() {
         guard let model else { return }
-        if model.preview?.node != nil { apply() }
+        if model.hasPrimary { apply() }
         else if let first = model.suggestions.first { run(first) }
     }
 

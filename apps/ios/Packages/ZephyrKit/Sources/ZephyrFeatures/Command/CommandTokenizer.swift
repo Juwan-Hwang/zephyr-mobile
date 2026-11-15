@@ -20,6 +20,8 @@ struct CommandParse: Hashable, Sendable {
     var regionName: String?
     var regionCode: String?
     var isEmpty: Bool { tokens.isEmpty }
+    /// 识别出“4K”操作（契约 §15.h 场景节点过滤）。
+    var wantsUHD: Bool { tokens.contains { $0.kind == .action && $0.value == "4K" } }
 }
 
 enum CommandTokenizer {

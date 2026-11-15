@@ -369,8 +369,25 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     public func previewSceneChange(sceneId: String, nodeId: NodeId) async throws -> ZephyrKit.ExitChange {
         guard let c = await nodes() else { return try await demo(.sceneNotFound) { try await fallback.previewSceneChange(sceneId: sceneId, nodeId: nodeId) } }
         let x = try await run(.sceneNotFound) { try c.previewSceneChange(sceneId: sceneId, nodeId: nodeId) }
-        return ZephyrKit.ExitChange(sceneId: x.sceneId, fromRegion: x.fromRegion ?? "", fromIp: x.fromIp, toRegion: x.toRegion,
-                                    toIp: x.toIp, affectedApps: x.affectedApps, unchangedApps: x.unchangedApps)
+        return CoreEngine.exitChange(x)
+    }
+
+    /// 契约 §15.h：场景节点过滤预览。新鲜度同 setLatencyTtlHours（核心按 nowMillis 判断）。
+    public func previewSceneNodeFilter(sceneId: String, filter: ZephyrKit.SceneNodeFilter) async throws -> ZephyrKit.NodeFilterPreview {
+        guard let c = await nodes() else { return try await demo(.sceneNotFound) { try await fallback.previewSceneNodeFilter(sceneId: sceneId, filter: filter) } }
+        let now = clock()
+        let p = try await run(.sceneNotFound) { try c.previewSceneNodeFilter(sceneId: sceneId, filter: CoreEngine.filter(filter), nowMillis: now) }
+        return ZephyrKit.NodeFilterPreview(matching: Int(p.matching), total: Int(p.total), poolMatching: Int64(clamping: p.poolMatching),
+                                           currentKept: p.currentKept, suggested: p.suggested.map(CoreEngine.row),
+                                           change: p.change.map(CoreEngine.exitChange))
+    }
+
+    /// 契约 §15.h：只改之后的候选与自动选点，不切当前节点；nodeFilter 随 scenes() 推送。
+    public func setSceneNodeFilter(sceneId: String, filter: ZephyrKit.SceneNodeFilter?) async throws {
+        guard let c = await nodes() else { return try await demo(.sceneNotFound) { try await fallback.setSceneNodeFilter(sceneId: sceneId, filter: filter) } }
+        let f = filter.map(CoreEngine.filter)
+        try await run(.sceneNotFound) { try c.setSceneNodeFilter(sceneId: sceneId, filter: f) }
+        await bumpScenes()
     }
 
     public func applySceneChange(sceneId: String, nodeId: NodeId) async throws {
@@ -1103,7 +1120,20 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
 
     static func row(_ r: NodeRow) -> NodeSummary {
         NodeSummary(id: r.id, name: r.name, region: r.region, city: r.city, carrier: r.carrier, tag: r.tag,
-                    protocol: r.protocol, multiplier: r.multiplier)
+                    protocol: r.protocol, multiplier: r.multiplier, uhd: r.uhd)
+    }
+
+    static func exitChange(_ x: ExitChange) -> ZephyrKit.ExitChange {
+        ZephyrKit.ExitChange(sceneId: x.sceneId, fromRegion: x.fromRegion ?? "", fromIp: x.fromIp, toRegion: x.toRegion,
+                             toIp: x.toIp, affectedApps: x.affectedApps, unchangedApps: x.unchangedApps)
+    }
+
+    static func filter(_ f: ZephyrKit.SceneNodeFilter) -> SceneNodeFilter {
+        switch f { case .uhd: return .uhd }
+    }
+
+    static func kitFilter(_ f: SceneNodeFilter) -> ZephyrKit.SceneNodeFilter {
+        switch f { case .uhd: return .uhd }
     }
 
     static func kind(_ k: LayerKind) -> ZephyrKit.LayerKind {
@@ -1132,7 +1162,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
                                source: source, testedAt: s.testedAt, note: s.note,
                                exceptions: s.exceptions.compactMap { e in e.node.map { ZephyrKit.SceneException(app: e.app, node: row($0)) } },
                                services: s.services.map { ZephyrKit.ServiceHealth(appId: $0.appId, name: $0.name, ok: $0.ok, checkedAt: $0.checkedAt) },
-                               scanQuery: s.scanQuery)
+                               scanQuery: s.scanQuery, nodeFilter: s.nodeFilter.map(kitFilter))
     }
 }
 
