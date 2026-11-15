@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.zephyr.app.di.AppGraph
 import com.zephyr.app.ui.common.PageScaffold
 import com.zephyr.design.components.ZCard
@@ -115,10 +116,11 @@ fun SubscriptionsScreen(back: String = "资料库", onBack: () -> Unit, onImport
             Spacer(Modifier.height(18.dp))
             ZSectionHeader("更新")
             ZListGroup {
-                ZSettingsRow("自动更新", value = "每 ${settings.autoUpdateHours} 小时", chevron = true, onClick = {
-                    val next = when (settings.autoUpdateHours) { 6 -> 12; 12 -> 24; else -> 6 }
-                    scope.launch { engine.updateSettings(settings.copy(autoUpdateHours = next)) }
-                })
+                // Review L-P2-9: "value ›" opens its options (same popup as Settings) instead of cycling on each tap.
+                com.zephyr.app.ui.settings.ChoiceRow(
+                    "自动更新", options = listOf(6, 12, 24).map { it to "每 $it 小时" }, selected = settings.autoUpdateHours,
+                    onSelect = { h -> scope.launch { engine.updateSettings(settings.copy(autoUpdateHours = h)) } },
+                )
                 ZDivider()
                 ZSettingsRow("仅在 Wi‑Fi 下更新", checked = settings.updateOnWifiOnly, onCheckedChange = { v -> scope.launch { engine.updateSettings(settings.copy(updateOnWifiOnly = v)) } })
                 ZDivider()
@@ -134,7 +136,8 @@ fun SubscriptionsScreen(back: String = "资料库", onBack: () -> Unit, onImport
 @Composable
 private fun Delta(v: String, label: String, color: androidx.compose.ui.graphics.Color) {
     Column {
-        ZText(v, style = ZTheme.type.number, color = color)
+        // Review L-P2-9: prototype .diff .rw b is 300 22px, not the 30sp number style.
+        ZText(v, style = ZTheme.type.number.copy(fontSize = 22.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Light, lineHeight = 26.sp), color = color)
         ZText(label, style = ZTheme.type.footnote, color = ZTheme.colors.text3)
     }
 }
