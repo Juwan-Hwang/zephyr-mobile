@@ -60,7 +60,7 @@
 
 - ~~启动屏颜色与 App 背景不一致~~ [已修]
 - [已修] 无深色/着色 App 图标变体（AppIcon-Light 资源与 `ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES`）。
-- ~~`NSLocalNetworkUsageDescription` 与只绑 localhost 矛盾~~ [已修]；缺 `ITSAppUsesNonExemptEncryption`（待用户决定）。
+- ~~`NSLocalNetworkUsageDescription` 与只绑 localhost 矛盾~~ [已修]；~~缺 `ITSAppUsesNonExemptEncryption`~~ [已修 2026-11-15]：用户授权由 iOS 决定，project.yml 主 App 声明 `true`（隧道使用 mihomo 的 TLS/Shadowsocks/VMess 等非豁免加密）；上架时需在 App Store Connect 完成出口合规问卷/文档，法国区可能另需 ANSSI 申报。
 - ~~代理凭据存 UserDefaults，应进 Keychain~~ [已修]
 - ~~CoreEngine queries/remapped 无限增长~~ [已修]；~~协议默认 no-op~~ [已修]。
 - ~~DarwinObservation deinit 与回调竞态~~ [已修]；~~CoreEngine `queries`/`remapped` 字典无限增长~~ [已修]。
