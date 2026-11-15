@@ -50,14 +50,16 @@ struct CommandFilterCard: View {
     }
 
     /// 开启且当前节点不满足时才换节点，此时给出口 IP 变化（用户点“应用”即确认，§14.y）。
-    private var exitChange: ExitChange? {
+    /// internal 供 CommandFilterTests 校验决策（不改行为）。
+    var exitChange: ExitChange? {
         let r = preview.result
         guard !preview.active, !r.currentKept, r.suggested != nil, let x = r.change,
               x.fromIp != x.toIp || x.fromRegion != x.toRegion else { return nil }
         return x
     }
 
-    private var summary: String {
+    /// internal 供 CommandFilterTests 校验文案选择（不改行为）。
+    var summary: String {
         let r = preview.result
         if preview.active { return ZL.tr("已开启。取消后恢复使用全部节点，当前节点保持不变。") }
         if r.poolMatching == 0 { return ZL.tr("没有支持 4K 的节点") }
