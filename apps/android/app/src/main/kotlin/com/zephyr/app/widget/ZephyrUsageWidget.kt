@@ -50,7 +50,7 @@ class ZephyrUsageWidget : GlanceAppWidget() {
     private fun Content(today: Long, hourly: List<Long>) {
         val bg = ColorProvider(day = Color(0xFFFFFFFF), night = Color(0xFF141417))
         val t1 = ColorProvider(day = Color(0xE6000000), night = Color(0xF2FFFFFF))
-        val t3 = ColorProvider(day = Color(0x8C000000), night = Color(0x66FFFFFF))
+        val t3 = ColorProvider(day = Color(0x8C000000), night = Color(0x80FFFFFF)) // tokens screen.t3 (#37)
         val accent = ColorProvider(day = Color(0xFF007AFF), night = Color(0xFF0A84FF))
         val idle = ColorProvider(day = Color(0x1F000000), night = Color(0x26FFFFFF))
         val (v, unit) = ZFormat.bytes(today)

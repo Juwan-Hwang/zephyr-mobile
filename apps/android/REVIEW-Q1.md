@@ -53,6 +53,7 @@
 - 第二十一批（PR agent/android/activity-trace）：✅ W-P2-3 剩余：新增“Zephyr 今日用量”中号小组件（今日流量 + 24 小时柱状图，按最忙小时归一，空小时 2dp 占位），随 refreshAll 一并刷新。H-P2-9 轨迹同 sheet 切换已在 afa2efc 完成（第十四批“仍待做”作废）。
 - 第二十二批（PR agent/android/today-flow）：✅ H-P2-13 流线动画：今日卡流线随相位缓慢漂移（70 s 一周期，同原型 t·0.25），相位 0 即原静态构图，截图与分享 PNG 不变；系统关闭动画时不动。
 - 第二十四批（PR agent/android/row-press）：✅ D-P2-2 缩放部分（zPressable 新增 row：满宽列表行——首页场景行/订阅与用量卡、活动行、指令层结果行、模式菜单项——不再整行缩放 0.97，改用主题按压高光；按钮保留缩放）。快照不含按压态，无基线变化。
+- 第二十五批（PR agent/android/widget-dark-t3）：✅ 跟进 #37：两个小组件夜间 t3 由 0x66FFFFFF 改为 0x80FFFFFF（tokens 深色 screen.t3 0.5，WCAG AA）。小组件无快照，无基线变化。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）；“视频只用 4K 节点”需契约节点标签过滤，暂无计划卡。
 
 ## 总览
