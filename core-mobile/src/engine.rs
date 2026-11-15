@@ -298,10 +298,27 @@ impl MobileCore {
     /// 先按最近延迟预筛 256 个再打分，千万级库里也只对少量节点计算。
     /// 场景候选：query = 地区代码（"JP"）；命令"最快节点"：query = 用户输入。
     pub fn fastest_nodes(&self, query: String, limit: u32, now_millis: i64, max_age_millis: i64) -> Result<Vec<RankedNode>, MobileError> {
+        self.fastest_nodes_in(&query, false, limit, now_millis, max_age_millis)
+    }
+}
+
+impl MobileCore {
+    /// fastest_nodes，uhd_only 时结果集再与 4K 位图取交集（§15.h）。
+    pub(crate) fn fastest_nodes_in(
+        &self,
+        query: &str,
+        uhd_only: bool,
+        limit: u32,
+        now_millis: i64,
+        max_age_millis: i64,
+    ) -> Result<Vec<RankedNode>, MobileError> {
         const PREFILTER: usize = 256;
         const TIMEOUT_AS_MS: f64 = 5000.0;
         let s = self.store()?;
-        let (bm, _) = s.timed_query(&query);
+        let (mut bm, _) = s.timed_query(query);
+        if uhd_only {
+            bm &= s.uhd_bitmap();
+        }
         let cand: Vec<(u64, Vec<(i32, i64)>)> = {
             let c = self.latency.lock();
             c.map
@@ -334,7 +351,10 @@ impl MobileCore {
             })
             .collect())
     }
+}
 
+#[uniffi::export]
+impl MobileCore {
     // ---------- 订阅（contract §7）：平台拉取正文，核心存储/差异/重建 ----------
 
     pub fn subscriptions(&self) -> Vec<Subscription> {

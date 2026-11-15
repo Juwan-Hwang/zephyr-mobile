@@ -77,6 +77,8 @@ pub struct NodeRow {
     pub protocol: String,
     pub multiplier: Option<f32>,
     pub subscription: u16,
+    /// §15.h：名字含 4K / UHD / 8K
+    pub uhd: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, uniffi::Record)]
@@ -646,9 +648,11 @@ impl NodeStore {
         let (tag, proto, mult, rix) = (r[20], r[21], r[22], r[23]);
         let s = self.names_off + name_off;
         let d = |x: u32| self.dict.get(x as usize).cloned();
+        let name = String::from_utf8_lossy(&self.map[s..s + name_len]).into_owned();
         NodeRow {
             id: fp,
-            name: String::from_utf8_lossy(&self.map[s..s + name_len]).into_owned(),
+            uhd: crate::subscription::is_uhd(&name),
+            name,
             region: self.regions.get(rix as usize).map(|r| r.code.clone()).unwrap_or_default(),
             city: if city == u16::MAX { None } else { d(city as u32) },
             carrier: if carrier == u16::MAX { None } else { d(carrier as u32) },
@@ -788,6 +792,15 @@ impl NodeStore {
             b
         });
         (bm, hl, all)
+    }
+
+    /// §15.h：名称词元含 4k / uhd / 8k 的节点。
+    pub fn uhd_bitmap(&self) -> RoaringBitmap {
+        let keys: Vec<u32> = self.tokens.iter().enumerate().filter(|(_, t)| crate::subscription::is_uhd_lower(t)).map(|(i, _)| i as u32).collect();
+        if keys.is_empty() {
+            return RoaringBitmap::new();
+        }
+        self.union(IndexKind::NameToken, &keys)
     }
 
     pub fn sections(&self, bm: &RoaringBitmap) -> Vec<RegionSection> {

@@ -885,6 +885,10 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -985,6 +989,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_scene_change(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`nodeId`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_scene_node_filter(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`filter`: RustBuffer.ByValue,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_subscription_update(`ptr`: Pointer,`id`: RustBuffer.ByValue,`fetched`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_query_nodes(`ptr`: Pointer,`query`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -1036,6 +1042,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_latency_ttl_hours(`ptr`: Pointer,`hours`: Int,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_exception(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`appId`: RustBuffer.ByValue,`nodeId`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_node_filter(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`filter`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_source(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`source`: RustBuffer.ByValue,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
@@ -1247,6 +1255,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_scene_change(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_scene_node_filter(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_subscription_update(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_query_nodes(
@@ -1298,6 +1308,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_latency_ttl_hours(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception(
+    ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_node_filter(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_source(
     ): Short
@@ -1450,6 +1462,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_scene_change() != 49107.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_scene_node_filter() != 58442.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_subscription_update() != 23752.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -1526,6 +1541,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception() != 4651.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_node_filter() != 20522.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_source() != 34889.toShort()) {
@@ -2541,6 +2559,11 @@ public interface MobileCoreInterface {
     fun `previewSceneChange`(`sceneId`: kotlin.String, `nodeId`: kotlin.ULong): ExitChange
     
     /**
+     * §15.h 预览节点过滤："22 个中 14 个支持 4K"；当前节点不满足时给出最快的满足候选与出口变化。
+     */
+    fun `previewSceneNodeFilter`(`sceneId`: kotlin.String, `filter`: SceneNodeFilter, `nowMillis`: kotlin.Long): NodeFilterPreview
+    
+    /**
      * "更新前显示更改"：不落盘。
      */
     fun `previewSubscriptionUpdate`(`id`: kotlin.String, `fetched`: FetchedSubscription): SubscriptionDiff
@@ -2662,6 +2685,11 @@ public interface MobileCoreInterface {
      * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
      */
     fun `setSceneException`(`sceneId`: kotlin.String, `appId`: kotlin.String, `nodeId`: kotlin.ULong?)
+    
+    /**
+     * §15.h 设置 / 清除节点过滤（持久化）。不切走当前节点；当前地区没有满足过滤的节点时报 Invalid。
+     */
+    fun `setSceneNodeFilter`(`sceneId`: kotlin.String, `filter`: SceneNodeFilter?)
     
     /**
      * 场景来源（引导"优选 / 简单"与场景 sheet 的来源分段）。
@@ -3130,6 +3158,22 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
 
     
     /**
+     * §15.h 预览节点过滤："22 个中 14 个支持 4K"；当前节点不满足时给出最快的满足候选与出口变化。
+     */
+    @Throws(MobileException::class)override fun `previewSceneNodeFilter`(`sceneId`: kotlin.String, `filter`: SceneNodeFilter, `nowMillis`: kotlin.Long): NodeFilterPreview {
+            return FfiConverterTypeNodeFilterPreview.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_scene_node_filter(
+        it, FfiConverterString.lower(`sceneId`),FfiConverterTypeSceneNodeFilter.lower(`filter`),FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * "更新前显示更改"：不落盘。
      */
     @Throws(MobileException::class)override fun `previewSubscriptionUpdate`(`id`: kotlin.String, `fetched`: FetchedSubscription): SubscriptionDiff {
@@ -3522,6 +3566,21 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_exception(
         it, FfiConverterString.lower(`sceneId`),FfiConverterString.lower(`appId`),FfiConverterOptionalULong.lower(`nodeId`),_status)
+}
+    }
+    
+    
+
+    
+    /**
+     * §15.h 设置 / 清除节点过滤（持久化）。不切走当前节点；当前地区没有满足过滤的节点时报 Invalid。
+     */
+    @Throws(MobileException::class)override fun `setSceneNodeFilter`(`sceneId`: kotlin.String, `filter`: SceneNodeFilter?)
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_node_filter(
+        it, FfiConverterString.lower(`sceneId`),FfiConverterOptionalTypeSceneNodeFilter.lower(`filter`),_status)
 }
     }
     
@@ -4492,6 +4551,75 @@ public object FfiConverterTypeNodeDiff: FfiConverterRustBuffer<NodeDiff> {
 
 
 /**
+ * §15.h previewSceneNodeFilter 的结果。
+ */
+data class NodeFilterPreview (
+    /**
+     * 候选中满足过滤的个数
+     */
+    var `matching`: kotlin.UInt, 
+    /**
+     * 不加过滤时的候选个数（与 Scene.available 同口径）
+     */
+    var `total`: kotlin.UInt, 
+    /**
+     * 当前地区节点库中满足过滤的个数（不看测速）
+     */
+    var `poolMatching`: kotlin.ULong, 
+    /**
+     * 当前节点满足过滤，或场景尚未选节点
+     */
+    var `currentKept`: kotlin.Boolean, 
+    /**
+     * current_kept = false 时满足过滤的最快候选
+     */
+    var `suggested`: NodeRow?, 
+    /**
+     * = previewSceneChange(sceneId, suggested.id)
+     */
+    var `change`: ExitChange?
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeNodeFilterPreview: FfiConverterRustBuffer<NodeFilterPreview> {
+    override fun read(buf: ByteBuffer): NodeFilterPreview {
+        return NodeFilterPreview(
+            FfiConverterUInt.read(buf),
+            FfiConverterUInt.read(buf),
+            FfiConverterULong.read(buf),
+            FfiConverterBoolean.read(buf),
+            FfiConverterOptionalTypeNodeRow.read(buf),
+            FfiConverterOptionalTypeExitChange.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: NodeFilterPreview) = (
+            FfiConverterUInt.allocationSize(value.`matching`) +
+            FfiConverterUInt.allocationSize(value.`total`) +
+            FfiConverterULong.allocationSize(value.`poolMatching`) +
+            FfiConverterBoolean.allocationSize(value.`currentKept`) +
+            FfiConverterOptionalTypeNodeRow.allocationSize(value.`suggested`) +
+            FfiConverterOptionalTypeExitChange.allocationSize(value.`change`)
+    )
+
+    override fun write(value: NodeFilterPreview, buf: ByteBuffer) {
+            FfiConverterUInt.write(value.`matching`, buf)
+            FfiConverterUInt.write(value.`total`, buf)
+            FfiConverterULong.write(value.`poolMatching`, buf)
+            FfiConverterBoolean.write(value.`currentKept`, buf)
+            FfiConverterOptionalTypeNodeRow.write(value.`suggested`, buf)
+            FfiConverterOptionalTypeExitChange.write(value.`change`, buf)
+    }
+}
+
+
+
+/**
  * 场景 sheet 漏斗（原型"检测自 2 个订阅中的 512 个节点 → 延迟低于 300 ms → …"），契约 §15.c。
  * 只给核心真实知道的级；"可访问 GPT"等按服务的级需要逐节点探测，核心没有，平台不显示。
  */
@@ -4686,7 +4814,11 @@ data class NodeRow (
     var `tag`: kotlin.String?, 
     var `protocol`: kotlin.String, 
     var `multiplier`: kotlin.Float?, 
-    var `subscription`: kotlin.UShort
+    var `subscription`: kotlin.UShort, 
+    /**
+     * §15.h：名字含 4K / UHD / 8K
+     */
+    var `uhd`: kotlin.Boolean
 ) {
     
     companion object
@@ -4707,6 +4839,7 @@ public object FfiConverterTypeNodeRow: FfiConverterRustBuffer<NodeRow> {
             FfiConverterString.read(buf),
             FfiConverterOptionalFloat.read(buf),
             FfiConverterUShort.read(buf),
+            FfiConverterBoolean.read(buf),
         )
     }
 
@@ -4719,7 +4852,8 @@ public object FfiConverterTypeNodeRow: FfiConverterRustBuffer<NodeRow> {
             FfiConverterOptionalString.allocationSize(value.`tag`) +
             FfiConverterString.allocationSize(value.`protocol`) +
             FfiConverterOptionalFloat.allocationSize(value.`multiplier`) +
-            FfiConverterUShort.allocationSize(value.`subscription`)
+            FfiConverterUShort.allocationSize(value.`subscription`) +
+            FfiConverterBoolean.allocationSize(value.`uhd`)
     )
 
     override fun write(value: NodeRow, buf: ByteBuffer) {
@@ -4732,6 +4866,7 @@ public object FfiConverterTypeNodeRow: FfiConverterRustBuffer<NodeRow> {
             FfiConverterString.write(value.`protocol`, buf)
             FfiConverterOptionalFloat.write(value.`multiplier`, buf)
             FfiConverterUShort.write(value.`subscription`, buf)
+            FfiConverterBoolean.write(value.`uhd`, buf)
     }
 }
 
@@ -5218,7 +5353,11 @@ data class Scene (
      * 场景重测用的 scanTargets / fastestNodes 查询（§15.e）：当前节点所在地区，未选节点时为空串（全库）。
      * 与 `available`、sceneCandidates(region = nil) 用的是同一个查询。
      */
-    var `scanQuery`: kotlin.String
+    var `scanQuery`: kotlin.String, 
+    /**
+     * §15.h 节点过滤；null = 不过滤
+     */
+    var `nodeFilter`: SceneNodeFilter?
 ) {
     
     companion object
@@ -5245,6 +5384,7 @@ public object FfiConverterTypeScene: FfiConverterRustBuffer<Scene> {
             FfiConverterSequenceTypeServiceHealth.read(buf),
             FfiConverterString.read(buf),
             FfiConverterString.read(buf),
+            FfiConverterOptionalTypeSceneNodeFilter.read(buf),
         )
     }
 
@@ -5263,7 +5403,8 @@ public object FfiConverterTypeScene: FfiConverterRustBuffer<Scene> {
             FfiConverterSequenceTypeSceneExceptionView.allocationSize(value.`exceptions`) +
             FfiConverterSequenceTypeServiceHealth.allocationSize(value.`services`) +
             FfiConverterString.allocationSize(value.`group`) +
-            FfiConverterString.allocationSize(value.`scanQuery`)
+            FfiConverterString.allocationSize(value.`scanQuery`) +
+            FfiConverterOptionalTypeSceneNodeFilter.allocationSize(value.`nodeFilter`)
     )
 
     override fun write(value: Scene, buf: ByteBuffer) {
@@ -5282,6 +5423,7 @@ public object FfiConverterTypeScene: FfiConverterRustBuffer<Scene> {
             FfiConverterSequenceTypeServiceHealth.write(value.`services`, buf)
             FfiConverterString.write(value.`group`, buf)
             FfiConverterString.write(value.`scanQuery`, buf)
+            FfiConverterOptionalTypeSceneNodeFilter.write(value.`nodeFilter`, buf)
     }
 }
 
@@ -6286,6 +6428,38 @@ public object FfiConverterTypeSceneKind: FfiConverterRustBuffer<SceneKind> {
 
 
 
+/**
+ * §15.h 场景节点过滤；以后加 streaming 等再追加。
+ */
+
+enum class SceneNodeFilter {
+    
+    UHD;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeSceneNodeFilter: FfiConverterRustBuffer<SceneNodeFilter> {
+    override fun read(buf: ByteBuffer) = try {
+        SceneNodeFilter.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: SceneNodeFilter) = 4UL
+
+    override fun write(value: SceneNodeFilter, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
 
 enum class SceneSource {
     
@@ -6664,6 +6838,38 @@ public object FfiConverterOptionalString: FfiConverterRustBuffer<kotlin.String?>
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypeExitChange: FfiConverterRustBuffer<ExitChange?> {
+    override fun read(buf: ByteBuffer): ExitChange? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeExitChange.read(buf)
+    }
+
+    override fun allocationSize(value: ExitChange?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeExitChange.allocationSize(value)
+        }
+    }
+
+    override fun write(value: ExitChange?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeExitChange.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeHostOverride: FfiConverterRustBuffer<HostOverride?> {
     override fun read(buf: ByteBuffer): HostOverride? {
         if (buf.get().toInt() == 0) {
@@ -6846,6 +7052,38 @@ public object FfiConverterOptionalTypeSubscriptionDiff: FfiConverterRustBuffer<S
         } else {
             buf.put(1)
             FfiConverterTypeSubscriptionDiff.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeSceneNodeFilter: FfiConverterRustBuffer<SceneNodeFilter?> {
+    override fun read(buf: ByteBuffer): SceneNodeFilter? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeSceneNodeFilter.read(buf)
+    }
+
+    override fun allocationSize(value: SceneNodeFilter?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeSceneNodeFilter.allocationSize(value)
+        }
+    }
+
+    override fun write(value: SceneNodeFilter?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeSceneNodeFilter.write(value, buf)
         }
     }
 }

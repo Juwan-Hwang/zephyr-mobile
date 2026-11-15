@@ -938,6 +938,11 @@ public protocol MobileCoreProtocol : AnyObject {
     func previewSceneChange(sceneId: String, nodeId: UInt64) throws  -> ExitChange
     
     /**
+     * §15.h 预览节点过滤："22 个中 14 个支持 4K"；当前节点不满足时给出最快的满足候选与出口变化。
+     */
+    func previewSceneNodeFilter(sceneId: String, filter: SceneNodeFilter, nowMillis: Int64) throws  -> NodeFilterPreview
+    
+    /**
      * "更新前显示更改"：不落盘。
      */
     func previewSubscriptionUpdate(id: String, fetched: FetchedSubscription) throws  -> SubscriptionDiff
@@ -1059,6 +1064,11 @@ public protocol MobileCoreProtocol : AnyObject {
      * 例外："Claude：US-Fixed-01"。node_id = None 删除例外。改完需重载。
      */
     func setSceneException(sceneId: String, appId: String, nodeId: UInt64?) throws 
+    
+    /**
+     * §15.h 设置 / 清除节点过滤（持久化）。不切走当前节点；当前地区没有满足过滤的节点时报 Invalid。
+     */
+    func setSceneNodeFilter(sceneId: String, filter: SceneNodeFilter?) throws 
     
     /**
      * 场景来源（引导"优选 / 简单"与场景 sheet 的来源分段）。
@@ -1410,6 +1420,19 @@ open func previewSceneChange(sceneId: String, nodeId: UInt64)throws  -> ExitChan
 }
     
     /**
+     * §15.h 预览节点过滤："22 个中 14 个支持 4K"；当前节点不满足时给出最快的满足候选与出口变化。
+     */
+open func previewSceneNodeFilter(sceneId: String, filter: SceneNodeFilter, nowMillis: Int64)throws  -> NodeFilterPreview {
+    return try  FfiConverterTypeNodeFilterPreview.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_preview_scene_node_filter(self.uniffiClonePointer(),
+        FfiConverterString.lower(sceneId),
+        FfiConverterTypeSceneNodeFilter.lower(filter),
+        FfiConverterInt64.lower(nowMillis),$0
+    )
+})
+}
+    
+    /**
      * "更新前显示更改"：不落盘。
      */
 open func previewSubscriptionUpdate(id: String, fetched: FetchedSubscription)throws  -> SubscriptionDiff {
@@ -1699,6 +1722,17 @@ open func setSceneException(sceneId: String, appId: String, nodeId: UInt64?)thro
         FfiConverterString.lower(sceneId),
         FfiConverterString.lower(appId),
         FfiConverterOptionUInt64.lower(nodeId),$0
+    )
+}
+}
+    
+    /**
+     * §15.h 设置 / 清除节点过滤（持久化）。不切走当前节点；当前地区没有满足过滤的节点时报 Invalid。
+     */
+open func setSceneNodeFilter(sceneId: String, filter: SceneNodeFilter?)throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_node_filter(self.uniffiClonePointer(),
+        FfiConverterString.lower(sceneId),
+        FfiConverterOptionTypeSceneNodeFilter.lower(filter),$0
     )
 }
 }
@@ -3452,6 +3486,143 @@ public func FfiConverterTypeNodeDiff_lower(_ value: NodeDiff) -> RustBuffer {
 
 
 /**
+ * §15.h previewSceneNodeFilter 的结果。
+ */
+public struct NodeFilterPreview {
+    /**
+     * 候选中满足过滤的个数
+     */
+    public var matching: UInt32
+    /**
+     * 不加过滤时的候选个数（与 Scene.available 同口径）
+     */
+    public var total: UInt32
+    /**
+     * 当前地区节点库中满足过滤的个数（不看测速）
+     */
+    public var poolMatching: UInt64
+    /**
+     * 当前节点满足过滤，或场景尚未选节点
+     */
+    public var currentKept: Bool
+    /**
+     * current_kept = false 时满足过滤的最快候选
+     */
+    public var suggested: NodeRow?
+    /**
+     * = previewSceneChange(sceneId, suggested.id)
+     */
+    public var change: ExitChange?
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(
+        /**
+         * 候选中满足过滤的个数
+         */matching: UInt32, 
+        /**
+         * 不加过滤时的候选个数（与 Scene.available 同口径）
+         */total: UInt32, 
+        /**
+         * 当前地区节点库中满足过滤的个数（不看测速）
+         */poolMatching: UInt64, 
+        /**
+         * 当前节点满足过滤，或场景尚未选节点
+         */currentKept: Bool, 
+        /**
+         * current_kept = false 时满足过滤的最快候选
+         */suggested: NodeRow?, 
+        /**
+         * = previewSceneChange(sceneId, suggested.id)
+         */change: ExitChange?) {
+        self.matching = matching
+        self.total = total
+        self.poolMatching = poolMatching
+        self.currentKept = currentKept
+        self.suggested = suggested
+        self.change = change
+    }
+}
+
+
+
+extension NodeFilterPreview: Equatable, Hashable {
+    public static func ==(lhs: NodeFilterPreview, rhs: NodeFilterPreview) -> Bool {
+        if lhs.matching != rhs.matching {
+            return false
+        }
+        if lhs.total != rhs.total {
+            return false
+        }
+        if lhs.poolMatching != rhs.poolMatching {
+            return false
+        }
+        if lhs.currentKept != rhs.currentKept {
+            return false
+        }
+        if lhs.suggested != rhs.suggested {
+            return false
+        }
+        if lhs.change != rhs.change {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(matching)
+        hasher.combine(total)
+        hasher.combine(poolMatching)
+        hasher.combine(currentKept)
+        hasher.combine(suggested)
+        hasher.combine(change)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeNodeFilterPreview: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> NodeFilterPreview {
+        return
+            try NodeFilterPreview(
+                matching: FfiConverterUInt32.read(from: &buf), 
+                total: FfiConverterUInt32.read(from: &buf), 
+                poolMatching: FfiConverterUInt64.read(from: &buf), 
+                currentKept: FfiConverterBool.read(from: &buf), 
+                suggested: FfiConverterOptionTypeNodeRow.read(from: &buf), 
+                change: FfiConverterOptionTypeExitChange.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: NodeFilterPreview, into buf: inout [UInt8]) {
+        FfiConverterUInt32.write(value.matching, into: &buf)
+        FfiConverterUInt32.write(value.total, into: &buf)
+        FfiConverterUInt64.write(value.poolMatching, into: &buf)
+        FfiConverterBool.write(value.currentKept, into: &buf)
+        FfiConverterOptionTypeNodeRow.write(value.suggested, into: &buf)
+        FfiConverterOptionTypeExitChange.write(value.change, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeNodeFilterPreview_lift(_ buf: RustBuffer) throws -> NodeFilterPreview {
+    return try FfiConverterTypeNodeFilterPreview.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeNodeFilterPreview_lower(_ value: NodeFilterPreview) -> RustBuffer {
+    return FfiConverterTypeNodeFilterPreview.lower(value)
+}
+
+
+/**
  * 场景 sheet 漏斗（原型"检测自 2 个订阅中的 512 个节点 → 延迟低于 300 ms → …"），契约 §15.c。
  * 只给核心真实知道的级；"可访问 GPT"等按服务的级需要逐节点探测，核心没有，平台不显示。
  */
@@ -3834,10 +4005,17 @@ public struct NodeRow {
     public var `protocol`: String
     public var multiplier: Float?
     public var subscription: UInt16
+    /**
+     * §15.h：名字含 4K / UHD / 8K
+     */
+    public var uhd: Bool
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
-    public init(id: UInt64, name: String, region: String, city: String?, carrier: String?, tag: String?, `protocol`: String, multiplier: Float?, subscription: UInt16) {
+    public init(id: UInt64, name: String, region: String, city: String?, carrier: String?, tag: String?, `protocol`: String, multiplier: Float?, subscription: UInt16, 
+        /**
+         * §15.h：名字含 4K / UHD / 8K
+         */uhd: Bool) {
         self.id = id
         self.name = name
         self.region = region
@@ -3847,6 +4025,7 @@ public struct NodeRow {
         self.`protocol` = `protocol`
         self.multiplier = multiplier
         self.subscription = subscription
+        self.uhd = uhd
     }
 }
 
@@ -3881,6 +4060,9 @@ extension NodeRow: Equatable, Hashable {
         if lhs.subscription != rhs.subscription {
             return false
         }
+        if lhs.uhd != rhs.uhd {
+            return false
+        }
         return true
     }
 
@@ -3894,6 +4076,7 @@ extension NodeRow: Equatable, Hashable {
         hasher.combine(`protocol`)
         hasher.combine(multiplier)
         hasher.combine(subscription)
+        hasher.combine(uhd)
     }
 }
 
@@ -3913,7 +4096,8 @@ public struct FfiConverterTypeNodeRow: FfiConverterRustBuffer {
                 tag: FfiConverterOptionString.read(from: &buf), 
                 protocol: FfiConverterString.read(from: &buf), 
                 multiplier: FfiConverterOptionFloat.read(from: &buf), 
-                subscription: FfiConverterUInt16.read(from: &buf)
+                subscription: FfiConverterUInt16.read(from: &buf), 
+                uhd: FfiConverterBool.read(from: &buf)
         )
     }
 
@@ -3927,6 +4111,7 @@ public struct FfiConverterTypeNodeRow: FfiConverterRustBuffer {
         FfiConverterString.write(value.`protocol`, into: &buf)
         FfiConverterOptionFloat.write(value.multiplier, into: &buf)
         FfiConverterUInt16.write(value.subscription, into: &buf)
+        FfiConverterBool.write(value.uhd, into: &buf)
     }
 }
 
@@ -4893,6 +5078,10 @@ public struct Scene {
      * 与 `available`、sceneCandidates(region = nil) 用的是同一个查询。
      */
     public var scanQuery: String
+    /**
+     * §15.h 节点过滤；null = 不过滤
+     */
+    public var nodeFilter: SceneNodeFilter?
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
@@ -4909,7 +5098,10 @@ public struct Scene {
         /**
          * 场景重测用的 scanTargets / fastestNodes 查询（§15.e）：当前节点所在地区，未选节点时为空串（全库）。
          * 与 `available`、sceneCandidates(region = nil) 用的是同一个查询。
-         */scanQuery: String) {
+         */scanQuery: String, 
+        /**
+         * §15.h 节点过滤；null = 不过滤
+         */nodeFilter: SceneNodeFilter?) {
         self.id = id
         self.kind = kind
         self.name = name
@@ -4925,6 +5117,7 @@ public struct Scene {
         self.services = services
         self.group = group
         self.scanQuery = scanQuery
+        self.nodeFilter = nodeFilter
     }
 }
 
@@ -4977,6 +5170,9 @@ extension Scene: Equatable, Hashable {
         if lhs.scanQuery != rhs.scanQuery {
             return false
         }
+        if lhs.nodeFilter != rhs.nodeFilter {
+            return false
+        }
         return true
     }
 
@@ -4996,6 +5192,7 @@ extension Scene: Equatable, Hashable {
         hasher.combine(services)
         hasher.combine(group)
         hasher.combine(scanQuery)
+        hasher.combine(nodeFilter)
     }
 }
 
@@ -5021,7 +5218,8 @@ public struct FfiConverterTypeScene: FfiConverterRustBuffer {
                 exceptions: FfiConverterSequenceTypeSceneExceptionView.read(from: &buf), 
                 services: FfiConverterSequenceTypeServiceHealth.read(from: &buf), 
                 group: FfiConverterString.read(from: &buf), 
-                scanQuery: FfiConverterString.read(from: &buf)
+                scanQuery: FfiConverterString.read(from: &buf), 
+                nodeFilter: FfiConverterOptionTypeSceneNodeFilter.read(from: &buf)
         )
     }
 
@@ -5041,6 +5239,7 @@ public struct FfiConverterTypeScene: FfiConverterRustBuffer {
         FfiConverterSequenceTypeServiceHealth.write(value.services, into: &buf)
         FfiConverterString.write(value.group, into: &buf)
         FfiConverterString.write(value.scanQuery, into: &buf)
+        FfiConverterOptionTypeSceneNodeFilter.write(value.nodeFilter, into: &buf)
     }
 }
 
@@ -6743,6 +6942,66 @@ extension SceneKind: Equatable, Hashable {}
 
 // Note that we don't yet support `indirect` for enums.
 // See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
+/**
+ * §15.h 场景节点过滤；以后加 streaming 等再追加。
+ */
+
+public enum SceneNodeFilter {
+    
+    case uhd
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeSceneNodeFilter: FfiConverterRustBuffer {
+    typealias SwiftType = SceneNodeFilter
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SceneNodeFilter {
+        let variant: Int32 = try readInt(&buf)
+        switch variant {
+        
+        case 1: return .uhd
+        
+        default: throw UniffiInternalError.unexpectedEnumCase
+        }
+    }
+
+    public static func write(_ value: SceneNodeFilter, into buf: inout [UInt8]) {
+        switch value {
+        
+        
+        case .uhd:
+            writeInt(&buf, Int32(1))
+        
+        }
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSceneNodeFilter_lift(_ buf: RustBuffer) throws -> SceneNodeFilter {
+    return try FfiConverterTypeSceneNodeFilter.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeSceneNodeFilter_lower(_ value: SceneNodeFilter) -> RustBuffer {
+    return FfiConverterTypeSceneNodeFilter.lower(value)
+}
+
+
+
+extension SceneNodeFilter: Equatable, Hashable {}
+
+
+
+// Note that we don't yet support `indirect` for enums.
+// See https://github.com/mozilla/uniffi-rs/issues/396 for further discussion.
 
 public enum SceneSource {
     
@@ -7213,6 +7472,30 @@ fileprivate struct FfiConverterOptionString: FfiConverterRustBuffer {
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
+fileprivate struct FfiConverterOptionTypeExitChange: FfiConverterRustBuffer {
+    typealias SwiftType = ExitChange?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypeExitChange.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypeExitChange.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
 fileprivate struct FfiConverterOptionTypeHostOverride: FfiConverterRustBuffer {
     typealias SwiftType = HostOverride?
 
@@ -7349,6 +7632,30 @@ fileprivate struct FfiConverterOptionTypeSubscriptionDiff: FfiConverterRustBuffe
         switch try readInt(&buf) as Int8 {
         case 0: return nil
         case 1: return try FfiConverterTypeSubscriptionDiff.read(from: &buf)
+        default: throw UniffiInternalError.unexpectedOptionalTag
+        }
+    }
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+fileprivate struct FfiConverterOptionTypeSceneNodeFilter: FfiConverterRustBuffer {
+    typealias SwiftType = SceneNodeFilter?
+
+    public static func write(_ value: SwiftType, into buf: inout [UInt8]) {
+        guard let value = value else {
+            writeInt(&buf, Int8(0))
+            return
+        }
+        writeInt(&buf, Int8(1))
+        FfiConverterTypeSceneNodeFilter.write(value, into: &buf)
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> SwiftType {
+        switch try readInt(&buf) as Int8 {
+        case 0: return nil
+        case 1: return try FfiConverterTypeSceneNodeFilter.read(from: &buf)
         default: throw UniffiInternalError.unexpectedOptionalTag
         }
     }
@@ -8096,6 +8403,9 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_scene_change() != 49107) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_scene_node_filter() != 58442) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_preview_subscription_update() != 23752) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -8172,6 +8482,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_exception() != 4651) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_node_filter() != 20522) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_source() != 34889) {

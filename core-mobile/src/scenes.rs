@@ -14,6 +14,12 @@ use crate::error::MobileError;
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
+/// §15.h 场景节点过滤；以后加 streaming 等再追加。
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, uniffi::Enum)]
+pub enum SceneNodeFilter {
+    Uhd,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, uniffi::Enum)]
 pub enum SceneKind {
     Ai,
@@ -118,6 +124,9 @@ pub struct SceneRec {
     /// 按服务的健康（平台探测后上报）：app id → 最近一次结果。
     #[serde(default)]
     pub services: Vec<ServiceRec>,
+    /// §15.h：只在满足过滤的节点里选候选 / 热备 / 自动最快。
+    #[serde(default)]
+    pub node_filter: Option<SceneNodeFilter>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -167,6 +176,7 @@ fn defaults() -> Vec<SceneRec> {
         exit_region: None,
         tested_at: None,
         services: vec![],
+        node_filter: None,
     };
     vec![mk("ai", SceneKind::Ai, "AI", None), mk("video", SceneKind::Video, "视频", None), mk("other", SceneKind::Other, "其他", None)]
 }
