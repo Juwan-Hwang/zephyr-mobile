@@ -60,6 +60,8 @@ jobs:
         run: node tools/check-contract-exports.mjs
       - name: tools/*.sh 通过 shellcheck
         run: shellcheck --version | sed -n 2p && shellcheck tools/*.sh
+      - name: workflow 通过 actionlint
+        run: docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:1.7.12 -color
   core:
     runs-on: ubuntu-latest
     steps:
@@ -129,7 +131,7 @@ jobs:
         working-directory: apps/ios
         run: |
           set -o pipefail
-          PROJ=$(ls -d *.xcodeproj | head -1)
+          PROJ=$(find . -maxdepth 1 -name '*.xcodeproj' | head -1)
           SCHEME=${IOS_SCHEME:-Zephyr}
           xcodebuild -project "$PROJ" -scheme "$SCHEME" \
             -destination 'platform=iOS Simulator,name=iPhone 16' \
@@ -142,7 +144,7 @@ jobs:
           TEST_RUNNER_ZEPHYR_SNAPSHOT_RECORD: all
         run: |
           set -o pipefail
-          PROJ=$(ls -d *.xcodeproj | head -1)
+          PROJ=$(find . -maxdepth 1 -name '*.xcodeproj' | head -1)
           SCHEME=${IOS_SCHEME:-Zephyr}
           xcodebuild -project "$PROJ" -scheme "$SCHEME" \
             -destination 'platform=iOS Simulator,name=iPhone 16' \
