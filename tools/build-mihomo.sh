@@ -28,7 +28,7 @@ android)
 ios)
   OUT=$ROOT/build/ios/zmihomo; rm -rf "$OUT"; mkdir -p "$OUT"
   build() { # sdk goarch clangarch outdir
-    SDK=$(xcrun --sdk $1 --show-sdk-path); CCX=$(xcrun --sdk $1 -f clang)
+    SDK=$(xcrun --sdk "$1" --show-sdk-path); CCX=$(xcrun --sdk "$1" -f clang)
     local tgt=$3-apple-ios17.0; [[ $1 == iphonesimulator ]] && tgt=$tgt-simulator
     mkdir -p "$4"
     GOOS=ios GOARCH=$2 CC="$CCX" CGO_CFLAGS="-isysroot $SDK -target $tgt" CGO_LDFLAGS="-isysroot $SDK -target $tgt" \

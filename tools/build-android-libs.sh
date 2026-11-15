@@ -8,7 +8,7 @@ ABIS=${ABIS:-"arm64-v8a armeabi-v7a x86_64"}
 cd "$ROOT/core-mobile"
 for abi in $ABIS; do
   case $abi in arm64-v8a) t=aarch64-linux-android;; armeabi-v7a) t=armv7-linux-androideabi;; x86_64) t=x86_64-linux-android;; x86) t=i686-linux-android;; esac
-  rustup target add $t >/dev/null
+  rustup target add "$t" >/dev/null
 done
 ARGS=(); for abi in $ABIS; do ARGS+=(-t "$abi"); done
 cargo ndk "${ARGS[@]}" --platform 26 -o "$OUT" build --release --lib
