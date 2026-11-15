@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "rule": "名字含 4K / UHD / 8K（仅 ASCII 不区分大小写；全角 ４Ｋ 不算；分隔开的 4 K 不算）即 uhd=true",
+  "cases": [
+    {
+      "name": "🇭🇰 香港 01 | 4K",
+      "uhd": true
+    },
+    {
+      "name": "日本 东京 UHD 02",
+      "uhd": true
+    },
+    {
+      "name": "US-8K-Netflix",
+      "uhd": true
+    },
+    {
+      "name": "新加坡 4k 解锁",
+      "uhd": true
+    },
+    {
+      "name": "台湾 uhd",
+      "uhd": true
+    },
+    {
+      "name": "Korea_4K_x2",
+      "uhd": true
+    },
+    {
+      "name": "JP Tokyo [4K]",
+      "uhd": true
+    },
+    {
+      "name": "美国 洛杉矶 ×1.5 【UHD】",
+      "uhd": true
+    },
+    {
+      "name": "香港 01",
+      "uhd": false
+    },
+    {
+      "name": "日本 东京 x4",
+      "uhd": false
+    },
+    {
+      "name": "US 4 K",
+      "uhd": false
+    },
+    {
+      "name": "新加坡 ４Ｋ",
+      "uhd": false
+    },
+    {
+      "name": "HK-Netflix",
+      "uhd": false
+    },
+    {
+      "name": "4",
+      "uhd": false
+    },
+    {
+      "name": "",
+      "uhd": false
+    },
+    {
+      "name": "UH-D 测试",
+      "uhd": false
+    },
+    {
+      "name": "Node4K",
+      "uhd": true
+    },
+    {
+      "name": "流媒体 4K60",
+      "uhd": true
+    }
+  ]
+}
