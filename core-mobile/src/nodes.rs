@@ -748,7 +748,7 @@ impl NodeStore {
     /// 查询：逐词匹配（地区 → 城市 → 运营商 → 标签/协议 → 名称词元前缀），各词位图取交集。
     /// 最后一个词若是 1–3 个 ASCII 字符且无匹配，视为正在输入而忽略（与原型一致）。
     pub fn query(&self, q: &str) -> (RoaringBitmap, Vec<String>, bool) {
-        let toks: Vec<String> = q.split_whitespace().map(|t| t.to_lowercase()).collect();
+        let toks: Vec<String> = q.split_whitespace().map(fold_lower).collect();
         let mut acc: Option<RoaringBitmap> = None;
         let mut hl = Vec::new();
         let n = toks.len();
