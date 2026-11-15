@@ -100,7 +100,7 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
         }.getOrNull()
     }
     val transform = remember(parsed, c) { TokenUnderline(parsed.spans, c.accent, c.connected, c.warning) }
-    val apply: (CommandPlan) -> Unit = { p -> if (p !is CommandPlan.NoNodes) onAction(CommandAction.Apply(p)) }
+    val apply: (CommandPlan) -> Unit = { p -> if (p !is CommandPlan.NoNodes && !(p is CommandPlan.Uhd && p.unavailable)) onAction(CommandAction.Apply(p)) }
 
     AnimatedVisibility(visible, enter = fadeIn(ZAnim.standard()), exit = fadeOut(ZAnim.standard())) {
         // Review H-P2-11: tapping the scrim dismisses without the press-scale of zPressable (the whole screen shrank).
@@ -201,6 +201,21 @@ private fun PlanCard(plan: CommandPlan, onApply: () -> Unit) {
                 )
                 Spacer(Modifier.height(16.dp))
                 ZButton("应用", onApply, Modifier.fillMaxWidth())
+            }
+            is CommandPlan.Uhd -> {
+                val pv = plan.preview
+                ZText(if (plan.clear) "${plan.who}使用全部节点" else "${plan.who}仅使用 4K 节点", style = ZTheme.type.headline)
+                when {
+                    plan.clear -> Note("${plan.scene.name}场景当前仅使用 4K 节点，将恢复使用全部节点。当前节点保持不变。", 4)
+                    pv == null || pv.poolMatching == 0L -> Note("没有支持 4K 的节点。", 4)
+                    pv.matching == 0 -> Note("有 ${pv.poolMatching} 个 4K 节点尚未测速，应用后请重测场景。", 4)
+                    else -> Note("${pv.total} 个中 ${pv.matching} 个支持 4K" + if (pv.currentKept) "，当前节点保持不变。" else "，将使用${pv.suggested?.name ?: "最快的 4K 节点"}。", 4)
+                }
+                pv?.takeIf { !plan.clear && !it.currentKept }?.change?.let { x -> IpLine("${x.fromRegion} ${x.fromIp ?: ""}".trim(), "${x.toRegion} ${x.toIp ?: ""}".trim()) }
+                if (!plan.clear && !plan.unavailable) Note("之后自动换最快只在 4K 节点中选择。", 12)
+                Spacer(Modifier.height(16.dp))
+                if (plan.unavailable) ZButton("无可用节点", {}, Modifier.fillMaxWidth(), kind = ZButtonKind.Secondary, enabled = false)
+                else ZButton("应用", onApply, Modifier.fillMaxWidth())
             }
             is CommandPlan.Direct -> {
                 ZText("${plan.who} 直连", style = ZTheme.type.headline)

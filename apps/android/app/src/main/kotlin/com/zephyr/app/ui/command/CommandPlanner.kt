@@ -1,6 +1,8 @@
 package com.zephyr.app.ui.command
 
 import com.zephyr.engine.ExitChange
+import com.zephyr.engine.NodeFilterPreview
+import com.zephyr.engine.SceneNodeFilter
 import com.zephyr.engine.NodeSummary
 import com.zephyr.engine.Scene
 import com.zephyr.engine.SceneKind
@@ -31,6 +33,16 @@ sealed interface CommandPlan {
     /** "AI 场景中没有英国节点。" */
     data class NoNodes(val who: String, val sceneLabel: String, val regionName: String) : CommandPlan
 
+    /**
+     * "视频只用 4K 节点" (contract §15.h): filter the scene's candidates. [preview] null = the filter is already on
+     * ([clear] offers to turn it off). When the current node is not 4K, [preview].suggested + change are shown as the
+     * exit-IP line and applied together with the filter; otherwise the current node is kept.
+     */
+    data class Uhd(val who: String, val scene: Scene, val preview: NodeFilterPreview?, val clear: Boolean) : CommandPlan {
+        /** "没有支持 4K 的节点": the region has none at all, the filter cannot be set. */
+        val unavailable: Boolean get() = !clear && (preview == null || preview.poolMatching == 0L)
+    }
+
     /** "GitHub 直连": host override to DIRECT, persisted in Zephyr only. */
     data class Direct(val who: String, val host: String, val fromRegion: String?, val fromIp: String?) : CommandPlan
 }
@@ -44,6 +56,13 @@ class CommandPlanner(private val engine: ZephyrEngine) {
         if (p.act == CommandParser.Act.DIRECT && svc.host != null) {
             val other = scene ?: scenes.firstOrNull { it.kind == SceneKind.OTHER }
             return CommandPlan.Direct(svc.name, svc.host, other?.selected?.region?.takeIf { other.selected.id >= 0 }, other?.exitIp)
+        }
+        if (p.act == CommandParser.Act.UHD) {
+            val s = scene ?: return null
+            if (s.kind != SceneKind.VIDEO) return null
+            if (s.nodeFilter == SceneNodeFilter.UHD) return CommandPlan.Uhd(svc.name, s, null, clear = true)
+            val pv = runCatching { engine.previewSceneNodeFilter(s.id, SceneNodeFilter.UHD) }.getOrNull()
+            return CommandPlan.Uhd(svc.name, s, pv, clear = false)
         }
         val rg = p.region ?: return null
         if (p.act != null || scene == null || svc.kind == SceneKind.OTHER) return null
