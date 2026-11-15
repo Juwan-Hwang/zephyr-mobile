@@ -86,3 +86,6 @@
 - 2026-11-14 本地化补漏 [已修 #133]：英文等非中文界面计数单位改 K/M/B（中文保留 万/亿）；补 3 条缺译（核心不可用页、本地代理页脚）。Widgets / PacketTunnel 的 xcstrings 与插值键复扫无缺口。
 - 2026-11-14 快照去抖 [已修 #134]：ZConnectButton、HomeHero 状态标题、ZStatusDot、ZTrafficStat、TrafficPanel 的显式 `.animation` 在 `zStaticRendering` 下关闭（home-connected-dark 偶发停在弹簧中途）。
 - 2026-11-14 快照去抖（续）[已修 #136]：GlobalModeCard、ScenesSection、ZGroupCard、ZFlag、ZTextField、ZToast 同上；TodayCardView 静态渲染下跳过 450 ms 去抖与后台 PNG 编码，固定“分享就绪、存储未就绪”一帧（today-dark-orange 偶发：存储按钮灰/亮与 settle 赛跑）。
+- 2026-11-15 编译警告清零 [已修 #147]：utun 名改用 `String(validatingCString:)`；快照 `make` 闭包标 `@MainActor`（Swift 6 non-sendable 结果）。iOS CI 日志无编译器警告。
+- 2026-11-15 命令面板本地化 [已修 #152]：CoreEngine 命令建议（连接/断开、切到节点、测试规则、切换模式、节点库查找、页面名、订阅数）改走 ZL，补 13 条英文；“连接”页面条目改名“连接列表”（与“连接”指令同键）。已知限制〔不改〕：键“规则”英文为 Rule，规则模式正确，但规则页标题也显示单数；中文同字无法用不同键区分。
+- 2026-11-15 快照耗时排查〔结论，不改〕：`testConnectionsSheetDisconnected` 在 run 43635890997 用时 342 s，诊断 PR #150（分段计时，未合并）复跑仅 6.3 s，唯一明显阶段是 window-shown 2.9 s。该用例是 ZephyrSnapshotTests 首个用例，判断为模拟器冷启动 / runner 波动，与断连态代码无关。
