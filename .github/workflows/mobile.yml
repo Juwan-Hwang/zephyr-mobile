@@ -58,6 +58,8 @@ jobs:
         run: node tools/gen-command-parse-fixtures.mjs --check
       - name: UniFFI 导出均写入契约
         run: node tools/check-contract-exports.mjs
+      - name: tools/*.sh 通过 shellcheck
+        run: shellcheck --version | sed -n 2p && shellcheck tools/*.sh
   core:
     runs-on: ubuntu-latest
     steps:

@@ -6,7 +6,7 @@ ROOT=$(cd "$(dirname "$0")/.." && pwd)
 OUT=$ROOT/build/ios
 cd "$ROOT/core-mobile"
 TARGETS="aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios"
-for t in $TARGETS; do rustup target add $t >/dev/null; IPHONEOS_DEPLOYMENT_TARGET=17.0 cargo build --release --lib --target $t; done
+for t in $TARGETS; do rustup target add "$t" >/dev/null; IPHONEOS_DEPLOYMENT_TARGET=17.0 cargo build --release --lib --target "$t"; done
 T=${CARGO_TARGET_DIR:-$ROOT/core-mobile/target}
 rm -rf "$OUT" && mkdir -p "$OUT/headers" "$OUT/sim" "$OUT/Sources"
 cp bindings/swift/*.h "$OUT/headers/"

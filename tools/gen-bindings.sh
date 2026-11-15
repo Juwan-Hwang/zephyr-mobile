@@ -13,7 +13,7 @@ for lang in swift kotlin; do
   cargo run -q --bin uniffi-bindgen -- generate --library "$LIB" --language $lang --out-dir "$OUT/$lang" --no-format
 done
 if [[ "${1:-}" == "--check" ]]; then
-  diff -r "$OUT" bindings && echo "bindings up to date" || { echo "bindings 漂移：运行 tools/gen-bindings.sh"; exit 1; }
+  if diff -r "$OUT" bindings; then echo "bindings up to date"; else echo "bindings 漂移：运行 tools/gen-bindings.sh"; exit 1; fi
 else
   rm -rf bindings && mv "$OUT" bindings && echo "bindings → core-mobile/bindings"
 fi
