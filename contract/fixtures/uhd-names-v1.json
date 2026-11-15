@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "rule": "名字含 4K / UHD / 8K（仅 ASCII 不区分大小写；全角 ４Ｋ 不算；分隔开的 4 K 不算）即 uhd=true",
+  "rule": "名字含 4K / UHD / 8K（仅 ASCII 不区分大小写；全角 ４Ｋ、开尔文符号 U+212A（4K）不算；分隔开的 4 K 不算）即 uhd=true",
   "cases": [
     {
       "name": "🇭🇰 香港 01 | 4K",
@@ -73,6 +73,10 @@
     {
       "name": "流媒体 4K60",
       "uhd": true
+    },
+    {
+      "name": "香港 4K",
+      "uhd": false
     }
   ]
 }

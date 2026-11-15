@@ -514,7 +514,7 @@ previewSceneNodeFilter(sceneId: String, filter: SceneNodeFilter, nowMillis: Int6
 setSceneNodeFilter(sceneId: String, filter: SceneNodeFilter?) throws    // 持久化
 ```
 - 4K 判定：节点名含 `4K` / `UHD` / `8K`（不区分大小写，同 subscription.rs 名字推断）；以后订阅有显式标签时优先读标签，名字推断作回退。
-  - 共享样本 `contract/fixtures/uhd-names-v1.json`（`{name, uhd}`，core-mobile `uhd_fixtures` 单测逐条比对）：仅 ASCII 不区分大小写，全角 `４Ｋ`、分隔开的 `4 K` 不算。两端 Mock 的名字判定应逐条比对。
+  - 共享样本 `contract/fixtures/uhd-names-v1.json`（`{name, uhd}`，core-mobile `uhd_fixtures` 单测逐条比对）：仅 ASCII 不区分大小写，全角 `４Ｋ`、开尔文符号 U+212A（`4K`）、分隔开的 `4 K` 不算（2026-11-16 补第 19 例，iOS #170 提出）。两端 Mock 的名字判定应逐条比对。
 - 过滤生效范围：该场景的 `sceneCandidates`、`Scene.available`、`applySceneChange` 组内热备、auto 场景换最快。`nodeFunnel` / `fastestNodes` / `scanTargets` 不带场景，不受影响。
 - **不主动切走当前节点**（同 §14.y）：`setSceneNodeFilter` 只改之后的候选与自动选点。当前节点不满足时由平台用 preview 的 `suggested` + `change` 出“更改出口 IP？”确认卡，用户确认后照常 `applySceneChange(sceneId, suggested.id)`。
 - `poolMatching == 0` 时 `setSceneNodeFilter(…, uhd)` 抛 `MobileError.Invalid`，场景不变。平台应先 preview：`poolMatching == 0` 禁用该指令并提示“没有支持 4K 的节点”；`matching == 0 && poolMatching > 0` 表示有 4K 节点但还没测速，可提示先重测（`scanTargets(scene.scanQuery, …)`）。

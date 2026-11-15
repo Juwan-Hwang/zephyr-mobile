@@ -491,7 +491,23 @@ fn normalize_token(raw: &str) -> Option<String> {
     if t.is_empty() || t.starts_with('×') || t.chars().all(|c| c.is_ascii_digit()) {
         return None;
     }
-    Some(t.to_lowercase())
+    Some(fold_lower(t))
+}
+
+/// 名称词元小写：与 `to_lowercase` 相同，但非 ASCII 字符若小写后落入 ASCII（开尔文符号 U+212A → k、U+0130 İ → i̇）则保留原字符，
+/// 避免 “4\u{212A}” 之类在词元里变成 ASCII “4k”（§15.h 4K 判定仅 ASCII 不区分大小写，iOS / Android Mock 同口径）。
+pub fn fold_lower(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    for c in s.chars() {
+        if c.is_ascii() {
+            out.push(c.to_ascii_lowercase());
+        } else if c.to_lowercase().any(|l| l.is_ascii()) {
+            out.push(c);
+        } else {
+            out.extend(c.to_lowercase());
+        }
+    }
+    out
 }
 
 pub fn name_tokens(name: &str) -> Vec<String> {
@@ -732,7 +748,7 @@ impl NodeStore {
     /// 查询：逐词匹配（地区 → 城市 → 运营商 → 标签/协议 → 名称词元前缀），各词位图取交集。
     /// 最后一个词若是 1–3 个 ASCII 字符且无匹配，视为正在输入而忽略（与原型一致）。
     pub fn query(&self, q: &str) -> (RoaringBitmap, Vec<String>, bool) {
-        let toks: Vec<String> = q.split_whitespace().map(|t| t.to_lowercase()).collect();
+        let toks: Vec<String> = q.split_whitespace().map(fold_lower).collect();
         let mut acc: Option<RoaringBitmap> = None;
         let mut hl = Vec::new();
         let n = toks.len();
