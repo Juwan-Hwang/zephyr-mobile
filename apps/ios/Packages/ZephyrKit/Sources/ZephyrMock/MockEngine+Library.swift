@@ -50,12 +50,19 @@ extension MockEngine {
     }
 
     public func sceneCandidates(sceneId: String, region: String?) async throws -> [NodeSummary] {
+        let filter = withState { s in s.scenes.first { $0.id == sceneId }?.nodeFilter }
+        return try await sceneCandidates(sceneId: sceneId, region: region, filter: filter)
+    }
+
+    /// 契约 §15.h：场景节点过滤只作用于该场景的候选；filter = nil 为不过滤口径（preview 的 total）。
+    func sceneCandidates(sceneId: String, region: String?, filter: SceneNodeFilter?) async throws -> [NodeSummary] {
         guard withState({ s in s.scenes.contains { $0.id == sceneId } }), let pool = pool(sceneId) else {
             throw ZephyrError(code: .sceneNotFound, message: sceneId)
         }
         let tested = withState { $0.tested }
         let list = pool
             .filter { region == nil || $0.region == region!.uppercased() }
+            .filter { Self.matches($0, filter) }
             .map { n -> NodeSummary in var n = n; if let t = tested[n.id] { n.latencyMs = t }; return n }
         func key(_ l: Int32?) -> Int32 { guard let l, l >= 0 else { return .max } ; return l }
         return Array(list.enumerated().sorted { (key($0.element.latencyMs), $0.offset) < (key($1.element.latencyMs), $1.offset) }

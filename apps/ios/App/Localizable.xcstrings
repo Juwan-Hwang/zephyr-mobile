@@ -4866,6 +4866,126 @@
           }
         }
       }
+    },
+    "%@仅使用 4K 节点" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: 4K nodes only"
+          }
+        }
+      }
+    },
+    "%1$@仅使用 4K 节点，已切换至%2$@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: 4K nodes only, switched to %2$@"
+          }
+        }
+      }
+    },
+    "%@已取消仅 4K 节点" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: all nodes again"
+          }
+        }
+      }
+    },
+    "取消仅 4K 节点" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn Off 4K Only"
+          }
+        }
+      }
+    },
+    "已开启。取消后恢复使用全部节点，当前节点保持不变。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On. Turning it off restores all nodes; the current node stays."
+          }
+        }
+      }
+    },
+    "没有支持 4K 的节点" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No nodes support 4K"
+          }
+        }
+      }
+    },
+    "4K 节点还没有测速，在场景中重新检测后可用。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4K nodes haven't been tested yet. Retest the scene to use them."
+          }
+        }
+      }
+    },
+    "%1$lld 个中 %2$lld 个支持 4K" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$lld of %1$lld support 4K"
+          }
+        }
+      }
+    },
+    "%@，当前节点保持不变。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@; the current node stays."
+          }
+        }
+      }
+    },
+    "%1$@，将使用%2$@。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@; will use %2$@."
+          }
+        }
+      }
+    },
+    "仅 4K 节点" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4K nodes only"
+          }
+        }
+      }
+    },
+    "取消后恢复使用全部节点" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restores all nodes"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

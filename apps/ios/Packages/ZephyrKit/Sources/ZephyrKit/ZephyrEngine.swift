@@ -34,6 +34,11 @@ public protocol ZephyrEngine: AnyObject, Sendable {
     /// UI 支持"撤销"：再 apply 旧节点。
     func applySceneChange(sceneId: String, nodeId: NodeId) async throws
     func retestScene(sceneId: String) async throws -> Scene
+    /// 契约 §15.h：预览场景节点过滤（“视频只用 4K 节点”）。未知场景抛 sceneNotFound。
+    func previewSceneNodeFilter(sceneId: String, filter: SceneNodeFilter) async throws -> NodeFilterPreview
+    /// 契约 §15.h：设置 / 清除（nil）场景节点过滤，持久化；不主动切走当前节点（§14.y）。
+    /// 当前地区没有满足的节点时抛错，场景不变；Scene.nodeFilter 经 scenes() 推送。
+    func setSceneNodeFilter(sceneId: String, filter: SceneNodeFilter?) async throws
     /// 契约 §14.z：来源分段（优选 = auto 立即换到最优；manual / subscriptionGroup 只记录）。
     func setSceneSource(sceneId: String, source: SceneSource) async throws
     /// 契约 §13：连接轨迹"本次连接 / 始终应用"。target = .unchanged 清除；persistent = false 只在本次运行有效。
@@ -145,6 +150,13 @@ public extension ZephyrEngine {
     /// 只读查询：没有实现即“无数据”（Mock / 预览走 testRule 预测，分段从“不变”开始）。
     func hostTrace(host: String) async -> HostTraceInfo? { nil }
     func hostOverride(host: String) async -> HostOverrideInfo? { nil }
+    /// 没有实现即不支持：抛错，UI 走错误横幅，不假装生效。
+    func previewSceneNodeFilter(sceneId: String, filter: SceneNodeFilter) async throws -> NodeFilterPreview {
+        throw ZephyrError(code: .internal, message: "previewSceneNodeFilter unsupported")
+    }
+    func setSceneNodeFilter(sceneId: String, filter: SceneNodeFilter?) async throws {
+        throw ZephyrError(code: .internal, message: "setSceneNodeFilter unsupported")
+    }
     /// 没有实现即无需扫描。
     func scanLatency(query: String) -> AsyncStream<ScanProgress> { AsyncStream { $0.finish() } }
 }
