@@ -476,3 +476,22 @@ syncSubscriptionRules() throws                                                  
 // 链接探针
 coreGreeting() -> String                                                             // zephyr-core 版本，确认链接正常
 ```
+
+### 15.g UniFFI 生成类型名对照（2026-11-15，补记已有实现，只追加）
+核心导出的类型名以生成绑定为准；下表是契约早期名与生成名的对照，平台已按右列使用，接口语义不变。`tools/check-contract-exports.mjs` 同时校验每个 `uniffi::Record / Enum / Object / Error` 与回调接口的类型名都在本文出现。
+```
+契约早期名                 → 生成类型名
+ZephyrError { code, message } → MobileError（枚举：Io / Invalid / Corrupt / NotFound / RuleInputInvalid / SubscriptionInvalid /
+                                StaleToken / SubscriptionNotFound / SceneNotFound / NotRunning / Cancelled，平台映射到 §10 ErrorCode）
+DnsSettings                → DnsConfig { fakeIp, nameservers, fallback, ipv6 }
+TunStack                   → TunStackKind { system, gvisor, mixed }
+SceneException             → SceneExceptionView { appId, app, node: NodeRow? }
+
+// 未在前文展开的已有类型
+enum BuildPhase { parse, index, write }                       // BuildProgress.onProgress 的 phase；parse 阶段 total = 0 表示未知
+record NodeDiff { added: UInt64, removed: UInt64, kept: UInt64 }   // BuildReport 内与旧库的差异
+enum GeoKind { geosite, geoip }                               // §14.v compileGeo(kind, nowMillis)
+record GroupMember { name, proxyType, latencyMs: Int32? }     // groupMembers；-1 = 超时，null = 未测
+record HostActivity { host, scene?, node, connections: Int32, totalBytes: Int64, lastSeenAt: Int64 }   // recentHosts
+record HostTrace { host, lastSeenAt, connections, totalBytes, rule, chain: [String], scene?, node }    // hostTrace；chain 自顶层组到出口节点
+```
