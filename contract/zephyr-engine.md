@@ -510,7 +510,7 @@ record NodeFilterPreview {
   suggested: NodeRow?,       // currentKept=false 时：满足过滤的最快候选；没有已测候选时为 null
   change: ExitChange?        // = previewSceneChange(sceneId, suggested.id)，出口 IP from → to（toIp 恒 null，同 §14）
 }
-previewSceneNodeFilter(sceneId: String, filter: SceneNodeFilter) throws -> NodeFilterPreview
+previewSceneNodeFilter(sceneId: String, filter: SceneNodeFilter, nowMillis: Int64) throws -> NodeFilterPreview   // 新鲜度同 setLatencyTtlHours
 setSceneNodeFilter(sceneId: String, filter: SceneNodeFilter?) throws    // 持久化
 ```
 - 4K 判定：节点名含 `4K` / `UHD` / `8K`（不区分大小写，同 subscription.rs 名字推断）；以后订阅有显式标签时优先读标签，名字推断作回退。
