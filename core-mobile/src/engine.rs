@@ -4,12 +4,12 @@
 use crate::diff::{diff_sorted, NodeDiff};
 use crate::error::MobileError;
 use crate::latency::{LatencyCache, LatencySample};
-use rustc_hash::FxHashMap;
-use crate::subs::{FetchedSubscription, SubStore, Subscription, SubscriptionDiff, SubscriptionsSummary};
 use crate::nodes::{BuildPhase, NodeQueryResult, NodeRow, NodeStore, NodeStoreBuilder, RegionSection};
 use crate::rules::{Layer, LayerBuilder, LayerKind, RuleLayerInfo, RuleSet, RuleTrace};
+use crate::subs::{FetchedSubscription, SubStore, Subscription, SubscriptionDiff, SubscriptionsSummary};
 use parking_lot::{Mutex, RwLock};
 use roaring::RoaringBitmap;
+use rustc_hash::FxHashMap;
 use std::collections::VecDeque;
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -109,7 +109,13 @@ impl MobileCore {
     fn swap_store(&self, builder: NodeStoreBuilder, skipped: u64, t0: std::time::Instant) -> Result<BuildReport, MobileError> {
         self.swap_store_p(builder, skipped, t0, &|_, _, _| true)
     }
-    fn swap_store_p(&self, builder: NodeStoreBuilder, skipped: u64, t0: std::time::Instant, progress: &dyn Fn(BuildPhase, u64, u64) -> bool) -> Result<BuildReport, MobileError> {
+    fn swap_store_p(
+        &self,
+        builder: NodeStoreBuilder,
+        skipped: u64,
+        t0: std::time::Instant,
+        progress: &dyn Fn(BuildPhase, u64, u64) -> bool,
+    ) -> Result<BuildReport, MobileError> {
         let gen = {
             let mut g = self.generation.lock();
             *g += 1;
@@ -168,7 +174,8 @@ fn load_positions(dir: &std::path::Path, gen: u64) -> (u64, FxHashMap<u64, u32>)
     if b.len() < 16 || &b[..8] != POS_MAGIC || u64::from_le_bytes(b[8..16].try_into().unwrap()) != gen || gen == 0 {
         return (0, FxHashMap::default());
     }
-    let m = b[16..].as_chunks::<12>().0.iter().map(|c| (u64::from_le_bytes(c[..8].try_into().unwrap()), u32::from_le_bytes(c[8..].try_into().unwrap()))).collect();
+    let m =
+        b[16..].as_chunks::<12>().0.iter().map(|c| (u64::from_le_bytes(c[..8].try_into().unwrap()), u32::from_le_bytes(c[8..].try_into().unwrap()))).collect();
     (gen, m)
 }
 
@@ -349,7 +356,14 @@ impl MobileCore {
     }
 
     /// 导入并重建节点库。url 可空（剪贴板/文件导入）。
-    pub fn import_subscription(&self, name: String, url: Option<String>, fetched: FetchedSubscription, auto_update_hours: i32, progress: Option<Box<dyn BuildProgress>>) -> Result<Subscription, MobileError> {
+    pub fn import_subscription(
+        &self,
+        name: String,
+        url: Option<String>,
+        fetched: FetchedSubscription,
+        auto_update_hours: i32,
+        progress: Option<Box<dyn BuildProgress>>,
+    ) -> Result<Subscription, MobileError> {
         let sub = self.subs.lock().import(name, url, &fetched, auto_update_hours)?;
         if let Err(e) = self.rebuild_from_subscriptions(progress) {
             let _ = self.subs.lock().delete(&sub.id);
@@ -364,7 +378,12 @@ impl MobileCore {
         self.subs.lock().preview(&id, &fetched)
     }
 
-    pub fn update_subscription(&self, id: String, fetched: FetchedSubscription, progress: Option<Box<dyn BuildProgress>>) -> Result<SubscriptionDiff, MobileError> {
+    pub fn update_subscription(
+        &self,
+        id: String,
+        fetched: FetchedSubscription,
+        progress: Option<Box<dyn BuildProgress>>,
+    ) -> Result<SubscriptionDiff, MobileError> {
         let d = self.subs.lock().update(&id, &fetched)?;
         self.rebuild_from_subscriptions(progress)?;
         self.sync_subscription_rules()?;
@@ -489,7 +508,15 @@ impl MobileCore {
     }
 
     /// 编译一层规则（文本为 Clash 规则行或规则集 payload）。index 决定匹配顺序。
-    pub fn compile_rule_layer(&self, index: u32, name: String, kind: LayerKind, note: String, default_policy: String, text: String) -> Result<RuleLayerInfo, MobileError> {
+    pub fn compile_rule_layer(
+        &self,
+        index: u32,
+        name: String,
+        kind: LayerKind,
+        note: String,
+        default_policy: String,
+        text: String,
+    ) -> Result<RuleLayerInfo, MobileError> {
         let mut b = LayerBuilder::new(&name, kind, &note, &default_policy);
         b.add_text(&text);
         let path = self.dir.join("rules").join(format!("{index:03}.zr"));
@@ -502,7 +529,8 @@ impl MobileCore {
 
     /// 重新加载 rules/ 下全部层（按文件名序），final_policy 为 MATCH 的去向（通常是场景 "other"）。
     pub fn load_rules(&self, final_policy: String) -> Result<RuleStats, MobileError> {
-        let mut files: Vec<PathBuf> = std::fs::read_dir(self.dir.join("rules"))?.flatten().map(|e| e.path()).filter(|p| p.extension().map(|e| e == "zr").unwrap_or(false)).collect();
+        let mut files: Vec<PathBuf> =
+            std::fs::read_dir(self.dir.join("rules"))?.flatten().map(|e| e.path()).filter(|p| p.extension().map(|e| e == "zr").unwrap_or(false)).collect();
         files.sort();
         let mut layers = Vec::with_capacity(files.len());
         for f in files {
@@ -554,7 +582,8 @@ mod tests {
         let q = core.query_nodes("JP".into()).unwrap();
         let rows = core.node_rows(q.token, 0, 5).unwrap().rows;
         let other = core.node_rows(core.query_nodes("US".into()).unwrap().token, 0, 1).unwrap().rows;
-        let mut samples: Vec<LatencySample> = rows.iter().enumerate().map(|(k, r)| LatencySample { id: r.id, ms: [300, 40, -1, 120, 80][k], at: 1000 }).collect();
+        let mut samples: Vec<LatencySample> =
+            rows.iter().enumerate().map(|(k, r)| LatencySample { id: r.id, ms: [300, 40, -1, 120, 80][k], at: 1000 }).collect();
         samples.push(LatencySample { id: other[0].id, ms: 1, at: 1000 });
         core.record_latencies(samples).unwrap();
         let best = core.fastest_nodes("JP".into(), 3, 1000, 0).unwrap();

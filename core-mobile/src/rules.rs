@@ -183,11 +183,19 @@ impl LayerBuilder {
             Rule::DomainSuffix(d) => self.dom.push((dhash(DomainKind::Suffix, &d), no, pi, DomainKind::Suffix as u8)),
             Rule::DomainKeyword(k) => self.kw.push((k, no, pi)),
             Rule::IpCidr(a, p) => {
-                let end = match p { 0 => u32::MAX, 32 => a, _ => a | (u32::MAX >> p) };
+                let end = match p {
+                    0 => u32::MAX,
+                    32 => a,
+                    _ => a | (u32::MAX >> p),
+                };
                 self.v4.push((a, end, no, pi, p))
             }
             Rule::IpCidr6(a, p) => {
-                let end = match p { 0 => u128::MAX, 128 => a, _ => a | (u128::MAX >> p) };
+                let end = match p {
+                    0 => u128::MAX,
+                    128 => a,
+                    _ => a | (u128::MAX >> p),
+                };
                 self.v6.push((a, end, no, pi, p))
             }
         }
@@ -292,13 +300,21 @@ trait Addr: Copy + Ord + std::fmt::Debug {
 }
 impl Addr for u32 {
     const MAX: Self = u32::MAX;
-    fn inc(self) -> Self { self.wrapping_add(1) }
-    fn dec(self) -> Self { self.wrapping_sub(1) }
+    fn inc(self) -> Self {
+        self.wrapping_add(1)
+    }
+    fn dec(self) -> Self {
+        self.wrapping_sub(1)
+    }
 }
 impl Addr for u128 {
     const MAX: Self = u128::MAX;
-    fn inc(self) -> Self { self.wrapping_add(1) }
-    fn dec(self) -> Self { self.wrapping_sub(1) }
+    fn inc(self) -> Self {
+        self.wrapping_add(1)
+    }
+    fn dec(self) -> Self {
+        self.wrapping_sub(1)
+    }
 }
 
 /// 嵌套/不相交区间 → 不相交区段（每段取序号最小的覆盖规则）。O(n log n)。
@@ -309,7 +325,9 @@ fn flatten<T: Addr>(mut v: Vec<(T, T, u32, u16, u8)>) -> Vec<Seg<T>> {
     let mut out: Vec<Seg<T>> = Vec::new();
     let mut pos: Option<T> = None; // 下一个待输出位置
     let emit = |out: &mut Vec<Seg<T>>, s: T, e: T, best: &Seg<T>| {
-        if s > e { return; }
+        if s > e {
+            return;
+        }
         if let Some(last) = out.last_mut() {
             if last.no == best.no && last.e.inc() == s && last.e != T::MAX {
                 last.e = e;
@@ -320,20 +338,35 @@ fn flatten<T: Addr>(mut v: Vec<(T, T, u32, u16, u8)>) -> Vec<Seg<T>> {
     };
     let pop_until = |stack: &mut Vec<((T, T), Seg<T>)>, out: &mut Vec<Seg<T>>, pos: &mut Option<T>, upto: Option<T>| {
         while let Some(&((_, end), best)) = stack.last() {
-            if let Some(u) = upto { if end >= u { break; } }
-            if let Some(p) = *pos { emit(out, p, end, &best); }
+            if let Some(u) = upto {
+                if end >= u {
+                    break;
+                }
+            }
+            if let Some(p) = *pos {
+                emit(out, p, end, &best);
+            }
             stack.pop();
             *pos = if end == T::MAX { None } else { Some(end.inc()) };
-            if pos.is_none() { stack.clear(); }
+            if pos.is_none() {
+                stack.clear();
+            }
         }
     };
     for (s, e, no, policy, prefix) in v {
         pop_until(&mut stack, &mut out, &mut pos, Some(s));
         if let Some(&(_, best)) = stack.last() {
-            if let Some(p) = pos { if p < s { emit(&mut out, p, s.dec(), &best); } }
+            if let Some(p) = pos {
+                if p < s {
+                    emit(&mut out, p, s.dec(), &best);
+                }
+            }
         }
         let me = Seg { s, e, rs: s, no, policy, prefix };
-        let best = match stack.last() { Some(&(_, b)) if b.no < no => b, _ => me };
+        let best = match stack.last() {
+            Some(&(_, b)) if b.no < no => b,
+            _ => me,
+        };
         stack.push(((s, e), best));
         pos = Some(s);
     }
@@ -505,9 +538,15 @@ impl Layer {
         let (mut lo, mut hi) = (0usize, self.v4_n);
         while lo < hi {
             let m = (lo + hi) / 2;
-            if at(m).0 <= ip { lo = m + 1 } else { hi = m }
+            if at(m).0 <= ip {
+                lo = m + 1
+            } else {
+                hi = m
+            }
         }
-        if lo == 0 { return None; }
+        if lo == 0 {
+            return None;
+        }
         let (_, e, rs, no, p, pre) = at(lo - 1);
         (ip <= e).then(|| (Hit { no, policy: p }, format!("IP-CIDR,{}/{}", std::net::Ipv4Addr::from(rs), pre)))
     }
@@ -521,9 +560,15 @@ impl Layer {
         let (mut lo, mut hi) = (0usize, self.v6_n);
         while lo < hi {
             let m = (lo + hi) / 2;
-            if at(m).0 <= ip { lo = m + 1 } else { hi = m }
+            if at(m).0 <= ip {
+                lo = m + 1
+            } else {
+                hi = m
+            }
         }
-        if lo == 0 { return None; }
+        if lo == 0 {
+            return None;
+        }
         let (_, e, rs, no, p, pre) = at(lo - 1);
         (ip <= e).then(|| (Hit { no, policy: p }, format!("IP-CIDR6,{}/{}", std::net::Ipv6Addr::from(rs), pre)))
     }
@@ -624,7 +669,13 @@ mod tests {
             layers: vec![
                 build(d.path(), "覆写", LayerKind::Override, "DIRECT", "DOMAIN-SUFFIX,github.com,DIRECT"),
                 build(d.path(), "订阅", LayerKind::Subscription, "video", "DOMAIN-SUFFIX,netflix.com,video\nDOMAIN-SUFFIX,nflxvideo.net,video\nMATCH,other"),
-                build(d.path(), "OpenAI", LayerKind::Domain, "ai", "payload:\n  - '+.openai.com'\n  - '+.chatgpt.com'\n  - '+.claude.ai'\n  - '+.anthropic.com'"),
+                build(
+                    d.path(),
+                    "OpenAI",
+                    LayerKind::Domain,
+                    "ai",
+                    "payload:\n  - '+.openai.com'\n  - '+.chatgpt.com'\n  - '+.claude.ai'\n  - '+.anthropic.com'",
+                ),
                 build(d.path(), "广告与跟踪", LayerKind::Domain, "REJECT", "DOMAIN-KEYWORD,doubleclick\nDOMAIN-KEYWORD,adservice\n+.ads.example.com"),
                 build(d.path(), "geoip:cn", LayerKind::Ip, "DIRECT", "36.0.0.0/10\n1.0.1.0/24\n2001:db8::/32"),
             ],

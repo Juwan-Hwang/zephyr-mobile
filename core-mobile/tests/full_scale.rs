@@ -5,7 +5,8 @@ use zephyr_mobile_core::MobileCore;
 #[test]
 #[ignore]
 fn full_scale_queries_match_prototype() {
-    let fx: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../contract/fixtures/mock-v0.json")).unwrap()).unwrap();
+    let fx: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../contract/fixtures/mock-v0.json")).unwrap()).unwrap();
     let dir = std::env::temp_dir().join("zephyr-full-scale-test");
     let _ = std::fs::remove_dir_all(&dir);
     let core = MobileCore::new(dir.to_string_lossy().into()).unwrap();
@@ -16,7 +17,8 @@ fn full_scale_queries_match_prototype() {
         let want = q["total"].as_u64().unwrap();
         let got = core.query_nodes(text.into()).unwrap();
         assert_eq!(got.total, want, "query {text:?}");
-        let secs: Vec<(String, u64)> = q["sections"].as_array().unwrap().iter().map(|s| (s["region"].as_str().unwrap().to_string(), s["count"].as_u64().unwrap())).collect();
+        let secs: Vec<(String, u64)> =
+            q["sections"].as_array().unwrap().iter().map(|s| (s["region"].as_str().unwrap().to_string(), s["count"].as_u64().unwrap())).collect();
         let got_secs: Vec<(String, u64)> = got.sections.iter().map(|s| (s.region.clone(), s.count)).collect();
         assert_eq!(got_secs, secs, "sections {text:?}");
         let want_names: Vec<&str> = q["firstRows"].as_array().unwrap().iter().filter_map(|r| r["name"].as_str()).collect();

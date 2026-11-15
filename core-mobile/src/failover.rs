@@ -60,7 +60,8 @@ impl MobileCore {
     }
 
     pub fn set_failover_policy(&self, policy: FailoverPolicy) -> Result<(), MobileError> {
-        let cfg = FailoverPolicyConfig { enabled: policy.enabled, threshold: policy.threshold, cooldown_secs: policy.cooldown_secs, fallback_group: "next".into() };
+        let cfg =
+            FailoverPolicyConfig { enabled: policy.enabled, threshold: policy.threshold, cooldown_secs: policy.cooldown_secs, fallback_group: "next".into() };
         let errs = validate_failover_policy(cfg.clone());
         if !errs.is_empty() {
             return Err(MobileError::Invalid(errs.join("; ")));

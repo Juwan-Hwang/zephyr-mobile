@@ -5,7 +5,11 @@ use zephyr_mobile_core::rules::{LayerBuilder, LayerKind, Rule};
 use zephyr_mobile_core::MobileCore;
 
 fn rss_mb() -> f64 {
-    std::fs::read_to_string("/proc/self/status").ok().and_then(|s| s.lines().find(|l| l.starts_with("VmRSS")).and_then(|l| l.split_whitespace().nth(1)?.parse::<f64>().ok())).unwrap_or(0.0) / 1024.0
+    std::fs::read_to_string("/proc/self/status")
+        .ok()
+        .and_then(|s| s.lines().find(|l| l.starts_with("VmRSS")).and_then(|l| l.split_whitespace().nth(1)?.parse::<f64>().ok()))
+        .unwrap_or(0.0)
+        / 1024.0
 }
 
 fn main() {
@@ -18,13 +22,23 @@ fn main() {
         let _ = std::fs::remove_dir_all(&dir);
         let core = MobileCore::new(dir.to_string_lossy().into()).unwrap();
         let rep = core.rebuild_mock_nodes(scale).unwrap();
-        let size: u64 = std::fs::read_dir(&dir).unwrap().flatten().filter(|e| e.file_name().to_string_lossy().ends_with(".zn")).map(|e| e.metadata().unwrap().len()).sum();
-        println!("nodes: {} built in {} ms, file {:.1} MB ({:.1} B/node), peak-ish rss {:.1} MB", rep.total, rep.took_millis, size as f64 / 1e6, size as f64 / rep.total as f64, rss_mb());
-        if std::env::var("BUILD_ONLY").is_ok() { return; }
+        let size: u64 =
+            std::fs::read_dir(&dir).unwrap().flatten().filter(|e| e.file_name().to_string_lossy().ends_with(".zn")).map(|e| e.metadata().unwrap().len()).sum();
+        println!(
+            "nodes: {} built in {} ms, file {:.1} MB ({:.1} B/node), peak-ish rss {:.1} MB",
+            rep.total,
+            rep.took_millis,
+            size as f64 / 1e6,
+            size as f64 / rep.total as f64,
+            rss_mb()
+        );
+        if std::env::var("BUILD_ONLY").is_ok() {
+            return;
+        }
     }
     let t0 = Instant::now();
     let core = MobileCore::new(dir.to_string_lossy().into()).unwrap();
-    println!("open {:.1} ms, rss after open: {:.1} MB", t0.elapsed().as_secs_f64()*1e3, rss_mb());
+    println!("open {:.1} ms, rss after open: {:.1} MB", t0.elapsed().as_secs_f64() * 1e3, rss_mb());
 
     for q in ["", "jp", "东京", "东京 iplc", "us 家宽", "香港 hkt bgp", "tw hinet 原生", "cn2 gia", "美国 洛杉矶", "zzz"] {
         let t = Instant::now();
@@ -34,7 +48,14 @@ fn main() {
         let mid = r.total / 2;
         let p = core.node_rows(r.token, mid, 60).unwrap();
         let pt = t.elapsed();
-        println!("query {:>14} → {:>10} in {:>7.2} ms · page(60 @ mid) {:>6.2} ms · first: {}", format!("{q:?}"), r.total, qt.as_secs_f64() * 1e3, pt.as_secs_f64() * 1e3, p.rows.first().map(|x| x.name.as_str()).unwrap_or("-"));
+        println!(
+            "query {:>14} → {:>10} in {:>7.2} ms · page(60 @ mid) {:>6.2} ms · first: {}",
+            format!("{q:?}"),
+            r.total,
+            qt.as_secs_f64() * 1e3,
+            pt.as_secs_f64() * 1e3,
+            p.rows.first().map(|x| x.name.as_str()).unwrap_or("-")
+        );
     }
     println!("rss after queries: {:.1} MB", rss_mb());
 

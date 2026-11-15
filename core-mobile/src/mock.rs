@@ -10,7 +10,14 @@ pub struct RegionSpec {
 }
 
 pub const RG: &[RegionSpec] = &[
-    RegionSpec { code: "US", name: "美国", count: 3118402, cities: &["洛杉矶", "圣何塞", "西雅图", "纽约", "达拉斯"], base_latency: 152, carriers: &["CN2 GIA", "Cogent", "Zenlayer", "HE"] },
+    RegionSpec {
+        code: "US",
+        name: "美国",
+        count: 3118402,
+        cities: &["洛杉矶", "圣何塞", "西雅图", "纽约", "达拉斯"],
+        base_latency: 152,
+        carriers: &["CN2 GIA", "Cogent", "Zenlayer", "HE"],
+    },
     RegionSpec { code: "JP", name: "日本", count: 2204117, cities: &["东京", "大阪"], base_latency: 58, carriers: &["NTT", "IIJ", "KDDI", "SoftBank"] },
     RegionSpec { code: "HK", name: "香港", count: 1906551, cities: &["香港"], base_latency: 34, carriers: &["HKT", "HKBN", "PCCW", "CMI"] },
     RegionSpec { code: "SG", name: "新加坡", count: 1512880, cities: &["新加坡"], base_latency: 63, carriers: &["Akari", "SingTel", "StarHub"] },
@@ -37,11 +44,25 @@ pub fn hsh(r: u32, j: u32) -> u32 {
     h ^= h >> 13;
     h
 }
-pub fn tag_of(r: u32, j: u32) -> usize { ((j as u64 * 7 + r as u64) % 5) as usize }
-pub fn prot_of(r: u32, j: u32) -> usize { (hsh(r + 7, j) % 5) as usize }
-pub fn car_of(r: u32, j: u32) -> usize { ((j / 5) as usize) % RG[r as usize].carriers.len() }
-fn gcd(a: u32, b: u32) -> u32 { if b == 0 { a } else { gcd(b, a % b) } }
-fn lcm(a: u32, b: u32) -> u32 { a / gcd(a, b) * b }
+pub fn tag_of(r: u32, j: u32) -> usize {
+    ((j as u64 * 7 + r as u64) % 5) as usize
+}
+pub fn prot_of(r: u32, j: u32) -> usize {
+    (hsh(r + 7, j) % 5) as usize
+}
+pub fn car_of(r: u32, j: u32) -> usize {
+    ((j / 5) as usize) % RG[r as usize].carriers.len()
+}
+fn gcd(a: u32, b: u32) -> u32 {
+    if b == 0 {
+        a
+    } else {
+        gcd(b, a % b)
+    }
+}
+fn lcm(a: u32, b: u32) -> u32 {
+    a / gcd(a, b) * b
+}
 
 pub fn node_name(r: u32, j: u32) -> String {
     let g = &RG[r as usize];
@@ -53,7 +74,9 @@ pub fn cached_latency(r: u32, j: u32) -> Option<u32> {
     let h = hsh(r, j);
     (h % 11 < 3).then(|| RG[r as usize].base_latency + h % 37)
 }
-pub fn total() -> u64 { RG.iter().map(|g| g.count as u64).sum() }
+pub fn total() -> u64 {
+    RG.iter().map(|g| g.count as u64).sum()
+}
 
 /// 生成 NodeInput（server 用确定性假地址，保证指纹唯一）。scale ∈ (0,1] 按比例缩小每个地区。
 pub fn nodes(scale: f64) -> impl Iterator<Item = crate::nodes::NodeInput> {
@@ -61,7 +84,12 @@ pub fn nodes(scale: f64) -> impl Iterator<Item = crate::nodes::NodeInput> {
         let n = ((g.count as f64) * scale).round().max(1.0) as u32;
         (0..n).map(move |j| {
             let r32 = r as u32;
-            let mult = match (hsh(r32 + 3, j) % 10) as usize { 4 => 15, 7 => 5, 9 => 20, _ => 0 };
+            let mult = match (hsh(r32 + 3, j) % 10) as usize {
+                4 => 15,
+                7 => 5,
+                9 => 20,
+                _ => 0,
+            };
             crate::nodes::NodeInput {
                 name: node_name(r32, j),
                 server: format!("n{j}.{}.mock", g.code.to_ascii_lowercase()),
@@ -85,7 +113,8 @@ mod tests {
     fn matches_prototype_samples() {
         assert_eq!(total(), 13_109_802);
         // 来自 contract/fixtures/mock-v0.json（原型求值）
-        let fx: serde_yaml::Value = serde_yaml::from_str(&std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../contract/fixtures/mock-v0.json")).unwrap()).unwrap();
+        let fx: serde_yaml::Value =
+            serde_yaml::from_str(&std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../contract/fixtures/mock-v0.json")).unwrap()).unwrap();
         let nodes = fx["nodes"].as_sequence().unwrap();
         assert!(nodes.len() > 200);
         for n in nodes {

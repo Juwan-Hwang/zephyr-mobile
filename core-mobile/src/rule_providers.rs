@@ -102,10 +102,8 @@ impl MobileCore {
 
     /// 订阅变化后：序号上的规则集换了名字（或已不存在）的旧层删除。
     pub(crate) fn prune_provider_layers(&self) -> Result<(), MobileError> {
-        let want: Vec<String> = self
-            .active_subscription_body()
-            .map(|b| providers_in(&b).into_iter().map(|p| p.0).chain(self.geo_layer_names(&b)).collect())
-            .unwrap_or_default();
+        let want: Vec<String> =
+            self.active_subscription_body().map(|b| providers_in(&b).into_iter().map(|p| p.0).chain(self.geo_layer_names(&b)).collect()).unwrap_or_default();
         let mut m = load_manifest(&self.dir);
         let rules_dir = self.dir.join("rules");
         if let Ok(rd) = std::fs::read_dir(&rules_dir) {
@@ -142,7 +140,18 @@ impl MobileCore {
                     None => true,
                     Some(e) => interval > 0 && now_millis - e.updated_at >= interval * 1000,
                 };
-                RuleProvider { name, url, behavior, format, interval_secs: interval, policy, layer_index: idx, rule_count: e.map(|e| e.count), updated_at: e.map(|e| e.updated_at), due }
+                RuleProvider {
+                    name,
+                    url,
+                    behavior,
+                    format,
+                    interval_secs: interval,
+                    policy,
+                    layer_index: idx,
+                    rule_count: e.map(|e| e.count),
+                    updated_at: e.map(|e| e.updated_at),
+                    due,
+                }
             })
             .collect()
     }
@@ -181,7 +190,10 @@ mod tests {
         let f = FetchedSubscription { body: SUB.into(), userinfo: None, now_millis: 1 };
         let sub = core.import_subscription("S".into(), None, f, 0, None).unwrap();
         let ps = core.rule_providers(1000);
-        assert_eq!(ps.iter().map(|p| (p.name.as_str(), p.layer_index, p.policy.as_str())).collect::<Vec<_>>(), vec![("openai", 2, "a"), ("cn-ip", 3, "DIRECT")]);
+        assert_eq!(
+            ps.iter().map(|p| (p.name.as_str(), p.layer_index, p.policy.as_str())).collect::<Vec<_>>(),
+            vec![("openai", 2, "a"), ("cn-ip", 3, "DIRECT")]
+        );
         assert!(ps.iter().all(|p| p.due && p.rule_count.is_none()));
 
         let i = core.compile_rule_provider("openai".into(), "payload:\n  - '+.openai.com'\n  - 'chatgpt.com'\n".into(), 5000).unwrap();
@@ -201,7 +213,11 @@ mod tests {
         assert!(core.compile_rule_provider("nope".into(), String::new(), 1).is_err());
 
         // 订阅换掉：规则集层被清理
-        let f2 = FetchedSubscription { body: "proxies:\n  - {name: a, server: a.example, port: 443, type: trojan, password: p}\nrules:\n  - MATCH,DIRECT\n".into(), userinfo: None, now_millis: 2 };
+        let f2 = FetchedSubscription {
+            body: "proxies:\n  - {name: a, server: a.example, port: 443, type: trojan, password: p}\nrules:\n  - MATCH,DIRECT\n".into(),
+            userinfo: None,
+            now_millis: 2,
+        };
         core.update_subscription(sub.id, f2, None).unwrap();
         assert_eq!(core.rule_stats().layers.len(), 2);
         assert!(core.rule_providers(1).is_empty());

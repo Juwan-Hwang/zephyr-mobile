@@ -7,7 +7,9 @@ fn main() {
     println!("generate {} in {:?}", v.len(), t.elapsed());
     let t = Instant::now();
     let mut b = NodeStoreBuilder::with_capacity(v.len());
-    for n in v { b.push(n); }
+    for n in v {
+        b.push(n);
+    }
     println!("push {:?}", t.elapsed());
     let t = Instant::now();
     b.write(&std::env::temp_dir().join("prof.zn")).unwrap();

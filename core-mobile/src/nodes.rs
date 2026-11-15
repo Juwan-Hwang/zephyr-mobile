@@ -165,7 +165,10 @@ impl NodeStoreBuilder {
             error: None,
         };
         // 标签与协议存 u8：先占低位 id，保证城市/运营商再多也不会把它们挤出 255
-        for t in crate::mock::TAGS.iter().chain(["VLESS", "VMess", "Hy2", "Hysteria", "TUIC", "SS", "SSR", "Trojan", "WireGuard", "AnyTLS", "Snell", "HTTP", "SOCKS5"].iter()) {
+        for t in crate::mock::TAGS
+            .iter()
+            .chain(["VLESS", "VMess", "Hy2", "Hysteria", "TUIC", "SS", "SSR", "Trojan", "WireGuard", "AnyTLS", "Snell", "HTTP", "SOCKS5"].iter())
+        {
             b.intern(t);
         }
         b
@@ -198,9 +201,18 @@ impl NodeStoreBuilder {
             }
         };
         self.regions[rix as usize].1 += 1;
-        let city = match &n.city { Some(s) if !s.is_empty() => self.intern(s) as u16, _ => u16::MAX };
-        let carrier = match &n.carrier { Some(s) if !s.is_empty() => self.intern(s) as u16, _ => u16::MAX };
-        let tag = match &n.tag { Some(s) if !s.is_empty() => self.intern(s), _ => u8::MAX as u32 };
+        let city = match &n.city {
+            Some(s) if !s.is_empty() => self.intern(s) as u16,
+            _ => u16::MAX,
+        };
+        let carrier = match &n.carrier {
+            Some(s) if !s.is_empty() => self.intern(s) as u16,
+            _ => u16::MAX,
+        };
+        let tag = match &n.tag {
+            Some(s) if !s.is_empty() => self.intern(s),
+            _ => u8::MAX as u32,
+        };
         let proto = self.intern(&n.protocol);
         if tag > u8::MAX as u32 || proto >= u8::MAX as u32 {
             self.error = Some(MobileError::Invalid("标签或协议种类超过 254".into()));
@@ -249,7 +261,11 @@ impl NodeStoreBuilder {
         let NodeStoreBuilder { records, names, dict, mut regions, .. } = self;
         let prof = std::env::var_os("ZM_PROFILE").is_some();
         let t0 = Instant::now();
-        let lap = |what: &str| if prof { eprintln!("  write.{what}: {:?}", t0.elapsed()) };
+        let lap = |what: &str| {
+            if prof {
+                eprintln!("  write.{what}: {:?}", t0.elapsed())
+            }
+        };
         let n = records.len();
         // 去重：按 (fp, 下标) 排序，同 fp 的后来者作废
         let mut dup = vec![false; n];
@@ -381,10 +397,8 @@ impl NodeStoreBuilder {
         for (new, &old) in order.iter().enumerate() {
             remap[old as usize] = new as u32;
         }
-        let index: BTreeMap<(IndexKind, u32), RoaringBitmap> = index
-            .into_iter()
-            .map(|((k, key), bm)| if k == IndexKind::NameToken { ((k, remap[key as usize]), bm) } else { ((k, key), bm) })
-            .collect();
+        let index: BTreeMap<(IndexKind, u32), RoaringBitmap> =
+            index.into_iter().map(|((k, key), bm)| if k == IndexKind::NameToken { ((k, remap[key as usize]), bm) } else { ((k, key), bm) }).collect();
 
         lap("assemble");
         if !progress(BuildPhase::Write, 0, 1) {
@@ -753,7 +767,12 @@ impl NodeStore {
                 }
             }
             match bm {
-                Some(b) => acc = Some(match acc { Some(a) => a & b, None => b }),
+                Some(b) => {
+                    acc = Some(match acc {
+                        Some(a) => a & b,
+                        None => b,
+                    })
+                }
                 None => {
                     let typing = last && tk.len() <= 3 && tk.chars().all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '-');
                     if !typing {
@@ -795,14 +814,7 @@ impl NodeStore {
         let t0 = Instant::now();
         let (bm, highlights, _) = self.query(q);
         let sections = self.sections(&bm);
-        let res = NodeQueryResult {
-            query: q.to_string(),
-            total: bm.len(),
-            sections,
-            highlights,
-            took_micros: t0.elapsed().as_micros() as u64,
-            token: 0,
-        };
+        let res = NodeQueryResult { query: q.to_string(), total: bm.len(), sections, highlights, took_micros: t0.elapsed().as_micros() as u64, token: 0 };
         (bm, res)
     }
 
