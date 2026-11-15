@@ -470,4 +470,7 @@ class MockEngine(
     }
 }
 
+/** §15.h 4K by name: ASCII-only case-insensitive (no UNICODE_CASE, so full-width ４Ｋ does not match). Checked against contract/fixtures/uhd-names-v1.json. */
+internal fun isUhdName(name: String): Boolean = UHD.containsMatchIn(name)
+
 private val UHD = Regex("4K|UHD|8K", RegexOption.IGNORE_CASE)
