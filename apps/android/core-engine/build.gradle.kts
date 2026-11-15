@@ -32,6 +32,7 @@ dependencies {
 // Contract fixtures live at repo root; tests read them via this system property.
 tasks.withType<Test>().configureEach {
     systemProperty("zephyr.fixtures", rootProject.file("../../contract/fixtures").absolutePath)
+    inputs.dir(rootProject.file("../../contract/fixtures")).withPropertyName("contractFixtures").withPathSensitivity(PathSensitivity.RELATIVE)
     systemProperty("zephyr.coreLib", providers.gradleProperty("zephyr.coreLib").orNull ?: "")
     maxHeapSize = "2g"
 }
