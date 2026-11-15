@@ -40,6 +40,8 @@ struct QRScanSheet: View {
             }
         }
         .preferredColorScheme(.dark)
+        // 全屏覆盖没有下拉关闭，VoiceOver 双指 Z 形擦除也要能退出（同指令层）。
+        .accessibilityAction(.escape) { dismiss() }
         .task { await prepare() }
         .onDisappear { scanner.stop() }
     }
