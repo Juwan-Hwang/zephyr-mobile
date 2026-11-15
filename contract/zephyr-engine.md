@@ -495,3 +495,28 @@ record GroupMember { name, proxyType, latencyMs: Int32? }     // groupMembers；
 record HostActivity { host, scene?, node, connections: Int32, totalBytes: Int64, lastSeenAt: Int64 }   // recentHosts
 record HostTrace { host, lastSeenAt, connections, totalBytes, rule, chain: [String], scene?, node }    // hostTrace；chain 自顶层组到出口节点
 ```
+
+### 15.h 场景节点过滤：视频只用 4K 节点（2026-11-15，契约先行，core-mobile 待实现，只追加）
+原型指令“视频只用 4K 节点”（index.html 1046–1055：“视频仅使用 4K 节点 · 22 个中 14 个支持 4K”）。看板 #1 上 Android / iOS 均同意，本节合并两端意见。
+```
+enum SceneNodeFilter { uhd }                     // 允许值只此一个；以后加 streaming 等再追加枚举项。null = 不过滤
+record NodeRow { …, uhd: Bool }                  // 追加字段
+record Scene   { …, nodeFilter: SceneNodeFilter? }   // 追加字段，随现有 scenes() 刷新推送
+record NodeFilterPreview {
+  matching: UInt32,          // 候选中满足过滤的个数（“14 个支持 4K”）
+  total: UInt32,             // 不加过滤时的候选个数（“22 个中”），与 Scene.available 同口径
+  poolMatching: UInt64,      // 当前地区节点库中满足过滤的个数（不看测速）；0 = 根本没有 4K 节点
+  currentKept: Bool,         // 当前节点满足过滤，或场景尚未选节点
+  suggested: NodeRow?,       // currentKept=false 时：满足过滤的最快候选；没有已测候选时为 null
+  change: ExitChange?        // = previewSceneChange(sceneId, suggested.id)，出口 IP from → to（toIp 恒 null，同 §14）
+}
+previewSceneNodeFilter(sceneId: String, filter: SceneNodeFilter, nowMillis: Int64) throws -> NodeFilterPreview   // 新鲜度同 setLatencyTtlHours
+setSceneNodeFilter(sceneId: String, filter: SceneNodeFilter?) throws    // 持久化
+```
+- 4K 判定：节点名含 `4K` / `UHD` / `8K`（不区分大小写，同 subscription.rs 名字推断）；以后订阅有显式标签时优先读标签，名字推断作回退。
+- 过滤生效范围：该场景的 `sceneCandidates`、`Scene.available`、`applySceneChange` 组内热备、auto 场景换最快。`nodeFunnel` / `fastestNodes` / `scanTargets` 不带场景，不受影响。
+- **不主动切走当前节点**（同 §14.y）：`setSceneNodeFilter` 只改之后的候选与自动选点。当前节点不满足时由平台用 preview 的 `suggested` + `change` 出“更改出口 IP？”确认卡，用户确认后照常 `applySceneChange(sceneId, suggested.id)`。
+- `poolMatching == 0` 时 `setSceneNodeFilter(…, uhd)` 抛 `MobileError.Invalid`，场景不变。平台应先 preview：`poolMatching == 0` 禁用该指令并提示“没有支持 4K 的节点”；`matching == 0 && poolMatching > 0` 表示有 4K 节点但还没测速，可提示先重测（`scanTargets(scene.scanQuery, …)`）。
+- 传 `null` 清除过滤，总是成功。未知 sceneId 抛 `SceneNotFound`。
+- 文案建议：“视频仅使用 4K 节点 · {total} 个中 {matching} 个支持 4K”；currentKept 时补“当前节点保持不变”。
+- Mock：`uhd` 按名字判定；preview 按 mock 候选算，`change` 复用 previewSceneChange 的 mock。
