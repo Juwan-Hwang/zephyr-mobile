@@ -40,7 +40,7 @@ private fun FitText(text: String) {
     val base = ZTheme.type.number
     var scale by remember(text) { mutableFloatStateOf(1f) }
     BasicText(
-        text,
+        latinDigits(text),
         Modifier,
         style = bidiStyle(text, base).copy(color = ZTheme.colors.text1, fontSize = base.fontSize * scale, lineHeight = base.lineHeight * scale),
         maxLines = 1,
