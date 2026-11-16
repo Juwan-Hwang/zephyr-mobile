@@ -94,6 +94,14 @@ public enum ZFormat {
         var cal = Calendar(identifier: .gregorian); cal.timeZone = timeZone
         let date = Date(timeIntervalSince1970: Double(at) / 1000)
         let c = cal.dateComponents([.month, .day], from: date)
+        // 非中文界面：交给系统按语言排日期（“Nov 9”“9 нояб.”“9 Kas”），月份名比数字模板自然（D-P2-12）。
+        if let locale = ZL.uiLocale, !locale.identifier.hasPrefix("zh") {
+            let f = DateFormatter()
+            f.locale = locale
+            f.timeZone = timeZone
+            f.setLocalizedDateFormatFromTemplate("MMMd")
+            return f.string(from: date)
+        }
         let key = "%lld月%lld日"
         let format = ZL.tr(key)
         if format == key { return "\(c.month ?? 0)月\(c.day ?? 0)日" }          // 未翻译（中文）
@@ -109,14 +117,26 @@ public enum ZFormat {
 
     /// 1 = 周日。"周五" / "Fri"。
     public static func shortWeekdayName(_ weekday: Int) -> String {
+        if let name = systemWeekday(weekday, short: true) { return name }
         let names = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"]
         return ZL.tr(names[(weekday - 1 + 7) % 7])
     }
 
     /// 1 = 周日。"星期五" / "Friday"。
     public static func weekdayName(_ weekday: Int) -> String {
+        if let name = systemWeekday(weekday, short: false) { return name }
         let names = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
         return ZL.tr(names[(weekday - 1 + 7) % 7])
+    }
+
+    /// 非中文界面的星期名取系统（CLDR）的独立形式；中文与单测返回 nil，沿用上面的表。
+    static func systemWeekday(_ weekday: Int, short: Bool) -> String? {
+        guard let locale = ZL.uiLocale, !locale.identifier.hasPrefix("zh") else { return nil }
+        let f = DateFormatter()
+        f.locale = locale
+        let names: [String] = short ? f.shortStandaloneWeekdaySymbols : f.standaloneWeekdaySymbols
+        let i = (weekday - 1 + 7) % 7
+        return i < names.count ? names[i] : nil
     }
 
     /// "9:41"。App 运行时（`ZL.bundle` 已设置）遵循系统的 12 / 24 小时设置与语言（"9:41 AM" / "09:41"）；

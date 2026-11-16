@@ -44,7 +44,7 @@ struct NodeNameMarkup: Equatable, Sendable {
 }
 
 /// 紧凑计数（原型 chips 与资料库卡片）。中文界面：312 万 / 1,311 万 / 1.04 亿；
-/// 其他语言：312K / 13.1M / 1.04B（“万 / 亿”在英文界面里没有意义）。按 `ZL.usesChineseUnits` 选择。
+/// 其他语言：312K / 13.1M / 1.04B（“万 / 亿”在英文界面里没有意义）。按 `ZL.countUnits` 选择（日文 万/億、韩文 만/억）。
 enum CompactCount {
     /// 千分位分组（不依赖 NumberFormatter，热路径零分配开销小）。
     static func grouped(_ v: Int64) -> String {
@@ -71,7 +71,31 @@ enum CompactCount {
     }
 
     /// 资料库卡片用：按界面语言选单位。
-    static func local(_ n: Int64) -> String { ZL.usesChineseUnits ? zh(n) : en(n) }
+    static func local(_ n: Int64) -> String { local(n, units: ZL.countUnits) }
+
+    static func local(_ n: Int64, units: ZL.CountUnits) -> String {
+        switch units {
+        case .zh: zh(n)
+        case .ja: cjk(n, wan: "万", yi: "億")
+        case .ko: cjk(n, wan: "만", yi: "억")
+        case .western: en(n)
+        case .localized(let lang): localizedCompact(n, lang: lang)
+        }
+    }
+
+    /// 其余语言交给系统的紧凑记数（CLDR）：不足 10 万照常分组，之后最多 3 位有效数字。
+    static func localizedCompact(_ n: Int64, lang: String) -> String {
+        let locale = Locale(identifier: lang)
+        if n < 100_000 { return n.formatted(.number.locale(locale)) }
+        return n.formatted(.number.notation(.compactName).precision(.significantDigits(1...3)).locale(locale))
+    }
+
+    /// 日文 / 韩文：与中文同为万进制，单位紧贴数字（“1,311万”“1.04億”“1,311만”）。
+    static func cjk(_ n: Int64, wan: String, yi: String) -> String {
+        if n < 100_000 { return grouped(n) }
+        if n < 100_000_000 { return grouped(Int64((Double(n) / 10_000).rounded())) + wan }
+        return String(format: "%.2f", Double(n) / 100_000_000) + yi
+    }
 
     /// 英文紧凑格式：不足 10 万显示原数；312K；13.1M（≥ 100M 不带小数）；1.04B。
     static func en(_ n: Int64) -> String {
@@ -86,7 +110,19 @@ enum CompactCount {
 
     /// chips 用："312 万"（原型 (count/1e4).toFixed(0)），不足 1 万时显示原数；英文界面 "312K" / "3.1M"。
     static func chip(_ n: Int64) -> String {
-        ZL.usesChineseUnits ? chipZh(n) : chipEn(n)
+        chip(n, units: ZL.countUnits)
+    }
+
+    static func chip(_ n: Int64, units: ZL.CountUnits) -> String {
+        switch units {
+        case .zh: chipZh(n)
+        case .ja: n < 10_000 ? grouped(n) : "\(Int64((Double(n) / 10_000).rounded()))万"
+        case .ko: n < 10_000 ? grouped(n) : "\(Int64((Double(n) / 10_000).rounded()))만"
+        case .western: chipEn(n)
+        case .localized(let lang):
+            n < 10_000 ? Int(n).formatted(.number.locale(Locale(identifier: lang)))
+                       : n.formatted(.number.notation(.compactName).precision(.significantDigits(1...2)).locale(Locale(identifier: lang)))
+        }
     }
 
     static func chipZh(_ n: Int64) -> String {

@@ -15,6 +15,27 @@ public enum ZL {
         return lang.hasPrefix("zh")
     }
 
+    /// 界面实际使用的语言（bundle 选中的本地化）；单测（bundle 为 nil）为 nil。
+    public static var uiLocale: Locale? {
+        bundle?.preferredLocalizations.first.map { Locale(identifier: $0) }
+    }
+
+    /// 紧凑计数的单位体系：中文“万 / 亿”、日文“万 / 億”、韩文“만 / 억”、英文 K / M / B，
+    /// 其余语言用系统的本地化紧凑写法（俄文“13,1 млн”等，D-P2-12）。
+    public enum CountUnits: Sendable, Equatable { case zh, ja, ko, western, localized(String) }
+
+    public static var countUnits: CountUnits { units(forLocalization: bundle?.preferredLocalizations.first) }
+
+    /// nil（测试、未设 bundle）按中文。
+    public static func units(forLocalization lang: String?) -> CountUnits {
+        guard let lang else { return .zh }
+        if lang.hasPrefix("zh") { return .zh }
+        if lang.hasPrefix("ja") { return .ja }
+        if lang.hasPrefix("ko") { return .ko }
+        if lang.hasPrefix("en") { return .western }
+        return .localized(lang)
+    }
+
     /// 直接查表。缺译文时回落到键本身（中文原文）。
     public static func tr(_ key: String) -> String {
         guard let bundle else { return key }

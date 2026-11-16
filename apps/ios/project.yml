@@ -25,9 +25,22 @@ options:
   deploymentTarget:
     iOS: "17.0"
   developmentLanguage: zh-Hans
+  # 产品决策 D-P2-12（11-16）：与桌面端 i18n.js 相同的 14 种语言；系统语言不在列表内回落英文。
   knownRegions:
-    - zh-Hans
     - en
+    - zh-Hans
+    - ja
+    - ko
+    - ru
+    - es
+    - fa
+    - tk
+    - my
+    - ar
+    - ur
+    - sw
+    - tr
+    - vi
     - Base
   createIntermediateGroups: true
   generateEmptyDirectories: true
@@ -96,12 +109,24 @@ targets:
         CFBundleDisplayName: Zephyr
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
-        CFBundleDevelopmentRegion: zh-Hans
+        CFBundleDevelopmentRegion: en
         # 出口合规：隧道协议（mihomo：TLS / Shadowsocks / VMess 等）使用非豁免加密，如实声明 YES。
         ITSAppUsesNonExemptEncryption: true
         CFBundleLocalizations:
-          - zh-Hans
           - en
+          - zh-Hans
+          - ja
+          - ko
+          - ru
+          - es
+          - fa
+          - tk
+          - my
+          - ar
+          - ur
+          - sw
+          - tr
+          - vi
         LSRequiresIPhoneOS: true
         UILaunchScreen:
           UIColorName: LaunchBackground
@@ -256,7 +281,7 @@ targets:
       path: Widgets/Info.plist
       properties:
         CFBundleDisplayName: Zephyr
-        CFBundleDevelopmentRegion: zh-Hans
+        CFBundleDevelopmentRegion: en
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         ZephyrAppGroup: $(ZEPHYR_APP_GROUP)
