@@ -68,6 +68,8 @@ fun SceneCard(
     scenes: List<Scene>,
     pending: PendingChange?,
     slots: Map<String, List<NodeSummary>>,
+    retesting: Set<String>,
+    scan: com.zephyr.engine.ScanProgress?,
     onPick: (Scene, NodeSummary) -> Unit,
     onPrefetch: (Scene) -> Unit,
     onConfirm: () -> Unit,
@@ -88,6 +90,7 @@ fun SceneCard(
             if (s.source != SceneSource.SUBSCRIPTION_GROUP) androidx.compose.runtime.LaunchedEffect(s.id, s.selected.id, s.source) { onPrefetch(s) }
             SceneRow(
                 s, slots[s.id].orEmpty(), pendingNode = pending?.takeIf { it.scene.id == s.id }?.node,
+                probing = if (s.id in retesting) (scan?.fraction ?: 0f) else null,
                 onScrubStart = { if (!hinted) { hinted = true; hint.markSeen() }; if (pending != null) onCancel() },
                 onPick = { n -> onPick(s, n) }, onOpen = { onOpen(s) },
             )
@@ -105,6 +108,8 @@ private fun SceneRow(
     s: Scene,
     slots: List<NodeSummary>,
     pendingNode: NodeSummary?,
+    /** Prototype 10 (scan): non-null while this scene is re-tested, the pool scan's fraction done. */
+    probing: Float?,
     onScrubStart: () -> Unit,
     onPick: (NodeSummary) -> Unit,
     onOpen: () -> Unit,
@@ -172,7 +177,13 @@ private fun SceneRow(
             ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight, fontSize = 17.sp, letterSpacing = (-0.01).em), maxLines = lines)
             Spacer(Modifier.height(3.dp))
             val down = s.services.filter { !it.ok }
-            ZText(
+            if (probing != null) {
+                // Prototype 10: "4 个可用" over a 96 dp accent bar that fills as the pool scan advances.
+                ZText(if (s.available > 0) "${s.available} 个可用 · 检测中" else "检测中", style = ZTheme.type.callout.copy(fontSize = 13.sp), color = c.text3, maxLines = lines)
+                Spacer(Modifier.height(6.dp))
+                val shown by androidx.compose.animation.core.animateFloatAsState(probing, label = "scan")
+                com.zephyr.design.components.ZProgressBar(shown, Modifier.width(96.dp), color = c.accent)
+            } else ZText(
                 when {
                     down.isNotEmpty() -> "${down.joinToString("、") { it.name }} 不可用"
                     s.source == SceneSource.SUBSCRIPTION_GROUP -> "订阅分组"

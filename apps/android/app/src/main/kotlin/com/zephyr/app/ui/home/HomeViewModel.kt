@@ -159,6 +159,17 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
      * 订阅分组 / Zephyr 优选. Choosing 优选 may move the exit to the best node; for AI that is an exit-IP change,
      * so it goes through the inline confirm first and the source is recorded only after "更改" (§14.y).
      */
+    /** Scenes being re-tested (prototype 10 "检测中") and the pool scan's progress ("正在检测 138/512"). */
+    private val _retesting = MutableStateFlow<Set<String>>(emptySet())
+    val retesting: StateFlow<Set<String>> = _retesting.asStateFlow()
+    val scan: StateFlow<com.zephyr.engine.ScanProgress?> = engine.scanProgress().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    fun retest(sceneId: String) {
+        if (sceneId in _retesting.value) return
+        _retesting.update { it + sceneId }
+        launchCatching("重新检测") { try { engine.retestScene(sceneId) } finally { _retesting.update { it - sceneId } } }
+    }
+
     fun setSource(scene: Scene, source: com.zephyr.engine.SceneSource) = launchCatching("切换来源") {
         if (scene.kind == com.zephyr.engine.SceneKind.AI && source == com.zephyr.engine.SceneSource.AUTO) {
             val best = engine.sceneCandidates(scene.id, null).firstOrNull()

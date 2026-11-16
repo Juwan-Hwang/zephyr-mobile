@@ -40,6 +40,8 @@ fun BoxScope.SceneSheet(
     onDismiss: () -> Unit,
     onPick: (Scene, NodeSummary) -> Unit = { _, _ -> },
     onSource: (Scene, SceneSource) -> Unit = { _, _ -> },
+    retesting: Boolean = false,
+    onRetest: (Scene) -> Unit = {},
 ) {
     val c = ZTheme.colors
     ZSheet(scene != null, onDismiss, scene?.name ?: "") {
@@ -83,6 +85,9 @@ fun BoxScope.SceneSheet(
             // §15.h: set by the command "视频只用 4K 节点"; candidates and auto-pick above are already filtered.
             if (s.nodeFilter == SceneNodeFilter.UHD) { ZDivider(); ZSettingsRow("节点范围", value = "仅 4K 节点") }
             s.exceptions.forEach { e -> ZDivider(); ZSettingsRow(e.app, value = "${e.node.name}（固定）") }
+            ZDivider()
+            // Prototype 10: re-test the scene's pool; progress shows on the home row and section header.
+            ZSettingsRow(if (retesting) "检测中…" else "重新检测", onClick = if (retesting) null else ({ onRetest(s) }))
         }
         ZText(
             "优选结果仅保存在 Zephyr 中，订阅配置保持原样。" + (s.testedAt?.let { " 上次检测 ${ZFormat.ago(it, com.zephyr.app.ui.common.LocalNow.current())}。" } ?: ""),

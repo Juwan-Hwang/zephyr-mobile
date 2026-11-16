@@ -175,11 +175,14 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                 }
             }
             val scenesNow by home.scenes.collectAsStateWithLifecycle()
+            val retestingNow by home.retesting.collectAsStateWithLifecycle()
             SceneSheet(
                 scene?.let { s -> scenesNow.firstOrNull { it.id == s.id } ?: s },
                 onDismiss = { scene = null },
                 onPick = { s, n -> scene = null; home.pick(s, n) },
                 onSource = { s, src -> home.setSource(s, src); if (s.kind == com.zephyr.engine.SceneKind.AI && src == com.zephyr.engine.SceneSource.AUTO) scene = null },
+                retesting = scene?.id in retestingNow,
+                onRetest = { s -> home.retest(s.id) },
             )
             ActivitySheet(activity, { activity = false; traceHost = null }, traceHost, onNotice = { home.notify(it) }) { traceHost = it }
             ImportSheet(import, { import = false; importPrefill = null }, prefill = importPrefill) { import = false; importPrefill = null; home.notify(it) }

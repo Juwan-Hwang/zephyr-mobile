@@ -59,6 +59,7 @@
 - 第四十一批（PR agent/android/uhd-fixture）：✅ §15.h 跟进 A #165：Mock 4K 名字判定抽为 isUhdName，新增 UhdNamesFixtureTest 逐条比对 contract/fixtures/uhd-names-v1.json。
 - 第四十二批（PR agent/android/uhd-ascii）：✅ 跟进 A #176：isUhdName 改仅 ASCII 折叠（U+212A 不算 4K）；core-engine Test task 声明 contract/fixtures 为输入，fixture 变化会使缓存失效。
 - 第四十二批（PR agent/android/subs-swipe）：✅ L-P2-9 收尾（规范 §4 左滑更新/删除：订阅行左滑露出“更新 / 删除”，过半吸附；删除需二次点按“确认删除”（核心无撤销）；失败显示“无法更新/删除 X”；TalkBack 自定义动作同两项）。L-P2-9 全部关闭。
+- 第四十三批（PR agent/android/scene-scan）：✅ H-P1-12 收尾（原型 10“检测中”：场景详情新增“重新检测”；CoreEngine.retestScene 按 Scene.scanQuery 取至多 512 个目标、每 64 个一组测速并发布平台本地 ScanProgress（§15.d），隧道开启时组测速 + 服务探测并行；首页场景标题右侧显示“正在检测 done/total”，该行显示“N 个可用 · 检测中”与 96dp 强调色进度条）。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）。
 
 ## 总览

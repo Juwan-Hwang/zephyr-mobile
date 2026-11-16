@@ -69,10 +69,13 @@ fun HomeScreen(vm: HomeViewModel, actions: HomeActions) {
     val scenes by vm.scenes.collectAsStateWithLifecycle()
     val subs by vm.subscriptions.collectAsStateWithLifecycle()
     val ui by vm.ui.collectAsStateWithLifecycle()
+    val retesting by vm.retesting.collectAsStateWithLifecycle()
+    val scan by vm.scan.collectAsStateWithLifecycle()
     val live = vm.live.collectAsStateWithLifecycle()
     HomeContent(
         conn, scenes, subs, ui, { live.value }, actions,
         HomeCallbacks({ vm.setMode(it) }, { s, n -> vm.pick(s, n) }, { vm.confirmPending() }, { vm.cancelPending() }, { vm.undo() }, { vm.toggleGlobalChange() }, { vm.confirmGlobal() }, { vm.prefetchSlots(it) }),
+        retesting, scan,
     )
 }
 
@@ -98,6 +101,9 @@ fun HomeContent(
     live: () -> HomeLive,
     actions: HomeActions,
     cb: HomeCallbacks,
+    /** Prototype 10 (scan): scenes being re-tested and the pool scan's progress. */
+    retesting: Set<String> = emptySet(),
+    scan: com.zephyr.engine.ScanProgress? = null,
 ) {
     val c = ZTheme.colors
     val connected = conn.status == ConnectionStatus.CONNECTED
@@ -138,13 +144,13 @@ fun HomeContent(
             item("scenes-h") {
                 Spacer(Modifier.height(28.dp))
                 val tested = scenes.mapNotNull { it.testedAt }.maxOrNull()
-                ZSectionHeader("场景", trailing = if (conn.mode == ProxyMode.GLOBAL) null else tested?.let { ZFormat.ago(it, ui.now).let { a -> if (a == "刚刚") "刚刚检测" else a.replace("前", "前检测") } })
+                ZSectionHeader("场景", trailing = if (conn.mode == ProxyMode.GLOBAL) null else scan?.let { "正在检测 ${it.done}/${it.total}" } ?: if (retesting.isNotEmpty()) "正在检测…" else tested?.let { ZFormat.ago(it, ui.now).let { a -> if (a == "刚刚") "刚刚检测" else a.replace("前", "前检测") } })
             }
             item("scenes") {
                 if (conn.mode == ProxyMode.GLOBAL) {
                     GlobalModeCard(ui.globalNode, ui.globalProposal, ui.globalChange, onUseRule = { cb.setMode(ProxyMode.RULE) }, onChangeNode = cb.toggleGlobalChange, onConfirm = cb.confirmGlobal)
                 } else {
-                    SceneCard(scenes, ui.pending, ui.slots, cb.pick, cb.prefetchSlots, { cb.confirm() }, cb.cancel, actions.onScene)
+                    SceneCard(scenes, ui.pending, ui.slots, retesting, scan, cb.pick, cb.prefetchSlots, { cb.confirm() }, cb.cancel, actions.onScene)
                 }
             }
             item("subs-h") {

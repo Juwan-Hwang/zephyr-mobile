@@ -124,6 +124,11 @@ data class NodeFilterPreview(
     val change: ExitChange?,
 )
 
+/** Contract §15.d: platform-local progress of a scene re-test scan ("正在检测 138/512"); not part of the FFI. */
+data class ScanProgress(val done: Int, val total: Int) {
+    val fraction: Float get() = if (total <= 0) 0f else (done.toFloat() / total).coerceIn(0f, 1f)
+}
+
 @Serializable
 data class ServiceHealth(val appId: String, val name: String, val ok: Boolean, val checkedAt: Long)
 
