@@ -100,7 +100,7 @@ final class RulesModel {
             out.append(Step(id: 2, label: ZL.tr("结果"), value: .text(ZL.tr("已拦截"))))
         default:
             if let scene = t.scene {
-                out.append(Step(id: 2, label: ZL.s("场景 · %@", scene.name),
+                out.append(Step(id: 2, label: ZL.s("场景 · %@", scene.displayName),
                                 value: .region(code: scene.selected.region, name: scene.selected.name)))
             } else {
                 out.append(Step(id: 2, label: ZL.tr("场景"), value: .text(t.policy)))

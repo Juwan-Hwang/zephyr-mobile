@@ -179,6 +179,14 @@ public struct Scene: Sendable, Hashable, Codable, Identifiable {
     /// 契约 §15.h：场景节点过滤；nil = 不过滤。不参与编码（fixture 无此字段）。
     public var nodeFilter: SceneNodeFilter? = nil
 
+    /// 界面显示名：内置场景（AI / 视频 / 其他）的名称是核心给的中文原文，按目录键本地化；
+    /// 用户自定义场景原样显示（D-P2-12）。
+    public var displayName: String { Scene.displayName(name, kind: kind) }
+
+    public static func displayName(_ name: String, kind: SceneKind) -> String {
+        kind == .custom ? name : ZL.tr(name)
+    }
+
     public init(id: String, kind: SceneKind, name: String, available: Int32, selected: NodeSummary, exitIp: String? = nil,
                 source: SceneSource, testedAt: Int64? = nil, note: String? = nil, exceptions: [SceneException] = [],
                 services: [ServiceHealth] = [], scanQuery: String? = nil, nodeFilter: SceneNodeFilter? = nil) {

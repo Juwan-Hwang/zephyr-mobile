@@ -169,7 +169,7 @@ public struct OnboardingView: View {
     // MARK: 共用
 
     private func stepLabel(_ s: String) -> some View {
-        Text(verbatim: s)
+        Text(verbatim: "\u{2066}\(s)\u{2069}")   // LTR 隔离：RTL 界面里仍读作 "1 / 2"
             .zMono(.body)
             .foregroundStyle(ZColor.t3)
             .accessibilityLabel(Text("第 \(s.prefix(1)) 步，共 2 步"))

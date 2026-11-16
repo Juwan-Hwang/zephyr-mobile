@@ -86,7 +86,7 @@ extension AppModel {
     /// 已自动切换：给撤销（再 apply 旧节点）；AI 场景未切换：只提示，不给操作。
     func apply(failover n: SceneFailoverNotice) {
         guard let to = n.switchedTo else {
-            showUndo(ZL.s("%@ 出口无响应，出口 IP 不会自动更换", n.sceneName))
+            showUndo(ZL.s("%@ 出口无响应，出口 IP 不会自动更换", ZL.tr(n.sceneName)))
             return
         }
         let engine = self.engine
@@ -99,7 +99,7 @@ extension AppModel {
                 do { try await engine.applySceneChange(sceneId: sceneId, nodeId: prev) } catch { self.report(error) }
             }
         }
-        showUndo(ZL.s("%1$@ 出口无响应，已自动切换到 %2$@", n.sceneName, to), undo: undo)
+        showUndo(ZL.s("%1$@ 出口无响应，已自动切换到 %2$@", ZL.tr(n.sceneName), to), undo: undo)
     }
 
     /// 场景出口探测：与流量同样只在“前台且已连接”时订阅（后台不探测、不自动切换）。

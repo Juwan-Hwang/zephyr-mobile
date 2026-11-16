@@ -47,7 +47,7 @@ struct ScenesSection: View {
                         // 提示气泡画在行下沿之外；抬高层级，盖住下一行之前的分隔线（原型 `.coach` 用 --s1 底，REVIEW H-P2-4）。
                         .zIndex(coach ? 1 : 0)
                     if let pending {
-                        SceneChangeConfirm(change: pending, sceneName: scene.name)
+                        SceneChangeConfirm(change: pending, sceneName: scene.displayName)
                             .transition(.opacity.combined(with: .move(edge: .top)))
                     }
                 }

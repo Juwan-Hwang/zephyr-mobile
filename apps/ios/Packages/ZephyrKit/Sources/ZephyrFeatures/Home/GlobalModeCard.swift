@@ -48,15 +48,15 @@ struct GlobalModeCard: View {
                     if let cur = model.globalNode { ZFlag(cur.region) }
                     Image(systemName: "arrow.forward").font(.caption2).foregroundStyle(ZQuaternaryText())
                     ZFlag(s.region)
-                    Text(verbatim: s.name).zType(.footnote).foregroundStyle(ZTokens.Colors.screenT1)
+                    Text(verbatim: s.displayName).zType(.footnote).foregroundStyle(ZTokens.Colors.screenT1)
                     if let ms = s.latencyMs, ms >= 0 {
                         Text(verbatim: ZFormat.latency(ms)).zMono(.small).foregroundStyle(ZColor.t3)
                     }
                 }
                 .padding(.top, ZTokens.Space.n4)
-                Text("所有 App 的出口都将变为\(s.name)。").zType(.caption).foregroundStyle(ZColor.t3)
+                Text("所有 App 的出口都将变为\(s.displayName)。").zType(.caption).foregroundStyle(ZColor.t3)
                 HStack(spacing: ZTokens.Space.n3) {
-                    ZButton("更改为\(s.name)", fullWidth: true) {
+                    ZButton("更改为\(s.displayName)", fullWidth: true) {
                         expanded = false
                         Task { await model.setGlobalNode(s) }
                     }

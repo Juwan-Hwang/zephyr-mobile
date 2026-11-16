@@ -79,7 +79,7 @@ struct SceneRow: View {
 
     private var leading: some View {
         VStack(alignment: .leading, spacing: ZTokens.Space.n1) {
-            Text(verbatim: scene.name)
+            Text(verbatim: scene.displayName)
                 .zType(.headline).fontWeight(.regular)
                 .foregroundStyle(ZTokens.Colors.screenT1)
             meta
@@ -206,7 +206,7 @@ struct SceneRow: View {
     private func openDetail() { model.present(.scene(id: scene.id)) }
 
     private var a11yLabel: String {
-        var parts = [scene.name]
+        var parts = [scene.displayName]
         if isProbing { parts.append(ZL.tr("检测中")) }
         else if services.replacesRowStatus { parts.append(services.spoken ?? "") }
         else if scene.source == .subscriptionGroup { parts.append(ZL.tr("订阅分组")) }

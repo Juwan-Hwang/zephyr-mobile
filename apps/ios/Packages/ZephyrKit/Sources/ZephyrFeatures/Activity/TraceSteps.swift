@@ -56,7 +56,7 @@ enum TraceSteps {
             steps.append(TraceStep(label: ZL.tr("策略"), value: value, marker: .success))
             return steps
         }
-        steps.append(TraceStep(label: ZL.tr("场景"), value: scene.name, detail: sourceText(scene.source)))
+        steps.append(TraceStep(label: ZL.tr("场景"), value: scene.displayName, detail: sourceText(scene.source)))
 
         let actual = live?.node ?? latest?.node
         let (node, exception) = resolveNode(scene: scene, actualNode: actual)

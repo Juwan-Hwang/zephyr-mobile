@@ -13,6 +13,10 @@ extension UIView {
 
     /// “尾部对齐”：LTR 为右、RTL 为左。
     var trailingAlignment: NSTextAlignment { isRTL ? .left : .right }
+
+    /// “首部对齐”：LTR 为左、RTL 为右。不用 `.natural`——它跟随文字本身的方向，
+    /// 节点名多为中文 / 拉丁字母，在阿拉伯文界面里会贴错边。
+    var leadingAlignment: NSTextAlignment { isRTL ? .right : .left }
 }
 
 enum RTLLayout {

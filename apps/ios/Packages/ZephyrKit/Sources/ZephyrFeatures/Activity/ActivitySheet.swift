@@ -173,7 +173,7 @@ struct ActivitySheet: View {
 
     private func sceneName(_ h: RecentHost) -> String? {
         guard let id = h.scene else { return nil }
-        return model.scene(id: id)?.name ?? id
+        return model.scene(id: id)?.displayName ?? id
     }
 
     private func close(_ h: RecentHost) {
