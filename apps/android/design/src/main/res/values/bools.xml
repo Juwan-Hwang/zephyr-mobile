@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Compact counts in 万/亿 (myriad) units instead of the locale's K/M/B. On only where the language counts that way. -->
+    <bool name="common_number_myriad">false</bool>
+</resources>

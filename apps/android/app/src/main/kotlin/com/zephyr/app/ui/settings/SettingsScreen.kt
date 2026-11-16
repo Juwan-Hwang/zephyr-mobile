@@ -1,5 +1,8 @@
 package com.zephyr.app.ui.settings
 
+import androidx.annotation.StringRes
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.Role
@@ -31,8 +34,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.zephyr.app.BuildConfig
+import com.zephyr.app.R
 import com.zephyr.app.di.AppGraph
+import com.zephyr.app.ui.common.BackTo
 import com.zephyr.app.ui.common.PageScaffold
+import com.zephyr.app.ui.common.joinList
 import com.zephyr.design.components.ZDivider
 import com.zephyr.design.components.ZListGroup
 import com.zephyr.design.components.ZSectionHeader
@@ -51,7 +57,7 @@ import com.zephyr.engine.StorageInfo
 import kotlinx.coroutines.launch
 
 @Composable
-fun SettingsScreen(back: String, onLogs: () -> Unit = {}, onBack: () -> Unit) {
+fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onBack: () -> Unit) {
     val engine = AppGraph.engine
     val c = ZTheme.colors
     val s by engine.settings().collectAsState(Settings())
@@ -59,57 +65,64 @@ fun SettingsScreen(back: String, onLogs: () -> Unit = {}, onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
     fun set(f: (Settings) -> Settings) = scope.launch { engine.updateSettings(f(s)) }
 
-    PageScaffold(back, "设置", onBack) {
+    PageScaffold(back, stringResource(R.string.common_settings), onBack) {
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-            ZSectionHeader("连接")
+            ZSectionHeader(stringResource(R.string.settings_section_connection))
             ZListGroup {
-                ZSettingsRow("按需连接", checked = s.onDemand, onCheckedChange = { v -> set { it.copy(onDemand = v) } })
+                ZSettingsRow(stringResource(R.string.settings_on_demand), checked = s.onDemand, onCheckedChange = { v -> set { it.copy(onDemand = v) } })
                 ZDivider()
-                ZSettingsRow("受信任的 Wi‑Fi", subtitle = "连接后自动断开", value = s.trustedWifi.joinToString("、").ifEmpty { "无" })
+                ZSettingsRow(stringResource(R.string.settings_trusted_wifi), subtitle = stringResource(R.string.settings_trusted_wifi_hint), value = joinList(s.trustedWifi).ifEmpty { stringResource(R.string.common_none) })
                 ZDivider()
                 ChoiceRow(
-                    "本地代理端口", listOf(true to "开", false to "关"), s.localProxyEnabled,
+                    stringResource(R.string.settings_local_proxy), listOf(true to stringResource(R.string.common_on), false to stringResource(R.string.common_off)), s.localProxyEnabled,
                     onSelect = { v -> set { it.copy(localProxyEnabled = v) } },
-                    subtitle = "127.0.0.1:${s.localProxyPort}" + if (s.localProxyAuth) " · 需要密码" else "",
+                    subtitle = "127.0.0.1:${s.localProxyPort}" + if (s.localProxyAuth) " · " + stringResource(R.string.settings_password_required) else "",
                 )
             }
-            ZSectionHeader("检测", Modifier.padding(top = 12.dp))
+            ZSectionHeader(stringResource(R.string.settings_section_testing), Modifier.padding(top = 12.dp))
             ZListGroup {
-                ZSettingsRow("仅在 Wi‑Fi 下测速", checked = s.testOnWifiOnly, onCheckedChange = { v -> set { it.copy(testOnWifiOnly = v) } })
+                ZSettingsRow(stringResource(R.string.settings_test_wifi_only), checked = s.testOnWifiOnly, onCheckedChange = { v -> set { it.copy(testOnWifiOnly = v) } })
                 ZDivider()
                 ChoiceRow(
-                    "结果保留", (listOf(6, 24, 72) + s.latencyTtlHours).distinct().sorted().map { it to "$it 小时" }, s.latencyTtlHours,
+                    stringResource(R.string.settings_keep_results), (listOf(6, 24, 72) + s.latencyTtlHours).distinct().sorted().map { it to pluralStringResource(R.plurals.settings_hours, it, it) }, s.latencyTtlHours,
                     onSelect = { h -> set { it.copy(latencyTtlHours = h) } },
                 )
             }
-            ZSectionHeader("存储", Modifier.padding(top = 12.dp))
+            ZSectionHeader(stringResource(R.string.settings_section_storage), Modifier.padding(top = 12.dp))
             ZListGroup {
                 Column(Modifier.padding(20.dp)) {
-                    ZText("节点与规则", style = ZTheme.type.body)
+                    ZText(stringResource(R.string.settings_storage_title), style = ZTheme.type.body)
                     Spacer(Modifier.height(12.dp))
                     StorageBar(storage)
                     Spacer(Modifier.height(8.dp))
-                    ZText("节点 ${ZFormat.bytesText(storage.nodesBytes)} · 规则 ${ZFormat.bytesText(storage.rulesBytes)} · 可用 ${ZFormat.bytesText(storage.freeBytes)}", style = ZTheme.type.footnote, color = c.text3)
+                    ZText(stringResource(R.string.settings_storage_detail, ZFormat.bytesText(storage.nodesBytes), ZFormat.bytesText(storage.rulesBytes), ZFormat.bytesText(storage.freeBytes)), style = ZTheme.type.footnote, color = c.text3)
                 }
             }
-            ZSectionHeader("外观", Modifier.padding(top = 12.dp))
+            ZSectionHeader(stringResource(R.string.settings_appearance), Modifier.padding(top = 12.dp))
             ZListGroup {
                 ChoiceRow(
-                    "外观", listOf(Appearance.SYSTEM to "跟随系统", Appearance.DARK to "深色", Appearance.LIGHT to "浅色"), s.appearance,
+                    stringResource(R.string.settings_appearance),
+                    listOf(
+                        Appearance.SYSTEM to stringResource(R.string.settings_appearance_system),
+                        Appearance.DARK to stringResource(R.string.settings_appearance_dark),
+                        Appearance.LIGHT to stringResource(R.string.settings_appearance_light),
+                    ),
+                    s.appearance,
                     onSelect = { a -> set { it.copy(appearance = a) } },
                 )
                 ZDivider()
                 Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 14.dp), verticalAlignment = Alignment.CenterVertically) {
-                    ZText("强调色", Modifier.weight(1f), style = ZTheme.type.body)
+                    ZText(stringResource(R.string.settings_accent), Modifier.weight(1f), style = ZTheme.type.body)
                     // Review L-P1-5: 28 dp dot inside a 44 dp radio target, Chinese names, selected semantics, one group.
                     Row(Modifier.selectableGroup(), horizontalArrangement = Arrangement.spacedBy(0.dp)) {
                         Accent.entries.forEach { a ->
+                            val name = accentName(a)?.let { stringResource(it) } ?: a.name.lowercase()
                             val z = ZAccent.valueOf(a.name)
                             val col = if (c.isDark) z.darkVariant() else z.color
                             Box(
                                 Modifier.size(44.dp)
                                     .selectable(selected = s.accent == a, role = Role.RadioButton) { set { it.copy(accent = a) } }
-                                    .semantics { contentDescription = accentName(a) },
+                                    .semantics { contentDescription = name },
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Box(
@@ -121,15 +134,15 @@ fun SettingsScreen(back: String, onLogs: () -> Unit = {}, onBack: () -> Unit) {
                     }
                 }
             }
-            ZSectionHeader("隐私", Modifier.padding(top = 12.dp))
+            ZSectionHeader(stringResource(R.string.settings_section_privacy), Modifier.padding(top = 12.dp))
             ZListGroup {
-                ZSettingsRow("共享诊断数据", checked = s.shareDiagnostics, onCheckedChange = { v -> set { it.copy(shareDiagnostics = v) } })
+                ZSettingsRow(stringResource(R.string.settings_share_diagnostics), checked = s.shareDiagnostics, onCheckedChange = { v -> set { it.copy(shareDiagnostics = v) } })
             }
-            ZSectionHeader("诊断", Modifier.padding(top = 12.dp))
+            ZSectionHeader(stringResource(R.string.settings_section_diagnostics), Modifier.padding(top = 12.dp))
             ZListGroup {
-                ZSettingsRow("日志", chevron = true, onClick = onLogs)
+                ZSettingsRow(stringResource(R.string.logs_title), chevron = true, onClick = onLogs)
             }
-            ZText("订阅、节点与流量数据仅保存在此设备上。", Modifier.padding(horizontal = 22.dp, vertical = 10.dp), style = ZTheme.type.footnote, color = c.text3)
+            ZText(stringResource(R.string.settings_local_data_note), Modifier.padding(horizontal = 22.dp, vertical = 10.dp), style = ZTheme.type.footnote, color = c.text3)
             ZText("Zephyr ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})", Modifier.fillMaxWidth().padding(vertical = 24.dp), style = ZTheme.type.footnote.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = c.text4)
         }
     }
@@ -146,8 +159,11 @@ private fun StorageBar(s: StorageInfo) {
     }
 }
 
-private fun accentName(a: Accent): String = when (a.name) {
-    "BLUE" -> "蓝色"; "GREEN" -> "绿色"; "ORANGE" -> "橙色"; "PINK" -> "粉色"; "PURPLE" -> "紫色"
-    "RED" -> "红色"; "TEAL" -> "青色"; "INDIGO" -> "靛蓝"; "YELLOW" -> "黄色"; "GRAPHITE" -> "石墨"
-    else -> a.name.lowercase()
+@StringRes
+private fun accentName(a: Accent): Int? = when (a.name) {
+    "BLUE" -> R.string.settings_accent_blue; "GREEN" -> R.string.settings_accent_green; "ORANGE" -> R.string.settings_accent_orange
+    "PINK" -> R.string.settings_accent_pink; "PURPLE" -> R.string.settings_accent_purple; "RED" -> R.string.settings_accent_red
+    "TEAL" -> R.string.settings_accent_teal; "INDIGO" -> R.string.settings_accent_indigo; "YELLOW" -> R.string.settings_accent_yellow
+    "GRAPHITE" -> R.string.settings_accent_graphite
+    else -> null
 }

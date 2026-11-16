@@ -1,5 +1,7 @@
 package com.zephyr.app.ui.nodes
 
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.contentDescription
@@ -38,13 +40,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.zephyr.app.R
+import com.zephyr.app.ui.common.BackTo
 import com.zephyr.app.ui.common.PageScaffold
+import com.zephyr.app.ui.common.toPluralCount
 import com.zephyr.design.components.ZChip
 import com.zephyr.design.components.ZEmptyState
 import com.zephyr.design.components.ZSearchField
@@ -63,7 +69,7 @@ import kotlin.math.roundToInt
 
 /** Node library (prototype `nodes`): 13,109,802 rows, fixed row height, region rail, index search. */
 @Composable
-fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: String = "资料库", onBack: () -> Unit, onImport: () -> Unit = {}) {
+fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImport: () -> Unit = {}) {
     val c = ZTheme.colors
     val ui by vm.ui.collectAsStateWithLifecycle()
     LaunchedEffect(initialQuery) { vm.setQuery(initialQuery, immediate = true) }
@@ -85,32 +91,34 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: String = "资料
     }
     LaunchedEffect(result?.token) { list.scrollToItem(0) }
 
-    PageScaffold(back = back, title = "节点", onBack = onBack) {
+    val res = LocalResources.current
+    PageScaffold(back = back, title = stringResource(R.string.common_nodes), onBack = onBack) {
         Column(Modifier.fillMaxSize()) {
             Row(Modifier.padding(horizontal = 22.dp), verticalAlignment = Alignment.Bottom) {
                 ZText(ZFormat.grouped(ui.total), style = ZTheme.type.hero.copy(fontSize = ZTheme.type.hero.fontSize * 0.86f))
                 Spacer(Modifier.width(8.dp))
-                ZText("个", Modifier.padding(bottom = 10.dp), style = ZTheme.type.body, color = c.text3)
+                ZText(pluralStringResource(R.plurals.nodes_total_unit, ui.total.toPluralCount()), Modifier.padding(bottom = 10.dp), style = ZTheme.type.body, color = c.text3)
             }
-            ZText(listOfNotNull(ui.subscriptionCount.takeIf { it > 0 }?.let { "来自 $it 个订阅" }, "${ui.regionCount} 个地区").joinToString(" · "), Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
+            val fromSubs = ui.subscriptionCount.takeIf { it > 0 }?.let { pluralStringResource(R.plurals.nodes_from_subs, it, it) }
+            ZText(listOfNotNull(fromSubs, pluralStringResource(R.plurals.common_region_count, ui.regionCount, ui.regionCount)).joinToString(" · "), Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
             Spacer(Modifier.height(18.dp))
             var composing by remember { mutableStateOf(false) }
             ZSearchField(
-                ui.query, { vm.setQuery(it, composing = composing) }, "地区、城市或线路", Modifier.padding(horizontal = 16.dp),
+                ui.query, { vm.setQuery(it, composing = composing) }, stringResource(R.string.nodes_search_placeholder), Modifier.padding(horizontal = 16.dp),
                 onComposingChange = { composing = it; if (!it) vm.setQuery(ui.query) },
-                trailing = if (ui.query.isNotBlank() && result != null) "${ZFormat.grouped(result.total)} 个 · ${ZFormat.micros(result.tookMicros)}" else null,
+                trailing = if (ui.query.isNotBlank() && result != null) stringResource(R.string.nodes_search_stats, ZFormat.grouped(result.total), ZFormat.micros(result.tookMicros)) else null,
             )
             Spacer(Modifier.height(12.dp))
             LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                item { ZChip("全部", ui.query.isBlank(), { vm.setQuery("", true) }) }
-                items(ui.chips, key = { it.first }) { (code, n) -> ZChip(code, ui.query.trim().equals(code, true), { vm.setQuery(code, true) }, detail = ZFormat.wan(n)) }
+                item { ZChip(stringResource(R.string.common_all), ui.query.isBlank(), { vm.setQuery("", true) }) }
+                items(ui.chips, key = { it.first }) { (code, n) -> ZChip(code, ui.query.trim().equals(code, true), { vm.setQuery(code, true) }, detail = ZFormat.chip(res, n)) }
             }
             Spacer(Modifier.height(10.dp))
             Box(Modifier.weight(1f).fillMaxWidth()) {
                 if (result != null && rowCount == 0 && ui.query.isBlank()) {
-                    ZEmptyState("还没有节点", Modifier.align(Alignment.Center), message = "导入订阅后，节点会出现在这里", action = "导入订阅", onAction = onImport)
+                    ZEmptyState(stringResource(R.string.nodes_empty_title), Modifier.align(Alignment.Center), message = stringResource(R.string.nodes_empty_message), action = stringResource(R.string.nodes_empty_action), onAction = onImport)
                 } else if (result != null && rowCount == 0) {
-                    ZEmptyState("无结果", Modifier.align(Alignment.Center), message = "没有与“${ui.query.trim()}”匹配的节点")
+                    ZEmptyState(stringResource(R.string.common_no_results), Modifier.align(Alignment.Center), message = stringResource(R.string.nodes_no_match, ui.query.trim()))
                 } else {
                     val epoch by vm.pageEpoch
                     LaunchedEffect(list, result) {
@@ -171,7 +179,7 @@ private fun Footer(vm: NodesViewModel, list: androidx.compose.foundation.lazy.La
     ) {
         ZText(if (pos > 0) "${ZFormat.grouped(pos)} / ${ZFormat.grouped(total)}" else "", style = ZTheme.type.monoSmall, color = c.text3)
         Spacer(Modifier.weight(1f))
-        ZText("已检测 ${ZFormat.grouped(tested)}", style = ZTheme.type.monoSmall, color = c.text3)
+        ZText(stringResource(R.string.nodes_tested, ZFormat.grouped(tested)), style = ZTheme.type.monoSmall, color = c.text3)
     }
 }
 
@@ -196,7 +204,8 @@ private fun androidx.compose.foundation.layout.BoxScope.RegionRail(codes: List<S
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         // Review L-P2-7: the rail is a drag target only; give TalkBack one tap-to-jump action per region instead.
-        codes.forEachIndexed { i, code -> ZText(code, Modifier.semantics { contentDescription = "跳到 $code"; role = androidx.compose.ui.semantics.Role.Button; onClick { onScrub((i + 0.5f) / codes.size); true } }, style = ZTheme.type.monoSmall.copy(fontSize = ZTheme.type.caption.fontSize * 0.92f), color = c.accent) }
+        val res = LocalResources.current
+        codes.forEachIndexed { i, code -> ZText(code, Modifier.semantics { contentDescription = res.getString(R.string.nodes_jump_to, code); role = androidx.compose.ui.semantics.Role.Button; onClick { onScrub((i + 0.5f) / codes.size); true } }, style = ZTheme.type.monoSmall.copy(fontSize = ZTheme.type.caption.fontSize * 0.92f), color = c.accent) }
     }
     bubble?.let { (sec, y) ->
         ZSurface(

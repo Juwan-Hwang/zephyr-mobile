@@ -21,9 +21,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.zephyr.app.R
 import com.zephyr.design.components.ZIcon
 import com.zephyr.design.components.ZIcons
 import com.zephyr.design.components.ZText
@@ -33,7 +35,7 @@ import com.zephyr.design.theme.ZTheme
 /** Library sub-page frame: "‹ 资料库" back link, optional trailing action, large title (prototype `.pg`). */
 @Composable
 fun PageScaffold(
-    back: String,
+    back: BackTo,
     title: String,
     onBack: () -> Unit,
     trailing: (@Composable () -> Unit)? = null,
@@ -44,10 +46,11 @@ fun PageScaffold(
         // Review L-P2-13: landscape cutouts take horizontal room too.
         .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))) {
         Row(Modifier.fillMaxWidth().height(52.dp).padding(start = 8.dp, end = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-            Row(Modifier.heightIn(min = 48.dp).zPressable(label = "返回$back", onClick = onBack).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+            val backLabel = stringResource(back.label)
+            Row(Modifier.heightIn(min = 48.dp).zPressable(label = stringResource(R.string.common_back_to, backLabel), onClick = onBack).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
                 ZIcon(ZIcons.Back, tint = c.accent, size = 22.dp)
                 Spacer(Modifier.width(2.dp))
-                ZText(back, style = ZTheme.type.body.copy(fontSize = ZTheme.type.headline.fontSize), color = c.accent)
+                ZText(backLabel, style = ZTheme.type.body.copy(fontSize = ZTheme.type.headline.fontSize), color = c.accent)
             }
             Spacer(Modifier.weight(1f))
             trailing?.invoke()

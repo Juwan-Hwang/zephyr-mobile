@@ -13,7 +13,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import com.zephyr.app.R
 import com.zephyr.app.di.AppGraph
+import com.zephyr.app.ui.common.UiText
+import com.zephyr.app.ui.common.uiText
 import com.zephyr.engine.ErrorCode
 import com.zephyr.engine.ImportSource
 import com.zephyr.engine.Subscription
@@ -36,8 +39,8 @@ class SubscriptionImporter internal constructor(
     private val engine: () -> com.zephyr.engine.ZephyrEngine = { AppGraph.engine },
 ) {
     var busy by mutableStateOf(false); private set
-    var error by mutableStateOf<String?>(null)
-    var hint by mutableStateOf<String?>(null)
+    var error by mutableStateOf<UiText?>(null)
+    var hint by mutableStateOf<UiText?>(null)
     internal var launchPicker: () -> Unit = {}
 
     /** Bumped by [cancel]; a result from an older generation is late and is dropped (iOS #99 parity). */
@@ -77,7 +80,7 @@ class SubscriptionImporter internal constructor(
     fun clipboardText(): String? {
         val cm = ctx?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
         val t = cm?.primaryClip?.getItemAt(0)?.coerceToText(ctx)?.toString()?.trim().orEmpty()
-        if (t.isEmpty()) error = "剪贴板是空的"
+        if (t.isEmpty()) error = uiText(R.string.subs_error_clipboard_empty)
         return t.ifEmpty { null }
     }
 
@@ -85,15 +88,15 @@ class SubscriptionImporter internal constructor(
 
     fun pickFile() { error = null; hint = null; launchPicker() }
 
-    fun showDesktopHint() { error = null; hint = "在电脑端打开 设置 › 移动端，即可显示二维码" }
+    fun showDesktopHint() { error = null; hint = uiText(R.string.subs_hint_desktop) }
 
     internal fun onFile(text: String?) {
-        if (text.isNullOrBlank()) error = "无法读取这个文件" else submit(ImportSource.FILE, text)
+        if (text.isNullOrBlank()) error = uiText(R.string.subs_error_read_file) else submit(ImportSource.FILE, text)
     }
 
-    private fun message(src: ImportSource, e: ZephyrException): String = when (e.error.code) {
-        ErrorCode.SUBSCRIPTION_FETCH_FAILED -> "无法下载这个订阅，请检查链接或网络"
-        else -> if (src == ImportSource.FILE) "这不是有效的配置文件" else "这不是有效的订阅链接"
+    private fun message(src: ImportSource, e: ZephyrException): UiText = when (e.error.code) {
+        ErrorCode.SUBSCRIPTION_FETCH_FAILED -> uiText(R.string.subs_error_fetch)
+        else -> uiText(if (src == ImportSource.FILE) R.string.subs_error_invalid_file else R.string.subs_error_invalid_link)
     }
 
     companion object {

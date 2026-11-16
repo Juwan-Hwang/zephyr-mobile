@@ -15,9 +15,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
+import com.zephyr.design.R
 import com.zephyr.design.format.ZFormat
 import com.zephyr.design.theme.ZTheme
 
@@ -27,7 +29,8 @@ fun ZTrafficStat(downBps: Long, upBps: Long, modifier: Modifier = Modifier) {
     val c = ZTheme.colors
     val (dv, du) = ZFormat.rate(downBps)
     val (uv, uu) = ZFormat.rate(upBps)
-    Column(modifier.clearAndSetSemantics { contentDescription = "下载 $dv $du 每秒，上传 $uv $uu 每秒" }) {
+    val a11y = stringResource(R.string.common_traffic_a11y, dv, du, uv, uu)
+    Column(modifier.clearAndSetSemantics { contentDescription = a11y }) {
         Row(verticalAlignment = Alignment.Bottom) {
             RollingNumber(dv)
             Spacer(Modifier.width(10.dp))

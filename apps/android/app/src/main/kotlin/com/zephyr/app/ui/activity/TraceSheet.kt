@@ -1,5 +1,6 @@
 package com.zephyr.app.ui.activity
 
+import com.zephyr.app.R
 import com.zephyr.app.ui.common.collectWhile
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,6 +27,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import com.zephyr.design.theme.ZAnim
 import androidx.compose.animation.core.animateFloat
@@ -63,43 +67,45 @@ internal fun androidx.compose.foundation.layout.ColumnScope.TraceBody(host: Stri
     val trace by produceState<ConnectionTrace?>(null, host, reload) { value = host?.let { runCatching { engine.connectionTrace(it) }.getOrNull() } }
     val scope = rememberCoroutineScope()
     var overrideError by remember(host) { mutableStateOf<String?>(null) }
+    val res = LocalResources.current
     run {
         val t = trace ?: return
         Column(Modifier.padding(horizontal = 22.dp)) {
             // Review H-P2-10: prototype `.tr h2` is 300 32px, not the hero face.
             ZText(t.host, style = ZTheme.type.title.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Light, fontSize = 32.sp, lineHeight = 38.sp), maxLines = 1)
-            ZText("${ZFormat.ago(t.lastSeenAt, now)} · ${t.connections} 个连接 · ${ZFormat.bytesText(t.totalBytes)}", style = ZTheme.type.callout, color = c.text3)
+            ZText(listOf(ZFormat.ago(res, t.lastSeenAt, now), pluralStringResource(R.plurals.trace_connections, t.connections, t.connections), ZFormat.bytesText(t.totalBytes)).joinToString(" · "), style = ZTheme.type.callout, color = c.text3)
             Spacer(Modifier.height(24.dp))
             val sceneName = t.scene?.let { id -> scenes.firstOrNull { it.id == id }?.name ?: id }
             // Review H-P2-10: 逐步出现（原型 256-258；iOS TraceView 0.08 s + i × 0.06 s）+ 竖线流光（原型 1006，iOS TraceRailFlow）。
             Box {
                 Column {
-                    Step(0, "规则", t.rule.replace(",", ", "), t.ruleSource?.let { "来自 $it" }, mono = true)
-                    Step(1, "场景", sceneName ?: "直连", t.sceneSource)
-                    t.node?.let { Step(2, "节点", it.name, t.via?.let { v -> "经由 $v" }) }
-                    Step(3, "出口", t.exitIp ?: "本机网络", listOfNotNull(t.exitRegion, t.exitStableDays?.let { "$it 天未变化" }).joinToString(" · ").ifEmpty { null }, mono = t.exitIp != null, last = true)
+                    Step(0, stringResource(R.string.trace_step_rule), t.rule.replace(",", ", "), t.ruleSource?.let { stringResource(R.string.trace_from, it) }, mono = true)
+                    Step(1, stringResource(R.string.trace_step_scene), sceneName ?: stringResource(R.string.common_direct), t.sceneSource)
+                    t.node?.let { Step(2, stringResource(R.string.trace_step_node), it.name, t.via?.let { v -> stringResource(R.string.trace_via, v) }) }
+                    val stable = t.exitStableDays?.let { pluralStringResource(R.plurals.trace_exit_stable, it, it) }
+                    Step(3, stringResource(R.string.trace_step_exit), t.exitIp ?: stringResource(R.string.common_local_network), listOfNotNull(t.exitRegion, stable).joinToString(" · ").ifEmpty { null }, mono = t.exitIp != null, last = true)
                 }
                 TraceRailFlow(Modifier.matchParentSize())
             }
         }
         Spacer(Modifier.height(16.dp))
-        ZText("本次连接", Modifier.padding(horizontal = 26.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.text3)
+        ZText(stringResource(R.string.trace_this_connection), Modifier.padding(horizontal = 26.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.text3)
         val others = scenes.filter { it.id != t.scene }.take(2)
-        val opts = listOf("不变", "直连") + others.map { it.name }
+        val opts = listOf(stringResource(R.string.trace_option_unchanged), stringResource(R.string.common_direct)) + others.map { it.name }
         val ov = t.override
         val sel = when (ov?.target) { null, TraceTarget.UNCHANGED -> 0; TraceTarget.DIRECT -> 1; TraceTarget.SCENE -> 2 + others.indexOfFirst { it.id == ov.sceneId }.coerceAtLeast(0) }
         val persistent = ov?.persistent ?: false
         fun apply(i: Int, keep: Boolean) = scope.launch {
             val (target, sid) = when (i) { 0 -> TraceTarget.UNCHANGED to null; 1 -> TraceTarget.DIRECT to null; else -> TraceTarget.SCENE to others[i - 2].id }
             // Review H-P2-10: a failed override is shown instead of silently swallowed.
-            overrideError = runCatching { engine.overrideHost(t.host, target, sid, keep) }.exceptionOrNull()?.let { "未能更改：${it.message ?: "请重试"}" }
+            overrideError = runCatching { engine.overrideHost(t.host, target, sid, keep) }.exceptionOrNull()?.let { res.getString(R.string.trace_override_failed, it.message ?: res.getString(R.string.common_try_again)) }
             reload++
         }
         ZSegmented(opts, sel, { apply(it, persistent) }, Modifier.padding(horizontal = 16.dp))
         overrideError?.let { ZText(it, Modifier.padding(horizontal = 26.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.danger) }
         Spacer(Modifier.height(16.dp))
         ZListGroup {
-            ZSettingsRow("始终应用", subtitle = "关闭时仅更改本次连接", checked = persistent, onCheckedChange = { v -> apply(sel, v) })
+            ZSettingsRow(stringResource(R.string.trace_always_apply), subtitle = stringResource(R.string.trace_always_apply_hint), checked = persistent, onCheckedChange = { v -> apply(sel, v) })
         }
         Spacer(Modifier.height(12.dp))
     }

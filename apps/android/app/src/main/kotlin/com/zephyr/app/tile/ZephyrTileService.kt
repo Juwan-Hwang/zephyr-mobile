@@ -7,6 +7,7 @@ import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import com.zephyr.app.R
 import com.zephyr.app.di.AppGraph
+import com.zephyr.app.ui.common.labelRes
 import com.zephyr.engine.ConnectionStatus
 import com.zephyr.engine.ProxyMode
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +32,7 @@ class ZephyrTileService : TileService() {
                 tile.state = if (on) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
                 tile.label = getString(R.string.app_name)
                 tile.icon = Icon.createWithResource(this@ZephyrTileService, R.drawable.ic_stat_zephyr)
-                val mode = when (c.mode) { ProxyMode.RULE -> "规则"; ProxyMode.GLOBAL -> "全局"; ProxyMode.DIRECT -> "直连" }
+                val mode = getString(c.mode.labelRes)
                 // Global mode routes everything through the GLOBAL node, not the first scene's exit (review W-P2-2).
                 val node = when (c.mode) {
                     ProxyMode.GLOBAL -> c.globalNodeId?.let { id -> runCatching { AppGraph.engine.node(id).summary.name }.getOrNull() }
@@ -39,13 +40,13 @@ class ZephyrTileService : TileService() {
                     ProxyMode.RULE -> scenes.firstOrNull()?.selected?.name
                 }
                 val sub = when (c.status) {
-                    ConnectionStatus.CONNECTING -> "连接中…"
+                    ConnectionStatus.CONNECTING -> getString(R.string.common_status_connecting_ellipsis)
                     ConnectionStatus.CONNECTED -> listOfNotNull(mode, node).joinToString(" · ")
-                    else -> getString(R.string.tile_off)
+                    else -> getString(R.string.common_status_disconnected)
                 }
                 // Tile.subtitle is API 29+; on Android 9 the state goes into the content description only.
                 if (android.os.Build.VERSION.SDK_INT >= 29) tile.subtitle = sub
-                tile.contentDescription = "${getString(R.string.app_name)}，$sub"
+                tile.contentDescription = getString(R.string.tile_a11y, getString(R.string.app_name), sub)
                 tile.updateTile()
             }
         }

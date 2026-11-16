@@ -38,6 +38,13 @@ class CommandParserTest {
         assertEquals("US", CommandParser.parse("claude us").region?.code)
     }
 
+    /** The English suggestions in res/values (command_examples) must parse like their Chinese counterparts. */
+    @Test fun englishExamples() {
+        CommandParser.parse("Gemini via Japan").let { assertEquals("gemini", it.service?.app?.id); assertEquals("JP", it.region?.code) }
+        CommandParser.parse("GitHub direct").let { assertEquals("github.com", it.service?.host); assertEquals(CommandParser.Act.DIRECT, it.act) }
+        CommandParser.parse("HK").let { assertEquals("HK", it.region?.code); assertTrue(!it.hasChips) }
+    }
+
     @Test fun regionAloneHasNoChips() {
         val p = CommandParser.parse("香港")
         assertEquals("HK", p.region?.code)

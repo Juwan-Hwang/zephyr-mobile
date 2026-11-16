@@ -11,7 +11,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.zephyr.app.R
 import com.zephyr.app.di.AppGraph
 import com.zephyr.design.components.ZDivider
 import com.zephyr.design.components.ZListGroup
@@ -54,13 +58,13 @@ fun BoxScope.SceneSheet(
         Row(Modifier.padding(horizontal = 22.dp), verticalAlignment = Alignment.Bottom) {
             ZText("${s.available}", style = ZTheme.type.number.copy(fontSize = ZTheme.type.hero.fontSize * 0.8f))
             Spacer(Modifier.width(8.dp))
-            ZText("个可用节点", Modifier.padding(bottom = 8.dp), style = ZTheme.type.body, color = c.text3)
+            ZText(pluralStringResource(R.plurals.scene_available_unit, s.available), Modifier.padding(bottom = 8.dp), style = ZTheme.type.body, color = c.text3)
         }
-        if (subs > 0) ZText("检测自 $subs 个订阅", Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
+        if (subs > 0) ZText(pluralStringResource(R.plurals.scene_tested_from, subs, subs), Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
         Spacer(Modifier.height(16.dp))
         val pooled = s.source != SceneSource.SUBSCRIPTION_GROUP
         ZSegmented(
-            listOf("订阅分组", "Zephyr 优选"), if (pooled) 1 else 0,
+            listOf(stringResource(R.string.common_source_group), stringResource(R.string.common_source_auto)), if (pooled) 1 else 0,
             { i -> val want = if (i == 1) SceneSource.AUTO else SceneSource.SUBSCRIPTION_GROUP; if (want != s.source) onSource(s, want) },
             Modifier.padding(horizontal = 16.dp),
         )
@@ -72,25 +76,27 @@ fun BoxScope.SceneSheet(
                     val fixed = s.exceptions.firstOrNull { it.node.id == n.id }
                     ZSettingsRow(
                         n.name,
-                        value = listOfNotNull(fixed?.let { "${it.app} 固定" }, n.latencyMs?.let { "$it ms" }).joinToString("  ").ifEmpty { null },
+                        value = listOfNotNull(fixed?.let { stringResource(R.string.scene_pinned_for, it.app) }, n.latencyMs?.let { "$it ms" }).joinToString("  ").ifEmpty { null },
                         onClick = if (n.id == s.selected.id) null else ({ onPick(s, n) }),
-                        trailing = if (n.id == s.selected.id) ({ ZText("当前", style = ZTheme.type.footnote, color = c.accent) }) else null,
+                        trailing = if (n.id == s.selected.id) ({ ZText(stringResource(R.string.common_current), style = ZTheme.type.footnote, color = c.accent) }) else null,
                     )
                 }
             }
             Spacer(Modifier.height(12.dp))
         }
         ZListGroup {
-            ZSettingsRow("节点不可用时", value = if (s.kind == SceneKind.AI) "询问" else "自动切换")
+            ZSettingsRow(stringResource(R.string.scene_when_unavailable), value = stringResource(if (s.kind == SceneKind.AI) R.string.scene_ask else R.string.scene_auto_switch))
             // §15.h: set by the command "视频只用 4K 节点"; candidates and auto-pick above are already filtered.
-            if (s.nodeFilter == SceneNodeFilter.UHD) { ZDivider(); ZSettingsRow("节点范围", value = "仅 4K 节点") }
-            s.exceptions.forEach { e -> ZDivider(); ZSettingsRow(e.app, value = "${e.node.name}（固定）") }
+            if (s.nodeFilter == SceneNodeFilter.UHD) { ZDivider(); ZSettingsRow(stringResource(R.string.scene_node_scope), value = stringResource(R.string.scene_uhd_only)) }
+            s.exceptions.forEach { e -> ZDivider(); ZSettingsRow(e.app, value = stringResource(R.string.scene_pinned_value, e.node.name)) }
             ZDivider()
             // Prototype 10: re-test the scene's pool; progress shows on the home row and section header.
-            ZSettingsRow(if (retesting) "检测中…" else "重新检测", onClick = if (retesting) null else ({ onRetest(s) }))
+            ZSettingsRow(stringResource(if (retesting) R.string.common_retesting else R.string.scene_retest), onClick = if (retesting) null else ({ onRetest(s) }))
         }
         ZText(
-            "优选结果仅保存在 Zephyr 中，订阅配置保持原样。" + (s.testedAt?.let { " 上次检测 ${ZFormat.ago(it, com.zephyr.app.ui.common.LocalNow.current())}。" } ?: ""),
+            stringResource(R.string.scene_note).let { note ->
+                s.testedAt?.let { stringResource(R.string.scene_note_tested, note, ZFormat.ago(LocalResources.current, it, com.zephyr.app.ui.common.LocalNow.current(), inline = true)) } ?: note
+            },
             Modifier.padding(horizontal = 22.dp, vertical = 12.dp), style = ZTheme.type.footnote, color = c.text3,
         )
     }

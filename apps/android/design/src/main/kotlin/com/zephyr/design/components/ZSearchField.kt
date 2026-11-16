@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -31,6 +32,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.zephyr.design.R
 import com.zephyr.design.theme.ZTheme
 
 /** Search field (prototype `.fs`): 48dp rounded, magnifier, clear button when non-empty. */
@@ -97,7 +99,7 @@ fun ZSearchField(
             ZText(trailing, style = ZTheme.type.monoSmall.copy(fontSize = 12.sp), color = c.text3, maxLines = 1)
         }
         if (value.isNotEmpty()) {
-            ZIconButton(ZIcons.Close, "清除", { onValueChange("") }, tint = c.text2, iconSize = 16.dp, size = 40.dp)
+            ZIconButton(ZIcons.Close, stringResource(R.string.common_clear), { onValueChange("") }, tint = c.text2, iconSize = 16.dp, size = 40.dp)
         }
     }
 }

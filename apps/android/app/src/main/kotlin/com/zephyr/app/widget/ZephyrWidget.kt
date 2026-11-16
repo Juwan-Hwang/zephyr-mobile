@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.clickable
@@ -38,6 +39,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.zephyr.app.di.AppGraph
+import com.zephyr.app.ui.common.labelRes
 import com.zephyr.design.format.ZFormat
 import com.zephyr.engine.ConnectionStatus
 import com.zephyr.engine.Scene
@@ -50,7 +52,6 @@ import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.action.actionStartActivity
 
-private val ProxyMode.widgetLabel: String get() = when (this) { ProxyMode.RULE -> "规则"; ProxyMode.GLOBAL -> "全局"; ProxyMode.DIRECT -> "直连" }
 
 /**
  * Home-screen widget (prototype `hs`): small = status + mode/exit + today's usage; medium = + scene list.
@@ -75,15 +76,17 @@ class ZephyrWidget : GlanceAppWidget() {
             ProxyMode.RULE -> scenes.firstOrNull()?.selected?.name
         }
         val detail = when {
-            c.status == ConnectionStatus.CONNECTING -> "连接中"
-            !on -> "未连接"
-            else -> listOfNotNull(c.mode.widgetLabel, exit).joinToString(" · ")
+            c.status == ConnectionStatus.CONNECTING -> context.getString(R.string.common_status_connecting)
+            !on -> context.getString(R.string.common_status_disconnected)
+            else -> listOfNotNull(context.getString(c.mode.labelRes), exit).joinToString(" · ")
         }
-        provideContent { GlanceTheme { Content(on, if (on) "已连接" else "Zephyr", detail, today, scenes) } }
+        val title = if (on) context.getString(R.string.common_status_connected) else context.getString(R.string.app_name)
+        provideContent { GlanceTheme { Content(on, title, detail, today, scenes) } }
     }
 
     @Composable
     private fun Content(on: Boolean, title: String, detail: String, today: Long, scenes: List<Scene>) {
+        val ctx = LocalContext.current
         val bg = ColorProvider(day = Color(0xFFFFFFFF), night = Color(0xFF141417))
         val t1 = ColorProvider(day = Color(0xE6000000), night = Color(0xF2FFFFFF))
         val t2 = ColorProvider(day = Color(0x94000000), night = Color(0x99FFFFFF))
@@ -110,7 +113,7 @@ class ZephyrWidget : GlanceAppWidget() {
                     ) {
                         Image(
                             ImageProvider(R.drawable.ic_widget_power),
-                            contentDescription = if (on) "断开连接" else "连接",
+                            contentDescription = ctx.getString(if (on) R.string.common_disconnect else R.string.common_connect),
                             modifier = GlanceModifier.size(18.dp),
                             colorFilter = ColorFilter.tint(if (on) ColorProvider(day = Color.White, night = Color.White) else t1),
                         )
@@ -120,12 +123,12 @@ class ZephyrWidget : GlanceAppWidget() {
                 Text(title, style = TextStyle(color = t1, fontSize = 24.sp), maxLines = 1)
                 Text(detail, style = TextStyle(color = t2, fontSize = 12.sp), maxLines = 1)
                 Spacer(GlanceModifier.height(6.dp))
-                Text("今日 $tv $tu", style = TextStyle(color = t3, fontSize = 12.sp), maxLines = 1)
+                Text(ctx.getString(R.string.widget_today, tv, tu), style = TextStyle(color = t3, fontSize = 12.sp), maxLines = 1)
             }
             if (wide) {
                 Spacer(GlanceModifier.width(16.dp))
                 Column(GlanceModifier.defaultWeight()) {
-                    Text("场景", style = TextStyle(color = t3, fontSize = 12.sp))
+                    Text(ctx.getString(R.string.common_scenes), style = TextStyle(color = t3, fontSize = 12.sp))
                     scenes.take(3).forEach { s ->
                         Spacer(GlanceModifier.height(8.dp))
                         Row(GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {

@@ -13,8 +13,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.zephyr.app.R
 import com.zephyr.design.components.ZSurfaceLevel
 import androidx.compose.foundation.shape.RoundedCornerShape
 import com.zephyr.design.components.ZButton
@@ -41,13 +45,13 @@ fun GlobalModeCard(
     val c = ZTheme.colors
     // Review H-P2-15: prototype `.gb` padding 16, `.h` 15, `.k` 13 / 1.5 with 5 px gap; buttons are Compact ZButtons (D-P2-4).
     ZCard(Modifier.padding(horizontal = 16.dp), padding = 16.dp, level = ZSurfaceLevel.S1, shape = RoundedCornerShape(22.dp)) {
-        ZText("全局模式", style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight, fontSize = 15.sp))
+        ZText(stringResource(R.string.home_global_title), style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight, fontSize = 15.sp))
         Spacer(Modifier.height(5.dp))
-        ZText(if (node != null) "所有流量均经由${node.name}。场景已暂停。" else "所有流量均经由同一节点。场景已暂停。", style = ZTheme.type.callout.copy(fontSize = 13.sp, lineHeight = 19.5.sp), color = c.text3)
+        ZText(if (node != null) stringResource(R.string.home_global_body, node.name) else stringResource(R.string.home_global_body_any), style = ZTheme.type.callout.copy(fontSize = 13.sp, lineHeight = 19.5.sp), color = c.text3)
         Spacer(Modifier.height(14.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            ZButton("使用规则模式", onUseRule, Modifier.weight(1f))
-            ZButton("更换节点", onChangeNode, Modifier.weight(1f), kind = ZButtonKind.Secondary)
+            ZButton(stringResource(R.string.home_global_use_rule), onUseRule, Modifier.weight(1f))
+            ZButton(stringResource(R.string.home_global_change_node), onChangeNode, Modifier.weight(1f), kind = ZButtonKind.Secondary)
         }
         androidx.compose.animation.AnimatedVisibility(proposal != null) {
             val p = proposal ?: return@AnimatedVisibility
@@ -57,19 +61,19 @@ fun GlobalModeCard(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         androidx.compose.foundation.layout.Box(Modifier.size(6.dp).background(c.warning, androidx.compose.foundation.shape.CircleShape))
                         Spacer(Modifier.width(8.dp))
-                        ZText("出口 IP 将更改", style = ZTheme.type.footnote)
+                        ZText(stringResource(R.string.common_exit_ip_changes), style = ZTheme.type.footnote)
                     }
                     Spacer(Modifier.height(4.dp))
-                    val from = change?.fromIp?.let { "${change.fromRegion} $it" } ?: node?.let { "${it.region} ${it.name}" } ?: "当前"
+                    val from = change?.fromIp?.let { "${change.fromRegion} $it" } ?: node?.let { "${it.region} ${it.name}" } ?: stringResource(R.string.common_current)
                     val to = change?.toIp?.let { "${change.toRegion} $it" } ?: "${p.region} ${p.name}"
                     ZText("$from → $to", style = ZTheme.type.monoSmall, color = c.text2)
                 }
                 Spacer(Modifier.height(8.dp))
-                ZText("所有 App 的出口都将变为${p.name}。", style = ZTheme.type.footnote, color = c.text3)
+                ZText(stringResource(R.string.home_global_change_note, p.name), style = ZTheme.type.footnote, color = c.text3)
                 Spacer(Modifier.height(12.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    ZButton("更改为${p.name}", onConfirm, Modifier.weight(1f))
-                    ZButton("取消", onChangeNode, Modifier.weight(1f), kind = ZButtonKind.Secondary)
+                    ZButton(stringResource(R.string.home_global_change_to, p.name), onConfirm, Modifier.weight(1f))
+                    ZButton(stringResource(R.string.common_cancel), onChangeNode, Modifier.weight(1f), kind = ZButtonKind.Secondary)
                 }
             }
         }
@@ -96,7 +100,7 @@ fun SubscriptionsCard(subs: List<Subscription>, now: Long, onOpen: () -> Unit) {
                     s.remainingBytes?.let { ZText(ZFormat.bytesText(it), style = ZTheme.type.numeric) }
                     s.expiresAt?.let {
                         Spacer(Modifier.height(4.dp))
-                        ZText(ZFormat.expires(it, now, weekday = true), style = ZTheme.type.caption, color = if (soon) c.warning else c.text3)
+                        ZText(ZFormat.expires(LocalResources.current, it, now, weekday = true), style = ZTheme.type.caption, color = if (soon) c.warning else c.text3)
                     }
                 }
             }
@@ -104,7 +108,7 @@ fun SubscriptionsCard(subs: List<Subscription>, now: Long, onOpen: () -> Unit) {
         if (subs.size > 3) {
             ZDivider(inset = false)
             Row(Modifier.fillMaxWidth().zPressable(row = true, onClick = onOpen).padding(horizontal = 18.dp, vertical = 14.dp)) {
-                ZText("更多 ${subs.size - 3} 个订阅", style = ZTheme.type.footnote, color = c.text3)
+                ZText(pluralStringResource(R.plurals.home_subs_more, subs.size - 3, subs.size - 3), style = ZTheme.type.footnote, color = c.text3)
             }
         }
     }

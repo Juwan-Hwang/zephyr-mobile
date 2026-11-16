@@ -6,7 +6,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import com.zephyr.design.R
 import com.zephyr.design.theme.ZAnim
 import com.zephyr.design.theme.ZTheme
 import com.zephyr.design.theme.latency
@@ -24,7 +26,7 @@ fun ZLatency(ms: Int?, testing: Boolean = false, modifier: Modifier = Modifier, 
         when {
             v == Int.MIN_VALUE -> ZText("···", style = style, color = c.text3)
             v == null -> ZText("—", style = style, color = c.text3)
-            v < 0 -> ZText("超时", style = style, color = c.danger)
+            v < 0 -> ZText(stringResource(R.string.common_latency_timeout), style = style, color = c.danger)
             else -> ZText("$v ms", style = style, color = c.latency(v))
         }
     }

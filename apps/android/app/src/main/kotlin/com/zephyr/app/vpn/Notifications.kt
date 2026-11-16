@@ -34,11 +34,11 @@ object Notifications {
         val nm = ctx.getSystemService(NotificationManager::class.java)
         nm.createNotificationChannels(
             listOf(
-                NotificationChannel(CH_VPN, ctx.getString(R.string.channel_vpn), NotificationManager.IMPORTANCE_LOW).apply {
-                    description = ctx.getString(R.string.channel_vpn_desc); setShowBadge(false)
+                NotificationChannel(CH_VPN, ctx.getString(R.string.notif_channel_vpn), NotificationManager.IMPORTANCE_LOW).apply {
+                    description = ctx.getString(R.string.notif_channel_vpn_desc); setShowBadge(false)
                 },
-                NotificationChannel(CH_ALERTS, ctx.getString(R.string.channel_alerts), NotificationManager.IMPORTANCE_DEFAULT).apply {
-                    description = ctx.getString(R.string.channel_alerts_desc)
+                NotificationChannel(CH_ALERTS, ctx.getString(R.string.notif_channel_alerts), NotificationManager.IMPORTANCE_DEFAULT).apply {
+                    description = ctx.getString(R.string.notif_channel_alerts_desc)
                 },
             ),
         )
@@ -61,22 +61,22 @@ object Notifications {
             // Follows the App's accent (review W-P2-4).
             .setColor(com.zephyr.design.tokens.ZAccent.valueOf(accent.name).darkVariant().toArgb())
         if (connecting || c == null) {
-            return b.setContentTitle("Zephyr").setContentText("连接中…").build()
+            return b.setContentTitle(ctx.getString(R.string.app_name)).setContentText(ctx.getString(R.string.common_status_connecting_ellipsis)).build()
         }
         val down = t?.let { ZFormat.rate(it.downBps) } ?: ("0" to "B")
         val up = t?.let { ZFormat.rate(it.upBps) } ?: ("0" to "B")
         val speed = "${down.first} ${down.second}/s ↓ · ${up.first} ${up.second}/s ↑"
-        val route = if (c.mode == ProxyMode.GLOBAL) "全局 · ${globalNode ?: "所有流量经由同一节点"}" else scenes.joinToString(" · ") { "${it.name} ${it.selected.name}" }
+        val route = if (c.mode == ProxyMode.GLOBAL) ctx.getString(R.string.notif_route_global, globalNode ?: ctx.getString(R.string.notif_route_global_any)) else scenes.joinToString(" · ") { "${it.name} ${it.selected.name}" }
         // Uptime is a system chronometer (review W-P2-1): it ticks without us re-posting the notification every second.
         c.since?.let { b.setWhen(it).setShowWhen(true).setUsesChronometer(true) }
         return b
-            .setContentTitle("Zephyr")
+            .setContentTitle(ctx.getString(R.string.app_name))
             .setContentText(speed)
             .setStyle(NotificationCompat.BigTextStyle().bigText("$speed\n$route"))
-            .addAction(0, ctx.getString(R.string.action_disconnect), action(ctx, ZephyrVpnService.ACTION_DISCONNECT))
+            .addAction(0, ctx.getString(R.string.common_disconnect), action(ctx, ZephyrVpnService.ACTION_DISCONNECT))
             .addAction(
                 0,
-                ctx.getString(if (c.mode == ProxyMode.GLOBAL) R.string.action_rule else R.string.action_global),
+                ctx.getString(if (c.mode == ProxyMode.GLOBAL) R.string.notif_action_rule else R.string.notif_action_global),
                 action(ctx, ZephyrVpnService.ACTION_TOGGLE_MODE),
             )
             .build()
@@ -86,8 +86,8 @@ object Notifications {
     fun expiry(ctx: Context, name: String, date: String, remaining: String): Notification =
         NotificationCompat.Builder(ctx, CH_ALERTS)
             .setSmallIcon(R.drawable.ic_stat_zephyr)
-            .setContentTitle("$name 将于 $date 到期")
-            .setContentText("剩余 $remaining")
+            .setContentTitle(ctx.getString(R.string.notif_expiry_title, name, date))
+            .setContentText(ctx.getString(R.string.notif_expiry_text, remaining))
             .setAutoCancel(true)
             .build()
 

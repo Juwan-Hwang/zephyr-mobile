@@ -28,6 +28,8 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
         deviceConfig = DeviceConfig.PIXEL_9.copy(
             nightMode = if (dark) NightMode.NIGHT else NightMode.NOTNIGHT,
             fontScale = fontScale,
+            // Baselines are the Chinese UI; English is the resource default, so pin the locale.
+            locale = "zh",
         ),
         maxPercentDifference = 0.1,
     )
