@@ -6062,7 +6062,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ için rota geçersiz kılması temizlendi"
+            "value" : "%@ için rota istisnası temizlendi"
           }
         },
         "ur" : {

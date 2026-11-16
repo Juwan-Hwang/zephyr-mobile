@@ -12360,7 +12360,7 @@
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "امیدوار نوڈز"
+            "value" : "ممکنہ نوڈز"
           }
         },
         "vi" : {
@@ -12770,7 +12770,7 @@
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تمام امیدوار"
+            "value" : "تمام ممکنہ نوڈز"
           }
         },
         "vi" : {
@@ -19580,7 +19580,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sağladığı düğümler ve kurallar kaldırılacak. Geçersiz kılmalar ve senaryo ayarları aynı kalır."
+            "value" : "Sağladığı düğümler ve kurallar kaldırılacak. İstisnalar ve senaryo ayarları aynı kalır."
           }
         },
         "ur" : {
@@ -21230,7 +21230,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ için rota geçersiz kılması temizlendi"
+            "value" : "%@ için rota istisnası temizlendi"
           }
         },
         "ur" : {
@@ -21334,7 +21334,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "المستخدَم"
+            "value" : "البيانات المستخدمة"
           }
         },
         "en" : {
@@ -26980,7 +26980,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Güncelleme, abonelikteki düğümleri ve kuralları değiştirir. Zephyr'deki geçersiz kılmalar ve senaryo seçimleri aynı kalır."
+            "value" : "Güncelleme, abonelikteki düğümleri ve kuralları değiştirir. Zephyr'deki istisnalar ve senaryo seçimleri aynı kalır."
           }
         },
         "ur" : {
@@ -29041,13 +29041,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld امیدوار نوڈ سے ٹیسٹ کیا گیا"
+                  "value" : "%lld ممکنہ نوڈ سے ٹیسٹ کیا گیا"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld امیدوار نوڈز سے ٹیسٹ کیا گیا"
+                  "value" : "%lld ممکنہ نوڈز سے ٹیسٹ کیا گیا"
                 }
               }
             }
@@ -32094,7 +32094,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geçersiz kılma ekle"
+            "value" : "İstisna ekle"
           }
         },
         "ur" : {
@@ -35538,7 +35538,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geçersiz Kılma"
+            "value" : "İstisna"
           }
         },
         "ur" : {
@@ -35620,7 +35620,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geçersiz kılmalar 1. katmanda, abonelik kurallarının üzerinde yer alır ve abonelikler güncellendiğinde değişmez. Alan adına göre eşleşir; alt alan adları da dahildir."
+            "value" : "İstisnalar 1. katmanda, abonelik kurallarının üzerinde yer alır ve abonelikler güncellendiğinde değişmez. Alan adına göre eşleşir; alt alan adları da dahildir."
           }
         },
         "ur" : {
@@ -35702,7 +35702,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geçersiz kılmalar 1. katmanda, abonelik kurallarının üzerinde yer alır ve abonelikler güncellendiğinde değişmez. Bu sürümde geçersiz kılmalar iPhone'da kaydedilemez. Bunları bilgisayarınızdaki Zephyr'de ekleyin; eşzamanlamadan sonra etkinleşir."
+            "value" : "İstisnalar 1. katmanda, abonelik kurallarının üzerinde yer alır ve abonelikler güncellendiğinde değişmez. Bu sürümde istisnalar iPhone'da kaydedilemez. Bunları bilgisayarınızdaki Zephyr'de ekleyin; eşzamanlamadan sonra etkinleşir."
           }
         },
         "ur" : {
@@ -35784,7 +35784,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geçersiz kılmalar korunacak"
+            "value" : "İstisnalar korunacak"
           }
         },
         "ur" : {
@@ -35866,7 +35866,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geçersiz kılmalar korundu"
+            "value" : "İstisnalar korundu"
           }
         },
         "ur" : {
@@ -36202,7 +36202,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kural setleri cihazda salt okunur bir dizine derlenir ve gerektiğinde diskten okunur. Abonelikler güncellendiğinde geçersiz kılmalar değişmez."
+            "value" : "Kural setleri cihazda salt okunur bir dizine derlenir ve gerektiğinde diskten okunur. Abonelikler güncellendiğinde istisnalar değişmez."
           }
         },
         "ur" : {
@@ -39646,7 +39646,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bazı geçersiz kılmalar artık uygulanmayacak"
+            "value" : "Bazı istisnalar artık uygulanmayacak"
           }
         },
         "ur" : {
@@ -39728,7 +39728,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bazı geçersiz kılmalar artık uygulanmıyor"
+            "value" : "Bazı istisnalar artık uygulanmıyor"
           }
         },
         "ur" : {
