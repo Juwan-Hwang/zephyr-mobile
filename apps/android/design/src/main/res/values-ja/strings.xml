@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 日本語 (ja). Generated from the English strings; keep keys, format args and order in sync with values/. -->
+<resources>
+    <string name="common_done">完了</string>
+    <string name="common_close">閉じる</string>
+    <string name="common_clear">消去</string>
+    <string name="common_latency_timeout">タイムアウト</string>
+    <string name="common_traffic_a11y">ダウンロード 毎秒 %1$s %2$s、アップロード 毎秒 %3$s %4$s</string>
+    <string name="common_time_just_now">たった今</string>
+    <string name="common_time_just_now_inline">たった今</string>
+    <plurals name="common_time_minutes_ago">
+        <item quantity="other">%1$d分前</item>
+    </plurals>
+    <plurals name="common_time_hours_ago">
+        <item quantity="other">%1$d時間前</item>
+    </plurals>
+    <plurals name="common_time_days_ago">
+        <item quantity="other">%1$d日前</item>
+    </plurals>
+    <string name="common_expiry_expired">期限切れ</string>
+    <string name="common_expiry_today">今日で期限切れ</string>
+    <string name="common_expiry_tomorrow">明日で期限切れ</string>
+    <string name="common_expiry_weekday">%1$sに期限切れ</string>
+    <plurals name="common_expiry_in_days">
+        <item quantity="other">あと%1$d日で期限切れ</item>
+    </plurals>
+    <string-array name="common_weekdays">
+        <item>月曜</item>
+        <item>火曜</item>
+        <item>水曜</item>
+        <item>木曜</item>
+        <item>金曜</item>
+        <item>土曜</item>
+        <item>日曜</item>
+    </string-array>
+</resources>

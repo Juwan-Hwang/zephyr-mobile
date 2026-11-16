@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Русский (ru). Generated from the English strings; keep keys, format args and order in sync with values/. -->
+<resources>
+    <string name="common_done">Готово</string>
+    <string name="common_close">Закрыть</string>
+    <string name="common_clear">Очистить</string>
+    <string name="common_latency_timeout">Тайм-аут</string>
+    <string name="common_traffic_a11y">Загрузка %1$s %2$s в секунду, отдача %3$s %4$s в секунду</string>
+    <string name="common_time_just_now">Только что</string>
+    <string name="common_time_just_now_inline">только что</string>
+    <plurals name="common_time_minutes_ago">
+        <item quantity="one">%1$d мин назад</item>
+        <item quantity="few">%1$d мин назад</item>
+        <item quantity="many">%1$d мин назад</item>
+        <item quantity="other">%1$d мин назад</item>
+    </plurals>
+    <plurals name="common_time_hours_ago">
+        <item quantity="one">%1$d ч назад</item>
+        <item quantity="few">%1$d ч назад</item>
+        <item quantity="many">%1$d ч назад</item>
+        <item quantity="other">%1$d ч назад</item>
+    </plurals>
+    <plurals name="common_time_days_ago">
+        <item quantity="one">%1$d дн. назад</item>
+        <item quantity="few">%1$d дн. назад</item>
+        <item quantity="many">%1$d дн. назад</item>
+        <item quantity="other">%1$d дн. назад</item>
+    </plurals>
+    <string name="common_expiry_expired">Срок истёк</string>
+    <string name="common_expiry_today">Истекает сегодня</string>
+    <string name="common_expiry_tomorrow">Истекает завтра</string>
+    <string name="common_expiry_weekday">Истекает %1$s</string>
+    <plurals name="common_expiry_in_days">
+        <item quantity="one">Истекает через %1$d день</item>
+        <item quantity="few">Истекает через %1$d дня</item>
+        <item quantity="many">Истекает через %1$d дней</item>
+        <item quantity="other">Истекает через %1$d дня</item>
+    </plurals>
+    <string-array name="common_weekdays">
+        <item>в пн</item>
+        <item>во вт</item>
+        <item>в ср</item>
+        <item>в чт</item>
+        <item>в пт</item>
+        <item>в сб</item>
+        <item>в вс</item>
+    </string-array>
+</resources>

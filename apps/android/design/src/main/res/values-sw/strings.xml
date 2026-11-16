@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kiswahili (sw). Generated from the English strings; keep keys, format args and order in sync with values/. -->
+<resources>
+    <string name="common_done">Nimemaliza</string>
+    <string name="common_close">Funga</string>
+    <string name="common_clear">Futa</string>
+    <string name="common_latency_timeout">Muda umeisha</string>
+    <string name="common_traffic_a11y">Kupakua %1$s %2$s kwa sekunde, kupakia %3$s %4$s kwa sekunde</string>
+    <string name="common_time_just_now">Sasa hivi</string>
+    <string name="common_time_just_now_inline">sasa hivi</string>
+    <plurals name="common_time_minutes_ago">
+        <item quantity="one">dakika %1$d iliyopita</item>
+        <item quantity="other">dakika %1$d zilizopita</item>
+    </plurals>
+    <plurals name="common_time_hours_ago">
+        <item quantity="one">saa %1$d iliyopita</item>
+        <item quantity="other">saa %1$d zilizopita</item>
+    </plurals>
+    <plurals name="common_time_days_ago">
+        <item quantity="one">siku %1$d iliyopita</item>
+        <item quantity="other">siku %1$d zilizopita</item>
+    </plurals>
+    <string name="common_expiry_expired">Muda umeisha</string>
+    <string name="common_expiry_today">Inaisha leo</string>
+    <string name="common_expiry_tomorrow">Inaisha kesho</string>
+    <string name="common_expiry_weekday">Inaisha %1$s</string>
+    <plurals name="common_expiry_in_days">
+        <item quantity="one">Inaisha baada ya siku %1$d</item>
+        <item quantity="other">Inaisha baada ya siku %1$d</item>
+    </plurals>
+    <string-array name="common_weekdays">
+        <item>Jumatatu</item>
+        <item>Jumanne</item>
+        <item>Jumatano</item>
+        <item>Alhamisi</item>
+        <item>Ijumaa</item>
+        <item>Jumamosi</item>
+        <item>Jumapili</item>
+    </string-array>
+</resources>
