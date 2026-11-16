@@ -306,7 +306,7 @@
     <string name="subs_diff_updated">%1$s täzelendi</string>
     <string name="subs_rule_changes">Düzgün üýtgeşmeleri</string>
     <string name="subs_overrides_kept">Aýratyn düzgünler saklandy</string>
-    <string name="subs_scenes_retested">Ssenariý toplumlary täzeden barlandy</string>
+    <string name="subs_scenes_retested">Ssenariýler täzeden barlandy</string>
     <string name="subs_section_data">Trafik</string>
     <string name="subs_this_month">Şu aý</string>
     <string name="subs_swipe_updating">Täzelenýär</string>
@@ -317,8 +317,8 @@
     <string name="subs_error_delete">%1$s pozup bolmady</string>
     <string name="subs_remaining">Galan</string>
     <plurals name="subs_others">
-        <item quantity="one">ýene %1$d</item>
-        <item quantity="other">ýene %1$d</item>
+        <item quantity="one">Ýene %1$d</item>
+        <item quantity="other">Ýene %1$d</item>
     </plurals>
     <string name="subs_section_update">Täzelemeler</string>
     <string name="subs_auto_update">Awtomatik täzele</string>
@@ -327,7 +327,7 @@
         <item quantity="other">Her %1$d sagatda</item>
     </plurals>
     <string name="subs_update_wifi_only">Diňe Wi‑Fi arkaly täzele</string>
-    <string name="subs_show_changes">Täzelemezden öň üýtgeşmeleri görkez</string>
+    <string name="subs_show_changes">Ilki üýtgeşmeleri görkez</string>
     <string name="subs_update_all">Hemmesini häzir täzele</string>
     <string name="onboarding_cancel_import_a11y">Importy ýatyr</string>
     <string name="onboarding_choose_mode">Režim saýlaň</string>

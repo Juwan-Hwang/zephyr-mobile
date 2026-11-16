@@ -1,6 +1,7 @@
 package com.zephyr.design.components
 
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,8 +20,10 @@ fun ZText(
     maxLines: Int = Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Ellipsis,
     softWrap: Boolean = true,
+    /** Shrink to fit instead of ellipsizing (single-line headlines whose translations run long). */
+    autoSize: TextAutoSize? = null,
 ) {
-    BasicText(text, modifier, style.copy(color = color), maxLines = maxLines, overflow = overflow, softWrap = softWrap)
+    BasicText(text, modifier, style.copy(color = color), maxLines = maxLines, overflow = overflow, softWrap = softWrap, autoSize = autoSize)
 }
 
 @Composable

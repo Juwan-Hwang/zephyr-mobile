@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- မြန်မာ (my). Generated from the English strings; keep keys, format args and order in sync with values/. -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="common_connect">ချိတ်ဆက်ရန်</string>
     <string name="common_disconnect">အဆက်ဖြတ်ရန်</string>
     <string name="common_cancel">မလုပ်တော့ပါ</string>
@@ -31,10 +31,10 @@
     <plurals name="common_node_count">
         <item quantity="other">နုတ် %1$s ခု</item>
     </plurals>
-    <plurals name="common_available_count">
-        <item quantity="other">%1$d ခု ရနိုင်</item>
+    <plurals name="common_available_count" tools:ignore="StringFormatMatches">
+        <item quantity="other">%1$s ခု ရနိုင်</item>
     </plurals>
-    <string name="common_status_connected">ချိတ်ဆက်ထားသည်</string>
+    <string name="common_status_connected">ချိတ်ဆက်ပြီး</string>
     <string name="common_status_connecting">ချိတ်ဆက်နေသည်</string>
     <string name="common_status_connecting_ellipsis">ချိတ်ဆက်နေသည်…</string>
     <string name="common_status_disconnecting">အဆက်ဖြတ်နေသည်</string>
@@ -57,8 +57,8 @@
     <string name="common_source_group">စာရင်းသွင်းမှု အုပ်စု</string>
     <string name="common_source_auto">Zephyr ရွေးချယ်မှု</string>
     <string name="common_all">အားလုံး</string>
-    <plurals name="common_region_count">
-        <item quantity="other">ဒေသ %1$d ခု</item>
+    <plurals name="common_region_count" tools:ignore="StringFormatMatches">
+        <item quantity="other">ဒေသ %1$s ခု</item>
     </plurals>
     <string name="home_global_title">ကမ္ဘာလုံးဆိုင်ရာ မုဒ်</string>
     <string name="home_global_body">ဒေတာအားလုံး %1$s မှတစ်ဆင့် သွားသည်။ မြင်ကွင်းများ ခဏရပ်ထားသည်။</string>
@@ -67,17 +67,17 @@
     <string name="home_global_change_node">နုတ် ပြောင်းရန်</string>
     <string name="home_global_change_note">အက်ပ်အားလုံး %1$s မှတစ်ဆင့် ထွက်မည်။</string>
     <string name="home_global_change_to">%1$s သို့ ပြောင်းရန်</string>
-    <plurals name="home_subs_more">
-        <item quantity="other">နောက်ထပ် စာရင်းသွင်းမှု %1$d ခု</item>
+    <plurals name="home_subs_more" tools:ignore="StringFormatMatches">
+        <item quantity="other">နောက်ထပ် စာရင်းသွင်းမှု %1$s ခု</item>
     </plurals>
-    <string name="home_scan_progress">စမ်းသပ်နေသည် %1$d/%2$d</string>
+    <string name="home_scan_progress" tools:ignore="StringFormatMatches">စမ်းသပ်နေသည် %1$s/%2$s</string>
     <string name="home_scan_running">စမ်းသပ်နေသည်…</string>
     <string name="home_scenes_tested">%1$s စမ်းသပ်ခဲ့</string>
     <string name="home_today_usage">ယနေ့ %1$s</string>
-    <string name="home_spark_a11y">ဒေါင်းလုဒ် အမြန်နှုန်း၊ နောက်ဆုံး ၉၀ စက္ကန့်</string>
+    <string name="home_spark_a11y">ဒေါင်းလုဒ် အမြန်နှုန်း၊ နောက်ဆုံး 90 စက္ကန့်</string>
     <string name="home_switch_mode">မုဒ် ပြောင်းရန်</string>
-    <plurals name="home_scene_count">
-        <item quantity="other">မြင်ကွင်း %1$d ခု</item>
+    <plurals name="home_scene_count" tools:ignore="StringFormatMatches">
+        <item quantity="other">မြင်ကွင်း %1$s ခု</item>
     </plurals>
     <string name="home_failure_no_subscription">စာရင်းသွင်းမှု အရင်ထည့်ပါ</string>
     <string name="home_failure_vpn_permission">VPN ခွင့်ပြုချက် လိုအပ်သည်</string>
@@ -93,23 +93,23 @@
     <string name="home_action_undo">နောက်ပြန်ခြင်း</string>
     <string name="home_error_not_connected">%1$s အတွက် အရင် ချိတ်ဆက်ပါ</string>
     <string name="home_error_failed">%1$s မအောင်မြင်ပါ</string>
-    <string name="home_error_node_gone">%1$s မအောင်မြင်ပါ- နုတ် မရှိတော့ပါ</string>
+    <string name="home_error_node_gone">%1$s မအောင်မြင်ပါ: နုတ် မရှိတော့ပါ</string>
     <string name="home_failover_none">%1$s ထွက်ပေါက် တုံ့ပြန်မှု မရှိပါ။ ထွက်ပေါက် IP ကို အလိုအလျောက် မပြောင်းပါ။</string>
     <string name="home_failover_switched">%1$s ထွက်ပေါက်ကို %2$s သို့ အလိုအလျောက် ပြောင်းလိုက်သည်</string>
     <string name="home_switched_to">%1$s သို့ ပြောင်းလိုက်သည်</string>
     <string name="home_now_uses">%1$s ယခု %2$s ကို သုံးသည်</string>
     <string name="home_now_direct">%1$s ယခု တိုက်ရိုက် ချိတ်ဆက်သည်</string>
-    <string name="home_now_all_nodes">%1$s- နုတ်အားလုံး ပြန်သုံးသည်</string>
+    <string name="home_now_all_nodes">%1$s: နုတ်အားလုံး ပြန်သုံးသည်</string>
     <string name="home_now_uses_uhd">%1$s ယခု %2$s ကို သုံးသည် (4K သာ)</string>
     <string name="home_now_uhd_only">%1$s ယခု 4K နုတ်များကိုသာ သုံးသည်</string>
-    <string name="home_apply_failed">အသုံးချ၍ မရပါ- %1$s</string>
-    <string name="home_scene_next_region">နောက်ဒေသ- %1$s</string>
-    <string name="home_scene_prev_region">ယခင်ဒေသ- %1$s</string>
+    <string name="home_apply_failed">အသုံးချ၍ မရပါ: %1$s</string>
+    <string name="home_scene_next_region">နောက်ဒေသ: %1$s</string>
+    <string name="home_scene_prev_region">ယခင်ဒေသ: %1$s</string>
     <string name="home_scene_details_a11y">%1$s မြင်ကွင်း အသေးစိတ်</string>
     <string name="home_scene_testing">စမ်းသပ်နေသည်</string>
     <string name="home_scene_services_down">%1$s မရနိုင်ပါ</string>
     <string name="home_scene_services_ok">%1$s ကောင်းမွန်</string>
-    <string name="home_pin_line">%1$s- %2$s</string>
+    <string name="home_pin_line">%1$s: %2$s</string>
     <string name="home_confirm_apps">%1$s အတွက် ထွက်ပေါက် IP ပြောင်းမလား။</string>
     <string name="home_confirm_scene">%1$s မြင်ကွင်း၏ ထွက်ပေါက် IP ပြောင်းမလား။</string>
     <string name="home_confirm_unchanged">%1$s မပြောင်းပါ။</string>
@@ -117,8 +117,8 @@
     <plurals name="scene_available_unit">
         <item quantity="other">ခု ရနိုင်သော နုတ်</item>
     </plurals>
-    <plurals name="scene_tested_from">
-        <item quantity="other">စာရင်းသွင်းမှု %1$d ခုမှ စမ်းသပ်ထားသည်</item>
+    <plurals name="scene_tested_from" tools:ignore="StringFormatMatches">
+        <item quantity="other">စာရင်းသွင်းမှု %1$s ခုမှ စမ်းသပ်ထားသည်</item>
     </plurals>
     <string name="scene_pinned_for">%1$s အတွက် ပုံသေ</string>
     <string name="scene_when_unavailable">နုတ် မရနိုင်သည့်အခါ</string>
@@ -129,8 +129,8 @@
     <string name="scene_pinned_value">%1$s (ပုံသေ)</string>
     <string name="scene_retest">ပြန်စမ်းသပ်ရန်</string>
     <string name="scene_note">ရွေးချယ်မှုများကို Zephyr တွင်သာ သိမ်းသည်။ စာရင်းသွင်းမှု ဖွဲ့စည်းပုံ မပြောင်းပါ။</string>
-    <string name="scene_note_tested">%1$s နောက်ဆုံး စမ်းသပ်ချိန်- %2$s။</string>
-    <string name="command_placeholder">ရှာရန် သို့မဟုတ် ညွှန်ကြားချက် ထည့်ပါ</string>
+    <string name="scene_note_tested">%1$s နောက်ဆုံး စမ်းသပ်ချိန်: %2$s။</string>
+    <string name="command_placeholder">ရှာရန် (သို့) ညွှန်ကြားချက်</string>
     <string name="command_section_suggestions">အကြံပြုချက်များ</string>
     <string name="command_section_command">ညွှန်ကြားချက်များ</string>
     <string-array name="command_examples">
@@ -158,24 +158,24 @@
     <string name="command_scene_ai">AI မြင်ကွင်း</string>
     <string name="command_scene_named">%1$s မြင်ကွင်း</string>
     <string name="command_no_nodes_available">ရနိုင်သော နုတ် မရှိပါ</string>
-    <plurals name="command_plan_exit_available">
-        <item quantity="other">%1$d ခု ရနိုင်သည်။ %2$s ကို သုံးမည်။</item>
+    <plurals name="command_plan_exit_available" tools:ignore="StringFormatMatches">
+        <item quantity="other">%1$s ခု ရနိုင်သည်။ %2$s ကို သုံးမည်။</item>
     </plurals>
     <string name="command_plan_releases_pin">%1$s သည် ပုံသေ ထွက်ပေါက် %2$s ကို မသုံးတော့ပါ။</string>
     <string name="command_plan_fallback_pause">%1$s နုတ် မရနိုင်ပါက %2$s ကို ခဏရပ်မည်။</string>
     <string name="command_plan_fallback_scene">%1$s နုတ် မရနိုင်ပါက မြင်ကွင်းရှိ အခြားနုတ်များကို သုံးမည်။</string>
-    <string name="command_uhd_title_all">%1$s- နုတ်အားလုံး</string>
-    <string name="command_uhd_title_only">%1$s- 4K နုတ်များသာ</string>
+    <string name="command_uhd_title_all">%1$s: နုတ်အားလုံး</string>
+    <string name="command_uhd_title_only">%1$s: 4K နုတ်များသာ</string>
     <string name="command_uhd_clear_note">%1$s မြင်ကွင်းသည် 4K နုတ်များကိုသာ သုံးနေသည်။ နုတ်အားလုံးကို ပြန်သုံးမည်၊ လက်ရှိနုတ် မပြောင်းပါ။</string>
     <string name="command_uhd_none">4K ပံ့ပိုးသော နုတ် မရှိပါ။</string>
-    <plurals name="command_uhd_untested">
-        <item quantity="other">4K နုတ် %1$d ခုကို မစမ်းသပ်ရသေးပါ။ အသုံးချပြီးနောက် မြင်ကွင်းကို ပြန်စမ်းသပ်ပါ။</item>
+    <plurals name="command_uhd_untested" tools:ignore="StringFormatMatches">
+        <item quantity="other">4K နုတ် %1$s ခုကို မစမ်းသပ်ရသေးပါ။ အသုံးချပြီးနောက် မြင်ကွင်းကို ပြန်စမ်းသပ်ပါ။</item>
     </plurals>
-    <plurals name="command_uhd_matching_keep">
-        <item quantity="other">%1$d ခုအနက် %2$d ခု 4K ပံ့ပိုးသည်၊ လက်ရှိနုတ် မပြောင်းပါ။</item>
+    <plurals name="command_uhd_matching_keep" tools:ignore="StringFormatMatches">
+        <item quantity="other">%1$s ခုအနက် %2$s ခု 4K ပံ့ပိုးသည်၊ လက်ရှိနုတ် မပြောင်းပါ။</item>
     </plurals>
-    <plurals name="command_uhd_matching_switch">
-        <item quantity="other">%1$d ခုအနက် %2$d ခု 4K ပံ့ပိုးသည်၊ %3$s ကို သုံးမည်။</item>
+    <plurals name="command_uhd_matching_switch" tools:ignore="StringFormatMatches">
+        <item quantity="other">%1$s ခုအနက် %2$s ခု 4K ပံ့ပိုးသည်၊ %3$s ကို သုံးမည်။</item>
     </plurals>
     <string name="command_uhd_fastest">အမြန်ဆုံး 4K နုတ်</string>
     <string name="command_uhd_auto_note">ယခုမှစ၍ အလိုအလျောက်ပြောင်းခြင်းသည် 4K နုတ်များထဲမှသာ ရွေးမည်။</string>
@@ -190,17 +190,17 @@
     <string name="activity_close_host_a11y">%1$s သို့ ချိတ်ဆက်မှုများ ပိတ်ရန်</string>
     <string name="activity_no_app_note">ချိတ်ဆက်မှုတစ်ခုစီကို မည်သည့်အက်ပ်က ပြုလုပ်သည်ကို မသိရသေးသဖြင့် ဒိုမိန်းများကိုသာ ပြသည်။</string>
     <string name="activity_close_none">လက်ရှိ ချိတ်ဆက်မှု မရှိပါ</string>
-    <plurals name="activity_closed">
-        <item quantity="other">ချိတ်ဆက်မှု %1$d ခု ပိတ်လိုက်သည်</item>
+    <plurals name="activity_closed" tools:ignore="StringFormatMatches">
+        <item quantity="other">ချိတ်ဆက်မှု %1$s ခု ပိတ်လိုက်သည်</item>
     </plurals>
     <plurals name="activity_close_failed">
         <item quantity="other">ချိတ်ဆက်မှုများ ပိတ်၍ မရပါ</item>
     </plurals>
-    <plurals name="activity_close_partial">
-        <item quantity="other">ချိတ်ဆက်မှု %1$d ခု ပိတ်၍ မရပါ</item>
+    <plurals name="activity_close_partial" tools:ignore="StringFormatMatches">
+        <item quantity="other">ချိတ်ဆက်မှု %1$s ခု ပိတ်၍ မရပါ</item>
     </plurals>
-    <plurals name="trace_connections">
-        <item quantity="other">ချိတ်ဆက်မှု %1$d ခု</item>
+    <plurals name="trace_connections" tools:ignore="StringFormatMatches">
+        <item quantity="other">ချိတ်ဆက်မှု %1$s ခု</item>
     </plurals>
     <string name="trace_step_rule">စည်းမျဉ်း</string>
     <string name="trace_step_scene">မြင်ကွင်း</string>
@@ -208,20 +208,20 @@
     <string name="trace_step_exit">ထွက်ပေါက်</string>
     <string name="trace_from">%1$s မှ</string>
     <string name="trace_via">%1$s မှတစ်ဆင့်</string>
-    <plurals name="trace_exit_stable">
-        <item quantity="other">%1$d ရက် မပြောင်းလဲပါ</item>
+    <plurals name="trace_exit_stable" tools:ignore="StringFormatMatches">
+        <item quantity="other">%1$s ရက် မပြောင်းလဲပါ</item>
     </plurals>
     <string name="trace_this_connection">ဤချိတ်ဆက်မှု</string>
     <string name="trace_option_unchanged">မပြောင်းပါ</string>
-    <string name="trace_override_failed">ပြောင်း၍ မရပါ- %1$s</string>
+    <string name="trace_override_failed">ပြောင်း၍ မရပါ: %1$s</string>
     <string name="trace_always_apply">အမြဲ အသုံးချရန်</string>
     <string name="trace_always_apply_hint">ပိတ်ထားလျှင် ဤချိတ်ဆက်မှုသာ ပြောင်းမည်</string>
     <string name="library_widgets">ဝစ်ဂျက်နှင့် အမြန်ဆက်တင်များ</string>
     <plurals name="nodes_total_unit">
         <item quantity="other">ခု</item>
     </plurals>
-    <plurals name="nodes_from_subs">
-        <item quantity="other">စာရင်းသွင်းမှု %1$d ခုမှ</item>
+    <plurals name="nodes_from_subs" tools:ignore="StringFormatMatches">
+        <item quantity="other">စာရင်းသွင်းမှု %1$s ခုမှ</item>
     </plurals>
     <string name="nodes_search_placeholder">ဒေသ၊ မြို့ သို့မဟုတ် လမ်းကြောင်း</string>
     <string name="nodes_search_stats">%1$s ခု · %2$s</string>
@@ -235,8 +235,8 @@
     <plurals name="rules_total_unit">
         <item quantity="other">ခု</item>
     </plurals>
-    <plurals name="rules_summary">
-        <item quantity="other">အလွှာ %1$d ခု · compile ပြီး · ဒစ်ခ်ပေါ်တွင် %2$s</item>
+    <plurals name="rules_summary" tools:ignore="StringFormatMatches">
+        <item quantity="other">အလွှာ %1$s ခု · compile ပြီး · ဒစ်ခ်ပေါ်တွင် %2$s</item>
     </plurals>
     <string name="rules_test_placeholder">ဒိုမိန်း သို့မဟုတ် IP စမ်းရန်</string>
     <string name="rules_test_hint">ကိုက်ညီသော စည်းမျဉ်းနှင့် ထွက်ပေါက်ကို ကြည့်ရန် ဒိုမိန်း သို့မဟုတ် IP လိပ်စာ ထည့်ပါ။</string>
@@ -249,7 +249,7 @@
     <string name="rules_kind_domain">ဒိုမိန်း</string>
     <string name="rules_kind_other">အခြား</string>
     <string name="rules_step_request">တောင်းဆိုမှု</string>
-    <string name="rules_step_layer">အလွှာ %1$d · %2$s</string>
+    <string name="rules_step_layer" tools:ignore="StringFormatMatches">အလွှာ %1$s · %2$s</string>
     <string name="rules_step_result">ရလဒ်</string>
     <string name="rules_blocked">ပိတ်ဆို့ထားသည်</string>
     <string name="rules_step_scene">မြင်ကွင်း · %1$s</string>
@@ -276,14 +276,14 @@
     <plurals name="subs_total_unit">
         <item quantity="other">ခု</item>
     </plurals>
-    <plurals name="subs_update_every">
-        <item quantity="other">%1$d နာရီတိုင်း အပ်ဒိတ်</item>
+    <plurals name="subs_update_every" tools:ignore="StringFormatMatches">
+        <item quantity="other">%1$s နာရီတိုင်း အပ်ဒိတ်</item>
     </plurals>
     <string name="subs_diff_updating">%1$s အပ်ဒိတ်လုပ်နေသည်…</string>
     <string name="subs_diff_updated">%1$s အပ်ဒိတ်ပြီး</string>
     <string name="subs_rule_changes">စည်းမျဉ်း ပြောင်းလဲမှုများ</string>
-    <string name="subs_overrides_kept">အစားထိုးချက်များ ဆက်ထားသည်</string>
-    <string name="subs_scenes_retested">မြင်ကွင်း နုတ်များကို ပြန်စမ်းသပ်ပြီး</string>
+    <string name="subs_overrides_kept">အစားထိုးချက် ဆက်ထား</string>
+    <string name="subs_scenes_retested">မြင်ကွင်း ပြန်စမ်းပြီး</string>
     <string name="subs_section_data">ဒေတာ</string>
     <string name="subs_this_month">ဤလ</string>
     <string name="subs_swipe_updating">အပ်ဒိတ်လုပ်နေသည်</string>
@@ -293,13 +293,13 @@
     <string name="subs_error_update">%1$s ကို အပ်ဒိတ်လုပ်၍ မရပါ</string>
     <string name="subs_error_delete">%1$s ကို ဖျက်၍ မရပါ</string>
     <string name="subs_remaining">ကျန်</string>
-    <plurals name="subs_others">
-        <item quantity="other">အခြား %1$d ခု</item>
+    <plurals name="subs_others" tools:ignore="StringFormatMatches">
+        <item quantity="other">အခြား %1$s ခု</item>
     </plurals>
     <string name="subs_section_update">အပ်ဒိတ်များ</string>
     <string name="subs_auto_update">အလိုအလျောက် အပ်ဒိတ်</string>
-    <plurals name="subs_every_hours">
-        <item quantity="other">%1$d နာရီတိုင်း</item>
+    <plurals name="subs_every_hours" tools:ignore="StringFormatMatches">
+        <item quantity="other">%1$s နာရီတိုင်း</item>
     </plurals>
     <string name="subs_update_wifi_only">Wi‑Fi ဖြင့်သာ အပ်ဒိတ်လုပ်ရန်</string>
     <string name="subs_show_changes">အပ်ဒိတ်မလုပ်မီ ပြောင်းလဲမှုများ ပြရန်</string>
@@ -321,8 +321,8 @@
     <string name="settings_section_testing">စမ်းသပ်ခြင်း</string>
     <string name="settings_test_wifi_only">Wi‑Fi ဖြင့်သာ အမြန်နှုန်း စမ်းရန်</string>
     <string name="settings_keep_results">ရလဒ် သိမ်းထားချိန်</string>
-    <plurals name="settings_hours">
-        <item quantity="other">%1$d နာရီ</item>
+    <plurals name="settings_hours" tools:ignore="StringFormatMatches">
+        <item quantity="other">%1$s နာရီ</item>
     </plurals>
     <string name="settings_section_storage">သိုလှောင်မှု</string>
     <string name="settings_storage_title">နုတ်နှင့် စည်းမျဉ်းများ</string>
@@ -375,7 +375,7 @@
     <string name="widget_label">Zephyr အခြေအနေ</string>
     <string name="widget_description">ချိတ်ဆက်မှု အခြေအနေ၊ အမြန်နှုန်းနှင့် မြင်ကွင်းများ</string>
     <string name="widget_usage_label">Zephyr ယနေ့ အသုံးပြုမှု</string>
-    <string name="widget_usage_description">ယနေ့ ဒေတာနှင့် ၂၄ နာရီ ခွဲခြမ်းချက်</string>
+    <string name="widget_usage_description">ယနေ့ ဒေတာနှင့် 24 နာရီ ခွဲခြမ်းချက်</string>
     <string name="widget_today">ယနေ့ %1$s %2$s</string>
     <string name="notif_channel_vpn">ချိတ်ဆက်မှု အခြေအနေ</string>
     <string name="notif_channel_vpn_desc">ချိတ်ဆက်ထားစဉ် အမြန်နှုန်းနှင့် မြင်ကွင်းများ ပြသည်</string>

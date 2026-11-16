@@ -306,7 +306,7 @@
     <string name="subs_diff_updated">%1$s imesasishwa</string>
     <string name="subs_rule_changes">Mabadiliko ya sheria</string>
     <string name="subs_overrides_kept">Ubatilishaji umebaki</string>
-    <string name="subs_scenes_retested">Makundi ya mazingira yamepimwa upya</string>
+    <string name="subs_scenes_retested">Mazingira yamepimwa upya</string>
     <string name="subs_section_data">Data</string>
     <string name="subs_this_month">Mwezi huu</string>
     <string name="subs_swipe_updating">Inasasisha</string>
@@ -327,7 +327,7 @@
         <item quantity="other">Kila saa %1$d</item>
     </plurals>
     <string name="subs_update_wifi_only">Sasisha kupitia Wi‑Fi pekee</string>
-    <string name="subs_show_changes">Onyesha mabadiliko kabla ya kusasisha</string>
+    <string name="subs_show_changes">Onyesha mabadiliko kwanza</string>
     <string name="subs_update_all">Sasisha zote sasa</string>
     <string name="onboarding_cancel_import_a11y">Ghairi kuleta</string>
     <string name="onboarding_choose_mode">Chagua hali</string>

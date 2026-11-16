@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -105,8 +106,12 @@ fun HomeStatus(
                     ),
                     style = ZTheme.type.status,
                     maxLines = 1,
+                    // Long translations (sw "Imeunganishwa", ru "Не удалось подключиться") step down instead of
+                    // running into the switch; anything that fits renders at the full status size as before.
+                    autoSize = TextAutoSize.StepBased(minFontSize = 26.sp, maxFontSize = ZTheme.type.status.fontSize),
                 )
             }
+            Spacer(Modifier.width(12.dp))
             ZToggle(on, onToggle, size = ZToggleSize.Hero, contentDescription = stringResource(R.string.common_connect))
         }
         Spacer(Modifier.height(10.dp))

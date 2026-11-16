@@ -343,16 +343,16 @@
         <item quantity="other">подписки</item>
     </plurals>
     <plurals name="subs_update_every">
-        <item quantity="one">обновление раз в %1$d час</item>
-        <item quantity="few">обновление раз в %1$d часа</item>
-        <item quantity="many">обновление раз в %1$d часов</item>
-        <item quantity="other">обновление раз в %1$d часа</item>
+        <item quantity="one">обновление раз в %1$d час</item>
+        <item quantity="few">обновление раз в %1$d часа</item>
+        <item quantity="many">обновление раз в %1$d часов</item>
+        <item quantity="other">обновление раз в %1$d часа</item>
     </plurals>
     <string name="subs_diff_updating">Обновление %1$s…</string>
     <string name="subs_diff_updated">%1$s: обновлено</string>
     <string name="subs_rule_changes">Изменения правил</string>
     <string name="subs_overrides_kept">Переопределения сохранены</string>
-    <string name="subs_scenes_retested">Узлы сценариев проверены заново</string>
+    <string name="subs_scenes_retested">Сценарии проверены заново</string>
     <string name="subs_section_data">Трафик</string>
     <string name="subs_this_month">В этом месяце</string>
     <string name="subs_swipe_updating">Обновление</string>
@@ -363,10 +363,10 @@
     <string name="subs_error_delete">Не удалось удалить %1$s</string>
     <string name="subs_remaining">Осталось</string>
     <plurals name="subs_others">
-        <item quantity="one">ещё %1$d</item>
-        <item quantity="few">ещё %1$d</item>
-        <item quantity="many">ещё %1$d</item>
-        <item quantity="other">ещё %1$d</item>
+        <item quantity="one">Ещё %1$d</item>
+        <item quantity="few">Ещё %1$d</item>
+        <item quantity="many">Ещё %1$d</item>
+        <item quantity="other">Ещё %1$d</item>
     </plurals>
     <string name="subs_section_update">Обновление</string>
     <string name="subs_auto_update">Автообновление</string>
@@ -377,7 +377,7 @@
         <item quantity="other">Каждые %1$d часа</item>
     </plurals>
     <string name="subs_update_wifi_only">Обновлять только по Wi‑Fi</string>
-    <string name="subs_show_changes">Показывать изменения до обновления</string>
+    <string name="subs_show_changes">Предпросмотр изменений</string>
     <string name="subs_update_all">Обновить все сейчас</string>
     <string name="onboarding_cancel_import_a11y">Отменить импорт</string>
     <string name="onboarding_choose_mode">Выберите режим</string>
