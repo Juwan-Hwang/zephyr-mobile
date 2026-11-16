@@ -62,6 +62,24 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
         paparazzi.snapshot { ZephyrTheme(dark = dark, accent = accent) { HomeContent(conn, scenes, subs, ui, { live }, NO_ACTIONS, NO_CB) } }
     }
 
+    /** Prototype 10 (scan): AI scene re-testing, header "正在检测 138/512", row bar at 27 %. */
+    @Test
+    fun homeScan() {
+        if (accent != ZAccent.BLUE || fontScale != 1f) return
+        val e = MockEngine(clock = { NOW }, demo = true, compute = kotlinx.coroutines.Dispatchers.Unconfined, measure = { 120L })
+        val (conn, scenes, subs, usage, spark) = runBlocking {
+            Quint(e.connectionState().first(), e.scenes().first(), e.subscriptions().first(), e.usageToday(), e.recentTraffic(90))
+        }
+        val ai = scenes.first { it.kind == com.zephyr.engine.SceneKind.AI }.id
+        val ui = HomeUi(now = NOW, usage = usage)
+        val live = HomeLive(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = NOW)
+        paparazzi.snapshot {
+            ZephyrTheme(dark = dark, accent = accent) {
+                HomeContent(conn, scenes, subs, ui, { live }, NO_ACTIONS, NO_CB, retesting = setOf(ai), scan = com.zephyr.engine.ScanProgress(138, 512))
+            }
+        }
+    }
+
     private data class Quint<A, B, C, D, E>(val a: A, val b: B, val c: C, val d: D, val e: E)
 
     companion object {
