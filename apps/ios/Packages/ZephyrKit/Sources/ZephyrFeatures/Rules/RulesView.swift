@@ -22,7 +22,7 @@ public struct RulesView: View {
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                PageHeader(title: "规则", number: model.stats.map { ZFormat.count($0.total) }, unit: ZL.tr("条"),
+                PageHeader(title: "规则", verbatimTitle: ZL.tr("规则", context: "列表"), number: model.stats.map { ZFormat.count($0.total) }, unit: ZL.tr("条"),
                            subtitle: model.subtitle)
                 VStack(alignment: .leading, spacing: 0) {
                     RuleTestCard(input: $model.input, steps: model.steps, took: model.tookText, invalid: model.invalid)

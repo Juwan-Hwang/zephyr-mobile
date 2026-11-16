@@ -30,7 +30,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : " と "
+            "value" : "と"
           }
         },
         "ko" : {
@@ -4480,7 +4480,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "မြင်ကွင်းတစ်ခုစီ လက်ရှိ သုံးနေသော ဒေသနှင့် နုတ်။"
+            "value" : "မြင်ကွင်းတစ်ခုစီ လက်ရှိ သုံးနေသော ဒေသနှင့် နုဒ်။"
           }
         },
         "ru" : {
@@ -5564,7 +5564,7 @@
         "tk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Import"
+            "value" : "Import et"
           }
         },
         "tr" : {
@@ -6014,7 +6014,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se ha borrado la invalidación de ruta de %@"
+            "value" : "Se ha borrado la excepción de ruta de %@"
           }
         },
         "fa" : {
@@ -8826,7 +8826,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ် %1$@ · စည်းမျဉ်း %2$@ · လွတ် %3$@"
+            "value" : "နုဒ် %1$@ · စည်းမျဉ်း %2$@ · လွတ် %3$@"
           }
         },
         "ru" : {
@@ -8908,7 +8908,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ဤနုတ် မရှိတော့ပါ"
+            "value" : "ဤနုဒ် မရှိတော့ပါ"
           }
         },
         "ru" : {
@@ -10595,7 +10595,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "الفيديو"
+            "value" : "فيديو"
           }
         },
         "en" : {

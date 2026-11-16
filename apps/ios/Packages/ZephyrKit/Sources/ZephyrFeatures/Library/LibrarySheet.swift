@@ -72,7 +72,8 @@ public struct LibrarySheet: View {
             LibraryStatCard(value: LibraryModel.compact(model.subscriptionCount),
                             spokenValue: model.subscriptionCount.map(ZFormat.count), caption: "订阅") { onOpen(.subscriptions) }
             LibraryStatCard(value: LibraryModel.compact(model.ruleTotal),
-                            spokenValue: model.ruleTotal.map(ZFormat.count), caption: "规则") { onOpen(.rules) }
+                            spokenValue: model.ruleTotal.map(ZFormat.count), caption: "规则",
+                            verbatimCaption: ZL.tr("规则", context: "列表")) { onOpen(.rules) }
             LibraryStatCard(value: LibraryModel.compact(model.sceneCount),
                             spokenValue: model.sceneCount.map(ZFormat.count), caption: "场景") { onOpen(.scenes) }
         }
