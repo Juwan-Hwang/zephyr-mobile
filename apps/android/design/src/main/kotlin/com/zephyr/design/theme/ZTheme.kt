@@ -84,7 +84,9 @@ fun ZephyrTheme(
     val tokens = if (dark) ZColors.Dark else ZColors.Light
     val indication = remember(tokens.screenPressed) { ZIndication(tokens.screenPressed) }
     val selection = remember(colors) { TextSelectionColors(colors.accent, colors.accent.copy(alpha = 0.3f)) }
+    val res = latinDigitResources()
     CompositionLocalProvider(
+        androidx.compose.ui.platform.LocalResources provides res,
         LocalColors provides colors,
         LocalZColors provides tokens,
         LocalType provides ZTypography.default,
@@ -95,3 +97,30 @@ fun ZephyrTheme(
         content = content,
     )
 }
+
+/**
+ * Digits in Arabic, Persian and Urdu: Western (0-9) everywhere, so a count formatted by a string resource
+ * ("١٢ ساعة") never sits next to the Western sizes, rates, IPs and grouped counts the UI keeps Latin ("13,098,480").
+ * Only the numbering system of resource formatting changes (resource lookup ignores the extension); a numbering
+ * system the user picked explicitly (Android 14 regional preferences, `-u-nu-…`) is kept. Other languages get
+ * the same Resources object, untouched.
+ */
+@Composable
+@ReadOnlyComposable
+private fun latinDigitResources(): android.content.res.Resources {
+    val res = androidx.compose.ui.platform.LocalResources.current
+    val conf = androidx.compose.ui.platform.LocalConfiguration.current
+    val loc = conf.locales[0]
+    if (loc.language !in LATIN_DIGIT_LANGUAGES || loc.getUnicodeLocaleType("nu") != null) return res
+    val ctx = androidx.compose.ui.platform.LocalContext.current
+    return latinCache.getOrPut(conf) {
+        runCatching {
+            val c = android.content.res.Configuration(conf)
+            c.setLocale(java.util.Locale.Builder().setLocale(loc).setUnicodeLocaleKeyword("nu", "latn").build())
+            ctx.createConfigurationContext(c).resources
+        }.getOrDefault(res)
+    }
+}
+
+private val LATIN_DIGIT_LANGUAGES = setOf("ar", "fa", "ur")
+private val latinCache = java.util.WeakHashMap<android.content.res.Configuration, android.content.res.Resources>()

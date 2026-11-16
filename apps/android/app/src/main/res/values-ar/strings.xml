@@ -32,16 +32,16 @@
     <string name="common_back_to">رجوع إلى \u2068%1$s\u2069</string>
     <plurals name="common_node_count">
         <item quantity="zero">\u2068%1$s\u2069 عقدة</item>
-        <item quantity="one">\u2068%1$s\u2069 عقدة</item>
-        <item quantity="two">\u2068%1$s\u2069 عقدتان</item>
+        <item quantity="one">عقدة واحدة</item>
+        <item quantity="two">عقدتان</item>
         <item quantity="few">\u2068%1$s\u2069 عُقد</item>
         <item quantity="many">\u2068%1$s\u2069 عقدة</item>
         <item quantity="other">\u2068%1$s\u2069 عقدة</item>
     </plurals>
     <plurals name="common_available_count">
         <item quantity="zero">%1$d متاحة</item>
-        <item quantity="one">%1$d متاحة</item>
-        <item quantity="two">%1$d متاحتان</item>
+        <item quantity="one">عقدة واحدة متاحة</item>
+        <item quantity="two">عقدتان متاحتان</item>
         <item quantity="few">%1$d متاحة</item>
         <item quantity="many">%1$d متاحة</item>
         <item quantity="other">%1$d متاحة</item>
@@ -71,8 +71,8 @@
     <string name="common_all">الكل</string>
     <plurals name="common_region_count">
         <item quantity="zero">%1$d منطقة</item>
-        <item quantity="one">%1$d منطقة</item>
-        <item quantity="two">%1$d منطقتان</item>
+        <item quantity="one">منطقة واحدة</item>
+        <item quantity="two">منطقتان</item>
         <item quantity="few">%1$d مناطق</item>
         <item quantity="many">%1$d منطقة</item>
         <item quantity="other">%1$d منطقة</item>
@@ -88,8 +88,8 @@
     <string name="home_global_change_to">التغيير إلى \u2068%1$s\u2069</string>
     <plurals name="home_subs_more">
         <item quantity="zero">%1$d اشتراك إضافي</item>
-        <item quantity="one">%1$d اشتراك إضافي</item>
-        <item quantity="two">%1$d اشتراكان إضافيان</item>
+        <item quantity="one">اشتراك إضافي واحد</item>
+        <item quantity="two">اشتراكان إضافيان</item>
         <item quantity="few">%1$d اشتراكات إضافية</item>
         <item quantity="many">%1$d اشتراكًا إضافيًا</item>
         <item quantity="other">%1$d اشتراك إضافي</item>
@@ -98,12 +98,12 @@
     <string name="home_scan_running">جارٍ الفحص…</string>
     <string name="home_scenes_tested">فُحصت \u2068%1$s\u2069</string>
     <string name="home_today_usage">اليوم \u2068%1$s\u2069</string>
-    <string name="home_spark_a11y">سرعة التنزيل خلال آخر ٩٠ ثانية</string>
+    <string name="home_spark_a11y">سرعة التنزيل خلال آخر 90 ثانية</string>
     <string name="home_switch_mode">تبديل الوضع</string>
     <plurals name="home_scene_count">
         <item quantity="zero">%1$d مشهد</item>
-        <item quantity="one">%1$d مشهد</item>
-        <item quantity="two">%1$d مشهدان</item>
+        <item quantity="one">مشهد واحد</item>
+        <item quantity="two">مشهدان</item>
         <item quantity="few">%1$d مشاهد</item>
         <item quantity="many">%1$d مشهدًا</item>
         <item quantity="other">%1$d مشهد</item>
@@ -138,7 +138,7 @@
     <string name="home_scene_testing">جارٍ الفحص</string>
     <string name="home_scene_services_down">\u2068%1$s\u2069 غير متاح</string>
     <string name="home_scene_services_ok">\u2068%1$s\u2069 متاح</string>
-    <string name="home_pin_line">\u2068%1$s\u2069: \u2068%2$s\u2069</string>
+    <string name="home_pin_line">%1$s: %2$s</string>
     <string name="home_confirm_apps">تغيير عنوان IP للخروج في \u2068%1$s\u2069؟</string>
     <string name="home_confirm_scene">تغيير عنوان IP للخروج في مشهد \u2068%1$s\u2069؟</string>
     <string name="home_confirm_unchanged">سيبقى \u2068%1$s\u2069 كما هو.</string>
@@ -148,15 +148,15 @@
     <plurals name="scene_available_unit">
         <item quantity="zero">عقدة متاحة</item>
         <item quantity="one">عقدة متاحة</item>
-        <item quantity="two">عقدتان متاحتان</item>
+        <item quantity="two">عُقد متاحة</item>
         <item quantity="few">عُقد متاحة</item>
         <item quantity="many">عقدة متاحة</item>
         <item quantity="other">عقدة متاحة</item>
     </plurals>
     <plurals name="scene_tested_from">
         <item quantity="zero">فُحصت من %1$d اشتراك</item>
-        <item quantity="one">فُحصت من %1$d اشتراك</item>
-        <item quantity="two">فُحصت من %1$d اشتراكين</item>
+        <item quantity="one">فُحصت من اشتراك واحد</item>
+        <item quantity="two">فُحصت من اشتراكين</item>
         <item quantity="few">فُحصت من %1$d اشتراكات</item>
         <item quantity="many">فُحصت من %1$d اشتراكًا</item>
         <item quantity="other">فُحصت من %1$d اشتراك</item>
@@ -203,11 +203,11 @@
     <string name="command_no_nodes_available">لا توجد عُقد متاحة</string>
     <plurals name="command_plan_exit_available">
         <item quantity="zero">%1$d متاحة. سيُستخدم \u2068%2$s\u2069.</item>
-        <item quantity="one">%1$d متاحة. سيُستخدم \u2068%2$s\u2069.</item>
-        <item quantity="two">%1$d متاحتان. سيُستخدم \u2068%2$s\u2069.</item>
-        <item quantity="few">%1$d متاحة. سيُستخدم \u2068%2$s\u2069.</item>
-        <item quantity="many">%1$d متاحة. سيُستخدم \u2068%2$s\u2069.</item>
-        <item quantity="other">%1$d متاحة. سيُستخدم \u2068%2$s\u2069.</item>
+        <item quantity="one">عقدة واحدة متاحة. سيُستخدم \u2068%2$s\u2069.</item>
+        <item quantity="two">عقدتان متاحتان. سيُستخدم \u2068%2$s\u2069.</item>
+        <item quantity="few">%1$d عُقد متاحة. سيُستخدم \u2068%2$s\u2069.</item>
+        <item quantity="many">%1$d عقدة متاحة. سيُستخدم \u2068%2$s\u2069.</item>
+        <item quantity="other">%1$d عقدة متاحة. سيُستخدم \u2068%2$s\u2069.</item>
     </plurals>
     <string name="command_plan_releases_pin">سيتوقف \u2068%1$s\u2069 عن استخدام مخرجه الثابت \u2068%2$s\u2069.</string>
     <string name="command_plan_fallback_pause">إذا لم تتوفر أي عقدة في \u2068%1$s\u2069، فسيتوقف \u2068%2$s\u2069 مؤقتًا.</string>
@@ -257,8 +257,8 @@
     <string name="activity_close_none">لا توجد اتصالات نشطة</string>
     <plurals name="activity_closed">
         <item quantity="zero">تم إغلاق %1$d اتصال</item>
-        <item quantity="one">تم إغلاق %1$d اتصال</item>
-        <item quantity="two">تم إغلاق %1$d اتصالين</item>
+        <item quantity="one">تم إغلاق اتصال واحد</item>
+        <item quantity="two">تم إغلاق اتصالين</item>
         <item quantity="few">تم إغلاق %1$d اتصالات</item>
         <item quantity="many">تم إغلاق %1$d اتصالًا</item>
         <item quantity="other">تم إغلاق %1$d اتصال</item>
@@ -273,8 +273,8 @@
     </plurals>
     <plurals name="activity_close_partial">
         <item quantity="zero">تعذّر إغلاق %1$d اتصال</item>
-        <item quantity="one">تعذّر إغلاق %1$d اتصال</item>
-        <item quantity="two">تعذّر إغلاق %1$d اتصالين</item>
+        <item quantity="one">تعذّر إغلاق اتصال واحد</item>
+        <item quantity="two">تعذّر إغلاق اتصالين</item>
         <item quantity="few">تعذّر إغلاق %1$d اتصالات</item>
         <item quantity="many">تعذّر إغلاق %1$d اتصالًا</item>
         <item quantity="other">تعذّر إغلاق %1$d اتصال</item>
@@ -283,8 +283,8 @@
     <!-- ── Connection trace ── -->
     <plurals name="trace_connections">
         <item quantity="zero">%1$d اتصال</item>
-        <item quantity="one">%1$d اتصال</item>
-        <item quantity="two">%1$d اتصالان</item>
+        <item quantity="one">اتصال واحد</item>
+        <item quantity="two">اتصالان</item>
         <item quantity="few">%1$d اتصالات</item>
         <item quantity="many">%1$d اتصالًا</item>
         <item quantity="other">%1$d اتصال</item>
@@ -297,8 +297,8 @@
     <string name="trace_via">عبر \u2068%1$s\u2069</string>
     <plurals name="trace_exit_stable">
         <item quantity="zero">لم يتغيّر منذ %1$d يوم</item>
-        <item quantity="one">لم يتغيّر منذ %1$d يوم</item>
-        <item quantity="two">لم يتغيّر منذ %1$d يومين</item>
+        <item quantity="one">لم يتغيّر منذ يوم</item>
+        <item quantity="two">لم يتغيّر منذ يومين</item>
         <item quantity="few">لم يتغيّر منذ %1$d أيام</item>
         <item quantity="many">لم يتغيّر منذ %1$d يومًا</item>
         <item quantity="other">لم يتغيّر منذ %1$d يوم</item>
@@ -316,21 +316,21 @@
     <plurals name="nodes_total_unit">
         <item quantity="zero">عقدة</item>
         <item quantity="one">عقدة</item>
-        <item quantity="two">عقدتان</item>
+        <item quantity="two">عُقد</item>
         <item quantity="few">عُقد</item>
         <item quantity="many">عقدة</item>
         <item quantity="other">عقدة</item>
     </plurals>
     <plurals name="nodes_from_subs">
         <item quantity="zero">من %1$d اشتراك</item>
-        <item quantity="one">من %1$d اشتراك</item>
-        <item quantity="two">من %1$d اشتراكين</item>
+        <item quantity="one">من اشتراك واحد</item>
+        <item quantity="two">من اشتراكين</item>
         <item quantity="few">من %1$d اشتراكات</item>
         <item quantity="many">من %1$d اشتراكًا</item>
         <item quantity="other">من %1$d اشتراك</item>
     </plurals>
     <string name="nodes_search_placeholder">منطقة أو مدينة أو مسار</string>
-    <string name="nodes_search_stats">\u2068%1$s\u2069 · \u2068%2$s\u2069</string>
+    <string name="nodes_search_stats">%1$s · %2$s</string>
     <string name="nodes_empty_title">لا توجد عُقد بعد</string>
     <string name="nodes_empty_message">استورد اشتراكًا وستظهر عُقده هنا</string>
     <string name="nodes_empty_action">استيراد اشتراك</string>
@@ -343,15 +343,15 @@
     <plurals name="rules_total_unit">
         <item quantity="zero">قاعدة</item>
         <item quantity="one">قاعدة</item>
-        <item quantity="two">قاعدتان</item>
+        <item quantity="two">قواعد</item>
         <item quantity="few">قواعد</item>
         <item quantity="many">قاعدة</item>
         <item quantity="other">قاعدة</item>
     </plurals>
     <plurals name="rules_summary">
         <item quantity="zero">%1$d طبقة · مُجمَّعة · \u2068%2$s\u2069 على القرص</item>
-        <item quantity="one">%1$d طبقة · مُجمَّعة · \u2068%2$s\u2069 على القرص</item>
-        <item quantity="two">%1$d طبقتان · مُجمَّعة · \u2068%2$s\u2069 على القرص</item>
+        <item quantity="one">طبقة واحدة · مُجمَّعة · \u2068%2$s\u2069 على القرص</item>
+        <item quantity="two">طبقتان · مُجمَّعة · \u2068%2$s\u2069 على القرص</item>
         <item quantity="few">%1$d طبقات · مُجمَّعة · \u2068%2$s\u2069 على القرص</item>
         <item quantity="many">%1$d طبقة · مُجمَّعة · \u2068%2$s\u2069 على القرص</item>
         <item quantity="other">%1$d طبقة · مُجمَّعة · \u2068%2$s\u2069 على القرص</item>
@@ -386,8 +386,8 @@
     <string name="subs_import_file">استيراد من ملف</string>
     <plurals name="subs_added">
         <item quantity="zero">تمت إضافة \u2068%1$s\u2069 (\u2068%2$s\u2069 عقدة)</item>
-        <item quantity="one">تمت إضافة \u2068%1$s\u2069 (\u2068%2$s\u2069 عقدة)</item>
-        <item quantity="two">تمت إضافة \u2068%1$s\u2069 (\u2068%2$s\u2069 عقدتان)</item>
+        <item quantity="one">تمت إضافة \u2068%1$s\u2069 (عقدة واحدة)</item>
+        <item quantity="two">تمت إضافة \u2068%1$s\u2069 (عقدتان)</item>
         <item quantity="few">تمت إضافة \u2068%1$s\u2069 (\u2068%2$s\u2069 عُقد)</item>
         <item quantity="many">تمت إضافة \u2068%1$s\u2069 (\u2068%2$s\u2069 عقدة)</item>
         <item quantity="other">تمت إضافة \u2068%1$s\u2069 (\u2068%2$s\u2069 عقدة)</item>
@@ -401,15 +401,15 @@
     <plurals name="subs_total_unit">
         <item quantity="zero">اشتراك</item>
         <item quantity="one">اشتراك</item>
-        <item quantity="two">اشتراكان</item>
+        <item quantity="two">اشتراكات</item>
         <item quantity="few">اشتراكات</item>
         <item quantity="many">اشتراكًا</item>
         <item quantity="other">اشتراك</item>
     </plurals>
     <plurals name="subs_update_every">
         <item quantity="zero">يُحدَّث كل %1$d ساعة</item>
-        <item quantity="one">يُحدَّث كل %1$d ساعة</item>
-        <item quantity="two">يُحدَّث كل %1$d ساعتين</item>
+        <item quantity="one">يُحدَّث كل ساعة</item>
+        <item quantity="two">يُحدَّث كل ساعتين</item>
         <item quantity="few">يُحدَّث كل %1$d ساعات</item>
         <item quantity="many">يُحدَّث كل %1$d ساعة</item>
         <item quantity="other">يُحدَّث كل %1$d ساعة</item>
@@ -430,8 +430,8 @@
     <string name="subs_remaining">المتبقي</string>
     <plurals name="subs_others">
         <item quantity="zero">%1$d اشتراك آخر</item>
-        <item quantity="one">%1$d اشتراك آخر</item>
-        <item quantity="two">%1$d اشتراكان آخران</item>
+        <item quantity="one">اشتراك آخر</item>
+        <item quantity="two">اشتراكان آخران</item>
         <item quantity="few">%1$d اشتراكات أخرى</item>
         <item quantity="many">%1$d اشتراكًا آخر</item>
         <item quantity="other">%1$d اشتراك آخر</item>
@@ -440,8 +440,8 @@
     <string name="subs_auto_update">التحديث التلقائي</string>
     <plurals name="subs_every_hours">
         <item quantity="zero">كل %1$d ساعة</item>
-        <item quantity="one">كل %1$d ساعة</item>
-        <item quantity="two">كل %1$d ساعتين</item>
+        <item quantity="one">كل ساعة</item>
+        <item quantity="two">كل ساعتين</item>
         <item quantity="few">كل %1$d ساعات</item>
         <item quantity="many">كل %1$d ساعة</item>
         <item quantity="other">كل %1$d ساعة</item>
@@ -472,8 +472,8 @@
     <string name="settings_keep_results">الاحتفاظ بالنتائج</string>
     <plurals name="settings_hours">
         <item quantity="zero">%1$d ساعة</item>
-        <item quantity="one">%1$d ساعة</item>
-        <item quantity="two">%1$d ساعتان</item>
+        <item quantity="one">ساعة واحدة</item>
+        <item quantity="two">ساعتان</item>
         <item quantity="few">%1$d ساعات</item>
         <item quantity="many">%1$d ساعة</item>
         <item quantity="other">%1$d ساعة</item>
@@ -511,7 +511,7 @@
     <string name="logs_pause">إيقاف مؤقت</string>
     <string name="logs_clear">مسح</string>
     <string name="logs_empty">لا توجد سجلات بعد</string>
-    <string name="logs_line_a11y">\u2068%1$s\u2069 \u2068%2$s\u2069 \u2068%3$s\u2069</string>
+    <string name="logs_line_a11y">%1$s %2$s %3$s</string>
 
     <!-- ── Today card ── -->
     <string name="today_style_night">ليل</string>
@@ -524,7 +524,7 @@
     <plurals name="today_regions">
         <item quantity="zero">منطقة</item>
         <item quantity="one">منطقة</item>
-        <item quantity="two">منطقتان</item>
+        <item quantity="two">مناطق</item>
         <item quantity="few">مناطق</item>
         <item quantity="many">منطقة</item>
         <item quantity="other">منطقة</item>
@@ -532,7 +532,7 @@
     <plurals name="today_hours_online">
         <item quantity="zero">ساعة اتصال</item>
         <item quantity="one">ساعة اتصال</item>
-        <item quantity="two">ساعتا اتصال</item>
+        <item quantity="two">ساعات اتصال</item>
         <item quantity="few">ساعات اتصال</item>
         <item quantity="many">ساعة اتصال</item>
         <item quantity="other">ساعة اتصال</item>
@@ -545,7 +545,7 @@
     <string name="widget_label">حالة Zephyr</string>
     <string name="widget_description">حالة الاتصال والسرعة والمشاهد</string>
     <string name="widget_usage_label">استخدام Zephyr اليوم</string>
-    <string name="widget_usage_description">حركة مرور اليوم وتوزيعها على ٢٤ ساعة</string>
+    <string name="widget_usage_description">حركة مرور اليوم وتوزيعها على 24 ساعة</string>
     <string name="widget_today">اليوم \u2066%1$s %2$s\u2069</string>
 
     <!-- ── Notifications ── -->

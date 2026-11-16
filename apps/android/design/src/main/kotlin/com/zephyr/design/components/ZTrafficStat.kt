@@ -31,20 +31,28 @@ fun ZTrafficStat(downBps: Long, upBps: Long, modifier: Modifier = Modifier) {
     val (uv, uu) = ZFormat.rate(upBps)
     val a11y = stringResource(R.string.common_traffic_a11y, dv, du, uv, uu)
     Column(modifier.clearAndSetSemantics { contentDescription = a11y }) {
-        Row(verticalAlignment = Alignment.Bottom) {
+        // Each line is one measurement ("3.0 MB/s ↓"): it keeps LTR order in RTL layouts, like "3.0 MB/s" inside
+        // Arabic text, while the Column still anchors it to the start (right) edge.
+        Ltr { Row(verticalAlignment = Alignment.Bottom) {
             RollingNumber(dv)
             Spacer(Modifier.width(10.dp))
             ZText("$du/s", Modifier.padding(bottom = 8.dp), style = ZTheme.type.footnote, color = c.text3)
             Spacer(Modifier.width(4.dp))
             ZIcon(ZIcons.ArrowDown, Modifier.padding(bottom = 10.dp), tint = c.download, size = 18.dp)
-        }
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        } }
+        Ltr { Row(verticalAlignment = Alignment.CenterVertically) {
             ZText("$uv $uu/s", style = ZTheme.type.numeric.copy(fontSize = ZTheme.type.footnote.fontSize), color = c.text2)
             Spacer(Modifier.width(4.dp))
             ZIcon(ZIcons.ArrowUp, tint = c.upload, size = 16.dp)
-        }
+        } }
     }
 }
+
+@Composable
+private fun Ltr(content: @Composable () -> Unit) =
+    androidx.compose.runtime.CompositionLocalProvider(
+        androidx.compose.ui.platform.LocalLayoutDirection provides androidx.compose.ui.unit.LayoutDirection.Ltr, content = content,
+    )
 
 @Composable
 private fun RollingNumber(text: String) {

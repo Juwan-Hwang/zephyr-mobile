@@ -19,9 +19,16 @@ import com.zephyr.app.R
 import com.zephyr.design.components.ZText
 import com.zephyr.design.theme.ZTheme
 
-/** Brand lockup: Z glyph + "Zephyr" wordmark (design/prototype/brand/app-lockup.svg). */
+/** Brand lockup: Z glyph + "Zephyr" wordmark (design/prototype/brand/app-lockup.svg). Never mirrored in RTL. */
 @Composable
 fun ZephyrLockup(modifier: Modifier = Modifier, tint: androidx.compose.ui.graphics.Color = ZTheme.colors.text1) {
+    androidx.compose.runtime.CompositionLocalProvider(
+        androidx.compose.ui.platform.LocalLayoutDirection provides androidx.compose.ui.unit.LayoutDirection.Ltr,
+    ) { Lockup(modifier, tint) }
+}
+
+@Composable
+private fun Lockup(modifier: Modifier, tint: androidx.compose.ui.graphics.Color) {
     Row(modifier.clearAndSetSemantics { contentDescription = "Zephyr" }, verticalAlignment = Alignment.CenterVertically) {
         Image(painterResource(R.drawable.ic_stat_zephyr), null, Modifier.size(20.dp), colorFilter = ColorFilter.tint(tint))
         Spacer(Modifier.width(4.dp))

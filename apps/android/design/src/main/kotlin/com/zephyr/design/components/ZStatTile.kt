@@ -42,7 +42,7 @@ private fun FitText(text: String) {
     BasicText(
         text,
         Modifier,
-        style = base.copy(color = ZTheme.colors.text1, fontSize = base.fontSize * scale, lineHeight = base.lineHeight * scale),
+        style = bidiStyle(text, base).copy(color = ZTheme.colors.text1, fontSize = base.fontSize * scale, lineHeight = base.lineHeight * scale),
         maxLines = 1,
         softWrap = false,
         overflow = TextOverflow.Clip,
