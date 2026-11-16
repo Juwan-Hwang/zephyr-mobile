@@ -36,7 +36,7 @@ struct SceneSheet: View {
 
     private func content(_ scene: Scene) -> some View {
         // D 的 ZSheet：抓手 + 标题 + "完成"（dismiss）+ 滚动正文。
-        ZSheet(verbatim: scene.name) {
+        ZSheet(verbatim: scene.displayName) {
             VStack(alignment: .leading, spacing: 0) {
                 ZBigNumber("\(scene.available)", unit: "个可用节点", size: .hero)
                     .padding(.horizontal, HMetrics.homeInset)

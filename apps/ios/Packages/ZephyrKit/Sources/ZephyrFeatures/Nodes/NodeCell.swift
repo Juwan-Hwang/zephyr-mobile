@@ -121,6 +121,7 @@ final class NodeCell: UICollectionViewCell {
         var right = b.width - trail
         protocolLabel.textAlignment = trailingAlignment
         latencyLabel.textAlignment = trailingAlignment
+        nameLabel.textAlignment = leadingAlignment
         latencyLabel.frame = rtl(CGRect(x: right - latW, y: 0, width: latW, height: b.height), in: b.width).integral
         right -= latW + gap
         if !protocolLabel.isHidden {

@@ -14,6 +14,8 @@ import ZephyrKit
 
 enum ZSnapshotLanguage: String, Sendable, Hashable {
     case zh, en, pseudo
+    /// D-P2-12：从右到左（阿拉伯文）与万进制（日文）各抽一种做验收。
+    case ar, ja
 
     /// 变体名前缀（中文无前缀，保持现有文件名）。
     var prefix: String { self == .zh ? "" : "\(rawValue)-" }
@@ -22,8 +24,21 @@ enum ZSnapshotLanguage: String, Sendable, Hashable {
         switch self {
         case .zh: nil
         case .en, .pseudo: Locale(identifier: "en_US")
+        case .ar: Locale(identifier: "ar")
+        case .ja: Locale(identifier: "ja_JP")
         }
     }
+
+    /// 测试 bundle 里要拷贝的 lproj（伪语言由英文表变换而来）。
+    var lprojName: String {
+        switch self {
+        case .zh, .en, .pseudo: "en"
+        case .ar: "ar"
+        case .ja: "ja"
+        }
+    }
+
+    var isRightToLeft: Bool { self == .ar }
 }
 
 /// 英文 / 伪语言变体的查表：在临时目录拼一个只含 en.lproj 的假 bundle，渲染期间让 `Bundle.main` 返回它。
@@ -38,11 +53,15 @@ final class ZSnapshotLocalizedBundle {
     nonisolated(unsafe) private static var override: Bundle?
     nonisolated(unsafe) private static var cache: [ZSnapshotLanguage: Bundle] = [:]
 
-    private static let englishSource: URL? = {
-        Bundle(for: ZSnapshotLocalizedBundle.self).url(forResource: "en", withExtension: "lproj")
-    }()
+    private static func source(_ lproj: String) -> URL? {
+        Bundle(for: ZSnapshotLocalizedBundle.self).url(forResource: lproj, withExtension: "lproj")
+    }
+
+    private static var englishSource: URL? { source("en") }
 
     static var hasEnglish: Bool { englishSource != nil }
+
+    static func has(_ language: ZSnapshotLanguage) -> Bool { language == .zh || source(language.lprojName) != nil }
 
     private static let swizzleMain: Void = {
         let selector = NSSelectorFromString("mainBundle")
@@ -57,17 +76,17 @@ final class ZSnapshotLocalizedBundle {
 
     private static func bundle(for language: ZSnapshotLanguage) -> Bundle? {
         if let cached = cache[language] { return cached }
-        guard language != .zh, let source = englishSource else { return nil }
+        guard language != .zh, let source = source(language.lprojName) else { return nil }
         let fm = FileManager.default
         let root = fm.temporaryDirectory.appendingPathComponent("zephyr-snapshot-\(language.rawValue).bundle", isDirectory: true)
-        let lproj = root.appendingPathComponent("en.lproj", isDirectory: true)
+        let lproj = root.appendingPathComponent("\(language.lprojName).lproj", isDirectory: true)
         try? fm.removeItem(at: root)
         do {
             try fm.createDirectory(at: root, withIntermediateDirectories: true)
             // 真 main 的 Info.plist（UIKit 渲染期间可能读 infoDictionary），开发语言改为 en。
             var info = Bundle.main.infoDictionary ?? [:]
-            info["CFBundleDevelopmentRegion"] = "en"
-            info["CFBundleLocalizations"] = ["en"]
+            info["CFBundleDevelopmentRegion"] = language.lprojName
+            info["CFBundleLocalizations"] = [language.lprojName]
             (info as NSDictionary).write(to: root.appendingPathComponent("Info.plist"), atomically: true)
             try fm.copyItem(at: source, to: lproj)
             if language == .pseudo {

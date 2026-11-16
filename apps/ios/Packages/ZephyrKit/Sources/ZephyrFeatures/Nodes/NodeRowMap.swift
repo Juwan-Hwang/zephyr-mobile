@@ -5,6 +5,7 @@
 // rowOffset 本地按 count 重新累加，不依赖引擎给的 rowOffset 语义细节。
 
 import Foundation
+import ZephyrKit
 
 struct NodeRowMap: Equatable, Sendable {
     struct Section: Equatable, Sendable {
@@ -30,7 +31,7 @@ struct NodeRowMap: Equatable, Sendable {
         out.reserveCapacity(raw.count)
         var row: Int64 = 0, ordinal: Int64 = 0
         for s in raw where s.count > 0 {
-            out.append(Section(region: s.region, name: s.name, count: s.count, headerRow: row, firstOrdinal: ordinal))
+            out.append(Section(region: s.region, name: Self.displayRegionName(s.name, code: s.region), count: s.count, headerRow: row, firstOrdinal: ordinal))
             row += s.count + 1
             ordinal += s.count
         }
@@ -39,6 +40,13 @@ struct NodeRowMap: Equatable, Sendable {
     }
 
     static let empty = NodeRowMap(sections: [])
+
+    /// 分区名：核心给的是中文地区名；非中文界面改用系统按界面语言给的地区名（取不到时保留原名，D-P2-12）。
+    static func displayRegionName(_ name: String, code: String) -> String {
+        guard let locale = ZL.uiLocale, !locale.identifier.hasPrefix("zh"),
+              let n = locale.localizedString(forRegionCode: code.uppercased()), !n.isEmpty else { return name }
+        return n
+    }
 
     var rowCount: Int64 { totalNodes + Int64(sections.count) }
     var isEmpty: Bool { totalNodes == 0 }

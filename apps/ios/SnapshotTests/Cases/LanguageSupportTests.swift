@@ -54,4 +54,19 @@ final class LanguageSupportTests: XCTestCase {
         XCTAssertFalse(Bundle.main.bundleURL.lastPathComponent.hasPrefix("zephyr-snapshot-"))
         XCTAssertEqual(ZL.tr("已连接"), "已连接")
     }
+
+    // D-P2-12：阿拉伯文 / 日文变体查到的是各自的译文。
+    func testArabicAndJapaneseBundlesResolve() {
+        for language in [ZSnapshotLanguage.ar, .ja] {
+            XCTAssertTrue(ZSnapshotLocalizedBundle.has(language), "测试 bundle 缺 \(language.lprojName).lproj")
+            let previous = ZSnapshotLocalizedBundle.use(language)
+            defer { ZSnapshotLocalizedBundle.use(previous) }
+            let value = ZL.tr("已连接")
+            XCTAssertNotEqual(value, "已连接", "\(language) 变体仍输出中文")
+            XCTAssertNotEqual(value, "Connected", "\(language) 变体输出了英文")
+            XCTAssertEqual(ZL.bundle?.preferredLocalizations.first, language.lprojName)
+        }
+        XCTAssertTrue(ZSnapshotLanguage.ar.isRightToLeft)
+        XCTAssertFalse(ZSnapshotLanguage.ja.isRightToLeft)
+    }
 }

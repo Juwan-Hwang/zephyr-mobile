@@ -57,6 +57,7 @@ final class NodeRegionHeaderContent: UIView {
         codeLabel.frame = box
         let cw = ceil(countLabel.sizeThatFits(.zero).width)
         countLabel.textAlignment = trailingAlignment
+        nameLabel.textAlignment = leadingAlignment
         let count = CGRect(x: b.width - trail - cw, y: 0, width: cw, height: b.height).offsetBy(dx: 0, dy: midY - b.height / 2)
         countLabel.frame = rtl(count, in: b.width).integral
         let nx = lead + boxW + 8

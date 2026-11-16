@@ -99,7 +99,7 @@ final class CommandModel {
         let sceneId = parse.sceneId ?? "video"
         guard let scene = app.scene(id: sceneId),
               let r = try? await app.engine.previewSceneNodeFilter(sceneId: sceneId, filter: .uhd) else { return nil }
-        return FilterPreview(sceneId: sceneId, sceneName: scene.name, active: scene.nodeFilter == .uhd, result: r)
+        return FilterPreview(sceneId: sceneId, sceneName: scene.displayName, active: scene.nodeFilter == .uhd, result: r)
     }
 
     private func resolveScene(hint: String?, nodeId: NodeId, title: String) async -> String? {

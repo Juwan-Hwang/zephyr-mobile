@@ -41,7 +41,8 @@ final class NodeListFooterView: UIView {
     func set(ordinal: Int64, total: Int64) {
         guard ordinal != lastOrdinal || total != lastTotal else { return }
         lastOrdinal = ordinal; lastTotal = total
-        positionLabel.text = total > 0 ? "\(CompactCount.grouped(ordinal)) / \(CompactCount.grouped(total))" : nil
+        // LTR 隔离（U+2066…U+2069）：RTL 界面里 "1 / 214" 不被双向算法排成 "214 / 1"。
+        positionLabel.text = total > 0 ? "\u{2066}\(CompactCount.grouped(ordinal)) / \(CompactCount.grouped(total))\u{2069}" : nil
         updateAccessibility()
     }
 
@@ -69,6 +70,7 @@ final class NodeListFooterView: UIView {
         let top: CGFloat = 12
         let half = (bounds.width - lead * 2) / 2
         testedLabel.textAlignment = trailingAlignment
+        positionLabel.textAlignment = leadingAlignment
         positionLabel.frame = rtl(CGRect(x: lead, y: top, width: half, height: h), in: bounds.width)
         testedLabel.frame = rtl(CGRect(x: lead + half, y: top, width: half, height: h), in: bounds.width)
     }

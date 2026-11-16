@@ -16,7 +16,7 @@ final class LibraryPagesSnapshotTests: XCTestCase {
     }
 
     func testNodes() async {
-        await zAssertSnapshots(named: "nodes", variants: ZSnapshotVariant.standardPlusAccent(.orange), settle: 0.8) { variant in
+        await zAssertSnapshots(named: "nodes", variants: ZSnapshotVariant.standardPlusAccent(.orange) + ZSnapshotVariant.multilingual, settle: 0.8) { variant in
             let engine = await SnapshotFixtures.engine(accent: variant.accent)
             return pushed(NodesView(engine: engine))
         }
@@ -37,7 +37,7 @@ final class LibraryPagesSnapshotTests: XCTestCase {
     }
 
     func testRules() async {
-        await zAssertSnapshots(named: "rules", variants: ZSnapshotVariant.standardPlusAccent(.pink, light: true), settle: 0.8) { variant in
+        await zAssertSnapshots(named: "rules", variants: ZSnapshotVariant.standardPlusAccent(.pink, light: true) + ZSnapshotVariant.multilingual, settle: 0.8) { variant in
             let engine = await SnapshotFixtures.engine(accent: variant.accent)
             return pushed(RulesView(engine: engine))
         }
