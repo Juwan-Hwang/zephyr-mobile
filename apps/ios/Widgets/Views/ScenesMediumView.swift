@@ -28,7 +28,7 @@ struct ScenesMediumView: View {
                         Rectangle().fill(ZTokens.Colors.screenHl).frame(height: 1).accessibilityHidden(true)
                     }
                     Link(destination: WidgetLinks.scene(scene.id)) {
-                        SceneRow(scene: scene, columnNames: rows.map(\.name))
+                        SceneRow(scene: scene, columnNames: rows.map(\.displayName))
                     }
                 }
             }
@@ -51,7 +51,7 @@ private struct SceneRow: View {
                 ForEach(Array(columnNames.enumerated()), id: \.offset) { _, name in
                     Text(verbatim: name).zType(.body).lineLimit(1).hidden()
                 }
-                Text(verbatim: scene.name)
+                Text(verbatim: scene.displayName)
                     .zType(.body)
                     .foregroundStyle(ZColor.t2)
                     .lineLimit(1)
@@ -69,7 +69,7 @@ private struct SceneRow: View {
         }
         .frame(maxHeight: .infinity)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(scene.name)，\(scene.nodeName)，\(ZFormat.latency(scene.latencyMs.map { Int32(clamping: $0) }))")
+        .accessibilityLabel("\(scene.displayName)，\(scene.nodeName)，\(ZFormat.latency(scene.latencyMs.map { Int32(clamping: $0) }))")
     }
 }
 

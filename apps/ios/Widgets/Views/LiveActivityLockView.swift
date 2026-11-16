@@ -107,13 +107,13 @@ struct SceneChips: View {
             ForEach(scenes) { scene in
                 HStack(spacing: ZTokens.Space.n2) {
                     RegionBadge(region: scene.region)
-                    Text(scene.name)
+                    Text(verbatim: scene.displayName)
                         .zType(.caption)
                         .foregroundStyle(ZColor.t2)
                         .lineLimit(1)
                 }
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("\(scene.name)：\(scene.nodeName)")
+                .accessibilityLabel("\(scene.displayName)：\(scene.nodeName)")
             }
         }
     }
