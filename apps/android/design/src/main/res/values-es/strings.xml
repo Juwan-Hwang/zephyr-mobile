@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Español (es). Generated from the English strings; keep keys, format args and order in sync with values/. -->
+<resources>
+    <string name="common_done">Listo</string>
+    <string name="common_close">Cerrar</string>
+    <string name="common_clear">Borrar</string>
+    <string name="common_latency_timeout">Agotado</string>
+    <string name="common_traffic_a11y">Descarga %1$s %2$s por segundo, subida %3$s %4$s por segundo</string>
+    <string name="common_time_just_now">Ahora mismo</string>
+    <string name="common_time_just_now_inline">ahora mismo</string>
+    <plurals name="common_time_minutes_ago">
+        <item quantity="one">hace %1$d min</item>
+        <item quantity="many">hace %1$d min</item>
+        <item quantity="other">hace %1$d min</item>
+    </plurals>
+    <plurals name="common_time_hours_ago">
+        <item quantity="one">hace %1$d h</item>
+        <item quantity="many">hace %1$d h</item>
+        <item quantity="other">hace %1$d h</item>
+    </plurals>
+    <plurals name="common_time_days_ago">
+        <item quantity="one">hace %1$d d</item>
+        <item quantity="many">hace %1$d d</item>
+        <item quantity="other">hace %1$d d</item>
+    </plurals>
+    <string name="common_expiry_expired">Caducada</string>
+    <string name="common_expiry_today">Caduca hoy</string>
+    <string name="common_expiry_tomorrow">Caduca mañana</string>
+    <string name="common_expiry_weekday">Caduca el %1$s</string>
+    <plurals name="common_expiry_in_days">
+        <item quantity="one">Caduca en %1$d día</item>
+        <item quantity="many">Caduca en %1$d días</item>
+        <item quantity="other">Caduca en %1$d días</item>
+    </plurals>
+    <string-array name="common_weekdays">
+        <item>lunes</item>
+        <item>martes</item>
+        <item>miércoles</item>
+        <item>jueves</item>
+        <item>viernes</item>
+        <item>sábado</item>
+        <item>domingo</item>
+    </string-array>
+</resources>

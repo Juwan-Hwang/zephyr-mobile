@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Türkçe (tr). Generated from the English strings; keep keys, format args and order in sync with values/. -->
+<resources>
+    <string name="common_done">Bitti</string>
+    <string name="common_close">Kapat</string>
+    <string name="common_clear">Temizle</string>
+    <string name="common_latency_timeout">Zaman aşımı</string>
+    <string name="common_traffic_a11y">İndirme saniyede %1$s %2$s, yükleme saniyede %3$s %4$s</string>
+    <string name="common_time_just_now">Az önce</string>
+    <string name="common_time_just_now_inline">az önce</string>
+    <plurals name="common_time_minutes_ago">
+        <item quantity="one">%1$d dk önce</item>
+        <item quantity="other">%1$d dk önce</item>
+    </plurals>
+    <plurals name="common_time_hours_ago">
+        <item quantity="one">%1$d sa önce</item>
+        <item quantity="other">%1$d sa önce</item>
+    </plurals>
+    <plurals name="common_time_days_ago">
+        <item quantity="one">%1$d gün önce</item>
+        <item quantity="other">%1$d gün önce</item>
+    </plurals>
+    <string name="common_expiry_expired">Süresi doldu</string>
+    <string name="common_expiry_today">Bugün bitiyor</string>
+    <string name="common_expiry_tomorrow">Yarın bitiyor</string>
+    <string name="common_expiry_weekday">%1$s günü bitiyor</string>
+    <plurals name="common_expiry_in_days">
+        <item quantity="one">%1$d gün sonra bitiyor</item>
+        <item quantity="other">%1$d gün sonra bitiyor</item>
+    </plurals>
+    <string-array name="common_weekdays">
+        <item>Pazartesi</item>
+        <item>Salı</item>
+        <item>Çarşamba</item>
+        <item>Perşembe</item>
+        <item>Cuma</item>
+        <item>Cumartesi</item>
+        <item>Pazar</item>
+    </string-array>
+</resources>

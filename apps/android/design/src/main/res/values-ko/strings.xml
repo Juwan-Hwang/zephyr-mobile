@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 한국어 (ko). Generated from the English strings; keep keys, format args and order in sync with values/. -->
+<resources>
+    <string name="common_done">완료</string>
+    <string name="common_close">닫기</string>
+    <string name="common_clear">지우기</string>
+    <string name="common_latency_timeout">시간 초과</string>
+    <string name="common_traffic_a11y">다운로드 초당 %1$s %2$s, 업로드 초당 %3$s %4$s</string>
+    <string name="common_time_just_now">방금</string>
+    <string name="common_time_just_now_inline">방금</string>
+    <plurals name="common_time_minutes_ago">
+        <item quantity="other">%1$d분 전</item>
+    </plurals>
+    <plurals name="common_time_hours_ago">
+        <item quantity="other">%1$d시간 전</item>
+    </plurals>
+    <plurals name="common_time_days_ago">
+        <item quantity="other">%1$d일 전</item>
+    </plurals>
+    <string name="common_expiry_expired">만료됨</string>
+    <string name="common_expiry_today">오늘 만료</string>
+    <string name="common_expiry_tomorrow">내일 만료</string>
+    <string name="common_expiry_weekday">%1$s요일 만료</string>
+    <plurals name="common_expiry_in_days">
+        <item quantity="other">%1$d일 후 만료</item>
+    </plurals>
+    <string-array name="common_weekdays">
+        <item>월</item>
+        <item>화</item>
+        <item>수</item>
+        <item>목</item>
+        <item>금</item>
+        <item>토</item>
+        <item>일</item>
+    </string-array>
+</resources>

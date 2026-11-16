@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Türkmençe (tk). Generated from the English strings; keep keys, format args and order in sync with values/. -->
+<resources>
+    <string name="common_done">Taýýar</string>
+    <string name="common_close">Ýap</string>
+    <string name="common_clear">Arassala</string>
+    <string name="common_latency_timeout">Wagt geçdi</string>
+    <string name="common_traffic_a11y">Ýükleme sekuntda %1$s %2$s, iberme sekuntda %3$s %4$s</string>
+    <string name="common_time_just_now">Häzirjik</string>
+    <string name="common_time_just_now_inline">häzirjik</string>
+    <plurals name="common_time_minutes_ago">
+        <item quantity="one">%1$d min öň</item>
+        <item quantity="other">%1$d min öň</item>
+    </plurals>
+    <plurals name="common_time_hours_ago">
+        <item quantity="one">%1$d sag öň</item>
+        <item quantity="other">%1$d sag öň</item>
+    </plurals>
+    <plurals name="common_time_days_ago">
+        <item quantity="one">%1$d gün öň</item>
+        <item quantity="other">%1$d gün öň</item>
+    </plurals>
+    <string name="common_expiry_expired">Möhleti geçdi</string>
+    <string name="common_expiry_today">Şu gün gutarýar</string>
+    <string name="common_expiry_tomorrow">Ertir gutarýar</string>
+    <string name="common_expiry_weekday">%1$s güni gutarýar</string>
+    <plurals name="common_expiry_in_days">
+        <item quantity="one">%1$d günden gutarýar</item>
+        <item quantity="other">%1$d günden gutarýar</item>
+    </plurals>
+    <string-array name="common_weekdays">
+        <item>Duşenbe</item>
+        <item>Sişenbe</item>
+        <item>Çarşenbe</item>
+        <item>Penşenbe</item>
+        <item>Anna</item>
+        <item>Şenbe</item>
+        <item>Ýekşenbe</item>
+    </string-array>
+</resources>

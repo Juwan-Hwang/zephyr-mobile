@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- မြန်မာ (my). Generated from the English strings; keep keys, format args and order in sync with values/. -->
+<resources>
+    <string name="common_done">ပြီးပြီ</string>
+    <string name="common_close">ပိတ်ရန်</string>
+    <string name="common_clear">ရှင်းရန်</string>
+    <string name="common_latency_timeout">အချိန်ကျော်</string>
+    <string name="common_traffic_a11y">ဒေါင်းလုဒ် တစ်စက္ကန့် %1$s %2$s၊ အပ်လုဒ် တစ်စက္ကန့် %3$s %4$s</string>
+    <string name="common_time_just_now">ယခုလေးတင်</string>
+    <string name="common_time_just_now_inline">ယခုလေးတင်</string>
+    <plurals name="common_time_minutes_ago">
+        <item quantity="other">%1$d မိနစ်က</item>
+    </plurals>
+    <plurals name="common_time_hours_ago">
+        <item quantity="other">%1$d နာရီက</item>
+    </plurals>
+    <plurals name="common_time_days_ago">
+        <item quantity="other">%1$d ရက်က</item>
+    </plurals>
+    <string name="common_expiry_expired">သက်တမ်းကုန်ပြီ</string>
+    <string name="common_expiry_today">ယနေ့ သက်တမ်းကုန်မည်</string>
+    <string name="common_expiry_tomorrow">မနက်ဖြန် သက်တမ်းကုန်မည်</string>
+    <string name="common_expiry_weekday">%1$s နေ့ သက်တမ်းကုန်မည်</string>
+    <plurals name="common_expiry_in_days">
+        <item quantity="other">%1$d ရက်အတွင်း သက်တမ်းကုန်မည်</item>
+    </plurals>
+    <string-array name="common_weekdays">
+        <item>တနင်္လာ</item>
+        <item>အင်္ဂါ</item>
+        <item>ဗုဒ္ဓဟူး</item>
+        <item>ကြာသပတေး</item>
+        <item>သောကြာ</item>
+        <item>စနေ</item>
+        <item>တနင်္ဂနွေ</item>
+    </string-array>
+</resources>
