@@ -33,6 +33,21 @@ class CommandParserTest {
         assertEquals(CommandParser.Act.UHD, p.act)
     }
 
+    /** The ar / fa / ur command_examples must parse, or tapping a suggestion would do nothing. */
+    @Test fun rtlExamplesParse() {
+        for (q in listOf("Gemini عبر اليابان", "Gemini از ژاپن", "Gemini بذریعہ جاپان")) {
+            val p = CommandParser.parse(q)
+            assertEquals(q, "gemini", p.service?.app?.id)
+            assertEquals(q, "JP", p.region?.code)
+        }
+        for (q in listOf("GitHub مباشر", "GitHub مستقیم", "GitHub براہ راست")) {
+            val p = CommandParser.parse(q)
+            assertEquals(q, "github.com", p.service?.host)
+            assertEquals(q, CommandParser.Act.DIRECT, p.act)
+        }
+        for (q in listOf("هونغ كونغ", "هنگ کنگ", "ہانگ کانگ")) assertEquals(q, "HK", CommandParser.parse(q).region?.code)
+    }
+
     @Test fun shortLatinNeedsWordBoundary() {
         assertNull(CommandParser.parse("status").region)
         assertEquals("US", CommandParser.parse("claude us").region?.code)

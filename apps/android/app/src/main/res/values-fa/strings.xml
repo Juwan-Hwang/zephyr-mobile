@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- فارسی. Generated from en (values/strings.xml); keys and format args 1:1. %n$s args are bidi-isolated (\u2068…\u2069). -->
+<resources>
+
+    <!-- ── Shared ── -->
+    <string name="common_connect">اتصال</string>
+    <string name="common_disconnect">قطع اتصال</string>
+    <string name="common_cancel">لغو</string>
+    <string name="common_apply">اعمال</string>
+    <string name="common_change">تغییر</string>
+    <string name="common_undo">واگرد</string>
+    <string name="common_share">اشتراک‌گذاری</string>
+    <string name="common_none">هیچ</string>
+    <string name="common_on">روشن</string>
+    <string name="common_off">خاموش</string>
+    <string name="common_today">امروز</string>
+    <string name="common_scenes">صحنه‌ها</string>
+    <string name="common_nodes">نودها</string>
+    <string name="common_rules">قوانین</string>
+    <string name="common_subscriptions">اشتراک‌ها</string>
+    <string name="common_settings">تنظیمات</string>
+    <string name="common_library">کتابخانه</string>
+    <string name="common_home">خانه</string>
+    <string name="common_direct">مستقیم</string>
+    <string name="common_local_network">شبکهٔ این دستگاه</string>
+    <string name="common_exit_ip_changes">IP خروجی تغییر می‌کند</string>
+    <string name="common_adding">در حال افزودن…</string>
+    <string name="common_add">افزودن</string>
+    <string name="common_updating">در حال به‌روزرسانی…</string>
+    <string name="common_retesting">در حال آزمایش…</string>
+    <string name="common_local_data_note">اشتراک‌ها و داده‌های ترافیک فقط روی همین دستگاه ذخیره می‌شوند.</string>
+    <string name="common_back_to">بازگشت به \u2068%1$s\u2069</string>
+    <plurals name="common_node_count">
+        <item quantity="one">\u2068%1$s\u2069 نود</item>
+        <item quantity="other">\u2068%1$s\u2069 نود</item>
+    </plurals>
+    <plurals name="common_available_count">
+        <item quantity="one">%1$d در دسترس</item>
+        <item quantity="other">%1$d در دسترس</item>
+    </plurals>
+    <string name="common_status_connected">متصل</string>
+    <string name="common_status_connecting">در حال اتصال</string>
+    <string name="common_status_connecting_ellipsis">در حال اتصال…</string>
+    <string name="common_status_disconnecting">در حال قطع اتصال</string>
+    <string name="common_status_failed">اتصال ناموفق بود</string>
+    <string name="common_status_disconnected">متصل نیست</string>
+    <string name="common_mode_rule">قانون</string>
+    <string name="common_mode_global">سراسری</string>
+    <string name="common_mode_direct">مستقیم</string>
+    <string name="common_mode_rule_hint">مسیریابی بر اساس صحنه</string>
+    <string name="common_mode_global_hint">همهٔ ترافیک از یک نود</string>
+    <string name="common_mode_direct_hint">بدون پروکسی</string>
+    <string name="common_try_again">دوباره امتحان کنید</string>
+    <string name="common_scene_ai">هوش مصنوعی</string>
+    <string name="common_scene_video">ویدیو</string>
+    <string name="common_scene_other">سایر</string>
+    <string name="common_no_results">نتیجه‌ای نیست</string>
+    <string name="common_current">فعلی</string>
+    <string name="common_list_separator">\u2068%1$s\u2069، \u2068%2$s\u2069</string>
+    <string name="common_pair_and">\u2068%1$s\u2069 و \u2068%2$s\u2069</string>
+    <string name="common_source_group">گروه اشتراک</string>
+    <string name="common_source_auto">انتخاب‌های Zephyr</string>
+    <string name="common_all">همه</string>
+    <plurals name="common_region_count">
+        <item quantity="one">%1$d منطقه</item>
+        <item quantity="other">%1$d منطقه</item>
+    </plurals>
+
+    <!-- ── Home ── -->
+    <string name="home_global_title">حالت سراسری</string>
+    <string name="home_global_body">همهٔ ترافیک از \u2068%1$s\u2069 عبور می‌کند. صحنه‌ها متوقف شده‌اند.</string>
+    <string name="home_global_body_any">همهٔ ترافیک از یک نود عبور می‌کند. صحنه‌ها متوقف شده‌اند.</string>
+    <string name="home_global_use_rule">استفاده از حالت قانون</string>
+    <string name="home_global_change_node">تغییر نود</string>
+    <string name="home_global_change_note">همهٔ برنامه‌ها از \u2068%1$s\u2069 خارج می‌شوند.</string>
+    <string name="home_global_change_to">تغییر به \u2068%1$s\u2069</string>
+    <plurals name="home_subs_more">
+        <item quantity="one">%1$d اشتراک دیگر</item>
+        <item quantity="other">%1$d اشتراک دیگر</item>
+    </plurals>
+    <string name="home_scan_progress">در حال آزمایش \u2066%1$d/%2$d\u2069</string>
+    <string name="home_scan_running">در حال آزمایش…</string>
+    <string name="home_scenes_tested">آزمایش‌شده \u2068%1$s\u2069</string>
+    <string name="home_today_usage">امروز \u2068%1$s\u2069</string>
+    <string name="home_spark_a11y">سرعت دانلود در ۹۰ ثانیهٔ اخیر</string>
+    <string name="home_switch_mode">تغییر حالت</string>
+    <plurals name="home_scene_count">
+        <item quantity="one">%1$d صحنه</item>
+        <item quantity="other">%1$d صحنه</item>
+    </plurals>
+    <string name="home_failure_no_subscription">ابتدا یک اشتراک اضافه کنید</string>
+    <string name="home_failure_vpn_permission">مجوز VPN لازم است</string>
+    <string name="home_failure_network">شبکه در دسترس نیست</string>
+    <string name="home_failure_core">هسته اجرا نشد</string>
+    <string name="home_action_switch_mode">تغییر حالت</string>
+    <string name="home_action_preview_exit">پیش‌نمایش خروجی</string>
+    <string name="home_action_retest">آزمایش دوباره</string>
+    <string name="home_action_switch_source">تغییر منبع</string>
+    <string name="home_action_switch_exit">تغییر خروجی</string>
+    <string name="home_action_load_nodes">بارگذاری نودها</string>
+    <string name="home_action_switch_node">تغییر نود</string>
+    <string name="home_action_undo">واگرد</string>
+    <string name="home_error_not_connected">برای \u2068%1$s\u2069 ابتدا متصل شوید</string>
+    <string name="home_error_failed">\u2068%1$s\u2069 ناموفق بود</string>
+    <string name="home_error_node_gone">\u2068%1$s\u2069 ناموفق بود: نود دیگر وجود ندارد</string>
+    <string name="home_failover_none">خروجی \u2068%1$s\u2069 پاسخ نمی‌دهد. IP خروجی خودکار تغییر نمی‌کند.</string>
+    <string name="home_failover_switched">خروجی \u2068%1$s\u2069 خودکار به \u2068%2$s\u2069 تغییر کرد</string>
+    <string name="home_switched_to">به \u2068%1$s\u2069 تغییر کرد</string>
+    <string name="home_now_uses">\u2068%1$s\u2069 اکنون از \u2068%2$s\u2069 استفاده می‌کند</string>
+    <string name="home_now_direct">\u2068%1$s\u2069 اکنون مستقیم وصل می‌شود</string>
+    <string name="home_now_all_nodes">\u2068%1$s\u2069: دوباره همهٔ نودها</string>
+    <string name="home_now_uses_uhd">\u2068%1$s\u2069 اکنون از \u2068%2$s\u2069 استفاده می‌کند (فقط 4K)</string>
+    <string name="home_now_uhd_only">\u2068%1$s\u2069 اکنون فقط از نودهای 4K استفاده می‌کند</string>
+    <string name="home_apply_failed">اعمال نشد: \u2068%1$s\u2069</string>
+    <string name="home_scene_next_region">منطقهٔ بعدی: \u2068%1$s\u2069</string>
+    <string name="home_scene_prev_region">منطقهٔ قبلی: \u2068%1$s\u2069</string>
+    <string name="home_scene_details_a11y">جزئیات صحنهٔ \u2068%1$s\u2069</string>
+    <string name="home_scene_testing">در حال آزمایش</string>
+    <string name="home_scene_services_down">\u2068%1$s\u2069 در دسترس نیست</string>
+    <string name="home_scene_services_ok">\u2068%1$s\u2069 در دسترس</string>
+    <string name="home_pin_line">\u2068%1$s\u2069: \u2068%2$s\u2069</string>
+    <string name="home_confirm_apps">IP خروجی \u2068%1$s\u2069 تغییر کند؟</string>
+    <string name="home_confirm_scene">IP خروجی صحنهٔ \u2068%1$s\u2069 تغییر کند؟</string>
+    <string name="home_confirm_unchanged">\u2068%1$s\u2069 بدون تغییر می‌ماند.</string>
+    <string name="home_scrub_hint">برای تغییر منطقه به چپ یا راست بکشید</string>
+
+    <!-- ── Scene sheet ── -->
+    <plurals name="scene_available_unit">
+        <item quantity="one">نود در دسترس</item>
+        <item quantity="other">نود در دسترس</item>
+    </plurals>
+    <plurals name="scene_tested_from">
+        <item quantity="one">آزمایش‌شده از %1$d اشتراک</item>
+        <item quantity="other">آزمایش‌شده از %1$d اشتراک</item>
+    </plurals>
+    <string name="scene_pinned_for">ثابت برای \u2068%1$s\u2069</string>
+    <string name="scene_when_unavailable">وقتی نودی در دسترس نیست</string>
+    <string name="scene_ask">بپرس</string>
+    <string name="scene_auto_switch">تغییر خودکار</string>
+    <string name="scene_node_scope">محدودهٔ نودها</string>
+    <string name="scene_uhd_only">فقط نودهای 4K</string>
+    <string name="scene_pinned_value">\u2068%1$s\u2069 (ثابت)</string>
+    <string name="scene_retest">آزمایش دوباره</string>
+    <string name="scene_note">انتخاب‌ها فقط در Zephyr ذخیره می‌شوند و پیکربندی اشتراک شما تغییر نمی‌کند.</string>
+    <string name="scene_note_tested">\u2068%1$s\u2069 آخرین آزمایش: \u2068%2$s\u2069.</string>
+
+    <!-- ── Command layer ── -->
+    <string name="command_placeholder">جست‌وجو یا وارد کردن فرمان</string>
+    <string name="command_section_suggestions">پیشنهادها</string>
+    <string name="command_section_command">فرمان‌ها</string>
+    <string-array name="command_examples">
+        <item>Gemini از ژاپن</item>
+        <item>GitHub مستقیم</item>
+        <item>هنگ کنگ</item>
+    </string-array>
+    <string name="command_see_all_nodes">دیدن همهٔ \u2068%1$s\u2069 نود در کتابخانهٔ نودها</string>
+    <string name="command_test_rule">\u2068%1$s\u2069 از کجا می‌رود؟</string>
+    <string name="command_chip_scene">صحنه</string>
+    <string name="command_chip_service">سرویس</string>
+    <string name="command_chip_region">منطقه</string>
+    <string name="command_chip_action">عملیات</string>
+    <string name="command_chip_scope">محدوده</string>
+    <string name="command_region_jp">ژاپن</string>
+    <string name="command_region_us">آمریکا</string>
+    <string name="command_region_hk">هنگ کنگ</string>
+    <string name="command_region_sg">سنگاپور</string>
+    <string name="command_region_tw">تایوان</string>
+    <string name="command_region_gb">بریتانیا</string>
+    <string name="command_region_kr">کره</string>
+    <string name="command_region_de">آلمان</string>
+    <string name="command_plan_exit_title">\u2068%1$s\u2069 از نودهای \u2068%2$s\u2069 استفاده می‌کند</string>
+    <string name="command_plan_no_nodes">در \u2068%1$s\u2069 نودی از \u2068%2$s\u2069 نیست.</string>
+    <string name="command_scene_ai">صحنهٔ هوش مصنوعی</string>
+    <string name="command_scene_named">صحنهٔ \u2068%1$s\u2069</string>
+    <string name="command_no_nodes_available">نودی در دسترس نیست</string>
+    <plurals name="command_plan_exit_available">
+        <item quantity="one">%1$d در دسترس. از \u2068%2$s\u2069 استفاده می‌شود.</item>
+        <item quantity="other">%1$d در دسترس. از \u2068%2$s\u2069 استفاده می‌شود.</item>
+    </plurals>
+    <string name="command_plan_releases_pin">\u2068%1$s\u2069 دیگر از خروجی ثابت \u2068%2$s\u2069 استفاده نمی‌کند.</string>
+    <string name="command_plan_fallback_pause">اگر هیچ نودی از \u2068%1$s\u2069 در دسترس نباشد، \u2068%2$s\u2069 متوقف می‌شود.</string>
+    <string name="command_plan_fallback_scene">اگر هیچ نودی از \u2068%1$s\u2069 در دسترس نباشد، از نودهای دیگر صحنه استفاده می‌شود.</string>
+    <string name="command_uhd_title_all">\u2068%1$s\u2069: همهٔ نودها</string>
+    <string name="command_uhd_title_only">\u2068%1$s\u2069: فقط نودهای 4K</string>
+    <string name="command_uhd_clear_note">صحنهٔ \u2068%1$s\u2069 فقط از نودهای 4K استفاده می‌کند. دوباره از همهٔ نودها استفاده می‌شود و نود فعلی می‌ماند.</string>
+    <string name="command_uhd_none">هیچ نودی از 4K پشتیبانی نمی‌کند.</string>
+    <plurals name="command_uhd_untested">
+        <item quantity="one">%1$d نود 4K هنوز آزمایش نشده است. پس از اعمال، صحنه را دوباره آزمایش کنید.</item>
+        <item quantity="other">%1$d نود 4K هنوز آزمایش نشده است. پس از اعمال، صحنه را دوباره آزمایش کنید.</item>
+    </plurals>
+    <plurals name="command_uhd_matching_keep">
+        <item quantity="one">%2$d از %1$d نود از 4K پشتیبانی می‌کند؛ نود فعلی می‌ماند.</item>
+        <item quantity="other">%2$d از %1$d نود از 4K پشتیبانی می‌کنند؛ نود فعلی می‌ماند.</item>
+    </plurals>
+    <plurals name="command_uhd_matching_switch">
+        <item quantity="one">%2$d از %1$d نود از 4K پشتیبانی می‌کند؛ از \u2068%3$s\u2069 استفاده می‌شود.</item>
+        <item quantity="other">%2$d از %1$d نود از 4K پشتیبانی می‌کنند؛ از \u2068%3$s\u2069 استفاده می‌شود.</item>
+    </plurals>
+    <string name="command_uhd_fastest">سریع‌ترین نود 4K</string>
+    <string name="command_uhd_auto_note">از این پس، تغییر خودکار فقط از میان نودهای 4K انتخاب می‌کند.</string>
+    <string name="command_direct_title">اتصال مستقیم \u2068%1$s\u2069</string>
+    <string name="command_direct_note">ترافیک \u2068%1$s\u2069 از پروکسی عبور نمی‌کند.</string>
+    <string name="command_direct_from_proxy">پروکسی</string>
+    <string name="command_zephyr_only">فقط در Zephyr اعمال می‌شود و پیکربندی اشتراک شما تغییر نمی‌کند.</string>
+
+    <!-- ── Recent connections ── -->
+    <string name="activity_title">اتصال‌های اخیر</string>
+    <string name="activity_back">‹ اتصال‌های اخیر</string>
+    <string name="activity_empty">پس از اتصال، دامنه‌هایی که اخیراً بازدید شده‌اند اینجا نمایش داده می‌شوند.</string>
+    <string name="activity_host_a11y">جزئیات اتصال \u2068%1$s\u2069</string>
+    <string name="activity_close_host_a11y">بستن اتصال‌های \u2068%1$s\u2069</string>
+    <string name="activity_no_app_note">هنوز مشخص نیست کدام برنامه هر اتصال را برقرار کرده است، بنابراین فقط دامنه‌ها نمایش داده می‌شوند.</string>
+    <string name="activity_close_none">اتصال فعالی وجود ندارد</string>
+    <plurals name="activity_closed">
+        <item quantity="one">%1$d اتصال بسته شد</item>
+        <item quantity="other">%1$d اتصال بسته شد</item>
+    </plurals>
+    <plurals name="activity_close_failed">
+        <item quantity="one">اتصال بسته نشد</item>
+        <item quantity="other">اتصال‌ها بسته نشدند</item>
+    </plurals>
+    <plurals name="activity_close_partial">
+        <item quantity="one">%1$d اتصال بسته نشد</item>
+        <item quantity="other">%1$d اتصال بسته نشد</item>
+    </plurals>
+
+    <!-- ── Connection trace ── -->
+    <plurals name="trace_connections">
+        <item quantity="one">%1$d اتصال</item>
+        <item quantity="other">%1$d اتصال</item>
+    </plurals>
+    <string name="trace_step_rule">قانون</string>
+    <string name="trace_step_scene">صحنه</string>
+    <string name="trace_step_node">نود</string>
+    <string name="trace_step_exit">خروجی</string>
+    <string name="trace_from">از \u2068%1$s\u2069</string>
+    <string name="trace_via">از طریق \u2068%1$s\u2069</string>
+    <plurals name="trace_exit_stable">
+        <item quantity="one">%1$d روز بدون تغییر</item>
+        <item quantity="other">%1$d روز بدون تغییر</item>
+    </plurals>
+    <string name="trace_this_connection">این اتصال</string>
+    <string name="trace_option_unchanged">بدون تغییر</string>
+    <string name="trace_override_failed">تغییر انجام نشد: \u2068%1$s\u2069</string>
+    <string name="trace_always_apply">همیشه اعمال شود</string>
+    <string name="trace_always_apply_hint">در حالت خاموش، فقط همین اتصال تغییر می‌کند</string>
+
+    <!-- ── Library ── -->
+    <string name="library_widgets">ابزارک‌ها و تنظیمات سریع</string>
+
+    <!-- ── Nodes ── -->
+    <plurals name="nodes_total_unit">
+        <item quantity="one">نود</item>
+        <item quantity="other">نود</item>
+    </plurals>
+    <plurals name="nodes_from_subs">
+        <item quantity="one">از %1$d اشتراک</item>
+        <item quantity="other">از %1$d اشتراک</item>
+    </plurals>
+    <string name="nodes_search_placeholder">منطقه، شهر یا مسیر</string>
+    <string name="nodes_search_stats">\u2068%1$s\u2069 · \u2068%2$s\u2069</string>
+    <string name="nodes_empty_title">هنوز نودی وجود ندارد</string>
+    <string name="nodes_empty_message">یک اشتراک وارد کنید تا نودهایش اینجا نمایش داده شوند</string>
+    <string name="nodes_empty_action">وارد کردن اشتراک</string>
+    <string name="nodes_no_match">هیچ نودی با «\u2068%1$s\u2069» مطابقت ندارد</string>
+    <string name="nodes_tested">\u2068%1$s\u2069 آزمایش‌شده</string>
+    <string name="nodes_jump_to">رفتن به \u2068%1$s\u2069</string>
+
+    <!-- ── Rules ── -->
+    <string name="rules_add_override_a11y">افزودن بازنویسی برای دامنه</string>
+    <plurals name="rules_total_unit">
+        <item quantity="one">قانون</item>
+        <item quantity="other">قانون</item>
+    </plurals>
+    <plurals name="rules_summary">
+        <item quantity="one">%1$d لایه · کامپایل‌شده · \u2068%2$s\u2069 روی دیسک</item>
+        <item quantity="other">%1$d لایه · کامپایل‌شده · \u2068%2$s\u2069 روی دیسک</item>
+    </plurals>
+    <string name="rules_test_placeholder">آزمایش دامنه یا IP</string>
+    <string name="rules_test_hint">یک دامنه یا نشانی IP وارد کنید تا قانون منطبق و خروجی را ببینید.</string>
+    <string name="rules_match_order">ترتیب تطبیق</string>
+    <string name="rules_top_to_bottom">از بالا به پایین</string>
+    <string name="rules_other_traffic">سایر ترافیک</string>
+    <string name="rules_note">مجموعه‌قوانین روی دستگاه به یک فهرست فقط‌خواندنی کامپایل می‌شوند و در صورت نیاز از دیسک خوانده می‌شوند. بازنویسی‌ها هنگام به‌روزرسانی اشتراک‌ها حفظ می‌شوند.</string>
+    <string name="rules_kind_override">بازنویسی</string>
+    <string name="rules_kind_subscription">اشتراک</string>
+    <string name="rules_kind_domain">دامنه</string>
+    <string name="rules_kind_other">سایر</string>
+    <string name="rules_step_request">درخواست</string>
+    <string name="rules_step_layer">لایهٔ %1$d · \u2068%2$s\u2069</string>
+    <string name="rules_step_result">نتیجه</string>
+    <string name="rules_blocked">مسدود</string>
+    <string name="rules_step_scene">صحنه · \u2068%1$s\u2069</string>
+    <string name="rules_step_exit_ip">IP خروجی</string>
+    <string name="rules_took">زمان: \u2068%1$s\u2069</string>
+    <string name="rules_kind_ip">IP</string>
+
+    <!-- ── Subscriptions ── -->
+    <string name="subs_add">افزودن اشتراک</string>
+    <string name="subs_paste_placeholder">پیوند اشتراک را جای‌گذاری کنید</string>
+    <string name="subs_paste_link">جای‌گذاری پیوند</string>
+    <string name="subs_paste_clipboard">جای‌گذاری از کلیپ‌بورد</string>
+    <string name="subs_scan_qr">اسکن کد QR</string>
+    <string name="subs_coming_soon">به‌زودی</string>
+    <string name="subs_import_desktop">وارد کردن از Zephyr روی رایانه</string>
+    <string name="subs_import_file">وارد کردن از فایل</string>
+    <plurals name="subs_added">
+        <item quantity="one">\u2068%1$s\u2069 اضافه شد (\u2068%2$s\u2069 نود)</item>
+        <item quantity="other">\u2068%1$s\u2069 اضافه شد (\u2068%2$s\u2069 نود)</item>
+    </plurals>
+    <string name="subs_error_clipboard_empty">کلیپ‌بورد خالی است</string>
+    <string name="subs_hint_desktop">روی رایانه، در Zephyr به تنظیمات › موبایل بروید تا کد QR نمایش داده شود</string>
+    <string name="subs_error_read_file">این فایل خوانده نشد</string>
+    <string name="subs_error_fetch">این اشتراک دانلود نشد. پیوند یا شبکه را بررسی کنید.</string>
+    <string name="subs_error_invalid_file">این فایل پیکربندی معتبری نیست</string>
+    <string name="subs_error_invalid_link">این پیوند اشتراک معتبری نیست</string>
+    <plurals name="subs_total_unit">
+        <item quantity="one">اشتراک</item>
+        <item quantity="other">اشتراک</item>
+    </plurals>
+    <plurals name="subs_update_every">
+        <item quantity="one">به‌روزرسانی هر %1$d ساعت</item>
+        <item quantity="other">به‌روزرسانی هر %1$d ساعت</item>
+    </plurals>
+    <string name="subs_diff_updating">در حال به‌روزرسانی \u2068%1$s\u2069…</string>
+    <string name="subs_diff_updated">\u2068%1$s\u2069 به‌روز شد</string>
+    <string name="subs_rule_changes">تغییرات قوانین</string>
+    <string name="subs_overrides_kept">بازنویسی‌ها حفظ شدند</string>
+    <string name="subs_scenes_retested">مخزن‌های صحنه دوباره آزمایش شدند</string>
+    <string name="subs_section_data">حجم داده</string>
+    <string name="subs_this_month">این ماه</string>
+    <string name="subs_swipe_updating">به‌روزرسانی…</string>
+    <string name="subs_swipe_update">به‌روزرسانی</string>
+    <string name="subs_swipe_confirm_delete">تأیید حذف</string>
+    <string name="subs_swipe_delete">حذف</string>
+    <string name="subs_error_update">\u2068%1$s\u2069 به‌روز نشد</string>
+    <string name="subs_error_delete">\u2068%1$s\u2069 حذف نشد</string>
+    <string name="subs_remaining">باقی‌مانده</string>
+    <plurals name="subs_others">
+        <item quantity="one">%1$d مورد دیگر</item>
+        <item quantity="other">%1$d مورد دیگر</item>
+    </plurals>
+    <string name="subs_section_update">به‌روزرسانی‌ها</string>
+    <string name="subs_auto_update">به‌روزرسانی خودکار</string>
+    <plurals name="subs_every_hours">
+        <item quantity="one">هر %1$d ساعت</item>
+        <item quantity="other">هر %1$d ساعت</item>
+    </plurals>
+    <string name="subs_update_wifi_only">به‌روزرسانی فقط با Wi‑Fi</string>
+    <string name="subs_show_changes">نمایش تغییرات پیش از به‌روزرسانی</string>
+    <string name="subs_update_all">به‌روزرسانی همه، همین حالا</string>
+
+    <!-- ── Onboarding ── -->
+    <string name="onboarding_cancel_import_a11y">لغو وارد کردن</string>
+    <string name="onboarding_choose_mode">یک حالت انتخاب کنید</string>
+    <string name="onboarding_simple">ساده</string>
+    <string name="onboarding_simple_desc">از گروه‌های اشتراک شما استفاده می‌کند. نودهای از دسترس خارج‌شده خودکار مدیریت می‌شوند.</string>
+    <string name="onboarding_optimized">بهینه</string>
+    <string name="onboarding_optimized_desc">نودها را هر روز با Wi‑Fi آزمایش می‌کند. هوش مصنوعی و ویدیو فقط از نودهای موفق استفاده می‌کنند. هر بار حدود 3 MB.</string>
+    <string name="onboarding_continue">ادامه</string>
+    <string name="onboarding_change_later">هر زمان بخواهید می‌توانید این را در تنظیمات تغییر دهید.</string>
+
+    <!-- ── Settings ── -->
+    <string name="settings_trusted_wifi">Wi‑Fi مورد اعتماد</string>
+    <string name="settings_local_proxy">پورت پروکسی محلی</string>
+    <string name="settings_section_connection">اتصال</string>
+    <string name="settings_on_demand">اتصال در صورت نیاز</string>
+    <string name="settings_trusted_wifi_hint">هنگام اتصال به آن، خودکار قطع شود</string>
+    <string name="settings_password_required">گذرواژه لازم است</string>
+    <string name="settings_section_testing">آزمایش</string>
+    <string name="settings_test_wifi_only">آزمایش سرعت فقط با Wi‑Fi</string>
+    <string name="settings_keep_results">نگه‌داری نتایج</string>
+    <plurals name="settings_hours">
+        <item quantity="one">%1$d ساعت</item>
+        <item quantity="other">%1$d ساعت</item>
+    </plurals>
+    <string name="settings_section_storage">فضای ذخیره‌سازی</string>
+    <string name="settings_storage_title">نودها و قوانین</string>
+    <string name="settings_storage_detail">نودها \u2068%1$s\u2069 · قوانین \u2068%2$s\u2069 · آزاد \u2068%3$s\u2069</string>
+    <string name="settings_appearance">ظاهر</string>
+    <string name="settings_appearance_system">سیستم</string>
+    <string name="settings_appearance_dark">تیره</string>
+    <string name="settings_appearance_light">روشن</string>
+    <string name="settings_accent">رنگ تأکیدی</string>
+    <string name="settings_accent_blue">آبی</string>
+    <string name="settings_accent_green">سبز</string>
+    <string name="settings_accent_orange">نارنجی</string>
+    <string name="settings_accent_pink">صورتی</string>
+    <string name="settings_accent_purple">بنفش</string>
+    <string name="settings_accent_red">قرمز</string>
+    <string name="settings_accent_teal">سبزآبی</string>
+    <string name="settings_accent_indigo">نیلی</string>
+    <string name="settings_accent_yellow">زرد</string>
+    <string name="settings_accent_graphite">گرافیتی</string>
+    <string name="settings_section_privacy">حریم خصوصی</string>
+    <string name="settings_share_diagnostics">اشتراک‌گذاری داده‌های عیب‌یابی</string>
+    <string name="settings_section_diagnostics">عیب‌یابی</string>
+    <string name="settings_local_data_note">اشتراک‌ها، نودها و داده‌های ترافیک فقط روی همین دستگاه ذخیره می‌شوند.</string>
+
+    <!-- ── Logs ── -->
+    <string name="logs_title">گزارش‌ها</string>
+    <string name="logs_level_debug">اشکال‌زدایی</string>
+    <string name="logs_level_info">اطلاعات</string>
+    <string name="logs_level_warning">هشدار</string>
+    <string name="logs_level_error">خطا</string>
+    <string name="logs_resume">ادامه</string>
+    <string name="logs_pause">توقف</string>
+    <string name="logs_clear">پاک کردن</string>
+    <string name="logs_empty">هنوز گزارشی نیست</string>
+    <string name="logs_line_a11y">\u2068%1$s\u2069 \u2068%2$s\u2069 \u2068%3$s\u2069</string>
+
+    <!-- ── Today card ── -->
+    <string name="today_style_night">شب</string>
+    <string name="today_style_dawn">سپیده‌دم</string>
+    <string name="today_style_mist">مه</string>
+    <string name="today_saved">در گالری ذخیره شد</string>
+    <string name="today_save_failed">تصویر ذخیره نشد</string>
+    <string name="today_storage_permission">برای ذخیرهٔ تصویر، مجوز ذخیره‌سازی لازم است</string>
+    <string name="today_date_pattern">EEEE d MMMM</string>
+    <plurals name="today_regions">
+        <item quantity="one">منطقه</item>
+        <item quantity="other">منطقه</item>
+    </plurals>
+    <plurals name="today_hours_online">
+        <item quantity="one">ساعت آنلاین</item>
+        <item quantity="other">ساعت آنلاین</item>
+    </plurals>
+    <string name="today_fastest">سریع‌ترین (ms)</string>
+    <string name="today_save_image">ذخیرهٔ تصویر</string>
+    <string name="today_pattern_note">این طرح از ترافیک امروز ساخته می‌شود و نام نود یا نشانی IP ندارد.</string>
+
+    <!-- ── Widgets ── -->
+    <string name="widget_label">وضعیت Zephyr</string>
+    <string name="widget_description">وضعیت اتصال، سرعت و صحنه‌ها</string>
+    <string name="widget_usage_label">مصرف امروز Zephyr</string>
+    <string name="widget_usage_description">ترافیک امروز و تفکیک ۲۴ ساعته</string>
+    <string name="widget_today">امروز \u2066%1$s %2$s\u2069</string>
+
+    <!-- ── Notifications ── -->
+    <string name="notif_channel_vpn">وضعیت اتصال</string>
+    <string name="notif_channel_vpn_desc">هنگام اتصال، سرعت و صحنه‌ها را نشان می‌دهد</string>
+    <string name="notif_channel_alerts">هشدارهای اشتراک</string>
+    <string name="notif_channel_alerts_desc">انقضای اشتراک و کمبود حجم</string>
+    <string name="notif_action_global">حالت سراسری</string>
+    <string name="notif_action_rule">حالت قانون</string>
+    <string name="notif_route_global">سراسری · \u2068%1$s\u2069</string>
+    <string name="notif_route_global_any">همهٔ ترافیک از یک نود</string>
+    <string name="notif_expiry_title">\u2068%1$s\u2069 در \u2068%2$s\u2069 منقضی می‌شود</string>
+    <string name="notif_expiry_text">\u2068%1$s\u2069 باقی‌مانده</string>
+
+    <!-- ── Quick Settings tile ── -->
+    <string name="tile_a11y">\u2068%1$s\u2069، \u2068%2$s\u2069</string>
+</resources>

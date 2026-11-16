@@ -12,4 +12,7 @@
     <locale android:name="sw" />
     <locale android:name="tk" />
     <locale android:name="my" />
+    <locale android:name="ar" />
+    <locale android:name="fa" />
+    <locale android:name="ur" />
 </locale-config>

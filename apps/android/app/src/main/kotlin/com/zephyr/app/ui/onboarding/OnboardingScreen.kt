@@ -70,13 +70,14 @@ fun OnboardingScreen(onDone: () -> Unit) {
     val imp = rememberSubscriptionImporter { s -> addedName = s.name; addedNodes = s.nodeCount; step = 1 }
     // Review L-P2-11: system back on step 2 returns to step 1 instead of leaving the app.
     androidx.activity.compose.BackHandler(enabled = step == 1) { step = 0 }
+    val dir = com.zephyr.app.ui.common.startToEndSign()
     // `.ob h1`: 300 34/1.18, −0.03em.
     val h1 = ZTheme.type.title.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Light, fontSize = 34.sp, lineHeight = 40.sp, letterSpacing = (-0.03).em)
     Column(Modifier.fillMaxSize().background(c.bg).statusBarsPadding().navigationBarsPadding().padding(top = 24.dp)) {
         com.zephyr.app.ui.common.ZephyrLockup(Modifier.padding(horizontal = 22.dp)) // `.obmk`
         Spacer(Modifier.height(28.dp))
         ZText("${step + 1} / 2", Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
-        AnimatedContent(step, transitionSpec = { (slideInHorizontally(ZAnim.slow()) { it / 3 } + fadeIn(ZAnim.standard())) togetherWith (slideOutHorizontally(ZAnim.standard()) { -it / 3 } + fadeOut(ZAnim.micro())) }, label = "ob") { s ->
+        AnimatedContent(step, transitionSpec = { (slideInHorizontally(ZAnim.slow()) { dir * it / 3 } + fadeIn(ZAnim.standard())) togetherWith (slideOutHorizontally(ZAnim.standard()) { -dir * it / 3 } + fadeOut(ZAnim.micro())) }, label = "ob") { s ->
             Column(Modifier.fillMaxWidth()) {
                 if (s == 0) {
                     ZText(stringResource(R.string.subs_add), Modifier.padding(horizontal = 22.dp, vertical = 12.dp), style = h1)
