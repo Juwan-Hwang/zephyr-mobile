@@ -21,6 +21,7 @@ concurrency:
 jobs:
   detect:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       ios: ${{ steps.d.outputs.ios }}
       android: ${{ steps.d.outputs.android }}
@@ -46,6 +47,7 @@ jobs:
           echo "android=$android" >> "$GITHUB_OUTPUT"
   contract:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
@@ -67,6 +69,7 @@ jobs:
         run: docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:1.7.12 -color
   core:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
@@ -178,6 +181,7 @@ jobs:
     needs: detect
     if: needs.detect.outputs.android == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
