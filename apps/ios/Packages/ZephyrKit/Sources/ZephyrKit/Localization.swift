@@ -42,6 +42,15 @@ public enum ZL {
         return bundle.localizedString(forKey: key, value: key, table: nil)
     }
 
+    /// 同一中文在不同位置需要不同译文时（如“规则”：模式名用单数 Rule，页面标题用复数 Rules），
+    /// 查表键为 `key#context`，表里的 zh-Hans 译文写回原文；缺表或缺译文时回落到 `key`。
+    public static func tr(_ key: String, context: String) -> String {
+        guard let bundle else { return key }
+        let composite = key + "#" + context
+        let v = bundle.localizedString(forKey: composite, value: key, table: nil)
+        return v == composite ? key : v
+    }
+
     /// 带参数的文案：键是含 `%lld` / `%@` / `%1$@` 的格式串；译文可用位置参数调整语序，
     /// xcstrings 里的复数变体由 stringsdict 按 `locale` 的复数规则选择。
     public static func f(_ key: String, _ args: CVarArg...) -> String {

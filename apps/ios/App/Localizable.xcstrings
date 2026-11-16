@@ -1026,7 +1026,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ် စုစည်းမှုတွင် “%@” ကို ရှာရန်"
+            "value" : "နုဒ် စုစည်းမှုတွင် “%@” ကို ရှာရန်"
           }
         },
         "ru" : {
@@ -1108,7 +1108,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ်များ တင်၍ မရပါ"
+            "value" : "နုဒ်များ တင်၍ မရပါ"
           }
         },
         "ru" : {
@@ -1866,7 +1866,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "စာရင်းသွင်းမှု %1$lld ခုမှ နုတ် %2$lld ခုကို စမ်းသပ်ပြီး"
+            "value" : "စာရင်းသွင်းမှု %1$lld ခုမှ နုဒ် %2$lld ခုကို စမ်းသပ်ပြီး"
           }
         },
         "ru" : {
@@ -3248,7 +3248,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : " と "
+            "value" : "と"
           }
         },
         "ko" : {
@@ -3500,7 +3500,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@개 사용 가능. %2$@을(를) 사용합니다."
+            "value" : "%1$@개 사용 가능. %2$@ 사용 예정."
           }
         },
         "my" : {
@@ -3588,7 +3588,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ သည် %2$@ နုတ်များမှတစ်ဆင့်"
+            "value" : "%1$@ သည် %2$@ နုဒ်များမှတစ်ဆင့်"
           }
         },
         "ru" : {
@@ -3828,13 +3828,13 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ 노드가 모두 중단되면 %2$@이(가) 일시 정지됩니다."
+            "value" : "%1$@ 노드가 모두 중단되면 %2$@ 연결이 일시 정지됩니다."
           }
         },
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ နုတ်အားလုံး မရနိုင်ပါက %2$@ ခဏရပ်မည်။"
+            "value" : "%1$@ နုဒ်အားလုံး မရနိုင်ပါက %2$@ ခဏရပ်မည်။"
           }
         },
         "ru" : {
@@ -3916,7 +3916,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@၊ နုတ် %2$@ ခု"
+            "value" : "%1$@၊ နုဒ် %2$@ ခု"
           }
         },
         "ru" : {
@@ -4408,7 +4408,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ် %@ ခု"
+            "value" : "နုဒ် %@ ခု"
           }
         },
         "ru" : {
@@ -4490,7 +4490,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "စာရင်းသွင်းမှု %1$@ ခု · နုတ် %2$@ ခု"
+            "value" : "စာရင်းသွင်းမှု %1$@ ခု · နုဒ် %2$@ ခု"
           }
         },
         "ru" : {
@@ -4572,7 +4572,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ သည် %2$@ နုတ်များကို သုံးသည်"
+            "value" : "%1$@ သည် %2$@ နုဒ်များကို သုံးသည်"
           }
         },
         "ru" : {
@@ -4730,7 +4730,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@은(는) 그대로 유지됩니다."
+            "value" : "%@의 출구 IP는 그대로 유지됩니다."
           }
         },
         "my" : {
@@ -6124,13 +6124,13 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "사용 가능한 %1$@ 노드가 없으면 %2$@이(가) 일시 정지됩니다."
+            "value" : "사용 가능한 %1$@ 노드가 없으면 %2$@ 연결이 일시 정지됩니다."
           }
         },
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ နုတ် မရနိုင်ပါက %2$@ ခဏရပ်မည်။"
+            "value" : "%1$@ နုဒ် မရနိုင်ပါက %2$@ ခဏရပ်မည်။"
           }
         },
         "ru" : {
@@ -6212,7 +6212,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ နုတ် မရနိုင်ပါက မြင်ကွင်းရှိ အခြား နုတ်များကို သုံးမည်။"
+            "value" : "%@ နုဒ် မရနိုင်ပါက မြင်ကွင်းရှိ အခြား နုဒ်များကို သုံးမည်။"
           }
         },
         "ru" : {
@@ -6458,7 +6458,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@၊ နုတ် %2$@ ခု"
+            "value" : "%1$@၊ နုဒ် %2$@ ခု"
           }
         },
         "ru" : {
@@ -6540,7 +6540,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@၊ နုတ် %2$@ ခု"
+            "value" : "%1$@၊ နုဒ် %2$@ ခု"
           }
         },
         "ru" : {
@@ -7118,7 +7118,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$lld개 사용 가능. %2$@을(를) 사용합니다."
+            "value" : "%1$lld개 사용 가능. %2$@ 사용 예정."
           }
         },
         "my" : {
@@ -10444,7 +10444,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ရနိုင်သော နုတ်"
+            "value" : "ရနိုင်သော နုဒ်"
           }
         },
         "ru" : {
@@ -11188,7 +11188,7 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Сегодня: %1$@ %2$@, регионов: %3$d, часов в сети: %4$lld, минимальная задержка: %5$@ миллисекунд. %6$@"
+            "value" : "Сегодня: %1$@ %2$@, регионов: %3$d, часов в сети: %4$lld, минимальная задержка: %5$@ ms. %6$@"
           }
         },
         "sw" : {
@@ -12166,7 +12166,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "စာရင်းသွင်းမှုမှ အုပ်စုများကို သုံးသည်။ မရနိုင်သော နုတ်များကို အလိုအလျောက် ကိုင်တွယ်သည်။"
+            "value" : "စာရင်းသွင်းမှုမှ အုပ်စုများကို သုံးသည်။ မရနိုင်သော နုဒ်များကို အလိုအလျောက် ကိုင်တွယ်သည်။"
           }
         },
         "ru" : {
@@ -12330,7 +12330,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ရွေးချယ်စရာ နုတ်များ"
+            "value" : "ရွေးချယ်စရာ နုဒ်များ"
           }
         },
         "ru" : {
@@ -12360,7 +12360,7 @@
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "امیدوار نوڈز"
+            "value" : "ممکنہ نوڈز"
           }
         },
         "vi" : {
@@ -12412,7 +12412,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ထည့်မည့်နှင့် ဖယ်မည့် နုတ်များကို ကြိုကြည့်ပြီး အတည်ပြုမှ အပ်ဒိတ်လုပ်ရန်"
+            "value" : "ထည့်မည့်နှင့် ဖယ်မည့် နုဒ်များကို ကြိုကြည့်ပြီး အတည်ပြုမှ အပ်ဒိတ်လုပ်ရန်"
           }
         },
         "ru" : {
@@ -12770,7 +12770,7 @@
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تمام امیدوار"
+            "value" : "تمام ممکنہ نوڈز"
           }
         },
         "vi" : {
@@ -16932,7 +16932,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ပုံစံကို ယနေ့ ဒေတာမှ ဖန်တီးထားပြီး နုတ်အမည်နှင့် IP များ မပါဝင်ပါ"
+            "value" : "ပုံစံကို ယနေ့ ဒေတာမှ ဖန်တီးထားပြီး နုဒ်အမည်နှင့် IP များ မပါဝင်ပါ"
           }
         },
         "ru" : {
@@ -17014,7 +17014,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ပုံစံကို ယနေ့ ဒေတာမှ ဖန်တီးထားပြီး နုတ်အမည်နှင့် IP လိပ်စာများ မပါဝင်ပါ။"
+            "value" : "ပုံစံကို ယနေ့ ဒေတာမှ ဖန်တီးထားပြီး နုဒ်အမည်နှင့် IP လိပ်စာများ မပါဝင်ပါ။"
           }
         },
         "ru" : {
@@ -19000,7 +19000,7 @@
         "tk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Import"
+            "value" : "Import et"
           }
         },
         "tr" : {
@@ -19386,7 +19386,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@을(를) 업데이트합니다"
+            "value" : "%@ 업데이트 예정"
           }
         },
         "my" : {
@@ -19532,7 +19532,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se eliminarán sus nodos y reglas. Las invalidaciones y los ajustes de escenarios no cambiarán."
+            "value" : "Se eliminarán sus nodos y reglas. Las excepciones y los ajustes de escenarios no cambiarán."
           }
         },
         "fa" : {
@@ -19556,7 +19556,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "၎င်း၏ နုတ်များနှင့် စည်းမျဉ်းများကို ဖယ်ရှားမည်။ အစားထိုးချက်များနှင့် မြင်ကွင်း ဆက်တင်များ မပြောင်းပါ။"
+            "value" : "၎င်း၏ နုဒ်များနှင့် စည်းမျဉ်းများကို ဖယ်ရှားမည်။ အစားထိုးချက်များနှင့် မြင်ကွင်း ဆက်တင်များ မပြောင်းပါ။"
           }
         },
         "ru" : {
@@ -19580,7 +19580,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sağladığı düğümler ve kurallar kaldırılacak. Geçersiz kılmalar ve senaryo ayarları aynı kalır."
+            "value" : "Sağladığı düğümler ve kurallar kaldırılacak. İstisnalar ve senaryo ayarları aynı kalır."
           }
         },
         "ur" : {
@@ -20622,7 +20622,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ အပ်ဒိတ်ပြီး- နုတ် %2$@ / %3$@"
+            "value" : "%1$@ အပ်ဒိတ်ပြီး- နုဒ် %2$@ / %3$@"
           }
         },
         "ru" : {
@@ -21124,7 +21124,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ ထည့်ပြီး (နုတ် %2$@ ခု)"
+            "value" : "%1$@ ထည့်ပြီး (နုဒ် %2$@ ခု)"
           }
         },
         "ru" : {
@@ -21182,7 +21182,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se ha borrado la invalidación de ruta de %@"
+            "value" : "Se ha borrado la excepción de ruta de %@"
           }
         },
         "fa" : {
@@ -21230,7 +21230,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ için rota geçersiz kılması temizlendi"
+            "value" : "%@ için rota istisnası temizlendi"
           }
         },
         "ur" : {
@@ -21334,7 +21334,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "المستخدَم"
+            "value" : "البيانات المستخدمة"
           }
         },
         "en" : {
@@ -22856,7 +22856,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "လက်ရှိ နုတ်"
+            "value" : "လက်ရှိ နုဒ်"
           }
         },
         "ru" : {
@@ -23014,7 +23014,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "모든 트래픽이 %@을(를) 거칩니다. 시나리오가 일시 정지되었습니다."
+            "value" : "모든 트래픽 경유: %@. 시나리오가 일시 정지되었습니다."
           }
         },
         "my" : {
@@ -24660,7 +24660,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ် %@ ခု ထည့်ပြီး"
+            "value" : "နုဒ် %@ ခု ထည့်ပြီး"
           }
         },
         "ru" : {
@@ -26300,7 +26300,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ရနိုင်သော နုတ် မရှိပါ"
+            "value" : "ရနိုင်သော နုဒ် မရှိပါ"
           }
         },
         "ru" : {
@@ -26546,7 +26546,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ် ပြောင်းရန်"
+            "value" : "နုဒ် ပြောင်းရန်"
           }
         },
         "ru" : {
@@ -26932,7 +26932,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Al actualizar se sustituyen los nodos y las reglas de la suscripción. Las invalidaciones y las selecciones de escenarios de Zephyr no cambian."
+            "value" : "Al actualizar se sustituyen los nodos y las reglas de la suscripción. Las excepciones y las selecciones de escenarios de Zephyr no cambian."
           }
         },
         "fa" : {
@@ -26956,7 +26956,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "အပ်ဒိတ်လုပ်လျှင် စာရင်းသွင်းမှု၏ နုတ်များနှင့် စည်းမျဉ်းများကို အစားထိုးမည်။ Zephyr ၏ အစားထိုးချက်များနှင့် မြင်ကွင်း ရွေးချယ်မှုများ မပြောင်းပါ။"
+            "value" : "အပ်ဒိတ်လုပ်လျှင် စာရင်းသွင်းမှု၏ နုဒ်များနှင့် စည်းမျဉ်းများကို အစားထိုးမည်။ Zephyr ၏ အစားထိုးချက်များနှင့် မြင်ကွင်း ရွေးချယ်မှုများ မပြောင်းပါ။"
           }
         },
         "ru" : {
@@ -26980,7 +26980,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Güncelleme, abonelikteki düğümleri ve kuralları değiştirir. Zephyr'deki geçersiz kılmalar ve senaryo seçimleri aynı kalır."
+            "value" : "Güncelleme, abonelikteki düğümleri ve kuralları değiştirir. Zephyr'deki istisnalar ve senaryo seçimleri aynı kalır."
           }
         },
         "ur" : {
@@ -28945,7 +28945,7 @@
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "ရွေးချယ်စရာ နုတ် %lld ခုမှ စမ်းသပ်ထားသည်"
+                  "value" : "ရွေးချယ်စရာ နုဒ် %lld ခုမှ စမ်းသပ်ထားသည်"
                 }
               }
             }
@@ -29041,13 +29041,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld امیدوار نوڈ سے ٹیسٹ کیا گیا"
+                  "value" : "%lld ممکنہ نوڈ سے ٹیسٹ کیا گیا"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld امیدوار نوڈز سے ٹیسٹ کیا گیا"
+                  "value" : "%lld ممکنہ نوڈز سے ٹیسٹ کیا گیا"
                 }
               }
             }
@@ -30922,7 +30922,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wi‑Fi ဖြင့် နုတ်များကို နေ့စဉ် စမ်းသပ်သည်။ AI နှင့် ဗီဒီယိုသည် စမ်းသပ်မှု အောင်သော နုတ်များကိုသာ သုံးသည်။ တစ်ကြိမ်လျှင် 3 MB ခန့်။"
+            "value" : "Wi‑Fi ဖြင့် နုဒ်များကို နေ့စဉ် စမ်းသပ်သည်။ AI နှင့် ဗီဒီယိုသည် စမ်းသပ်မှု အောင်သော နုဒ်များကိုသာ သုံးသည်။ တစ်ကြိမ်လျှင် 3 MB ခန့်။"
           }
         },
         "ru" : {
@@ -31168,7 +31168,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "“%@” နှင့် ကိုက်ညီသော နုတ် မရှိပါ"
+            "value" : "“%@” နှင့် ကိုက်ညီသော နုဒ် မရှိပါ"
           }
         },
         "ru" : {
@@ -31742,7 +31742,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ်အားလုံး ကြည့်ရန်"
+            "value" : "နုဒ်အားလုံး ကြည့်ရန်"
           }
         },
         "ru" : {
@@ -32046,7 +32046,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Añadir invalidación"
+            "value" : "Añadir excepción"
           }
         },
         "fa" : {
@@ -32094,7 +32094,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geçersiz kılma ekle"
+            "value" : "İstisna ekle"
           }
         },
         "ur" : {
@@ -32234,7 +32234,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "စာရင်းသွင်းမှု ထည့်ပြီးနောက် ၎င်း၏ နုတ်များနှင့် စည်းမျဉ်းများ ဤနေရာတွင် ပေါ်လာမည်။"
+            "value" : "စာရင်းသွင်းမှု ထည့်ပြီးနောက် ၎င်း၏ နုဒ်များနှင့် စည်းမျဉ်းများ ဤနေရာတွင် ပေါ်လာမည်။"
           }
         },
         "ru" : {
@@ -32726,7 +32726,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ် %@ ခု ဖယ်ပြီး"
+            "value" : "နုဒ် %@ ခု ဖယ်ပြီး"
           }
         },
         "ru" : {
@@ -34694,7 +34694,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ်များ"
+            "value" : "နုဒ်များ"
           }
         },
         "ru" : {
@@ -34776,7 +34776,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ် %1$@ · စည်းမျဉ်း %2$@ · လွတ် %3$@"
+            "value" : "နုဒ် %1$@ · စည်းမျဉ်း %2$@ · လွတ် %3$@"
           }
         },
         "ru" : {
@@ -34858,7 +34858,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ် %1$@ · စည်းမျဉ်း %2$@ · ရနိုင် %3$@"
+            "value" : "နုဒ် %1$@ · စည်းမျဉ်း %2$@ · ရနိုင် %3$@"
           }
         },
         "ru" : {
@@ -34940,7 +34940,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ် 0.0 GB · စည်းမျဉ်း 0.0 GB · ရနိုင် 0.0 GB"
+            "value" : "နုဒ် 0.0 GB · စည်းမျဉ်း 0.0 GB · ရနိုင် 0.0 GB"
           }
         },
         "ru" : {
@@ -35022,7 +35022,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ်နှင့် စည်းမျဉ်း"
+            "value" : "နုဒ်နှင့် စည်းမျဉ်း"
           }
         },
         "ru" : {
@@ -35104,7 +35104,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ်နှင့် စည်းမျဉ်း၊ %@"
+            "value" : "နုဒ်နှင့် စည်းမျဉ်း၊ %@"
           }
         },
         "ru" : {
@@ -35186,7 +35186,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ် စာရင်း"
+            "value" : "နုဒ် စာရင်း"
           }
         },
         "ru" : {
@@ -35268,7 +35268,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ဤနုတ် မရှိတော့ပါ"
+            "value" : "ဤနုဒ် မရှိတော့ပါ"
           }
         },
         "ru" : {
@@ -35350,7 +35350,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ် ရင်းမြစ်"
+            "value" : "နုဒ် ရင်းမြစ်"
           }
         },
         "ru" : {
@@ -35490,7 +35490,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Invalidación"
+            "value" : "Excepción"
           }
         },
         "fa" : {
@@ -35538,7 +35538,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geçersiz Kılma"
+            "value" : "İstisna"
           }
         },
         "ur" : {
@@ -35572,7 +35572,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Las invalidaciones están en la capa 1, por encima de las reglas de suscripción, y no cambian al actualizar las suscripciones. Se aplican por dominio, incluidos los subdominios."
+            "value" : "Las excepciones están en la capa 1, por encima de las reglas de suscripción, y no cambian al actualizar las suscripciones. Se aplican por dominio, incluidos los subdominios."
           }
         },
         "fa" : {
@@ -35620,7 +35620,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geçersiz kılmalar 1. katmanda, abonelik kurallarının üzerinde yer alır ve abonelikler güncellendiğinde değişmez. Alan adına göre eşleşir; alt alan adları da dahildir."
+            "value" : "İstisnalar 1. katmanda, abonelik kurallarının üzerinde yer alır ve abonelikler güncellendiğinde değişmez. Alan adına göre eşleşir; alt alan adları da dahildir."
           }
         },
         "ur" : {
@@ -35654,7 +35654,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Las invalidaciones están en la capa 1, por encima de las reglas de suscripción, y se mantienen al actualizar las suscripciones. Esta versión no permite guardar invalidaciones en el iPhone. Añádelas en Zephyr en tu ordenador; se aplicarán tras sincronizar."
+            "value" : "Las excepciones están en la capa 1, por encima de las reglas de suscripción, y se mantienen al actualizar las suscripciones. Esta versión no permite guardar excepciones en el iPhone. Añádelas en Zephyr en tu ordenador; se aplicarán tras sincronizar."
           }
         },
         "fa" : {
@@ -35702,7 +35702,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geçersiz kılmalar 1. katmanda, abonelik kurallarının üzerinde yer alır ve abonelikler güncellendiğinde değişmez. Bu sürümde geçersiz kılmalar iPhone'da kaydedilemez. Bunları bilgisayarınızdaki Zephyr'de ekleyin; eşzamanlamadan sonra etkinleşir."
+            "value" : "İstisnalar 1. katmanda, abonelik kurallarının üzerinde yer alır ve abonelikler güncellendiğinde değişmez. Bu sürümde istisnalar iPhone'da kaydedilemez. Bunları bilgisayarınızdaki Zephyr'de ekleyin; eşzamanlamadan sonra etkinleşir."
           }
         },
         "ur" : {
@@ -35736,7 +35736,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Las invalidaciones se conservarán"
+            "value" : "Las excepciones se conservarán"
           }
         },
         "fa" : {
@@ -35784,7 +35784,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geçersiz kılmalar korunacak"
+            "value" : "İstisnalar korunacak"
           }
         },
         "ur" : {
@@ -35818,7 +35818,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Invalidaciones conservadas"
+            "value" : "Excepciones conservadas"
           }
         },
         "fa" : {
@@ -35866,7 +35866,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geçersiz kılmalar korundu"
+            "value" : "İstisnalar korundu"
           }
         },
         "ur" : {
@@ -35961,6 +35961,96 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quy tắc"
+          }
+        }
+      }
+    },
+    "规则#列表" : {
+      "comment" : "规则页标题与资料库统计卡说明（复数）；模式名“规则”另见键“规则”。经 ZL.tr(\"规则\", context: \"列表\") 查表。",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "القواعد"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rules"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reglas"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قوانین"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ルール"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "규칙"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "စည်းမျဉ်းများ"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Правила"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sheria"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Düzgünler"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurallar"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قواعد"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quy tắc"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "规则"
           }
         }
       }
@@ -36064,7 +36154,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Los conjuntos de reglas se compilan en el dispositivo en un índice de solo lectura y se leen del disco cuando hace falta. Las invalidaciones se mantienen al actualizar las suscripciones."
+            "value" : "Los conjuntos de reglas se compilan en el dispositivo en un índice de solo lectura y se leen del disco cuando hace falta. Las excepciones se mantienen al actualizar las suscripciones."
           }
         },
         "fa" : {
@@ -36112,7 +36202,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kural setleri cihazda salt okunur bir dizine derlenir ve gerektiğinde diskten okunur. Abonelikler güncellendiğinde geçersiz kılmalar değişmez."
+            "value" : "Kural setleri cihazda salt okunur bir dizine derlenir ve gerektiğinde diskten okunur. Abonelikler güncellendiğinde istisnalar değişmez."
           }
         },
         "ur" : {
@@ -36134,7 +36224,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "الفيديو"
+            "value" : "فيديو"
           }
         },
         "en" : {
@@ -36334,7 +36424,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "စာရင်းသွင်းမှု၊ နုတ်နှင့် ဒေတာ အသုံးပြုမှုကို ဤစက်တွင်သာ သိမ်းသည်။"
+            "value" : "စာရင်းသွင်းမှု၊ နုဒ်နှင့် ဒေတာ အသုံးပြုမှုကို ဤစက်တွင်သာ သိမ်းသည်။"
           }
         },
         "ru" : {
@@ -39508,7 +39598,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Algunas invalidaciones dejarán de aplicarse"
+            "value" : "Algunas excepciones dejarán de aplicarse"
           }
         },
         "fa" : {
@@ -39556,7 +39646,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bazı geçersiz kılmalar artık uygulanmayacak"
+            "value" : "Bazı istisnalar artık uygulanmayacak"
           }
         },
         "ur" : {
@@ -39590,7 +39680,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Algunas invalidaciones ya no se aplican"
+            "value" : "Algunas excepciones ya no se aplican"
           }
         },
         "fa" : {
@@ -39638,7 +39728,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bazı geçersiz kılmalar artık uygulanmıyor"
+            "value" : "Bazı istisnalar artık uygulanmıyor"
           }
         },
         "ur" : {
@@ -40926,7 +41016,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@- 4K နုတ်များသာ"
+            "value" : "%@- 4K နုဒ်များသာ"
           }
         },
         "ru" : {
@@ -41008,7 +41098,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@- 4K နုတ်များသာ၊ %2$@ သို့ ပြောင်းပြီး"
+            "value" : "%1$@- 4K နုဒ်များသာ၊ %2$@ သို့ ပြောင်းပြီး"
           }
         },
         "ru" : {
@@ -41090,7 +41180,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@- နုတ်အားလုံး ပြန်သုံးသည်"
+            "value" : "%@- နုဒ်အားလုံး ပြန်သုံးသည်"
           }
         },
         "ru" : {
@@ -41254,7 +41344,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ဖွင့်ထားသည်။ ပိတ်လျှင် နုတ်အားလုံးကို ပြန်သုံးမည်၊ လက်ရှိ နုတ် မပြောင်းပါ။"
+            "value" : "ဖွင့်ထားသည်။ ပိတ်လျှင် နုဒ်အားလုံးကို ပြန်သုံးမည်၊ လက်ရှိ နုဒ် မပြောင်းပါ။"
           }
         },
         "ru" : {
@@ -41336,7 +41426,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "4K ပံ့ပိုးသော နုတ် မရှိပါ"
+            "value" : "4K ပံ့ပိုးသော နုဒ် မရှိပါ"
           }
         },
         "ru" : {
@@ -41418,7 +41508,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "4K နုတ်များကို မစမ်းသပ်ရသေးပါ။ သုံးရန် မြင်ကွင်းကို ပြန်စမ်းသပ်ပါ။"
+            "value" : "4K နုဒ်များကို မစမ်းသပ်ရသေးပါ။ သုံးရန် မြင်ကွင်းကို ပြန်စမ်းသပ်ပါ။"
           }
         },
         "ru" : {
@@ -41582,7 +41672,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@၊ လက်ရှိ နုတ် မပြောင်းပါ။"
+            "value" : "%@၊ လက်ရှိ နုဒ် မပြောင်းပါ။"
           }
         },
         "ru" : {
@@ -41658,7 +41748,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@. %2$@을(를) 사용합니다."
+            "value" : "%1$@. %2$@ 사용 예정."
           }
         },
         "my" : {
@@ -41746,7 +41836,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "4K နုတ်များသာ"
+            "value" : "4K နုဒ်များသာ"
           }
         },
         "ru" : {
@@ -41828,7 +41918,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နုတ်အားလုံး ပြန်သုံးမည်"
+            "value" : "နုဒ်အားလုံး ပြန်သုံးမည်"
           }
         },
         "ru" : {

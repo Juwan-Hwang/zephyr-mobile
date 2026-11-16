@@ -10,6 +10,8 @@ import ZephyrDesign
 
 struct PageHeader: View {
     var title: LocalizedStringKey
+    /// 已本地化的标题（`ZL.tr(_:context:)`）；有值时代替 `title`。
+    var verbatimTitle: String? = nil
     /// 已格式化的数字（ZFormat.count）；nil = 加载中；不传 = 不显示数字行（设置页）。
     var number: String?
     var unit: String?
@@ -20,7 +22,7 @@ struct PageHeader: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(title)
+            (verbatimTitle.map { Text(verbatim: $0) } ?? Text(title))
                 .zType(.large)
                 .foregroundStyle(ZTokens.Colors.screenT1)
                 .accessibilityAddTraits(.isHeader)

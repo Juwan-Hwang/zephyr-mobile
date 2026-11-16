@@ -27,3 +27,28 @@ final class LocalizationTests: XCTestCase {
         XCTAssertEqual(ZFormat.weekdayName(6), "星期五")
     }
 }
+
+final class LocalizationContextTests: XCTestCase {
+    /// 无 bundle（单测）时带上下文的键回落到中文原文，不露出 `#列表`。
+    func testContextKeyFallsBackToPlainKey() {
+        XCTAssertNil(ZL.bundle)
+        XCTAssertEqual(ZL.tr("规则", context: "列表"), "规则")
+    }
+
+    /// 表里的上下文键：zh-Hans 写回原文，英文为复数页面标题。
+    func testRulesListTitleEntry() throws {
+        let url = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+            .deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("App/Localizable.xcstrings")
+        let json = try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any]
+        let entry = (json?["strings"] as? [String: Any])?["规则#列表"] as? [String: Any]
+        let locs = try XCTUnwrap(entry?["localizations"] as? [String: Any])
+        func value(_ l: String) -> String? {
+            ((locs[l] as? [String: Any])?["stringUnit"] as? [String: Any])?["value"] as? String
+        }
+        XCTAssertEqual(value("zh-Hans"), "规则")
+        XCTAssertEqual(value("en"), "Rules")
+        XCTAssertEqual(locs.count, 14)
+    }
+}

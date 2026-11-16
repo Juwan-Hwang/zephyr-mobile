@@ -9,7 +9,11 @@ struct LibraryStatCard: View {
     /// 朗读用完整值（“13,109,802”）。
     var spokenValue: String?
     var caption: LocalizedStringKey
+    /// 已本地化的说明（`ZL.tr(_:context:)`）；有值时代替 `caption`。
+    var verbatimCaption: String? = nil
     var action: () -> Void
+
+    private var captionText: Text { verbatimCaption.map { Text(verbatim: $0) } ?? Text(caption) }
 
     /// 110 − 上下内边距 2×20；是最小值，大字体下随内容增高。
     static let minContentHeight: CGFloat = 70
@@ -20,11 +24,11 @@ struct LibraryStatCard: View {
             ZCard(padding: ZTokens.Space.n5, cornerRadius: ZTokens.Radius.overlay - ZTokens.Space.n1) {
                 VStack(alignment: .leading, spacing: 0) {
                     ZBigNumber(value ?? "000", size: .small,
-                               accessibilityLabel: Text(caption) + Text(verbatim: " \(spokenValue ?? value ?? "")"))
+                               accessibilityLabel: captionText + Text(verbatim: " \(spokenValue ?? value ?? "")"))
                         .foregroundStyle(ZTokens.Colors.screenT1)
                         .redacted(reason: value == nil ? .placeholder : [])
                     Spacer(minLength: ZTokens.Space.n3)
-                    Text(caption)
+                    captionText
                         .zType(.footnote)
                         .foregroundStyle(ZColor.t2)
                         .accessibilityHidden(true)
