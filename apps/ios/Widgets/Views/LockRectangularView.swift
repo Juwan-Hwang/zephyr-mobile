@@ -14,7 +14,7 @@ struct LockRectangularView: View {
                 .widgetAccentable()
             if state.connection.status == .connected, !state.scenes.isEmpty {
                 ForEach(state.scenes.prefix(2)) { scene in
-                    Text("\(scene.name) \(scene.nodeName)")
+                    Text(verbatim: "\(scene.displayName) \(scene.nodeName)")
                         .zType(.body)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
