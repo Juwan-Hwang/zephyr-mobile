@@ -41,4 +41,36 @@ final class CompactCountTests: XCTestCase {
         XCTAssertEqual(CompactCount.chip(3_118_402), "312 万")
         XCTAssertEqual(LibraryModel.compact(13_109_802), "1,311 万")
     }
+
+    // MARK: D-P2-12 其他语言
+
+    func testUnitsByLocalization() {
+        XCTAssertEqual(ZL.units(forLocalization: nil), .zh)
+        XCTAssertEqual(ZL.units(forLocalization: "zh-Hans"), .zh)
+        XCTAssertEqual(ZL.units(forLocalization: "ja"), .ja)
+        XCTAssertEqual(ZL.units(forLocalization: "ko"), .ko)
+        XCTAssertEqual(ZL.units(forLocalization: "en"), .western)
+        XCTAssertEqual(ZL.units(forLocalization: "ru"), .localized("ru"))
+    }
+
+    func testJapaneseAndKoreanUseMyriadUnits() {
+        XCTAssertEqual(CompactCount.local(13_109_802, units: .ja), "1,311万")
+        XCTAssertEqual(CompactCount.local(103_606_731, units: .ja), "1.04億")
+        XCTAssertEqual(CompactCount.local(13_109_802, units: .ko), "1,311만")
+        XCTAssertEqual(CompactCount.local(103_606_731, units: .ko), "1.04억")
+        XCTAssertEqual(CompactCount.chip(3_118_402, units: .ja), "312万")
+        XCTAssertEqual(CompactCount.chip(3_118_402, units: .ko), "312만")
+        XCTAssertEqual(CompactCount.local(214, units: .ko), "214")
+    }
+
+    func testOtherLanguagesNeverUseCJKUnits() {
+        for lang in ["ru", "es", "tr", "vi", "ar", "fa", "ur", "sw", "tk", "my"] {
+            for n: Int64 in [214, 99_999, 312_000, 13_109_802, 103_606_731] {
+                for s in [CompactCount.local(n, units: .localized(lang)), CompactCount.chip(n, units: .localized(lang))] {
+                    XCTAssertFalse(s.isEmpty, "\(lang) \(n)")
+                    XCTAssertFalse(s.contains("万") || s.contains("亿") || s.contains("億"), "\(lang) \(n) → \(s)")
+                }
+            }
+        }
+    }
 }
