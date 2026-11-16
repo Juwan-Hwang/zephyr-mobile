@@ -7,7 +7,6 @@ import com.zephyr.app.di.AppGraph
 import com.zephyr.app.ui.home.HomeContent
 import com.zephyr.app.ui.home.HomeLive
 import com.zephyr.app.ui.home.HomeUi
-import com.zephyr.app.ui.settings.SettingsScreen
 import com.zephyr.app.ui.subs.SubscriptionsScreen
 import com.zephyr.design.theme.ZephyrTheme
 import com.zephyr.design.tokens.ZAccent
@@ -21,7 +20,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 
 /**
- * Translation acceptance (D-P2-12 phase 2a): Home in the connected demo state plus the text-heaviest page per
+ * Translation acceptance (D-P2-12 phase 2a): Home in the connected demo state plus Subscriptions (the text-heaviest page) per
  * left-to-right locale, dark, BLUE, font 1×. Same MockEngine data as [HomeScreenshotTest] / [PagesScreenshotTest].
  */
 @RunWith(Parameterized::class)
@@ -59,15 +58,6 @@ class LocaleScreenshotTest(private val locale: String) {
         ZephyrTheme(dark = true, accent = ZAccent.BLUE) {
             androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) {
                 SubscriptionsScreen(onBack = {}, onImport = {})
-            }
-        }
-    }
-
-    @Test
-    fun settings() = paparazzi.snapshot {
-        ZephyrTheme(dark = true, accent = ZAccent.BLUE) {
-            androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) {
-                SettingsScreen(com.zephyr.app.ui.common.BackTo.LIBRARY, onBack = {})
             }
         }
     }

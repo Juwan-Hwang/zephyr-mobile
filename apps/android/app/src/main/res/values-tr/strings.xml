@@ -327,7 +327,7 @@
         <item quantity="other">%1$d saatte bir</item>
     </plurals>
     <string name="subs_update_wifi_only">Yalnızca Wi‑Fi’da güncelle</string>
-    <string name="subs_show_changes">Güncellemeden önce değişiklikleri göster</string>
+    <string name="subs_show_changes">Önce değişiklikleri göster</string>
     <string name="subs_update_all">Tümünü şimdi güncelle</string>
     <string name="onboarding_cancel_import_a11y">İçe aktarmayı iptal et</string>
     <string name="onboarding_choose_mode">Bir mod seçin</string>
