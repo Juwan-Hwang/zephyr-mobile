@@ -23,7 +23,7 @@ fun ZText(
     /** Shrink to fit instead of ellipsizing (single-line headlines whose translations run long). */
     autoSize: TextAutoSize? = null,
 ) {
-    BasicText(text, modifier, bidiStyle(text, style).copy(color = color), maxLines = maxLines, overflow = overflow, softWrap = softWrap, autoSize = autoSize)
+    BasicText(latinDigits(text), modifier, bidiStyle(text, style).copy(color = color), maxLines = maxLines, overflow = overflow, softWrap = softWrap, autoSize = autoSize)
 }
 
 @Composable
@@ -35,5 +35,5 @@ fun ZText(
     maxLines: Int = Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Ellipsis,
 ) {
-    BasicText(text, modifier, bidiStyle(text, style).copy(color = color), maxLines = maxLines, overflow = overflow)
+    BasicText(latinDigits(text), modifier, bidiStyle(text, style).copy(color = color), maxLines = maxLines, overflow = overflow)
 }
