@@ -438,17 +438,34 @@ class CoreEngine(
         scenesBump.value++
     }
 
+    private val scan = kotlinx.coroutines.flow.MutableStateFlow<com.zephyr.engine.ScanProgress?>(null)
+    override fun scanProgress(): Flow<com.zephyr.engine.ScanProgress?> =
+        if (mockData) kotlinx.coroutines.flow.combine(scan, fallback.scanProgress()) { a, b -> a ?: b } else scan
+
     override suspend fun retestScene(sceneId: String): Scene {
         val c = nodes() ?: return if (mockData) fallback.retestScene(sceneId) else throw noSubscription()
         val raw = withContext(io) { wrap { c.scenes(clock()) } }.firstOrNull { it.id == sceneId } ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)
-        val l = live()
-        if (l != null) {
-            runCatching { withContext(io) { l.test(raw.group, LivePort.TEST_URL, 5_000) } }
-            runCatching { probeServices(listOf(sceneId)) }
-        } else if (raw.scanQuery.isNotEmpty()) {
-            // §15.e: tunnel down → re-measure the scene's region pool (same query as `available`); maxAge 1 ms = everything, stalest first (0 would mean untested only).
-            val ids = runCatching { withContext(io) { c.scanTargets(raw.scanQuery, 100u, clock(), 1L) } }.getOrDefault(emptyList())
-            if (ids.isNotEmpty()) runCatching { testLatency(ids.map { it.toLong() }) }
+        kotlinx.coroutines.coroutineScope {
+            // Group test + service probe (tunnel up) run beside the pool scan; the row leaves "检测中" when both end.
+            val l = live()
+            if (l != null) launch {
+                runCatching { withContext(io) { l.test(raw.group, LivePort.TEST_URL, 5_000) } }
+                runCatching { probeServices(listOf(sceneId)) }
+            }
+            // §15.d/§15.e: re-measure the scene's region pool (same query as `available`), at most one 512 batch,
+            // 64 at a time so the home row can show "正在检测 done/total". maxAge 1 ms = everything, stalest first.
+            if (raw.scanQuery.isNotEmpty() && scan.value == null) {
+                val ids = runCatching { withContext(io) { c.scanTargets(raw.scanQuery, 512u, clock(), 1L) } }.getOrDefault(emptyList())
+                if (ids.isNotEmpty()) try {
+                    var done = 0
+                    scan.value = com.zephyr.engine.ScanProgress(0, ids.size)
+                    ids.chunked(64).forEach { chunk ->
+                        runCatching { testLatency(chunk.map { it.toLong() }) }
+                        done += chunk.size
+                        scan.value = com.zephyr.engine.ScanProgress(done, ids.size)
+                    }
+                } finally { scan.value = null }
+            }
         }
         scenesBump.value++
         return withContext(io) { wrap { c.scenes(clock()) } }.firstOrNull { it.id == sceneId }?.let(::scene) ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, sceneId)

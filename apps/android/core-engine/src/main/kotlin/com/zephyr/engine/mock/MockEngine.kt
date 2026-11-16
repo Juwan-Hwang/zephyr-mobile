@@ -204,10 +204,16 @@ class MockEngine(
 
     override suspend fun retestScene(sceneId: String): Scene {
         requireScene(sceneId)
-        delay(scaled(900))
+        // Mirrors the real scan's 64-node batches over a 512-node pool so the home row's bar has something to show.
+        try {
+            for (done in 0..512 step 64) { scan.value = ScanProgress(done, 512); if (done < 512) delay(scaled(110)) }
+        } finally { scan.value = null }
         sceneState.update { list -> list.map { if (it.id == sceneId) it.copy(testedAt = clock()) else it } }
         return requireScene(sceneId)
     }
+
+    private val scan = MutableStateFlow<ScanProgress?>(null)
+    override fun scanProgress(): Flow<ScanProgress?> = scan.asStateFlow()
 
     private fun requireScene(id: String): Scene =
         sceneState.value.firstOrNull { it.id == id } ?: throw ZephyrException(ErrorCode.SCENE_NOT_FOUND, id)

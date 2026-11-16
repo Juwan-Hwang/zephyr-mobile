@@ -30,6 +30,8 @@ interface ZephyrEngine {
     suspend fun previewSceneChange(sceneId: String, nodeId: NodeId): ExitChange
     suspend fun applySceneChange(sceneId: String, nodeId: NodeId)
     suspend fun retestScene(sceneId: String): Scene
+    /** Progress of the node scan a [retestScene] runs (contract §15.d, platform-local); null = not scanning. */
+    fun scanProgress(): Flow<ScanProgress?> = kotlinx.coroutines.flow.flowOf(null)
     /**
      * Pins one app of a scene to a node ("Gemini 走日本" → Gemini：东京 03; contract §14 setSceneException).
      * `nodeId = null` removes the pin. Never called by automation: only on an explicit, confirmed user action.
