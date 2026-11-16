@@ -82,7 +82,7 @@
     <string name="home_scan_running">در حال آزمایش…</string>
     <string name="home_scenes_tested">آزمایش‌شده \u2068%1$s\u2069</string>
     <string name="home_today_usage">امروز \u2068%1$s\u2069</string>
-    <string name="home_spark_a11y">سرعت دانلود در ۹۰ ثانیهٔ اخیر</string>
+    <string name="home_spark_a11y">سرعت دانلود در 90 ثانیهٔ اخیر</string>
     <string name="home_switch_mode">تغییر حالت</string>
     <plurals name="home_scene_count">
         <item quantity="one">%1$d صحنه</item>
@@ -118,7 +118,7 @@
     <string name="home_scene_testing">در حال آزمایش</string>
     <string name="home_scene_services_down">\u2068%1$s\u2069 در دسترس نیست</string>
     <string name="home_scene_services_ok">\u2068%1$s\u2069 در دسترس</string>
-    <string name="home_pin_line">\u2068%1$s\u2069: \u2068%2$s\u2069</string>
+    <string name="home_pin_line">%1$s: %2$s</string>
     <string name="home_confirm_apps">IP خروجی \u2068%1$s\u2069 تغییر کند؟</string>
     <string name="home_confirm_scene">IP خروجی صحنهٔ \u2068%1$s\u2069 تغییر کند؟</string>
     <string name="home_confirm_unchanged">\u2068%1$s\u2069 بدون تغییر می‌ماند.</string>
@@ -258,7 +258,7 @@
         <item quantity="other">از %1$d اشتراک</item>
     </plurals>
     <string name="nodes_search_placeholder">منطقه، شهر یا مسیر</string>
-    <string name="nodes_search_stats">\u2068%1$s\u2069 · \u2068%2$s\u2069</string>
+    <string name="nodes_search_stats">%1$s · %2$s</string>
     <string name="nodes_empty_title">هنوز نودی وجود ندارد</string>
     <string name="nodes_empty_message">یک اشتراک وارد کنید تا نودهایش اینجا نمایش داده شوند</string>
     <string name="nodes_empty_action">وارد کردن اشتراک</string>
@@ -407,7 +407,7 @@
     <string name="logs_pause">توقف</string>
     <string name="logs_clear">پاک کردن</string>
     <string name="logs_empty">هنوز گزارشی نیست</string>
-    <string name="logs_line_a11y">\u2068%1$s\u2069 \u2068%2$s\u2069 \u2068%3$s\u2069</string>
+    <string name="logs_line_a11y">%1$s %2$s %3$s</string>
 
     <!-- ── Today card ── -->
     <string name="today_style_night">شب</string>
@@ -433,7 +433,7 @@
     <string name="widget_label">وضعیت Zephyr</string>
     <string name="widget_description">وضعیت اتصال، سرعت و صحنه‌ها</string>
     <string name="widget_usage_label">مصرف امروز Zephyr</string>
-    <string name="widget_usage_description">ترافیک امروز و تفکیک ۲۴ ساعته</string>
+    <string name="widget_usage_description">ترافیک امروز و تفکیک 24 ساعته</string>
     <string name="widget_today">امروز \u2066%1$s %2$s\u2069</string>
 
     <!-- ── Notifications ── -->

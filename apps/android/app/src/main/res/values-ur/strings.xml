@@ -118,7 +118,7 @@
     <string name="home_scene_testing">جانچ جاری</string>
     <string name="home_scene_services_down">\u2068%1$s\u2069 دستیاب نہیں</string>
     <string name="home_scene_services_ok">\u2068%1$s\u2069 دستیاب</string>
-    <string name="home_pin_line">\u2068%1$s\u2069: \u2068%2$s\u2069</string>
+    <string name="home_pin_line">%1$s: %2$s</string>
     <string name="home_confirm_apps">\u2068%1$s\u2069 کا ایگزٹ IP تبدیل کریں؟</string>
     <string name="home_confirm_scene">\u2068%1$s\u2069 منظر کا ایگزٹ IP تبدیل کریں؟</string>
     <string name="home_confirm_unchanged">\u2068%1$s\u2069 ویسا ہی رہے گا۔</string>
@@ -258,7 +258,7 @@
         <item quantity="other">%1$d سبسکرپشنز سے</item>
     </plurals>
     <string name="nodes_search_placeholder">علاقہ، شہر یا روٹ</string>
-    <string name="nodes_search_stats">\u2068%1$s\u2069 · \u2068%2$s\u2069</string>
+    <string name="nodes_search_stats">%1$s · %2$s</string>
     <string name="nodes_empty_title">ابھی کوئی نوڈ نہیں</string>
     <string name="nodes_empty_message">سبسکرپشن امپورٹ کریں، اس کے نوڈز یہاں نظر آئیں گے</string>
     <string name="nodes_empty_action">سبسکرپشن امپورٹ کریں</string>
@@ -407,7 +407,7 @@
     <string name="logs_pause">روکیں</string>
     <string name="logs_clear">صاف کریں</string>
     <string name="logs_empty">ابھی کوئی لاگ نہیں</string>
-    <string name="logs_line_a11y">\u2068%1$s\u2069 \u2068%2$s\u2069 \u2068%3$s\u2069</string>
+    <string name="logs_line_a11y">%1$s %2$s %3$s</string>
 
     <!-- ── Today card ── -->
     <string name="today_style_night">رات</string>
