@@ -43,11 +43,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.dismiss
 import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.zephyr.design.R
 import com.zephyr.design.theme.ZAnim
 import com.zephyr.design.theme.ZTheme
 import kotlinx.coroutines.CancellationException
@@ -64,7 +66,7 @@ fun BoxScope.ZSheet(
     onDismiss: () -> Unit,
     title: String,
     modifier: Modifier = Modifier,
-    trailing: String? = "完成",
+    trailing: String? = stringResource(R.string.common_done),
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val c = ZTheme.colors
@@ -73,7 +75,7 @@ fun BoxScope.ZSheet(
             Modifier
                 .fillMaxSize()
                 .background(c.scrim)
-                .clickable(remember { MutableInteractionSource() }, null, onClickLabel = "关闭", onClick = onDismiss),
+                .clickable(remember { MutableInteractionSource() }, null, onClickLabel = stringResource(R.string.common_close), onClick = onDismiss),
         )
     }
     AnimatedVisibility(

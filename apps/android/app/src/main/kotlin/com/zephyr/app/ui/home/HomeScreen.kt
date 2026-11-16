@@ -29,10 +29,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.zephyr.app.R
 import com.zephyr.design.components.ZIconButton
 import com.zephyr.design.components.ZIcons
 import com.zephyr.design.components.ZSectionHeader
@@ -124,9 +127,9 @@ fun HomeContent(
                     Column {
                         val l = live()
                         Spacer(Modifier.height(36.dp))
-                        Column(Modifier.zPressable(label = "最近连接", onClick = actions.onActivity)) {
+                        Column(Modifier.zPressable(label = stringResource(R.string.activity_title), onClick = actions.onActivity)) {
                             ZTrafficStat(l.traffic.downBps, l.traffic.upBps, Modifier.padding(horizontal = 22.dp))
-                            ZSparkline(l.spark, Modifier.fillMaxWidth().height(72.dp), description = "最近 90 秒下载速率", panMillis = 120, headDot = true)
+                            ZSparkline(l.spark, Modifier.fillMaxWidth().height(72.dp), description = stringResource(R.string.home_spark_a11y), panMillis = 120, headDot = true)
                         }
                     }
                 }
@@ -144,7 +147,16 @@ fun HomeContent(
             item("scenes-h") {
                 Spacer(Modifier.height(28.dp))
                 val tested = scenes.mapNotNull { it.testedAt }.maxOrNull()
-                ZSectionHeader("场景", trailing = if (conn.mode == ProxyMode.GLOBAL) null else scan?.let { "正在检测 ${it.done}/${it.total}" } ?: if (retesting.isNotEmpty()) "正在检测…" else tested?.let { ZFormat.ago(it, ui.now).let { a -> if (a == "刚刚") "刚刚检测" else a.replace("前", "前检测") } })
+                val res = LocalResources.current
+                ZSectionHeader(
+                    stringResource(R.string.common_scenes),
+                    trailing = when {
+                        conn.mode == ProxyMode.GLOBAL -> null
+                        scan != null -> stringResource(R.string.home_scan_progress, scan.done, scan.total)
+                        retesting.isNotEmpty() -> stringResource(R.string.home_scan_running)
+                        else -> tested?.let { stringResource(R.string.home_scenes_tested, ZFormat.ago(res, it, ui.now, inline = true)) }
+                    },
+                )
             }
             item("scenes") {
                 if (conn.mode == ProxyMode.GLOBAL) {
@@ -155,7 +167,7 @@ fun HomeContent(
             }
             item("subs-h") {
                 Spacer(Modifier.height(28.dp))
-                ZSectionHeader("订阅", trailing = ui.usage?.let { "今日 ${ZFormat.bytesText(it.todayBytes)}" }, onTrailing = actions.onToday)
+                ZSectionHeader(stringResource(R.string.common_subscriptions), trailing = ui.usage?.let { stringResource(R.string.home_today_usage, ZFormat.bytesText(it.todayBytes)) }, onTrailing = actions.onToday)
             }
             item("subs") { SubscriptionsCard(subs, ui.now, actions.onSubscriptions) }
         }
@@ -166,15 +178,15 @@ fun HomeContent(
                 .background(Brush.verticalGradient(listOf(c.bg.copy(alpha = 0f), c.bg.copy(alpha = 0.92f), c.bg))),
         )
         Row(Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(horizontal = 12.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-            ZSurface(Modifier.weight(1f).height(52.dp).zPressable(label = "搜索或输入指令", onClick = actions.onCommand), style = ZSurfaceStyle.Glass, shape = ZTheme.shapes.pill) {
+            ZSurface(Modifier.weight(1f).height(52.dp).zPressable(label = stringResource(R.string.command_placeholder), onClick = actions.onCommand), style = ZSurfaceStyle.Glass, shape = ZTheme.shapes.pill) {
                 Row(Modifier.fillMaxSize().padding(horizontal = 20.dp), verticalAlignment = Alignment.CenterVertically) {
                     ZIcon(ZIcons.Search, tint = c.text2, size = 20.dp)
                     Spacer(Modifier.width(12.dp))
-                    ZText("搜索或输入指令", style = ZTheme.type.body, color = c.text3)
+                    ZText(stringResource(R.string.command_placeholder), style = ZTheme.type.body, color = c.text3)
                 }
             }
             Spacer(Modifier.width(10.dp))
-            ZIconButton(ZIcons.Grid, "资料库", actions.onLibrary, filled = true, size = 52.dp)
+            ZIconButton(ZIcons.Grid, stringResource(R.string.common_library), actions.onLibrary, filled = true, size = 52.dp)
         }
     }
 }

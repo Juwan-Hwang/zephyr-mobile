@@ -22,11 +22,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.zephyr.app.R
 import com.zephyr.app.di.AppGraph
+import com.zephyr.app.ui.common.BackTo
 import com.zephyr.app.ui.common.PageScaffold
 import com.zephyr.design.components.ZSegmented
 import com.zephyr.design.components.ZText
@@ -35,8 +38,11 @@ import com.zephyr.design.theme.ZTheme
 import com.zephyr.engine.LogLevel
 import com.zephyr.engine.LogLine
 
-private val levels = listOf(LogLevel.DEBUG to "调试", LogLevel.INFO to "信息", LogLevel.WARNING to "警告", LogLevel.ERROR to "错误")
-private val levelNames = mapOf(LogLevel.DEBUG to "调试", LogLevel.INFO to "信息", LogLevel.WARNING to "警告", LogLevel.ERROR to "错误")
+private val levels = listOf(
+    LogLevel.DEBUG to R.string.logs_level_debug, LogLevel.INFO to R.string.logs_level_info,
+    LogLevel.WARNING to R.string.logs_level_warning, LogLevel.ERROR to R.string.logs_level_error,
+)
+private val levelNames = levels.toMap()
 
 @Composable
 fun LogsScreen(onBack: () -> Unit) {
@@ -49,23 +55,23 @@ fun LogsScreen(onBack: () -> Unit) {
     val c = ZTheme.colors
     val ctx = LocalContext.current
 
-    PageScaffold("设置", "日志", onBack, trailing = {
+    PageScaffold(BackTo.SETTINGS, stringResource(R.string.logs_title), onBack, trailing = {
         Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            ToolbarText(if (paused) "继续" else "暂停", enabled = true) { model.togglePause() }
-            ToolbarText("清空", enabled = lines.isNotEmpty()) { model.clear() }
-            ToolbarText("分享", enabled = lines.isNotEmpty()) {
+            ToolbarText(stringResource(if (paused) R.string.logs_resume else R.string.logs_pause), enabled = true) { model.togglePause() }
+            ToolbarText(stringResource(R.string.logs_clear), enabled = lines.isNotEmpty()) { model.clear() }
+            ToolbarText(stringResource(R.string.common_share), enabled = lines.isNotEmpty()) {
                 val send = Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, model.exportText())
                 ctx.startActivity(Intent.createChooser(send, null))
             }
         }
     }) {
         ZSegmented(
-            levels.map { it.second }, levels.indexOfFirst { it.first == level }, { i -> model.setLevel(levels[i].first) },
+            levels.map { stringResource(it.second) }, levels.indexOfFirst { it.first == level }, { i -> model.setLevel(levels[i].first) },
             Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         )
         if (lines.isEmpty()) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                ZText("暂无日志", style = ZTheme.type.body, color = c.text3)
+                ZText(stringResource(R.string.logs_empty), style = ZTheme.type.body, color = c.text3)
             }
         } else {
             val state = rememberLazyListState()
@@ -100,8 +106,9 @@ private fun LogRow(line: LogLine) {
         LogLevel.ERROR -> c.danger
     }
     val time = LogsModel.time(line.at)
+    val a11y = stringResource(R.string.logs_line_a11y, time, levelNames[line.level]?.let { stringResource(it) } ?: "", line.message)
     Row(
-        Modifier.fillMaxWidth().clearAndSetSemantics { contentDescription = "$time ${levelNames[line.level]} ${line.message}" },
+        Modifier.fillMaxWidth().clearAndSetSemantics { contentDescription = a11y },
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         ZText(time, style = mono, color = c.text3)

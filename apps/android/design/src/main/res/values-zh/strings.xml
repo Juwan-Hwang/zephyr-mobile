@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 简体中文。与 values/strings.xml 一一对应；新增文案两边同时加。 -->
+<resources>
+
+    <!-- ── Shared ── -->
+    <string name="common_done">完成</string>
+    <string name="common_close">关闭</string>
+    <string name="common_clear">清除</string>
+    <string name="common_latency_timeout">超时</string>
+    <string name="common_traffic_a11y">下载 %1$s %2$s 每秒，上传 %3$s %4$s 每秒</string>
+    <string name="common_time_just_now">刚刚</string>
+    <string name="common_time_just_now_inline">刚刚</string>
+    <plurals name="common_time_minutes_ago">
+        <item quantity="other">%1$d 分钟前</item>
+    </plurals>
+    <plurals name="common_time_hours_ago">
+        <item quantity="other">%1$d 小时前</item>
+    </plurals>
+    <plurals name="common_time_days_ago">
+        <item quantity="other">%1$d 天前</item>
+    </plurals>
+    <string name="common_expiry_expired">已过期</string>
+    <string name="common_expiry_today">今天到期</string>
+    <string name="common_expiry_tomorrow">明天到期</string>
+    <string name="common_expiry_weekday">%1$s到期</string>
+    <plurals name="common_expiry_in_days">
+        <item quantity="other">%1$d 天后到期</item>
+    </plurals>
+    <string-array name="common_weekdays">
+        <item>周一</item>
+        <item>周二</item>
+        <item>周三</item>
+        <item>周四</item>
+        <item>周五</item>
+        <item>周六</item>
+        <item>周日</item>
+    </string-array>
+</resources>

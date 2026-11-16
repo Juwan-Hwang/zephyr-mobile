@@ -1,5 +1,8 @@
 package com.zephyr.app.ui.activity
 
+import com.zephyr.app.R
+import com.zephyr.app.ui.common.uiPlural
+import com.zephyr.app.ui.common.uiText
 import com.zephyr.engine.ConnectionInfo
 import com.zephyr.engine.ErrorCode
 import com.zephyr.engine.ZephyrEngine
@@ -26,21 +29,22 @@ class CloseHostTest {
 
     private fun c(id: String, host: String) = ConnectionInfo(id, host, node = "n", upBytes = 0, downBytes = 0, startedAt = 0)
 
+    // The toast is resolved where it is drawn; here we check which message and which count it carries.
     @Test fun messages() {
-        assertEquals("已关闭 3 个连接", closeMessage(3, 3))
-        assertEquals("2 个连接未能关闭", closeMessage(1, 3))
-        assertEquals("连接未能关闭", closeMessage(0, 2))
-        assertEquals("没有活动的连接", closeMessage(0, 0))
+        assertEquals(uiPlural(R.plurals.activity_closed, 3), closeMessage(3, 3))
+        assertEquals(uiPlural(R.plurals.activity_close_partial, 2), closeMessage(1, 3))
+        assertEquals(uiPlural(R.plurals.activity_close_failed, 2), closeMessage(0, 2))
+        assertEquals(uiText(R.string.activity_close_none), closeMessage(0, 0))
     }
 
     @Test fun closesOnlyThatHost() = runTest {
         val e = Fake(listOf(c("1", "a.com"), c("2", "b.com"), c("3", "a.com")), failing = emptySet())
-        assertEquals("已关闭 2 个连接", closeHostConnections(e, "a.com"))
+        assertEquals(uiPlural(R.plurals.activity_closed, 2), closeHostConnections(e, "a.com"))
         assertEquals(listOf("1", "3"), e.closed)
     }
 
     @Test fun partialFailure() = runTest {
         val e = Fake(listOf(c("1", "a.com"), c("3", "a.com")), failing = setOf("3"))
-        assertEquals("1 个连接未能关闭", closeHostConnections(e, "a.com"))
+        assertEquals(uiPlural(R.plurals.activity_close_partial, 1), closeHostConnections(e, "a.com"))
     }
 }

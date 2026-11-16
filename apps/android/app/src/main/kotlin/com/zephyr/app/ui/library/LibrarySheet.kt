@@ -1,5 +1,6 @@
 package com.zephyr.app.ui.library
 
+import com.zephyr.app.R
 import com.zephyr.app.ui.common.collectWhile
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +16,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.zephyr.app.di.AppGraph
 import com.zephyr.design.components.ZSurfaceLevel
@@ -41,25 +44,26 @@ fun BoxScope.LibrarySheet(visible: Boolean, onDismiss: () -> Unit, onOpen: (Libr
     val rules by produceState(0L, visible, subList) { if (visible) value = runCatching { e.ruleStats().total }.getOrDefault(value) }
     val scenes by remember { e.scenes() }.collectWhile(visible, emptyList())
     val settings by e.settings().collectAsState(Settings())
-    ZSheet(visible, onDismiss, "资料库") {
+    val res = LocalResources.current
+    ZSheet(visible, onDismiss, stringResource(R.string.common_library)) {
         Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            ZStatTile(ZFormat.compactZh(nodes), "节点", Modifier.weight(1f)) { onOpen(LibraryDest.Nodes) }
-            ZStatTile(ZFormat.grouped(subs.toLong()), "订阅", Modifier.weight(1f)) { onOpen(LibraryDest.Subscriptions) }
+            ZStatTile(ZFormat.compact(res, nodes), stringResource(R.string.common_nodes), Modifier.weight(1f)) { onOpen(LibraryDest.Nodes) }
+            ZStatTile(ZFormat.grouped(subs.toLong()), stringResource(R.string.common_subscriptions), Modifier.weight(1f)) { onOpen(LibraryDest.Subscriptions) }
         }
         Spacer(Modifier.height(10.dp))
         Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            ZStatTile(ZFormat.compactZh(rules), "规则", Modifier.weight(1f)) { onOpen(LibraryDest.Rules) }
-            ZStatTile("${scenes.size}", "场景", Modifier.weight(1f)) { onOpen(LibraryDest.Scenes) }
+            ZStatTile(ZFormat.compact(res, rules), stringResource(R.string.common_rules), Modifier.weight(1f)) { onOpen(LibraryDest.Rules) }
+            ZStatTile("${scenes.size}", stringResource(R.string.common_scenes), Modifier.weight(1f)) { onOpen(LibraryDest.Scenes) }
         }
         Spacer(Modifier.height(20.dp))
         ZListGroup(level = ZSurfaceLevel.S1, shape = RoundedCornerShape(18.dp)) {
-            ZSettingsRow("小组件与快捷开关", chevron = true, onClick = { onOpen(LibraryDest.Widgets) })
+            ZSettingsRow(stringResource(R.string.library_widgets), chevron = true, onClick = { onOpen(LibraryDest.Widgets) })
             ZDivider()
-            ZSettingsRow("受信任的 Wi‑Fi", value = settings.trustedWifi.firstOrNull() ?: "无", chevron = true, onClick = { onOpen(LibraryDest.TrustedWifi) })
+            ZSettingsRow(stringResource(R.string.settings_trusted_wifi), value = settings.trustedWifi.firstOrNull() ?: stringResource(R.string.common_none), chevron = true, onClick = { onOpen(LibraryDest.TrustedWifi) })
             ZDivider()
-            ZSettingsRow("本地代理端口", value = if (settings.localProxyEnabled) "开" else "关", chevron = true, onClick = { onOpen(LibraryDest.LocalProxy) })
+            ZSettingsRow(stringResource(R.string.settings_local_proxy), value = stringResource(if (settings.localProxyEnabled) R.string.common_on else R.string.common_off), chevron = true, onClick = { onOpen(LibraryDest.LocalProxy) })
             ZDivider()
-            ZSettingsRow("设置", chevron = true, onClick = { onOpen(LibraryDest.Settings) })
+            ZSettingsRow(stringResource(R.string.common_settings), chevron = true, onClick = { onOpen(LibraryDest.Settings) })
         }
         Box(Modifier.height(12.dp))
     }

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
 import android.provider.MediaStore
+import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -44,8 +45,12 @@ import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import com.zephyr.app.R
 import com.zephyr.app.di.AppGraph
 import com.zephyr.app.ui.common.ZephyrLockup
 import com.zephyr.design.components.ZButton
@@ -63,14 +68,13 @@ import com.zephyr.engine.UsageSummary
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 import kotlin.math.PI
 import kotlin.math.sin
 
-enum class TodayStyle(val label: String, val bg: Color, val line: Color, val fg: Color) {
-    Night("夜", Color(0xFF02040A), Color(0xFF3BA4FF), Color.White),
-    Dawn("晨", Color(0xFFF6EEE6), Color(0xFFE07A4F), Color(0xFF1B1B1F)),
-    Mist("雾", Color(0xFFECEDEF), Color(0xFF6C8DB8), Color(0xFF1B1B1F)),
+enum class TodayStyle(@StringRes val label: Int, val bg: Color, val line: Color, val fg: Color) {
+    Night(R.string.today_style_night, Color(0xFF02040A), Color(0xFF3BA4FF), Color.White),
+    Dawn(R.string.today_style_dawn, Color(0xFFF6EEE6), Color(0xFFE07A4F), Color(0xFF1B1B1F)),
+    Mist(R.string.today_style_mist, Color(0xFFECEDEF), Color(0xFF6C8DB8), Color(0xFF1B1B1F)),
 }
 
 private val PageBg = Color.Black
@@ -84,6 +88,7 @@ fun TodayScreen(onClose: () -> Unit) {
     val layer = rememberGraphicsLayer()
     val scope = rememberCoroutineScope()
     val ctx = LocalContext.current
+    val res = LocalResources.current
     val c = ZTheme.colors
     // Black page: light status/nav bar icons while it is open, restored on leave.
     val view = androidx.compose.ui.platform.LocalView.current
@@ -103,17 +108,17 @@ fun TodayScreen(onClose: () -> Unit) {
     var saved by remember { mutableStateOf<String?>(null) }
     val doSave: () -> Unit = {
         scope.launch {
-            saved = runCatching { save(ctx, layer.toImageBitmap().asAndroidBitmap()) }.fold({ "已存储到相册" }, { "无法存储图像" })
+            saved = runCatching { save(ctx, layer.toImageBitmap().asAndroidBitmap()) }.fold({ res.getString(R.string.today_saved) }, { res.getString(R.string.today_save_failed) })
             kotlinx.coroutines.delay(3_000); saved = null
         }
     }
     // Android 9 needs WRITE_EXTERNAL_STORAGE for MediaStore inserts; 10+ needs nothing.
     val storagePermission = androidx.activity.compose.rememberLauncherForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),
-    ) { granted -> if (granted) doSave() else saved = "需要存储权限才能保存图像" }
+    ) { granted -> if (granted) doSave() else saved = res.getString(R.string.today_storage_permission) }
     // Review H-P2-13: the prototype's 今日 page is always black, whatever the app theme.
     Column(Modifier.fillMaxSize().background(PageBg).statusBarsPadding().navigationBarsPadding()) {
-        Row(Modifier.fillMaxWidth().padding(8.dp)) { Spacer(Modifier.weight(1f)); ZIconButton(ZIcons.Close, "关闭", onClose, tint = PageFg.copy(alpha = 0.6f)) }
+        Row(Modifier.fillMaxWidth().padding(8.dp)) { Spacer(Modifier.weight(1f)); ZIconButton(ZIcons.Close, stringResource(com.zephyr.design.R.string.common_close), onClose, tint = PageFg.copy(alpha = 0.6f)) }
         val u = usage
         Box(
             Modifier.padding(horizontal = 22.dp).fillMaxWidth().aspectRatio(0.68f)
@@ -122,7 +127,7 @@ fun TodayScreen(onClose: () -> Unit) {
         ) {
             if (u != null) Flow(u.hourly, style)
             Column(Modifier.align(Alignment.BottomStart).padding(24.dp)) {
-                val date = LocalDate.now().format(DateTimeFormatter.ofPattern("M月d日 · EEEE", Locale.CHINA))
+                val date = LocalDate.now().format(DateTimeFormatter.ofPattern(stringResource(R.string.today_date_pattern), res.configuration.locales[0]))
                 ZText(date, style = ZTheme.type.footnote, color = style.fg.copy(alpha = 0.6f))
                 val (v, unit) = ZFormat.bytes(u?.todayBytes ?: 0)
                 Row(verticalAlignment = Alignment.Bottom) {
@@ -131,9 +136,11 @@ fun TodayScreen(onClose: () -> Unit) {
                     ZText(unit, Modifier.padding(bottom = 14.dp), style = ZTheme.type.title.copy(fontSize = 18.sp, fontWeight = ZTheme.type.body.fontWeight), color = style.fg.copy(alpha = 0.6f))
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(36.dp)) {
-                    Stat("${u?.regionsToday ?: 0}", "个地区", style.fg)
-                    Stat("${(u?.onlineMillisToday ?: 0) / 3_600_000}", "小时在线", style.fg)
-                    Stat("${u?.fastestLatencyMs ?: "—"}", "ms 最快", style.fg)
+                    val regions = u?.regionsToday ?: 0
+                    val hours = ((u?.onlineMillisToday ?: 0) / 3_600_000).toInt()
+                    Stat("$regions", pluralStringResource(R.plurals.today_regions, regions), style.fg)
+                    Stat("$hours", pluralStringResource(R.plurals.today_hours_online, hours), style.fg)
+                    Stat("${u?.fastestLatencyMs ?: "—"}", stringResource(R.string.today_fastest), style.fg)
                 }
                 Spacer(Modifier.height(18.dp))
                 Box(Modifier.fillMaxWidth().height(1.dp).background(style.fg.copy(alpha = 0.14f)))
@@ -141,7 +148,7 @@ fun TodayScreen(onClose: () -> Unit) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     ZephyrLockup(tint = style.fg)
                     Spacer(Modifier.weight(1f))
-                    ZText("今日", style = ZTheme.type.footnote, color = style.fg.copy(alpha = 0.5f))
+                    ZText(stringResource(R.string.common_today), style = ZTheme.type.footnote, color = style.fg.copy(alpha = 0.5f))
                 }
             }
         }
@@ -155,20 +162,20 @@ fun TodayScreen(onClose: () -> Unit) {
                 ) {
                     Box(Modifier.size(28.dp).clip(CircleShape).background(s.bg).border(1.dp, PageFg.copy(alpha = 0.16f), CircleShape))
                     Spacer(Modifier.width(10.dp))
-                    ZText(s.label, style = ZTheme.type.callout, color = PageFg)
+                    ZText(stringResource(s.label), style = ZTheme.type.callout, color = PageFg)
                 }
             }
         }
         Spacer(Modifier.height(20.dp))
         Row(Modifier.padding(horizontal = 22.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            ZButton("分享", { scope.launch { val b = layer.toImageBitmap().asAndroidBitmap(); share(ctx, b) } }, Modifier.weight(1f))
-            ZButton("存储图像", {
+            ZButton(stringResource(R.string.common_share), { scope.launch { val b = layer.toImageBitmap().asAndroidBitmap(); share(ctx, b) } }, Modifier.weight(1f))
+            ZButton(stringResource(R.string.today_save_image), {
                 val needs = Build.VERSION.SDK_INT < 29 &&
                     ctx.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != android.content.pm.PackageManager.PERMISSION_GRANTED
                 if (needs) storagePermission.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) else doSave()
             }, Modifier.weight(1f), kind = ZButtonKind.Secondary)
         }
-        ZText(saved ?: "图案由今天的流量生成，不含节点名称与 IP 地址。", Modifier.fillMaxWidth().padding(16.dp), style = ZTheme.type.footnote.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = PageFg.copy(alpha = 0.45f))
+        ZText(saved ?: stringResource(R.string.today_pattern_note), Modifier.fillMaxWidth().padding(16.dp), style = ZTheme.type.footnote.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = PageFg.copy(alpha = 0.45f))
     }
 }
 

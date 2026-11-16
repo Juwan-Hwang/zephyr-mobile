@@ -1,5 +1,6 @@
 package com.zephyr.app.ui.rules
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.fadeIn
@@ -28,6 +29,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
+import com.zephyr.app.R
 import com.zephyr.app.ui.activity.TraceSheet
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
@@ -35,7 +39,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.border
 import androidx.compose.ui.unit.sp
 import com.zephyr.app.di.AppGraph
+import com.zephyr.app.ui.common.BackTo
 import com.zephyr.app.ui.common.PageScaffold
+import com.zephyr.app.ui.common.toPluralCount
 import com.zephyr.design.components.ZCard
 import com.zephyr.design.components.ZDivider
 import com.zephyr.design.components.ZRegionBadge
@@ -52,7 +58,7 @@ import kotlinx.coroutines.delay
 
 /** Rules (prototype `rules`): 7 compiled layers in match order + live domain/IP trace. */
 @Composable
-fun RulesScreen(initial: String, back: String = "资料库", onBack: () -> Unit) {
+fun RulesScreen(initial: String, back: BackTo = BackTo.LIBRARY, onBack: () -> Unit) {
     val engine = AppGraph.engine
     val c = ZTheme.colors
     var q by remember { mutableStateOf(initial) }
@@ -66,8 +72,8 @@ fun RulesScreen(initial: String, back: String = "资料库", onBack: () -> Unit)
     var overrideHost by remember { mutableStateOf<String?>(null) }
     val focus = remember { androidx.compose.ui.focus.FocusRequester() }
     androidx.compose.foundation.layout.Box(Modifier.fillMaxSize()) {
-    PageScaffold(back = back, title = "规则", onBack = onBack, trailing = {
-        com.zephyr.design.components.ZIconButton(com.zephyr.design.components.ZIcons.Plus, "为域名添加覆写", {
+    PageScaffold(back = back, title = stringResource(R.string.common_rules), onBack = onBack, trailing = {
+        com.zephyr.design.components.ZIconButton(com.zephyr.design.components.ZIcons.Plus, stringResource(R.string.rules_add_override_a11y), {
             val h = q.trim()
             if (h.isEmpty()) runCatching { focus.requestFocus() } else overrideHost = h
         }, tint = c.accent)
@@ -76,31 +82,32 @@ fun RulesScreen(initial: String, back: String = "资料库", onBack: () -> Unit)
             Row(Modifier.padding(horizontal = 22.dp), verticalAlignment = Alignment.Bottom) {
                 ZText(ZFormat.grouped(stats?.total ?: 0), style = ZTheme.type.hero.copy(fontSize = ZTheme.type.hero.fontSize * 0.86f))
                 Spacer(Modifier.width(8.dp))
-                ZText("条", Modifier.padding(bottom = 10.dp), style = ZTheme.type.body, color = c.text3)
+                ZText(pluralStringResource(R.plurals.rules_total_unit, (stats?.total ?: 0L).toPluralCount()), Modifier.padding(bottom = 10.dp), style = ZTheme.type.body, color = c.text3)
             }
-            ZText("${stats?.layers?.size ?: 7} 层 · 已编译 · 磁盘占用 ${ZFormat.bytesText(stats?.diskBytes ?: 0)}", Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
+            val layerCount = stats?.layers?.size ?: 7
+            ZText(pluralStringResource(R.plurals.rules_summary, layerCount, layerCount, ZFormat.bytesText(stats?.diskBytes ?: 0)), Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
             Spacer(Modifier.height(18.dp))
-            ZSearchField(q, { q = it }, "测试域名或 IP", Modifier.padding(horizontal = 16.dp).focusRequester(focus))
+            ZSearchField(q, { q = it }, stringResource(R.string.rules_test_placeholder), Modifier.padding(horizontal = 16.dp).focusRequester(focus))
             Spacer(Modifier.height(12.dp))
             ZCard(Modifier.padding(horizontal = 16.dp), padding = 18.dp) {
                 AnimatedContent(trace, transitionSpec = { fadeIn(ZAnim.standard()) togetherWith fadeOut(ZAnim.micro()) }, label = "trace") { t ->
-                    if (t == null) ZText("输入域名或 IP，查看匹配的规则与出口。", style = ZTheme.type.footnote, color = c.text3)
+                    if (t == null) ZText(stringResource(R.string.rules_test_hint), style = ZTheme.type.footnote, color = c.text3)
                     else Chain(t, stats)
                 }
             }
             Spacer(Modifier.height(20.dp))
-            ZSectionHeader("匹配顺序", trailing = "从上到下")
+            ZSectionHeader(stringResource(R.string.rules_match_order), trailing = stringResource(R.string.rules_top_to_bottom))
             ZCard(Modifier.padding(horizontal = 16.dp)) {
                 val hit = trace
                 stats?.layers?.forEachIndexed { i, l ->
                     if (i > 0) ZDivider(inset = false)
-                    LayerRow(i + 1, l.name, l.note, kindLabel(l.kind), ZFormat.grouped(l.count), hit != null && hit.layerIndex == l.index, accent = l.kind == LayerKind.OVERRIDE)
+                    LayerRow(i + 1, l.name, l.note, stringResource(kindLabel(l.kind)), ZFormat.grouped(l.count), hit != null && hit.layerIndex == l.index, accent = l.kind == LayerKind.OVERRIDE)
                 }
                 ZDivider(inset = false)
-                LayerRow((stats?.layers?.size ?: 7) + 1, "其余流量", "MATCH", null, "其他", trace != null && trace!!.layerIndex == null, false)
+                LayerRow((stats?.layers?.size ?: 7) + 1, stringResource(R.string.rules_other_traffic), "MATCH", null, stringResource(R.string.rules_kind_other), trace != null && trace!!.layerIndex == null, false)
             }
             ZText(
-                "规则集在设备上编译为只读索引，按需从磁盘读取。订阅更新时，覆写保持不变。",
+                stringResource(R.string.rules_note),
                 Modifier.padding(horizontal = 22.dp, vertical = 14.dp), style = ZTheme.type.footnote, color = c.text3,
             )
             Spacer(Modifier.height(40.dp))
@@ -110,7 +117,13 @@ fun RulesScreen(initial: String, back: String = "资料库", onBack: () -> Unit)
     }
 }
 
-private fun kindLabel(k: LayerKind) = when (k) { LayerKind.OVERRIDE -> "覆写"; LayerKind.SUBSCRIPTION -> "订阅"; LayerKind.DOMAIN -> "域名"; LayerKind.IP -> "IP" }
+@StringRes
+private fun kindLabel(k: LayerKind): Int = when (k) {
+    LayerKind.OVERRIDE -> R.string.rules_kind_override
+    LayerKind.SUBSCRIPTION -> R.string.rules_kind_subscription
+    LayerKind.DOMAIN -> R.string.rules_kind_domain
+    LayerKind.IP -> R.string.rules_kind_ip
+}
 
 @Composable
 private fun LayerRow(ix: Int, name: String, note: String, kind: String?, count: String, hit: Boolean, accent: Boolean) {
@@ -135,20 +148,20 @@ private fun LayerRow(ix: Int, name: String, note: String, kind: String?, count: 
 private fun Chain(t: RuleTrace, stats: RuleStats?) {
     val c = ZTheme.colors
     Column {
-        Step("请求", t.input, mono = true)
+        Step(stringResource(R.string.rules_step_request), t.input, mono = true)
         val layer = t.layerIndex?.let { li -> stats?.layers?.firstOrNull { it.index == li } }
-        if (layer != null) Step("第 ${layer.index + 1} 层 · ${layer.name}", t.rule, mono = true, badge = t.ruleNo?.let { "#" + ZFormat.grouped(it) })
-        else Step("第 ${(stats?.layers?.size ?: 7) + 1} 层 · 其余流量", "MATCH", mono = true)
+        if (layer != null) Step(stringResource(R.string.rules_step_layer, layer.index + 1, layer.name), t.rule, mono = true, badge = t.ruleNo?.let { "#" + ZFormat.grouped(it) })
+        else Step(stringResource(R.string.rules_step_layer, (stats?.layers?.size ?: 7) + 1, stringResource(R.string.rules_other_traffic)), "MATCH", mono = true)
         when (t.policy) {
-            "DIRECT" -> Step("出口", "直连", last = true)
-            "REJECT" -> Step("结果", "已拦截", last = true)
+            "DIRECT" -> Step(stringResource(R.string.trace_step_exit), stringResource(R.string.common_direct), last = true)
+            "REJECT" -> Step(stringResource(R.string.rules_step_result), stringResource(R.string.rules_blocked), last = true)
             else -> t.scene?.let { s ->
-                Step("场景 · ${s.name}", s.selected.name, region = s.selected.region, last = t.exitIp == null)
-                t.exitIp?.let { Step("出口 IP", it, mono = true, last = true) }
+                Step(stringResource(R.string.rules_step_scene, s.name), s.selected.name, region = s.selected.region, last = t.exitIp == null)
+                t.exitIp?.let { Step(stringResource(R.string.rules_step_exit_ip), it, mono = true, last = true) }
             }
         }
         Spacer(Modifier.height(4.dp))
-        ZText("用时 ${ZFormat.micros(t.tookMicros)}", style = ZTheme.type.caption, color = c.text3)
+        ZText(stringResource(R.string.rules_took, ZFormat.micros(t.tookMicros)), style = ZTheme.type.caption, color = c.text3)
     }
 }
 

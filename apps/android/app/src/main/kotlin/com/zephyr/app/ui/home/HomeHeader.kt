@@ -1,5 +1,6 @@
 package com.zephyr.app.ui.home
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -26,6 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
@@ -33,7 +36,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import com.zephyr.app.R
 import com.zephyr.app.ui.common.ZephyrLockup
+import com.zephyr.app.ui.common.hintRes
+import com.zephyr.app.ui.common.labelRes
 import com.zephyr.design.components.ZIcon
 import com.zephyr.design.components.ZIconButton
 import com.zephyr.design.components.ZIcons
@@ -64,7 +70,7 @@ fun HomeTopBar(status: ConnectionStatus, onSettings: () -> Unit) {
         Spacer(Modifier.width(6.dp))
         ZephyrLockup()
         Spacer(Modifier.weight(1f))
-        ZIconButton(ZIcons.Settings, "设置", onSettings, tint = c.text2)
+        ZIconButton(ZIcons.Settings, stringResource(R.string.common_settings), onSettings, tint = c.text2)
     }
 }
 
@@ -88,18 +94,20 @@ fun HomeStatus(
                 modifier = Modifier.weight(1f).semantics { liveRegion = LiveRegionMode.Polite },
             ) { s ->
                 ZText(
-                    when (s) {
-                        ConnectionStatus.CONNECTED -> "已连接"
-                        ConnectionStatus.CONNECTING -> "连接中"
-                        ConnectionStatus.DISCONNECTING -> "正在断开"
-                        ConnectionStatus.FAILED -> "连接失败"
-                        ConnectionStatus.DISCONNECTED -> "未连接"
-                    },
+                    stringResource(
+                        when (s) {
+                            ConnectionStatus.CONNECTED -> R.string.common_status_connected
+                            ConnectionStatus.CONNECTING -> R.string.common_status_connecting
+                            ConnectionStatus.DISCONNECTING -> R.string.common_status_disconnecting
+                            ConnectionStatus.FAILED -> R.string.common_status_failed
+                            ConnectionStatus.DISCONNECTED -> R.string.common_status_disconnected
+                        },
+                    ),
                     style = ZTheme.type.status,
                     maxLines = 1,
                 )
             }
-            ZToggle(on, onToggle, size = ZToggleSize.Hero, contentDescription = "连接")
+            ZToggle(on, onToggle, size = ZToggleSize.Hero, contentDescription = stringResource(R.string.common_connect))
         }
         Spacer(Modifier.height(10.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -108,9 +116,9 @@ fun HomeStatus(
             val since = connection.since
             ZText(
                 when {
-                    connection.status == ConnectionStatus.FAILED -> failureText(connection.error?.code)
+                    connection.status == ConnectionStatus.FAILED -> stringResource(failureText(connection.error?.code))
                     connection.status == ConnectionStatus.CONNECTED && since != null -> ZFormat.duration(now - since)
-                    else -> "$sceneCount 个场景"
+                    else -> pluralStringResource(R.plurals.home_scene_count, sceneCount, sceneCount)
                 },
                 style = ZTheme.type.numeric.copy(fontSize = 14.sp), // Review H-P2-1: prototype .sub 14px, t3
                 color = c.text3,
@@ -125,8 +133,8 @@ private fun ModePicker(mode: ProxyMode, onMode: (ProxyMode) -> Unit) {
     var open by remember { mutableStateOf(false) }
     val rot by animateFloatAsState(if (open) 180f else 0f, ZAnim.standard(), label = "chev")
     Box {
-        Row(Modifier.zPressable(label = "切换模式") { open = true }.padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
-            ZText(mode.label, style = ZTheme.type.bodyStrong.copy(fontSize = 14.sp, lineHeight = 20.sp))
+        Row(Modifier.zPressable(label = stringResource(R.string.home_switch_mode)) { open = true }.padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+            ZText(stringResource(mode.labelRes), style = ZTheme.type.bodyStrong.copy(fontSize = 14.sp, lineHeight = 20.sp))
             Spacer(Modifier.width(4.dp))
             ZIcon(ZIcons.ChevronDown, Modifier.then(Modifier), tint = c.text2, size = 14.dp)
         }
@@ -140,8 +148,8 @@ private fun ModePicker(mode: ProxyMode, onMode: (ProxyMode) -> Unit) {
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Column(Modifier.weight(1f)) {
-                                    ZText(m.label, style = ZTheme.type.body)
-                                    ZText(m.hint, style = ZTheme.type.caption, color = c.text3)
+                                    ZText(stringResource(m.labelRes), style = ZTheme.type.body)
+                                    ZText(stringResource(m.hintRes), style = ZTheme.type.caption, color = c.text3)
                                 }
                                 if (m == mode) ZIcon(ZIcons.Check, tint = c.accent, size = 18.dp)
                             }
@@ -153,18 +161,11 @@ private fun ModePicker(mode: ProxyMode, onMode: (ProxyMode) -> Unit) {
     }
 }
 
-val ProxyMode.label: String get() = when (this) { ProxyMode.RULE -> "规则"; ProxyMode.GLOBAL -> "全局"; ProxyMode.DIRECT -> "直连" }
-val ProxyMode.hint: String get() = when (this) {
-    ProxyMode.RULE -> "按场景分流"
-    ProxyMode.GLOBAL -> "所有流量经由一个节点"
-    ProxyMode.DIRECT -> "不经过代理"
-}
-
-
 /** One line under "连接失败": what to do next, never a raw error. */
-internal fun failureText(code: com.zephyr.engine.ErrorCode?): String = when (code) {
-    com.zephyr.engine.ErrorCode.SUBSCRIPTION_NOT_FOUND -> "先添加一个订阅"
-    com.zephyr.engine.ErrorCode.VPN_PERMISSION_DENIED -> "需要允许 VPN 连接"
-    com.zephyr.engine.ErrorCode.NETWORK_UNAVAILABLE -> "网络不可用"
-    else -> "内核未能启动"
+@StringRes
+internal fun failureText(code: com.zephyr.engine.ErrorCode?): Int = when (code) {
+    com.zephyr.engine.ErrorCode.SUBSCRIPTION_NOT_FOUND -> R.string.home_failure_no_subscription
+    com.zephyr.engine.ErrorCode.VPN_PERMISSION_DENIED -> R.string.home_failure_vpn_permission
+    com.zephyr.engine.ErrorCode.NETWORK_UNAVAILABLE -> R.string.home_failure_network
+    else -> R.string.home_failure_core
 }

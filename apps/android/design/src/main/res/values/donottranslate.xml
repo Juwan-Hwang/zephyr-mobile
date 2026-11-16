@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Myriad units for compact counts (ZFormat.compact when common_number_myriad is true). Unit glyphs, not copy. -->
+    <string name="common_unit_wan" translatable="false">万</string>
+    <string name="common_unit_yi" translatable="false">亿</string>
+</resources>

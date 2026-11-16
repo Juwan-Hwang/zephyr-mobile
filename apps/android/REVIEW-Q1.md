@@ -60,6 +60,7 @@
 - 第四十二批（PR agent/android/uhd-ascii）：✅ 跟进 A #176：isUhdName 改仅 ASCII 折叠（U+212A 不算 4K）；core-engine Test task 声明 contract/fixtures 为输入，fixture 变化会使缓存失效。
 - 第四十二批（PR agent/android/subs-swipe）：✅ L-P2-9 收尾（规范 §4 左滑更新/删除：订阅行左滑露出“更新 / 删除”，过半吸附；删除需二次点按“确认删除”（核心无撤销）；失败显示“无法更新/删除 X”；TalkBack 自定义动作同两项）。L-P2-9 全部关闭。
 - 第四十三批（PR agent/android/scene-scan）：✅ H-P1-12 收尾（原型 10“检测中”：场景详情新增“重新检测”；CoreEngine.retestScene 按 Scene.scanQuery 取至多 512 个目标、每 64 个一组测速并发布平台本地 ScanProgress（§15.d），隧道开启时组测速 + 服务探测并行；首页场景标题右侧显示“正在检测 done/total”，该行显示“N 个可用 · 检测中”与 96dp 强调色进度条）。
+- 第四十四批（PR agent/android/i18n-strings）：✅ D-P2-12 第一阶段（界面文案全部抽到资源：values=英文（默认与回退），values-zh=现有中文逐字保留；design 组件文案与 ZFormat 的相对时间/到期/计数单位同样走资源；ViewModel、导入器、通知、快捷开关、小组件用 @StringRes / UiText；计数用 plurals；localeFilters 与 locales_config 改为 en + zh，supportsRtl 已开；Paparazzi 锁 zh，基线不变）。余项：ja ko ru es fa tk my ar ur sw tr vi 分批补；引擎侧可见文案（场景名、规则层名与说明、Mock 节点/分组名）待引擎侧本地化；指令解析仍只认中英关键词。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）。
 
 ## 总览

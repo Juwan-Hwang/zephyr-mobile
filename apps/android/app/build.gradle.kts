@@ -35,7 +35,8 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    androidResources { localeFilters += listOf("zh-rCN") }
+    // Ship only the App's own languages (keeps library translations out); keep in sync with res/xml/locales_config.xml.
+    androidResources { localeFilters += listOf("en", "zh") }
     buildFeatures { compose = true; buildConfig = true }
     packaging { resources.excludes += "/META-INF/{AL2.0,LGPL2.1}" }
 }

@@ -2,6 +2,7 @@ package com.zephyr.app.ui.nav
 
 import com.zephyr.design.components.ZToast
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.zIndex
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.padding
@@ -34,10 +35,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.zephyr.app.R
 import com.zephyr.app.di.AppGraph
 import com.zephyr.app.ui.activity.ActivitySheet
 import com.zephyr.app.ui.command.CommandAction
 import com.zephyr.app.ui.command.CommandOverlay
+import com.zephyr.app.ui.common.BackTo
+import com.zephyr.app.ui.common.resolve
 import com.zephyr.app.ui.home.HomeActions
 import com.zephyr.app.ui.home.HomeScreen
 import com.zephyr.app.ui.home.HomeViewModel
@@ -65,10 +69,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @Serializable object Home
-@Serializable data class Nodes(val query: String = "", val back: String = "资料库")
-@Serializable data class Rules(val query: String = "", val back: String = "资料库")
-@Serializable data class Subs(val back: String = "资料库")
-@Serializable data class SettingsRoute(val back: String = "资料库")
+@Serializable data class Nodes(val query: String = "", val back: BackTo = BackTo.LIBRARY)
+@Serializable data class Rules(val query: String = "", val back: BackTo = BackTo.LIBRARY)
+@Serializable data class Subs(val back: BackTo = BackTo.LIBRARY)
+@Serializable data class SettingsRoute(val back: BackTo = BackTo.LIBRARY)
 @Serializable object Logs
 @Serializable object Today
 @Serializable object Onboarding
@@ -99,7 +103,7 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
         val nav = rememberNavController()
         // Review A-P2-4: overlays survive rotation / fold / process death.
         var library by rememberSaveable { mutableStateOf(false) }
-        val backTo: (String) -> Unit = { label -> nav.popBackStack(); if (label == "资料库") library = true }
+        val backTo: (BackTo) -> Unit = { to -> nav.popBackStack(); if (to == BackTo.LIBRARY) library = true }
         var scene by remember { mutableStateOf<Scene?>(null) }
         var activity by rememberSaveable { mutableStateOf(false) }
         var traceHost by rememberSaveable { mutableStateOf<String?>(null) }
@@ -130,13 +134,13 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                         home,
                         HomeActions(
                             onToggle = onToggle,
-                            onSettings = { nav.navigate(SettingsRoute(back = "首页")) },
+                            onSettings = { nav.navigate(SettingsRoute(back = BackTo.HOME)) },
                             onLibrary = { library = true },
                             onCommand = { command = true },
                             onToday = { nav.navigate(Today) },
-                            onSubscriptions = { nav.navigate(Subs(back = "首页")) },
+                            onSubscriptions = { nav.navigate(Subs(back = BackTo.HOME)) },
                             onScene = { scene = it },
-                            onChangeGlobalNode = { nav.navigate(Nodes(back = "首页")) },
+                            onChangeGlobalNode = { nav.navigate(Nodes(back = BackTo.HOME)) },
                             onActivity = { activity = true },
                         ),
                     )
@@ -196,8 +200,8 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
             LaunchedEffect(window) { home.toastWindowMs = window }
             ZToast(
                 visible = toast != null,
-                message = toast?.message ?: "",
-                action = if (toast?.let { it.undoAction != null || (it.sceneId != null && it.previousNodeId != null) } == true) "撤销" else null,
+                message = toast?.message?.resolve() ?: "",
+                action = if (toast?.let { it.undoAction != null || (it.sceneId != null && it.previousNodeId != null) } == true) stringResource(R.string.common_undo) else null,
                 onAction = { home.undo() },
                 durationMs = window,
                 key = toast?.serial,
@@ -206,8 +210,8 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
             CommandOverlay(command, { command = false }) { a ->
                 command = false
                 when (a) {
-                    is CommandAction.TestRule -> nav.navigate(Rules(a.input, back = "首页"))
-                    is CommandAction.OpenNodes -> nav.navigate(Nodes(a.query, back = "首页"))
+                    is CommandAction.TestRule -> nav.navigate(Rules(a.input, back = BackTo.HOME))
+                    is CommandAction.OpenNodes -> nav.navigate(Nodes(a.query, back = BackTo.HOME))
                     is CommandAction.Apply -> home.applyCommand(a.plan)
                 }
             }

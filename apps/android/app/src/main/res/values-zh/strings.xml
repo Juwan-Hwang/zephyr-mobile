@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 简体中文。与 values/strings.xml 一一对应；新增文案两边同时加。 -->
+<resources>
+
+    <!-- ── Shared ── -->
+    <string name="common_connect">连接</string>
+    <string name="common_disconnect">断开连接</string>
+    <string name="common_cancel">取消</string>
+    <string name="common_apply">应用</string>
+    <string name="common_change">更改</string>
+    <string name="common_undo">撤销</string>
+    <string name="common_share">分享</string>
+    <string name="common_none">无</string>
+    <string name="common_on">开</string>
+    <string name="common_off">关</string>
+    <string name="common_today">今日</string>
+    <string name="common_scenes">场景</string>
+    <string name="common_nodes">节点</string>
+    <string name="common_rules">规则</string>
+    <string name="common_subscriptions">订阅</string>
+    <string name="common_settings">设置</string>
+    <string name="common_library">资料库</string>
+    <string name="common_home">首页</string>
+    <string name="common_direct">直连</string>
+    <string name="common_local_network">本机网络</string>
+    <string name="common_exit_ip_changes">出口 IP 将更改</string>
+    <string name="common_adding">正在添加…</string>
+    <string name="common_add">添加</string>
+    <string name="common_updating">正在更新…</string>
+    <string name="common_retesting">检测中…</string>
+    <string name="common_local_data_note">订阅与流量数据仅保存在此设备上。</string>
+    <string name="common_back_to">返回%1$s</string>
+    <plurals name="common_node_count">
+        <item quantity="other">%1$s 个节点</item>
+    </plurals>
+    <plurals name="common_available_count">
+        <item quantity="other">%1$d 个可用</item>
+    </plurals>
+    <string name="common_status_connected">已连接</string>
+    <string name="common_status_connecting">连接中</string>
+    <string name="common_status_connecting_ellipsis">连接中…</string>
+    <string name="common_status_disconnecting">正在断开</string>
+    <string name="common_status_failed">连接失败</string>
+    <string name="common_status_disconnected">未连接</string>
+    <string name="common_mode_rule">规则</string>
+    <string name="common_mode_global">全局</string>
+    <string name="common_mode_direct">直连</string>
+    <string name="common_mode_rule_hint">按场景分流</string>
+    <string name="common_mode_global_hint">所有流量经由一个节点</string>
+    <string name="common_mode_direct_hint">不经过代理</string>
+    <string name="common_try_again">请重试</string>
+    <string name="common_scene_ai">AI</string>
+    <string name="common_scene_video">视频</string>
+    <string name="common_scene_other">其他</string>
+    <string name="common_no_results">无结果</string>
+    <string name="common_current">当前</string>
+    <string name="common_list_separator">%1$s、%2$s</string>
+    <string name="common_pair_and">%1$s 和 %2$s</string>
+    <string name="common_source_group">订阅分组</string>
+    <string name="common_source_auto">Zephyr 优选</string>
+    <string name="common_all">全部</string>
+    <plurals name="common_region_count">
+        <item quantity="other">%1$d 个地区</item>
+    </plurals>
+
+    <!-- ── Home ── -->
+    <string name="home_global_title">全局模式</string>
+    <string name="home_global_body">所有流量均经由%1$s。场景已暂停。</string>
+    <string name="home_global_body_any">所有流量均经由同一节点。场景已暂停。</string>
+    <string name="home_global_use_rule">使用规则模式</string>
+    <string name="home_global_change_node">更换节点</string>
+    <string name="home_global_change_note">所有 App 的出口都将变为%1$s。</string>
+    <string name="home_global_change_to">更改为%1$s</string>
+    <plurals name="home_subs_more">
+        <item quantity="other">更多 %1$d 个订阅</item>
+    </plurals>
+    <string name="home_scan_progress">正在检测 %1$d/%2$d</string>
+    <string name="home_scan_running">正在检测…</string>
+    <string name="home_scenes_tested">%1$s检测</string>
+    <string name="home_today_usage">今日 %1$s</string>
+    <string name="home_spark_a11y">最近 90 秒下载速率</string>
+    <string name="home_switch_mode">切换模式</string>
+    <plurals name="home_scene_count">
+        <item quantity="other">%1$d 个场景</item>
+    </plurals>
+    <string name="home_failure_no_subscription">先添加一个订阅</string>
+    <string name="home_failure_vpn_permission">需要允许 VPN 连接</string>
+    <string name="home_failure_network">网络不可用</string>
+    <string name="home_failure_core">内核未能启动</string>
+    <string name="home_action_switch_mode">切换模式</string>
+    <string name="home_action_preview_exit">预览出口</string>
+    <string name="home_action_retest">重新检测</string>
+    <string name="home_action_switch_source">切换来源</string>
+    <string name="home_action_switch_exit">切换出口</string>
+    <string name="home_action_load_nodes">读取节点</string>
+    <string name="home_action_switch_node">切换节点</string>
+    <string name="home_action_undo">撤销</string>
+    <string name="home_error_not_connected">%1$s 需要先连接</string>
+    <string name="home_error_failed">%1$s 失败</string>
+    <string name="home_error_node_gone">%1$s 失败：节点已不存在</string>
+    <string name="home_failover_none">%1$s 出口无响应，出口 IP 不会自动更换</string>
+    <string name="home_failover_switched">%1$s 出口已自动切换到 %2$s</string>
+    <string name="home_switched_to">已切换至%1$s</string>
+    <string name="home_now_uses">%1$s 现使用%2$s</string>
+    <string name="home_now_direct">%1$s 现为直连</string>
+    <string name="home_now_all_nodes">%1$s现使用全部节点</string>
+    <string name="home_now_uses_uhd">%1$s现使用%2$s（仅 4K）</string>
+    <string name="home_now_uhd_only">%1$s现仅使用 4K 节点</string>
+    <string name="home_apply_failed">未能应用：%1$s</string>
+    <string name="home_scene_next_region">下一个地区：%1$s</string>
+    <string name="home_scene_prev_region">上一个地区：%1$s</string>
+    <string name="home_scene_details_a11y">%1$s 场景详情</string>
+    <string name="home_scene_testing">检测中</string>
+    <string name="home_scene_services_down">%1$s 不可用</string>
+    <string name="home_scene_services_ok">%1$s 正常</string>
+    <string name="home_pin_line">%1$s：%2$s</string>
+    <string name="home_confirm_apps">更改 %1$s 的出口 IP？</string>
+    <string name="home_confirm_scene">更改 %1$s 场景的出口 IP？</string>
+    <string name="home_confirm_unchanged">%1$s 保持不变。</string>
+    <string name="home_scrub_hint">左右滑动以切换地区</string>
+
+    <!-- ── Scene sheet ── -->
+    <plurals name="scene_available_unit">
+        <item quantity="other">个可用节点</item>
+    </plurals>
+    <plurals name="scene_tested_from">
+        <item quantity="other">检测自 %1$d 个订阅</item>
+    </plurals>
+    <string name="scene_pinned_for">%1$s 固定</string>
+    <string name="scene_when_unavailable">节点不可用时</string>
+    <string name="scene_ask">询问</string>
+    <string name="scene_auto_switch">自动切换</string>
+    <string name="scene_node_scope">节点范围</string>
+    <string name="scene_uhd_only">仅 4K 节点</string>
+    <string name="scene_pinned_value">%1$s（固定）</string>
+    <string name="scene_retest">重新检测</string>
+    <string name="scene_note">优选结果仅保存在 Zephyr 中，订阅配置保持原样。</string>
+    <string name="scene_note_tested">%1$s 上次检测 %2$s。</string>
+
+    <!-- ── Command layer ── -->
+    <string name="command_placeholder">搜索或输入指令</string>
+    <string name="command_section_suggestions">建议</string>
+    <string name="command_section_command">指令</string>
+    <string-array name="command_examples">
+        <item>Gemini 走日本</item>
+        <item>GitHub 直连</item>
+        <item>视频只用 4K 节点</item>
+        <item>香港</item>
+    </string-array>
+    <string name="command_see_all_nodes">在节点库中查看全部 %1$s 个</string>
+    <string name="command_test_rule">%1$s 走哪里？</string>
+    <string name="command_chip_scene">场景</string>
+    <string name="command_chip_service">服务</string>
+    <string name="command_chip_region">地区</string>
+    <string name="command_chip_action">操作</string>
+    <string name="command_chip_scope">范围</string>
+    <string name="command_region_jp">日本</string>
+    <string name="command_region_us">美国</string>
+    <string name="command_region_hk">香港</string>
+    <string name="command_region_sg">新加坡</string>
+    <string name="command_region_tw">台湾</string>
+    <string name="command_region_gb">英国</string>
+    <string name="command_region_kr">韩国</string>
+    <string name="command_region_de">德国</string>
+    <string name="command_plan_exit_title">%1$s 使用%2$s节点</string>
+    <string name="command_plan_no_nodes">%1$s中没有%2$s节点。</string>
+    <string name="command_scene_ai">AI 场景</string>
+    <string name="command_scene_named">%1$s场景</string>
+    <string name="command_no_nodes_available">无可用节点</string>
+    <plurals name="command_plan_exit_available">
+        <item quantity="other">%1$d 个可用，将使用%2$s。</item>
+    </plurals>
+    <string name="command_plan_releases_pin">%1$s 将不再使用固定出口 %2$s。</string>
+    <string name="command_plan_fallback_pause">%1$s节点均不可用时，%2$s 将暂停。</string>
+    <string name="command_plan_fallback_scene">%1$s节点均不可用时，将使用场景中的其他节点。</string>
+    <string name="command_uhd_title_all">%1$s使用全部节点</string>
+    <string name="command_uhd_title_only">%1$s仅使用 4K 节点</string>
+    <string name="command_uhd_clear_note">%1$s场景当前仅使用 4K 节点，将恢复使用全部节点。当前节点保持不变。</string>
+    <string name="command_uhd_none">没有支持 4K 的节点。</string>
+    <plurals name="command_uhd_untested">
+        <item quantity="other">有 %1$d 个 4K 节点尚未测速，应用后请重测场景。</item>
+    </plurals>
+    <plurals name="command_uhd_matching_keep">
+        <item quantity="other">%1$d 个中 %2$d 个支持 4K，当前节点保持不变。</item>
+    </plurals>
+    <plurals name="command_uhd_matching_switch">
+        <item quantity="other">%1$d 个中 %2$d 个支持 4K，将使用%3$s。</item>
+    </plurals>
+    <string name="command_uhd_fastest">最快的 4K 节点</string>
+    <string name="command_uhd_auto_note">之后自动换最快只在 4K 节点中选择。</string>
+    <string name="command_direct_title">%1$s 直连</string>
+    <string name="command_direct_note">%1$s 的流量将不经过代理。</string>
+    <string name="command_direct_from_proxy">代理</string>
+    <string name="command_zephyr_only">仅在 Zephyr 中生效，订阅配置保持原样。</string>
+
+    <!-- ── Recent connections ── -->
+    <string name="activity_title">最近连接</string>
+    <string name="activity_back">‹ 最近连接</string>
+    <string name="activity_empty">连接后这里会显示最近访问的域名。</string>
+    <string name="activity_host_a11y">%1$s 连接详情</string>
+    <string name="activity_close_host_a11y">关闭 %1$s 的连接</string>
+    <string name="activity_no_app_note">暂未取得发起连接的应用，只显示域名。</string>
+    <string name="activity_close_none">没有活动的连接</string>
+    <plurals name="activity_closed">
+        <item quantity="other">已关闭 %1$d 个连接</item>
+    </plurals>
+    <plurals name="activity_close_failed">
+        <item quantity="other">连接未能关闭</item>
+    </plurals>
+    <plurals name="activity_close_partial">
+        <item quantity="other">%1$d 个连接未能关闭</item>
+    </plurals>
+
+    <!-- ── Connection trace ── -->
+    <plurals name="trace_connections">
+        <item quantity="other">%1$d 个连接</item>
+    </plurals>
+    <string name="trace_step_rule">规则</string>
+    <string name="trace_step_scene">场景</string>
+    <string name="trace_step_node">节点</string>
+    <string name="trace_step_exit">出口</string>
+    <string name="trace_from">来自 %1$s</string>
+    <string name="trace_via">经由 %1$s</string>
+    <plurals name="trace_exit_stable">
+        <item quantity="other">%1$d 天未变化</item>
+    </plurals>
+    <string name="trace_this_connection">本次连接</string>
+    <string name="trace_option_unchanged">不变</string>
+    <string name="trace_override_failed">未能更改：%1$s</string>
+    <string name="trace_always_apply">始终应用</string>
+    <string name="trace_always_apply_hint">关闭时仅更改本次连接</string>
+
+    <!-- ── Library ── -->
+    <string name="library_widgets">小组件与快捷开关</string>
+
+    <!-- ── Nodes ── -->
+    <plurals name="nodes_total_unit">
+        <item quantity="other">个</item>
+    </plurals>
+    <plurals name="nodes_from_subs">
+        <item quantity="other">来自 %1$d 个订阅</item>
+    </plurals>
+    <string name="nodes_search_placeholder">地区、城市或线路</string>
+    <string name="nodes_search_stats">%1$s 个 · %2$s</string>
+    <string name="nodes_empty_title">还没有节点</string>
+    <string name="nodes_empty_message">导入订阅后，节点会出现在这里</string>
+    <string name="nodes_empty_action">导入订阅</string>
+    <string name="nodes_no_match">没有与“%1$s”匹配的节点</string>
+    <string name="nodes_tested">已检测 %1$s</string>
+    <string name="nodes_jump_to">跳到 %1$s</string>
+
+    <!-- ── Rules ── -->
+    <string name="rules_add_override_a11y">为域名添加覆写</string>
+    <plurals name="rules_total_unit">
+        <item quantity="other">条</item>
+    </plurals>
+    <plurals name="rules_summary">
+        <item quantity="other">%1$d 层 · 已编译 · 磁盘占用 %2$s</item>
+    </plurals>
+    <string name="rules_test_placeholder">测试域名或 IP</string>
+    <string name="rules_test_hint">输入域名或 IP，查看匹配的规则与出口。</string>
+    <string name="rules_match_order">匹配顺序</string>
+    <string name="rules_top_to_bottom">从上到下</string>
+    <string name="rules_other_traffic">其余流量</string>
+    <string name="rules_note">规则集在设备上编译为只读索引，按需从磁盘读取。订阅更新时，覆写保持不变。</string>
+    <string name="rules_kind_override">覆写</string>
+    <string name="rules_kind_subscription">订阅</string>
+    <string name="rules_kind_domain">域名</string>
+    <string name="rules_kind_other">其他</string>
+    <string name="rules_step_request">请求</string>
+    <string name="rules_step_layer">第 %1$d 层 · %2$s</string>
+    <string name="rules_step_result">结果</string>
+    <string name="rules_blocked">已拦截</string>
+    <string name="rules_step_scene">场景 · %1$s</string>
+    <string name="rules_step_exit_ip">出口 IP</string>
+    <string name="rules_took">用时 %1$s</string>
+    <string name="rules_kind_ip">IP</string>
+
+    <!-- ── Subscriptions ── -->
+    <string name="subs_add">添加订阅</string>
+    <string name="subs_paste_placeholder">粘贴订阅链接</string>
+    <string name="subs_paste_link">粘贴链接</string>
+    <string name="subs_paste_clipboard">从剪贴板粘贴</string>
+    <string name="subs_scan_qr">扫描二维码</string>
+    <string name="subs_coming_soon">即将支持</string>
+    <string name="subs_import_desktop">从电脑上的 Zephyr 导入</string>
+    <string name="subs_import_file">从文件导入</string>
+    <plurals name="subs_added">
+        <item quantity="other">已添加 %1$s（%2$s 个节点）</item>
+    </plurals>
+    <string name="subs_error_clipboard_empty">剪贴板是空的</string>
+    <string name="subs_hint_desktop">在电脑端打开 设置 › 移动端，即可显示二维码</string>
+    <string name="subs_error_read_file">无法读取这个文件</string>
+    <string name="subs_error_fetch">无法下载这个订阅，请检查链接或网络</string>
+    <string name="subs_error_invalid_file">这不是有效的配置文件</string>
+    <string name="subs_error_invalid_link">这不是有效的订阅链接</string>
+    <plurals name="subs_total_unit">
+        <item quantity="other">个</item>
+    </plurals>
+    <plurals name="subs_update_every">
+        <item quantity="other">每 %1$d 小时更新</item>
+    </plurals>
+    <string name="subs_diff_updating">%1$s 正在更新…</string>
+    <string name="subs_diff_updated">%1$s 已更新</string>
+    <string name="subs_rule_changes">规则变更</string>
+    <string name="subs_overrides_kept">覆写已保留</string>
+    <string name="subs_scenes_retested">场景池已重新检测</string>
+    <string name="subs_section_data">流量</string>
+    <string name="subs_this_month">本月</string>
+    <string name="subs_swipe_updating">更新中</string>
+    <string name="subs_swipe_update">更新</string>
+    <string name="subs_swipe_confirm_delete">确认删除</string>
+    <string name="subs_swipe_delete">删除</string>
+    <string name="subs_error_update">无法更新 %1$s</string>
+    <string name="subs_error_delete">无法删除 %1$s</string>
+    <string name="subs_remaining">剩余</string>
+    <plurals name="subs_others">
+        <item quantity="other">其他 %1$d 个</item>
+    </plurals>
+    <string name="subs_section_update">更新</string>
+    <string name="subs_auto_update">自动更新</string>
+    <plurals name="subs_every_hours">
+        <item quantity="other">每 %1$d 小时</item>
+    </plurals>
+    <string name="subs_update_wifi_only">仅在 Wi‑Fi 下更新</string>
+    <string name="subs_show_changes">更新前显示更改</string>
+    <string name="subs_update_all">立即全部更新</string>
+
+    <!-- ── Onboarding ── -->
+    <string name="onboarding_cancel_import_a11y">取消导入</string>
+    <string name="onboarding_choose_mode">选择使用方式</string>
+    <string name="onboarding_simple">简单</string>
+    <string name="onboarding_simple_desc">使用订阅提供的分组。节点不可用时自动处理。</string>
+    <string name="onboarding_optimized">优选</string>
+    <string name="onboarding_optimized_desc">每天在 Wi‑Fi 下检测节点。AI 与视频仅使用检测通过的节点。每次约 3 MB。</string>
+    <string name="onboarding_continue">继续</string>
+    <string name="onboarding_change_later">可随时在设置中更改。</string>
+
+    <!-- ── Settings ── -->
+    <string name="settings_trusted_wifi">受信任的 Wi‑Fi</string>
+    <string name="settings_local_proxy">本地代理端口</string>
+    <string name="settings_section_connection">连接</string>
+    <string name="settings_on_demand">按需连接</string>
+    <string name="settings_trusted_wifi_hint">连接后自动断开</string>
+    <string name="settings_password_required">需要密码</string>
+    <string name="settings_section_testing">检测</string>
+    <string name="settings_test_wifi_only">仅在 Wi‑Fi 下测速</string>
+    <string name="settings_keep_results">结果保留</string>
+    <plurals name="settings_hours">
+        <item quantity="other">%1$d 小时</item>
+    </plurals>
+    <string name="settings_section_storage">存储</string>
+    <string name="settings_storage_title">节点与规则</string>
+    <string name="settings_storage_detail">节点 %1$s · 规则 %2$s · 可用 %3$s</string>
+    <string name="settings_appearance">外观</string>
+    <string name="settings_appearance_system">跟随系统</string>
+    <string name="settings_appearance_dark">深色</string>
+    <string name="settings_appearance_light">浅色</string>
+    <string name="settings_accent">强调色</string>
+    <string name="settings_accent_blue">蓝色</string>
+    <string name="settings_accent_green">绿色</string>
+    <string name="settings_accent_orange">橙色</string>
+    <string name="settings_accent_pink">粉色</string>
+    <string name="settings_accent_purple">紫色</string>
+    <string name="settings_accent_red">红色</string>
+    <string name="settings_accent_teal">青色</string>
+    <string name="settings_accent_indigo">靛蓝</string>
+    <string name="settings_accent_yellow">黄色</string>
+    <string name="settings_accent_graphite">石墨</string>
+    <string name="settings_section_privacy">隐私</string>
+    <string name="settings_share_diagnostics">共享诊断数据</string>
+    <string name="settings_section_diagnostics">诊断</string>
+    <string name="settings_local_data_note">订阅、节点与流量数据仅保存在此设备上。</string>
+
+    <!-- ── Logs ── -->
+    <string name="logs_title">日志</string>
+    <string name="logs_level_debug">调试</string>
+    <string name="logs_level_info">信息</string>
+    <string name="logs_level_warning">警告</string>
+    <string name="logs_level_error">错误</string>
+    <string name="logs_resume">继续</string>
+    <string name="logs_pause">暂停</string>
+    <string name="logs_clear">清空</string>
+    <string name="logs_empty">暂无日志</string>
+    <string name="logs_line_a11y">%1$s %2$s %3$s</string>
+
+    <!-- ── Today card ── -->
+    <string name="today_style_night">夜</string>
+    <string name="today_style_dawn">晨</string>
+    <string name="today_style_mist">雾</string>
+    <string name="today_saved">已存储到相册</string>
+    <string name="today_save_failed">无法存储图像</string>
+    <string name="today_storage_permission">需要存储权限才能保存图像</string>
+    <string name="today_date_pattern">M月d日 · EEEE</string>
+    <plurals name="today_regions">
+        <item quantity="other">个地区</item>
+    </plurals>
+    <plurals name="today_hours_online">
+        <item quantity="other">小时在线</item>
+    </plurals>
+    <string name="today_fastest">ms 最快</string>
+    <string name="today_save_image">存储图像</string>
+    <string name="today_pattern_note">图案由今天的流量生成，不含节点名称与 IP 地址。</string>
+
+    <!-- ── Widgets ── -->
+    <string name="widget_label">Zephyr 状态</string>
+    <string name="widget_description">连接状态、实时速率与场景</string>
+    <string name="widget_usage_label">Zephyr 今日用量</string>
+    <string name="widget_usage_description">今日流量与 24 小时分布</string>
+    <string name="widget_today">今日 %1$s %2$s</string>
+
+    <!-- ── Notifications ── -->
+    <string name="notif_channel_vpn">连接状态</string>
+    <string name="notif_channel_vpn_desc">已连接时常驻显示速率与场景</string>
+    <string name="notif_channel_alerts">订阅提醒</string>
+    <string name="notif_channel_alerts_desc">订阅到期与流量不足</string>
+    <string name="notif_action_global">全局模式</string>
+    <string name="notif_action_rule">规则模式</string>
+    <string name="notif_route_global">全局 · %1$s</string>
+    <string name="notif_route_global_any">所有流量经由同一节点</string>
+    <string name="notif_expiry_title">%1$s 将于 %2$s 到期</string>
+    <string name="notif_expiry_text">剩余 %1$s</string>
+
+    <!-- ── Quick Settings tile ── -->
+    <string name="tile_a11y">%1$s，%2$s</string>
+</resources>

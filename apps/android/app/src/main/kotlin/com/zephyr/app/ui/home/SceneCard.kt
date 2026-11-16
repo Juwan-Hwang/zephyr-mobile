@@ -1,6 +1,8 @@
 package com.zephyr.app.ui.home
 
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.animation.AnimatedContent
@@ -40,10 +42,14 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import com.zephyr.app.R
+import com.zephyr.app.ui.common.joinAnd
+import com.zephyr.app.ui.common.joinList
 import com.zephyr.design.components.ZSurfaceLevel
 import androidx.compose.foundation.shape.RoundedCornerShape
 import com.zephyr.design.components.ZButton
@@ -115,6 +121,7 @@ private fun SceneRow(
     onOpen: () -> Unit,
 ) {
     val c = ZTheme.colors
+    val res = LocalResources.current
     val hf = LocalHapticFeedback.current
     val swipeable = s.source != SceneSource.SUBSCRIPTION_GROUP && slots.size > 1
     val current = slots.indexOfFirst { it.id == s.selected.id }.coerceAtLeast(0)
@@ -160,11 +167,11 @@ private fun SceneRow(
             )
             .semantics {
                 if (swipeable) customActions = listOfNotNull(
-                    slots.getOrNull(current + 1)?.let { n -> CustomAccessibilityAction("下一个地区：${n.name}") { onPick(n); true } },
-                    slots.getOrNull(current - 1)?.let { n -> CustomAccessibilityAction("上一个地区：${n.name}") { onPick(n); true } },
+                    slots.getOrNull(current + 1)?.let { n -> CustomAccessibilityAction(res.getString(R.string.home_scene_next_region, n.name)) { onPick(n); true } },
+                    slots.getOrNull(current - 1)?.let { n -> CustomAccessibilityAction(res.getString(R.string.home_scene_prev_region, n.name)) { onPick(n); true } },
                 )
             }
-            .zPressable(row = true, label = "${s.name} 场景详情", onClick = onOpen)
+            .zPressable(row = true, label = stringResource(R.string.home_scene_details_a11y, s.name), onClick = onOpen)
             .padding(horizontal = 16.dp, vertical = 15.dp), // review H-P2-4: `.row` 15/16
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -179,15 +186,16 @@ private fun SceneRow(
             val down = s.services.filter { !it.ok }
             if (probing != null) {
                 // Prototype 10: "4 个可用" over a 96 dp accent bar that fills as the pool scan advances.
-                ZText(if (s.available > 0) "${s.available} 个可用 · 检测中" else "检测中", style = ZTheme.type.callout.copy(fontSize = 13.sp), color = c.text3, maxLines = lines)
+                val testing = stringResource(R.string.home_scene_testing)
+                ZText(if (s.available > 0) pluralStringResource(R.plurals.common_available_count, s.available, s.available) + " · " + testing else testing, style = ZTheme.type.callout.copy(fontSize = 13.sp), color = c.text3, maxLines = lines)
                 Spacer(Modifier.height(6.dp))
                 val shown by androidx.compose.animation.core.animateFloatAsState(probing, label = "scan")
                 com.zephyr.design.components.ZProgressBar(shown, Modifier.width(96.dp), color = c.accent)
             } else ZText(
                 when {
-                    down.isNotEmpty() -> "${down.joinToString("、") { it.name }} 不可用"
-                    s.source == SceneSource.SUBSCRIPTION_GROUP -> "订阅分组"
-                    else -> "${s.available} 个可用"
+                    down.isNotEmpty() -> stringResource(R.string.home_scene_services_down, joinList(down.map { it.name }))
+                    s.source == SceneSource.SUBSCRIPTION_GROUP -> stringResource(R.string.common_source_group)
+                    else -> pluralStringResource(R.plurals.common_available_count, s.available, s.available)
                 },
                 style = ZTheme.type.callout.copy(fontSize = 13.sp), color = if (down.isNotEmpty()) c.danger else c.text3, maxLines = lines,
             )
@@ -207,8 +215,8 @@ private fun SceneRow(
             }
             // Prototype 11 (zero): "Claude 不可用" left, "GPT、Gemini 正常" right, replacing the pin line.
             val up = s.services.filter { it.ok }
-            val serviceLine = if (s.services.any { !it.ok } && up.isNotEmpty()) "${up.joinToString("、") { it.name }} 正常" else null
-            val sub = serviceLine ?: s.exceptions.firstOrNull()?.let { "${it.app}：${it.node.name}" } ?: s.note
+            val serviceLine = if (s.services.any { !it.ok } && up.isNotEmpty()) stringResource(R.string.home_scene_services_ok, joinList(up.map { it.name })) else null
+            val sub = serviceLine ?: s.exceptions.firstOrNull()?.let { stringResource(R.string.home_pin_line, it.app, it.node.name) } ?: s.note
             if (sub != null) {
                 Spacer(Modifier.height(5.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -254,7 +262,7 @@ private fun ExitConfirm(p: PendingChange, onConfirm: () -> Unit, onCancel: () ->
             Box(Modifier.size(6.dp).background(c.warning, CircleShape))
             Spacer(Modifier.width(8.dp))
             ZText(
-                if (apps.isNotEmpty()) "更改 ${apps.joinToString(" 和 ")} 的出口 IP？" else "更改 ${p.scene.name} 场景的出口 IP？",
+                if (apps.isNotEmpty()) stringResource(R.string.home_confirm_apps, LocalResources.current.joinAnd(apps)) else stringResource(R.string.home_confirm_scene, p.scene.name),
                 style = ZTheme.type.body.copy(fontSize = androidx.compose.ui.unit.TextUnit(14f, androidx.compose.ui.unit.TextUnitType.Sp)),
             )
         }
@@ -267,12 +275,12 @@ private fun ExitConfirm(p: PendingChange, onConfirm: () -> Unit, onCancel: () ->
         }
         if (p.change.unchangedApps.isNotEmpty()) {
             Spacer(Modifier.height(6.dp))
-            ZText("${p.change.unchangedApps.joinToString("、")} 保持不变。", style = ZTheme.type.footnote.copy(fontSize = androidx.compose.ui.unit.TextUnit(12f, androidx.compose.ui.unit.TextUnitType.Sp)), color = c.text3)
+            ZText(stringResource(R.string.home_confirm_unchanged, joinList(p.change.unchangedApps)), style = ZTheme.type.footnote.copy(fontSize = androidx.compose.ui.unit.TextUnit(12f, androidx.compose.ui.unit.TextUnitType.Sp)), color = c.text3)
         }
         Spacer(Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            CompactButton("更改", c.primaryButton, c.onPrimaryButton, onConfirm, Modifier.weight(1f))
-            CompactButton("取消", c.hairline, c.text1, onCancel, Modifier.weight(1f))
+            CompactButton(stringResource(R.string.common_change), c.primaryButton, c.onPrimaryButton, onConfirm, Modifier.weight(1f))
+            CompactButton(stringResource(R.string.common_cancel), c.hairline, c.text1, onCancel, Modifier.weight(1f))
         }
     }
 }
@@ -311,7 +319,7 @@ private fun ScrubCoach() {
         label = "nudge",
     )
     ZText(
-        "左右滑动以切换地区",
+        stringResource(R.string.home_scrub_hint),
         Modifier
             .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)

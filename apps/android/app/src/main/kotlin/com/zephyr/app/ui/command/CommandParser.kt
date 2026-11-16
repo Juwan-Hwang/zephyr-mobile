@@ -86,7 +86,4 @@ object CommandParser {
     }
 
     private fun overlaps(spans: List<Span>, i: Int, len: Int) = spans.any { i < it.start + it.length && it.start < i + len }
-
-    /** Prototype SUG: tapping one types it into the field (never runs an action). */
-    val EXAMPLES = listOf("Gemini 走日本", "GitHub 直连", "视频只用 4K 节点", "香港")
 }

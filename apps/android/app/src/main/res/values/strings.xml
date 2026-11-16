@@ -1,16 +1,502 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- English: default and fallback locale. Chinese lives in values-zh. Keys: <screen>_<what>, snake_case. -->
 <resources>
     <string name="app_name" translatable="false">Zephyr</string>
-    <string name="widget_label">Zephyr 状态</string>
-    <string name="widget_usage_label">Zephyr 今日用量</string>
-    <string name="widget_usage_description">今日流量与 24 小时分布</string>
-    <string name="widget_description">连接状态、实时速率与场景</string>
-    <string name="channel_vpn">连接状态</string>
-    <string name="channel_vpn_desc">已连接时常驻显示速率与场景</string>
-    <string name="channel_alerts">订阅提醒</string>
-    <string name="channel_alerts_desc">订阅到期与流量不足</string>
-    <string name="action_disconnect">断开连接</string>
-    <string name="action_global">全局模式</string>
-    <string name="action_rule">规则模式</string>
-    <string name="tile_off">未连接</string>
+
+    <!-- ── Shared ── -->
+    <string name="common_connect">Connect</string>
+    <string name="common_disconnect">Disconnect</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_apply">Apply</string>
+    <string name="common_change">Change</string>
+    <string name="common_undo">Undo</string>
+    <string name="common_share">Share</string>
+    <!-- Empty value of a settings row -->
+    <string name="common_none">None</string>
+    <string name="common_on">On</string>
+    <string name="common_off">Off</string>
+    <string name="common_today">Today</string>
+    <string name="common_scenes">Scenes</string>
+    <string name="common_nodes">Nodes</string>
+    <string name="common_rules">Rules</string>
+    <string name="common_subscriptions">Subscriptions</string>
+    <string name="common_settings">Settings</string>
+    <string name="common_library">Library</string>
+    <!-- Back link to the home screen -->
+    <string name="common_home">Home</string>
+    <!-- A connection that bypasses the proxy -->
+    <string name="common_direct">Direct</string>
+    <!-- Exit when traffic goes direct -->
+    <string name="common_local_network">This device’s network</string>
+    <string name="common_exit_ip_changes">Exit IP will change</string>
+    <string name="common_adding">Adding…</string>
+    <string name="common_add">Add</string>
+    <string name="common_updating">Updating…</string>
+    <string name="common_retesting">Testing…</string>
+    <string name="common_local_data_note">Subscriptions and traffic data are stored only on this device.</string>
+    <!-- Accessibility: page back link, %1$s is the previous page -->
+    <string name="common_back_to">Back to %1$s</string>
+    <!-- %1$s is a grouped number, e.g. 13,109,802 -->
+    <plurals name="common_node_count">
+        <item quantity="one">%1$s node</item>
+        <item quantity="other">%1$s nodes</item>
+    </plurals>
+    <plurals name="common_available_count">
+        <item quantity="one">%1$d available</item>
+        <item quantity="other">%1$d available</item>
+    </plurals>
+    <string name="common_status_connected">Connected</string>
+    <string name="common_status_connecting">Connecting</string>
+    <string name="common_status_connecting_ellipsis">Connecting…</string>
+    <string name="common_status_disconnecting">Disconnecting</string>
+    <string name="common_status_failed">Connection failed</string>
+    <string name="common_status_disconnected">Not connected</string>
+    <string name="common_mode_rule">Rule</string>
+    <string name="common_mode_global">Global</string>
+    <string name="common_mode_direct">Direct</string>
+    <string name="common_mode_rule_hint">Route by scene</string>
+    <string name="common_mode_global_hint">All traffic through one node</string>
+    <string name="common_mode_direct_hint">Bypass the proxy</string>
+    <string name="common_try_again">Try again</string>
+    <string name="common_scene_ai">AI</string>
+    <string name="common_scene_video">Video</string>
+    <string name="common_scene_other">Other</string>
+    <string name="common_no_results">No results</string>
+    <!-- The node in use now -->
+    <string name="common_current">Current</string>
+    <!-- Joins list items: "GPT, Gemini" -->
+    <string name="common_list_separator">%1$s, %2$s</string>
+    <!-- Joins names: "GPT and Claude" -->
+    <string name="common_pair_and">%1$s and %2$s</string>
+    <!-- Scene source: groups from the subscription -->
+    <string name="common_source_group">Subscription group</string>
+    <!-- Scene source: nodes Zephyr tests and picks (feature name, as on iOS) -->
+    <string name="common_source_auto">Zephyr Picks</string>
+    <string name="common_all">All</string>
+    <plurals name="common_region_count">
+        <item quantity="one">%1$d region</item>
+        <item quantity="other">%1$d regions</item>
+    </plurals>
+
+    <!-- ── Home ── -->
+    <string name="home_global_title">Global mode</string>
+    <string name="home_global_body">All traffic goes through %1$s. Scenes are paused.</string>
+    <string name="home_global_body_any">All traffic goes through one node. Scenes are paused.</string>
+    <string name="home_global_use_rule">Use rule mode</string>
+    <string name="home_global_change_node">Change node</string>
+    <string name="home_global_change_note">All apps will exit through %1$s.</string>
+    <string name="home_global_change_to">Change to %1$s</string>
+    <plurals name="home_subs_more">
+        <item quantity="one">%1$d more subscription</item>
+        <item quantity="other">%1$d more subscriptions</item>
+    </plurals>
+    <string name="home_scan_progress">Testing %1$d/%2$d</string>
+    <string name="home_scan_running">Testing…</string>
+    <!-- %1$s is a relative time: "just now", "5 min ago" -->
+    <string name="home_scenes_tested">Tested %1$s</string>
+    <!-- %1$s is an amount, e.g. 1.2 GB -->
+    <string name="home_today_usage">Today %1$s</string>
+    <string name="home_spark_a11y">Download speed, last 90 seconds</string>
+    <!-- Accessibility label of the mode picker; also the action named in errors -->
+    <string name="home_switch_mode">Switch mode</string>
+    <plurals name="home_scene_count">
+        <item quantity="one">%1$d scene</item>
+        <item quantity="other">%1$d scenes</item>
+    </plurals>
+    <string name="home_failure_no_subscription">Add a subscription first</string>
+    <string name="home_failure_vpn_permission">VPN permission needed</string>
+    <string name="home_failure_network">Network unavailable</string>
+    <string name="home_failure_core">The core couldn’t start</string>
+    <!-- Action names below fill %1$s of home_error_*; lowercase in English -->
+    <string name="home_action_switch_mode">switch mode</string>
+    <string name="home_action_preview_exit">preview the exit</string>
+    <string name="home_action_retest">retest</string>
+    <string name="home_action_switch_source">switch source</string>
+    <string name="home_action_switch_exit">switch the exit</string>
+    <string name="home_action_load_nodes">load nodes</string>
+    <string name="home_action_switch_node">switch node</string>
+    <string name="home_action_undo">undo</string>
+    <string name="home_error_not_connected">Connect first to %1$s</string>
+    <string name="home_error_failed">Couldn’t %1$s</string>
+    <string name="home_error_node_gone">Couldn’t %1$s: the node no longer exists</string>
+    <string name="home_failover_none">%1$s exit isn’t responding. The exit IP won’t change automatically.</string>
+    <string name="home_failover_switched">%1$s exit switched to %2$s automatically</string>
+    <string name="home_switched_to">Switched to %1$s</string>
+    <string name="home_now_uses">%1$s now uses %2$s</string>
+    <string name="home_now_direct">%1$s now connects directly</string>
+    <string name="home_now_all_nodes">%1$s: all nodes again</string>
+    <string name="home_now_uses_uhd">%1$s now uses %2$s (4K only)</string>
+    <string name="home_now_uhd_only">%1$s now uses only 4K nodes</string>
+    <string name="home_apply_failed">Couldn’t apply: %1$s</string>
+    <string name="home_scene_next_region">Next region: %1$s</string>
+    <string name="home_scene_prev_region">Previous region: %1$s</string>
+    <string name="home_scene_details_a11y">%1$s scene details</string>
+    <string name="home_scene_testing">Testing</string>
+    <string name="home_scene_services_down">%1$s unavailable</string>
+    <string name="home_scene_services_ok">%1$s OK</string>
+    <!-- App pinned to a node: "Claude: US-Fixed-01" -->
+    <string name="home_pin_line">%1$s: %2$s</string>
+    <string name="home_confirm_apps">Change the exit IP for %1$s?</string>
+    <string name="home_confirm_scene">Change the exit IP for the %1$s scene?</string>
+    <string name="home_confirm_unchanged">%1$s will stay the same.</string>
+    <string name="home_scrub_hint">Swipe left or right to change region</string>
+
+    <!-- ── Scene sheet ── -->
+    <!-- Unit after the big available count; no number in the string -->
+    <plurals name="scene_available_unit">
+        <item quantity="one">available node</item>
+        <item quantity="other">available nodes</item>
+    </plurals>
+    <plurals name="scene_tested_from">
+        <item quantity="one">Tested from %1$d subscription</item>
+        <item quantity="other">Tested from %1$d subscriptions</item>
+    </plurals>
+    <!-- %1$s is an app -->
+    <string name="scene_pinned_for">Pinned for %1$s</string>
+    <string name="scene_when_unavailable">When a node is unavailable</string>
+    <string name="scene_ask">Ask</string>
+    <string name="scene_auto_switch">Switch automatically</string>
+    <string name="scene_node_scope">Node scope</string>
+    <string name="scene_uhd_only">4K nodes only</string>
+    <string name="scene_pinned_value">%1$s (pinned)</string>
+    <string name="scene_retest">Test again</string>
+    <string name="scene_note">Picks are saved only in Zephyr. Your subscription configuration isn’t changed.</string>
+    <!-- %1$s is scene_note, %2$s a relative time ("5 min ago") -->
+    <string name="scene_note_tested">%1$s Last tested %2$s.</string>
+
+    <!-- ── Command layer ── -->
+    <string name="command_placeholder">Search or enter a command</string>
+    <string name="command_section_suggestions">Suggestions</string>
+    <string name="command_section_command">Commands</string>
+    <!-- Tapping one types it into the field. Each must parse with CommandParser (its keywords are Chinese and English only) -->
+    <string-array name="command_examples">
+        <item>Gemini via Japan</item>
+        <item>GitHub direct</item>
+        <item>HK</item>
+    </string-array>
+    <!-- %1$s is a grouped count -->
+    <string name="command_see_all_nodes">See all %1$s in the node library</string>
+    <!-- %1$s is a domain or IP -->
+    <string name="command_test_rule">Where does %1$s go?</string>
+    <string name="command_chip_scene">Scene</string>
+    <string name="command_chip_service">Service</string>
+    <string name="command_chip_region">Region</string>
+    <string name="command_chip_action">Action</string>
+    <string name="command_chip_scope">Scope</string>
+    <string name="command_region_jp">Japan</string>
+    <string name="command_region_us">US</string>
+    <string name="command_region_hk">Hong Kong</string>
+    <string name="command_region_sg">Singapore</string>
+    <string name="command_region_tw">Taiwan</string>
+    <string name="command_region_gb">UK</string>
+    <string name="command_region_kr">Korea</string>
+    <string name="command_region_de">Germany</string>
+    <!-- %1$s app or scene, %2$s region -->
+    <string name="command_plan_exit_title">%1$s uses %2$s nodes</string>
+    <!-- %1$s is command_scene_ai or command_scene_named -->
+    <string name="command_plan_no_nodes">No %2$s nodes in %1$s.</string>
+    <string name="command_scene_ai">the AI scene</string>
+    <string name="command_scene_named">the %1$s scene</string>
+    <string name="command_no_nodes_available">No nodes available</string>
+    <plurals name="command_plan_exit_available">
+        <item quantity="one">%1$d available. Will use %2$s.</item>
+        <item quantity="other">%1$d available. Will use %2$s.</item>
+    </plurals>
+    <string name="command_plan_releases_pin">%1$s will stop using its fixed exit %2$s.</string>
+    <string name="command_plan_fallback_pause">If no %1$s node is available, %2$s will pause.</string>
+    <string name="command_plan_fallback_scene">If no %1$s node is available, other nodes in the scene will be used.</string>
+    <string name="command_uhd_title_all">%1$s: all nodes</string>
+    <string name="command_uhd_title_only">%1$s: 4K nodes only</string>
+    <string name="command_uhd_clear_note">The %1$s scene uses only 4K nodes. All nodes will be used again; the current node stays.</string>
+    <string name="command_uhd_none">No nodes support 4K.</string>
+    <plurals name="command_uhd_untested">
+        <item quantity="one">%1$d 4K node hasn’t been tested yet. Retest the scene after applying.</item>
+        <item quantity="other">%1$d 4K nodes haven’t been tested yet. Retest the scene after applying.</item>
+    </plurals>
+    <!-- Quantity follows %2$d -->
+    <plurals name="command_uhd_matching_keep">
+        <item quantity="one">%2$d of %1$d supports 4K; the current node stays.</item>
+        <item quantity="other">%2$d of %1$d support 4K; the current node stays.</item>
+    </plurals>
+    <!-- Quantity follows %2$d -->
+    <plurals name="command_uhd_matching_switch">
+        <item quantity="one">%2$d of %1$d supports 4K; will use %3$s.</item>
+        <item quantity="other">%2$d of %1$d support 4K; will use %3$s.</item>
+    </plurals>
+    <string name="command_uhd_fastest">the fastest 4K node</string>
+    <string name="command_uhd_auto_note">From now on, auto-switching picks only from 4K nodes.</string>
+    <string name="command_direct_title">Connect %1$s directly</string>
+    <string name="command_direct_note">%1$s traffic will bypass the proxy.</string>
+    <string name="command_direct_from_proxy">Proxy</string>
+    <string name="command_zephyr_only">Applies only in Zephyr. Your subscription configuration isn’t changed.</string>
+
+    <!-- ── Recent connections ── -->
+    <string name="activity_title">Recent connections</string>
+    <!-- Back link inside the sheet; flip the chevron for RTL -->
+    <string name="activity_back">‹ Recent connections</string>
+    <string name="activity_empty">Once connected, recently visited domains appear here.</string>
+    <string name="activity_host_a11y">%1$s connection details</string>
+    <string name="activity_close_host_a11y">Close connections to %1$s</string>
+    <string name="activity_no_app_note">The app that made each connection isn’t known yet, so only domains are shown.</string>
+    <string name="activity_close_none">No active connections</string>
+    <plurals name="activity_closed">
+        <item quantity="one">Closed %1$d connection</item>
+        <item quantity="other">Closed %1$d connections</item>
+    </plurals>
+    <plurals name="activity_close_failed">
+        <item quantity="one">Couldn’t close the connection</item>
+        <item quantity="other">Couldn’t close connections</item>
+    </plurals>
+    <plurals name="activity_close_partial">
+        <item quantity="one">%1$d connection couldn’t be closed</item>
+        <item quantity="other">%1$d connections couldn’t be closed</item>
+    </plurals>
+
+    <!-- ── Connection trace ── -->
+    <plurals name="trace_connections">
+        <item quantity="one">%1$d connection</item>
+        <item quantity="other">%1$d connections</item>
+    </plurals>
+    <string name="trace_step_rule">Rule</string>
+    <string name="trace_step_scene">Scene</string>
+    <string name="trace_step_node">Node</string>
+    <string name="trace_step_exit">Exit</string>
+    <!-- %1$s is a subscription or rule set -->
+    <string name="trace_from">From %1$s</string>
+    <string name="trace_via">Via %1$s</string>
+    <plurals name="trace_exit_stable">
+        <item quantity="one">Unchanged for %1$d day</item>
+        <item quantity="other">Unchanged for %1$d days</item>
+    </plurals>
+    <string name="trace_this_connection">This connection</string>
+    <!-- Segment: keep the current routing for this host -->
+    <string name="trace_option_unchanged">No change</string>
+    <string name="trace_override_failed">Couldn’t change: %1$s</string>
+    <string name="trace_always_apply">Always apply</string>
+    <string name="trace_always_apply_hint">When off, only this connection changes</string>
+
+    <!-- ── Library ── -->
+    <!-- Quick Settings is the Android system panel name -->
+    <string name="library_widgets">Widgets &amp; Quick Settings</string>
+
+    <!-- ── Nodes ── -->
+    <!-- Unit after the big node count; no number in the string -->
+    <plurals name="nodes_total_unit">
+        <item quantity="one">node</item>
+        <item quantity="other">nodes</item>
+    </plurals>
+    <plurals name="nodes_from_subs">
+        <item quantity="one">From %1$d subscription</item>
+        <item quantity="other">From %1$d subscriptions</item>
+    </plurals>
+    <string name="nodes_search_placeholder">Region, city, or route</string>
+    <!-- %1$s match count, %2$s search time (0.52 ms) -->
+    <string name="nodes_search_stats">%1$s · %2$s</string>
+    <string name="nodes_empty_title">No nodes yet</string>
+    <string name="nodes_empty_message">Import a subscription and its nodes will appear here</string>
+    <string name="nodes_empty_action">Import subscription</string>
+    <string name="nodes_no_match">No nodes match “%1$s”</string>
+    <string name="nodes_tested">%1$s tested</string>
+    <!-- Accessibility: region index entry, %1$s is a region code -->
+    <string name="nodes_jump_to">Jump to %1$s</string>
+
+    <!-- ── Rules ── -->
+    <string name="rules_add_override_a11y">Add override for a domain</string>
+    <!-- Unit after the big rule count; no number in the string -->
+    <plurals name="rules_total_unit">
+        <item quantity="one">rule</item>
+        <item quantity="other">rules</item>
+    </plurals>
+    <plurals name="rules_summary">
+        <item quantity="one">%1$d layer · compiled · %2$s on disk</item>
+        <item quantity="other">%1$d layers · compiled · %2$s on disk</item>
+    </plurals>
+    <string name="rules_test_placeholder">Test a domain or IP</string>
+    <string name="rules_test_hint">Enter a domain or IP address to see the matching rule and exit.</string>
+    <string name="rules_match_order">Match order</string>
+    <string name="rules_top_to_bottom">Top to bottom</string>
+    <string name="rules_other_traffic">All other traffic</string>
+    <string name="rules_note">Rule sets are compiled on device into a read-only index and read from disk as needed. Overrides stay in place when subscriptions update.</string>
+    <string name="rules_kind_override">Override</string>
+    <string name="rules_kind_subscription">Subscription</string>
+    <string name="rules_kind_domain">Domain</string>
+    <string name="rules_kind_other">Other</string>
+    <string name="rules_step_request">Request</string>
+    <string name="rules_step_layer">Layer %1$d · %2$s</string>
+    <string name="rules_step_result">Result</string>
+    <string name="rules_blocked">Blocked</string>
+    <string name="rules_step_scene">Scene · %1$s</string>
+    <string name="rules_step_exit_ip">Exit IP</string>
+    <!-- %1$s is a duration, e.g. 0.42 ms -->
+    <string name="rules_took">Took %1$s</string>
+    <string name="rules_kind_ip">IP</string>
+
+    <!-- ── Subscriptions ── -->
+    <string name="subs_add">Add subscription</string>
+    <string name="subs_paste_placeholder">Paste a subscription link</string>
+    <string name="subs_paste_link">Paste link</string>
+    <string name="subs_paste_clipboard">Paste from clipboard</string>
+    <string name="subs_scan_qr">Scan QR code</string>
+    <string name="subs_coming_soon">Coming soon</string>
+    <string name="subs_import_desktop">Import from Zephyr on your computer</string>
+    <string name="subs_import_file">Import from file</string>
+    <!-- %1$s subscription name, %2$s grouped node count -->
+    <plurals name="subs_added">
+        <item quantity="one">Added %1$s (%2$s node)</item>
+        <item quantity="other">Added %1$s (%2$s nodes)</item>
+    </plurals>
+    <string name="subs_error_clipboard_empty">The clipboard is empty</string>
+    <string name="subs_hint_desktop">On your computer, open Settings › Mobile in Zephyr to show the QR code</string>
+    <string name="subs_error_read_file">Couldn’t read this file</string>
+    <string name="subs_error_fetch">Couldn’t download this subscription. Check the link or your network.</string>
+    <string name="subs_error_invalid_file">This isn’t a valid config file</string>
+    <string name="subs_error_invalid_link">This isn’t a valid subscription link</string>
+    <!-- Unit after the big count; no number in the string -->
+    <plurals name="subs_total_unit">
+        <item quantity="one">subscription</item>
+        <item quantity="other">subscriptions</item>
+    </plurals>
+    <!-- Follows subs_total_unit after " · " -->
+    <plurals name="subs_update_every">
+        <item quantity="one">updated every %1$d hour</item>
+        <item quantity="other">updated every %1$d hours</item>
+    </plurals>
+    <string name="subs_diff_updating">Updating %1$s…</string>
+    <string name="subs_diff_updated">%1$s updated</string>
+    <string name="subs_rule_changes">Rule changes</string>
+    <string name="subs_overrides_kept">Overrides kept</string>
+    <string name="subs_scenes_retested">Scene pools retested</string>
+    <string name="subs_section_data">Data</string>
+    <string name="subs_this_month">This month</string>
+    <string name="subs_swipe_updating">Updating</string>
+    <string name="subs_swipe_update">Update</string>
+    <string name="subs_swipe_confirm_delete">Confirm delete</string>
+    <string name="subs_swipe_delete">Delete</string>
+    <string name="subs_error_update">Couldn’t update %1$s</string>
+    <string name="subs_error_delete">Couldn’t delete %1$s</string>
+    <string name="subs_remaining">Remaining</string>
+    <plurals name="subs_others">
+        <item quantity="one">%1$d other</item>
+        <item quantity="other">%1$d others</item>
+    </plurals>
+    <string name="subs_section_update">Updates</string>
+    <string name="subs_auto_update">Automatic updates</string>
+    <plurals name="subs_every_hours">
+        <item quantity="one">Every %1$d hour</item>
+        <item quantity="other">Every %1$d hours</item>
+    </plurals>
+    <string name="subs_update_wifi_only">Update on Wi‑Fi only</string>
+    <string name="subs_show_changes">Show changes before updating</string>
+    <string name="subs_update_all">Update all now</string>
+
+    <!-- ── Onboarding ── -->
+    <string name="onboarding_cancel_import_a11y">Cancel import</string>
+    <string name="onboarding_choose_mode">Choose a mode</string>
+    <string name="onboarding_simple">Simple</string>
+    <string name="onboarding_simple_desc">Uses the groups from your subscription. Unavailable nodes are handled automatically.</string>
+    <string name="onboarding_optimized">Optimized</string>
+    <string name="onboarding_optimized_desc">Tests nodes daily over Wi‑Fi. AI and Video use only nodes that pass. About 3 MB each time.</string>
+    <string name="onboarding_continue">Continue</string>
+    <string name="onboarding_change_later">You can change this anytime in Settings.</string>
+
+    <!-- ── Settings ── -->
+    <string name="settings_trusted_wifi">Trusted Wi‑Fi</string>
+    <string name="settings_local_proxy">Local proxy port</string>
+    <string name="settings_section_connection">Connection</string>
+    <string name="settings_on_demand">Connect on demand</string>
+    <string name="settings_trusted_wifi_hint">Disconnect automatically when joined</string>
+    <string name="settings_password_required">Password required</string>
+    <string name="settings_section_testing">Testing</string>
+    <string name="settings_test_wifi_only">Test speed on Wi‑Fi only</string>
+    <string name="settings_keep_results">Keep results</string>
+    <plurals name="settings_hours">
+        <item quantity="one">%1$d hour</item>
+        <item quantity="other">%1$d hours</item>
+    </plurals>
+    <string name="settings_section_storage">Storage</string>
+    <string name="settings_storage_title">Nodes &amp; rules</string>
+    <string name="settings_storage_detail">Nodes %1$s · Rules %2$s · Available %3$s</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_appearance_system">System</string>
+    <string name="settings_appearance_dark">Dark</string>
+    <string name="settings_appearance_light">Light</string>
+    <string name="settings_accent">Accent color</string>
+    <string name="settings_accent_blue">Blue</string>
+    <string name="settings_accent_green">Green</string>
+    <string name="settings_accent_orange">Orange</string>
+    <string name="settings_accent_pink">Pink</string>
+    <string name="settings_accent_purple">Purple</string>
+    <string name="settings_accent_red">Red</string>
+    <string name="settings_accent_teal">Teal</string>
+    <string name="settings_accent_indigo">Indigo</string>
+    <string name="settings_accent_yellow">Yellow</string>
+    <string name="settings_accent_graphite">Graphite</string>
+    <string name="settings_section_privacy">Privacy</string>
+    <string name="settings_share_diagnostics">Share diagnostic data</string>
+    <string name="settings_section_diagnostics">Diagnostics</string>
+    <string name="settings_local_data_note">Subscriptions, nodes, and traffic data are stored only on this device.</string>
+
+    <!-- ── Logs ── -->
+    <string name="logs_title">Logs</string>
+    <string name="logs_level_debug">Debug</string>
+    <string name="logs_level_info">Info</string>
+    <string name="logs_level_warning">Warning</string>
+    <string name="logs_level_error">Error</string>
+    <string name="logs_resume">Resume</string>
+    <string name="logs_pause">Pause</string>
+    <string name="logs_clear">Clear</string>
+    <string name="logs_empty">No logs yet</string>
+    <!-- Accessibility: time, level, message -->
+    <string name="logs_line_a11y">%1$s %2$s %3$s</string>
+
+    <!-- ── Today card ── -->
+    <string name="today_style_night">Night</string>
+    <string name="today_style_dawn">Dawn</string>
+    <string name="today_style_mist">Mist</string>
+    <string name="today_saved">Saved to gallery</string>
+    <string name="today_save_failed">Couldn’t save the image</string>
+    <string name="today_storage_permission">Storage permission is needed to save the image</string>
+    <!-- java.time DateTimeFormatter pattern for the card date; keep letters as pattern symbols -->
+    <string name="today_date_pattern">EEEE, MMMM d</string>
+    <!-- Label under a number -->
+    <plurals name="today_regions">
+        <item quantity="one">region</item>
+        <item quantity="other">regions</item>
+    </plurals>
+    <!-- Label under a number -->
+    <plurals name="today_hours_online">
+        <item quantity="one">hour online</item>
+        <item quantity="other">hours online</item>
+    </plurals>
+    <!-- Label under a latency number -->
+    <string name="today_fastest">ms fastest</string>
+    <string name="today_save_image">Save image</string>
+    <string name="today_pattern_note">The pattern is generated from today’s traffic and contains no node names or IP addresses.</string>
+
+    <!-- ── Widgets ── -->
+    <string name="widget_label">Zephyr status</string>
+    <string name="widget_description">Connection status, speed, and scenes</string>
+    <string name="widget_usage_label">Zephyr usage today</string>
+    <string name="widget_usage_description">Today’s traffic and 24-hour breakdown</string>
+    <!-- %1$s value, %2$s unit -->
+    <string name="widget_today">Today %1$s %2$s</string>
+
+    <!-- ── Notifications ── -->
+    <string name="notif_channel_vpn">Connection status</string>
+    <string name="notif_channel_vpn_desc">Shows speed and scenes while connected</string>
+    <string name="notif_channel_alerts">Subscription alerts</string>
+    <string name="notif_channel_alerts_desc">Subscription expiry and low data</string>
+    <string name="notif_action_global">Global mode</string>
+    <string name="notif_action_rule">Rule mode</string>
+    <!-- %1$s is the node all traffic goes through -->
+    <string name="notif_route_global">Global · %1$s</string>
+    <string name="notif_route_global_any">All traffic through one node</string>
+    <!-- %1$s subscription, %2$s date -->
+    <string name="notif_expiry_title">%1$s expires on %2$s</string>
+    <!-- %1$s remaining data, e.g. 12.0 GB -->
+    <string name="notif_expiry_text">%1$s left</string>
+
+    <!-- ── Quick Settings tile ── -->
+    <!-- Tile description: app name, then state -->
+    <string name="tile_a11y">%1$s, %2$s</string>
 </resources>

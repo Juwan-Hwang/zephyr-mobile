@@ -33,8 +33,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.zephyr.app.R
 import com.zephyr.app.di.AppGraph
+import com.zephyr.app.ui.common.resolve
 import com.zephyr.design.components.ZButton
 import com.zephyr.design.components.ZCard
 import com.zephyr.design.components.ZIcon
@@ -43,6 +48,7 @@ import com.zephyr.design.components.ZSearchField
 import com.zephyr.design.components.ZSurface
 import com.zephyr.design.components.ZText
 import com.zephyr.design.components.zPressable
+import com.zephyr.design.format.ZFormat
 import com.zephyr.design.theme.ZAnim
 import com.zephyr.design.theme.ZTheme
 import com.zephyr.engine.NodeQueryResult
@@ -106,7 +112,7 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
         // Review H-P2-11: tapping the scrim dismisses without the press-scale of zPressable (the whole screen shrank).
         Box(Modifier.fillMaxSize().background(c.bg.copy(alpha = if (android.os.Build.VERSION.SDK_INT >= 31) 0.72f else 0.86f)).clickable(
             interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }, indication = null,
-            onClickLabel = "关闭", onClick = onDismiss,
+            onClickLabel = stringResource(com.zephyr.design.R.string.common_close), onClick = onDismiss,
         ))
     }
     AnimatedVisibility(visible, enter = slideInVertically(ZAnim.slow()) { -it / 6 } + fadeIn(ZAnim.standard()), exit = fadeOut(ZAnim.micro())) {
@@ -115,37 +121,37 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
         Column(Modifier.fillMaxSize().statusBarsPadding().imePadding().padding(horizontal = 12.dp).verticalScroll(rememberScrollState())) {
             Spacer(Modifier.height(12.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                ZSearchField(input, { input = it }, "搜索或输入指令", Modifier.weight(1f), focusRequester = focus, onComposingChange = { composing = it },
+                ZSearchField(input, { input = it }, stringResource(R.string.command_placeholder), Modifier.weight(1f), focusRequester = focus, onComposingChange = { composing = it },
                     onSubmit = { plan?.let(apply) }, visualTransformation = transform, large = true)
                 Spacer(Modifier.width(4.dp))
-                ZText("取消", Modifier.zPressable(onClick = onDismiss).padding(horizontal = 8.dp, vertical = 14.dp), style = ZTheme.type.body, color = c.accent)
+                ZText(stringResource(R.string.common_cancel), Modifier.zPressable(onClick = onDismiss).padding(horizontal = 8.dp, vertical = 14.dp), style = ZTheme.type.body, color = c.accent)
             }
             if (input.isBlank()) {
-                Label("建议")
-                CommandParser.EXAMPLES.forEach { ex ->
+                Label(stringResource(R.string.command_section_suggestions))
+                stringArrayResource(R.array.command_examples).forEach { ex ->
                     ZText(ex, Modifier.fillMaxWidth().zPressable(row = true, onClick = { input = ex }).padding(horizontal = 14.dp, vertical = 14.dp), style = ZTheme.type.body)
                 }
                 return@Column
             }
             if (parsed.hasChips) {
-                Label("指令")
+                Label(stringResource(R.string.command_section_command))
                 Chips(parsed)
             }
             plan?.let { PlanCard(it, onApply = { apply(it) }) }
             nodes?.let { (r, rows) ->
                 if (rows.isNotEmpty()) {
-                    Label("节点")
+                    Label(stringResource(R.string.common_nodes))
                     rows.forEach { n -> NodeLine(n) { onAction(CommandAction.OpenNodes(input.trim())) } }
-                    ZText("在节点库中查看全部 %,d 个".format(r.total), Modifier.fillMaxWidth().zPressable(row = true, onClick = { onAction(CommandAction.OpenNodes(input.trim())) }).padding(horizontal = 14.dp, vertical = 12.dp),
+                    ZText(stringResource(R.string.command_see_all_nodes, ZFormat.grouped(r.total)), Modifier.fillMaxWidth().zPressable(row = true, onClick = { onAction(CommandAction.OpenNodes(input.trim())) }).padding(horizontal = 14.dp, vertical = 12.dp),
                         style = ZTheme.type.footnote, color = c.accent)
                 }
             }
             if (looksLikeHost(input)) {
-                Label("规则")
-                ZText("${input.trim()} 走哪里？", Modifier.fillMaxWidth().zPressable(row = true, onClick = { onAction(CommandAction.TestRule(input.trim())) }).padding(horizontal = 14.dp, vertical = 14.dp), style = ZTheme.type.body)
+                Label(stringResource(R.string.common_rules))
+                ZText(stringResource(R.string.command_test_rule, input.trim()), Modifier.fillMaxWidth().zPressable(row = true, onClick = { onAction(CommandAction.TestRule(input.trim())) }).padding(horizontal = 14.dp, vertical = 14.dp), style = ZTheme.type.body)
             }
             if (!parsed.hasChips && plan == null && nodes?.second.isNullOrEmpty() && !looksLikeHost(input) && nodes != null) {
-                ZText("无结果", Modifier.fillMaxWidth().padding(vertical = 40.dp), style = ZTheme.type.body.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = c.text3)
+                ZText(stringResource(R.string.common_no_results), Modifier.fillMaxWidth().padding(vertical = 40.dp), style = ZTheme.type.body.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = c.text3)
             }
             Spacer(Modifier.height(40.dp))
         }
@@ -159,10 +165,10 @@ private fun Label(t: String) =
 @Composable
 private fun Chips(p: CommandParser.Parsed) {
     val chips = buildList {
-        p.service?.let { add((if (it.isSceneWord) "场景" else "服务") to it.name) }
-        p.region?.let { add("地区" to it.name) }
-        p.act?.let { add("操作" to it.label) }
-        p.service?.takeIf { !it.isSceneWord }?.let { add("范围" to scopeName(it.kind)) }
+        p.service?.let { add(stringResource(if (it.isSceneWord) R.string.command_chip_scene else R.string.command_chip_service) to if (it.isSceneWord) stringResource(it.kind.nameRes) else it.name) }
+        p.region?.let { add(stringResource(R.string.command_chip_region) to regionName(it.code)) }
+        p.act?.let { add(stringResource(R.string.command_chip_action) to if (it == CommandParser.Act.DIRECT) stringResource(R.string.common_direct) else it.label) }
+        p.service?.takeIf { !it.isSceneWord }?.let { add(stringResource(R.string.command_chip_scope) to stringResource(it.kind.nameRes)) }
     }
     Row(Modifier.padding(horizontal = 10.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         chips.forEach { (k, v) ->
@@ -176,7 +182,16 @@ private fun Chips(p: CommandParser.Parsed) {
     }
 }
 
-private fun scopeName(k: SceneKind) = when (k) { SceneKind.AI -> "AI"; SceneKind.VIDEO -> "视频"; else -> "其他" }
+private val SceneKind.nameRes: Int get() = when (this) { SceneKind.AI -> R.string.common_scene_ai; SceneKind.VIDEO -> R.string.common_scene_video; else -> R.string.common_scene_other }
+
+/** Region names for the parser's codes; any other code is shown as is. */
+@Composable
+private fun regionName(code: String): String = when (code) {
+    "JP" -> R.string.command_region_jp; "US" -> R.string.command_region_us; "HK" -> R.string.command_region_hk
+    "SG" -> R.string.command_region_sg; "TW" -> R.string.command_region_tw; "GB" -> R.string.command_region_gb
+    "KR" -> R.string.command_region_kr; "DE" -> R.string.command_region_de
+    else -> null
+}?.let { stringResource(it) } ?: code
 
 @Composable
 private fun PlanCard(plan: CommandPlan, onApply: () -> Unit) {
@@ -185,45 +200,48 @@ private fun PlanCard(plan: CommandPlan, onApply: () -> Unit) {
     ZCard(padding = 18.dp) {
         when (plan) {
             is CommandPlan.NoNodes -> {
-                ZText("${plan.who} 使用${plan.regionName}节点", style = ZTheme.type.headline)
-                Note("${plan.sceneLabel}中没有${plan.regionName}节点。", 4)
+                val region = regionName(plan.regionCode)
+                ZText(stringResource(R.string.command_plan_exit_title, plan.who, region), style = ZTheme.type.headline)
+                Note(stringResource(R.string.command_plan_no_nodes, plan.sceneLabel.resolve(), region), 4)
                 Spacer(Modifier.height(16.dp))
-                ZButton("无可用节点", {}, Modifier.fillMaxWidth(), kind = ZButtonKind.Secondary, enabled = false)
+                ZButton(stringResource(R.string.command_no_nodes_available), {}, Modifier.fillMaxWidth(), kind = ZButtonKind.Secondary, enabled = false)
             }
             is CommandPlan.Exit -> {
-                ZText("${plan.who} 使用${plan.regionName}节点", style = ZTheme.type.headline)
-                Note("${plan.available} 个可用，将使用${plan.node.name}。", 4)
+                val region = regionName(plan.regionCode)
+                ZText(stringResource(R.string.command_plan_exit_title, plan.who, region), style = ZTheme.type.headline)
+                Note(pluralStringResource(R.plurals.command_plan_exit_available, plan.available, plan.available, plan.node.name), 4)
                 plan.change?.let { x -> IpLine("${x.fromRegion} ${x.fromIp ?: ""}".trim(), "${x.toRegion} ${x.toIp ?: ""}".trim()) }
-                plan.releasesPin?.let { Note("${plan.who} 将不再使用固定出口 $it。", 12) }
+                plan.releasesPin?.let { Note(stringResource(R.string.command_plan_releases_pin, plan.who, it), 12) }
                 Note(
-                    if (plan.scene.kind == SceneKind.AI) "${plan.regionName}节点均不可用时，${plan.who} 将暂停。"
-                    else "${plan.regionName}节点均不可用时，将使用场景中的其他节点。", 12,
+                    if (plan.scene.kind == SceneKind.AI) stringResource(R.string.command_plan_fallback_pause, region, plan.who)
+                    else stringResource(R.string.command_plan_fallback_scene, region), 12,
                 )
                 Spacer(Modifier.height(16.dp))
-                ZButton("应用", onApply, Modifier.fillMaxWidth())
+                ZButton(stringResource(R.string.common_apply), onApply, Modifier.fillMaxWidth())
             }
             is CommandPlan.Uhd -> {
                 val pv = plan.preview
-                ZText(if (plan.clear) "${plan.who}使用全部节点" else "${plan.who}仅使用 4K 节点", style = ZTheme.type.headline)
+                ZText(stringResource(if (plan.clear) R.string.command_uhd_title_all else R.string.command_uhd_title_only, plan.who), style = ZTheme.type.headline)
                 when {
-                    plan.clear -> Note("${plan.scene.name}场景当前仅使用 4K 节点，将恢复使用全部节点。当前节点保持不变。", 4)
-                    pv == null || pv.poolMatching == 0L -> Note("没有支持 4K 的节点。", 4)
-                    pv.matching == 0 -> Note("有 ${pv.poolMatching} 个 4K 节点尚未测速，应用后请重测场景。", 4)
-                    else -> Note("${pv.total} 个中 ${pv.matching} 个支持 4K" + if (pv.currentKept) "，当前节点保持不变。" else "，将使用${pv.suggested?.name ?: "最快的 4K 节点"}。", 4)
+                    plan.clear -> Note(stringResource(R.string.command_uhd_clear_note, plan.scene.name), 4)
+                    pv == null || pv.poolMatching == 0L -> Note(stringResource(R.string.command_uhd_none), 4)
+                    pv.matching == 0 -> pv.poolMatching.toInt().let { n -> Note(pluralStringResource(R.plurals.command_uhd_untested, n, n), 4) }
+                    pv.currentKept -> Note(pluralStringResource(R.plurals.command_uhd_matching_keep, pv.matching, pv.total, pv.matching), 4)
+                    else -> Note(pluralStringResource(R.plurals.command_uhd_matching_switch, pv.matching, pv.total, pv.matching, pv.suggested?.name ?: stringResource(R.string.command_uhd_fastest)), 4)
                 }
                 pv?.takeIf { !plan.clear && !it.currentKept }?.change?.let { x -> IpLine("${x.fromRegion} ${x.fromIp ?: ""}".trim(), "${x.toRegion} ${x.toIp ?: ""}".trim()) }
-                if (!plan.clear && !plan.unavailable) Note("之后自动换最快只在 4K 节点中选择。", 12)
+                if (!plan.clear && !plan.unavailable) Note(stringResource(R.string.command_uhd_auto_note), 12)
                 Spacer(Modifier.height(16.dp))
-                if (plan.unavailable) ZButton("无可用节点", {}, Modifier.fillMaxWidth(), kind = ZButtonKind.Secondary, enabled = false)
-                else ZButton("应用", onApply, Modifier.fillMaxWidth())
+                if (plan.unavailable) ZButton(stringResource(R.string.command_no_nodes_available), {}, Modifier.fillMaxWidth(), kind = ZButtonKind.Secondary, enabled = false)
+                else ZButton(stringResource(R.string.common_apply), onApply, Modifier.fillMaxWidth())
             }
             is CommandPlan.Direct -> {
-                ZText("${plan.who} 直连", style = ZTheme.type.headline)
-                Note("${plan.who} 的流量将不经过代理。", 4)
-                IpLine(listOfNotNull(plan.fromRegion, plan.fromIp).joinToString(" ").ifEmpty { "代理" }, "本机网络")
-                Note("仅在 Zephyr 中生效，订阅配置保持原样。", 12)
+                ZText(stringResource(R.string.command_direct_title, plan.who), style = ZTheme.type.headline)
+                Note(stringResource(R.string.command_direct_note, plan.who), 4)
+                IpLine(listOfNotNull(plan.fromRegion, plan.fromIp).joinToString(" ").ifEmpty { stringResource(R.string.command_direct_from_proxy) }, stringResource(R.string.common_local_network))
+                Note(stringResource(R.string.command_zephyr_only), 12)
                 Spacer(Modifier.height(16.dp))
-                ZButton("应用", onApply, Modifier.fillMaxWidth())
+                ZButton(stringResource(R.string.common_apply), onApply, Modifier.fillMaxWidth())
             }
         }
     }
@@ -244,7 +262,7 @@ private fun IpLine(from: String, to: String) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(Modifier.width(6.dp).height(6.dp).background(c.warning, androidx.compose.foundation.shape.CircleShape))
             Spacer(Modifier.width(8.dp))
-            ZText("出口 IP 将更改", style = ZTheme.type.footnote)
+            ZText(stringResource(R.string.common_exit_ip_changes), style = ZTheme.type.footnote)
         }
         Spacer(Modifier.height(4.dp))
         ZText("$from → $to", style = ZTheme.type.monoSmall, color = c.text2)

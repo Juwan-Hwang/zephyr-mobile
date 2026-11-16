@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.LocalContext
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
@@ -30,6 +31,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.zephyr.app.MainActivity
+import com.zephyr.app.R
 import com.zephyr.app.di.AppGraph
 import com.zephyr.design.format.ZFormat
 
@@ -58,7 +60,7 @@ class ZephyrUsageWidget : GlanceAppWidget() {
         Column(
             GlanceModifier.fillMaxSize().background(bg).cornerRadius(24.dp).padding(16.dp).clickable(actionStartActivity<MainActivity>()),
         ) {
-            Text("今日", style = TextStyle(color = t3, fontSize = 12.sp))
+            Text(LocalContext.current.getString(R.string.common_today), style = TextStyle(color = t3, fontSize = 12.sp))
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(v, style = TextStyle(color = t1, fontSize = 28.sp, fontWeight = FontWeight.Normal), maxLines = 1)
                 Spacer(GlanceModifier.width(4.dp))

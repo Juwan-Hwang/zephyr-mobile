@@ -1,5 +1,8 @@
 package com.zephyr.app.ui.command
 
+import com.zephyr.app.R
+import com.zephyr.app.ui.common.UiText
+import com.zephyr.app.ui.common.uiText
 import com.zephyr.engine.ExitChange
 import com.zephyr.engine.NodeFilterPreview
 import com.zephyr.engine.SceneNodeFilter
@@ -20,7 +23,8 @@ sealed interface CommandPlan {
         val who: String,
         val scene: Scene,
         val appId: String?,
-        val regionName: String,
+        /** Region code ("JP"); the card names it in the App's language. */
+        val regionCode: String,
         val available: Int,
         val node: NodeSummary,
         /** Null when the exit already is in that region (prototype `same`: no IP line). */
@@ -31,7 +35,7 @@ sealed interface CommandPlan {
     ) : CommandPlan
 
     /** "AI 场景中没有英国节点。" */
-    data class NoNodes(val who: String, val sceneLabel: String, val regionName: String) : CommandPlan
+    data class NoNodes(val who: String, val sceneLabel: UiText, val regionCode: String) : CommandPlan
 
     /**
      * "视频只用 4K 节点" (contract §15.h): filter the scene's candidates. [preview] null = the filter is already on
@@ -53,6 +57,8 @@ class CommandPlanner(private val engine: ZephyrEngine) {
         val svc = p.service ?: return null
         val scenes = runCatching { engine.scenes().first() }.getOrDefault(emptyList())
         val scene = scenes.firstOrNull { it.kind == svc.kind }
+        // A scene word ("视频") is input vocabulary; the card names the scene as the engine does.
+        val who = if (svc.isSceneWord) scene?.name ?: svc.name else svc.name
         if (p.act == CommandParser.Act.DIRECT && svc.host != null) {
             val other = scene ?: scenes.firstOrNull { it.kind == SceneKind.OTHER }
             return CommandPlan.Direct(svc.name, svc.host, other?.selected?.region?.takeIf { other.selected.id >= 0 }, other?.exitIp)
@@ -60,18 +66,18 @@ class CommandPlanner(private val engine: ZephyrEngine) {
         if (p.act == CommandParser.Act.UHD) {
             val s = scene ?: return null
             if (s.kind != SceneKind.VIDEO) return null
-            if (s.nodeFilter == SceneNodeFilter.UHD) return CommandPlan.Uhd(svc.name, s, null, clear = true)
+            if (s.nodeFilter == SceneNodeFilter.UHD) return CommandPlan.Uhd(who, s, null, clear = true)
             val pv = runCatching { engine.previewSceneNodeFilter(s.id, SceneNodeFilter.UHD) }.getOrNull()
-            return CommandPlan.Uhd(svc.name, s, pv, clear = false)
+            return CommandPlan.Uhd(who, s, pv, clear = false)
         }
         val rg = p.region ?: return null
         if (p.act != null || scene == null || svc.kind == SceneKind.OTHER) return null
         val pool = runCatching { engine.sceneCandidates(scene.id, rg.code) }.getOrDefault(emptyList())
             .sortedBy { it.latencyMs ?: Int.MAX_VALUE }
         val best = pool.firstOrNull() ?: return CommandPlan.NoNodes(
-            svc.name,
-            if (scene.kind == SceneKind.AI) "AI 场景" else "${scene.name}场景",
-            rg.name,
+            who,
+            if (scene.kind == SceneKind.AI) uiText(R.string.command_scene_ai) else uiText(R.string.command_scene_named, scene.name),
+            rg.code,
         )
         val pin = svc.app?.let { a -> scene.exceptions.firstOrNull { it.appId == a.id } }
         val currentRegion = pin?.node?.region ?: scene.selected.region.takeIf { scene.selected.id >= 0 }
@@ -79,10 +85,10 @@ class CommandPlanner(private val engine: ZephyrEngine) {
         else runCatching { engine.previewSceneChange(scene.id, best.id) }.getOrNull()
             ?.let { x -> if (pin != null) x.copy(fromRegion = pin.node.region, fromIp = null) else x }
         return CommandPlan.Exit(
-            who = svc.name,
+            who = who,
             scene = scene,
             appId = svc.app?.id,
-            regionName = rg.name,
+            regionCode = rg.code,
             available = pool.size,
             node = best,
             change = change,

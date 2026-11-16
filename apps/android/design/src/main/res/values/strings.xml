@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- English: default and fallback locale. Chinese lives in values-zh. Keys: <screen>_<what>, snake_case. -->
+<resources>
+
+    <!-- ── Shared ── -->
+    <!-- Sheet trailing action -->
+    <string name="common_done">Done</string>
+    <!-- Accessibility: dismiss a sheet or overlay -->
+    <string name="common_close">Close</string>
+    <!-- Accessibility: clear a search field -->
+    <string name="common_clear">Clear</string>
+    <!-- Latency column when a node test timed out -->
+    <string name="common_latency_timeout">Timeout</string>
+    <!-- Accessibility: live rate. %1$s/%3$s value, %2$s/%4$s unit (MB, KB) -->
+    <string name="common_traffic_a11y">Download %1$s %2$s per second, upload %3$s %4$s per second</string>
+    <!-- Standalone, e.g. subscription last updated -->
+    <string name="common_time_just_now">Just now</string>
+    <!-- Inside a sentence: "Last tested just now" -->
+    <string name="common_time_just_now_inline">just now</string>
+    <plurals name="common_time_minutes_ago">
+        <item quantity="one">%1$d min ago</item>
+        <item quantity="other">%1$d min ago</item>
+    </plurals>
+    <plurals name="common_time_hours_ago">
+        <item quantity="one">%1$d hr ago</item>
+        <item quantity="other">%1$d hr ago</item>
+    </plurals>
+    <plurals name="common_time_days_ago">
+        <item quantity="one">%1$d d ago</item>
+        <item quantity="other">%1$d d ago</item>
+    </plurals>
+    <string name="common_expiry_expired">Expired</string>
+    <string name="common_expiry_today">Expires today</string>
+    <string name="common_expiry_tomorrow">Expires tomorrow</string>
+    <!-- %1$s is a weekday from common_weekdays -->
+    <string name="common_expiry_weekday">Expires %1$s</string>
+    <plurals name="common_expiry_in_days">
+        <item quantity="one">Expires in %1$d day</item>
+        <item quantity="other">Expires in %1$d days</item>
+    </plurals>
+    <!-- Monday first, as used in common_expiry_weekday -->
+    <string-array name="common_weekdays">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
+</resources>
