@@ -47,6 +47,10 @@ struct ZSnapshotVariant: Sendable, Hashable {
     /// 伪语言 + AX5：最长文案 × 最大字号，暴露截断与写死高度。
     static let pseudoAX5 = ZSnapshotVariant(name: "pseudo-dark-ax5", colorScheme: .dark, dynamicType: .accessibility5, accent: .blue, language: .pseudo)
     static let languages: [ZSnapshotVariant] = [.englishDark, .pseudoDark]
+    /// D-P2-12 验收：阿拉伯文（RTL 镜像）与日文（万进制计数、长度）。文件名 `<base>-ar-dark` / `<base>-ja-dark`。
+    static let arabicDark = ZSnapshotVariant(name: "ar-dark", colorScheme: .dark, dynamicType: .large, accent: .blue, language: .ar)
+    static let japaneseDark = ZSnapshotVariant(name: "ja-dark", colorScheme: .dark, dynamicType: .large, accent: .blue, language: .ja)
+    static let multilingual: [ZSnapshotVariant] = [.arabicDark, .japaneseDark]
 
     /// 每个用例的基础三件套：深色 / 浅色 / AX5。
     static let standard: [ZSnapshotVariant] = [.dark, .light, .darkAX5]
@@ -107,8 +111,8 @@ func zAssertSnapshots<V: View>(
         // 语言要在构造视图之前切换（模型与视图初始化里可能已经取了 ZL 文案），断言完恢复中文。
         let previous = ZSnapshotLocalizedBundle.use(variant.language)
         defer { ZSnapshotLocalizedBundle.use(previous) }
-        if variant.language != .zh, !ZSnapshotLocalizedBundle.hasEnglish {
-            XCTFail("测试 bundle 里没有 en.lproj（project.yml 应把 App/Localizable.xcstrings 编进 ZephyrSnapshotTests）", file: file, line: line)
+        if !ZSnapshotLocalizedBundle.has(variant.language) {
+            XCTFail("测试 bundle 里没有 \(variant.language.lprojName).lproj（project.yml 应把 App/Localizable.xcstrings 编进 ZephyrSnapshotTests）", file: file, line: line)
             continue
         }
         let view = try await make(variant)
@@ -216,6 +220,7 @@ enum ZSnapshotRenderer {
             .dynamicTypeSize(variant.dynamicType)
             .environment(\.colorScheme, variant.colorScheme)
             .environment(\.zStaticRendering, true)
+            .environment(\.layoutDirection, variant.language.isRightToLeft ? .rightToLeft : .leftToRight)
             .transaction { $0.animation = nil }
             .zPageBackground()
         let host = UIHostingController(rootView: root)
@@ -226,6 +231,13 @@ enum ZSnapshotRenderer {
         let window = UIWindow(frame: CGRect(origin: .zero, size: ZSnapshotLayout.iPhone16))
         window.overrideUserInterfaceStyle = variant.interfaceStyle
         window.traitOverrides.preferredContentSizeCategory = variant.contentSizeCategory
+        if variant.language.isRightToLeft {
+            // UIKit 手动布局（节点列表）读 effectiveUserInterfaceLayoutDirection，需要 trait 与语义属性一起翻转。
+            window.traitOverrides.layoutDirection = .rightToLeft
+            host.traitOverrides.layoutDirection = .rightToLeft
+            window.semanticContentAttribute = .forceRightToLeft
+            host.view.semanticContentAttribute = .forceRightToLeft
+        }
         window.rootViewController = host
         window.isHidden = false
 
