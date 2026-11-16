@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Русский (ru). Generated from the English strings; keep keys, format args and order in sync with values/. -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="common_connect">Подключить</string>
     <string name="common_disconnect">Отключить</string>
     <string name="common_cancel">Отмена</string>
@@ -129,7 +129,7 @@
     <string name="home_confirm_scene">Сменить IP выхода для сценария %1$s?</string>
     <string name="home_confirm_unchanged">%1$s без изменений.</string>
     <string name="home_scrub_hint">Смахните влево или вправо, чтобы сменить регион</string>
-    <plurals name="scene_available_unit">
+    <plurals name="scene_available_unit" tools:ignore="ImpliedQuantity">
         <item quantity="one">доступный узел</item>
         <item quantity="few">доступных узла</item>
         <item quantity="many">доступных узлов</item>
@@ -229,7 +229,7 @@
         <item quantity="many">Закрыто %1$d подключений</item>
         <item quantity="other">Закрыто %1$d подключения</item>
     </plurals>
-    <plurals name="activity_close_failed">
+    <plurals name="activity_close_failed" tools:ignore="ImpliedQuantity">
         <item quantity="one">Не удалось закрыть подключение</item>
         <item quantity="few">Не удалось закрыть подключения</item>
         <item quantity="many">Не удалось закрыть подключения</item>
@@ -265,7 +265,7 @@
     <string name="trace_always_apply">Применять всегда</string>
     <string name="trace_always_apply_hint">Если выключено, изменится только это подключение</string>
     <string name="library_widgets">Виджеты и быстрые настройки</string>
-    <plurals name="nodes_total_unit">
+    <plurals name="nodes_total_unit" tools:ignore="ImpliedQuantity">
         <item quantity="one">узел</item>
         <item quantity="few">узла</item>
         <item quantity="many">узлов</item>
@@ -286,7 +286,7 @@
     <string name="nodes_tested">Проверено: %1$s</string>
     <string name="nodes_jump_to">Перейти к %1$s</string>
     <string name="rules_add_override_a11y">Добавить переопределение для домена</string>
-    <plurals name="rules_total_unit">
+    <plurals name="rules_total_unit" tools:ignore="ImpliedQuantity">
         <item quantity="one">правило</item>
         <item quantity="few">правила</item>
         <item quantity="many">правил</item>
@@ -336,7 +336,7 @@
     <string name="subs_error_fetch">Не удалось загрузить подписку. Проверьте ссылку или подключение к сети.</string>
     <string name="subs_error_invalid_file">Это не файл конфигурации</string>
     <string name="subs_error_invalid_link">Это не ссылка на подписку</string>
-    <plurals name="subs_total_unit">
+    <plurals name="subs_total_unit" tools:ignore="ImpliedQuantity">
         <item quantity="one">подписка</item>
         <item quantity="few">подписки</item>
         <item quantity="many">подписок</item>
@@ -441,13 +441,13 @@
     <string name="today_save_failed">Не удалось сохранить изображение</string>
     <string name="today_storage_permission">Чтобы сохранить изображение, нужен доступ к хранилищу</string>
     <string name="today_date_pattern">EEEE, d MMMM</string>
-    <plurals name="today_regions">
+    <plurals name="today_regions" tools:ignore="ImpliedQuantity">
         <item quantity="one">регион</item>
         <item quantity="few">региона</item>
         <item quantity="many">регионов</item>
         <item quantity="other">региона</item>
     </plurals>
-    <plurals name="today_hours_online">
+    <plurals name="today_hours_online" tools:ignore="ImpliedQuantity">
         <item quantity="one">час в сети</item>
         <item quantity="few">часа в сети</item>
         <item quantity="many">часов в сети</item>
