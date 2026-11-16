@@ -33,7 +33,7 @@ struct RecentHostRow: View {
                 .zMono(.body)
                 .foregroundStyle(ZColor.t3)
                 .fixedSize()
-            Image(systemName: "chevron.right")
+            Image(systemName: "chevron.forward")
                 .font(.caption)
                 .foregroundStyle(ZQuaternaryText())
                 .accessibilityHidden(true)

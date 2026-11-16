@@ -75,7 +75,7 @@ public struct ZProfileCard: View {
                         }
                     }
                     if showsChevron {
-                        Image(systemName: "chevron.right")
+                        Image(systemName: "chevron.forward")
                             .font(.footnote.weight(.semibold))
                             .foregroundStyle(ZQuaternaryText())
                             .accessibilityHidden(true)

@@ -73,7 +73,7 @@ struct TraceView: View {
             action()
         } label: {
             HStack(spacing: ZTokens.Space.n1) {
-                Image(systemName: "chevron.left").font(.footnote.weight(.semibold))
+                Image(systemName: "chevron.backward").font(.footnote.weight(.semibold))
                 Text("刚才")
             }
             .zType(.body)

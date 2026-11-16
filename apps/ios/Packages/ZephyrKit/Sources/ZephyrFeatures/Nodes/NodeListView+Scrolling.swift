@@ -146,7 +146,10 @@ extension NodeListView {
                        subtitle: "\(ZFormat.count(t.indexInSection + 1)) / \(ZFormat.count(sec.count))")
             let by = rail.frame.minY + y
             let half = bubble.bounds.height / 2
-            bubble.center = CGPoint(x: rail.frame.minX - ZTokens.Space.n4 - bubble.bounds.width / 2,
+            // RTL：索引条在左侧，气泡放在它的右边。
+            let bubbleX = isRTL ? rail.frame.maxX + ZTokens.Space.n4 + bubble.bounds.width / 2
+                                : rail.frame.minX - ZTokens.Space.n4 - bubble.bounds.width / 2
+            bubble.center = CGPoint(x: bubbleX,
                                     y: min(max(by, half + ZTokens.Space.n3), bounds.height - half - ZTokens.Space.n3))
             if phase == .began { bubble.setVisible(true, reduceMotion: reduceMotion) }
         } else {

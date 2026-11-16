@@ -136,7 +136,7 @@ private struct SuggestionRow: View {
                 }
             }
             Spacer(minLength: 0)
-            Image(systemName: "chevron.right").font(.caption).foregroundStyle(ZQuaternaryText())
+            Image(systemName: "chevron.forward").font(.caption).foregroundStyle(ZQuaternaryText())
         }
         .padding(.vertical, ZTokens.Space.n4)
         .padding(.horizontal, ZTokens.Space.n5)

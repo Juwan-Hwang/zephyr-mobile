@@ -112,20 +112,22 @@ final class NodeCell: UICollectionViewCell {
         let hair = 1 / scale
         let lead = NodeListStyle.leading, trail = NodeListStyle.trailing
         CATransaction.begin(); CATransaction.setDisableActions(true)
-        separator.frame = CGRect(x: lead, y: b.height - hair, width: b.width - lead, height: hair)
-        skeleton.frame = CGRect(x: lead, y: (b.height - 10) / 2, width: min(180, b.width * 0.45), height: 10)
+        separator.frame = rtl(CGRect(x: lead, y: b.height - hair, width: b.width - lead, height: hair), in: b.width)
+        skeleton.frame = rtl(CGRect(x: lead, y: (b.height - 10) / 2, width: min(180, b.width * 0.45), height: 10), in: b.width)
         CATransaction.commit()
 
         let gap: CGFloat = 12
         let latW = style.latencyWidth
         var right = b.width - trail
-        latencyLabel.frame = CGRect(x: right - latW, y: 0, width: latW, height: b.height).integral
+        protocolLabel.textAlignment = trailingAlignment
+        latencyLabel.textAlignment = trailingAlignment
+        latencyLabel.frame = rtl(CGRect(x: right - latW, y: 0, width: latW, height: b.height), in: b.width).integral
         right -= latW + gap
         if !protocolLabel.isHidden {
             let pw = ceil(protocolLabel.sizeThatFits(CGSize(width: 80, height: b.height)).width)
-            protocolLabel.frame = CGRect(x: right - pw, y: 0, width: pw, height: b.height).integral
+            protocolLabel.frame = rtl(CGRect(x: right - pw, y: 0, width: pw, height: b.height), in: b.width).integral
             right -= pw + gap
         }
-        nameLabel.frame = CGRect(x: lead + 2, y: 0, width: max(0, right - lead - 2), height: b.height).integral
+        nameLabel.frame = rtl(CGRect(x: lead + 2, y: 0, width: max(0, right - lead - 2), height: b.height), in: b.width).integral
     }
 }

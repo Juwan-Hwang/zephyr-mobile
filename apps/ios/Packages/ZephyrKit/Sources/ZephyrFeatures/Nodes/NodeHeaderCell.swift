@@ -50,15 +50,18 @@ final class NodeRegionHeaderContent: UIView {
         let midY = contentTopInset + (b.height - contentTopInset) / 2
         let codeSize = codeLabel.sizeThatFits(.zero)
         let boxW = ceil(codeSize.width) + 12, boxH = ceil(codeSize.height) + 6
-        let box = CGRect(x: lead, y: midY - boxH / 2, width: boxW, height: boxH).integral
+        let box = rtl(CGRect(x: lead, y: midY - boxH / 2, width: boxW, height: boxH), in: b.width).integral
         CATransaction.begin(); CATransaction.setDisableActions(true)
         codeBox.frame = box
         CATransaction.commit()
         codeLabel.frame = box
         let cw = ceil(countLabel.sizeThatFits(.zero).width)
-        countLabel.frame = CGRect(x: b.width - trail - cw, y: 0, width: cw, height: b.height).offsetBy(dx: 0, dy: midY - b.height / 2).integral
-        let nx = box.maxX + 8
-        nameLabel.frame = CGRect(x: nx, y: 0, width: max(0, countLabel.frame.minX - 8 - nx), height: b.height).offsetBy(dx: 0, dy: midY - b.height / 2).integral
+        countLabel.textAlignment = trailingAlignment
+        let count = CGRect(x: b.width - trail - cw, y: 0, width: cw, height: b.height).offsetBy(dx: 0, dy: midY - b.height / 2)
+        countLabel.frame = rtl(count, in: b.width).integral
+        let nx = lead + boxW + 8
+        let name = CGRect(x: nx, y: 0, width: max(0, count.minX - 8 - nx), height: b.height).offsetBy(dx: 0, dy: midY - b.height / 2)
+        nameLabel.frame = rtl(name, in: b.width).integral
     }
 }
 
@@ -87,8 +90,9 @@ final class NodeHeaderCell: UICollectionViewCell {
         content.frame = contentView.bounds
         let scale = traitCollection.displayScale > 0 ? traitCollection.displayScale : 2
         CATransaction.begin(); CATransaction.setDisableActions(true)
-        separator.frame = CGRect(x: NodeListStyle.leading, y: contentView.bounds.height - 1 / scale,
-                                 width: contentView.bounds.width - NodeListStyle.leading, height: 1 / scale)
+        separator.frame = rtl(CGRect(x: NodeListStyle.leading, y: contentView.bounds.height - 1 / scale,
+                                     width: contentView.bounds.width - NodeListStyle.leading, height: 1 / scale),
+                              in: contentView.bounds.width)
         CATransaction.commit()
     }
 }

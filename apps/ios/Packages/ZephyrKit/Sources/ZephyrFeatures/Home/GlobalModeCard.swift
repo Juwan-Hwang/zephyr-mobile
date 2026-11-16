@@ -46,7 +46,7 @@ struct GlobalModeCard: View {
             if let s = suggestion {
                 HStack(spacing: ZTokens.Space.n3) {
                     if let cur = model.globalNode { ZFlag(cur.region) }
-                    Image(systemName: "arrow.right").font(.caption2).foregroundStyle(ZQuaternaryText())
+                    Image(systemName: "arrow.forward").font(.caption2).foregroundStyle(ZQuaternaryText())
                     ZFlag(s.region)
                     Text(verbatim: s.name).zType(.footnote).foregroundStyle(ZTokens.Colors.screenT1)
                     if let ms = s.latencyMs, ms >= 0 {

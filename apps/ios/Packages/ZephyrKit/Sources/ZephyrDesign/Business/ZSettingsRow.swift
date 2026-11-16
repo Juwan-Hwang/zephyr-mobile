@@ -143,7 +143,7 @@ public struct ZSettingsAccessoryView: View {
     }
 
     private var chevron: some View {
-        Image(systemName: "chevron.right")
+        Image(systemName: "chevron.forward")
             .font(.footnote.weight(.semibold))
             .foregroundStyle(ZQuaternaryText())
             .accessibilityHidden(true)

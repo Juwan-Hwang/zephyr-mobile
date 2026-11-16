@@ -173,7 +173,7 @@ extension ProxyMode {
         switch self { case .rule: ZL.tr("规则"); case .global: ZL.tr("全局"); case .direct: ZL.tr("直连") }
     }
     var zhSymbol: String {
-        switch self { case .rule: "arrow.triangle.branch"; case .global: "globe"; case .direct: "arrow.right" }
+        switch self { case .rule: "arrow.triangle.branch"; case .global: "globe"; case .direct: "arrow.forward" }
     }
 }
 
