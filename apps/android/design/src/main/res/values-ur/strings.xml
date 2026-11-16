@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- اردو. Generated from en (values/strings.xml); keys and format args 1:1. %n$s args are bidi-isolated (\u2068…\u2069). -->
+<resources>
+
+    <!-- ── Shared ── -->
+    <string name="common_done">ہو گیا</string>
+    <string name="common_close">بند کریں</string>
+    <string name="common_clear">صاف کریں</string>
+    <string name="common_latency_timeout">ٹائم آؤٹ</string>
+    <string name="common_traffic_a11y">ڈاؤن لوڈ \u2066%1$s %2$s\u2069 فی سیکنڈ، اپ لوڈ \u2066%3$s %4$s\u2069 فی سیکنڈ</string>
+    <string name="common_time_just_now">ابھی</string>
+    <string name="common_time_just_now_inline">ابھی</string>
+    <plurals name="common_time_minutes_ago">
+        <item quantity="one">%1$d منٹ پہلے</item>
+        <item quantity="other">%1$d منٹ پہلے</item>
+    </plurals>
+    <plurals name="common_time_hours_ago">
+        <item quantity="one">%1$d گھنٹہ پہلے</item>
+        <item quantity="other">%1$d گھنٹے پہلے</item>
+    </plurals>
+    <plurals name="common_time_days_ago">
+        <item quantity="one">%1$d دن پہلے</item>
+        <item quantity="other">%1$d دن پہلے</item>
+    </plurals>
+    <string name="common_expiry_expired">میعاد ختم</string>
+    <string name="common_expiry_today">آج ختم ہو رہا ہے</string>
+    <string name="common_expiry_tomorrow">کل ختم ہوگا</string>
+    <string name="common_expiry_weekday">\u2068%1$s\u2069 کو ختم ہوگا</string>
+    <plurals name="common_expiry_in_days">
+        <item quantity="one">%1$d دن میں ختم ہوگا</item>
+        <item quantity="other">%1$d دن میں ختم ہوگا</item>
+    </plurals>
+    <string-array name="common_weekdays">
+        <item>پیر</item>
+        <item>منگل</item>
+        <item>بدھ</item>
+        <item>جمعرات</item>
+        <item>جمعہ</item>
+        <item>ہفتہ</item>
+        <item>اتوار</item>
+    </string-array>
+</resources>

@@ -21,8 +21,9 @@ import com.zephyr.design.theme.ZTheme
  * No Material icon dependency — keeps the APK small and both platforms visually identical.
  */
 object ZIcons {
-    private fun stroke(name: String, vararg paths: String, width: Float = 1.6f): ImageVector =
-        ImageVector.Builder(name, 24.dp, 24.dp, 24f, 24f).apply {
+    /** [mirror]: a directional glyph (back, chevron, arrow) that flips in right-to-left layouts. */
+    private fun stroke(name: String, vararg paths: String, width: Float = 1.6f, mirror: Boolean = false): ImageVector =
+        ImageVector.Builder(name, 24.dp, 24.dp, 24f, 24f, autoMirror = mirror).apply {
             paths.forEach {
                 addPath(
                     pathData = addPathNodes(it),
@@ -53,15 +54,16 @@ object ZIcons {
         "M15.5 14h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a1.5 1.5 0 0 1-1.5-1.5v-3a1.5 1.5 0 0 1 1.5-1.5z",
         width = 1.8f,
     )
-    val ChevronRight = stroke("chevron_right", "M9.5 6l6 6l-6 6", width = 1.8f)
+    /** Row affordance pointing toward the end edge (› in LTR, ‹ in RTL). */
+    val ChevronRight = stroke("chevron_right", "M9.5 6l6 6l-6 6", width = 1.8f, mirror = true)
     val ChevronDown = stroke("chevron_down", "M7 10l5 5l5-5", width = 1.8f)
-    val Back = stroke("back", "M15 4.5L7.5 12L15 19.5", width = 2.4f)
+    val Back = stroke("back", "M15 4.5L7.5 12L15 19.5", width = 2.4f, mirror = true)
     val Close = stroke("close", "M6.5 6.5l11 11M17.5 6.5l-11 11", width = 1.8f)
     val Filter = stroke("filter", "M4 7h16M7 12h10M10 17h4", width = 2f)
     val Plus = stroke("plus", "M12 5v14M5 12h14", width = 2f)
     val ArrowDown = stroke("arrow_down", "M12 5v14M6.5 13.5L12 19l5.5-5.5", width = 2f)
     val ArrowUp = stroke("arrow_up", "M12 19V5M6.5 10.5L12 5l5.5 5.5", width = 2f)
-    val ArrowRight = stroke("arrow_right", "M5 12h14M13.5 6.5L19 12l-5.5 5.5", width = 1.8f)
+    val ArrowRight = stroke("arrow_right", "M5 12h14M13.5 6.5L19 12l-5.5 5.5", width = 1.8f, mirror = true)
     val Check = stroke("check", "M5 12.5l4.5 4.5L19 7.5", width = 2.2f)
     val Qr = stroke(
         "qr",

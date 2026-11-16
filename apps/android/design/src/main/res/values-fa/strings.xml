@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- فارسی. Generated from en (values/strings.xml); keys and format args 1:1. %n$s args are bidi-isolated (\u2068…\u2069). -->
+<resources>
+
+    <!-- ── Shared ── -->
+    <string name="common_done">تمام</string>
+    <string name="common_close">بستن</string>
+    <string name="common_clear">پاک کردن</string>
+    <string name="common_latency_timeout">تایم‌اوت</string>
+    <string name="common_traffic_a11y">دانلود \u2066%1$s %2$s\u2069 در ثانیه، آپلود \u2066%3$s %4$s\u2069 در ثانیه</string>
+    <string name="common_time_just_now">هم‌اکنون</string>
+    <string name="common_time_just_now_inline">هم‌اکنون</string>
+    <plurals name="common_time_minutes_ago">
+        <item quantity="one">%1$d دقیقه پیش</item>
+        <item quantity="other">%1$d دقیقه پیش</item>
+    </plurals>
+    <plurals name="common_time_hours_ago">
+        <item quantity="one">%1$d ساعت پیش</item>
+        <item quantity="other">%1$d ساعت پیش</item>
+    </plurals>
+    <plurals name="common_time_days_ago">
+        <item quantity="one">%1$d روز پیش</item>
+        <item quantity="other">%1$d روز پیش</item>
+    </plurals>
+    <string name="common_expiry_expired">منقضی شده</string>
+    <string name="common_expiry_today">امروز منقضی می‌شود</string>
+    <string name="common_expiry_tomorrow">فردا منقضی می‌شود</string>
+    <string name="common_expiry_weekday">\u2068%1$s\u2069 منقضی می‌شود</string>
+    <plurals name="common_expiry_in_days">
+        <item quantity="one">%1$d روز دیگر منقضی می‌شود</item>
+        <item quantity="other">%1$d روز دیگر منقضی می‌شود</item>
+    </plurals>
+    <string-array name="common_weekdays">
+        <item>دوشنبه</item>
+        <item>سه‌شنبه</item>
+        <item>چهارشنبه</item>
+        <item>پنجشنبه</item>
+        <item>جمعه</item>
+        <item>شنبه</item>
+        <item>یکشنبه</item>
+    </string-array>
+</resources>

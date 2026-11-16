@@ -42,6 +42,8 @@ fun ZSparkline(
     val shift = remember { Animatable(0f) }
     if (panMillis > 0) LaunchedEffect(values) {
         // Start one step to the right and glide left; animation runs only while this is composed/visible.
+        // Deliberately not mirrored in RTL: time runs left→right on charts in ar/fa/ur UIs too (the Canvas draws in
+        // absolute coordinates), so the newest sample stays on the right edge.
         shift.snapTo(1f)
         shift.animateTo(0f, tween(panMillis, easing = LinearEasing))
     }

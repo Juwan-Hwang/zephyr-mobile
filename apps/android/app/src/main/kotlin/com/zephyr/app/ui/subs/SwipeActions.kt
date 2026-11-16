@@ -19,11 +19,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.zephyr.design.components.ZText
 import com.zephyr.design.theme.ZTheme
@@ -33,8 +35,9 @@ import kotlin.math.roundToInt
 internal data class SwipeAction(val label: String, val color: Color, val onClick: () -> Unit)
 
 /**
- * Review L-P2-9 (spec §4 “左滑更新/删除”): swipe a row left to reveal its actions; it snaps open past half the
- * actions' width, closes on a right swipe or after an action. TalkBack gets the same actions as custom actions.
+ * Review L-P2-9 (spec §4 “左滑更新/删除”): swipe a row toward the start edge (left in LTR, right in RTL) to reveal
+ * its actions, which sit at the end edge; it snaps open past half the actions' width, closes on the opposite swipe
+ * or after an action. TalkBack gets the same actions as custom actions.
  * [resetKey] closes the row when it changes (e.g. after the list updates).
  */
 @Composable
@@ -43,6 +46,8 @@ internal fun SwipeActionsRow(actions: List<SwipeAction>, resetKey: Any? = null, 
     val maxPx = with(LocalDensity.current) { (actionWidth * actions.size).toPx() }
     val offset = remember { Animatable(0f) }
     val scope = rememberCoroutineScope()
+    // offset {} already mirrors x in RTL; the raw finger delta does not, so flip it to keep "drag follows finger".
+    val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     LaunchedEffect(resetKey) { offset.snapTo(0f) }
     fun close() = scope.launch { offset.animateTo(0f) }
     Box(Modifier.semantics { customActions = actions.map { a -> CustomAccessibilityAction(a.label) { a.onClick(); true } } }) {
@@ -62,6 +67,7 @@ internal fun SwipeActionsRow(actions: List<SwipeAction>, resetKey: Any? = null, 
                 .draggable(
                     rememberDraggableState { d -> scope.launch { offset.snapTo((offset.value + d).coerceIn(-maxPx, 0f)) } },
                     Orientation.Horizontal,
+                    reverseDirection = rtl,
                     onDragStopped = { v -> offset.animateTo(if (offset.value < -maxPx / 2 || v < -800f) -maxPx else 0f) },
                 ),
         ) { content() }

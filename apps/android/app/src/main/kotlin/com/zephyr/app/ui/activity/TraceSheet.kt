@@ -121,9 +121,10 @@ private fun Step(index: Int, label: String, value: String, detail: String?, mono
         kotlinx.coroutines.delay(80L + index * 60L)
         shown.animateTo(1f, ZAnim.slow())
     }
+    val dir = com.zephyr.app.ui.common.startToEndSign()
     Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min).graphicsLayer {
         alpha = shown.value
-        translationX = (1f - shown.value) * -8.dp.toPx()
+        translationX = dir * (1f - shown.value) * -8.dp.toPx()
     }) {
         Box(Modifier.width(20.dp).fillMaxHeight()) {
             if (!last) Box(Modifier.align(Alignment.TopCenter).padding(top = 13.dp).width(1.dp).fillMaxHeight().background(c.hairlineStrong))
@@ -151,8 +152,10 @@ private fun TraceRailFlow(modifier: Modifier) {
         androidx.compose.animation.core.infiniteRepeatable<Float>(androidx.compose.animation.core.tween<Float>(1800, easing = androidx.compose.animation.core.FastOutSlowInEasing)),
         label = "railT",
     )
+    val rtl = com.zephyr.app.ui.common.startToEndSign() < 0
     androidx.compose.foundation.Canvas(modifier.clearAndSetSemantics {}) {
-        val seg = 40.dp.toPx(); val x = 10.dp.toPx(); val top = 13.dp.toPx(); val bottom = size.height - 48.dp.toPx()
+        // The rail is the step dots' column at the start edge; Canvas x does not mirror by itself.
+        val seg = 40.dp.toPx(); val x = if (rtl) size.width - 10.dp.toPx() else 10.dp.toPx(); val top = 13.dp.toPx(); val bottom = size.height - 48.dp.toPx()
         if (bottom <= top) return@Canvas
         val y = top - seg + (bottom - top + seg) * t
         val y0 = y.coerceAtLeast(top); val y1 = (y + seg).coerceAtMost(bottom)

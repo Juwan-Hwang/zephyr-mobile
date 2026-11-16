@@ -118,16 +118,18 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
 
         // Review H-P2-11: 原型 --cmdbg .72 + blur 30。API 31+ 模糊指令层下面的页面；更低版本 blur 无效，遮罩保持 .86。
         val cmdBlur by androidx.compose.animation.core.animateDpAsState(if (command) 30.dp else 0.dp, ZAnim.standard(), label = "cmdBlur")
+        // Push slides in from the end edge, pop returns toward it: mirrored in RTL (slide offsets are absolute px).
+        val dir = com.zephyr.app.ui.common.startToEndSign()
         Box(Modifier.fillMaxSize().background(ZTheme.colors.bg)) {
             NavHost(
                 nav, startDestination = if (startOnboarding) Onboarding else Home,
                 modifier = if (cmdBlur > 0.dp) Modifier.blur(cmdBlur) else Modifier,
-                enterTransition = { slideInHorizontally(ZAnim.slow()) { it / 4 } + fadeIn(ZAnim.standard()) },
+                enterTransition = { slideInHorizontally(ZAnim.slow()) { dir * it / 4 } + fadeIn(ZAnim.standard()) },
                 // Review A-P2-8: the page underneath moves too, so a predictive-back drag (which seeks these
                 // transitions) previews it sliding back in from the left instead of a flat cross-fade.
-                exitTransition = { slideOutHorizontally(ZAnim.slow()) { -it / 10 } + fadeOut(ZAnim.standard()) },
-                popEnterTransition = { slideInHorizontally(ZAnim.standard()) { -it / 10 } + fadeIn(ZAnim.standard()) },
-                popExitTransition = { slideOutHorizontally(ZAnim.standard()) { it / 4 } + fadeOut(ZAnim.standard()) },
+                exitTransition = { slideOutHorizontally(ZAnim.slow()) { -dir * it / 10 } + fadeOut(ZAnim.standard()) },
+                popEnterTransition = { slideInHorizontally(ZAnim.standard()) { -dir * it / 10 } + fadeIn(ZAnim.standard()) },
+                popExitTransition = { slideOutHorizontally(ZAnim.standard()) { dir * it / 4 } + fadeOut(ZAnim.standard()) },
             ) {
                 composable<Home> {
                     HomeScreen(

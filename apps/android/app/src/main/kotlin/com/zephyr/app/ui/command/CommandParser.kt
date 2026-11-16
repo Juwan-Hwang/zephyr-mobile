@@ -25,14 +25,15 @@ object CommandParser {
 
     /** Prototype RGN plus the remaining regions of the node library. */
     private val REGIONS: List<Triple<String, String, List<String>>> = listOf(
-        Triple("日本", "JP", listOf("日本", "东京", "大阪", "jp", "japan", "tokyo")),
-        Triple("美国", "US", listOf("美国", "洛杉矶", "us", "usa")),
-        Triple("香港", "HK", listOf("香港", "hk")),
-        Triple("新加坡", "SG", listOf("新加坡", "狮城", "sg")),
-        Triple("台湾", "TW", listOf("台湾", "台北", "tw")),
-        Triple("英国", "GB", listOf("英国", "伦敦", "uk", "gb")),
-        Triple("韩国", "KR", listOf("韩国", "首尔", "kr")),
-        Triple("德国", "DE", listOf("德国", "法兰克福", "de")),
+        // ar / fa / ur names match command_region_* and the localized command_examples.
+        Triple("日本", "JP", listOf("日本", "东京", "大阪", "jp", "japan", "tokyo", "اليابان", "طوكيو", "ژاپن", "توکیو", "جاپان", "ٹوکیو")),
+        Triple("美国", "US", listOf("美国", "洛杉矶", "us", "usa", "الولايات المتحدة", "أمريكا", "آمریکا", "امریکا", "امریکہ")),
+        Triple("香港", "HK", listOf("香港", "hk", "هونغ كونغ", "هنگ کنگ", "ہانگ کانگ")),
+        Triple("新加坡", "SG", listOf("新加坡", "狮城", "sg", "سنغافورة", "سنگاپور")),
+        Triple("台湾", "TW", listOf("台湾", "台北", "tw", "تايوان", "تایوان", "تائیوان")),
+        Triple("英国", "GB", listOf("英国", "伦敦", "uk", "gb", "المملكة المتحدة", "بريطانيا", "بریتانیا", "انگلیس", "برطانیہ")),
+        Triple("韩国", "KR", listOf("韩国", "首尔", "kr", "كوريا", "کره", "کوریا")),
+        Triple("德国", "DE", listOf("德国", "法兰克福", "de", "ألمانيا", "آلمان", "جرمنی")),
     )
 
     /** Prototype SVC rows for scene "其他": direct-able by host. */
@@ -41,7 +42,7 @@ object CommandParser {
         Triple("Telegram", "telegram.org", listOf("telegram", "电报", "tg")),
     )
 
-    private val ACTS = listOf(Act.DIRECT to listOf("直连", "不走代理", "direct"), Act.UHD to listOf("4k"))
+    private val ACTS = listOf(Act.DIRECT to listOf("直连", "不走代理", "direct", "مباشر", "مستقیم", "براہ راست"), Act.UHD to listOf("4k"))
 
     fun parse(q: String): Parsed {
         val lo = q.lowercase()
@@ -66,7 +67,7 @@ object CommandParser {
             if (i >= 0) { act = a; spans += Span(i, k.length, Tok.ACTION); break@loop }
         }
         if (svc == null) {
-            val m = Regex("视频|流媒体").find(q)
+            val m = Regex("视频|流媒体|الفيديو|فيديو|ویدیو|ویڈیو").find(q)
             if (m != null) { svc = Service("视频", SceneKind.VIDEO); spans += Span(m.range.first, m.value.length, Tok.SERVICE) }
         }
         return Parsed(svc, rg, act, spans.sortedBy { it.start })

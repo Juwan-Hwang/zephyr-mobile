@@ -141,6 +141,8 @@ private fun SceneRow(
         else -> s.selected
     }
     val stepPx = with(androidx.compose.ui.platform.LocalDensity.current) { 42.dp.toPx() }
+    // RTL: dragging toward the end edge (left) still means "next", like a mirrored slider.
+    val dir = com.zephyr.app.ui.common.startToEndSign()
     val latestSlots by androidx.compose.runtime.rememberUpdatedState(slots)
     val latestCurrent by androidx.compose.runtime.rememberUpdatedState(current)
     Box {
@@ -159,7 +161,7 @@ private fun SceneRow(
                         },
                         onDragCancel = { scrubbing = false; idx = latestCurrent },
                     ) { _, d ->
-                        dx += d
+                        dx += d * dir
                         val i = (latestCurrent + kotlin.math.round(dx / stepPx).toInt()).coerceIn(0, latestSlots.lastIndex)
                         if (i != idx) { idx = i; tick++; hf.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick) }
                     }
@@ -204,7 +206,7 @@ private fun SceneRow(
         val right: @Composable (Modifier) -> Unit = { m -> Column(m, horizontalAlignment = if (stacked) Alignment.Start else Alignment.End) {
             AnimatedContent(
                 targetState = shown,
-                transitionSpec = { (slideInHorizontally(ZAnim.slow()) { it / 3 } + fadeIn(ZAnim.standard())) togetherWith fadeOut(ZAnim.micro()) },
+                transitionSpec = { (slideInHorizontally(ZAnim.slow()) { dir * it / 3 } + fadeIn(ZAnim.standard())) togetherWith fadeOut(ZAnim.micro()) },
                 label = "node",
             ) { n ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -307,6 +309,7 @@ private fun CompactButton(text: String, bg: androidx.compose.ui.graphics.Color, 
 
 @Composable
 private fun ScrubCoach() {
+    val dir = com.zephyr.app.ui.common.startToEndSign()
     val nudge = androidx.compose.animation.core.rememberInfiniteTransition(label = "coach")
     val dx by nudge.animateFloat(
         0f, 0f,
@@ -327,7 +330,7 @@ private fun ScrubCoach() {
                 val p = m.measure(c.copy(minHeight = 0, maxHeight = androidx.compose.ui.unit.Constraints.Infinity))
                 layout(c.maxWidth, 0) { p.place((c.maxWidth - p.width) / 2, -p.height / 2) }
             }
-            .graphicsLayer { translationX = dx * density }
+            .graphicsLayer { translationX = dir * dx * density }
             .background(ZTheme.colors.surface2)
             .padding(horizontal = 8.dp),
         style = ZTheme.type.footnote.copy(fontSize = androidx.compose.ui.unit.TextUnit(11f, androidx.compose.ui.unit.TextUnitType.Sp)),
