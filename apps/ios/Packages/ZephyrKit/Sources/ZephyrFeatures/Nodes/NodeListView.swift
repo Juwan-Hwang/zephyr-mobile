@@ -161,8 +161,9 @@ final class NodeListView: UIView, UICollectionViewDataSource, UICollectionViewDe
         footer.frame = CGRect(x: 0, y: b.height - NodeListStyle.footerHeight, width: b.width, height: NodeListStyle.footerHeight)
         let railW = NodeListStyle.railTouchWidth
         let railTop = NodeListStyle.pinnedHeight + ZTokens.Space.n2
-        rail.frame = CGRect(x: b.width - railW - ZTokens.Space.n1, y: railTop,
-                            width: railW, height: max(0, b.height - railTop - NodeListStyle.footerHeight))
+        // RTL：索引条随尾边移到左侧。
+        rail.frame = rtl(CGRect(x: b.width - railW - ZTokens.Space.n1, y: railTop,
+                                width: railW, height: max(0, b.height - railTop - NodeListStyle.footerHeight)), in: b.width)
         updateChrome()
     }
 

@@ -68,7 +68,8 @@ final class NodeListFooterView: UIView {
         let h = ceil(positionLabel.font?.lineHeight ?? 14)
         let top: CGFloat = 12
         let half = (bounds.width - lead * 2) / 2
-        positionLabel.frame = CGRect(x: lead, y: top, width: half, height: h)
-        testedLabel.frame = CGRect(x: lead + half, y: top, width: half, height: h)
+        testedLabel.textAlignment = trailingAlignment
+        positionLabel.frame = rtl(CGRect(x: lead, y: top, width: half, height: h), in: bounds.width)
+        testedLabel.frame = rtl(CGRect(x: lead + half, y: top, width: half, height: h), in: bounds.width)
     }
 }

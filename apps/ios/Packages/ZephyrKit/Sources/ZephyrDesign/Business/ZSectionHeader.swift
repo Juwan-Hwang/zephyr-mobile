@@ -40,7 +40,7 @@ public struct ZSectionHeader: View {
                 Button(action: action) {
                     HStack(spacing: ZTokens.Space.n1) {
                         Text(verbatim: trailing)
-                        Image(systemName: "chevron.right").imageScale(.small)
+                        Image(systemName: "chevron.forward").imageScale(.small)
                     }
                     .foregroundStyle(ZColor.t3)
                     .frame(minHeight: ZTokens.Layout.touchMinIos / 2)

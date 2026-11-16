@@ -59,7 +59,9 @@ struct HorizontalPanOverlay: UIViewRepresentable {
         }
 
         @objc func pan(_ g: UIPanGestureRecognizer) {
-            let dx = g.translation(in: g.view).x
+            // RTL 下“向前”是向左滑：取反，使候选顺序与阅读方向一致。
+            let raw = g.translation(in: g.view).x
+            let dx = g.view?.effectiveUserInterfaceLayoutDirection == .rightToLeft ? -raw : raw
             switch g.state {
             case .began: parent.onPressChanged(false); parent.onBegan(); parent.onChanged(dx)
             case .changed: parent.onChanged(dx)

@@ -29,7 +29,7 @@ struct SubscriptionImportOptions: View {
                 .zType(.body)
                 .foregroundStyle(ZTokens.Colors.screenT1)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Image(systemName: "chevron.right")
+            Image(systemName: "chevron.forward")
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(ZQuaternaryText())
                 .accessibilityHidden(true)

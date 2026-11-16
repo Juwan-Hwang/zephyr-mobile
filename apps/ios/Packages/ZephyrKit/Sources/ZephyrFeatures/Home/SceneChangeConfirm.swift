@@ -86,7 +86,7 @@ struct ExitIPLine: View {
         HStack(spacing: ZTokens.Space.n3) {
             Text(verbatim: side(change?.fromRegion ?? fallbackFrom, change?.fromIp))
                 .foregroundStyle(ZColor.t2)
-            Image(systemName: "arrow.right").font(.caption2).foregroundStyle(ZQuaternaryText())
+            Image(systemName: "arrow.forward").font(.caption2).foregroundStyle(ZQuaternaryText())
             Text(verbatim: side(change?.toRegion ?? fallbackTo, change?.toIp))
                 .foregroundStyle(ZTokens.Colors.screenT1)
         }
