@@ -928,10 +928,10 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     }
 
     static func defaultName(_ url: URL?) -> String {
-        guard let url else { return "本地配置" }
-        guard let host = url.host else { return "新订阅" }
+        guard let url else { return ZL.tr("本地配置") }
+        guard let host = url.host else { return ZL.tr("新订阅") }
         let parts = host.split(separator: ".").map(String.init).filter { !$0.isEmpty }
-        let base = parts.count >= 2 ? parts[parts.count - 2] : (parts.first ?? "新订阅")
+        let base = parts.count >= 2 ? parts[parts.count - 2] : (parts.first ?? ZL.tr("新订阅"))
         return base.prefix(1).uppercased() + base.dropFirst()
     }
 
