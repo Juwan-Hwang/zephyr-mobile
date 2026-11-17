@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "note": "已知未对齐项：平台 术语 语言。对应端改完后必须从此删除，否则 check-glossary 报“过期豁免”。",
+  "pending": [
+    "ios mode.global sw", "ios mode.global vi",
+    "ios mode.global_title sw", "ios mode.global_title vi",
+    "ios override es", "ios override tr",
+    "ios logs tk",
+    "ios exit_ip tk", "ios exit_ip ar",
+    "ios none ar", "ios on ar", "ios off ar",
+    "ios status.failed es",
+    "ios auto_update ar", "android auto_update sw", "ios auto_update tr",
+    "ios local_proxy_port ru", "ios local_proxy_port fa", "ios local_proxy_port my", "ios local_proxy_port ur", "ios local_proxy_port sw",
+    "android require_password ru", "android require_password fa", "android require_password tk", "android require_password ar",
+    "ios require_password ar", "android require_password ur", "android require_password sw", "android require_password tr",
+    "ios accent ur",
+    "ios diagnostics my"
+  ]
+}
