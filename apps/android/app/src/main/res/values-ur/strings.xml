@@ -3,12 +3,12 @@
 <resources>
 
     <!-- ── Shared ── -->
-    <string name="common_connect">کنیکٹ کریں</string>
-    <string name="common_disconnect">ڈسکنیکٹ کریں</string>
+    <string name="common_connect">منسلک کریں</string>
+    <string name="common_disconnect">منقطع کریں</string>
     <string name="common_cancel">منسوخ کریں</string>
     <string name="common_apply">لاگو کریں</string>
     <string name="common_change">تبدیل کریں</string>
-    <string name="common_undo">واپس لیں</string>
+    <string name="common_undo">واپس کریں</string>
     <string name="common_share">شیئر کریں</string>
     <string name="common_none">کوئی نہیں</string>
     <string name="common_on">آن</string>
@@ -26,8 +26,8 @@
     <string name="common_exit_ip_changes">ایگزٹ IP بدل جائے گا</string>
     <string name="common_adding">شامل کیا جا رہا ہے…</string>
     <string name="common_add">شامل کریں</string>
-    <string name="common_updating">اپڈیٹ ہو رہا ہے…</string>
-    <string name="common_retesting">جانچ ہو رہی ہے…</string>
+    <string name="common_updating">اپ ڈیٹ ہو رہا ہے…</string>
+    <string name="common_retesting">ٹیسٹ جاری…</string>
     <string name="common_local_data_note">سبسکرپشنز اور ٹریفک ڈیٹا صرف اسی ڈیوائس پر محفوظ ہوتے ہیں۔</string>
     <string name="common_back_to">\u2068%1$s\u2069 پر واپس جائیں</string>
     <plurals name="common_node_count">
@@ -43,8 +43,8 @@
     <string name="common_status_connecting_ellipsis">منسلک ہو رہا ہے…</string>
     <string name="common_status_disconnecting">منقطع ہو رہا ہے</string>
     <string name="common_status_failed">کنکشن ناکام</string>
-    <string name="common_status_disconnected">منسلک نہیں</string>
-    <string name="common_mode_rule">قواعد</string>
+    <string name="common_status_disconnected">غیر منسلک</string>
+    <string name="common_mode_rule">قاعدہ</string>
     <string name="common_mode_global">گلوبل</string>
     <string name="common_mode_direct">براہ راست</string>
     <string name="common_mode_rule_hint">منظر کے مطابق روٹنگ</string>
@@ -60,7 +60,7 @@
     <string name="common_pair_and">\u2068%1$s\u2069 اور \u2068%2$s\u2069</string>
     <string name="common_source_group">سبسکرپشن گروپ</string>
     <string name="common_source_auto">Zephyr کا انتخاب</string>
-    <string name="common_all">تمام</string>
+    <string name="common_all">سب</string>
     <plurals name="common_region_count">
         <item quantity="one">%1$d علاقہ</item>
         <item quantity="other">%1$d علاقے</item>
@@ -70,7 +70,7 @@
     <string name="home_global_title">گلوبل موڈ</string>
     <string name="home_global_body">تمام ٹریفک \u2068%1$s\u2069 سے گزرتا ہے۔ مناظر موقوف ہیں۔</string>
     <string name="home_global_body_any">تمام ٹریفک ایک ہی نوڈ سے گزرتا ہے۔ مناظر موقوف ہیں۔</string>
-    <string name="home_global_use_rule">قواعد موڈ استعمال کریں</string>
+    <string name="home_global_use_rule">قاعدہ موڈ استعمال کریں</string>
     <string name="home_global_change_node">نوڈ تبدیل کریں</string>
     <string name="home_global_change_note">تمام ایپس \u2068%1$s\u2069 سے باہر جائیں گی۔</string>
     <string name="home_global_change_to">\u2068%1$s\u2069 پر تبدیل کریں</string>
@@ -78,9 +78,9 @@
         <item quantity="one">%1$d مزید سبسکرپشن</item>
         <item quantity="other">%1$d مزید سبسکرپشنز</item>
     </plurals>
-    <string name="home_scan_progress">جانچ جاری \u2066%1$d/%2$d\u2069</string>
-    <string name="home_scan_running">جانچ ہو رہی ہے…</string>
-    <string name="home_scenes_tested">\u2068%1$s\u2069 جانچا گیا</string>
+    <string name="home_scan_progress">ٹیسٹ جاری \u2066%1$d/%2$d\u2069</string>
+    <string name="home_scan_running">ٹیسٹ جاری…</string>
+    <string name="home_scenes_tested">\u2068%1$s\u2069 ٹیسٹ کیا گیا</string>
     <string name="home_today_usage">آج \u2068%1$s\u2069</string>
     <string name="home_spark_a11y">پچھلے 90 سیکنڈ میں ڈاؤن لوڈ کی رفتار</string>
     <string name="home_switch_mode">موڈ تبدیل کریں</string>
@@ -94,20 +94,20 @@
     <string name="home_failure_core">کور شروع نہیں ہو سکا</string>
     <string name="home_action_switch_mode">موڈ کی تبدیلی</string>
     <string name="home_action_preview_exit">ایگزٹ کا پیش منظر</string>
-    <string name="home_action_retest">دوبارہ جانچ</string>
+    <string name="home_action_retest">دوبارہ ٹیسٹ</string>
     <string name="home_action_switch_source">سورس کی تبدیلی</string>
     <string name="home_action_switch_exit">ایگزٹ کی تبدیلی</string>
     <string name="home_action_load_nodes">نوڈز لوڈ کرنے</string>
     <string name="home_action_switch_node">نوڈ کی تبدیلی</string>
     <string name="home_action_undo">واپسی</string>
-    <string name="home_error_not_connected">\u2068%1$s\u2069 کے لیے پہلے کنیکٹ کریں</string>
+    <string name="home_error_not_connected">\u2068%1$s\u2069 کے لیے پہلے منسلک ہوں</string>
     <string name="home_error_failed">\u2068%1$s\u2069 میں ناکامی</string>
     <string name="home_error_node_gone">\u2068%1$s\u2069 میں ناکامی: نوڈ اب موجود نہیں</string>
-    <string name="home_failover_none">\u2068%1$s\u2069 کا ایگزٹ جواب نہیں دے رہا۔ ایگزٹ IP خودبخود نہیں بدلے گا۔</string>
-    <string name="home_failover_switched">\u2068%1$s\u2069 کا ایگزٹ خودبخود \u2068%2$s\u2069 پر بدل گیا</string>
+    <string name="home_failover_none">\u2068%1$s\u2069 کا ایگزٹ جواب نہیں دے رہا۔ ایگزٹ IP خود بخود نہیں بدلے گا۔</string>
+    <string name="home_failover_switched">\u2068%1$s\u2069 کا ایگزٹ خود بخود \u2068%2$s\u2069 پر بدل گیا</string>
     <string name="home_switched_to">\u2068%1$s\u2069 پر منتقل ہو گیا</string>
     <string name="home_now_uses">\u2068%1$s\u2069 اب \u2068%2$s\u2069 استعمال کر رہا ہے</string>
-    <string name="home_now_direct">\u2068%1$s\u2069 اب براہ راست کنیکٹ ہوتا ہے</string>
+    <string name="home_now_direct">\u2068%1$s\u2069 اب براہ راست منسلک ہوتا ہے</string>
     <string name="home_now_all_nodes">\u2068%1$s\u2069: دوبارہ تمام نوڈز</string>
     <string name="home_now_uses_uhd">\u2068%1$s\u2069 اب \u2068%2$s\u2069 استعمال کر رہا ہے (صرف 4K)</string>
     <string name="home_now_uhd_only">\u2068%1$s\u2069 اب صرف 4K نوڈز استعمال کر رہا ہے</string>
@@ -115,10 +115,10 @@
     <string name="home_scene_next_region">اگلا علاقہ: \u2068%1$s\u2069</string>
     <string name="home_scene_prev_region">پچھلا علاقہ: \u2068%1$s\u2069</string>
     <string name="home_scene_details_a11y">\u2068%1$s\u2069 منظر کی تفصیلات</string>
-    <string name="home_scene_testing">جانچ جاری</string>
+    <string name="home_scene_testing">ٹیسٹ جاری</string>
     <string name="home_scene_services_down">\u2068%1$s\u2069 دستیاب نہیں</string>
     <string name="home_scene_services_ok">\u2068%1$s\u2069 دستیاب</string>
-    <string name="home_pin_line">%1$s: %2$s</string>
+    <string name="home_pin_line">\u2068%1$s\u2069: \u2068%2$s\u2069</string>
     <string name="home_confirm_apps">\u2068%1$s\u2069 کا ایگزٹ IP تبدیل کریں؟</string>
     <string name="home_confirm_scene">\u2068%1$s\u2069 منظر کا ایگزٹ IP تبدیل کریں؟</string>
     <string name="home_confirm_unchanged">\u2068%1$s\u2069 ویسا ہی رہے گا۔</string>
@@ -126,26 +126,26 @@
 
     <!-- ── Scene sheet ── -->
     <plurals name="scene_available_unit">
-        <item quantity="one">نوڈ دستیاب</item>
-        <item quantity="other">نوڈز دستیاب</item>
+        <item quantity="one">دستیاب نوڈ</item>
+        <item quantity="other">دستیاب نوڈز</item>
     </plurals>
     <plurals name="scene_tested_from">
-        <item quantity="one">%1$d سبسکرپشن سے جانچا گیا</item>
-        <item quantity="other">%1$d سبسکرپشنز سے جانچا گیا</item>
+        <item quantity="one">%1$d سبسکرپشن سے ٹیسٹ کیا گیا</item>
+        <item quantity="other">%1$d سبسکرپشنز سے ٹیسٹ کیا گیا</item>
     </plurals>
-    <string name="scene_pinned_for">\u2068%1$s\u2069 کے لیے پن</string>
+    <string name="scene_pinned_for">\u2068%1$s\u2069 کے لیے پن شدہ</string>
     <string name="scene_when_unavailable">جب نوڈ دستیاب نہ ہو</string>
     <string name="scene_ask">پوچھیں</string>
     <string name="scene_auto_switch">خودکار تبدیلی</string>
     <string name="scene_node_scope">نوڈز کا دائرہ</string>
     <string name="scene_uhd_only">صرف 4K نوڈز</string>
     <string name="scene_pinned_value">\u2068%1$s\u2069 (پن شدہ)</string>
-    <string name="scene_retest">دوبارہ جانچیں</string>
+    <string name="scene_retest">دوبارہ ٹیسٹ کریں</string>
     <string name="scene_note">انتخاب صرف Zephyr میں محفوظ ہوتے ہیں۔ آپ کی سبسکرپشن کی کنفیگریشن تبدیل نہیں ہوتی۔</string>
-    <string name="scene_note_tested">\u2068%1$s\u2069 آخری جانچ: \u2068%2$s\u2069۔</string>
+    <string name="scene_note_tested">\u2068%1$s\u2069 آخری ٹیسٹ: \u2068%2$s\u2069۔</string>
 
     <!-- ── Command layer ── -->
-    <string name="command_placeholder">تلاش کریں یا کمانڈ لکھیں</string>
+    <string name="command_placeholder">تلاش کریں یا کمانڈ درج کریں</string>
     <string name="command_section_suggestions">تجاویز</string>
     <string name="command_section_command">کمانڈز</string>
     <string-array name="command_examples">
@@ -185,8 +185,8 @@
     <string name="command_uhd_clear_note">\u2068%1$s\u2069 منظر صرف 4K نوڈز استعمال کرتا ہے۔ دوبارہ تمام نوڈز استعمال ہوں گے؛ موجودہ نوڈ برقرار رہے گا۔</string>
     <string name="command_uhd_none">کوئی نوڈ 4K سپورٹ نہیں کرتا۔</string>
     <plurals name="command_uhd_untested">
-        <item quantity="one">4K کا %1$d نوڈ ابھی جانچا نہیں گیا۔ لاگو کرنے کے بعد منظر دوبارہ جانچیں۔</item>
-        <item quantity="other">4K کے %1$d نوڈز ابھی جانچے نہیں گئے۔ لاگو کرنے کے بعد منظر دوبارہ جانچیں۔</item>
+        <item quantity="one">4K کا %1$d نوڈ ابھی ٹیسٹ نہیں ہوا۔ لاگو کرنے کے بعد منظر دوبارہ ٹیسٹ کریں۔</item>
+        <item quantity="other">4K کے %1$d نوڈز ابھی ٹیسٹ نہیں ہوئے۔ لاگو کرنے کے بعد منظر دوبارہ ٹیسٹ کریں۔</item>
     </plurals>
     <plurals name="command_uhd_matching_keep">
         <item quantity="one">%1$d میں سے %2$d 4K سپورٹ کرتا ہے؛ موجودہ نوڈ برقرار رہے گا۔</item>
@@ -198,7 +198,7 @@
     </plurals>
     <string name="command_uhd_fastest">تیز ترین 4K نوڈ</string>
     <string name="command_uhd_auto_note">اب سے خودکار تبدیلی صرف 4K نوڈز میں سے انتخاب کرے گی۔</string>
-    <string name="command_direct_title">\u2068%1$s\u2069 کو براہ راست جوڑیں</string>
+    <string name="command_direct_title">\u2068%1$s\u2069 کو براہ راست منسلک کریں</string>
     <string name="command_direct_note">\u2068%1$s\u2069 کا ٹریفک پراکسی سے نہیں گزرے گا۔</string>
     <string name="command_direct_from_proxy">پراکسی</string>
     <string name="command_zephyr_only">صرف Zephyr میں لاگو ہوتا ہے۔ آپ کی سبسکرپشن کی کنفیگریشن تبدیل نہیں ہوتی۔</string>
@@ -206,7 +206,7 @@
     <!-- ── Recent connections ── -->
     <string name="activity_title">حالیہ کنکشنز</string>
     <string name="activity_back">‹ حالیہ کنکشنز</string>
-    <string name="activity_empty">کنیکٹ ہونے کے بعد حال ہی میں دیکھے گئے ڈومینز یہاں نظر آئیں گے۔</string>
+    <string name="activity_empty">منسلک ہونے کے بعد حال ہی میں دیکھے گئے ڈومینز یہاں نظر آئیں گے۔</string>
     <string name="activity_host_a11y">\u2068%1$s\u2069 کنکشن کی تفصیلات</string>
     <string name="activity_close_host_a11y">\u2068%1$s\u2069 کے کنکشنز بند کریں</string>
     <string name="activity_no_app_note">ابھی معلوم نہیں کہ ہر کنکشن کس ایپ نے بنایا، اس لیے صرف ڈومینز دکھائے جا رہے ہیں۔</string>
@@ -243,7 +243,7 @@
     <string name="trace_option_unchanged">کوئی تبدیلی نہیں</string>
     <string name="trace_override_failed">تبدیل نہیں ہو سکا: \u2068%1$s\u2069</string>
     <string name="trace_always_apply">ہمیشہ لاگو کریں</string>
-    <string name="trace_always_apply_hint">بند ہونے پر صرف یہی کنکشن بدلتا ہے</string>
+    <string name="trace_always_apply_hint">آف ہونے پر صرف یہ کنکشن تبدیل ہوگا</string>
 
     <!-- ── Library ── -->
     <string name="library_widgets">ویجیٹس اور فوری ترتیبات</string>
@@ -262,8 +262,8 @@
     <string name="nodes_empty_title">ابھی کوئی نوڈ نہیں</string>
     <string name="nodes_empty_message">سبسکرپشن امپورٹ کریں، اس کے نوڈز یہاں نظر آئیں گے</string>
     <string name="nodes_empty_action">سبسکرپشن امپورٹ کریں</string>
-    <string name="nodes_no_match">«\u2068%1$s\u2069» سے کوئی نوڈ میل نہیں کھاتا</string>
-    <string name="nodes_tested">\u2068%1$s\u2069 جانچے گئے</string>
+    <string name="nodes_no_match">“\u2068%1$s\u2069” سے کوئی نوڈ میل نہیں کھاتا</string>
+    <string name="nodes_tested">\u2068%1$s\u2069 ٹیسٹ کیے گئے</string>
     <string name="nodes_jump_to">\u2068%1$s\u2069 پر جائیں</string>
 
     <!-- ── Rules ── -->
@@ -276,12 +276,12 @@
         <item quantity="one">%1$d پرت · کمپائل شدہ · ڈسک پر \u2068%2$s\u2069</item>
         <item quantity="other">%1$d پرتیں · کمپائل شدہ · ڈسک پر \u2068%2$s\u2069</item>
     </plurals>
-    <string name="rules_test_placeholder">ڈومین یا IP جانچیں</string>
+    <string name="rules_test_placeholder">ڈومین یا IP ٹیسٹ کریں</string>
     <string name="rules_test_hint">مماثل قاعدہ اور ایگزٹ دیکھنے کے لیے ڈومین یا IP ایڈریس درج کریں۔</string>
     <string name="rules_match_order">میچ کی ترتیب</string>
     <string name="rules_top_to_bottom">اوپر سے نیچے</string>
     <string name="rules_other_traffic">باقی تمام ٹریفک</string>
-    <string name="rules_note">قواعد کے سیٹ ڈیوائس پر ایک صرف پڑھنے والے انڈیکس میں کمپائل ہوتے ہیں اور ضرورت کے مطابق ڈسک سے پڑھے جاتے ہیں۔ سبسکرپشنز اپڈیٹ ہونے پر اوور رائیڈز برقرار رہتے ہیں۔</string>
+    <string name="rules_note">قواعد کے سیٹ ڈیوائس پر صرف پڑھنے کے قابل انڈیکس میں کمپائل ہوتے ہیں اور ضرورت کے مطابق ڈسک سے پڑھے جاتے ہیں۔ سبسکرپشنز اپ ڈیٹ ہونے پر اوور رائیڈز برقرار رہتے ہیں۔</string>
     <string name="rules_kind_override">اوور رائیڈ</string>
     <string name="rules_kind_subscription">سبسکرپشن</string>
     <string name="rules_kind_domain">ڈومین</string>
@@ -289,7 +289,7 @@
     <string name="rules_step_request">درخواست</string>
     <string name="rules_step_layer">پرت %1$d · \u2068%2$s\u2069</string>
     <string name="rules_step_result">نتیجہ</string>
-    <string name="rules_blocked">بلاک</string>
+    <string name="rules_blocked">بلاک شدہ</string>
     <string name="rules_step_scene">منظر · \u2068%1$s\u2069</string>
     <string name="rules_step_exit_ip">ایگزٹ IP</string>
     <string name="rules_took">وقت: \u2068%1$s\u2069</string>
@@ -319,44 +319,44 @@
         <item quantity="other">سبسکرپشنز</item>
     </plurals>
     <plurals name="subs_update_every">
-        <item quantity="one">ہر %1$d گھنٹے بعد اپڈیٹ</item>
-        <item quantity="other">ہر %1$d گھنٹے بعد اپڈیٹ</item>
+        <item quantity="one">ہر %1$d گھنٹے بعد اپ ڈیٹ</item>
+        <item quantity="other">ہر %1$d گھنٹے بعد اپ ڈیٹ</item>
     </plurals>
-    <string name="subs_diff_updating">\u2068%1$s\u2069 اپڈیٹ ہو رہا ہے…</string>
-    <string name="subs_diff_updated">\u2068%1$s\u2069 اپڈیٹ ہو گیا</string>
+    <string name="subs_diff_updating">\u2068%1$s\u2069 اپ ڈیٹ ہو رہا ہے…</string>
+    <string name="subs_diff_updated">\u2068%1$s\u2069 اپ ڈیٹ ہو گیا</string>
     <string name="subs_rule_changes">قواعد میں تبدیلیاں</string>
-    <string name="subs_overrides_kept">اوور رائیڈز برقرار رہے</string>
-    <string name="subs_scenes_retested">مناظر کے پولز دوبارہ جانچے گئے</string>
+    <string name="subs_overrides_kept">اوور رائیڈز برقرار رکھے گئے</string>
+    <string name="subs_scenes_retested">منظر پولز دوبارہ ٹیسٹ کیے گئے</string>
     <string name="subs_section_data">ڈیٹا</string>
     <string name="subs_this_month">اس مہینے</string>
-    <string name="subs_swipe_updating">اپڈیٹ…</string>
-    <string name="subs_swipe_update">اپڈیٹ</string>
-    <string name="subs_swipe_confirm_delete">تصدیق کریں</string>
+    <string name="subs_swipe_updating">اپ ڈیٹ…</string>
+    <string name="subs_swipe_update">اپ ڈیٹ</string>
+    <string name="subs_swipe_confirm_delete">حذف کی تصدیق</string>
     <string name="subs_swipe_delete">حذف کریں</string>
-    <string name="subs_error_update">\u2068%1$s\u2069 اپڈیٹ نہیں ہو سکا</string>
+    <string name="subs_error_update">\u2068%1$s\u2069 اپ ڈیٹ نہیں ہو سکا</string>
     <string name="subs_error_delete">\u2068%1$s\u2069 حذف نہیں ہو سکا</string>
     <string name="subs_remaining">باقی</string>
     <plurals name="subs_others">
         <item quantity="one">%1$d دیگر</item>
         <item quantity="other">%1$d دیگر</item>
     </plurals>
-    <string name="subs_section_update">اپڈیٹس</string>
-    <string name="subs_auto_update">خودکار اپڈیٹ</string>
+    <string name="subs_section_update">اپ ڈیٹ</string>
+    <string name="subs_auto_update">خودکار اپ ڈیٹس</string>
     <plurals name="subs_every_hours">
         <item quantity="one">ہر %1$d گھنٹے</item>
         <item quantity="other">ہر %1$d گھنٹے</item>
     </plurals>
-    <string name="subs_update_wifi_only">صرف Wi‑Fi پر اپڈیٹ کریں</string>
-    <string name="subs_show_changes">اپڈیٹ سے پہلے تبدیلیاں دکھائیں</string>
-    <string name="subs_update_all">ابھی سب اپڈیٹ کریں</string>
+    <string name="subs_update_wifi_only">صرف Wi‑Fi پر اپ ڈیٹ کریں</string>
+    <string name="subs_show_changes">اپ ڈیٹ سے پہلے تبدیلیاں دکھائیں</string>
+    <string name="subs_update_all">ابھی سب اپ ڈیٹ کریں</string>
 
     <!-- ── Onboarding ── -->
     <string name="onboarding_cancel_import_a11y">امپورٹ منسوخ کریں</string>
     <string name="onboarding_choose_mode">ایک موڈ منتخب کریں</string>
     <string name="onboarding_simple">سادہ</string>
-    <string name="onboarding_simple_desc">آپ کی سبسکرپشن کے گروپس استعمال کرتا ہے۔ غیر دستیاب نوڈز خودکار طور پر سنبھالے جاتے ہیں۔</string>
+    <string name="onboarding_simple_desc">آپ کی سبسکرپشن کے گروپس استعمال کرتا ہے۔ غیر دستیاب نوڈز خود بخود سنبھالے جاتے ہیں۔</string>
     <string name="onboarding_optimized">آپٹمائزڈ</string>
-    <string name="onboarding_optimized_desc">روزانہ Wi‑Fi پر نوڈز جانچتا ہے۔ مصنوعی ذہانت اور ویڈیو صرف کامیاب نوڈز استعمال کرتے ہیں۔ ہر بار تقریباً 3 MB۔</string>
+    <string name="onboarding_optimized_desc">روزانہ Wi‑Fi پر نوڈز ٹیسٹ کرتا ہے۔ مصنوعی ذہانت اور ویڈیو صرف کامیاب نوڈز استعمال کرتے ہیں۔ ہر بار تقریباً 3 MB۔</string>
     <string name="onboarding_continue">جاری رکھیں</string>
     <string name="onboarding_change_later">آپ اسے کسی بھی وقت ترتیبات میں بدل سکتے ہیں۔</string>
 
@@ -364,11 +364,11 @@
     <string name="settings_trusted_wifi">قابلِ اعتماد Wi‑Fi</string>
     <string name="settings_local_proxy">مقامی پراکسی پورٹ</string>
     <string name="settings_section_connection">کنکشن</string>
-    <string name="settings_on_demand">ضرورت پر کنیکٹ کریں</string>
-    <string name="settings_trusted_wifi_hint">ان سے جڑنے پر خودکار طور پر منقطع کریں</string>
+    <string name="settings_on_demand">ضرورت پر منسلک کریں</string>
+    <string name="settings_trusted_wifi_hint">ان سے جڑنے پر خود بخود منقطع ہو جائے</string>
     <string name="settings_password_required">پاس ورڈ درکار ہے</string>
-    <string name="settings_section_testing">جانچ</string>
-    <string name="settings_test_wifi_only">صرف Wi‑Fi پر رفتار جانچیں</string>
+    <string name="settings_section_testing">ٹیسٹنگ</string>
+    <string name="settings_test_wifi_only">صرف Wi‑Fi پر اسپیڈ ٹیسٹ</string>
     <string name="settings_keep_results">نتائج محفوظ رکھیں</string>
     <plurals name="settings_hours">
         <item quantity="one">%1$d گھنٹہ</item>
@@ -379,8 +379,8 @@
     <string name="settings_storage_detail">نوڈز \u2068%1$s\u2069 · قواعد \u2068%2$s\u2069 · دستیاب \u2068%3$s\u2069</string>
     <string name="settings_appearance">ظاہری شکل</string>
     <string name="settings_appearance_system">سسٹم</string>
-    <string name="settings_appearance_dark">گہرا</string>
-    <string name="settings_appearance_light">ہلکا</string>
+    <string name="settings_appearance_dark">تاریک</string>
+    <string name="settings_appearance_light">روشن</string>
     <string name="settings_accent">نمایاں رنگ</string>
     <string name="settings_accent_blue">نیلا</string>
     <string name="settings_accent_green">سبز</string>
@@ -438,11 +438,11 @@
 
     <!-- ── Notifications ── -->
     <string name="notif_channel_vpn">کنکشن کی حالت</string>
-    <string name="notif_channel_vpn_desc">کنیکٹ ہونے پر رفتار اور مناظر دکھاتا ہے</string>
+    <string name="notif_channel_vpn_desc">منسلک ہونے پر رفتار اور مناظر دکھاتا ہے</string>
     <string name="notif_channel_alerts">سبسکرپشن الرٹس</string>
     <string name="notif_channel_alerts_desc">سبسکرپشن کی میعاد اور کم ڈیٹا</string>
     <string name="notif_action_global">گلوبل موڈ</string>
-    <string name="notif_action_rule">قواعد موڈ</string>
+    <string name="notif_action_rule">قاعدہ موڈ</string>
     <string name="notif_route_global">گلوبل · \u2068%1$s\u2069</string>
     <string name="notif_route_global_any">تمام ٹریفک ایک نوڈ سے</string>
     <string name="notif_expiry_title">\u2068%1$s\u2069 کی میعاد \u2068%2$s\u2069 کو ختم ہوگی</string>

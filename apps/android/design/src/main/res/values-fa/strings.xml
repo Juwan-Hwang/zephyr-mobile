@@ -8,8 +8,8 @@
     <string name="common_clear">پاک کردن</string>
     <string name="common_latency_timeout">تایم‌اوت</string>
     <string name="common_traffic_a11y">دانلود \u2066%1$s %2$s\u2069 در ثانیه، آپلود \u2066%3$s %4$s\u2069 در ثانیه</string>
-    <string name="common_time_just_now">هم‌اکنون</string>
-    <string name="common_time_just_now_inline">هم‌اکنون</string>
+    <string name="common_time_just_now">همین حالا</string>
+    <string name="common_time_just_now_inline">همین حالا</string>
     <plurals name="common_time_minutes_ago">
         <item quantity="one">%1$d دقیقه پیش</item>
         <item quantity="other">%1$d دقیقه پیش</item>
@@ -34,7 +34,7 @@
         <item>دوشنبه</item>
         <item>سه‌شنبه</item>
         <item>چهارشنبه</item>
-        <item>پنجشنبه</item>
+        <item>پنج‌شنبه</item>
         <item>جمعه</item>
         <item>شنبه</item>
         <item>یکشنبه</item>

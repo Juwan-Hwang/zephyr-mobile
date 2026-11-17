@@ -21,7 +21,7 @@
     <string name="common_home">ホーム</string>
     <string name="common_direct">ダイレクト</string>
     <string name="common_local_network">このデバイスのネットワーク</string>
-    <string name="common_exit_ip_changes">出口 IP が変わります</string>
+    <string name="common_exit_ip_changes">出口 IP が変更されます</string>
     <string name="common_adding">追加中…</string>
     <string name="common_add">追加</string>
     <string name="common_updating">更新中…</string>
@@ -44,7 +44,7 @@
     <string name="common_mode_global">グローバル</string>
     <string name="common_mode_direct">ダイレクト</string>
     <string name="common_mode_rule_hint">シーンごとに振り分け</string>
-    <string name="common_mode_global_hint">すべてを 1つのノード経由で</string>
+    <string name="common_mode_global_hint">すべてを1つのノード経由で</string>
     <string name="common_mode_direct_hint">プロキシを経由しない</string>
     <string name="common_try_again">もう一度お試しください</string>
     <string name="common_scene_ai">AI</string>
@@ -54,7 +54,7 @@
     <string name="common_current">使用中</string>
     <string name="common_list_separator">%1$s、%2$s</string>
     <string name="common_pair_and">%1$sと%2$s</string>
-    <string name="common_source_group">提供元のグループ</string>
+    <string name="common_source_group">サブスクリプショングループ</string>
     <string name="common_source_auto">Zephyr おすすめ</string>
     <string name="common_all">すべて</string>
     <plurals name="common_region_count">
@@ -62,7 +62,7 @@
     </plurals>
     <string name="home_global_title">グローバルモード</string>
     <string name="home_global_body">すべてのトラフィックが%1$sを経由します。シーンは一時停止中です。</string>
-    <string name="home_global_body_any">すべてのトラフィックが 1つのノードを経由します。シーンは一時停止中です。</string>
+    <string name="home_global_body_any">すべてのトラフィックが1つのノードを経由します。シーンは一時停止中です。</string>
     <string name="home_global_use_rule">ルールモードを使用</string>
     <string name="home_global_change_node">ノードを変更</string>
     <string name="home_global_change_note">すべての App の出口が%1$sになります。</string>
@@ -74,7 +74,7 @@
     <string name="home_scan_running">テスト中…</string>
     <string name="home_scenes_tested">テスト：%1$s</string>
     <string name="home_today_usage">今日 %1$s</string>
-    <string name="home_spark_a11y">ダウンロード速度（直近 90秒）</string>
+    <string name="home_spark_a11y">ダウンロード速度（直近90秒）</string>
     <string name="home_switch_mode">モードを切り替え</string>
     <plurals name="home_scene_count">
         <item quantity="other">%1$dシーン</item>
@@ -91,7 +91,7 @@
     <string name="home_action_load_nodes">ノードの読み込み</string>
     <string name="home_action_switch_node">ノードの切り替え</string>
     <string name="home_action_undo">取り消し</string>
-    <string name="home_error_not_connected">%1$sには先に接続してください</string>
+    <string name="home_error_not_connected">%1$sには接続が必要です</string>
     <string name="home_error_failed">%1$sに失敗しました</string>
     <string name="home_error_node_gone">%1$sに失敗しました：ノードがもう存在しません</string>
     <string name="home_failover_none">%1$sの出口が応答しません。出口 IP は自動では変わりません。</string>
@@ -138,7 +138,7 @@
         <item>GitHub direct</item>
         <item>HK</item>
     </string-array>
-    <string name="command_see_all_nodes">ノードライブラリで %1$s個すべてを表示</string>
+    <string name="command_see_all_nodes">ノードライブラリで%1$s個すべてを表示</string>
     <string name="command_test_rule">%1$sの経路は？</string>
     <string name="command_chip_scene">シーン</string>
     <string name="command_chip_service">サービス</string>
@@ -251,7 +251,7 @@
     <string name="rules_step_request">リクエスト</string>
     <string name="rules_step_layer">レイヤー %1$d · %2$s</string>
     <string name="rules_step_result">結果</string>
-    <string name="rules_blocked">ブロック</string>
+    <string name="rules_blocked">ブロック済み</string>
     <string name="rules_step_scene">シーン · %1$s</string>
     <string name="rules_step_exit_ip">出口 IP</string>
     <string name="rules_took">所要時間 %1$s</string>
@@ -262,7 +262,7 @@
     <string name="subs_paste_clipboard">クリップボードからペースト</string>
     <string name="subs_scan_qr">QR コードをスキャン</string>
     <string name="subs_coming_soon">近日対応</string>
-    <string name="subs_import_desktop">コンピュータの Zephyr からインポート</string>
+    <string name="subs_import_desktop">コンピュータ上の Zephyr からインポート</string>
     <string name="subs_import_file">ファイルからインポート</string>
     <plurals name="subs_added">
         <item quantity="other">%1$sを追加しました（%2$s個のノード）</item>
@@ -282,9 +282,9 @@
     <string name="subs_diff_updating">%1$sを更新中…</string>
     <string name="subs_diff_updated">%1$sを更新しました</string>
     <string name="subs_rule_changes">ルールの変更</string>
-    <string name="subs_overrides_kept">オーバーライド保持</string>
-    <string name="subs_scenes_retested">シーンを再テスト</string>
-    <string name="subs_section_data">データ量</string>
+    <string name="subs_overrides_kept">オーバーライドを保持しました</string>
+    <string name="subs_scenes_retested">シーンプールを再テストしました</string>
+    <string name="subs_section_data">データ</string>
     <string name="subs_this_month">今月</string>
     <string name="subs_swipe_updating">更新中</string>
     <string name="subs_swipe_update">更新</string>
@@ -313,14 +313,14 @@
     <string name="onboarding_continue">続ける</string>
     <string name="onboarding_change_later">「設定」でいつでも変更できます。</string>
     <string name="settings_trusted_wifi">信頼済み Wi‑Fi</string>
-    <string name="settings_local_proxy">ローカルプロキシのポート</string>
+    <string name="settings_local_proxy">ローカルプロキシポート</string>
     <string name="settings_section_connection">接続</string>
     <string name="settings_on_demand">オンデマンド接続</string>
-    <string name="settings_trusted_wifi_hint">接続すると自動的に切断</string>
-    <string name="settings_password_required">パスワードが必要</string>
+    <string name="settings_trusted_wifi_hint">接続したら自動的に切断</string>
+    <string name="settings_password_required">パスワードを要求</string>
     <string name="settings_section_testing">テスト</string>
     <string name="settings_test_wifi_only">Wi‑Fi 接続時のみ速度テスト</string>
-    <string name="settings_keep_results">結果の保持</string>
+    <string name="settings_keep_results">結果を保持</string>
     <plurals name="settings_hours">
         <item quantity="other">%1$d時間</item>
     </plurals>
@@ -378,14 +378,14 @@
     <string name="widget_usage_description">今日のトラフィックと 24時間の内訳</string>
     <string name="widget_today">今日 %1$s %2$s</string>
     <string name="notif_channel_vpn">接続状態</string>
-    <string name="notif_channel_vpn_desc">接続中、速度とシーンを表示します</string>
+    <string name="notif_channel_vpn_desc">接続中は速度とシーンを常に表示します</string>
     <string name="notif_channel_alerts">サブスクリプションの通知</string>
     <string name="notif_channel_alerts_desc">サブスクリプションの期限とデータ残量</string>
     <string name="notif_action_global">グローバルモード</string>
     <string name="notif_action_rule">ルールモード</string>
     <string name="notif_route_global">グローバル · %1$s</string>
-    <string name="notif_route_global_any">すべてを 1つのノード経由で</string>
-    <string name="notif_expiry_title">%1$sは%2$sに期限切れになります</string>
+    <string name="notif_route_global_any">すべてを1つのノード経由で</string>
+    <string name="notif_expiry_title">%1$sの有効期限は%2$sです</string>
     <string name="notif_expiry_text">残り %1$s</string>
     <string name="tile_a11y">%1$s、%2$s</string>
 </resources>

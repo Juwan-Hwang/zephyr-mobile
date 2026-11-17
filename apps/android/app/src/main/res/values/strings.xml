@@ -124,7 +124,7 @@
     <string name="home_switched_to">Switched to %1$s</string>
     <string name="home_now_uses">%1$s now uses %2$s</string>
     <string name="home_now_direct">%1$s now connects directly</string>
-    <string name="home_now_all_nodes">%1$s: all nodes again</string>
+    <string name="home_now_all_nodes">%1$s now uses all nodes</string>
     <string name="home_now_uses_uhd">%1$s now uses %2$s (4K only)</string>
     <string name="home_now_uhd_only">%1$s now uses only 4K nodes</string>
     <string name="home_apply_failed">Couldn’t apply: %1$s</string>
@@ -405,7 +405,7 @@
     <string name="settings_section_connection">Connection</string>
     <string name="settings_on_demand">Connect on demand</string>
     <string name="settings_trusted_wifi_hint">Disconnect automatically when joined</string>
-    <string name="settings_password_required">Password required</string>
+    <string name="settings_password_required">Require password</string>
     <string name="settings_section_testing">Testing</string>
     <string name="settings_test_wifi_only">Test speed on Wi‑Fi only</string>
     <string name="settings_keep_results">Keep results</string>

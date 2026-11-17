@@ -4,10 +4,10 @@
     <string name="common_done">Taýýar</string>
     <string name="common_close">Ýap</string>
     <string name="common_clear">Arassala</string>
-    <string name="common_latency_timeout">Wagt geçdi</string>
+    <string name="common_latency_timeout">Wagt gutardy</string>
     <string name="common_traffic_a11y">Ýükleme sekuntda %1$s %2$s, iberme sekuntda %3$s %4$s</string>
-    <string name="common_time_just_now">Häzirjik</string>
-    <string name="common_time_just_now_inline">häzirjik</string>
+    <string name="common_time_just_now">Ýaňy</string>
+    <string name="common_time_just_now_inline">ýaňy</string>
     <plurals name="common_time_minutes_ago">
         <item quantity="one">%1$d min öň</item>
         <item quantity="other">%1$d min öň</item>

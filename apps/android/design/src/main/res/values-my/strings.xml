@@ -9,20 +9,20 @@
     <string name="common_time_just_now">ယခုလေးတင်</string>
     <string name="common_time_just_now_inline">ယခုလေးတင်</string>
     <plurals name="common_time_minutes_ago" tools:ignore="StringFormatMatches">
-        <item quantity="other">%1$s မိနစ်က</item>
+        <item quantity="other">%1$d မိနစ်က</item>
     </plurals>
     <plurals name="common_time_hours_ago" tools:ignore="StringFormatMatches">
-        <item quantity="other">%1$s နာရီက</item>
+        <item quantity="other">%1$d နာရီက</item>
     </plurals>
     <plurals name="common_time_days_ago" tools:ignore="StringFormatMatches">
-        <item quantity="other">%1$s ရက်က</item>
+        <item quantity="other">%1$d ရက်က</item>
     </plurals>
     <string name="common_expiry_expired">သက်တမ်းကုန်ပြီ</string>
     <string name="common_expiry_today">ယနေ့ သက်တမ်းကုန်</string>
     <string name="common_expiry_tomorrow">မနက်ဖြန် သက်တမ်းကုန်</string>
     <string name="common_expiry_weekday">%1$s နေ့ သက်တမ်းကုန်</string>
     <plurals name="common_expiry_in_days" tools:ignore="StringFormatMatches">
-        <item quantity="other">သက်တမ်း %1$s ရက် ကျန်</item>
+        <item quantity="other">သက်တမ်း %1$d ရက် ကျန်</item>
     </plurals>
     <string-array name="common_weekdays">
         <item>တနင်္လာ</item>

@@ -40,12 +40,12 @@
     <string name="common_status_connecting">Inaunganisha</string>
     <string name="common_status_connecting_ellipsis">Inaunganisha…</string>
     <string name="common_status_disconnecting">Inatenganisha</string>
-    <string name="common_status_failed">Imeshindwa kuunganisha</string>
+    <string name="common_status_failed">Muunganisho umeshindwa</string>
     <string name="common_status_disconnected">Haijaunganishwa</string>
     <string name="common_mode_rule">Sheria</string>
     <string name="common_mode_global">Jumla</string>
     <string name="common_mode_direct">Moja kwa moja</string>
-    <string name="common_mode_rule_hint">Elekeza kwa mazingira</string>
+    <string name="common_mode_rule_hint">Elekeza kulingana na mazingira</string>
     <string name="common_mode_global_hint">Trafiki yote kupitia nodi moja</string>
     <string name="common_mode_direct_hint">Bila kupitia proksi</string>
     <string name="common_try_again">Jaribu tena</string>
@@ -66,7 +66,7 @@
     <string name="home_global_title">Hali ya Jumla</string>
     <string name="home_global_body">Trafiki yote inapitia %1$s. Mazingira yamesitishwa.</string>
     <string name="home_global_body_any">Trafiki yote inapitia nodi moja. Mazingira yamesitishwa.</string>
-    <string name="home_global_use_rule">Tumia hali ya Sheria</string>
+    <string name="home_global_use_rule">Tumia hali ya sheria</string>
     <string name="home_global_change_node">Badilisha nodi</string>
     <string name="home_global_change_note">Programu zote zitatoka kupitia %1$s.</string>
     <string name="home_global_change_to">Badilisha hadi %1$s</string>
@@ -99,12 +99,12 @@
     <string name="home_error_not_connected">Unganisha kwanza kabla ya %1$s</string>
     <string name="home_error_failed">Imeshindwa %1$s</string>
     <string name="home_error_node_gone">Imeshindwa %1$s: nodi haipo tena</string>
-    <string name="home_failover_none">Njia ya kutoka ya %1$s haijibu. IP ya kutoka haitabadilika yenyewe.</string>
-    <string name="home_failover_switched">Njia ya kutoka ya %1$s imehamia %2$s yenyewe</string>
+    <string name="home_failover_none">Njia ya kutoka ya %1$s haijibu. IP ya kutoka haitabadilika kiotomatiki.</string>
+    <string name="home_failover_switched">Njia ya kutoka ya %1$s imebadilishwa kiotomatiki hadi %2$s</string>
     <string name="home_switched_to">Imebadilishwa hadi %1$s</string>
     <string name="home_now_uses">%1$s sasa inatumia %2$s</string>
     <string name="home_now_direct">%1$s sasa inaunganisha moja kwa moja</string>
-    <string name="home_now_all_nodes">%1$s: nodi zote tena</string>
+    <string name="home_now_all_nodes">%1$s sasa inatumia nodi zote</string>
     <string name="home_now_uses_uhd">%1$s sasa inatumia %2$s (4K pekee)</string>
     <string name="home_now_uhd_only">%1$s sasa inatumia nodi za 4K pekee</string>
     <string name="home_apply_failed">Imeshindwa kutumia: %1$s</string>
@@ -130,14 +130,14 @@
     <string name="scene_pinned_for">Imebanwa kwa %1$s</string>
     <string name="scene_when_unavailable">Nodi isipopatikana</string>
     <string name="scene_ask">Uliza</string>
-    <string name="scene_auto_switch">Badilisha yenyewe</string>
+    <string name="scene_auto_switch">Badilisha kiotomatiki</string>
     <string name="scene_node_scope">Wigo wa nodi</string>
     <string name="scene_uhd_only">Nodi za 4K pekee</string>
     <string name="scene_pinned_value">%1$s (imebanwa)</string>
     <string name="scene_retest">Pima tena</string>
     <string name="scene_note">Chaguo huhifadhiwa ndani ya Zephyr pekee. Usanidi wa usajili wako haubadilishwi.</string>
     <string name="scene_note_tested">%1$s Ilipimwa mara ya mwisho %2$s.</string>
-    <string name="command_placeholder">Tafuta au andika amri</string>
+    <string name="command_placeholder">Tafuta au weka amri</string>
     <string name="command_section_suggestions">Mapendekezo</string>
     <string name="command_section_command">Amri</string>
     <string-array name="command_examples">
@@ -155,7 +155,7 @@
     <string name="command_region_jp">Japani</string>
     <string name="command_region_us">Marekani</string>
     <string name="command_region_hk">Hong Kong</string>
-    <string name="command_region_sg">Singapore</string>
+    <string name="command_region_sg">Singapuri</string>
     <string name="command_region_tw">Taiwani</string>
     <string name="command_region_gb">Uingereza</string>
     <string name="command_region_kr">Korea</string>
@@ -175,18 +175,18 @@
     <string name="command_uhd_title_all">%1$s: nodi zote</string>
     <string name="command_uhd_title_only">%1$s: nodi za 4K pekee</string>
     <string name="command_uhd_clear_note">Mazingira ya %1$s yanatumia nodi za 4K pekee. Nodi zote zitatumika tena; nodi ya sasa inabaki.</string>
-    <string name="command_uhd_none">Hakuna nodi inayotumia 4K.</string>
+    <string name="command_uhd_none">Hakuna nodi inayoauni 4K.</string>
     <plurals name="command_uhd_untested">
         <item quantity="one">Nodi %1$d ya 4K bado haijapimwa. Pima mazingira upya baada ya kutumia.</item>
         <item quantity="other">Nodi %1$d za 4K bado hazijapimwa. Pima mazingira upya baada ya kutumia.</item>
     </plurals>
     <plurals name="command_uhd_matching_keep">
-        <item quantity="one">%2$d kati ya %1$d inatumia 4K; nodi ya sasa inabaki.</item>
-        <item quantity="other">%2$d kati ya %1$d zinatumia 4K; nodi ya sasa inabaki.</item>
+        <item quantity="one">%2$d kati ya %1$d inaauni 4K; nodi ya sasa inabaki.</item>
+        <item quantity="other">%2$d kati ya %1$d zinaauni 4K; nodi ya sasa inabaki.</item>
     </plurals>
     <plurals name="command_uhd_matching_switch">
-        <item quantity="one">%2$d kati ya %1$d inatumia 4K; itatumia %3$s.</item>
-        <item quantity="other">%2$d kati ya %1$d zinatumia 4K; itatumia %3$s.</item>
+        <item quantity="one">%2$d kati ya %1$d inaauni 4K; itatumia %3$s.</item>
+        <item quantity="other">%2$d kati ya %1$d zinaauni 4K; itatumia %3$s.</item>
     </plurals>
     <string name="command_uhd_fastest">nodi ya 4K yenye kasi zaidi</string>
     <string name="command_uhd_auto_note">Kuanzia sasa, ubadilishaji wa kiotomatiki utachagua kati ya nodi za 4K pekee.</string>
@@ -220,7 +220,7 @@
     <string name="trace_step_rule">Sheria</string>
     <string name="trace_step_scene">Mazingira</string>
     <string name="trace_step_node">Nodi</string>
-    <string name="trace_step_exit">Kutoka</string>
+    <string name="trace_step_exit">Njia ya kutoka</string>
     <string name="trace_from">Kutoka %1$s</string>
     <string name="trace_via">Kupitia %1$s</string>
     <plurals name="trace_exit_stable">
@@ -228,7 +228,7 @@
         <item quantity="other">Haijabadilika kwa siku %1$d</item>
     </plurals>
     <string name="trace_this_connection">Muunganisho huu</string>
-    <string name="trace_option_unchanged">Bila mabadiliko</string>
+    <string name="trace_option_unchanged">Hakuna mabadiliko</string>
     <string name="trace_override_failed">Imeshindwa kubadilisha: %1$s</string>
     <string name="trace_always_apply">Tumia kila wakati</string>
     <string name="trace_always_apply_hint">Ikizimwa, muunganisho huu pekee ndio hubadilika</string>
@@ -248,7 +248,7 @@
     <string name="nodes_empty_action">Leta usajili</string>
     <string name="nodes_no_match">Hakuna nodi zinazolingana na “%1$s”</string>
     <string name="nodes_tested">%1$s zimepimwa</string>
-    <string name="nodes_jump_to">Nenda %1$s</string>
+    <string name="nodes_jump_to">Nenda kwenye %1$s</string>
     <string name="rules_add_override_a11y">Ongeza ubatilishaji wa kikoa</string>
     <plurals name="rules_total_unit">
         <item quantity="one">sheria</item>
@@ -258,12 +258,12 @@
         <item quantity="one">Tabaka %1$d · imekusanywa · %2$s kwenye diski</item>
         <item quantity="other">Tabaka %1$d · imekusanywa · %2$s kwenye diski</item>
     </plurals>
-    <string name="rules_test_placeholder">Pima kikoa au IP</string>
-    <string name="rules_test_hint">Andika kikoa au anwani ya IP ili kuona sheria inayolingana na njia ya kutoka.</string>
+    <string name="rules_test_placeholder">Jaribu kikoa au IP</string>
+    <string name="rules_test_hint">Weka kikoa au anwani ya IP ili kuona sheria na njia ya kutoka inayolingana.</string>
     <string name="rules_match_order">Mpangilio wa kulinganisha</string>
     <string name="rules_top_to_bottom">Juu hadi chini</string>
     <string name="rules_other_traffic">Trafiki nyingine yote</string>
-    <string name="rules_note">Seti za sheria hukusanywa kwenye kifaa kuwa faharasa ya kusoma tu na husomwa kutoka kwenye diski inapohitajika. Ubatilishaji hubaki usajili unaposasishwa.</string>
+    <string name="rules_note">Seti za sheria hukusanywa kwenye kifaa kuwa faharasa ya kusoma tu na husomwa kutoka kwenye diski inapohitajika. Ubatilishaji haubadiliki usajili unaposasishwa.</string>
     <string name="rules_kind_override">Ubatilishaji</string>
     <string name="rules_kind_subscription">Usajili</string>
     <string name="rules_kind_domain">Kikoa</string>
@@ -290,23 +290,23 @@
     </plurals>
     <string name="subs_error_clipboard_empty">Ubao wa kunakili hauna kitu</string>
     <string name="subs_hint_desktop">Kwenye kompyuta, fungua Mipangilio › Simu katika Zephyr ili kuonyesha msimbo wa QR</string>
-    <string name="subs_error_read_file">Imeshindwa kusoma faili hii</string>
+    <string name="subs_error_read_file">Imeshindwa kusoma faili hili</string>
     <string name="subs_error_fetch">Imeshindwa kupakua usajili huu. Kagua kiungo au mtandao wako.</string>
-    <string name="subs_error_invalid_file">Hii si faili sahihi ya usanidi</string>
+    <string name="subs_error_invalid_file">Hili si faili sahihi la usanidi</string>
     <string name="subs_error_invalid_link">Hiki si kiungo sahihi cha usajili</string>
     <plurals name="subs_total_unit">
         <item quantity="one">usajili</item>
         <item quantity="other">usajili</item>
     </plurals>
     <plurals name="subs_update_every">
-        <item quantity="one">husasishwa kila saa %1$d</item>
-        <item quantity="other">husasishwa kila saa %1$d</item>
+        <item quantity="one">husasishwa kila baada ya saa %1$d</item>
+        <item quantity="other">husasishwa kila baada ya saa %1$d</item>
     </plurals>
     <string name="subs_diff_updating">Inasasisha %1$s…</string>
     <string name="subs_diff_updated">%1$s imesasishwa</string>
     <string name="subs_rule_changes">Mabadiliko ya sheria</string>
-    <string name="subs_overrides_kept">Ubatilishaji umebaki</string>
-    <string name="subs_scenes_retested">Mazingira yamepimwa upya</string>
+    <string name="subs_overrides_kept">Ubatilishaji umehifadhiwa</string>
+    <string name="subs_scenes_retested">Makundi ya mazingira yamepimwa upya</string>
     <string name="subs_section_data">Data</string>
     <string name="subs_this_month">Mwezi huu</string>
     <string name="subs_swipe_updating">Inasasisha</string>
@@ -323,17 +323,17 @@
     <string name="subs_section_update">Masasisho</string>
     <string name="subs_auto_update">Sasisha kiotomatiki</string>
     <plurals name="subs_every_hours">
-        <item quantity="one">Kila saa %1$d</item>
-        <item quantity="other">Kila saa %1$d</item>
+        <item quantity="one">Kila baada ya saa %1$d</item>
+        <item quantity="other">Kila baada ya saa %1$d</item>
     </plurals>
     <string name="subs_update_wifi_only">Sasisha kupitia Wi‑Fi pekee</string>
     <string name="subs_show_changes">Onyesha mabadiliko kwanza</string>
     <string name="subs_update_all">Sasisha zote sasa</string>
     <string name="onboarding_cancel_import_a11y">Ghairi kuleta</string>
-    <string name="onboarding_choose_mode">Chagua hali</string>
+    <string name="onboarding_choose_mode">Chagua jinsi ya kutumia</string>
     <string name="onboarding_simple">Rahisi</string>
     <string name="onboarding_simple_desc">Hutumia makundi ya usajili wako. Nodi zisizopatikana hushughulikiwa kiotomatiki.</string>
-    <string name="onboarding_optimized">Bora zaidi</string>
+    <string name="onboarding_optimized">Chaguo bora</string>
     <string name="onboarding_optimized_desc">Hupima nodi kila siku kupitia Wi‑Fi. AI na Video hutumia nodi zilizofaulu pekee. Takriban 3 MB kila mara.</string>
     <string name="onboarding_continue">Endelea</string>
     <string name="onboarding_change_later">Unaweza kubadilisha hili wakati wowote katika Mipangilio.</string>
@@ -341,7 +341,7 @@
     <string name="settings_local_proxy">Mlango wa proksi ya ndani</string>
     <string name="settings_section_connection">Muunganisho</string>
     <string name="settings_on_demand">Unganisha inapohitajika</string>
-    <string name="settings_trusted_wifi_hint">Tenganisha kiotomatiki ukiunganishwa nazo</string>
+    <string name="settings_trusted_wifi_hint">Tenganisha kiotomatiki ukijiunga</string>
     <string name="settings_password_required">Nenosiri linahitajika</string>
     <string name="settings_section_testing">Upimaji</string>
     <string name="settings_test_wifi_only">Pima kasi kupitia Wi‑Fi pekee</string>
@@ -379,7 +379,7 @@
     <string name="logs_level_error">Hitilafu</string>
     <string name="logs_resume">Endelea</string>
     <string name="logs_pause">Sitisha</string>
-    <string name="logs_clear">Futa</string>
+    <string name="logs_clear">Futa yote</string>
     <string name="logs_empty">Bado hakuna kumbukumbu</string>
     <string name="logs_line_a11y">%1$s %2$s %3$s</string>
     <string name="today_style_night">Usiku</string>
@@ -403,17 +403,17 @@
     <string name="widget_label">Hali ya Zephyr</string>
     <string name="widget_description">Hali ya muunganisho, kasi na mazingira</string>
     <string name="widget_usage_label">Matumizi ya Zephyr leo</string>
-    <string name="widget_usage_description">Trafiki ya leo kwa saa 24</string>
+    <string name="widget_usage_description">Trafiki ya leo na mgawanyo wa saa 24</string>
     <string name="widget_today">Leo %1$s %2$s</string>
     <string name="notif_channel_vpn">Hali ya muunganisho</string>
     <string name="notif_channel_vpn_desc">Huonyesha kasi na mazingira ukiwa umeunganishwa</string>
     <string name="notif_channel_alerts">Arifa za usajili</string>
-    <string name="notif_channel_alerts_desc">Usajili kuisha muda na data kupungua</string>
+    <string name="notif_channel_alerts_desc">Muda wa usajili kuisha na data kupungua</string>
     <string name="notif_action_global">Hali ya Jumla</string>
     <string name="notif_action_rule">Hali ya Sheria</string>
     <string name="notif_route_global">Jumla · %1$s</string>
     <string name="notif_route_global_any">Trafiki yote kupitia nodi moja</string>
-    <string name="notif_expiry_title">%1$s inaisha %2$s</string>
+    <string name="notif_expiry_title">%1$s itaisha %2$s</string>
     <string name="notif_expiry_text">Zimesalia %1$s</string>
     <string name="tile_a11y">%1$s, %2$s</string>
 </resources>

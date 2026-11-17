@@ -4,7 +4,7 @@
     <string name="common_done">완료</string>
     <string name="common_close">닫기</string>
     <string name="common_clear">지우기</string>
-    <string name="common_latency_timeout">시간 초과</string>
+    <string name="common_latency_timeout">타임아웃</string>
     <string name="common_traffic_a11y">다운로드 초당 %1$s %2$s, 업로드 초당 %3$s %4$s</string>
     <string name="common_time_just_now">방금</string>
     <string name="common_time_just_now_inline">방금</string>

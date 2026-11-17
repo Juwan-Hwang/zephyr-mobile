@@ -43,13 +43,13 @@
     <string name="common_status_connecting_ellipsis">Conectando…</string>
     <string name="common_status_disconnecting">Desconectando</string>
     <string name="common_status_failed">Error de conexión</string>
-    <string name="common_status_disconnected">Sin conexión</string>
+    <string name="common_status_disconnected">No conectado</string>
     <string name="common_mode_rule">Regla</string>
     <string name="common_mode_global">Global</string>
     <string name="common_mode_direct">Directo</string>
     <string name="common_mode_rule_hint">Según el escenario</string>
     <string name="common_mode_global_hint">Todo el tráfico por un nodo</string>
-    <string name="common_mode_direct_hint">Sin pasar por el proxy</string>
+    <string name="common_mode_direct_hint">Omitir el proxy</string>
     <string name="common_try_again">Reintentar</string>
     <string name="common_scene_ai">AI</string>
     <string name="common_scene_video">Vídeo</string>
@@ -58,7 +58,7 @@
     <string name="common_current">Actual</string>
     <string name="common_list_separator">%1$s, %2$s</string>
     <string name="common_pair_and">%1$s y %2$s</string>
-    <string name="common_source_group">Grupo de suscripción</string>
+    <string name="common_source_group">Grupo de la suscripción</string>
     <string name="common_source_auto">Selección de Zephyr</string>
     <string name="common_all">Todos</string>
     <plurals name="common_region_count">
@@ -101,7 +101,7 @@
     <string name="home_action_load_nodes">cargar los nodos</string>
     <string name="home_action_switch_node">cambiar de nodo</string>
     <string name="home_action_undo">deshacer</string>
-    <string name="home_error_not_connected">Conéctate antes de %1$s</string>
+    <string name="home_error_not_connected">Conéctate primero para %1$s</string>
     <string name="home_error_failed">No se ha podido %1$s</string>
     <string name="home_error_node_gone">No se ha podido %1$s: el nodo ya no existe</string>
     <string name="home_failover_none">La salida de %1$s no responde. La IP de salida no cambiará automáticamente.</string>
@@ -109,7 +109,7 @@
     <string name="home_switched_to">Cambiado a %1$s</string>
     <string name="home_now_uses">%1$s ahora usa %2$s</string>
     <string name="home_now_direct">%1$s ahora se conecta directamente</string>
-    <string name="home_now_all_nodes">%1$s: de nuevo todos los nodos</string>
+    <string name="home_now_all_nodes">%1$s vuelve a usar todos los nodos</string>
     <string name="home_now_uses_uhd">%1$s ahora usa %2$s (solo 4K)</string>
     <string name="home_now_uhd_only">%1$s ahora usa solo nodos 4K</string>
     <string name="home_apply_failed">No se ha podido aplicar: %1$s</string>
@@ -123,7 +123,7 @@
     <string name="home_confirm_apps">¿Cambiar la IP de salida de %1$s?</string>
     <string name="home_confirm_scene">¿Cambiar la IP de salida del escenario %1$s?</string>
     <string name="home_confirm_unchanged">%1$s no cambia.</string>
-    <string name="home_scrub_hint">Desliza a izquierda o derecha para cambiar de región</string>
+    <string name="home_scrub_hint">Desliza a la izquierda o a la derecha para cambiar de región</string>
     <plurals name="scene_available_unit">
         <item quantity="one">nodo disponible</item>
         <item quantity="many">nodos disponibles</item>
@@ -138,13 +138,13 @@
     <string name="scene_when_unavailable">Si un nodo no está disponible</string>
     <string name="scene_ask">Preguntar</string>
     <string name="scene_auto_switch">Cambiar automáticamente</string>
-    <string name="scene_node_scope">Nodos</string>
+    <string name="scene_node_scope">Alcance de nodos</string>
     <string name="scene_uhd_only">Solo nodos 4K</string>
     <string name="scene_pinned_value">%1$s (fijado)</string>
     <string name="scene_retest">Volver a probar</string>
     <string name="scene_note">La selección solo se guarda en Zephyr. La configuración de tu suscripción no cambia.</string>
     <string name="scene_note_tested">%1$s Última prueba: %2$s.</string>
-    <string name="command_placeholder">Busca o escribe un comando</string>
+    <string name="command_placeholder">Buscar o introducir comando</string>
     <string name="command_section_suggestions">Sugerencias</string>
     <string name="command_section_command">Comandos</string>
     <string-array name="command_examples">
@@ -274,12 +274,12 @@
         <item quantity="other">reglas</item>
     </plurals>
     <plurals name="rules_summary">
-        <item quantity="one">%1$d capa · compiladas · %2$s en disco</item>
+        <item quantity="one">%1$d capa · compilada · %2$s en disco</item>
         <item quantity="many">%1$d capas · compiladas · %2$s en disco</item>
         <item quantity="other">%1$d capas · compiladas · %2$s en disco</item>
     </plurals>
-    <string name="rules_test_placeholder">Prueba un dominio o IP</string>
-    <string name="rules_test_hint">Escribe un dominio o una dirección IP para ver la regla y la salida que le corresponden.</string>
+    <string name="rules_test_placeholder">Probar un dominio o IP</string>
+    <string name="rules_test_hint">Introduce un dominio o una dirección IP para ver la regla y la salida que coinciden.</string>
     <string name="rules_match_order">Orden de coincidencia</string>
     <string name="rules_top_to_bottom">De arriba abajo</string>
     <string name="rules_other_traffic">Resto del tráfico</string>
@@ -297,7 +297,7 @@
     <string name="rules_took">Tardó %1$s</string>
     <string name="rules_kind_ip">IP</string>
     <string name="subs_add">Añadir suscripción</string>
-    <string name="subs_paste_placeholder">Pega un enlace de suscripción</string>
+    <string name="subs_paste_placeholder">Pegar un enlace de suscripción</string>
     <string name="subs_paste_link">Pegar enlace</string>
     <string name="subs_paste_clipboard">Pegar del portapapeles</string>
     <string name="subs_scan_qr">Escanear código QR</string>
@@ -321,9 +321,9 @@
         <item quantity="other">suscripciones</item>
     </plurals>
     <plurals name="subs_update_every">
-        <item quantity="one">se actualiza cada %1$d hora</item>
+        <item quantity="one">actualización cada %1$d hora</item>
         <item quantity="many">se actualizan cada %1$d horas</item>
-        <item quantity="other">se actualizan cada %1$d horas</item>
+        <item quantity="other">actualización cada %1$d horas</item>
     </plurals>
     <string name="subs_diff_updating">Actualizando %1$s…</string>
     <string name="subs_diff_updated">%1$s actualizada</string>
@@ -345,7 +345,7 @@
         <item quantity="other">%1$d más</item>
     </plurals>
     <string name="subs_section_update">Actualizaciones</string>
-    <string name="subs_auto_update">Actualización automática</string>
+    <string name="subs_auto_update">Actualizaciones automáticas</string>
     <plurals name="subs_every_hours">
         <item quantity="one">Cada %1$d h</item>
         <item quantity="many">Cada %1$d h</item>
@@ -363,11 +363,11 @@
     <string name="onboarding_continue">Continuar</string>
     <string name="onboarding_change_later">Puedes cambiarlo cuando quieras en Ajustes.</string>
     <string name="settings_trusted_wifi">Redes Wi‑Fi de confianza</string>
-    <string name="settings_local_proxy">Puerto del proxy local</string>
+    <string name="settings_local_proxy">Puerto de proxy local</string>
     <string name="settings_section_connection">Conexión</string>
     <string name="settings_on_demand">Conexión a petición</string>
-    <string name="settings_trusted_wifi_hint">Desconectar al unirse a ellas</string>
-    <string name="settings_password_required">Requiere contraseña</string>
+    <string name="settings_trusted_wifi_hint">Desconectar automáticamente al unirse</string>
+    <string name="settings_password_required">Solicitar contraseña</string>
     <string name="settings_section_testing">Pruebas</string>
     <string name="settings_test_wifi_only">Probar velocidad solo con Wi‑Fi</string>
     <string name="settings_keep_results">Conservar resultados</string>
@@ -409,8 +409,8 @@
     <string name="logs_empty">Aún no hay registros</string>
     <string name="logs_line_a11y">%1$s %2$s %3$s</string>
     <string name="today_style_night">Noche</string>
-    <string name="today_style_dawn">Alba</string>
-    <string name="today_style_mist">Niebla</string>
+    <string name="today_style_dawn">Amanecer</string>
+    <string name="today_style_mist">Bruma</string>
     <string name="today_saved">Guardada en la galería</string>
     <string name="today_save_failed">No se ha podido guardar la imagen</string>
     <string name="today_storage_permission">Se necesita permiso de almacenamiento para guardar la imagen</string>

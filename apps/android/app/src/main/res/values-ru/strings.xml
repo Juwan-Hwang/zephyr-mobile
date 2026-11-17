@@ -46,9 +46,9 @@
     <string name="common_status_disconnecting">Отключение</string>
     <string name="common_status_failed">Не удалось подключиться</string>
     <string name="common_status_disconnected">Не подключено</string>
-    <string name="common_mode_rule">Правила</string>
+    <string name="common_mode_rule">Правило</string>
     <string name="common_mode_global">Глобальный</string>
-    <string name="common_mode_direct">Напрямую</string>
+    <string name="common_mode_direct">Прямой</string>
     <string name="common_mode_rule_hint">Маршрут по сценариям</string>
     <string name="common_mode_global_hint">Весь трафик через один узел</string>
     <string name="common_mode_direct_hint">В обход прокси</string>
@@ -56,7 +56,7 @@
     <string name="common_scene_ai">AI</string>
     <string name="common_scene_video">Видео</string>
     <string name="common_scene_other">Другое</string>
-    <string name="common_no_results">Ничего не найдено</string>
+    <string name="common_no_results">Нет результатов</string>
     <string name="common_current">Текущий</string>
     <string name="common_list_separator">%1$s, %2$s</string>
     <string name="common_pair_and">%1$s и %2$s</string>
@@ -144,15 +144,15 @@
     <string name="scene_pinned_for">Закреплено для %1$s</string>
     <string name="scene_when_unavailable">Если узел недоступен</string>
     <string name="scene_ask">Спрашивать</string>
-    <string name="scene_auto_switch">Переключать сам</string>
+    <string name="scene_auto_switch">Переключать автоматически</string>
     <string name="scene_node_scope">Какие узлы</string>
     <string name="scene_uhd_only">Только узлы 4K</string>
     <string name="scene_pinned_value">%1$s (закреплён)</string>
     <string name="scene_retest">Проверить снова</string>
-    <string name="scene_note">Выбор хранится только в Zephyr. Конфигурация подписки не меняется.</string>
+    <string name="scene_note">Результаты выбора сохраняются только в Zephyr. Конфигурация подписки не меняется.</string>
     <string name="scene_note_tested">%1$s Последняя проверка: %2$s.</string>
     <string name="command_placeholder">Поиск или команда</string>
-    <string name="command_section_suggestions">Подсказки</string>
+    <string name="command_section_suggestions">Рекомендации</string>
     <string name="command_section_command">Команды</string>
     <string-array name="command_examples">
         <item>Gemini via Japan</item>
@@ -260,7 +260,7 @@
         <item quantity="other">Без изменений %1$d дня</item>
     </plurals>
     <string name="trace_this_connection">Это подключение</string>
-    <string name="trace_option_unchanged">Не менять</string>
+    <string name="trace_option_unchanged">Без изменений</string>
     <string name="trace_override_failed">Не удалось изменить: %1$s</string>
     <string name="trace_always_apply">Применять всегда</string>
     <string name="trace_always_apply_hint">Если выключено, изменится только это подключение</string>
@@ -300,10 +300,10 @@
     </plurals>
     <string name="rules_test_placeholder">Проверить домен или IP</string>
     <string name="rules_test_hint">Введите домен или IP-адрес, чтобы увидеть подходящее правило и выход.</string>
-    <string name="rules_match_order">Порядок проверки</string>
+    <string name="rules_match_order">Порядок сопоставления</string>
     <string name="rules_top_to_bottom">Сверху вниз</string>
     <string name="rules_other_traffic">Весь остальной трафик</string>
-    <string name="rules_note">Наборы правил компилируются на устройстве в индекс только для чтения и считываются с диска по мере необходимости. При обновлении подписок переопределения сохраняются.</string>
+    <string name="rules_note">Наборы правил компилируются на устройстве в индекс только для чтения и считываются с диска по мере необходимости. Переопределения не меняются при обновлении подписок.</string>
     <string name="rules_kind_override">Переопределение</string>
     <string name="rules_kind_subscription">Подписка</string>
     <string name="rules_kind_domain">Домен</string>
@@ -332,7 +332,7 @@
     </plurals>
     <string name="subs_error_clipboard_empty">Буфер обмена пуст</string>
     <string name="subs_hint_desktop">На компьютере откройте в Zephyr «Настройки › Мобильные», чтобы показать QR-код</string>
-    <string name="subs_error_read_file">Не удалось прочитать файл</string>
+    <string name="subs_error_read_file">Не удалось прочитать этот файл</string>
     <string name="subs_error_fetch">Не удалось загрузить подписку. Проверьте ссылку или подключение к сети.</string>
     <string name="subs_error_invalid_file">Это не файл конфигурации</string>
     <string name="subs_error_invalid_link">Это не ссылка на подписку</string>
@@ -352,9 +352,9 @@
     <string name="subs_diff_updated">%1$s: обновлено</string>
     <string name="subs_rule_changes">Изменения правил</string>
     <string name="subs_overrides_kept">Переопределения сохранены</string>
-    <string name="subs_scenes_retested">Сценарии проверены заново</string>
+    <string name="subs_scenes_retested">Узлы сценариев проверены заново</string>
     <string name="subs_section_data">Трафик</string>
-    <string name="subs_this_month">В этом месяце</string>
+    <string name="subs_this_month">Этот месяц</string>
     <string name="subs_swipe_updating">Обновление</string>
     <string name="subs_swipe_update">Обновить</string>
     <string name="subs_swipe_confirm_delete">Точно удалить</string>
@@ -384,14 +384,14 @@
     <string name="onboarding_simple">Простой</string>
     <string name="onboarding_simple_desc">Используются группы из подписки. Недоступные узлы обрабатываются автоматически.</string>
     <string name="onboarding_optimized">Оптимальный</string>
-    <string name="onboarding_optimized_desc">Ежедневно проверяет узлы по Wi‑Fi. AI и «Видео» используют только узлы, прошедшие проверку. Около 3 MB за раз.</string>
+    <string name="onboarding_optimized_desc">Ежедневная проверка узлов по Wi‑Fi. AI и «Видео» используют только узлы, прошедшие проверку. Около 3 MB за раз.</string>
     <string name="onboarding_continue">Продолжить</string>
     <string name="onboarding_change_later">Это можно изменить в любой момент в настройках.</string>
-    <string name="settings_trusted_wifi">Доверенные Wi‑Fi</string>
+    <string name="settings_trusted_wifi">Доверенные сети Wi‑Fi</string>
     <string name="settings_local_proxy">Порт локального прокси</string>
     <string name="settings_section_connection">Подключение</string>
     <string name="settings_on_demand">Подключение по запросу</string>
-    <string name="settings_trusted_wifi_hint">Отключаться в этих сетях автоматически</string>
+    <string name="settings_trusted_wifi_hint">Автоматически отключаться в этих сетях</string>
     <string name="settings_password_required">Нужен пароль</string>
     <string name="settings_section_testing">Проверка</string>
     <string name="settings_test_wifi_only">Тест скорости только по Wi‑Fi</string>
@@ -424,10 +424,10 @@
     <string name="settings_share_diagnostics">Отправлять диагностику</string>
     <string name="settings_section_diagnostics">Диагностика</string>
     <string name="settings_local_data_note">Подписки, узлы и данные о трафике хранятся только на этом устройстве.</string>
-    <string name="logs_title">Журнал</string>
+    <string name="logs_title">Журналы</string>
     <string name="logs_level_debug">Отладка</string>
     <string name="logs_level_info">Инфо</string>
-    <string name="logs_level_warning">Внимание</string>
+    <string name="logs_level_warning">Предупреждение</string>
     <string name="logs_level_error">Ошибка</string>
     <string name="logs_resume">Продолжить</string>
     <string name="logs_pause">Пауза</string>
@@ -453,9 +453,9 @@
         <item quantity="many">часов в сети</item>
         <item quantity="other">часа в сети</item>
     </plurals>
-    <string name="today_fastest">ms — лучший</string>
+    <string name="today_fastest">ms — минимум</string>
     <string name="today_save_image">Сохранить изображение</string>
-    <string name="today_pattern_note">Узор создан на основе сегодняшнего трафика и не содержит названий узлов и IP-адресов.</string>
+    <string name="today_pattern_note">Узор создаётся на основе сегодняшнего трафика и не содержит названий узлов и IP-адресов.</string>
     <string name="widget_label">Статус Zephyr</string>
     <string name="widget_description">Статус подключения, скорость и сценарии</string>
     <string name="widget_usage_label">Zephyr: трафик за сегодня</string>

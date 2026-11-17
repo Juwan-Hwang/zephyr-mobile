@@ -118,7 +118,7 @@
     <string name="home_confirm_apps">%1$s için çıkış IP’si değiştirilsin mi?</string>
     <string name="home_confirm_scene">%1$s senaryosunun çıkış IP’si değiştirilsin mi?</string>
     <string name="home_confirm_unchanged">%1$s aynı kalacak.</string>
-    <string name="home_scrub_hint">Bölgeyi değiştirmek için sola veya sağa kaydırın</string>
+    <string name="home_scrub_hint">Bölge değiştirmek için sola veya sağa kaydırın</string>
     <plurals name="scene_available_unit">
         <item quantity="one">kullanılabilir düğüm</item>
         <item quantity="other">kullanılabilir düğüm</item>
@@ -177,8 +177,8 @@
     <string name="command_uhd_clear_note">%1$s senaryosu yalnızca 4K düğümleri kullanıyor. Yeniden tüm düğümler kullanılacak; mevcut düğüm aynı kalır.</string>
     <string name="command_uhd_none">4K destekleyen düğüm yok.</string>
     <plurals name="command_uhd_untested">
-        <item quantity="one">%1$d 4K düğümü henüz test edilmedi. Uyguladıktan sonra senaryoyu yeniden test edin.</item>
-        <item quantity="other">%1$d 4K düğümü henüz test edilmedi. Uyguladıktan sonra senaryoyu yeniden test edin.</item>
+        <item quantity="one">%1$d 4K düğüm henüz test edilmedi. Uyguladıktan sonra senaryoyu yeniden test edin.</item>
+        <item quantity="other">%1$d 4K düğüm henüz test edilmedi. Uyguladıktan sonra senaryoyu yeniden test edin.</item>
     </plurals>
     <plurals name="command_uhd_matching_keep">
         <item quantity="one">%1$d düğümün %2$d tanesi 4K destekliyor; mevcut düğüm aynı kalır.</item>
@@ -228,7 +228,7 @@
         <item quantity="other">%1$d gündür değişmedi</item>
     </plurals>
     <string name="trace_this_connection">Bu bağlantı</string>
-    <string name="trace_option_unchanged">Değiştirme</string>
+    <string name="trace_option_unchanged">Değişiklik yok</string>
     <string name="trace_override_failed">Değiştirilemedi: %1$s</string>
     <string name="trace_always_apply">Her zaman uygula</string>
     <string name="trace_always_apply_hint">Kapalıyken yalnızca bu bağlantı değişir</string>
@@ -241,7 +241,7 @@
         <item quantity="one">%1$d abonelikten</item>
         <item quantity="other">%1$d abonelikten</item>
     </plurals>
-    <string name="nodes_search_placeholder">Bölge, şehir veya hat</string>
+    <string name="nodes_search_placeholder">Bölge, şehir veya rota</string>
     <string name="nodes_search_stats">%1$s · %2$s</string>
     <string name="nodes_empty_title">Henüz düğüm yok</string>
     <string name="nodes_empty_message">Bir abonelik içe aktarın, düğümleri burada görünsün</string>
@@ -332,16 +332,16 @@
     <string name="onboarding_cancel_import_a11y">İçe aktarmayı iptal et</string>
     <string name="onboarding_choose_mode">Bir mod seçin</string>
     <string name="onboarding_simple">Basit</string>
-    <string name="onboarding_simple_desc">Aboneliğinizdeki grupları kullanır. Kullanılamayan düğümler otomatik olarak ele alınır.</string>
+    <string name="onboarding_simple_desc">Aboneliğinizdeki grupları kullanır. Kullanılamayan düğümler otomatik olarak yönetilir.</string>
     <string name="onboarding_optimized">Optimize</string>
     <string name="onboarding_optimized_desc">Düğümleri her gün Wi‑Fi üzerinden test eder. AI ve Video yalnızca testi geçen düğümleri kullanır. Her seferinde yaklaşık 3 MB.</string>
     <string name="onboarding_continue">Devam</string>
     <string name="onboarding_change_later">Bunu istediğiniz zaman Ayarlar’dan değiştirebilirsiniz.</string>
     <string name="settings_trusted_wifi">Güvenilir Wi‑Fi</string>
-    <string name="settings_local_proxy">Yerel proxy bağlantı noktası</string>
+    <string name="settings_local_proxy">Yerel proxy portu</string>
     <string name="settings_section_connection">Bağlantı</string>
     <string name="settings_on_demand">İsteğe bağlı bağlan</string>
-    <string name="settings_trusted_wifi_hint">Bağlanınca otomatik olarak bağlantıyı kes</string>
+    <string name="settings_trusted_wifi_hint">Bu ağlarda bağlantıyı otomatik olarak kes</string>
     <string name="settings_password_required">Parola gerekli</string>
     <string name="settings_section_testing">Test</string>
     <string name="settings_test_wifi_only">Hız testini yalnızca Wi‑Fi’da yap</string>
@@ -402,7 +402,7 @@
     <string name="today_pattern_note">Desen bugünkü trafikten oluşturulur; düğüm adı veya IP adresi içermez.</string>
     <string name="widget_label">Zephyr durumu</string>
     <string name="widget_description">Bağlantı durumu, hız ve senaryolar</string>
-    <string name="widget_usage_label">Zephyr bugünkü kullanım</string>
+    <string name="widget_usage_label">Zephyr: bugünkü kullanım</string>
     <string name="widget_usage_description">Bugünkü trafik ve 24 saatlik dağılım</string>
     <string name="widget_today">Bugün %1$s %2$s</string>
     <string name="notif_channel_vpn">Bağlantı durumu</string>
