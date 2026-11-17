@@ -63,6 +63,8 @@ jobs:
         run: node tools/check-contract-exports.mjs
       - name: 契约样本结构自检（可解析、主键唯一、字段类型）
         run: node tools/check-fixtures.mjs
+      - name: 三端术语终版对齐（contract/i18n）
+        run: node tools/check-glossary.mjs
       - name: tools/*.sh 通过 shellcheck
         run: shellcheck --version | sed -n 2p && shellcheck tools/*.sh
       - name: workflow 通过 actionlint

@@ -1,0 +1,1056 @@
+{
+  "version": 1,
+  "locales": [
+    "en",
+    "zh",
+    "ja",
+    "ko",
+    "ru",
+    "es",
+    "fa",
+    "tk",
+    "my",
+    "ar",
+    "ur",
+    "sw",
+    "tr",
+    "vi"
+  ],
+  "note": "三端（iOS / Android / 桌面）共用术语终版。比较时忽略大小写（大小写按平台惯例）；ar 忽略词首定冠词 ال。详见 contract/i18n.md。",
+  "terms": {
+    "nodes": {
+      "en": "Nodes",
+      "zh": "节点",
+      "ja": "ノード",
+      "ko": "노드",
+      "ru": "Узлы",
+      "es": "Nodos",
+      "fa": "نودها",
+      "tk": "Düwünler",
+      "my": "နုဒ်များ",
+      "ar": "العقد",
+      "ur": "نوڈز",
+      "sw": "Nodi",
+      "tr": "Düğümler",
+      "vi": "Nút",
+      "keys": {
+        "android": "common_nodes",
+        "ios": "App:节点"
+      }
+    },
+    "node": {
+      "en": "Node",
+      "zh": "节点",
+      "ja": "ノード",
+      "ko": "노드",
+      "ru": "Узел",
+      "es": "Nodo",
+      "fa": "نود",
+      "tk": "Düwün",
+      "my": "နုဒ်",
+      "ar": "العقدة",
+      "ur": "نوڈ",
+      "sw": "Nodi",
+      "tr": "Düğüm",
+      "vi": "Nút",
+      "keys": {
+        "android": "trace_step_node"
+      }
+    },
+    "subscriptions": {
+      "en": "Subscriptions",
+      "zh": "订阅",
+      "ja": "サブスクリプション",
+      "ko": "구독",
+      "ru": "Подписки",
+      "es": "Suscripciones",
+      "fa": "اشتراک‌ها",
+      "tk": "Abunalar",
+      "my": "စာရင်းသွင်းမှုများ",
+      "ar": "الاشتراكات",
+      "ur": "سبسکرپشنز",
+      "sw": "Usajili",
+      "tr": "Abonelikler",
+      "vi": "Đăng ký",
+      "keys": {
+        "android": "common_subscriptions",
+        "ios": "App:订阅"
+      }
+    },
+    "subscription": {
+      "en": "Subscription",
+      "zh": "订阅",
+      "ja": "サブスクリプション",
+      "ko": "구독",
+      "ru": "Подписка",
+      "es": "Suscripción",
+      "fa": "اشتراک",
+      "tk": "Abuna",
+      "my": "စာရင်းသွင်းမှု",
+      "ar": "اشتراك",
+      "ur": "سبسکرپشن",
+      "sw": "Usajili",
+      "tr": "Abonelik",
+      "vi": "Đăng ký",
+      "keys": {
+        "android": "rules_kind_subscription"
+      }
+    },
+    "rules": {
+      "en": "Rules",
+      "zh": "规则",
+      "ja": "ルール",
+      "ko": "규칙",
+      "ru": "Правила",
+      "es": "Reglas",
+      "fa": "قوانین",
+      "tk": "Düzgünler",
+      "my": "စည်းမျဉ်းများ",
+      "ar": "القواعد",
+      "ur": "قواعد",
+      "sw": "Sheria",
+      "tr": "Kurallar",
+      "vi": "Quy tắc",
+      "keys": {
+        "android": "common_rules",
+        "ios": "App:规则#列表"
+      }
+    },
+    "rule": {
+      "en": "Rule",
+      "zh": "规则",
+      "ja": "ルール",
+      "ko": "규칙",
+      "ru": "Правило",
+      "es": "Regla",
+      "fa": "قانون",
+      "tk": "Düzgün",
+      "my": "စည်းမျဉ်း",
+      "ar": "القاعدة",
+      "ur": "قاعدہ",
+      "sw": "Sheria",
+      "tr": "Kural",
+      "vi": "Quy tắc",
+      "keys": {
+        "android": "common_mode_rule",
+        "ios": "App:规则"
+      }
+    },
+    "scenes": {
+      "en": "Scenes",
+      "zh": "场景",
+      "ja": "シーン",
+      "ko": "시나리오",
+      "ru": "Сценарии",
+      "es": "Escenarios",
+      "fa": "صحنه‌ها",
+      "tk": "Ssenariýler",
+      "my": "မြင်ကွင်းများ",
+      "ar": "المشاهد",
+      "ur": "مناظر",
+      "sw": "Mazingira",
+      "tr": "Senaryolar",
+      "vi": "Ngữ cảnh",
+      "keys": {
+        "android": "common_scenes",
+        "ios": "App:场景"
+      }
+    },
+    "scene": {
+      "en": "Scene",
+      "zh": "场景",
+      "ja": "シーン",
+      "ko": "시나리오",
+      "ru": "Сценарий",
+      "es": "Escenario",
+      "fa": "صحنه",
+      "tk": "Ssenariý",
+      "my": "မြင်ကွင်း",
+      "ar": "المشهد",
+      "ur": "منظر",
+      "sw": "Mazingira",
+      "tr": "Senaryo",
+      "vi": "Ngữ cảnh",
+      "keys": {
+        "android": "trace_step_scene"
+      }
+    },
+    "latency": {
+      "en": "Latency",
+      "zh": "延迟",
+      "ja": "レイテンシ",
+      "ko": "지연 시간",
+      "ru": "Задержка",
+      "es": "Latencia",
+      "fa": "تأخیر",
+      "tk": "Gijikme",
+      "my": "နောက်ကျမှု",
+      "ar": "التأخير",
+      "ur": "تاخیر",
+      "sw": "Kuchelewa",
+      "tr": "Gecikme",
+      "vi": "Độ trễ",
+      "keys": {
+        "ios": "App:延迟"
+      }
+    },
+    "proxy": {
+      "en": "Proxy",
+      "zh": "代理",
+      "ja": "プロキシ",
+      "ko": "프록시",
+      "ru": "Прокси",
+      "es": "Proxy",
+      "fa": "پروکسی",
+      "tk": "Proksi",
+      "my": "ပရောက်စီ",
+      "ar": "الوكيل",
+      "ur": "پراکسی",
+      "sw": "Proksi",
+      "tr": "Proxy",
+      "vi": "Proxy",
+      "keys": {
+        "android": "command_direct_from_proxy"
+      }
+    },
+    "mode.rule": {
+      "en": "Rule",
+      "zh": "规则",
+      "ja": "ルール",
+      "ko": "규칙",
+      "ru": "Правило",
+      "es": "Regla",
+      "fa": "قانون",
+      "tk": "Düzgün",
+      "my": "စည်းမျဉ်း",
+      "ar": "القاعدة",
+      "ur": "قاعدہ",
+      "sw": "Sheria",
+      "tr": "Kural",
+      "vi": "Quy tắc",
+      "keys": {
+        "android": "common_mode_rule",
+        "ios": "App:规则"
+      }
+    },
+    "mode.global": {
+      "en": "Global",
+      "zh": "全局",
+      "ja": "グローバル",
+      "ko": "글로벌",
+      "ru": "Глобальный",
+      "es": "Global",
+      "fa": "سراسری",
+      "tk": "Global",
+      "my": "ကမ္ဘာလုံးဆိုင်ရာ",
+      "ar": "شامل",
+      "ur": "گلوبل",
+      "sw": "Jumla",
+      "tr": "Küresel",
+      "vi": "Toàn cục",
+      "keys": {
+        "android": "common_mode_global",
+        "ios": "App:全局"
+      }
+    },
+    "mode.direct": {
+      "en": "Direct",
+      "zh": "直连",
+      "ja": "ダイレクト",
+      "ko": "다이렉트",
+      "ru": "Прямой",
+      "es": "Directo",
+      "fa": "مستقیم",
+      "tk": "Göni",
+      "my": "တိုက်ရိုက်",
+      "ar": "مباشر",
+      "ur": "براہ راست",
+      "sw": "Moja kwa moja",
+      "tr": "Doğrudan",
+      "vi": "Trực tiếp",
+      "keys": {
+        "android": "common_mode_direct",
+        "ios": "App:直连"
+      }
+    },
+    "mode.global_title": {
+      "en": "Global mode",
+      "zh": "全局模式",
+      "ja": "グローバルモード",
+      "ko": "글로벌 모드",
+      "ru": "Глобальный режим",
+      "es": "Modo global",
+      "fa": "حالت سراسری",
+      "tk": "Global režim",
+      "my": "ကမ္ဘာလုံးဆိုင်ရာ မုဒ်",
+      "ar": "الوضع الشامل",
+      "ur": "گلوبل موڈ",
+      "sw": "Hali ya Jumla",
+      "tr": "Küresel mod",
+      "vi": "Chế độ toàn cục",
+      "keys": {
+        "android": "home_global_title",
+        "ios": "App:全局模式"
+      }
+    },
+    "override": {
+      "en": "Override",
+      "zh": "覆写",
+      "ja": "オーバーライド",
+      "ko": "오버라이드",
+      "ru": "Переопределение",
+      "es": "Invalidación",
+      "fa": "بازنویسی",
+      "tk": "Aýratyn düzgün",
+      "my": "အစားထိုးချက်",
+      "ar": "تجاوز",
+      "ur": "اوور رائیڈ",
+      "sw": "Ubatilishaji",
+      "tr": "Geçersiz kılma",
+      "vi": "Ghi đè",
+      "keys": {
+        "android": "rules_kind_override",
+        "ios": "App:覆写"
+      }
+    },
+    "logs": {
+      "en": "Logs",
+      "zh": "日志",
+      "ja": "ログ",
+      "ko": "로그",
+      "ru": "Журналы",
+      "es": "Registros",
+      "fa": "گزارش‌ها",
+      "tk": "Günnamalar",
+      "my": "မှတ်တမ်းများ",
+      "ar": "السجلات",
+      "ur": "لاگز",
+      "sw": "Kumbukumbu",
+      "tr": "Günlükler",
+      "vi": "Nhật ký",
+      "keys": {
+        "android": "logs_title",
+        "ios": "App:日志"
+      }
+    },
+    "settings": {
+      "en": "Settings",
+      "zh": "设置",
+      "ja": "設定",
+      "ko": "설정",
+      "ru": "Настройки",
+      "es": "Ajustes",
+      "fa": "تنظیمات",
+      "tk": "Sazlamalar",
+      "my": "ဆက်တင်များ",
+      "ar": "الإعدادات",
+      "ur": "ترتیبات",
+      "sw": "Mipangilio",
+      "tr": "Ayarlar",
+      "vi": "Cài đặt",
+      "keys": {
+        "android": "common_settings",
+        "ios": "App:设置"
+      }
+    },
+    "import_from_file": {
+      "en": "Import from file",
+      "zh": "从文件导入",
+      "ja": "ファイルからインポート",
+      "ko": "파일에서 가져오기",
+      "ru": "Импорт из файла",
+      "es": "Importar desde archivo",
+      "fa": "وارد کردن از فایل",
+      "tk": "Faýldan import et",
+      "my": "ဖိုင်မှ တင်သွင်းရန်",
+      "ar": "استيراد من ملف",
+      "ur": "فائل سے امپورٹ کریں",
+      "sw": "Leta kutoka faili",
+      "tr": "Dosyadan içe aktar",
+      "vi": "Nhập từ tệp",
+      "keys": {
+        "android": "subs_import_file",
+        "ios": "App:从文件导入"
+      }
+    },
+    "update": {
+      "en": "Update",
+      "zh": "更新",
+      "ja": "更新",
+      "ko": "업데이트",
+      "ru": "Обновить",
+      "es": "Actualizar",
+      "fa": "به‌روزرسانی",
+      "tk": "Täzele",
+      "my": "အပ်ဒိတ်",
+      "ar": "تحديث",
+      "ur": "اپ ڈیٹ",
+      "sw": "Sasisha",
+      "tr": "Güncelle",
+      "vi": "Cập nhật",
+      "keys": {
+        "android": "subs_swipe_update",
+        "ios": "App:更新"
+      }
+    },
+    "domain": {
+      "en": "Domain",
+      "zh": "域名",
+      "ja": "ドメイン",
+      "ko": "도메인",
+      "ru": "Домен",
+      "es": "Dominio",
+      "fa": "دامنه",
+      "tk": "Domen",
+      "my": "ဒိုမိန်း",
+      "ar": "نطاق",
+      "ur": "ڈومین",
+      "sw": "Kikoa",
+      "tr": "Alan adı",
+      "vi": "Tên miền",
+      "keys": {
+        "android": "rules_kind_domain",
+        "ios": "App:域名"
+      }
+    },
+    "exit": {
+      "en": "Exit",
+      "zh": "出口",
+      "ja": "出口",
+      "ko": "출구",
+      "ru": "Выход",
+      "es": "Salida",
+      "fa": "خروجی",
+      "tk": "Çykyş",
+      "my": "ထွက်ပေါက်",
+      "ar": "المخرج",
+      "ur": "ایگزٹ",
+      "sw": "Njia ya kutoka",
+      "tr": "Çıkış",
+      "vi": "Đầu ra",
+      "keys": {
+        "android": "trace_step_exit",
+        "ios": "App:出口"
+      }
+    },
+    "exit_ip": {
+      "en": "Exit IP",
+      "zh": "出口 IP",
+      "ja": "出口 IP",
+      "ko": "출구 IP",
+      "ru": "IP выхода",
+      "es": "IP de salida",
+      "fa": "IP خروجی",
+      "tk": "Çykyş IP-si",
+      "my": "ထွက်ပေါက် IP",
+      "ar": "عنوان IP للخروج",
+      "ur": "ایگزٹ IP",
+      "sw": "IP ya kutoka",
+      "tr": "Çıkış IP’si",
+      "vi": "IP đầu ra",
+      "keys": {
+        "android": "rules_step_exit_ip",
+        "ios": "App:出口 IP"
+      }
+    },
+    "log.debug": {
+      "en": "Debug",
+      "zh": "调试",
+      "ja": "デバッグ",
+      "ko": "디버그",
+      "ru": "Отладка",
+      "es": "Depuración",
+      "fa": "اشکال‌زدایی",
+      "tk": "Düzediş",
+      "my": "အမှားရှာ",
+      "ar": "تصحيح",
+      "ur": "ڈیبگ",
+      "sw": "Utatuzi",
+      "tr": "Hata ayıklama",
+      "vi": "Gỡ lỗi",
+      "keys": {
+        "android": "logs_level_debug",
+        "ios": "App:调试"
+      }
+    },
+    "log.info": {
+      "en": "Info",
+      "zh": "信息",
+      "ja": "情報",
+      "ko": "정보",
+      "ru": "Инфо",
+      "es": "Info",
+      "fa": "اطلاعات",
+      "tk": "Maglumat",
+      "my": "အချက်အလက်",
+      "ar": "معلومات",
+      "ur": "معلومات",
+      "sw": "Taarifa",
+      "tr": "Bilgi",
+      "vi": "Thông tin",
+      "keys": {
+        "android": "logs_level_info",
+        "ios": "App:信息"
+      }
+    },
+    "log.error": {
+      "en": "Error",
+      "zh": "错误",
+      "ja": "エラー",
+      "ko": "오류",
+      "ru": "Ошибка",
+      "es": "Error",
+      "fa": "خطا",
+      "tk": "Ýalňyşlyk",
+      "my": "အမှား",
+      "ar": "خطأ",
+      "ur": "خرابی",
+      "sw": "Hitilafu",
+      "tr": "Hata",
+      "vi": "Lỗi",
+      "keys": {
+        "android": "logs_level_error",
+        "ios": "App:错误"
+      }
+    },
+    "appearance": {
+      "en": "Appearance",
+      "zh": "外观",
+      "ja": "外観",
+      "ko": "모양",
+      "ru": "Оформление",
+      "es": "Apariencia",
+      "fa": "ظاهر",
+      "tk": "Daşky görnüş",
+      "my": "အသွင်အပြင်",
+      "ar": "المظهر",
+      "ur": "ظاہری شکل",
+      "sw": "Mwonekano",
+      "tr": "Görünüm",
+      "vi": "Giao diện",
+      "keys": {
+        "android": "settings_appearance",
+        "ios": "App:外观"
+      }
+    },
+    "appearance.light": {
+      "en": "Light",
+      "zh": "浅色",
+      "ja": "ライト",
+      "ko": "라이트",
+      "ru": "Светлое",
+      "es": "Claro",
+      "fa": "روشن",
+      "tk": "Ýagty",
+      "my": "အလင်း",
+      "ar": "فاتح",
+      "ur": "روشن",
+      "sw": "Mwanga",
+      "tr": "Açık",
+      "vi": "Sáng",
+      "keys": {
+        "android": "settings_appearance_light",
+        "ios": "App:浅色"
+      }
+    },
+    "appearance.dark": {
+      "en": "Dark",
+      "zh": "深色",
+      "ja": "ダーク",
+      "ko": "다크",
+      "ru": "Тёмное",
+      "es": "Oscuro",
+      "fa": "تیره",
+      "tk": "Garaňky",
+      "my": "အမှောင်",
+      "ar": "داكن",
+      "ur": "تاریک",
+      "sw": "Giza",
+      "tr": "Koyu",
+      "vi": "Tối",
+      "keys": {
+        "android": "settings_appearance_dark",
+        "ios": "App:深色"
+      }
+    },
+    "appearance.system": {
+      "en": "System",
+      "zh": "跟随系统",
+      "ja": "システム",
+      "ko": "시스템",
+      "ru": "Как в системе",
+      "es": "Sistema",
+      "fa": "سیستم",
+      "tk": "Ulgam",
+      "my": "စနစ်အတိုင်း",
+      "ar": "النظام",
+      "ur": "سسٹم",
+      "sw": "Mfumo",
+      "tr": "Sistem",
+      "vi": "Hệ thống",
+      "keys": {
+        "android": "settings_appearance_system",
+        "ios": "App:跟随系统"
+      }
+    },
+    "all": {
+      "en": "All",
+      "zh": "全部",
+      "ja": "すべて",
+      "ko": "전체",
+      "ru": "Все",
+      "es": "Todos",
+      "fa": "همه",
+      "tk": "Ählisi",
+      "my": "အားလုံး",
+      "ar": "الكل",
+      "ur": "سب",
+      "sw": "Zote",
+      "tr": "Tümü",
+      "vi": "Tất cả",
+      "keys": {
+        "android": "common_all",
+        "ios": "App:全部"
+      }
+    },
+    "none": {
+      "en": "None",
+      "zh": "无",
+      "ja": "なし",
+      "ko": "없음",
+      "ru": "Нет",
+      "es": "Ninguno",
+      "fa": "هیچ",
+      "tk": "Ýok",
+      "my": "မရှိ",
+      "ar": "بلا",
+      "ur": "کوئی نہیں",
+      "sw": "Hakuna",
+      "tr": "Yok",
+      "vi": "Không có",
+      "keys": {
+        "android": "common_none",
+        "ios": "App:无"
+      }
+    },
+    "on": {
+      "en": "On",
+      "zh": "开",
+      "ja": "オン",
+      "ko": "켬",
+      "ru": "Вкл.",
+      "es": "Sí",
+      "fa": "روشن",
+      "tk": "Açyk",
+      "my": "ဖွင့်",
+      "ar": "مفعّل",
+      "ur": "آن",
+      "sw": "Imewashwa",
+      "tr": "Açık",
+      "vi": "Bật",
+      "keys": {
+        "android": "common_on",
+        "ios": "App:开"
+      }
+    },
+    "off": {
+      "en": "Off",
+      "zh": "关",
+      "ja": "オフ",
+      "ko": "끔",
+      "ru": "Выкл.",
+      "es": "No",
+      "fa": "خاموش",
+      "tk": "Öçük",
+      "my": "ပိတ်",
+      "ar": "معطّل",
+      "ur": "آف",
+      "sw": "Imezimwa",
+      "tr": "Kapalı",
+      "vi": "Tắt",
+      "keys": {
+        "android": "common_off",
+        "ios": "App:关"
+      }
+    },
+    "today": {
+      "en": "Today",
+      "zh": "今日",
+      "ja": "今日",
+      "ko": "오늘",
+      "ru": "Сегодня",
+      "es": "Hoy",
+      "fa": "امروز",
+      "tk": "Şu gün",
+      "my": "ယနေ့",
+      "ar": "اليوم",
+      "ur": "آج",
+      "sw": "Leo",
+      "tr": "Bugün",
+      "vi": "Hôm nay",
+      "keys": {
+        "android": "common_today",
+        "ios": "App:今日"
+      }
+    },
+    "undo": {
+      "en": "Undo",
+      "zh": "撤销",
+      "ja": "取り消す",
+      "ko": "실행 취소",
+      "ru": "Отменить",
+      "es": "Deshacer",
+      "fa": "واگرد",
+      "tk": "Yzyna al",
+      "my": "နောက်ပြန်ရန်",
+      "ar": "تراجع",
+      "ur": "واپس کریں",
+      "sw": "Tendua",
+      "tr": "Geri al",
+      "vi": "Hoàn tác",
+      "keys": {
+        "android": "common_undo",
+        "ios": "App:撤销"
+      }
+    },
+    "apply": {
+      "en": "Apply",
+      "zh": "应用",
+      "ja": "適用",
+      "ko": "적용",
+      "ru": "Применить",
+      "es": "Aplicar",
+      "fa": "اعمال",
+      "tk": "Ulan",
+      "my": "အသုံးချရန်",
+      "ar": "تطبيق",
+      "ur": "لاگو کریں",
+      "sw": "Tumia",
+      "tr": "Uygula",
+      "vi": "Áp dụng",
+      "keys": {
+        "android": "common_apply",
+        "ios": "App:应用"
+      }
+    },
+    "delete": {
+      "en": "Delete",
+      "zh": "删除",
+      "ja": "削除",
+      "ko": "삭제",
+      "ru": "Удалить",
+      "es": "Eliminar",
+      "fa": "حذف",
+      "tk": "Poz",
+      "my": "ဖျက်ရန်",
+      "ar": "حذف",
+      "ur": "حذف کریں",
+      "sw": "Futa",
+      "tr": "Sil",
+      "vi": "Xóa",
+      "keys": {
+        "android": "subs_swipe_delete",
+        "ios": "App:删除"
+      }
+    },
+    "disconnect": {
+      "en": "Disconnect",
+      "zh": "断开连接",
+      "ja": "切断",
+      "ko": "연결 해제",
+      "ru": "Отключить",
+      "es": "Desconectar",
+      "fa": "قطع اتصال",
+      "tk": "Birikmäni kes",
+      "my": "အဆက်ဖြတ်ရန်",
+      "ar": "قطع الاتصال",
+      "ur": "منقطع کریں",
+      "sw": "Tenganisha",
+      "tr": "Bağlantıyı kes",
+      "vi": "Ngắt kết nối",
+      "keys": {
+        "android": "common_disconnect",
+        "ios": "App:断开连接"
+      }
+    },
+    "status.connecting": {
+      "en": "Connecting",
+      "zh": "连接中",
+      "ja": "接続中",
+      "ko": "연결 중",
+      "ru": "Подключение",
+      "es": "Conectando",
+      "fa": "در حال اتصال",
+      "tk": "Birikdirilýär",
+      "my": "ချိတ်ဆက်နေသည်",
+      "ar": "جارٍ الاتصال",
+      "ur": "منسلک ہو رہا ہے",
+      "sw": "Inaunganisha",
+      "tr": "Bağlanıyor",
+      "vi": "Đang kết nối",
+      "keys": {
+        "android": "common_status_connecting",
+        "ios": "App:连接中"
+      }
+    },
+    "status.disconnected": {
+      "en": "Not connected",
+      "zh": "未连接",
+      "ja": "未接続",
+      "ko": "연결 안 됨",
+      "ru": "Не подключено",
+      "es": "No conectado",
+      "fa": "متصل نیست",
+      "tk": "Birikdirilmedi",
+      "my": "ချိတ်ဆက်မထားပါ",
+      "ar": "غير متصل",
+      "ur": "غیر منسلک",
+      "sw": "Haijaunganishwa",
+      "tr": "Bağlı değil",
+      "vi": "Chưa kết nối",
+      "keys": {
+        "android": "common_status_disconnected",
+        "ios": "App:未连接"
+      }
+    },
+    "status.failed": {
+      "en": "Connection failed",
+      "zh": "连接失败",
+      "ja": "接続できませんでした",
+      "ko": "연결 실패",
+      "ru": "Не удалось подключиться",
+      "es": "Error de conexión",
+      "fa": "اتصال ناموفق بود",
+      "tk": "Birikme şowsuz",
+      "my": "ချိတ်ဆက်၍ မရပါ",
+      "ar": "فشل الاتصال",
+      "ur": "کنکشن ناکام",
+      "sw": "Muunganisho umeshindwa",
+      "tr": "Bağlantı başarısız",
+      "vi": "Kết nối không thành công",
+      "keys": {
+        "android": "common_status_failed",
+        "ios": "App:连接失败"
+      }
+    },
+    "no_results": {
+      "en": "No results",
+      "zh": "无结果",
+      "ja": "結果なし",
+      "ko": "결과 없음",
+      "ru": "Нет результатов",
+      "es": "Sin resultados",
+      "fa": "نتیجه‌ای نیست",
+      "tk": "Netije ýok",
+      "my": "ရလဒ် မရှိပါ",
+      "ar": "لا توجد نتائج",
+      "ur": "کوئی نتیجہ نہیں",
+      "sw": "Hakuna matokeo",
+      "tr": "Sonuç yok",
+      "vi": "Không có kết quả",
+      "keys": {
+        "android": "common_no_results",
+        "ios": "App:无结果"
+      }
+    },
+    "switch_mode": {
+      "en": "Switch mode",
+      "zh": "切换模式",
+      "ja": "モードを切り替え",
+      "ko": "모드 전환",
+      "ru": "Сменить режим",
+      "es": "Cambiar modo",
+      "fa": "تغییر حالت",
+      "tk": "Režimi çalyş",
+      "my": "မုဒ် ပြောင်းရန်",
+      "ar": "تبديل الوضع",
+      "ur": "موڈ تبدیل کریں",
+      "sw": "Badilisha hali",
+      "tr": "Modu değiştir",
+      "vi": "Đổi chế độ",
+      "keys": {
+        "android": "home_switch_mode",
+        "ios": "App:切换模式"
+      }
+    },
+    "testing": {
+      "en": "Testing",
+      "zh": "检测中",
+      "ja": "テスト中",
+      "ko": "테스트 중",
+      "ru": "Проверка",
+      "es": "Probando",
+      "fa": "در حال آزمایش",
+      "tk": "Barlanýar",
+      "my": "စမ်းသပ်နေသည်",
+      "ar": "جارٍ الاختبار",
+      "ur": "ٹیسٹ جاری",
+      "sw": "Inapima",
+      "tr": "Test ediliyor",
+      "vi": "Đang kiểm tra",
+      "keys": {
+        "android": "home_scene_testing",
+        "ios": "App:检测中"
+      }
+    },
+    "test_again": {
+      "en": "Test again",
+      "zh": "重新检测",
+      "ja": "再テスト",
+      "ko": "다시 테스트",
+      "ru": "Проверить снова",
+      "es": "Volver a probar",
+      "fa": "آزمایش دوباره",
+      "tk": "Gaýtadan barla",
+      "my": "ပြန်စမ်းသပ်ရန်",
+      "ar": "إعادة الاختبار",
+      "ur": "دوبارہ ٹیسٹ کریں",
+      "sw": "Pima tena",
+      "tr": "Yeniden test et",
+      "vi": "Kiểm tra lại",
+      "keys": {
+        "android": "scene_retest",
+        "ios": "App:重新检测"
+      }
+    },
+    "auto_update": {
+      "en": "Automatic updates",
+      "zh": "自动更新",
+      "ja": "自動更新",
+      "ko": "자동 업데이트",
+      "ru": "Автообновление",
+      "es": "Actualizaciones automáticas",
+      "fa": "به‌روزرسانی خودکار",
+      "tk": "Awtomatik täzelenme",
+      "my": "အလိုအလျောက် အပ်ဒိတ်",
+      "ar": "التحديث التلقائي",
+      "ur": "خودکار اپ ڈیٹس",
+      "sw": "Masasisho ya kiotomatiki",
+      "tr": "Otomatik güncelleme",
+      "vi": "Tự động cập nhật",
+      "keys": {
+        "android": "subs_auto_update",
+        "ios": "App:自动更新"
+      }
+    },
+    "local_proxy_port": {
+      "en": "Local proxy port",
+      "zh": "本地代理端口",
+      "ja": "ローカルプロキシポート",
+      "ko": "로컬 프록시 포트",
+      "ru": "Порт локального прокси",
+      "es": "Puerto de proxy local",
+      "fa": "پورت پروکسی محلی",
+      "tk": "Ýerli proksi porty",
+      "my": "စက်တွင်း ပရောက်စီ ပေါ့တ်",
+      "ar": "منفذ الوكيل المحلي",
+      "ur": "مقامی پراکسی پورٹ",
+      "sw": "Mlango wa proksi ya ndani",
+      "tr": "Yerel proxy portu",
+      "vi": "Cổng proxy cục bộ",
+      "keys": {
+        "android": "settings_local_proxy",
+        "ios": "App:本地代理端口"
+      }
+    },
+    "require_password": {
+      "en": "Require password",
+      "zh": "需要密码",
+      "ja": "パスワードを要求",
+      "ko": "암호 요구",
+      "ru": "Требовать пароль",
+      "es": "Solicitar contraseña",
+      "fa": "نیاز به گذرواژه",
+      "tk": "Parol talap et",
+      "my": "စကားဝှက် လိုအပ်သည်",
+      "ar": "طلب كلمة المرور",
+      "ur": "پاس ورڈ درکار",
+      "sw": "Hitaji nenosiri",
+      "tr": "Parola gerektir",
+      "vi": "Yêu cầu mật khẩu",
+      "keys": {
+        "android": "settings_password_required",
+        "ios": "App:需要密码"
+      }
+    },
+    "accent": {
+      "en": "Accent color",
+      "zh": "强调色",
+      "ja": "アクセントカラー",
+      "ko": "강조 색상",
+      "ru": "Цвет акцента",
+      "es": "Color de realce",
+      "fa": "رنگ تأکیدی",
+      "tk": "Aksent reňki",
+      "my": "အထူးပြု အရောင်",
+      "ar": "لون التمييز",
+      "ur": "نمایاں رنگ",
+      "sw": "Rangi ya msisitizo",
+      "tr": "Vurgu rengi",
+      "vi": "Màu nhấn",
+      "keys": {
+        "android": "settings_accent",
+        "ios": "App:强调色"
+      }
+    },
+    "diagnostics": {
+      "en": "Diagnostics",
+      "zh": "诊断",
+      "ja": "診断",
+      "ko": "진단",
+      "ru": "Диагностика",
+      "es": "Diagnóstico",
+      "fa": "عیب‌یابی",
+      "tk": "Diagnostika",
+      "my": "ပြဿနာရှာဖွေခြင်း",
+      "ar": "التشخيص",
+      "ur": "تشخیص",
+      "sw": "Uchunguzi",
+      "tr": "Tanılama",
+      "vi": "Chẩn đoán",
+      "keys": {
+        "android": "settings_section_diagnostics",
+        "ios": "App:诊断"
+      }
+    },
+    "import": {
+      "en": "Import",
+      "zh": "导入",
+      "ja": "インポート",
+      "ko": "가져오기",
+      "ru": "Импорт",
+      "es": "Importar",
+      "fa": "وارد کردن",
+      "tk": "Import et",
+      "my": "တင်သွင်းရန်",
+      "ar": "استيراد",
+      "ur": "امپورٹ",
+      "sw": "Leta",
+      "tr": "İçe Aktar",
+      "vi": "Nhập",
+      "keys": {
+        "ios": "App:导入"
+      }
+    },
+    "log.warning": {
+      "en": "Warning",
+      "zh": "警告",
+      "ja": "警告",
+      "ko": "경고",
+      "ru": "Предупреждение",
+      "es": "Aviso",
+      "fa": "هشدار",
+      "tk": "Duýduryş",
+      "my": "သတိပေးချက်",
+      "ar": "تحذير",
+      "ur": "انتباہ",
+      "sw": "Onyo",
+      "tr": "Uyarı",
+      "vi": "Cảnh báo",
+      "keys": {
+        "android": "logs_level_warning",
+        "ios": "App:警告"
+      }
+    }
+  }
+}
