@@ -249,7 +249,7 @@
     <string name="nodes_no_match">“%1$s” ile eşleşen düğüm yok</string>
     <string name="nodes_tested">%1$s test edildi</string>
     <string name="nodes_jump_to">%1$s bölümüne git</string>
-    <string name="rules_add_override_a11y">Alan adı için geçersiz kılma ekle</string>
+    <string name="rules_add_override_a11y">Alan adı için üzerine yazma ekle</string>
     <plurals name="rules_total_unit">
         <item quantity="one">kural</item>
         <item quantity="other">kural</item>
@@ -263,8 +263,8 @@
     <string name="rules_match_order">Eşleşme sırası</string>
     <string name="rules_top_to_bottom">Yukarıdan aşağıya</string>
     <string name="rules_other_traffic">Diğer tüm trafik</string>
-    <string name="rules_note">Kural setleri cihazda salt okunur bir dizine derlenir ve gerektiğinde diskten okunur. Abonelikler güncellendiğinde geçersiz kılmalar korunur.</string>
-    <string name="rules_kind_override">Geçersiz kılma</string>
+    <string name="rules_note">Kural setleri cihazda salt okunur bir dizine derlenir ve gerektiğinde diskten okunur. Abonelikler güncellendiğinde üzerine yazmalar korunur.</string>
+    <string name="rules_kind_override">Üzerine yazma</string>
     <string name="rules_kind_subscription">Abonelik</string>
     <string name="rules_kind_domain">Alan adı</string>
     <string name="rules_kind_other">Diğer</string>
@@ -305,7 +305,7 @@
     <string name="subs_diff_updating">%1$s güncelleniyor…</string>
     <string name="subs_diff_updated">%1$s güncellendi</string>
     <string name="subs_rule_changes">Kural değişiklikleri</string>
-    <string name="subs_overrides_kept">Geçersiz kılmalar korundu</string>
+    <string name="subs_overrides_kept">Üzerine yazmalar korundu</string>
     <string name="subs_scenes_retested">Senaryo havuzları yeniden test edildi</string>
     <string name="subs_section_data">Veri</string>
     <string name="subs_this_month">Bu ay</string>
