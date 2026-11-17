@@ -321,7 +321,7 @@
         <item quantity="other">%1$d nyingine</item>
     </plurals>
     <string name="subs_section_update">Masasisho</string>
-    <string name="subs_auto_update">Sasisha kiotomatiki</string>
+    <string name="subs_auto_update">Masasisho ya kiotomatiki</string>
     <plurals name="subs_every_hours">
         <item quantity="one">Kila baada ya saa %1$d</item>
         <item quantity="other">Kila baada ya saa %1$d</item>
@@ -342,7 +342,7 @@
     <string name="settings_section_connection">Muunganisho</string>
     <string name="settings_on_demand">Unganisha inapohitajika</string>
     <string name="settings_trusted_wifi_hint">Tenganisha kiotomatiki ukijiunga</string>
-    <string name="settings_password_required">Nenosiri linahitajika</string>
+    <string name="settings_password_required">Hitaji nenosiri</string>
     <string name="settings_section_testing">Upimaji</string>
     <string name="settings_test_wifi_only">Pima kasi kupitia Wi‑Fi pekee</string>
     <string name="settings_keep_results">Hifadhi matokeo</string>

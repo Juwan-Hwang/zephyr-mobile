@@ -366,7 +366,7 @@
     <string name="settings_section_connection">اتصال</string>
     <string name="settings_on_demand">اتصال در صورت نیاز</string>
     <string name="settings_trusted_wifi_hint">هنگام اتصال به آن، به‌طور خودکار قطع شود</string>
-    <string name="settings_password_required">گذرواژه لازم است</string>
+    <string name="settings_password_required">نیاز به گذرواژه</string>
     <string name="settings_section_testing">آزمایش</string>
     <string name="settings_test_wifi_only">آزمایش سرعت فقط با Wi‑Fi</string>
     <string name="settings_keep_results">نگه‌داری نتایج</string>

@@ -64,6 +64,7 @@
 - 第四十五批（agent/android/i18n-ltr）：D-P2-12 第二阶段 a，新增 ja ko ru es tr vi sw tk my；首页状态标题超长自动缩字号；LocaleScreenshotTest 各语言快照（首页 + 订阅页）。
 - 第四十六批（PR agent/android/i18n-rtl）：✅ D-P2-12 第二阶段 b（新增 ar / fa / ur：全部字符串、CLDR 复数（ar 六类、fa/ur 两类）、数组，术语对齐桌面端；%n$s 参数一律 FSI/PDI 双向隔离，数值+单位用 LRI 成组；完整 RTL 镜像：返回箭头与行箭头 autoMirror、订阅行滑动方向、场景拨动与节点切换动画、导航转场、Trace 轨道随方向翻转；图表时间轴保持左→右；指令解析识别三种语言的地区与“直连”，示例可点用；RtlScreenshotTest 覆盖三语 × 首页/设置/订阅）。 补充：ar/fa 资源格式化产生的阿拉伯-印度数字在 ZText/ZStatTile 绘制层统一转西文数字。
 - 第四十七批（PR agent/android/l10n-review）：✅ D-P2-12 译文审校：12 种语言加英文共 535 条修改（ar 166、my 90、ur 69、ja 27、sw 35、tk 28、fa 27、vi 24、es 21、ru 19、ko 12、tr 9、en 6）。术语对齐桌面端与 iOS；缅文“节点”统一 နုဒ်，复数占位符 %s 改 %d；阿文复数补齐双数等形式；vi/sw“全局”保留 Toàn cục / Jumla（桌面端 Toàn cầu / Ulimwengu 是“全球/世界”的意思，建议桌面端改）。command_examples 不动（指令解析只认 zh/en/ar/fa/ur）。
+- 第36批（PR agent/android/glossary-align）：✅ 术语表对齐：需要密码改动作式（ru/fa/tk/ar/ur/sw/tr）、sw 自动更新，删除 pending 中 android 8 项
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）。
 
 ## 总览
