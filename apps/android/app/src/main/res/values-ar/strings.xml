@@ -466,7 +466,7 @@
     <string name="settings_section_connection">الاتصال</string>
     <string name="settings_on_demand">الاتصال عند الطلب</string>
     <string name="settings_trusted_wifi_hint">قطع الاتصال تلقائيًا عند الانضمام إليها</string>
-    <string name="settings_password_required">كلمة المرور مطلوبة</string>
+    <string name="settings_password_required">طلب كلمة المرور</string>
     <string name="settings_section_testing">الاختبار</string>
     <string name="settings_test_wifi_only">اختبار السرعة عبر Wi‑Fi فقط</string>
     <string name="settings_keep_results">الاحتفاظ بالنتائج</string>

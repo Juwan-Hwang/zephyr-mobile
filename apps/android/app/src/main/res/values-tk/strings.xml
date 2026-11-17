@@ -342,7 +342,7 @@
     <string name="settings_section_connection">Birikme</string>
     <string name="settings_on_demand">Zerur bolanda birikdir</string>
     <string name="settings_trusted_wifi_hint">Bu tora goşulanda birikmäni awtomatik kes</string>
-    <string name="settings_password_required">Parol gerek</string>
+    <string name="settings_password_required">Parol talap et</string>
     <string name="settings_section_testing">Barlag</string>
     <string name="settings_test_wifi_only">Tizligi diňe Wi‑Fi arkaly barla</string>
     <string name="settings_keep_results">Netijeleri sakla</string>

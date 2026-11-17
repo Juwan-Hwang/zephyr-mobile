@@ -342,7 +342,7 @@
     <string name="settings_section_connection">Bağlantı</string>
     <string name="settings_on_demand">İsteğe bağlı bağlan</string>
     <string name="settings_trusted_wifi_hint">Bu ağlarda bağlantıyı otomatik olarak kes</string>
-    <string name="settings_password_required">Parola gerekli</string>
+    <string name="settings_password_required">Parola gerektir</string>
     <string name="settings_section_testing">Test</string>
     <string name="settings_test_wifi_only">Hız testini yalnızca Wi‑Fi’da yap</string>
     <string name="settings_keep_results">Sonuçları sakla</string>
