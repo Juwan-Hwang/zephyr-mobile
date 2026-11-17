@@ -6014,7 +6014,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se ha borrado la invalidación de ruta de %@"
+            "value" : "Se ha borrado la sobrescritura de ruta de %@"
           }
         },
         "fa" : {
