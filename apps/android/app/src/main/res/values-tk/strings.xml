@@ -40,7 +40,7 @@
     <string name="common_status_connecting">Birikdirilýär</string>
     <string name="common_status_connecting_ellipsis">Birikdirilýär…</string>
     <string name="common_status_disconnecting">Birikme kesilýär</string>
-    <string name="common_status_failed">Birikip bolmady</string>
+    <string name="common_status_failed">Birikme şowsuz</string>
     <string name="common_status_disconnected">Birikdirilmedi</string>
     <string name="common_mode_rule">Düzgün</string>
     <string name="common_mode_global">Global</string>
@@ -48,17 +48,17 @@
     <string name="common_mode_rule_hint">Ssenariý boýunça ugrukdyr</string>
     <string name="common_mode_global_hint">Ähli trafik bir düwünden</string>
     <string name="common_mode_direct_hint">Proksisiz</string>
-    <string name="common_try_again">Täzeden synanyşyň</string>
+    <string name="common_try_again">Täzeden synanyş</string>
     <string name="common_scene_ai">AI</string>
     <string name="common_scene_video">Wideo</string>
-    <string name="common_scene_other">Beýlekiler</string>
+    <string name="common_scene_other">Beýleki</string>
     <string name="common_no_results">Netije ýok</string>
     <string name="common_current">Häzirki</string>
     <string name="common_list_separator">%1$s, %2$s</string>
     <string name="common_pair_and">%1$s we %2$s</string>
     <string name="common_source_group">Abuna topary</string>
     <string name="common_source_auto">Zephyr saýlawy</string>
-    <string name="common_all">Hemmesi</string>
+    <string name="common_all">Ählisi</string>
     <plurals name="common_region_count">
         <item quantity="one">%1$d sebit</item>
         <item quantity="other">%1$d sebit</item>
@@ -90,7 +90,7 @@
     <string name="home_failure_core">Ýadro işe girizilmedi</string>
     <string name="home_action_switch_mode">Režimi çalyşmak</string>
     <string name="home_action_preview_exit">Çykyşy öňünden görmek</string>
-    <string name="home_action_retest">Täzeden barlamak</string>
+    <string name="home_action_retest">Gaýtadan barlamak</string>
     <string name="home_action_switch_source">Çeşmäni çalyşmak</string>
     <string name="home_action_switch_exit">Çykyşy çalyşmak</string>
     <string name="home_action_load_nodes">Düwünleri ýüklemek</string>
@@ -134,10 +134,10 @@
     <string name="scene_node_scope">Düwün çägi</string>
     <string name="scene_uhd_only">Diňe 4K düwünler</string>
     <string name="scene_pinned_value">%1$s (berkidilen)</string>
-    <string name="scene_retest">Täzeden barla</string>
+    <string name="scene_retest">Gaýtadan barla</string>
     <string name="scene_note">Saýlananlar diňe Zephyr-de saklanýar. Abunaňyzyň konfigurasiýasy üýtgemeýär.</string>
     <string name="scene_note_tested">%1$s Soňky barlag: %2$s.</string>
-    <string name="command_placeholder">Gözläň ýa-da buýruk ýazyň</string>
+    <string name="command_placeholder">Gözle ýa-da buýruk ýaz</string>
     <string name="command_section_suggestions">Teklipler</string>
     <string name="command_section_command">Buýruklar</string>
     <string-array name="command_examples">
@@ -169,7 +169,7 @@
         <item quantity="one">%1$d elýeterli. %2$s ulanylar.</item>
         <item quantity="other">%1$d elýeterli. %2$s ulanylar.</item>
     </plurals>
-    <string name="command_plan_releases_pin">%1$s indi %2$s berkidilen çykyşyny ulanmaz.</string>
+    <string name="command_plan_releases_pin">%1$s indi berkidilen %2$s çykyşyny ulanmaz.</string>
     <string name="command_plan_fallback_pause">Elýeterli %1$s düwüni bolmasa, %2$s togtadylar.</string>
     <string name="command_plan_fallback_scene">Elýeterli %1$s düwüni bolmasa, ssenariýdäki beýleki düwünler ulanylar.</string>
     <string name="command_uhd_title_all">%1$s: ähli düwünler</string>
@@ -177,8 +177,8 @@
     <string name="command_uhd_clear_note">%1$s ssenariýsi diňe 4K düwünleri ulanýar. Ýene ähli düwünler ulanylar; häzirki düwün üýtgemez.</string>
     <string name="command_uhd_none">4K goldaýan düwün ýok.</string>
     <plurals name="command_uhd_untested">
-        <item quantity="one">%1$d 4K düwüni entek barlanmady. Ulanandan soň ssenariýni täzeden barlaň.</item>
-        <item quantity="other">%1$d 4K düwüni entek barlanmady. Ulanandan soň ssenariýni täzeden barlaň.</item>
+        <item quantity="one">%1$d 4K düwün entek barlanmady. Ulanandan soň ssenariýni täzeden barlaň.</item>
+        <item quantity="other">%1$d 4K düwün entek barlanmady. Ulanandan soň ssenariýni täzeden barlaň.</item>
     </plurals>
     <plurals name="command_uhd_matching_keep">
         <item quantity="one">%1$d düwüniň %2$d-si 4K goldaýar; häzirki düwün üýtgemez.</item>
@@ -227,8 +227,8 @@
         <item quantity="one">%1$d gün bäri üýtgemedi</item>
         <item quantity="other">%1$d gün bäri üýtgemedi</item>
     </plurals>
-    <string name="trace_this_connection">Bu birikme</string>
-    <string name="trace_option_unchanged">Üýtgetme</string>
+    <string name="trace_this_connection">Şu birikme</string>
+    <string name="trace_option_unchanged">Üýtgeşiksiz</string>
     <string name="trace_override_failed">Üýtgedip bolmady: %1$s</string>
     <string name="trace_always_apply">Hemişe ulan</string>
     <string name="trace_always_apply_hint">Öçük bolsa, diňe şu birikme üýtgeýär</string>
@@ -259,7 +259,7 @@
         <item quantity="other">%1$d gatlak · kompilirlendi · diskde %2$s</item>
     </plurals>
     <string name="rules_test_placeholder">Domeni ýa-da IP-ni barla</string>
-    <string name="rules_test_hint">Gabat gelýän düzgüni we çykyşy görmek üçin domen ýa-da IP salgy giriziň.</string>
+    <string name="rules_test_hint">Gabat gelýän düzgüni we çykyşy görmek üçin domen ýa-da IP salgysyny giriziň.</string>
     <string name="rules_match_order">Gabat gelme tertibi</string>
     <string name="rules_top_to_bottom">Ýokardan aşak</string>
     <string name="rules_other_traffic">Galan ähli trafik</string>
@@ -267,8 +267,8 @@
     <string name="rules_kind_override">Aýratyn düzgün</string>
     <string name="rules_kind_subscription">Abuna</string>
     <string name="rules_kind_domain">Domen</string>
-    <string name="rules_kind_other">Beýlekiler</string>
-    <string name="rules_step_request">Sorag</string>
+    <string name="rules_kind_other">Beýleki</string>
+    <string name="rules_step_request">Haýyş</string>
     <string name="rules_step_layer">Gatlak %1$d · %2$s</string>
     <string name="rules_step_result">Netije</string>
     <string name="rules_blocked">Petiklendi</string>
@@ -280,7 +280,7 @@
     <string name="subs_paste_placeholder">Abuna salgysyny goýuň</string>
     <string name="subs_paste_link">Salgyny goý</string>
     <string name="subs_paste_clipboard">Buferden goý</string>
-    <string name="subs_scan_qr">QR kody skanirle</string>
+    <string name="subs_scan_qr">QR koduny skanirle</string>
     <string name="subs_coming_soon">Ýakynda</string>
     <string name="subs_import_desktop">Kompýuterdäki Zephyr-den import et</string>
     <string name="subs_import_file">Faýldan import et</string>
@@ -306,7 +306,7 @@
     <string name="subs_diff_updated">%1$s täzelendi</string>
     <string name="subs_rule_changes">Düzgün üýtgeşmeleri</string>
     <string name="subs_overrides_kept">Aýratyn düzgünler saklandy</string>
-    <string name="subs_scenes_retested">Ssenariýler täzeden barlandy</string>
+    <string name="subs_scenes_retested">Ssenariý toplumlary gaýtadan barlandy</string>
     <string name="subs_section_data">Trafik</string>
     <string name="subs_this_month">Şu aý</string>
     <string name="subs_swipe_updating">Täzelenýär</string>
@@ -321,7 +321,7 @@
         <item quantity="other">Ýene %1$d</item>
     </plurals>
     <string name="subs_section_update">Täzelemeler</string>
-    <string name="subs_auto_update">Awtomatik täzele</string>
+    <string name="subs_auto_update">Awtomatik täzelenme</string>
     <plurals name="subs_every_hours">
         <item quantity="one">Her %1$d sagatda</item>
         <item quantity="other">Her %1$d sagatda</item>
@@ -340,8 +340,8 @@
     <string name="settings_trusted_wifi">Ynamdar Wi‑Fi</string>
     <string name="settings_local_proxy">Ýerli proksi porty</string>
     <string name="settings_section_connection">Birikme</string>
-    <string name="settings_on_demand">Gerek bolanda birikdir</string>
-    <string name="settings_trusted_wifi_hint">Birikende awtomatik kes</string>
+    <string name="settings_on_demand">Zerur bolanda birikdir</string>
+    <string name="settings_trusted_wifi_hint">Bu tora goşulanda birikmäni awtomatik kes</string>
     <string name="settings_password_required">Parol gerek</string>
     <string name="settings_section_testing">Barlag</string>
     <string name="settings_test_wifi_only">Tizligi diňe Wi‑Fi arkaly barla</string>
@@ -372,15 +372,15 @@
     <string name="settings_share_diagnostics">Diagnostika maglumatlaryny paýlaş</string>
     <string name="settings_section_diagnostics">Diagnostika</string>
     <string name="settings_local_data_note">Abunalar, düwünler we trafik maglumatlary diňe şu enjamda saklanýar.</string>
-    <string name="logs_title">Žurnallar</string>
-    <string name="logs_level_debug">Sazlama</string>
+    <string name="logs_title">Günnamalar</string>
+    <string name="logs_level_debug">Düzediş</string>
     <string name="logs_level_info">Maglumat</string>
     <string name="logs_level_warning">Duýduryş</string>
     <string name="logs_level_error">Ýalňyşlyk</string>
     <string name="logs_resume">Dowam et</string>
     <string name="logs_pause">Togtat</string>
     <string name="logs_clear">Arassala</string>
-    <string name="logs_empty">Entek žurnal ýok</string>
+    <string name="logs_empty">Entek günnama ýok</string>
     <string name="logs_line_a11y">%1$s %2$s %3$s</string>
     <string name="today_style_night">Gije</string>
     <string name="today_style_dawn">Daň</string>
@@ -402,7 +402,7 @@
     <string name="today_pattern_note">Nagyş şu günki trafikden döredilýär we düwün atlaryny ýa-da IP salgylaryny öz içine almaýar.</string>
     <string name="widget_label">Zephyr ýagdaýy</string>
     <string name="widget_description">Birikme ýagdaýy, tizlik we ssenariýler</string>
-    <string name="widget_usage_label">Zephyr şu günki ulanyş</string>
+    <string name="widget_usage_label">Zephyr: şu günki ulanyş</string>
     <string name="widget_usage_description">Şu günki trafik we 24 sagatlyk paýlanyş</string>
     <string name="widget_today">Şu gün %1$s %2$s</string>
     <string name="notif_channel_vpn">Birikme ýagdaýy</string>
@@ -413,7 +413,7 @@
     <string name="notif_action_rule">Düzgün režimi</string>
     <string name="notif_route_global">Global · %1$s</string>
     <string name="notif_route_global_any">Ähli trafik bir düwünden</string>
-    <string name="notif_expiry_title">%1$s möhleti %2$s gutarýar</string>
+    <string name="notif_expiry_title">%1$s: möhleti %2$s gutarýar</string>
     <string name="notif_expiry_text">%1$s galdy</string>
     <string name="tile_a11y">%1$s, %2$s</string>
 </resources>

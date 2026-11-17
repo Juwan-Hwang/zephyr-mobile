@@ -8,8 +8,8 @@
     <string name="common_clear">صاف کریں</string>
     <string name="common_latency_timeout">ٹائم آؤٹ</string>
     <string name="common_traffic_a11y">ڈاؤن لوڈ \u2066%1$s %2$s\u2069 فی سیکنڈ، اپ لوڈ \u2066%3$s %4$s\u2069 فی سیکنڈ</string>
-    <string name="common_time_just_now">ابھی</string>
-    <string name="common_time_just_now_inline">ابھی</string>
+    <string name="common_time_just_now">ابھی ابھی</string>
+    <string name="common_time_just_now_inline">ابھی ابھی</string>
     <plurals name="common_time_minutes_ago">
         <item quantity="one">%1$d منٹ پہلے</item>
         <item quantity="other">%1$d منٹ پہلے</item>
@@ -23,12 +23,12 @@
         <item quantity="other">%1$d دن پہلے</item>
     </plurals>
     <string name="common_expiry_expired">میعاد ختم</string>
-    <string name="common_expiry_today">آج ختم ہو رہا ہے</string>
-    <string name="common_expiry_tomorrow">کل ختم ہوگا</string>
-    <string name="common_expiry_weekday">\u2068%1$s\u2069 کو ختم ہوگا</string>
+    <string name="common_expiry_today">میعاد آج ختم ہوگی</string>
+    <string name="common_expiry_tomorrow">میعاد کل ختم ہوگی</string>
+    <string name="common_expiry_weekday">میعاد \u2068%1$s\u2069 کو ختم ہوگی</string>
     <plurals name="common_expiry_in_days">
-        <item quantity="one">%1$d دن میں ختم ہوگا</item>
-        <item quantity="other">%1$d دن میں ختم ہوگا</item>
+        <item quantity="one">میعاد %1$d دن میں ختم ہوگی</item>
+        <item quantity="other">میعاد %1$d دن میں ختم ہوگی</item>
     </plurals>
     <string-array name="common_weekdays">
         <item>پیر</item>

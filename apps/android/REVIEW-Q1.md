@@ -63,6 +63,7 @@
 - 第四十四批（PR agent/android/i18n-strings）：✅ D-P2-12 第一阶段（界面文案全部抽到资源：values=英文（默认与回退），values-zh=现有中文逐字保留；design 组件文案与 ZFormat 的相对时间/到期/计数单位同样走资源；ViewModel、导入器、通知、快捷开关、小组件用 @StringRes / UiText；计数用 plurals；localeFilters 与 locales_config 改为 en + zh，supportsRtl 已开；Paparazzi 锁 zh，基线不变）。余项：ja ko ru es fa tk my ar ur sw tr vi 分批补；引擎侧可见文案（场景名、规则层名与说明、Mock 节点/分组名）待引擎侧本地化；指令解析仍只认中英关键词。
 - 第四十五批（agent/android/i18n-ltr）：D-P2-12 第二阶段 a，新增 ja ko ru es tr vi sw tk my；首页状态标题超长自动缩字号；LocaleScreenshotTest 各语言快照（首页 + 订阅页）。
 - 第四十六批（PR agent/android/i18n-rtl）：✅ D-P2-12 第二阶段 b（新增 ar / fa / ur：全部字符串、CLDR 复数（ar 六类、fa/ur 两类）、数组，术语对齐桌面端；%n$s 参数一律 FSI/PDI 双向隔离，数值+单位用 LRI 成组；完整 RTL 镜像：返回箭头与行箭头 autoMirror、订阅行滑动方向、场景拨动与节点切换动画、导航转场、Trace 轨道随方向翻转；图表时间轴保持左→右；指令解析识别三种语言的地区与“直连”，示例可点用；RtlScreenshotTest 覆盖三语 × 首页/设置/订阅）。 补充：ar/fa 资源格式化产生的阿拉伯-印度数字在 ZText/ZStatTile 绘制层统一转西文数字。
+- 第四十七批（PR agent/android/l10n-review）：✅ D-P2-12 译文审校：12 种语言加英文共 535 条修改（ar 166、my 90、ur 69、ja 27、sw 35、tk 28、fa 27、vi 24、es 21、ru 19、ko 12、tr 9、en 6）。术语对齐桌面端与 iOS；缅文“节点”统一 နုဒ်，复数占位符 %s 改 %d；阿文复数补齐双数等形式；vi/sw“全局”保留 Toàn cục / Jumla（桌面端 Toàn cầu / Ulimwengu 是“全球/世界”的意思，建议桌面端改）。command_examples 不动（指令解析只认 zh/en/ar/fa/ur）。
 - 偏离：Compose 下划线颜色随文字色（原型为 t1 文字 + 彩色下划线）。
 
 ## 总览

@@ -4,7 +4,7 @@
     <string name="common_done">Xong</string>
     <string name="common_close">Đóng</string>
     <string name="common_clear">Xóa</string>
-    <string name="common_latency_timeout">Quá thời gian</string>
+    <string name="common_latency_timeout">Hết thời gian</string>
     <string name="common_traffic_a11y">Tải xuống %1$s %2$s mỗi giây, tải lên %3$s %4$s mỗi giây</string>
     <string name="common_time_just_now">Vừa xong</string>
     <string name="common_time_just_now_inline">vừa xong</string>

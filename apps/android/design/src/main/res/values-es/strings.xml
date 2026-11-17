@@ -4,7 +4,7 @@
     <string name="common_done">Listo</string>
     <string name="common_close">Cerrar</string>
     <string name="common_clear">Borrar</string>
-    <string name="common_latency_timeout">Agotado</string>
+    <string name="common_latency_timeout">Tiempo agotado</string>
     <string name="common_traffic_a11y">Descarga %1$s %2$s por segundo, subida %3$s %4$s por segundo</string>
     <string name="common_time_just_now">Ahora mismo</string>
     <string name="common_time_just_now_inline">ahora mismo</string>

@@ -18,7 +18,7 @@
     <string name="common_subscriptions">Đăng ký</string>
     <string name="common_settings">Cài đặt</string>
     <string name="common_library">Thư viện</string>
-    <string name="common_home">Trang chính</string>
+    <string name="common_home">Trang chủ</string>
     <string name="common_direct">Trực tiếp</string>
     <string name="common_local_network">Mạng của thiết bị này</string>
     <string name="common_exit_ip_changes">IP đầu ra sẽ thay đổi</string>
@@ -26,7 +26,7 @@
     <string name="common_add">Thêm</string>
     <string name="common_updating">Đang cập nhật…</string>
     <string name="common_retesting">Đang kiểm tra…</string>
-    <string name="common_local_data_note">Gói đăng ký và dữ liệu lưu lượng chỉ được lưu trên thiết bị này.</string>
+    <string name="common_local_data_note">Đăng ký và dữ liệu lưu lượng chỉ được lưu trên thiết bị này.</string>
     <string name="common_back_to">Quay lại %1$s</string>
     <plurals name="common_node_count">
         <item quantity="other">%1$s nút</item>
@@ -54,7 +54,7 @@
     <string name="common_current">Đang dùng</string>
     <string name="common_list_separator">%1$s, %2$s</string>
     <string name="common_pair_and">%1$s và %2$s</string>
-    <string name="common_source_group">Nhóm của gói đăng ký</string>
+    <string name="common_source_group">Nhóm đăng ký</string>
     <string name="common_source_auto">Zephyr chọn lọc</string>
     <string name="common_all">Tất cả</string>
     <plurals name="common_region_count">
@@ -68,22 +68,22 @@
     <string name="home_global_change_note">Mọi ứng dụng sẽ ra mạng qua %1$s.</string>
     <string name="home_global_change_to">Đổi sang %1$s</string>
     <plurals name="home_subs_more">
-        <item quantity="other">Thêm %1$d gói đăng ký</item>
+        <item quantity="other">%1$d gói đăng ký khác</item>
     </plurals>
     <string name="home_scan_progress">Đang kiểm tra %1$d/%2$d</string>
     <string name="home_scan_running">Đang kiểm tra…</string>
     <string name="home_scenes_tested">Đã kiểm tra %1$s</string>
     <string name="home_today_usage">Hôm nay %1$s</string>
     <string name="home_spark_a11y">Tốc độ tải xuống trong 90 giây qua</string>
-    <string name="home_switch_mode">Chuyển chế độ</string>
+    <string name="home_switch_mode">Đổi chế độ</string>
     <plurals name="home_scene_count">
         <item quantity="other">%1$d ngữ cảnh</item>
     </plurals>
     <string name="home_failure_no_subscription">Hãy thêm một gói đăng ký trước</string>
     <string name="home_failure_vpn_permission">Cần quyền VPN</string>
-    <string name="home_failure_network">Không có mạng</string>
+    <string name="home_failure_network">Mạng không khả dụng</string>
     <string name="home_failure_core">Không khởi động được lõi</string>
-    <string name="home_action_switch_mode">chuyển chế độ</string>
+    <string name="home_action_switch_mode">đổi chế độ</string>
     <string name="home_action_preview_exit">xem trước đầu ra</string>
     <string name="home_action_retest">kiểm tra lại</string>
     <string name="home_action_switch_source">chuyển nguồn</string>
@@ -108,7 +108,7 @@
     <string name="home_scene_details_a11y">Chi tiết ngữ cảnh %1$s</string>
     <string name="home_scene_testing">Đang kiểm tra</string>
     <string name="home_scene_services_down">%1$s không khả dụng</string>
-    <string name="home_scene_services_ok">%1$s ổn định</string>
+    <string name="home_scene_services_ok">%1$s bình thường</string>
     <string name="home_pin_line">%1$s: %2$s</string>
     <string name="home_confirm_apps">Đổi IP đầu ra cho %1$s?</string>
     <string name="home_confirm_scene">Đổi IP đầu ra cho ngữ cảnh %1$s?</string>
@@ -128,7 +128,7 @@
     <string name="scene_uhd_only">Chỉ nút 4K</string>
     <string name="scene_pinned_value">%1$s (đã ghim)</string>
     <string name="scene_retest">Kiểm tra lại</string>
-    <string name="scene_note">Kết quả chọn lọc chỉ được lưu trong Zephyr. Cấu hình gói đăng ký không thay đổi.</string>
+    <string name="scene_note">Kết quả chọn lọc chỉ được lưu trong Zephyr. Cấu hình đăng ký không thay đổi.</string>
     <string name="scene_note_tested">%1$s Kiểm tra lần cuối %2$s.</string>
     <string name="command_placeholder">Tìm kiếm hoặc nhập lệnh</string>
     <string name="command_section_suggestions">Gợi ý</string>
@@ -215,7 +215,7 @@
     <string name="trace_option_unchanged">Không đổi</string>
     <string name="trace_override_failed">Không thể thay đổi: %1$s</string>
     <string name="trace_always_apply">Luôn áp dụng</string>
-    <string name="trace_always_apply_hint">Khi tắt, chỉ kết nối này thay đổi</string>
+    <string name="trace_always_apply_hint">Khi tắt, chỉ thay đổi kết nối này</string>
     <string name="library_widgets">Tiện ích và Cài đặt nhanh</string>
     <plurals name="nodes_total_unit">
         <item quantity="other">nút</item>
@@ -241,9 +241,9 @@
     <string name="rules_test_placeholder">Kiểm tra tên miền hoặc IP</string>
     <string name="rules_test_hint">Nhập tên miền hoặc địa chỉ IP để xem quy tắc và đầu ra phù hợp.</string>
     <string name="rules_match_order">Thứ tự khớp</string>
-    <string name="rules_top_to_bottom">Từ trên xuống</string>
-    <string name="rules_other_traffic">Mọi lưu lượng khác</string>
-    <string name="rules_note">Bộ quy tắc được biên dịch trên thiết bị thành chỉ mục chỉ đọc và đọc từ ổ đĩa khi cần. Ghi đè được giữ nguyên khi gói đăng ký cập nhật.</string>
+    <string name="rules_top_to_bottom">Từ trên xuống dưới</string>
+    <string name="rules_other_traffic">Mọi lưu lượng còn lại</string>
+    <string name="rules_note">Bộ quy tắc được biên dịch trên thiết bị thành chỉ mục chỉ đọc và đọc từ ổ đĩa khi cần. Ghi đè giữ nguyên khi đăng ký cập nhật.</string>
     <string name="rules_kind_override">Ghi đè</string>
     <string name="rules_kind_subscription">Đăng ký</string>
     <string name="rules_kind_domain">Tên miền</string>
@@ -256,7 +256,7 @@
     <string name="rules_step_exit_ip">IP đầu ra</string>
     <string name="rules_took">Mất %1$s</string>
     <string name="rules_kind_ip">IP</string>
-    <string name="subs_add">Thêm gói đăng ký</string>
+    <string name="subs_add">Thêm đăng ký</string>
     <string name="subs_paste_placeholder">Dán liên kết gói đăng ký</string>
     <string name="subs_paste_link">Dán liên kết</string>
     <string name="subs_paste_clipboard">Dán từ bộ nhớ tạm</string>
@@ -282,8 +282,8 @@
     <string name="subs_diff_updating">Đang cập nhật %1$s…</string>
     <string name="subs_diff_updated">Đã cập nhật %1$s</string>
     <string name="subs_rule_changes">Thay đổi quy tắc</string>
-    <string name="subs_overrides_kept">Đã giữ ghi đè</string>
-    <string name="subs_scenes_retested">Đã kiểm tra lại nút của ngữ cảnh</string>
+    <string name="subs_overrides_kept">Đã giữ lại ghi đè</string>
+    <string name="subs_scenes_retested">Đã kiểm tra lại nhóm nút của ngữ cảnh</string>
     <string name="subs_section_data">Dữ liệu</string>
     <string name="subs_this_month">Tháng này</string>
     <string name="subs_swipe_updating">Đang cập nhật</string>
@@ -307,7 +307,7 @@
     <string name="onboarding_cancel_import_a11y">Hủy nhập</string>
     <string name="onboarding_choose_mode">Chọn chế độ</string>
     <string name="onboarding_simple">Đơn giản</string>
-    <string name="onboarding_simple_desc">Dùng các nhóm trong gói đăng ký. Nút không khả dụng được xử lý tự động.</string>
+    <string name="onboarding_simple_desc">Dùng các nhóm do đăng ký cung cấp. Nút không khả dụng được xử lý tự động.</string>
     <string name="onboarding_optimized">Tối ưu</string>
     <string name="onboarding_optimized_desc">Kiểm tra nút hằng ngày qua Wi‑Fi. AI và Video chỉ dùng các nút đạt yêu cầu. Khoảng 3 MB mỗi lần.</string>
     <string name="onboarding_continue">Tiếp tục</string>
@@ -317,14 +317,14 @@
     <string name="settings_section_connection">Kết nối</string>
     <string name="settings_on_demand">Kết nối theo yêu cầu</string>
     <string name="settings_trusted_wifi_hint">Tự động ngắt kết nối khi tham gia</string>
-    <string name="settings_password_required">Cần mật khẩu</string>
+    <string name="settings_password_required">Yêu cầu mật khẩu</string>
     <string name="settings_section_testing">Kiểm tra</string>
-    <string name="settings_test_wifi_only">Chỉ kiểm tra tốc độ qua Wi‑Fi</string>
-    <string name="settings_keep_results">Giữ kết quả</string>
+    <string name="settings_test_wifi_only">Chỉ đo tốc độ qua Wi‑Fi</string>
+    <string name="settings_keep_results">Lưu giữ kết quả</string>
     <plurals name="settings_hours">
         <item quantity="other">%1$d giờ</item>
     </plurals>
-    <string name="settings_section_storage">Bộ nhớ</string>
+    <string name="settings_section_storage">Dung lượng</string>
     <string name="settings_storage_title">Nút và quy tắc</string>
     <string name="settings_storage_detail">Nút %1$s · Quy tắc %2$s · Còn trống %3$s</string>
     <string name="settings_appearance">Giao diện</string>
@@ -345,7 +345,7 @@
     <string name="settings_section_privacy">Quyền riêng tư</string>
     <string name="settings_share_diagnostics">Chia sẻ dữ liệu chẩn đoán</string>
     <string name="settings_section_diagnostics">Chẩn đoán</string>
-    <string name="settings_local_data_note">Gói đăng ký, nút và dữ liệu lưu lượng chỉ được lưu trên thiết bị này.</string>
+    <string name="settings_local_data_note">Đăng ký, nút và dữ liệu lưu lượng chỉ được lưu trên thiết bị này.</string>
     <string name="logs_title">Nhật ký</string>
     <string name="logs_level_debug">Gỡ lỗi</string>
     <string name="logs_level_info">Thông tin</string>
@@ -358,7 +358,7 @@
     <string name="logs_line_a11y">%1$s %2$s %3$s</string>
     <string name="today_style_night">Đêm</string>
     <string name="today_style_dawn">Bình minh</string>
-    <string name="today_style_mist">Sương</string>
+    <string name="today_style_mist">Sương mù</string>
     <string name="today_saved">Đã lưu vào thư viện ảnh</string>
     <string name="today_save_failed">Không thể lưu hình ảnh</string>
     <string name="today_storage_permission">Cần quyền bộ nhớ để lưu hình ảnh</string>

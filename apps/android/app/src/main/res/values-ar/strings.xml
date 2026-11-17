@@ -15,7 +15,7 @@
     <string name="common_off">معطّل</string>
     <string name="common_today">اليوم</string>
     <string name="common_scenes">المشاهد</string>
-    <string name="common_nodes">العُقد</string>
+    <string name="common_nodes">العقد</string>
     <string name="common_rules">القواعد</string>
     <string name="common_subscriptions">الاشتراكات</string>
     <string name="common_settings">الإعدادات</string>
@@ -27,24 +27,24 @@
     <string name="common_adding">جارٍ الإضافة…</string>
     <string name="common_add">إضافة</string>
     <string name="common_updating">جارٍ التحديث…</string>
-    <string name="common_retesting">جارٍ الفحص…</string>
+    <string name="common_retesting">جارٍ الاختبار…</string>
     <string name="common_local_data_note">تُحفظ الاشتراكات وبيانات حركة المرور على هذا الجهاز فقط.</string>
     <string name="common_back_to">رجوع إلى \u2068%1$s\u2069</string>
     <plurals name="common_node_count">
         <item quantity="zero">\u2068%1$s\u2069 عقدة</item>
         <item quantity="one">عقدة واحدة</item>
         <item quantity="two">عقدتان</item>
-        <item quantity="few">\u2068%1$s\u2069 عُقد</item>
+        <item quantity="few">\u2068%1$s\u2069 عقد</item>
         <item quantity="many">\u2068%1$s\u2069 عقدة</item>
         <item quantity="other">\u2068%1$s\u2069 عقدة</item>
     </plurals>
     <plurals name="common_available_count">
-        <item quantity="zero">%1$d متاحة</item>
+        <item quantity="zero">%1$d عقدة متاحة</item>
         <item quantity="one">عقدة واحدة متاحة</item>
         <item quantity="two">عقدتان متاحتان</item>
-        <item quantity="few">%1$d متاحة</item>
-        <item quantity="many">%1$d متاحة</item>
-        <item quantity="other">%1$d متاحة</item>
+        <item quantity="few">%1$d عقد متاحة</item>
+        <item quantity="many">%1$d عقدة متاحة</item>
+        <item quantity="other">%1$d عقدة متاحة</item>
     </plurals>
     <string name="common_status_connected">متصل</string>
     <string name="common_status_connecting">جارٍ الاتصال</string>
@@ -52,7 +52,7 @@
     <string name="common_status_disconnecting">جارٍ قطع الاتصال</string>
     <string name="common_status_failed">فشل الاتصال</string>
     <string name="common_status_disconnected">غير متصل</string>
-    <string name="common_mode_rule">القواعد</string>
+    <string name="common_mode_rule">القاعدة</string>
     <string name="common_mode_global">شامل</string>
     <string name="common_mode_direct">مباشر</string>
     <string name="common_mode_rule_hint">توجيه حسب المشهد</string>
@@ -62,7 +62,7 @@
     <string name="common_scene_ai">الذكاء الاصطناعي</string>
     <string name="common_scene_video">الفيديو</string>
     <string name="common_scene_other">أخرى</string>
-    <string name="common_no_results">لا نتائج</string>
+    <string name="common_no_results">لا توجد نتائج</string>
     <string name="common_current">الحالية</string>
     <string name="common_list_separator">\u2068%1$s\u2069، \u2068%2$s\u2069</string>
     <string name="common_pair_and">\u2068%1$s\u2069 و\u2068%2$s\u2069</string>
@@ -82,7 +82,7 @@
     <string name="home_global_title">الوضع الشامل</string>
     <string name="home_global_body">تمر كل حركة المرور عبر \u2068%1$s\u2069. المشاهد متوقفة مؤقتًا.</string>
     <string name="home_global_body_any">تمر كل حركة المرور عبر عقدة واحدة. المشاهد متوقفة مؤقتًا.</string>
-    <string name="home_global_use_rule">استخدام وضع القواعد</string>
+    <string name="home_global_use_rule">استخدام وضع القاعدة</string>
     <string name="home_global_change_node">تغيير العقدة</string>
     <string name="home_global_change_note">ستخرج كل التطبيقات عبر \u2068%1$s\u2069.</string>
     <string name="home_global_change_to">التغيير إلى \u2068%1$s\u2069</string>
@@ -94,9 +94,9 @@
         <item quantity="many">%1$d اشتراكًا إضافيًا</item>
         <item quantity="other">%1$d اشتراك إضافي</item>
     </plurals>
-    <string name="home_scan_progress">جارٍ الفحص \u2066%1$d/%2$d\u2069</string>
-    <string name="home_scan_running">جارٍ الفحص…</string>
-    <string name="home_scenes_tested">فُحصت \u2068%1$s\u2069</string>
+    <string name="home_scan_progress">جارٍ الاختبار \u2066%1$d/%2$d\u2069</string>
+    <string name="home_scan_running">جارٍ الاختبار…</string>
+    <string name="home_scenes_tested">اختُبرت \u2068%1$s\u2069</string>
     <string name="home_today_usage">اليوم \u2068%1$s\u2069</string>
     <string name="home_spark_a11y">سرعة التنزيل خلال آخر 90 ثانية</string>
     <string name="home_switch_mode">تبديل الوضع</string>
@@ -114,10 +114,10 @@
     <string name="home_failure_core">تعذّر تشغيل النواة</string>
     <string name="home_action_switch_mode">تبديل الوضع</string>
     <string name="home_action_preview_exit">معاينة المخرج</string>
-    <string name="home_action_retest">إعادة الفحص</string>
+    <string name="home_action_retest">إعادة الاختبار</string>
     <string name="home_action_switch_source">تبديل المصدر</string>
     <string name="home_action_switch_exit">تبديل المخرج</string>
-    <string name="home_action_load_nodes">تحميل العُقد</string>
+    <string name="home_action_load_nodes">تحميل العقد</string>
     <string name="home_action_switch_node">تبديل العقدة</string>
     <string name="home_action_undo">التراجع</string>
     <string name="home_error_not_connected">اتصل أولًا من أجل \u2068%1$s\u2069</string>
@@ -128,14 +128,14 @@
     <string name="home_switched_to">تم التبديل إلى \u2068%1$s\u2069</string>
     <string name="home_now_uses">يستخدم \u2068%1$s\u2069 الآن \u2068%2$s\u2069</string>
     <string name="home_now_direct">يتصل \u2068%1$s\u2069 الآن مباشرةً</string>
-    <string name="home_now_all_nodes">\u2068%1$s\u2069: كل العُقد مجددًا</string>
+    <string name="home_now_all_nodes">\u2068%1$s\u2069: كل العقد مجددًا</string>
     <string name="home_now_uses_uhd">يستخدم \u2068%1$s\u2069 الآن \u2068%2$s\u2069 (4K فقط)</string>
-    <string name="home_now_uhd_only">يستخدم \u2068%1$s\u2069 الآن عُقد 4K فقط</string>
+    <string name="home_now_uhd_only">يستخدم \u2068%1$s\u2069 الآن عقد 4K فقط</string>
     <string name="home_apply_failed">تعذّر التطبيق: \u2068%1$s\u2069</string>
     <string name="home_scene_next_region">المنطقة التالية: \u2068%1$s\u2069</string>
     <string name="home_scene_prev_region">المنطقة السابقة: \u2068%1$s\u2069</string>
     <string name="home_scene_details_a11y">تفاصيل مشهد \u2068%1$s\u2069</string>
-    <string name="home_scene_testing">جارٍ الفحص</string>
+    <string name="home_scene_testing">جارٍ الاختبار</string>
     <string name="home_scene_services_down">\u2068%1$s\u2069 غير متاح</string>
     <string name="home_scene_services_ok">\u2068%1$s\u2069 متاح</string>
     <string name="home_pin_line">%1$s: %2$s</string>
@@ -148,32 +148,32 @@
     <plurals name="scene_available_unit">
         <item quantity="zero">عقدة متاحة</item>
         <item quantity="one">عقدة متاحة</item>
-        <item quantity="two">عُقد متاحة</item>
-        <item quantity="few">عُقد متاحة</item>
+        <item quantity="two">عقدتان متاحتان</item>
+        <item quantity="few">عقد متاحة</item>
         <item quantity="many">عقدة متاحة</item>
         <item quantity="other">عقدة متاحة</item>
     </plurals>
     <plurals name="scene_tested_from">
-        <item quantity="zero">فُحصت من %1$d اشتراك</item>
-        <item quantity="one">فُحصت من اشتراك واحد</item>
-        <item quantity="two">فُحصت من اشتراكين</item>
-        <item quantity="few">فُحصت من %1$d اشتراكات</item>
-        <item quantity="many">فُحصت من %1$d اشتراكًا</item>
-        <item quantity="other">فُحصت من %1$d اشتراك</item>
+        <item quantity="zero">اختُبرت من %1$d اشتراك</item>
+        <item quantity="one">اختُبرت من اشتراك واحد</item>
+        <item quantity="two">اختُبرت من اشتراكين</item>
+        <item quantity="few">اختُبرت من %1$d اشتراكات</item>
+        <item quantity="many">اختُبرت من %1$d اشتراكًا</item>
+        <item quantity="other">اختُبرت من %1$d اشتراك</item>
     </plurals>
     <string name="scene_pinned_for">مثبّتة لتطبيق \u2068%1$s\u2069</string>
     <string name="scene_when_unavailable">عند تعذّر الوصول إلى عقدة</string>
     <string name="scene_ask">اسألني</string>
     <string name="scene_auto_switch">التبديل تلقائيًا</string>
-    <string name="scene_node_scope">نطاق العُقد</string>
-    <string name="scene_uhd_only">عُقد 4K فقط</string>
+    <string name="scene_node_scope">نطاق العقد</string>
+    <string name="scene_uhd_only">عقد 4K فقط</string>
     <string name="scene_pinned_value">\u2068%1$s\u2069 (مثبّتة)</string>
-    <string name="scene_retest">إعادة الفحص</string>
+    <string name="scene_retest">إعادة الاختبار</string>
     <string name="scene_note">تُحفظ الاختيارات في Zephyr فقط، ولا يتغيّر إعداد اشتراكك.</string>
-    <string name="scene_note_tested">\u2068%1$s\u2069 آخر فحص: \u2068%2$s\u2069.</string>
+    <string name="scene_note_tested">\u2068%1$s\u2069 آخر اختبار: \u2068%2$s\u2069.</string>
 
     <!-- ── Command layer ── -->
-    <string name="command_placeholder">ابحث أو أدخل أمرًا</string>
+    <string name="command_placeholder">البحث أو إدخال أمر</string>
     <string name="command_section_suggestions">اقتراحات</string>
     <string name="command_section_command">الأوامر</string>
     <string-array name="command_examples">
@@ -181,7 +181,7 @@
         <item>GitHub مباشر</item>
         <item>هونغ كونغ</item>
     </string-array>
-    <string name="command_see_all_nodes">عرض كل العُقد (\u2068%1$s\u2069) في مكتبة العُقد</string>
+    <string name="command_see_all_nodes">عرض كل العقد (\u2068%1$s\u2069) في مكتبة العقد</string>
     <string name="command_test_rule">إلى أين يذهب \u2068%1$s\u2069؟</string>
     <string name="command_chip_scene">المشهد</string>
     <string name="command_chip_service">الخدمة</string>
@@ -196,33 +196,33 @@
     <string name="command_region_gb">المملكة المتحدة</string>
     <string name="command_region_kr">كوريا</string>
     <string name="command_region_de">ألمانيا</string>
-    <string name="command_plan_exit_title">يستخدم \u2068%1$s\u2069 عُقد \u2068%2$s\u2069</string>
-    <string name="command_plan_no_nodes">لا توجد عُقد في \u2068%2$s\u2069 ضمن \u2068%1$s\u2069.</string>
+    <string name="command_plan_exit_title">يستخدم \u2068%1$s\u2069 عقد \u2068%2$s\u2069</string>
+    <string name="command_plan_no_nodes">لا توجد عقد في \u2068%2$s\u2069 ضمن \u2068%1$s\u2069.</string>
     <string name="command_scene_ai">مشهد الذكاء الاصطناعي</string>
     <string name="command_scene_named">مشهد \u2068%1$s\u2069</string>
-    <string name="command_no_nodes_available">لا توجد عُقد متاحة</string>
+    <string name="command_no_nodes_available">لا توجد عقد متاحة</string>
     <plurals name="command_plan_exit_available">
-        <item quantity="zero">%1$d متاحة. سيُستخدم \u2068%2$s\u2069.</item>
+        <item quantity="zero">%1$d عقدة متاحة. سيُستخدم \u2068%2$s\u2069.</item>
         <item quantity="one">عقدة واحدة متاحة. سيُستخدم \u2068%2$s\u2069.</item>
         <item quantity="two">عقدتان متاحتان. سيُستخدم \u2068%2$s\u2069.</item>
-        <item quantity="few">%1$d عُقد متاحة. سيُستخدم \u2068%2$s\u2069.</item>
+        <item quantity="few">%1$d عقد متاحة. سيُستخدم \u2068%2$s\u2069.</item>
         <item quantity="many">%1$d عقدة متاحة. سيُستخدم \u2068%2$s\u2069.</item>
         <item quantity="other">%1$d عقدة متاحة. سيُستخدم \u2068%2$s\u2069.</item>
     </plurals>
     <string name="command_plan_releases_pin">سيتوقف \u2068%1$s\u2069 عن استخدام مخرجه الثابت \u2068%2$s\u2069.</string>
     <string name="command_plan_fallback_pause">إذا لم تتوفر أي عقدة في \u2068%1$s\u2069، فسيتوقف \u2068%2$s\u2069 مؤقتًا.</string>
-    <string name="command_plan_fallback_scene">إذا لم تتوفر أي عقدة في \u2068%1$s\u2069، فستُستخدم عُقد أخرى من المشهد.</string>
-    <string name="command_uhd_title_all">\u2068%1$s\u2069: كل العُقد</string>
-    <string name="command_uhd_title_only">\u2068%1$s\u2069: عُقد 4K فقط</string>
-    <string name="command_uhd_clear_note">يستخدم مشهد \u2068%1$s\u2069 عُقد 4K فقط. ستُستخدم كل العُقد مجددًا، وتبقى العقدة الحالية.</string>
+    <string name="command_plan_fallback_scene">إذا لم تتوفر أي عقدة في \u2068%1$s\u2069، فستُستخدم عقد أخرى من المشهد.</string>
+    <string name="command_uhd_title_all">\u2068%1$s\u2069: كل العقد</string>
+    <string name="command_uhd_title_only">\u2068%1$s\u2069: عقد 4K فقط</string>
+    <string name="command_uhd_clear_note">يستخدم مشهد \u2068%1$s\u2069 عقد 4K فقط. ستُستخدم كل العقد مجددًا، وتبقى العقدة الحالية.</string>
     <string name="command_uhd_none">لا توجد عقدة تدعم 4K.</string>
     <plurals name="command_uhd_untested">
-        <item quantity="zero">لم تُفحص بعد %1$d من عُقد 4K. أعد فحص المشهد بعد التطبيق.</item>
-        <item quantity="one">لم تُفحص بعد %1$d من عُقد 4K. أعد فحص المشهد بعد التطبيق.</item>
-        <item quantity="two">لم تُفحص بعد %1$d من عُقد 4K. أعد فحص المشهد بعد التطبيق.</item>
-        <item quantity="few">لم تُفحص بعد %1$d من عُقد 4K. أعد فحص المشهد بعد التطبيق.</item>
-        <item quantity="many">لم تُفحص بعد %1$d من عُقد 4K. أعد فحص المشهد بعد التطبيق.</item>
-        <item quantity="other">لم تُفحص بعد %1$d من عُقد 4K. أعد فحص المشهد بعد التطبيق.</item>
+        <item quantity="zero">لم تُختبر %1$d عقدة 4K بعد. أعد اختبار المشهد بعد التطبيق.</item>
+        <item quantity="one">لم تُختبر بعد %1$d من عقد 4K. أعد اختبار المشهد بعد التطبيق.</item>
+        <item quantity="two">لم تُختبر عقدتا 4K بعد. أعد اختبار المشهد بعد التطبيق.</item>
+        <item quantity="few">لم تُختبر %1$d عقد 4K بعد. أعد اختبار المشهد بعد التطبيق.</item>
+        <item quantity="many">لم تُختبر %1$d عقدة 4K بعد. أعد اختبار المشهد بعد التطبيق.</item>
+        <item quantity="other">لم تُختبر %1$d عقدة 4K بعد. أعد اختبار المشهد بعد التطبيق.</item>
     </plurals>
     <plurals name="command_uhd_matching_keep">
         <item quantity="zero">%2$d من %1$d تدعم 4K، وتبقى العقدة الحالية.</item>
@@ -241,7 +241,7 @@
         <item quantity="other">%2$d من %1$d تدعم 4K، وسيُستخدم \u2068%3$s\u2069.</item>
     </plurals>
     <string name="command_uhd_fastest">أسرع عقدة 4K</string>
-    <string name="command_uhd_auto_note">من الآن، يختار التبديل التلقائي من عُقد 4K فقط.</string>
+    <string name="command_uhd_auto_note">من الآن فصاعدًا، سيختار التبديل التلقائي من عقد 4K فقط.</string>
     <string name="command_direct_title">اتصال \u2068%1$s\u2069 مباشرةً</string>
     <string name="command_direct_note">ستتجاوز حركة مرور \u2068%1$s\u2069 الوكيل.</string>
     <string name="command_direct_from_proxy">الوكيل</string>
@@ -316,8 +316,8 @@
     <plurals name="nodes_total_unit">
         <item quantity="zero">عقدة</item>
         <item quantity="one">عقدة</item>
-        <item quantity="two">عُقد</item>
-        <item quantity="few">عُقد</item>
+        <item quantity="two">عقدتان</item>
+        <item quantity="few">عقد</item>
         <item quantity="many">عقدة</item>
         <item quantity="other">عقدة</item>
     </plurals>
@@ -331,11 +331,11 @@
     </plurals>
     <string name="nodes_search_placeholder">منطقة أو مدينة أو مسار</string>
     <string name="nodes_search_stats">%1$s · %2$s</string>
-    <string name="nodes_empty_title">لا توجد عُقد بعد</string>
-    <string name="nodes_empty_message">استورد اشتراكًا وستظهر عُقده هنا</string>
+    <string name="nodes_empty_title">لا توجد عقد بعد</string>
+    <string name="nodes_empty_message">استورد اشتراكًا وستظهر عقده هنا</string>
     <string name="nodes_empty_action">استيراد اشتراك</string>
-    <string name="nodes_no_match">لا توجد عُقد تطابق «\u2068%1$s\u2069»</string>
-    <string name="nodes_tested">تم فحص \u2068%1$s\u2069</string>
+    <string name="nodes_no_match">لا توجد عقد تطابق «\u2068%1$s\u2069»</string>
+    <string name="nodes_tested">تم اختبار \u2068%1$s\u2069</string>
     <string name="nodes_jump_to">الانتقال إلى \u2068%1$s\u2069</string>
 
     <!-- ── Rules ── -->
@@ -343,7 +343,7 @@
     <plurals name="rules_total_unit">
         <item quantity="zero">قاعدة</item>
         <item quantity="one">قاعدة</item>
-        <item quantity="two">قواعد</item>
+        <item quantity="two">قاعدتان</item>
         <item quantity="few">قواعد</item>
         <item quantity="many">قاعدة</item>
         <item quantity="other">قاعدة</item>
@@ -356,7 +356,7 @@
         <item quantity="many">%1$d طبقة · مُجمَّعة · \u2068%2$s\u2069 على القرص</item>
         <item quantity="other">%1$d طبقة · مُجمَّعة · \u2068%2$s\u2069 على القرص</item>
     </plurals>
-    <string name="rules_test_placeholder">اختبر نطاقًا أو IP</string>
+    <string name="rules_test_placeholder">اختبار نطاق أو IP</string>
     <string name="rules_test_hint">أدخل نطاقًا أو عنوان IP لمعرفة القاعدة المطابقة والمخرج.</string>
     <string name="rules_match_order">ترتيب المطابقة</string>
     <string name="rules_top_to_bottom">من الأعلى إلى الأسفل</string>
@@ -377,7 +377,7 @@
 
     <!-- ── Subscriptions ── -->
     <string name="subs_add">إضافة اشتراك</string>
-    <string name="subs_paste_placeholder">الصق رابط اشتراك</string>
+    <string name="subs_paste_placeholder">لصق رابط اشتراك</string>
     <string name="subs_paste_link">لصق الرابط</string>
     <string name="subs_paste_clipboard">لصق من الحافظة</string>
     <string name="subs_scan_qr">مسح رمز QR</string>
@@ -388,7 +388,7 @@
         <item quantity="zero">تمت إضافة \u2068%1$s\u2069 (\u2068%2$s\u2069 عقدة)</item>
         <item quantity="one">تمت إضافة \u2068%1$s\u2069 (عقدة واحدة)</item>
         <item quantity="two">تمت إضافة \u2068%1$s\u2069 (عقدتان)</item>
-        <item quantity="few">تمت إضافة \u2068%1$s\u2069 (\u2068%2$s\u2069 عُقد)</item>
+        <item quantity="few">تمت إضافة \u2068%1$s\u2069 (\u2068%2$s\u2069 عقد)</item>
         <item quantity="many">تمت إضافة \u2068%1$s\u2069 (\u2068%2$s\u2069 عقدة)</item>
         <item quantity="other">تمت إضافة \u2068%1$s\u2069 (\u2068%2$s\u2069 عقدة)</item>
     </plurals>
@@ -401,7 +401,7 @@
     <plurals name="subs_total_unit">
         <item quantity="zero">اشتراك</item>
         <item quantity="one">اشتراك</item>
-        <item quantity="two">اشتراكات</item>
+        <item quantity="two">اشتراكان</item>
         <item quantity="few">اشتراكات</item>
         <item quantity="many">اشتراكًا</item>
         <item quantity="other">اشتراك</item>
@@ -417,11 +417,11 @@
     <string name="subs_diff_updating">جارٍ تحديث \u2068%1$s\u2069…</string>
     <string name="subs_diff_updated">تم تحديث \u2068%1$s\u2069</string>
     <string name="subs_rule_changes">تغييرات القواعد</string>
-    <string name="subs_overrides_kept">أُبقي على التجاوزات</string>
-    <string name="subs_scenes_retested">أُعيد فحص مجموعات المشاهد</string>
+    <string name="subs_overrides_kept">تم الاحتفاظ بالتجاوزات</string>
+    <string name="subs_scenes_retested">أُعيد اختبار مجموعات المشاهد</string>
     <string name="subs_section_data">البيانات</string>
     <string name="subs_this_month">هذا الشهر</string>
-    <string name="subs_swipe_updating">تحديث…</string>
+    <string name="subs_swipe_updating">جارٍ التحديث…</string>
     <string name="subs_swipe_update">تحديث</string>
     <string name="subs_swipe_confirm_delete">تأكيد الحذف</string>
     <string name="subs_swipe_delete">حذف</string>
@@ -454,9 +454,9 @@
     <string name="onboarding_cancel_import_a11y">إلغاء الاستيراد</string>
     <string name="onboarding_choose_mode">اختر وضعًا</string>
     <string name="onboarding_simple">بسيط</string>
-    <string name="onboarding_simple_desc">يستخدم المجموعات الموجودة في اشتراكك، ويتعامل تلقائيًا مع العُقد غير المتاحة.</string>
+    <string name="onboarding_simple_desc">يستخدم المجموعات الموجودة في اشتراكك، ويتعامل تلقائيًا مع العقد غير المتاحة.</string>
     <string name="onboarding_optimized">مُحسَّن</string>
-    <string name="onboarding_optimized_desc">يفحص العُقد يوميًا عبر Wi‑Fi، ولا يستخدم مشهدا الذكاء الاصطناعي والفيديو إلا العُقد الناجحة. نحو 3 MB في كل مرة.</string>
+    <string name="onboarding_optimized_desc">يختبر العقد يوميًا عبر Wi‑Fi، ولا يستخدم مشهدا الذكاء الاصطناعي والفيديو إلا العقد التي تجتاز الاختبار. نحو 3 MB في كل مرة.</string>
     <string name="onboarding_continue">متابعة</string>
     <string name="onboarding_change_later">يمكنك تغيير ذلك في أي وقت من الإعدادات.</string>
 
@@ -467,8 +467,8 @@
     <string name="settings_on_demand">الاتصال عند الطلب</string>
     <string name="settings_trusted_wifi_hint">قطع الاتصال تلقائيًا عند الانضمام إليها</string>
     <string name="settings_password_required">كلمة المرور مطلوبة</string>
-    <string name="settings_section_testing">الفحص</string>
-    <string name="settings_test_wifi_only">فحص السرعة عبر Wi‑Fi فقط</string>
+    <string name="settings_section_testing">الاختبار</string>
+    <string name="settings_test_wifi_only">اختبار السرعة عبر Wi‑Fi فقط</string>
     <string name="settings_keep_results">الاحتفاظ بالنتائج</string>
     <plurals name="settings_hours">
         <item quantity="zero">%1$d ساعة</item>
@@ -479,8 +479,8 @@
         <item quantity="other">%1$d ساعة</item>
     </plurals>
     <string name="settings_section_storage">التخزين</string>
-    <string name="settings_storage_title">العُقد والقواعد</string>
-    <string name="settings_storage_detail">العُقد \u2068%1$s\u2069 · القواعد \u2068%2$s\u2069 · المتاح \u2068%3$s\u2069</string>
+    <string name="settings_storage_title">العقد والقواعد</string>
+    <string name="settings_storage_detail">العقد \u2068%1$s\u2069 · القواعد \u2068%2$s\u2069 · المتاح \u2068%3$s\u2069</string>
     <string name="settings_appearance">المظهر</string>
     <string name="settings_appearance_system">النظام</string>
     <string name="settings_appearance_dark">داكن</string>
@@ -499,7 +499,7 @@
     <string name="settings_section_privacy">الخصوصية</string>
     <string name="settings_share_diagnostics">مشاركة بيانات التشخيص</string>
     <string name="settings_section_diagnostics">التشخيص</string>
-    <string name="settings_local_data_note">تُحفظ الاشتراكات والعُقد وبيانات حركة المرور على هذا الجهاز فقط.</string>
+    <string name="settings_local_data_note">تُحفظ الاشتراكات والعقد وبيانات حركة المرور على هذا الجهاز فقط.</string>
 
     <!-- ── Logs ── -->
     <string name="logs_title">السجلات</string>
@@ -524,7 +524,7 @@
     <plurals name="today_regions">
         <item quantity="zero">منطقة</item>
         <item quantity="one">منطقة</item>
-        <item quantity="two">مناطق</item>
+        <item quantity="two">منطقتان</item>
         <item quantity="few">مناطق</item>
         <item quantity="many">منطقة</item>
         <item quantity="other">منطقة</item>
@@ -532,14 +532,14 @@
     <plurals name="today_hours_online">
         <item quantity="zero">ساعة اتصال</item>
         <item quantity="one">ساعة اتصال</item>
-        <item quantity="two">ساعات اتصال</item>
+        <item quantity="two">ساعتا اتصال</item>
         <item quantity="few">ساعات اتصال</item>
         <item quantity="many">ساعة اتصال</item>
         <item quantity="other">ساعة اتصال</item>
     </plurals>
     <string name="today_fastest">أسرع زمن (ms)</string>
     <string name="today_save_image">حفظ الصورة</string>
-    <string name="today_pattern_note">يُولَّد النمط من حركة مرور اليوم، ولا يتضمن أسماء عُقد أو عناوين IP.</string>
+    <string name="today_pattern_note">يُولَّد النمط من حركة مرور اليوم، ولا يتضمن أسماء عقد أو عناوين IP.</string>
 
     <!-- ── Widgets ── -->
     <string name="widget_label">حالة Zephyr</string>
@@ -554,7 +554,7 @@
     <string name="notif_channel_alerts">تنبيهات الاشتراك</string>
     <string name="notif_channel_alerts_desc">انتهاء الاشتراك وانخفاض البيانات المتبقية</string>
     <string name="notif_action_global">الوضع الشامل</string>
-    <string name="notif_action_rule">وضع القواعد</string>
+    <string name="notif_action_rule">وضع القاعدة</string>
     <string name="notif_route_global">شامل · \u2068%1$s\u2069</string>
     <string name="notif_route_global_any">كل حركة المرور عبر عقدة واحدة</string>
     <string name="notif_expiry_title">ينتهي \u2068%1$s\u2069 في \u2068%2$s\u2069</string>

@@ -20,17 +20,17 @@
     <string name="common_expiry_expired">期限切れ</string>
     <string name="common_expiry_today">今日で期限切れ</string>
     <string name="common_expiry_tomorrow">明日で期限切れ</string>
-    <string name="common_expiry_weekday">%1$sに期限切れ</string>
+    <string name="common_expiry_weekday">%1$s曜日に期限切れ</string>
     <plurals name="common_expiry_in_days">
         <item quantity="other">あと%1$d日で期限切れ</item>
     </plurals>
     <string-array name="common_weekdays">
-        <item>月曜</item>
-        <item>火曜</item>
-        <item>水曜</item>
-        <item>木曜</item>
-        <item>金曜</item>
-        <item>土曜</item>
-        <item>日曜</item>
+        <item>月</item>
+        <item>火</item>
+        <item>水</item>
+        <item>木</item>
+        <item>金</item>
+        <item>土</item>
+        <item>日</item>
     </string-array>
 </resources>
