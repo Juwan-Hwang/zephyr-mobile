@@ -4258,7 +4258,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Başka bir uygulama Zephyr'i açmak istiyor."
+            "value" : "Başka bir uygulama Zephyr’i açmak istiyor."
           }
         },
         "ur" : {
@@ -4422,7 +4422,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Başka bir uygulama Zephyr'in bağlantısını kesmek istiyor. Trafik artık proxy üzerinden geçmeyecek."
+            "value" : "Başka bir uygulama Zephyr’in bağlantısını kesmek istiyor. Trafik artık proxy üzerinden geçmeyecek."
           }
         },
         "ur" : {
@@ -5148,7 +5148,7 @@
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hubadilisha hali ya proksi ya Zephyr kati ya Sheria, Ulimwengu na Moja kwa Moja."
+            "value" : "Hubadilisha hali ya proksi ya Zephyr kati ya Sheria, Jumla na Moja kwa Moja."
           }
         },
         "tk" : {
@@ -5160,7 +5160,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr'in proxy modunu Kural, Küresel ve Doğrudan arasında değiştirir."
+            "value" : "Zephyr’in proxy modunu Kural, Küresel ve Doğrudan arasında değiştirir."
           }
         },
         "ur" : {
@@ -5172,7 +5172,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chuyển chế độ proxy của Zephyr giữa Quy tắc, Toàn cầu và Trực tiếp."
+            "value" : "Chuyển chế độ proxy của Zephyr giữa Quy tắc, Toàn cục và Trực tiếp."
           }
         }
       }
@@ -5242,7 +5242,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hızı ve senaryoları Kilitli Ekran'da görün."
+            "value" : "Hızı ve senaryoları Kilitli Ekran’da görün."
           }
         },
         "ur" : {
@@ -6014,7 +6014,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se ha borrado la excepción de ruta de %@"
+            "value" : "Se ha borrado la invalidación de ruta de %@"
           }
         },
         "fa" : {
@@ -6308,7 +6308,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr'i ${mode} moduna geçir"
+            "value" : "Zephyr’i ${mode} moduna geçir"
           }
         },
         "ur" : {
@@ -8194,7 +8194,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VPN izni yok. Zephyr'de VPN yapılandırmasına izin verin."
+            "value" : "VPN izni yok. Zephyr’de VPN yapılandırmasına izin verin."
           }
         },
         "ur" : {
@@ -9588,7 +9588,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Henüz yapılandırma yok. Zephyr'i açın ve önce bir abonelik ekleyin."
+            "value" : "Henüz yapılandırma yok. Zephyr’i açın ve önce bir abonelik ekleyin."
           }
         },
         "ur" : {
@@ -9752,7 +9752,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr'e Bağlan"
+            "value" : "Zephyr’e Bağlan"
           }
         },
         "ur" : {
@@ -9834,7 +9834,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr'e Bağlan: ${value}"
+            "value" : "Zephyr’e Bağlan: ${value}"
           }
         },
         "ur" : {
@@ -9916,7 +9916,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr'e bağlanılsın mı?"
+            "value" : "Zephyr’e bağlanılsın mı?"
           }
         },
         "ur" : {
@@ -10080,7 +10080,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr proxy'sine bağlanır veya bağlantıyı keser."
+            "value" : "Zephyr proxy’sine bağlanır veya bağlantıyı keser."
           }
         },
         "ur" : {
@@ -10326,7 +10326,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hız güncellemeleri duraklatıldı. Son durumu görmek için Zephyr'i açın."
+            "value" : "Hız güncellemeleri duraklatıldı. Son durumu görmek için Zephyr’i açın."
           }
         },
         "ur" : {
@@ -10490,7 +10490,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr'in VPN yapılandırması eklemesine izin verin"
+            "value" : "Zephyr’in VPN yapılandırması eklemesine izin verin"
           }
         },
         "ur" : {
