@@ -215,6 +215,7 @@ v0.1 追加：`stale_token`（查询句柄已淘汰，UI 重新 queryNodes 即�
 - v0（2026-11-06）首版。后续加字段只追加、不改名；破坏性改动升 v1 并在看板公告。
 - v0.1（2026-11-06 14:20）追加 §13：类型命名、Dns/Tun 设置、stale_token / subscription_not_found、IPv6 规则测试、连接轨迹。
 - v0.3（2026-11-14）追加 §15：导入载荷 / 桌面同步二维码格式（parseImportPayload）。
+- v0.4（2026-11-18）追加 §16：发版审计（#209）的契约补定义——网络与路由、错误码映射、设置默认值、指令语义、格式与无障碍、本地代理凭据、日志级别、订阅拉取、平台差异登记。只追加，不改名。
 
 ## 13. v0.1 追加（2026-11-06 14:20，只追加不改名）
 采纳 iOS NOTES-K 的命名，两端照此：
@@ -521,3 +522,94 @@ setSceneNodeFilter(sceneId: String, filter: SceneNodeFilter?) throws    // 持�
 - 传 `null` 清除过滤，总是成功。未知 sceneId 抛 `SceneNotFound`。
 - 文案建议：“视频仅使用 4K 节点 · {total} 个中 {matching} 个支持 4K”；currentKept 时补“当前节点保持不变”。
 - Mock：`uhd` 按名字判定；preview 按 mock 候选算，`change` 复用 previewSceneChange 的 mock。
+
+## 16. v0.4 追加（2026-11-18，发版审计 #209 契约补定义，只追加）
+来源：发版前审计（`docs/audit/`，#206）引擎 E01–E47、UI U1–U35 中归 A 的契约缺口。决策规则：原型定义了的照原型；原型没定义的，取对用户更安全的行为并写明理由。本节优先于 §0–§15 中与之冲突的旧描述（旧描述保留不删）。
+
+### 16.a 网络与路由（E10 / E04 / E11 / E18 / E01 / E03）
+
+**① 局域网绕过（E10，两端共同行为，用户不可关）**
+隧道的路由表**必须排除**以下网段，这些地址的流量走系统网络、不进 TUN（规则/全局/直连三种模式都一样）：
+```
+IPv4：10.0.0.0/8, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 192.168.0.0/16, 224.0.0.0/4, 255.255.255.255/32
+IPv6：fe80::/10, fc00::/7, ff00::/8（::1 本就不进 TUN）
+```
+- 理由：全局模式下打印机、投屏、NAS、路由器后台若被代理，要么不可达，要么把局域网请求发给远端节点（隐私问题）。iOS 现状已如此（`TunnelNetworkSettingsFactory`）。
+- **不排除** fake-ip 段 198.18.0.0/16（DNS 劫持与 fake-ip 依赖它进 TUN），也不排除 100.64.0.0/10（运营商 NAT 段，可能是公网服务）。
+- iOS：`NEIPv4Settings.excludedRoutes` / `NEIPv6Settings.excludedRoutes`（现状保持）。
+- Android：API 33+ 用 `VpnService.Builder.excludeRoute(IpPrefix)`；API < 33 用 `addRoute` 加补集路由（0.0.0.0/0 减去上表；v6 同理，仅在 IPv6 开启时）。补集由平台本地算好写成常量表并加单测。
+- 核心不额外前插 `IP-CIDR,…,DIRECT` 规则：路由层排除已覆盖三种模式，规则层前插只对规则模式有效，还会改变规则页的匹配结果。
+
+**② 底层网络与计费属性（E04）**
+- VPN 的计费属性**必须**跟随底层网络：蜂窝 = 计费，Wi‑Fi 按系统判断。其他 App（和 WorkManager 的 `UNMETERED` 约束、本 App 的「仅在 Wi‑Fi 下…」判断）读到的必须是真实值。
+- Android：删除 `setMetered(false)`（保持默认 true，即"任一底层网络计费则 VPN 计费"），并用 `ConnectivityManager.NetworkCallback` 跟踪默认网络，调用 `setUnderlyingNetworks(arrayOf(当前默认网络))`；默认网络消失时传 `null`。
+- iOS：NE 由系统沿用底层网络属性，无需处理。
+- 平台判断"当前是否计费 / 是否 Wi‑Fi"时看**底层网络**（Android `NetworkCapabilities` of 底层网络，或 VPN 网络的 `NET_CAPABILITY_NOT_METERED`——前提是上面已修好；iOS `NWPathMonitor` 的 `isExpensive` / `isConstrained` / `usesInterfaceType(.wifi)`）。
+
+**③ 网络切换后的统一动作（E04）**
+默认底层网络变化（Wi‑Fi ↔ 蜂窝、换了 SSID；不含同一网络上的短暂重连 / iOS `reasserting`）后，平台在隧道运行时：
+1. 去抖 2 s 后调用一次 `closeAll`（旧接口上的连接已失效，关掉让 App 立刻重连，而不是挂到超时）；
+2. 重新评估受信任 Wi‑Fi（见 ⑤）；
+3. 场景故障探测的下一轮立即执行（iOS 仅在前台时，见 §16.f）。
+不重载配置、不重建 TUN。
+
+**④ IPv6（E11，平台差异登记）**
+`TunSettings.ipv6 = false` 的语义是"IPv6 流量被阻断，不得绕过隧道直连"。两端实现不同、结果相同，均保留：
+- iOS：始终把 `::/0` 路由进隧道（防泄露），IPv6 关闭时由 mihomo 丢弃；
+- Android：IPv6 关闭时不添加 v6 地址/路由，按 `VpnService.Builder` 文档该地址族被系统阻断。不得调用 `allowFamily(AF_INET6)`。
+
+**⑤ 按需连接 / 受信任的 Wi‑Fi（E01，两端语义）**
+字段：`onDemand`、`trustedWifi: [String]`（SSID 列表）、`disconnectOnTrusted`。默认值见 §16.c。
+- 生效前提：用户**至少手动连接过一次**（首次连接时才会请求 VPN 授权；在此之前按需连接不做任何事，也不弹授权）。
+- **用户手动断开 = 暂停按需连接**，直到用户下次手动连接（含小组件 / 控制中心 / 快捷开关 / 通知的"断开"）。否则用户无法断开（E02）。
+- 受信任 Wi‑Fi：`disconnectOnTrusted && 当前 SSID ∈ trustedWifi` 时断开隧道；离开该网络且 `onDemand` 开启、且未处于"手动断开暂停"时自动重连。`trustedWifi` 为空时无任何效果。
+- iOS：`NEOnDemandRuleDisconnect(ssidMatch: trustedWifi)`（仅当 disconnectOnTrusted）+ 末尾 `NEOnDemandRuleConnect`；手动断开前先 `isOnDemandEnabled = false` 并保存，手动连接时恢复。读 SSID 不需要定位权限。
+- Android（没有系统级按需规则，平台自己实现）：
+  - `onDemand` = **自动重连**：用户连接后，若 VPN 服务被系统杀掉 / 进程重启 / 设备重启，且上次状态是"已连接且非手动断开"，则自动重新连接（`START_STICKY` + `RECEIVE_BOOT_COMPLETED` 接收器；若不实现开机重连就删掉该权限）。网络从无到有时同样重连。
+  - 受信任 Wi‑Fi：前台服务里用 `NetworkCallback` 监听 Wi‑Fi，读 SSID（Android 10+ 需要 `ACCESS_FINE_LOCATION` 且系统定位开关打开；`NEARBY_WIFI_DEVICES` 不能代替）。**拿不到 SSID 时一律按"不受信任"处理**（保持连接——宁可多保护，不可误断），设置页该行显示"需要定位权限才能识别 Wi‑Fi 名称"并提供授权入口；只在用户打开受信任 Wi‑Fi 页时请求权限，不在启动时请求。
+  - 系统"始终开启的 VPN"已启用（API 29+ `VpnService.isAlwaysOn()`）时：受信任 Wi‑Fi **不自动断开**（锁定模式下断开会断网），该行显示"由系统『始终开启的 VPN』管理"。
+- 两端都不得在用户未操作时首次弹出 VPN 授权。
+
+**⑥ 常开 / Kill switch（E03，平台差异登记）**
+- Android：由系统设置"始终开启的 VPN / 屏蔽未使用 VPN 的连接"提供，App 不自行实现；资料库可提供跳转系统 VPN 设置的入口。
+- iOS：v1 **不**开 `includeAllNetworks` / `enforceRoutes`（会让 ① 的局域网排除失效，并影响 AirDrop / CarPlay 等本地功能）。v1 不承诺 Kill switch。
+
+**⑦ `strictRoute`（E18）**
+核心运行配置固定 `auto-route: false`（路由由系统 VPN 框架设置），mihomo 的 `strict-route` 只在 auto-route 下生效，因此 `TunSettings.strictRoute` **在移动端无效**。字段保留（只追加不改名，旧数据可解码），默认值不变；平台**不得**在 UI 展示该开关。防泄露由 ① 路由排除 + ④ IPv6 阻断保证。
+
+### 16.b 错误码映射（E07 / E43 / E27）
+
+**① 核心 `MobileError` → §10 `ErrorCode` 权威映射表**。先看"调用处覆盖"，没有覆盖的用默认列。两端各加一个表驱动单测逐行比对本表。
+
+| MobileError | 默认 ErrorCode | 调用处覆盖 |
+|---|---|---|
+| `Io` | `internal` | 消息含 `os error 28` / `No space left` / `ENOSPC` → `storage_full`（任何调用） |
+| `Invalid` | `internal` | `parseImportPayload` / `importSubscription` / `previewSubscriptionUpdate` / `updateSubscription` → `subscription_invalid`；`testRule` / `overrideHost` / `connectionTrace` 的 host 输入 → `rule_input_invalid`；`setSceneNodeFilter(…, uhd)` → `rule_input_invalid`（UI 应先 preview，见 §15.h，正常不会走到） |
+| `Corrupt` | `internal` | 启动时 `nodeIndex` / `ruleStats` 遇到 → 平台先自动 `rebuildFromSubscriptions` 一次，仍失败才报 `internal` |
+| `NotFound` | `internal` | `node` / `nodeDetail` / `sceneCandidates` 里的节点 → `node_not_found`；`groupMembers` / `selectInGroup` / `testGroup` → `group_not_found`；`hostTrace` / `connectionTrace` → `node_not_found`（§13 已定）；"节点库未建立" → `subscription_not_found`（还没有订阅） |
+| `RuleInputInvalid` | `rule_input_invalid` | — |
+| `SubscriptionInvalid` | `subscription_invalid` | — |
+| `StaleToken` | `stale_token` | 平台按 §5 用原查询重查一次；重查仍失败报 `stale_token`（**不是** `internal`），UI 不提示，回到列表顶部 |
+| `SubscriptionNotFound` | `subscription_not_found` | — |
+| `SceneNotFound` | `scene_not_found` | —（覆写、例外、场景节点过滤等所有带 sceneId 的调用都一样） |
+| `NotRunning` | `not_running` | — |
+| `Cancelled` | `cancelled` | UI 不提示 |
+
+- 平台自身的错误：VPN 授权被用户拒绝 → `vpn_permission_denied`（**只有**这一种；iOS `startVPNTunnel` / 保存配置的其他失败 → `internal`，扩展启动失败按扩展写回的 errorCode）；拉取订阅见 §16.i；离线（无可用网络）→ `network_unavailable`。
+- `message` 只进日志，UI 一律按 code 本地化（§0.5）；任何把 `message` 原文显示给用户的地方都按缺陷处理（U27）。
+
+**② 没有订阅时连接（E07）**
+- 引擎 `connect()` 在订阅列表为空时抛 **`subscription_not_found`**（不再用 `subscription_invalid`：用户没有订阅，不是订阅坏了）。
+- UI：订阅为空时首页大开关不发起连接，直接打开导入面板；小组件 / 控制中心 / 快捷开关 / 快捷指令触发时收到 `subscription_not_found`，打开 App 到导入面板（无法打开时显示"还没有订阅"）。
+- §14.x 扩展找不到 `file-descriptor: -1` 哨兵（有订阅但配置文件缺失/损坏）仍是 `subscription_invalid`。
+
+**③ 重载失败（E27）**
+需要重载的操作（`applySceneChange` 返回 needsReload、`setGlobalNode`、`overrideHost`、`setSceneException`、`setSceneSource` 的 auto 换点、订阅更新、设置热应用）按下表处理：
+
+| 隧道状态 | 行为 |
+|---|---|
+| 未运行 / 已断开 | 只改核心状态，不重载；下次连接时生成的配置自然包含改动。操作成功。 |
+| 连接中 | 排队，连上后补一次重载（多次合并为一次）。操作成功。 |
+| 已连接，写配置或 `zm_reload` 失败 | **回滚**核心里的改动（场景：`applySceneChange(sceneId, previous)`；覆写：恢复原 `hostOverride`；例外：恢复原节点或 null；全局节点：恢复原节点），然后抛错：写配置失败按 ① 的 `Io` 规则（多为 `storage_full` / `internal`），`zm_reload` 失败 → `core_crashed`。UI 显示"未能应用更改"，不显示"已切换"。 |
+
+理由：不回滚时 UI 显示新节点、实际流量仍走旧配置，用户看到的和实际不一致；不报错（静默吞掉）同样如此。不新增错误码，沿用 `core_crashed`，免得两端 14 种语言再加文案。
