@@ -211,6 +211,7 @@ private struct TraceRailFlow: View {
     }
 }
 
+#if DEBUG
 #Preview("轨迹") {
     HPreview(model: .preview()) {
         ScrollView { TraceView(host: "claude.ai", recent: nil, onBack: {}) }
@@ -222,3 +223,4 @@ private struct TraceRailFlow: View {
         ScrollView { TraceView(host: "qq.com", recent: nil, onBack: nil) }
     }
 }
+#endif

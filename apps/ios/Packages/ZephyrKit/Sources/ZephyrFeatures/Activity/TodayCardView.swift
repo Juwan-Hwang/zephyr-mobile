@@ -202,6 +202,7 @@ struct TodayThemePicker: View {
     }
 }
 
+#if DEBUG
 #Preview("今日 · 夜") {
     HPreview(model: .preview()) { TodayCardView() }
 }
@@ -210,3 +211,4 @@ struct TodayThemePicker: View {
     HPreview(model: .preview(), scheme: .light) { TodayCardView() }
         .dynamicTypeSize(.accessibility5)
 }
+#endif

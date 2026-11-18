@@ -57,6 +57,7 @@ struct RegionChips: View {
     }
 }
 
+#if DEBUG
 #Preview {
     RegionChips(sections: [
         RegionSection(region: "US", name: "美国", count: 3_118_402, rowOffset: 0),
@@ -66,3 +67,4 @@ struct RegionChips: View {
     .zPageBackground()
     .preferredColorScheme(.dark)
 }
+#endif

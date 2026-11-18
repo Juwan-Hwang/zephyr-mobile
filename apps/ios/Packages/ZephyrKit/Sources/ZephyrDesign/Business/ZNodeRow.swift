@@ -148,7 +148,9 @@ private struct ZNodeRowSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZNodeRowSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZNodeRowSample() } }
 #Preview("强调色") { ZAccentMatrix { ZNodeRow(name: "东京 IPLC 12", highlight: "IPLC", latency: 64, isSelected: true) } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZNodeRowSample() } }
+#endif

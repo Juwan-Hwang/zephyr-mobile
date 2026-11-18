@@ -107,7 +107,9 @@ private struct ZProfileSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZProfileSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZProfileSample() } }
 #Preview("强调色") { ZAccentMatrix { ZCard(padding: 0) { ZProfileCard(name: "Nebula Cloud", remaining: "86.4 GB", remainingCaption: "26 天后到期", usage: 0.4) } } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZProfileSample() } }
+#endif

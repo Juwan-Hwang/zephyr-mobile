@@ -213,7 +213,9 @@ private struct ZSheetSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZSheetSample() }
 #Preview("浅色") { ZSheetSample(scheme: .light) }
 #Preview("强调色") { ZSheetSample().zAccent(.orange) }
 #Preview("AX5") { ZSheetSample().dynamicTypeSize(.accessibility5) }
+#endif

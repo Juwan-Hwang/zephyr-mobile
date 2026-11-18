@@ -40,6 +40,7 @@ struct SubscriptionReviewSheet: View {
     }
 }
 
+#if DEBUG
 #Preview {
     Color.clear.zSheet(isPresented: .constant(true), detents: [.medium]) {
         SubscriptionReviewSheet(review: .init(target: .all(count: 214),
@@ -49,3 +50,4 @@ struct SubscriptionReviewSheet: View {
     }
     .preferredColorScheme(.dark)
 }
+#endif

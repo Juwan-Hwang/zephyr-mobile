@@ -74,7 +74,9 @@ private struct ZFlagSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZFlagSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZFlagSample() } }
 #Preview("强调色") { ZAccentMatrix { ZFlag("HK", isHighlighted: true) } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZFlagSample() } }
+#endif

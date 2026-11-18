@@ -49,7 +49,9 @@ private struct ZCardSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZCardSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZCardSample() } }
 #Preview("强调色") { ZAccentMatrix { ZCard { Text(verbatim: "强调").foregroundStyle(ZAccentStyle()) } } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZCardSample() } }
+#endif

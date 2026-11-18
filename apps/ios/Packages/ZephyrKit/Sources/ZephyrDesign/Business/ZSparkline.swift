@@ -144,7 +144,9 @@ private struct ZSparklineLive: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZSparkline(samples: ZSparklineDemo.samples).frame(height: 96) } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZSparkline(samples: ZSparklineDemo.samples).frame(height: 96) } }
 #Preview("强调色") { ZAccentMatrix { ZSparkline(samples: ZSparklineDemo.samples, color: ZTokens.Colors.colorUpload).frame(height: 60) } }
 #Preview("AX5 · 滚动") { ZPreviewCanvas(dynamicType: .accessibility5) { ZSparklineLive() } }
+#endif

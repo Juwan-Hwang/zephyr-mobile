@@ -62,7 +62,9 @@ private struct ZEmptySample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZEmptySample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZEmptySample() } }
 #Preview("强调色") { ZAccentMatrix { ZEmptyState("没有最近连接", systemImage: "point.3.connected.trianglepath.dotted") } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZEmptySample() } }
+#endif

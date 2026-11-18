@@ -52,6 +52,7 @@ struct OnboardingChoiceCard: View {
     }
 }
 
+#if DEBUG
 #Preview {
     VStack(spacing: ZTokens.Space.n4) {
         OnboardingChoiceCard(title: "简单", detail: "使用订阅提供的分组。节点不可用时自动处理。", isOn: false) {}
@@ -61,3 +62,4 @@ struct OnboardingChoiceCard: View {
     .zPageBackground()
     .preferredColorScheme(.dark)
 }
+#endif

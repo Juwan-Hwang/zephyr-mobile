@@ -49,6 +49,7 @@ struct AccentPicker: View {
     }
 }
 
+#if DEBUG
 #Preview {
     @Previewable @State var a: Accent = .blue
     ZSettingsGroup("外观") {
@@ -58,3 +59,4 @@ struct AccentPicker: View {
     .zPageBackground()
     .preferredColorScheme(.dark)
 }
+#endif

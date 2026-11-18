@@ -71,6 +71,7 @@ struct SubscriptionDiffCard: View {
     }
 }
 
+#if DEBUG
 #Preview {
     VStack(spacing: ZTokens.Space.n5) {
         SubscriptionDiffCard(title: "Nebula Cloud 已更新", trailing: "2 小时前",
@@ -84,3 +85,4 @@ struct SubscriptionDiffCard: View {
     .zPageBackground()
     .preferredColorScheme(.dark)
 }
+#endif

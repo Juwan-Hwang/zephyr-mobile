@@ -96,7 +96,9 @@ private struct ZIconButtonSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZIconButtonSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZIconButtonSample() } }
 #Preview("强调色") { ZAccentMatrix { ZIconButton(systemImage: "plus", label: "添加", style: .accent) {} } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZIconButtonSample() } }
+#endif

@@ -198,7 +198,9 @@ private struct ZSettingsRowSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZSettingsRowSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZSettingsRowSample() } }
 #Preview("强调色") { ZAccentMatrix { ZSettingsGroup { ZSettingsRow(verbatim: "OpenAI", index: 3, isHighlighted: true, accessory: .value("312")) } } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZSettingsRowSample() } }
+#endif

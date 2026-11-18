@@ -88,6 +88,7 @@ extension View {
     }
 }
 
+#if DEBUG
 #Preview("错误横幅") {
     @Previewable @State var error: PageError? = PageError("无法获取订阅", retry: {})
     Color.clear
@@ -97,3 +98,4 @@ extension View {
         .onTapGesture { error = PageError("网络不可用") }
         .preferredColorScheme(.dark)
 }
+#endif

@@ -37,6 +37,7 @@ struct MenuPickerRow<Value: Hashable>: View {
     }
 }
 
+#if DEBUG
 #Preview {
     @Previewable @State var hours: Int32 = 12
     ZSettingsGroup("更新") {
@@ -47,3 +48,4 @@ struct MenuPickerRow<Value: Hashable>: View {
     .zPageBackground()
     .preferredColorScheme(.dark)
 }
+#endif

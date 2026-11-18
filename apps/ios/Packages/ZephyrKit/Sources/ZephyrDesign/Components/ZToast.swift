@@ -134,7 +134,9 @@ private struct ZToastSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZToastSample() }
 #Preview("浅色") { ZToastSample(scheme: .light) }
 #Preview("强调色") { ZToastSample().zAccent(.pink) }
 #Preview("AX5") { ZToastSample().dynamicTypeSize(.accessibility5) }
+#endif

@@ -240,7 +240,9 @@ private struct ZGroupCardSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZGroupCardSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZGroupCardSample() } }
 #Preview("强调色") { ZAccentMatrix { ZCard(padding: 0) { ZGroupCard(title: "视频", subtitle: "22 个可用", regionCode: "HK", exitName: "香港 HKT", scrubCount: 5, scrubIndex: 1) } } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZGroupCardSample() } }
+#endif

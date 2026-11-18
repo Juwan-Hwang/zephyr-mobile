@@ -77,6 +77,7 @@ private struct ZBadgeSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZBadgeSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZBadgeSample() } }
 #Preview("强调色") { ZAccentMatrix { ZBadge("覆写", tone: .accent) } }
@@ -84,3 +85,4 @@ private struct ZBadgeSample: View {
     ZBadge("覆写", tone: .accent)
     ZBadge("域名")
 } }
+#endif

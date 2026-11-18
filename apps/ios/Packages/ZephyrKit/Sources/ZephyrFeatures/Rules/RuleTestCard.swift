@@ -62,6 +62,7 @@ struct RuleTestCard: View {
     }
 }
 
+#if DEBUG
 #Preview {
     @Previewable @State var q = "ads.doubleclick.net"
     RuleTestCard(input: $q, steps: [
@@ -73,3 +74,4 @@ struct RuleTestCard: View {
     .zPageBackground()
     .preferredColorScheme(.dark)
 }
+#endif

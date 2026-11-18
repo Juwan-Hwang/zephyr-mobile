@@ -65,6 +65,7 @@ struct CoachHint: View {
     }
 }
 
+#if DEBUG
 #Preview {
     VStack(spacing: ZTokens.Space.n6) {
         ProbeBar().frame(width: HMetrics.probeBarWidth)
@@ -73,3 +74,4 @@ struct CoachHint: View {
     .padding()
     .zPageBackground()
 }
+#endif

@@ -31,6 +31,8 @@ struct HomeHeader: View {
     }
 }
 
+#if DEBUG
 #Preview {
     HPreview(model: .preview()) { HomeHeader() }
 }
+#endif

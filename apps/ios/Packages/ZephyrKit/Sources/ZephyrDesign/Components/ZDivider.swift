@@ -18,6 +18,7 @@ public struct ZDivider: View {
     }
 }
 
+#if DEBUG
 #Preview("深色") {
     ZPreviewCanvas {
         ZCard(padding: 0) {
@@ -45,3 +46,4 @@ public struct ZDivider: View {
         }
     }
 }
+#endif

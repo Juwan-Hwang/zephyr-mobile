@@ -46,6 +46,7 @@ public struct HomeView: View {
     }
 }
 
+#if DEBUG
 #Preview("首页 · 已连接") {
     HPreview(model: .preview()) { HomeView() }
 }
@@ -77,3 +78,4 @@ public struct HomeView: View {
     HPreview(model: .preview()) { HomeView() }
         .zAccent(.pink)
 }
+#endif

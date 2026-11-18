@@ -12,6 +12,8 @@ struct ConnectionsSheet: View {
     }
 }
 
+#if DEBUG
 #Preview {
     HPreview(model: .preview()) { ConnectionsSheet(initialTraceID: nil) }
 }
+#endif

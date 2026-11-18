@@ -113,7 +113,9 @@ private struct ZTrafficSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZTrafficSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZTrafficSample() } }
 #Preview("强调色") { ZAccentMatrix { ZTrafficStat(down: ZRateText("38.4", unit: "MB/s"), up: ZRateText("1.2", unit: "MB/s")) } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZTrafficSample() } }
+#endif

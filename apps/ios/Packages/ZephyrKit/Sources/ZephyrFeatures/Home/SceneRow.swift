@@ -238,6 +238,7 @@ private struct AdjustableIf: ViewModifier {
     }
 }
 
+#if DEBUG
 #Preview {
     HPreview(model: .preview()) { HomeView() }
 }
@@ -255,3 +256,4 @@ private struct AdjustableIf: ViewModifier {
         SceneRow(scene: scene, scrubbable: false, showsCoach: false, isProbing: false, pendingTarget: nil)
     }
 }
+#endif

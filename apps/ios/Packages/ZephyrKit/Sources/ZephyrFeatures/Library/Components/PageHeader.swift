@@ -45,6 +45,7 @@ struct PageHeader: View {
     }
 }
 
+#if DEBUG
 #Preview {
     VStack {
         PageHeader(title: "订阅", number: "214", unit: "个 · 每 12 小时更新")
@@ -54,3 +55,4 @@ struct PageHeader: View {
     .zPageBackground()
     .preferredColorScheme(.dark)
 }
+#endif

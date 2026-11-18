@@ -38,6 +38,7 @@ struct RuleLayerRow: View {
     }
 }
 
+#if DEBUG
 #Preview {
     ZCard(padding: 0) {
         VStack(spacing: 0) {
@@ -52,3 +53,4 @@ struct RuleLayerRow: View {
     .zPageBackground()
     .preferredColorScheme(.dark)
 }
+#endif

@@ -178,6 +178,7 @@ struct TrafficChart: View {
     }
 }
 
+#if DEBUG
 #Preview("曲线 · 已连接") {
     let model = AppModel.preview(connected: true)
     return TrafficChart(store: model.traffic, isOn: true)
@@ -191,3 +192,4 @@ struct TrafficChart: View {
         .frame(height: 150)
         .zPageBackground()
 }
+#endif

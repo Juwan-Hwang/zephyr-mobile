@@ -28,6 +28,7 @@ public struct ZBrandMark: View {
     }
 }
 
+#if DEBUG
 #Preview("深色") {
     ZPreviewCanvas {
         HStack(spacing: ZTokens.Space.n3) {
@@ -56,3 +57,4 @@ public struct ZBrandMark: View {
         ZBrandMark().frame(height: 15).foregroundStyle(ZTokens.Colors.screenT1)
     }
 }
+#endif

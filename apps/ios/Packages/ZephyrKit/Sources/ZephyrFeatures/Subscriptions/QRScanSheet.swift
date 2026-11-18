@@ -86,6 +86,8 @@ struct QRScanSheet: View {
     }
 }
 
+#if DEBUG
 #Preview {
     QRScanSheet(desktop: false, onCode: { _ in })
 }
+#endif

@@ -126,7 +126,9 @@ private struct ZSkeletonSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZSkeletonSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZSkeletonSample() } }
 #Preview("强调色") { ZAccentMatrix { ZSkeleton(width: 160) } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZSkeletonSample() } }
+#endif
