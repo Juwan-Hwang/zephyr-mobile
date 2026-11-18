@@ -40,6 +40,7 @@ extension MockEngine {
         let p = payload.trimmingCharacters(in: .whitespacesAndNewlines)
         var host = "本地配置"
         var isFile = source == .file
+        var auto: Int32?   // 导入码自带的间隔；没有时用设置（契约 §15，E32）
         switch source {
         case .url:
             guard let u = URL(string: p), let scheme = u.scheme?.lowercased(), ["http", "https"].contains(scheme),
@@ -54,6 +55,7 @@ extension MockEngine {
             let parsed = try ParsedImport.parseOrThrowEngineError(p)
             let first = parsed.items[0]
             host = first.name ?? URL(string: first.url)?.host ?? host
+            auto = first.autoUpdateHours
         case .file:
             guard ParsedImport.looksLikeConfig(p) else {
                 throw ZephyrError(code: .subscriptionInvalid, message: "not a clash/mihomo config")
@@ -69,7 +71,7 @@ extension MockEngine {
             let sub = Subscription(id: "import-\(s.importCount)", name: host, url: isFile ? nil : "https://\(host)/••••••",
                                    nodeCount: Int64(1000 + h % 5000), usedBytes: 0, totalBytes: 100_000_000_000,
                                    remainingBytes: 100_000_000_000, expiresAt: now + 30 * 86_400_000, updatedAt: now,
-                                   autoUpdateHours: s.settings.autoUpdateHours, lastDiff: nil)
+                                   autoUpdateHours: auto ?? s.settings.autoUpdateHours, lastDiff: nil)
             s.subscriptions.append(sub)
             return sub
         }

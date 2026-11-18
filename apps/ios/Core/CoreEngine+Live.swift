@@ -177,7 +177,8 @@ extension CoreEngine {
         let path = t.controllerSocketPath
         return poll(every: 1) { [weak self] in
             guard let self else { return nil }
-            let list = (try? await self.mihomo(path) { try $0.activeConnections(limit: 500) }) ?? []
+            // 契约 §8：activeConnections 最多 200 条（E45，与 Android 一致）。
+            let list = (try? await self.mihomo(path) { try $0.activeConnections(limit: 200) }) ?? []
             return list.map {
                 ZephyrKit.ConnectionInfo(id: $0.id, host: $0.host, app: $0.app, scene: $0.scene, node: $0.node,
                                          upBytes: $0.upBytes, downBytes: $0.downBytes, startedAt: $0.startedAt)
