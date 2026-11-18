@@ -166,6 +166,36 @@ extension AppModel {
         return true
     }
 
+    /// 引导第 2 步“简单 / 优选”（审计 #207 U3，对齐 Android `applyOnboardingMode`）：简单 = 所有场景用订阅提供的分组
+    /// （subscription_group），优选 = Zephyr 优选（auto）。首次安装尚未用过任何出口，不算需要确认的出口变更（§14.y）。
+    /// 场景流还没落地时最多等 2 秒取首帧；单个场景失败不打断其余场景，也不弹横幅（与 Android runCatching 一致）。
+    public func applyOnboardingChoice(_ choice: OnboardingChoice) async {
+        let source = choice.sceneSource
+        var list = scenes
+        if list.isEmpty { list = await firstScenes(timeout: 2) }
+        for s in list where s.source != source {
+            try? await engine.setSceneSource(sceneId: s.id, source: source)
+        }
+    }
+
+    /// 场景流的首帧，超时返回空。
+    private func firstScenes(timeout seconds: Double) async -> [ZephyrKit.Scene] {
+        let engine = self.engine
+        return await withTaskGroup(of: [ZephyrKit.Scene]?.self) { group in
+            group.addTask {
+                for await list in engine.scenes() { return list }
+                return nil
+            }
+            group.addTask {
+                try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+                return nil
+            }
+            let first = await group.next() ?? nil
+            group.cancelAll()
+            return first ?? []
+        }
+    }
+
     public func setSceneSource(sceneId: String, source: SceneSource) async {
         guard let current = scene(id: sceneId)?.source, current != source else { return }
         do { try await engine.setSceneSource(sceneId: sceneId, source: source) } catch { report(error) }

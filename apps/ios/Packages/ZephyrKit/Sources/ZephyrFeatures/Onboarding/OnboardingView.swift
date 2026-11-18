@@ -2,6 +2,7 @@
 //   1 / 2 添加订阅：粘贴链接 / 扫描二维码 / 从电脑上的 Zephyr 导入 / 从文件导入（复用 SubscriptionImportFlow）
 //   2 / 2 已添加 Nebula Cloud（312 个节点）· 选择使用方式：简单 / 优选（默认）→ 继续
 // 继续 → onFinish()（或 onFinishChoosing(choice)）。“优选”同时写回 testOnWifiOnly = true（“每天在 Wi‑Fi 下检测节点”）。
+// 场景来源由宿主写：RootView 用 onFinishChoosing 调 `AppModel.applyOnboardingChoice`（简单 → subscription_group，优选 → auto）。
 // 原型 03（连接 / VPN 授权）由宿主在 onFinish 后展示首页未连接态完成。
 
 import SwiftUI
@@ -17,6 +18,14 @@ public enum OnboardingChoice: String, Sendable, Hashable, CaseIterable {
     case simple
     /// Zephyr 优选（场景来源 = auto）。
     case best
+
+    /// 该选择对应的场景节点来源（由宿主经 `AppModel.applyOnboardingChoice` 写入所有场景）。
+    public var sceneSource: SceneSource {
+        switch self {
+        case .simple: .subscriptionGroup
+        case .best: .auto
+        }
+    }
 }
 
 @MainActor
@@ -40,7 +49,7 @@ public struct OnboardingView: View {
         self.init(engine: engine, added: nil) { _ in onFinish() }
     }
 
-    /// 需要知道用户选了“简单 / 优选”时用这个（例如 App 层据此设置场景来源，见 NOTES-L）。
+    /// 需要知道用户选了“简单 / 优选”时用这个（RootView 据此设置场景来源）。
     public init(engine: any ZephyrEngine, onFinishChoosing: @escaping (OnboardingChoice) -> Void) {
         self.init(engine: engine, added: nil, onFinish: onFinishChoosing)
     }

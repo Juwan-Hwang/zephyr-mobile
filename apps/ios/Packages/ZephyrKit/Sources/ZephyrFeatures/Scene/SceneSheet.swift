@@ -78,8 +78,9 @@ struct SceneSheet: View {
             }
         }
         // 过滤变化（契约 §15.h）也要重取候选与漏斗。
-        .task(id: "\(scene.testedAt ?? 0)|\(scene.nodeFilter?.rawValue ?? "")") {
-            async let funnel = model.engine.nodeFunnel(maxAgeMs: Self.funnelMaxAgeMs, thresholdMs: 300)
+        // 设置里改了“延迟结果保留”也重取（漏斗新鲜度跟随 latencyTtlHours，#207 U33）。
+        .task(id: "\(scene.testedAt ?? 0)|\(scene.nodeFilter?.rawValue ?? "")|\(Self.latencyTtlHours(model.settings))") {
+            async let funnel = model.engine.nodeFunnel(maxAgeMs: Self.funnelMaxAgeMs(model.settings), thresholdMs: 300)
             candidates = await model.sceneCandidates(sceneId)
             nodeFunnel = await funnel
             loaded = true
@@ -180,8 +181,16 @@ struct SceneSheet: View {
         return parts.isEmpty ? " " : parts.joined(separator: " · ")
     }
 
-    /// 漏斗新鲜度与场景候选一致：24 h（契约 §15.c）。
-    static let funnelMaxAgeMs: Int64 = 24 * 3_600_000
+    /// 漏斗新鲜度与场景候选一致：跟随设置 latencyTtlHours（契约 §15.e：nodeFunnel 由调用方传同一个设置值）。
+    static func funnelMaxAgeMs(_ settings: ZephyrKit.Settings?) -> Int64 {
+        Int64(latencyTtlHours(settings)) * 3_600_000
+    }
+
+    /// 有效的延迟有效期（小时）：没有设置或为 0 时用默认 24（§15.e “0 = 恢复默认 24”，同 SceneRetestPlanner）。
+    static func latencyTtlHours(_ settings: ZephyrKit.Settings?) -> Int32 {
+        let h = settings?.latencyTtlHours ?? 0
+        return h > 0 ? h : SceneRetestPlanner.fallbackTtlHours
+    }
 
     /// 契约漏斗四级；无数据时用候选推出的三级。
     private func funnel(_ scene: Scene) -> [FunnelStep] {
@@ -237,7 +246,7 @@ extension SceneSheet {
     /// “检测频率”行：结果超过延迟有效期（设置 › 延迟结果保留）后，回前台 / 后台刷新时自动重测（SceneRetestPlanner）。
     /// 24 小时仍说“每天”；其余按小时数，不再固定写“每天”（X-P1-5）。
     static func retestFrequency(_ settings: ZephyrKit.Settings?) -> String {
-        let hours = Int64(max(1, settings?.latencyTtlHours ?? 24))
+        let hours = Int64(latencyTtlHours(settings))
         let base = hours == 24 ? ZL.tr("每天") : ZL.f("每 %lld 小时", hours)
         return settings?.testOnWifiOnly == false ? base : ZL.s("%@（仅 Wi‑Fi）", base)
     }

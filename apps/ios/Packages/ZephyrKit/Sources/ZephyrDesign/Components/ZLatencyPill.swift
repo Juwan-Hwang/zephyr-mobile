@@ -1,5 +1,6 @@
 // 延迟读数（原型 `.vr .ms`：等宽 13、右对齐、最小宽 52；`.ms.u` 未测 —、`···` 检测中、`.ms.w` 高延迟黄色）。
-// 颜色按 ZTokens.LatencyThreshold 分档：<80 good / 80–199 fair(黄) / 200–399 poor(橙) / ≥400 或超时 bad(红)。
+// 颜色按 ZTokens.LatencyThreshold（tokens/mobile.json latency，按原型克制配色）：<200 ms 中性次级灰，≥200 ms 琥珀，
+// 超时（负数）红；未测与检测中用更淡的 screenT4。不再是红黄绿四档。
 // text = 列表里的纯文字；pill = 带 14% 底色的胶囊（详情、小组件）。
 
 import SwiftUI
