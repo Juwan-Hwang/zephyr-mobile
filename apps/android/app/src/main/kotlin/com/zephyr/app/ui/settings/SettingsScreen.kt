@@ -176,22 +176,29 @@ private fun accentName(a: Accent): Int? = when (a.name) {
  */
 @Composable
 private fun TrustedWifiRow(s: Settings) {
-    val ctx = androidx.compose.ui.platform.LocalContext.current
     val monitor = AppGraph.network
+    // Previews / screenshot tests have no Activity result registry; nothing to ask there.
+    if (monitor == null) { TrustedWifiRowContent(s, needs = false, onAsk = null); return }
+    val ctx = androidx.compose.ui.platform.LocalContext.current
     var granted by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(com.zephyr.app.vpn.NetworkMonitor.hasLocationPermission(ctx)) }
     val ask = androidx.activity.compose.rememberLauncherForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions(),
     ) { res ->
         granted = res[android.Manifest.permission.ACCESS_FINE_LOCATION] == true
-        if (granted) monitor?.refresh()
+        if (granted) monitor.refresh()
     }
-    val needs = monitor != null && !granted && s.disconnectOnTrusted && s.trustedWifi.any { it.isNotBlank() }
+    val needs = !granted && s.disconnectOnTrusted && s.trustedWifi.any { it.isNotBlank() }
+    TrustedWifiRowContent(s, needs) {
+        ask.launch(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION))
+    }
+}
+
+@Composable
+private fun TrustedWifiRowContent(s: Settings, needs: Boolean, onAsk: (() -> Unit)?) {
     ZSettingsRow(
         stringResource(R.string.settings_trusted_wifi),
         subtitle = stringResource(if (needs) R.string.settings_trusted_wifi_location else R.string.settings_trusted_wifi_hint),
         value = joinList(s.trustedWifi).ifEmpty { stringResource(R.string.common_none) },
-        onClick = if (needs) {
-            { ask.launch(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)) }
-        } else null,
+        onClick = if (needs) onAsk else null,
     )
 }
