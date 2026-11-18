@@ -42,9 +42,10 @@ final class SystemTunnelPort: TunnelPort, @unchecked Sendable {
         return Self.state(raw ?? .disconnected, since: nil).status
     }
 
+    /// 只有权限 / 配置被拒才是 vpn_permission_denied；还没有配置 → subscription_invalid（§14.x）；其余系统错误 → internal（#207 E07）。
     func start() async throws {
         do { try await controller.setConnected(true) } catch {
-            throw ZephyrError(code: .vpnPermissionDenied, message: "\(error)")
+            throw ZephyrError(code: ErrorCode(rawValue: TunnelController.errorCode(for: error)) ?? .internal, message: "\(error)")
         }
     }
 

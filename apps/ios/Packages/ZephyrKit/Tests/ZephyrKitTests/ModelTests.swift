@@ -41,6 +41,47 @@ final class ModelTests: XCTestCase {
         XCTAssertNotNil(try json(st)["show_changes_before_update"])
     }
 
+    /// #207 E09/U8：默认值与契约 §13 一致。
+    func testTunnelDefaultsMatchContract() {
+        XCTAssertEqual(TunSettings().stack, .gvisor)
+        XCTAssertEqual(TunSettings().mtu, 9000)
+        XCTAssertEqual(DnsSettings().nameservers, ["https://dns.alidns.com/dns-query", "https://doh.pub/dns-query"])
+        XCTAssertEqual(DnsSettings().fallback, ["https://1.1.1.1/dns-query"])
+        XCTAssertTrue(DnsSettings().fakeIp)
+        XCTAssertFalse(DnsSettings().ipv6)
+    }
+
+    private func legacySettingsJSON(stack: String, nameservers: [String], fallback: [String]) throws -> Data {
+        let st = Settings(onDemand: false, trustedWifi: [], disconnectOnTrusted: false, localProxyPort: 7890, localProxyAuth: true,
+                          testOnWifiOnly: true, latencyTtlHours: 24, autoUpdateHours: 12, updateOnWifiOnly: true, showChangesBeforeUpdate: true,
+                          dns: DnsSettings(), tun: TunSettings(), accent: .blue, appearance: .system, shareAnonymousPattern: false)
+        var obj = try json(st)
+        obj["dns"] = ["fake_ip": true, "nameservers": nameservers, "fallback": fallback, "ipv6": false]
+        obj["tun"] = ["stack": stack, "mtu": 9000, "ipv6": false, "strict_route": true]
+        return try JSONSerialization.data(withJSONObject: obj)
+    }
+
+    /// 旧版本落盘的出厂值迁移到契约默认值。
+    func testLegacyTunnelDefaultsMigrate() throws {
+        let data = try legacySettingsJSON(stack: "system",
+                                          nameservers: ["https://doh.pub/dns-query", "https://dns.alidns.com/dns-query"],
+                                          fallback: ["https://1.1.1.1/dns-query", "https://dns.google/dns-query"])
+        let s = try JSONDecoder().decode(Settings.self, from: data)
+        XCTAssertEqual(s.tun.stack, .gvisor)
+        XCTAssertEqual(s.dns.nameservers, DnsSettings.defaultNameservers)
+        XCTAssertEqual(s.dns.fallback, DnsSettings.defaultFallback)
+    }
+
+    /// DNS 不是旧出厂值（用户 / 导入改过）时一律保留，栈也不动。
+    func testCustomTunnelSettingsKept() throws {
+        let data = try legacySettingsJSON(stack: "system", nameservers: ["https://example.com/dns-query"],
+                                          fallback: ["https://1.1.1.1/dns-query", "https://dns.google/dns-query"])
+        let s = try JSONDecoder().decode(Settings.self, from: data)
+        XCTAssertEqual(s.tun.stack, .system)
+        XCTAssertEqual(s.dns.nameservers, ["https://example.com/dns-query"])
+        XCTAssertEqual(s.dns.fallback.count, 2)
+    }
+
     func testLocateRow() {
         let secs = [RegionSection(region: "US", name: "美国", count: 3, rowOffset: 0),
                     RegionSection(region: "JP", name: "日本", count: 2, rowOffset: 4)]
