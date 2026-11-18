@@ -142,6 +142,16 @@
         <item quantity="many">Проверено по %1$d подпискам</item>
         <item quantity="other">Проверено по %1$d подпискам</item>
     </plurals>
+    <string name="scene_tested_from_pool">Проверено узлов: %2$s (подписок: %1$d)</string>
+    <string name="scene_test_frequency">Частота проверки</string>
+    <string name="scene_test_daily">Ежедневно</string>
+    <string name="scene_test_wifi_only">%1$s (только Wi‑Fi)</string>
+    <plurals name="scene_test_every_hours">
+        <item quantity="one">Каждый %1$d час</item>
+        <item quantity="few">Каждые %1$d часа</item>
+        <item quantity="many">Каждые %1$d часов</item>
+        <item quantity="other">Каждые %1$d часа</item>
+    </plurals>
     <string name="scene_pinned_for">Закреплено для %1$s</string>
     <string name="scene_when_unavailable">Если узел недоступен</string>
     <string name="scene_ask">Спрашивать</string>
@@ -272,6 +282,10 @@
     <string name="trace_always_apply">Применять всегда</string>
     <string name="trace_always_apply_hint">Если выключено, изменится только это подключение</string>
     <string name="library_widgets">Виджеты и быстрые настройки</string>
+    <string name="widgets_home_title">Виджеты на главном экране</string>
+    <string name="widgets_home_steps">Нажмите и удерживайте пустое место на главном экране › Виджеты › Zephyr, затем перетащите виджет на экран.</string>
+    <string name="widgets_tile_title">Плитка быстрых настроек</string>
+    <string name="widgets_tile_steps">Дважды проведите вниз от верхнего края экрана › Изменить › перетащите Zephyr в быстрые настройки. Нажмите на плитку, чтобы подключиться или отключиться.</string>
     <plurals name="nodes_total_unit" tools:ignore="ImpliedQuantity">
         <item quantity="one">узел</item>
         <item quantity="few">узла</item>
@@ -343,7 +357,7 @@
         <item quantity="other">Добавлено: %1$s (%2$s узла)</item>
     </plurals>
     <string name="subs_error_clipboard_empty">Буфер обмена пуст</string>
-    <string name="subs_hint_desktop">На компьютере откройте в Zephyr «Настройки › Мобильные», чтобы показать QR-код</string>
+    <string name="subs_hint_desktop">На компьютере откройте в Zephyr «Настройки › Синхронизация с телефоном», чтобы показать QR-код</string>
     <string name="subs_error_read_file">Не удалось прочитать этот файл</string>
     <string name="subs_error_fetch">Не удалось загрузить подписку. Проверьте ссылку или подключение к сети.</string>
     <string name="subs_error_invalid_file">Это не файл конфигурации</string>
@@ -449,6 +463,16 @@
     <string name="settings_trusted_wifi_hint">Автоматически отключаться в этих сетях</string>
     <string name="settings_trusted_wifi_location">Разрешите доступ к геолокации, чтобы распознавать сети Wi‑Fi</string>
     <string name="settings_password_required">Требовать пароль</string>
+    <string name="trusted_wifi_disconnect">Отключаться в этих сетях Wi‑Fi</string>
+    <string name="trusted_wifi_footer">В доверенных сетях, например дома или на работе, Zephyr отключается автоматически, а когда вы уходите, снова подключается по запросу.</string>
+    <string name="trusted_wifi_networks">Сети</string>
+    <string name="trusted_wifi_add_hint">Добавить имя сети Wi‑Fi</string>
+    <string name="local_proxy_footer">Если включено, Zephyr слушает только 127.0.0.1, и другие устройства в вашей сети не смогут подключиться.</string>
+    <string name="local_proxy_port">Порт</string>
+    <string name="local_proxy_port_footer">Другие приложения могут использовать правила и сценарии Zephyr через этот порт на 127.0.0.1.</string>
+    <string name="local_proxy_security">Безопасность</string>
+    <string name="local_proxy_auth_footer">Если включено, для подключения к локальному порту нужны имя пользователя и пароль. Так другие приложения не смогут использовать прокси без разрешения.</string>
+    <string name="local_proxy_port_invalid">Введите порт от %1$d до %2$d</string>
     <string name="settings_section_testing">Проверка</string>
     <string name="settings_test_wifi_only">Тест скорости только по Wi‑Fi</string>
     <string name="settings_keep_results">Хранить результаты</string>
@@ -470,12 +494,6 @@
     <string name="settings_accent_green">Зелёный</string>
     <string name="settings_accent_orange">Оранжевый</string>
     <string name="settings_accent_pink">Розовый</string>
-    <string name="settings_accent_purple">Фиолетовый</string>
-    <string name="settings_accent_red">Красный</string>
-    <string name="settings_accent_teal">Бирюзовый</string>
-    <string name="settings_accent_indigo">Индиго</string>
-    <string name="settings_accent_yellow">Жёлтый</string>
-    <string name="settings_accent_graphite">Графит</string>
     <string name="settings_section_privacy">Конфиденциальность</string>
     <string name="settings_share_diagnostics">Отправлять диагностику</string>
     <string name="settings_section_diagnostics">Диагностика</string>

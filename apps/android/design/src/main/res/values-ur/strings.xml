@@ -33,6 +33,7 @@
     <string name="common_expiry_today">میعاد آج ختم ہوگی</string>
     <string name="common_expiry_tomorrow">میعاد کل ختم ہوگی</string>
     <string name="common_expiry_weekday">میعاد \u2068%1$s\u2069 کو ختم ہوگی</string>
+    <string name="common_expiry_date">میعاد: \u2068%1$s\u2069</string>
     <plurals name="common_expiry_in_days">
         <item quantity="one">میعاد %1$d دن میں ختم ہوگی</item>
         <item quantity="other">میعاد %1$d دن میں ختم ہوگی</item>

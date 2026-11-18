@@ -31,6 +31,7 @@
     <string name="common_expiry_today">Şu gün gutarýar</string>
     <string name="common_expiry_tomorrow">Ertir gutarýar</string>
     <string name="common_expiry_weekday">%1$s güni gutarýar</string>
+    <string name="common_expiry_date">Möhleti: %1$s</string>
     <plurals name="common_expiry_in_days">
         <item quantity="one">%1$d günden gutarýar</item>
         <item quantity="other">%1$d günden gutarýar</item>

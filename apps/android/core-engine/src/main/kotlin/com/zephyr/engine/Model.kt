@@ -366,8 +366,9 @@ data class TunSettings(
 @Serializable
 data class Settings(
     val onDemand: Boolean = false,
-    val trustedWifi: List<String> = listOf("家"),
-    val disconnectOnTrusted: Boolean = true,
+    /** First-install default is empty (audit #208 U7); the prototype's "家" lives only in the demo engine. */
+    val trustedWifi: List<String> = emptyList(),
+    val disconnectOnTrusted: Boolean = false,
     val localProxyPort: Int = 7890,
     val localProxyAuth: Boolean = true,
     val localProxyEnabled: Boolean = false,
@@ -380,7 +381,7 @@ data class Settings(
     val tun: TunSettings = TunSettings(),
     val accent: Accent = Accent.BLUE,
     val appearance: Appearance = Appearance.SYSTEM,
-    val shareAnonymousPattern: Boolean = true,
+    val shareAnonymousPattern: Boolean = false,
     val shareDiagnostics: Boolean = false,
 )
 

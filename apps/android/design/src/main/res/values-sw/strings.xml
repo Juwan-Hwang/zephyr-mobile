@@ -31,6 +31,7 @@
     <string name="common_expiry_today">Inaisha leo</string>
     <string name="common_expiry_tomorrow">Inaisha kesho</string>
     <string name="common_expiry_weekday">Inaisha %1$s</string>
+    <string name="common_expiry_date">Inaisha %1$s</string>
     <plurals name="common_expiry_in_days">
         <item quantity="one">Inaisha baada ya siku %1$d</item>
         <item quantity="other">Inaisha baada ya siku %1$d</item>

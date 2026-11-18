@@ -33,6 +33,7 @@
     <string name="common_expiry_today">امروز منقضی می‌شود</string>
     <string name="common_expiry_tomorrow">فردا منقضی می‌شود</string>
     <string name="common_expiry_weekday">\u2068%1$s\u2069 منقضی می‌شود</string>
+    <string name="common_expiry_date">انقضا: \u2068%1$s\u2069</string>
     <plurals name="common_expiry_in_days">
         <item quantity="one">%1$d روز دیگر منقضی می‌شود</item>
         <item quantity="other">%1$d روز دیگر منقضی می‌شود</item>

@@ -49,6 +49,7 @@
     <string name="common_expiry_today">ينتهي اليوم</string>
     <string name="common_expiry_tomorrow">ينتهي غدًا</string>
     <string name="common_expiry_weekday">ينتهي يوم \u2068%1$s\u2069</string>
+    <string name="common_expiry_date">ينتهي في \u2068%1$s\u2069</string>
     <plurals name="common_expiry_in_days">
         <item quantity="zero">ينتهي خلال %1$d يوم</item>
         <item quantity="one">ينتهي خلال يوم</item>

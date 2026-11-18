@@ -154,6 +154,16 @@
         <item quantity="one">Tested from %1$d subscription</item>
         <item quantity="other">Tested from %1$d subscriptions</item>
     </plurals>
+    <!-- %1$d is a subscription count, %2$s a node count -->
+    <string name="scene_tested_from_pool">Tested %2$s nodes from %1$d subscriptions</string>
+    <string name="scene_test_frequency">Test frequency</string>
+    <string name="scene_test_daily">Daily</string>
+    <!-- %1$s is scene_test_daily or scene_test_every_hours -->
+    <string name="scene_test_wifi_only">%1$s (Wi‑Fi only)</string>
+    <plurals name="scene_test_every_hours">
+        <item quantity="one">Every hour</item>
+        <item quantity="other">Every %1$d hours</item>
+    </plurals>
     <!-- %1$s is an app -->
     <string name="scene_pinned_for">Pinned for %1$s</string>
     <string name="scene_when_unavailable">When a node is unavailable</string>
@@ -287,6 +297,10 @@
     <!-- ── Library ── -->
     <!-- Quick Settings is the Android system panel name -->
     <string name="library_widgets">Widgets &amp; Quick Settings</string>
+    <string name="widgets_home_title">Home screen widgets</string>
+    <string name="widgets_home_steps">Touch and hold an empty spot on the home screen › Widgets › Zephyr, then drag one onto the home screen.</string>
+    <string name="widgets_tile_title">Quick Settings tile</string>
+    <string name="widgets_tile_steps">Swipe down twice from the top of the screen › Edit › drag Zephyr into Quick Settings. Tap it to connect or disconnect.</string>
 
     <!-- ── Nodes ── -->
     <!-- Unit after the big node count; no number in the string -->
@@ -360,7 +374,7 @@
         <item quantity="other">Added %1$s (%2$s nodes)</item>
     </plurals>
     <string name="subs_error_clipboard_empty">The clipboard is empty</string>
-    <string name="subs_hint_desktop">On your computer, open Settings › Mobile in Zephyr to show the QR code</string>
+    <string name="subs_hint_desktop">On your computer, open Settings › Sync to phone in Zephyr to show the QR code</string>
     <string name="subs_error_read_file">Couldn’t read this file</string>
     <string name="subs_error_fetch">Couldn’t download this subscription. Check the link or your network.</string>
     <string name="subs_error_invalid_file">This isn’t a valid config file</string>
@@ -454,6 +468,17 @@
     <string name="settings_trusted_wifi_hint">Disconnect automatically when joined</string>
     <string name="settings_trusted_wifi_location">Allow location access to recognize Wi‑Fi names</string>
     <string name="settings_password_required">Require password</string>
+    <string name="trusted_wifi_disconnect">Disconnect on these Wi‑Fi networks</string>
+    <string name="trusted_wifi_footer">On trusted networks like home or work, Zephyr disconnects automatically and reconnects on demand when you leave.</string>
+    <string name="trusted_wifi_networks">Networks</string>
+    <string name="trusted_wifi_add_hint">Add Wi‑Fi name</string>
+    <string name="local_proxy_footer">When on, Zephyr listens only on 127.0.0.1, so other devices on your network can’t connect.</string>
+    <string name="local_proxy_port">Port</string>
+    <string name="local_proxy_port_footer">Other apps can use Zephyr’s rules and scenes through this port on 127.0.0.1.</string>
+    <string name="local_proxy_security">Security</string>
+    <string name="local_proxy_auth_footer">When on, connecting to the local port requires a user name and password, preventing other apps from using the proxy without permission.</string>
+    <!-- %1$d and %2$d are the lowest and highest allowed port -->
+    <string name="local_proxy_port_invalid">Enter a port from %1$d to %2$d</string>
     <string name="settings_section_testing">Testing</string>
     <string name="settings_test_wifi_only">Test speed on Wi‑Fi only</string>
     <string name="settings_keep_results">Keep results</string>
@@ -473,12 +498,6 @@
     <string name="settings_accent_green">Green</string>
     <string name="settings_accent_orange">Orange</string>
     <string name="settings_accent_pink">Pink</string>
-    <string name="settings_accent_purple">Purple</string>
-    <string name="settings_accent_red">Red</string>
-    <string name="settings_accent_teal">Teal</string>
-    <string name="settings_accent_indigo">Indigo</string>
-    <string name="settings_accent_yellow">Yellow</string>
-    <string name="settings_accent_graphite">Graphite</string>
     <string name="settings_section_privacy">Privacy</string>
     <string name="settings_share_diagnostics">Share diagnostic data</string>
     <string name="settings_section_diagnostics">Diagnostics</string>

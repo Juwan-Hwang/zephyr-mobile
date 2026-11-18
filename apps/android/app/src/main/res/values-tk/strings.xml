@@ -128,6 +128,14 @@
         <item quantity="one">%1$d abunadan barlandy</item>
         <item quantity="other">%1$d abunadan barlandy</item>
     </plurals>
+    <string name="scene_tested_from_pool">%1$d abunadan %2$s düwün barlandy</string>
+    <string name="scene_test_frequency">Barlag ýygylygy</string>
+    <string name="scene_test_daily">Her gün</string>
+    <string name="scene_test_wifi_only">%1$s (diňe Wi‑Fi)</string>
+    <plurals name="scene_test_every_hours">
+        <item quantity="one">Her sagat</item>
+        <item quantity="other">Her %1$d sagat</item>
+    </plurals>
     <string name="scene_pinned_for">%1$s üçin berkidildi</string>
     <string name="scene_when_unavailable">Düwün elýeterli bolmasa</string>
     <string name="scene_ask">Sora</string>
@@ -240,6 +248,10 @@
     <string name="trace_always_apply">Hemişe ulan</string>
     <string name="trace_always_apply_hint">Öçük bolsa, diňe şu birikme üýtgeýär</string>
     <string name="library_widgets">Widjetler we Çalt sazlamalar</string>
+    <string name="widgets_home_title">Baş ekran widjetleri</string>
+    <string name="widgets_home_steps">Baş ekranyň boş ýerine basyp saklaň › Widjetler › Zephyr, soňra birini baş ekrana süýräň.</string>
+    <string name="widgets_tile_title">Çalt sazlamalar plitkasy</string>
+    <string name="widgets_tile_steps">Ekranyň ýokarsyndan iki gezek aşak süýşüriň › Üýtget › Zephyr-i çalt sazlamalara süýräň. Birikmek ýa-da birikmäni kesmek üçin oňa basyň.</string>
     <plurals name="nodes_total_unit">
         <item quantity="one">düwün</item>
         <item quantity="other">düwün</item>
@@ -301,7 +313,7 @@
         <item quantity="other">%1$s goşuldy (%2$s düwün)</item>
     </plurals>
     <string name="subs_error_clipboard_empty">Bufer boş</string>
-    <string name="subs_hint_desktop">QR kody görkezmek üçin kompýuterde Zephyr-iň Sazlamalar › Mobil bölümini açyň</string>
+    <string name="subs_hint_desktop">QR kody görkezmek üçin kompýuterde Zephyr-iň Sazlamalar › Telefona sinhronla bölümini açyň</string>
     <string name="subs_error_read_file">Bu faýly okap bolmady</string>
     <string name="subs_error_fetch">Bu abunany ýükläp bolmady. Salgyny ýa-da tory barlaň.</string>
     <string name="subs_error_invalid_file">Bu dogry konfigurasiýa faýly däl</string>
@@ -389,6 +401,16 @@
     <string name="settings_trusted_wifi_hint">Bu tora goşulanda birikmäni awtomatik kes</string>
     <string name="settings_trusted_wifi_location">Wi‑Fi atlaryny tanamak üçin ýerleşiş rugsadyny beriň</string>
     <string name="settings_password_required">Parol talap et</string>
+    <string name="trusted_wifi_disconnect">Şu Wi‑Fi torlarynda birikmäni kes</string>
+    <string name="trusted_wifi_footer">Öý ýa-da iş ýaly ynamdar torlarda Zephyr birikmäni awtomatik kesýär we siz gideniňizde zerur bolanda gaýtadan birigýär.</string>
+    <string name="trusted_wifi_networks">Torlar</string>
+    <string name="trusted_wifi_add_hint">Wi‑Fi adyny goş</string>
+    <string name="local_proxy_footer">Açyk bolsa, Zephyr diňe 127.0.0.1-i diňleýär, şonuň üçin toruňyzdaky beýleki enjamlar birigip bilmeýär.</string>
+    <string name="local_proxy_port">Port</string>
+    <string name="local_proxy_port_footer">Beýleki programmalar 127.0.0.1-däki şu port arkaly Zephyr-iň düzgünlerini we ssenariýlerini ulanyp bilýär.</string>
+    <string name="local_proxy_security">Howpsuzlyk</string>
+    <string name="local_proxy_auth_footer">Açyk bolsa, ýerli porta birikmek üçin ulanyjy ady we parol gerek bolar. Bu beýleki programmalaryň proksini rugsatsyz ulanmagynyň öňüni alýar.</string>
+    <string name="local_proxy_port_invalid">%1$d bilen %2$d aralygyndaky porty giriziň</string>
     <string name="settings_section_testing">Barlag</string>
     <string name="settings_test_wifi_only">Tizligi diňe Wi‑Fi arkaly barla</string>
     <string name="settings_keep_results">Netijeleri sakla</string>
@@ -408,12 +430,6 @@
     <string name="settings_accent_green">Ýaşyl</string>
     <string name="settings_accent_orange">Mämişi</string>
     <string name="settings_accent_pink">Gülgüne</string>
-    <string name="settings_accent_purple">Melewşe</string>
-    <string name="settings_accent_red">Gyzyl</string>
-    <string name="settings_accent_teal">Gök-ýaşyl</string>
-    <string name="settings_accent_indigo">Indigo</string>
-    <string name="settings_accent_yellow">Sary</string>
-    <string name="settings_accent_graphite">Grafit</string>
     <string name="settings_section_privacy">Gizlinlik</string>
     <string name="settings_share_diagnostics">Diagnostika maglumatlaryny paýlaş</string>
     <string name="settings_section_diagnostics">Diagnostika</string>

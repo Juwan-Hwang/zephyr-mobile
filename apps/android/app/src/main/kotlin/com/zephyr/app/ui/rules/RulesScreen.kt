@@ -1,5 +1,6 @@
 package com.zephyr.app.ui.rules
 
+import com.zephyr.app.ui.common.displayName
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
@@ -156,7 +157,7 @@ private fun Chain(t: RuleTrace, stats: RuleStats?) {
             "DIRECT" -> Step(stringResource(R.string.trace_step_exit), stringResource(R.string.common_direct), last = true)
             "REJECT" -> Step(stringResource(R.string.rules_step_result), stringResource(R.string.rules_blocked), last = true)
             else -> t.scene?.let { s ->
-                Step(stringResource(R.string.rules_step_scene, s.name), s.selected.name, region = s.selected.region, last = t.exitIp == null)
+                Step(stringResource(R.string.rules_step_scene, s.displayName()), s.selected.name, region = s.selected.region, last = t.exitIp == null)
                 t.exitIp?.let { Step(stringResource(R.string.rules_step_exit_ip), it, mono = true, last = true) }
             }
         }

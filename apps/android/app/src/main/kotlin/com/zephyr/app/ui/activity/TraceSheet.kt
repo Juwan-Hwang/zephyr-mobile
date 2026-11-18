@@ -1,5 +1,6 @@
 package com.zephyr.app.ui.activity
 
+import com.zephyr.app.ui.common.sceneName
 import com.zephyr.app.R
 import com.zephyr.app.ui.common.collectWhile
 import com.zephyr.app.ui.common.UiText
@@ -77,7 +78,7 @@ internal fun androidx.compose.foundation.layout.ColumnScope.TraceBody(host: Stri
             ZText(t.host, style = ZTheme.type.title.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Light, fontSize = 32.sp, lineHeight = 38.sp), maxLines = 1)
             ZText(listOf(ZFormat.ago(res, t.lastSeenAt, now), pluralStringResource(R.plurals.trace_connections, t.connections, t.connections), ZFormat.bytesText(t.totalBytes)).joinToString(" · "), style = ZTheme.type.callout, color = c.text3)
             Spacer(Modifier.height(24.dp))
-            val sceneName = t.scene?.let { id -> scenes.firstOrNull { it.id == id }?.name ?: id }
+            val sceneName = t.scene?.let { id -> scenes.firstOrNull { it.id == id }?.let { res.sceneName(it) } ?: id }
             // Review H-P2-10: 逐步出现（原型 256-258；iOS TraceView 0.08 s + i × 0.06 s）+ 竖线流光（原型 1006，iOS TraceRailFlow）。
             Box {
                 Column {
@@ -93,7 +94,7 @@ internal fun androidx.compose.foundation.layout.ColumnScope.TraceBody(host: Stri
         Spacer(Modifier.height(16.dp))
         ZText(stringResource(R.string.trace_this_connection), Modifier.padding(horizontal = 26.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.text3)
         val others = scenes.filter { it.id != t.scene }.take(2)
-        val opts = listOf(stringResource(R.string.trace_option_unchanged), stringResource(R.string.common_direct)) + others.map { it.name }
+        val opts = listOf(stringResource(R.string.trace_option_unchanged), stringResource(R.string.common_direct)) + others.map { res.sceneName(it) }
         val ov = t.override
         val sel = when (ov?.target) { null, TraceTarget.UNCHANGED -> 0; TraceTarget.DIRECT -> 1; TraceTarget.SCENE -> 2 + others.indexOfFirst { it.id == ov.sceneId }.coerceAtLeast(0) }
         val persistent = ov?.persistent ?: false

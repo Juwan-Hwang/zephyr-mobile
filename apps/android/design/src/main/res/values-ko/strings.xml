@@ -27,6 +27,7 @@
     <string name="common_expiry_today">오늘 만료</string>
     <string name="common_expiry_tomorrow">내일 만료</string>
     <string name="common_expiry_weekday">%1$s요일 만료</string>
+    <string name="common_expiry_date">%1$s 만료</string>
     <plurals name="common_expiry_in_days">
         <item quantity="other">%1$d일 후 만료</item>
     </plurals>

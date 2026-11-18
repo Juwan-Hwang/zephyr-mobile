@@ -128,6 +128,14 @@
         <item quantity="one">%1$d abonelikten test edildi</item>
         <item quantity="other">%1$d abonelikten test edildi</item>
     </plurals>
+    <string name="scene_tested_from_pool">%1$d abonelikten %2$s düğüm test edildi</string>
+    <string name="scene_test_frequency">Test sıklığı</string>
+    <string name="scene_test_daily">Her gün</string>
+    <string name="scene_test_wifi_only">%1$s (yalnızca Wi‑Fi)</string>
+    <plurals name="scene_test_every_hours">
+        <item quantity="one">Saatte bir</item>
+        <item quantity="other">%1$d saatte bir</item>
+    </plurals>
     <string name="scene_pinned_for">%1$s için sabitlendi</string>
     <string name="scene_when_unavailable">Düğüm kullanılamadığında</string>
     <string name="scene_ask">Sor</string>
@@ -240,6 +248,10 @@
     <string name="trace_always_apply">Her zaman uygula</string>
     <string name="trace_always_apply_hint">Kapalıyken yalnızca bu bağlantı değişir</string>
     <string name="library_widgets">Widget’lar ve Hızlı Ayarlar</string>
+    <string name="widgets_home_title">Ana ekran widget’ları</string>
+    <string name="widgets_home_steps">Ana ekranda boş bir yere dokunup basılı tutun › Widget’lar › Zephyr, ardından birini ana ekrana sürükleyin.</string>
+    <string name="widgets_tile_title">Hızlı Ayarlar kutucuğu</string>
+    <string name="widgets_tile_steps">Ekranın üstünden iki kez aşağı kaydırın › Düzenle › Zephyr’i Hızlı Ayarlar’a sürükleyin. Bağlanmak veya bağlantıyı kesmek için dokunun.</string>
     <plurals name="nodes_total_unit">
         <item quantity="one">düğüm</item>
         <item quantity="other">düğüm</item>
@@ -301,7 +313,7 @@
         <item quantity="other">%1$s eklendi (%2$s düğüm)</item>
     </plurals>
     <string name="subs_error_clipboard_empty">Pano boş</string>
-    <string name="subs_hint_desktop">QR kodu görmek için bilgisayarınızda Zephyr’de Ayarlar › Mobil’i açın</string>
+    <string name="subs_hint_desktop">QR kodu görmek için bilgisayarınızda Zephyr’de Ayarlar › Telefona eşzamanla’yı açın</string>
     <string name="subs_error_read_file">Bu dosya okunamadı</string>
     <string name="subs_error_fetch">Abonelik indirilemedi. Bağlantıyı veya ağınızı kontrol edin.</string>
     <string name="subs_error_invalid_file">Bu geçerli bir yapılandırma dosyası değil</string>
@@ -389,6 +401,16 @@
     <string name="settings_trusted_wifi_hint">Bu ağlarda bağlantıyı otomatik olarak kes</string>
     <string name="settings_trusted_wifi_location">Wi‑Fi adlarını tanımak için konum erişimine izin verin</string>
     <string name="settings_password_required">Parola gerektir</string>
+    <string name="trusted_wifi_disconnect">Bu Wi‑Fi ağlarında bağlantıyı kes</string>
+    <string name="trusted_wifi_footer">Ev veya iş gibi güvenilir ağlarda Zephyr bağlantıyı otomatik olarak keser; ayrıldığınızda gerektiğinde yeniden bağlanır.</string>
+    <string name="trusted_wifi_networks">Ağlar</string>
+    <string name="trusted_wifi_add_hint">Wi‑Fi adı ekle</string>
+    <string name="local_proxy_footer">Açık olduğunda Zephyr yalnızca 127.0.0.1 adresini dinler; böylece ağınızdaki diğer cihazlar bağlanamaz.</string>
+    <string name="local_proxy_port">Port</string>
+    <string name="local_proxy_port_footer">Diğer uygulamalar, 127.0.0.1 üzerindeki bu port aracılığıyla Zephyr’in kurallarını ve senaryolarını kullanabilir.</string>
+    <string name="local_proxy_security">Güvenlik</string>
+    <string name="local_proxy_auth_footer">Açık olduğunda yerel porta bağlanmak için kullanıcı adı ve parola gerekir; böylece diğer uygulamalar proxy’yi izinsiz kullanamaz.</string>
+    <string name="local_proxy_port_invalid">%1$d ile %2$d arasında bir port girin</string>
     <string name="settings_section_testing">Test</string>
     <string name="settings_test_wifi_only">Hız testini yalnızca Wi‑Fi’da yap</string>
     <string name="settings_keep_results">Sonuçları sakla</string>
@@ -408,12 +430,6 @@
     <string name="settings_accent_green">Yeşil</string>
     <string name="settings_accent_orange">Turuncu</string>
     <string name="settings_accent_pink">Pembe</string>
-    <string name="settings_accent_purple">Mor</string>
-    <string name="settings_accent_red">Kırmızı</string>
-    <string name="settings_accent_teal">Deniz mavisi</string>
-    <string name="settings_accent_indigo">Çivit</string>
-    <string name="settings_accent_yellow">Sarı</string>
-    <string name="settings_accent_graphite">Grafit</string>
     <string name="settings_section_privacy">Gizlilik</string>
     <string name="settings_share_diagnostics">Tanılama verilerini paylaş</string>
     <string name="settings_section_diagnostics">Tanılama</string>

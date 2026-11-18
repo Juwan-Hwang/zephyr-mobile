@@ -1,5 +1,7 @@
 package com.zephyr.app.ui.activity
 
+import androidx.compose.ui.platform.LocalResources
+import com.zephyr.app.ui.common.sceneName
 import com.zephyr.app.R
 import com.zephyr.app.ui.common.UiText
 import com.zephyr.app.ui.common.collectWhile
@@ -73,7 +75,7 @@ fun BoxScope.ActivitySheet(
                     Column(Modifier.weight(1f)) {
                         ZText(x.host, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight), maxLines = 1)
                         ZText(
-                            if (x.scene == null) stringResource(R.string.common_direct) else listOfNotNull(x.app, x.scene, x.node).joinToString(" · "),
+                            if (x.scene == null) stringResource(R.string.common_direct) else listOfNotNull(x.app, x.scene?.let { LocalResources.current.sceneName(it) }, x.node).joinToString(" · "),
                             style = ZTheme.type.callout, color = c.text3, maxLines = 1,
                         )
                     }

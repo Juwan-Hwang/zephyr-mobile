@@ -27,6 +27,7 @@
     <string name="common_expiry_today">Hết hạn hôm nay</string>
     <string name="common_expiry_tomorrow">Hết hạn ngày mai</string>
     <string name="common_expiry_weekday">Hết hạn vào %1$s</string>
+    <string name="common_expiry_date">Hết hạn %1$s</string>
     <plurals name="common_expiry_in_days">
         <item quantity="other">Hết hạn sau %1$d ngày</item>
     </plurals>

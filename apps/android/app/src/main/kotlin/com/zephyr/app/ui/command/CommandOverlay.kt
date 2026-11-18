@@ -1,5 +1,6 @@
 package com.zephyr.app.ui.command
 
+import com.zephyr.app.ui.common.displayName
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -201,19 +202,19 @@ private fun PlanCard(plan: CommandPlan, onApply: () -> Unit) {
         when (plan) {
             is CommandPlan.NoNodes -> {
                 val region = regionName(plan.regionCode)
-                ZText(stringResource(R.string.command_plan_exit_title, plan.who, region), style = ZTheme.type.headline)
+                ZText(stringResource(R.string.command_plan_exit_title, plan.who.resolve(), region), style = ZTheme.type.headline)
                 Note(stringResource(R.string.command_plan_no_nodes, plan.sceneLabel.resolve(), region), 4)
                 Spacer(Modifier.height(16.dp))
                 ZButton(stringResource(R.string.command_no_nodes_available), {}, Modifier.fillMaxWidth(), kind = ZButtonKind.Secondary, enabled = false)
             }
             is CommandPlan.Exit -> {
                 val region = regionName(plan.regionCode)
-                ZText(stringResource(R.string.command_plan_exit_title, plan.who, region), style = ZTheme.type.headline)
+                ZText(stringResource(R.string.command_plan_exit_title, plan.who.resolve(), region), style = ZTheme.type.headline)
                 Note(pluralStringResource(R.plurals.command_plan_exit_available, plan.available, plan.available, plan.node.name), 4)
                 plan.change?.let { x -> IpLine("${x.fromRegion} ${x.fromIp ?: ""}".trim(), "${x.toRegion} ${x.toIp ?: ""}".trim()) }
-                plan.releasesPin?.let { Note(stringResource(R.string.command_plan_releases_pin, plan.who, it), 12) }
+                plan.releasesPin?.let { Note(stringResource(R.string.command_plan_releases_pin, plan.who.resolve(), it), 12) }
                 Note(
-                    if (plan.scene.kind == SceneKind.AI) stringResource(R.string.command_plan_fallback_pause, region, plan.who)
+                    if (plan.scene.kind == SceneKind.AI) stringResource(R.string.command_plan_fallback_pause, region, plan.who.resolve())
                     else stringResource(R.string.command_plan_fallback_scene, region), 12,
                 )
                 Spacer(Modifier.height(16.dp))
@@ -221,9 +222,9 @@ private fun PlanCard(plan: CommandPlan, onApply: () -> Unit) {
             }
             is CommandPlan.Uhd -> {
                 val pv = plan.preview
-                ZText(stringResource(if (plan.clear) R.string.command_uhd_title_all else R.string.command_uhd_title_only, plan.who), style = ZTheme.type.headline)
+                ZText(stringResource(if (plan.clear) R.string.command_uhd_title_all else R.string.command_uhd_title_only, plan.who.resolve()), style = ZTheme.type.headline)
                 when {
-                    plan.clear -> Note(stringResource(R.string.command_uhd_clear_note, plan.scene.name), 4)
+                    plan.clear -> Note(stringResource(R.string.command_uhd_clear_note, plan.scene.displayName()), 4)
                     pv == null || pv.poolMatching == 0L -> Note(stringResource(R.string.command_uhd_none), 4)
                     pv.matching == 0 -> pv.poolMatching.toInt().let { n -> Note(pluralStringResource(R.plurals.command_uhd_untested, n, n), 4) }
                     pv.currentKept -> Note(pluralStringResource(R.plurals.command_uhd_matching_keep, pv.matching, pv.total, pv.matching), 4)
@@ -236,8 +237,8 @@ private fun PlanCard(plan: CommandPlan, onApply: () -> Unit) {
                 else ZButton(stringResource(R.string.common_apply), onApply, Modifier.fillMaxWidth())
             }
             is CommandPlan.Direct -> {
-                ZText(stringResource(R.string.command_direct_title, plan.who), style = ZTheme.type.headline)
-                Note(stringResource(R.string.command_direct_note, plan.who), 4)
+                ZText(stringResource(R.string.command_direct_title, plan.who.resolve()), style = ZTheme.type.headline)
+                Note(stringResource(R.string.command_direct_note, plan.who.resolve()), 4)
                 IpLine(listOfNotNull(plan.fromRegion, plan.fromIp).joinToString(" ").ifEmpty { stringResource(R.string.command_direct_from_proxy) }, stringResource(R.string.common_local_network))
                 Note(stringResource(R.string.command_zephyr_only), 12)
                 Spacer(Modifier.height(16.dp))

@@ -135,6 +135,15 @@
         <item quantity="many">Probado desde %1$d suscripciones</item>
         <item quantity="other">Probado desde %1$d suscripciones</item>
     </plurals>
+    <string name="scene_tested_from_pool">%2$s nodos probados de %1$d suscripciones</string>
+    <string name="scene_test_frequency">Frecuencia de prueba</string>
+    <string name="scene_test_daily">A diario</string>
+    <string name="scene_test_wifi_only">%1$s (solo Wi‑Fi)</string>
+    <plurals name="scene_test_every_hours">
+        <item quantity="one">Cada hora</item>
+        <item quantity="many">Cada %1$d horas</item>
+        <item quantity="other">Cada %1$d horas</item>
+    </plurals>
     <string name="scene_pinned_for">Fijado para %1$s</string>
     <string name="scene_when_unavailable">Si un nodo no está disponible</string>
     <string name="scene_ask">Preguntar</string>
@@ -256,6 +265,10 @@
     <string name="trace_always_apply">Aplicar siempre</string>
     <string name="trace_always_apply_hint">Si está desactivado, solo cambia esta conexión</string>
     <string name="library_widgets">Widgets y ajustes rápidos</string>
+    <string name="widgets_home_title">Widgets de la pantalla de inicio</string>
+    <string name="widgets_home_steps">Mantén pulsado un espacio vacío de la pantalla de inicio › Widgets › Zephyr y arrastra uno a la pantalla.</string>
+    <string name="widgets_tile_title">Icono de Ajustes rápidos</string>
+    <string name="widgets_tile_steps">Desliza dos veces hacia abajo desde la parte superior › Editar › arrastra Zephyr a Ajustes rápidos. Tócalo para conectar o desconectar.</string>
     <plurals name="nodes_total_unit">
         <item quantity="one">nodo</item>
         <item quantity="many">nodos</item>
@@ -322,7 +335,7 @@
         <item quantity="other">%1$s añadida (%2$s nodos)</item>
     </plurals>
     <string name="subs_error_clipboard_empty">El portapapeles está vacío</string>
-    <string name="subs_hint_desktop">En el ordenador, abre Ajustes › Móvil en Zephyr para ver el código QR</string>
+    <string name="subs_hint_desktop">En el ordenador, abre Ajustes › Sincronizar con el teléfono en Zephyr para ver el código QR</string>
     <string name="subs_error_read_file">No se ha podido leer este archivo</string>
     <string name="subs_error_fetch">No se ha podido descargar la suscripción. Revisa el enlace o la red.</string>
     <string name="subs_error_invalid_file">No es un archivo de configuración válido</string>
@@ -419,6 +432,16 @@
     <string name="settings_trusted_wifi_hint">Desconectar automáticamente al unirse</string>
     <string name="settings_trusted_wifi_location">Permite el acceso a la ubicación para reconocer las redes Wi‑Fi</string>
     <string name="settings_password_required">Solicitar contraseña</string>
+    <string name="trusted_wifi_disconnect">Desconectar en estas redes Wi‑Fi</string>
+    <string name="trusted_wifi_footer">En redes de confianza, como en casa o en el trabajo, Zephyr se desconecta automáticamente y vuelve a conectarse a petición cuando te vas.</string>
+    <string name="trusted_wifi_networks">Redes</string>
+    <string name="trusted_wifi_add_hint">Añadir nombre de red Wi‑Fi</string>
+    <string name="local_proxy_footer">Si está activado, Zephyr solo escucha en 127.0.0.1, así que otros dispositivos de tu red no podrán conectarse.</string>
+    <string name="local_proxy_port">Puerto</string>
+    <string name="local_proxy_port_footer">Otras apps pueden usar las reglas y los escenarios de Zephyr a través de este puerto en 127.0.0.1.</string>
+    <string name="local_proxy_security">Seguridad</string>
+    <string name="local_proxy_auth_footer">Si está activado, conectarse al puerto local requiere un nombre de usuario y una contraseña, lo que impide que otras apps usen el proxy sin permiso.</string>
+    <string name="local_proxy_port_invalid">Introduce un puerto entre %1$d y %2$d</string>
     <string name="settings_section_testing">Pruebas</string>
     <string name="settings_test_wifi_only">Probar velocidad solo con Wi‑Fi</string>
     <string name="settings_keep_results">Conservar resultados</string>
@@ -439,12 +462,6 @@
     <string name="settings_accent_green">Verde</string>
     <string name="settings_accent_orange">Naranja</string>
     <string name="settings_accent_pink">Rosa</string>
-    <string name="settings_accent_purple">Morado</string>
-    <string name="settings_accent_red">Rojo</string>
-    <string name="settings_accent_teal">Verde azulado</string>
-    <string name="settings_accent_indigo">Índigo</string>
-    <string name="settings_accent_yellow">Amarillo</string>
-    <string name="settings_accent_graphite">Grafito</string>
     <string name="settings_section_privacy">Privacidad</string>
     <string name="settings_share_diagnostics">Compartir datos de diagnóstico</string>
     <string name="settings_section_diagnostics">Diagnóstico</string>

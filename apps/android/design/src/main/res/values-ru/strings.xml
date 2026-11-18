@@ -39,6 +39,7 @@
     <string name="common_expiry_today">Истекает сегодня</string>
     <string name="common_expiry_tomorrow">Истекает завтра</string>
     <string name="common_expiry_weekday">Истекает %1$s</string>
+    <string name="common_expiry_date">Истекает %1$s</string>
     <plurals name="common_expiry_in_days">
         <item quantity="one">Истекает через %1$d день</item>
         <item quantity="few">Истекает через %1$d дня</item>
