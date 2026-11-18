@@ -74,6 +74,7 @@ private struct RateReadout: View {
     }
 }
 
+#if DEBUG
 #Preview("已连接") {
     HPreview(model: .preview()) { TrafficPanel() }
 }
@@ -81,3 +82,4 @@ private struct RateReadout: View {
 #Preview("未连接") {
     HPreview(model: .preview(connected: false)) { TrafficPanel() }
 }
+#endif

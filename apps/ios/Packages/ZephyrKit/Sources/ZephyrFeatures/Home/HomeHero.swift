@@ -177,6 +177,7 @@ extension ProxyMode {
     }
 }
 
+#if DEBUG
 #Preview("已连接") {
     HPreview(model: .preview()) { HomeHero() }
 }
@@ -185,3 +186,4 @@ extension ProxyMode {
     HPreview(model: .preview(connected: false)) { HomeHero() }
         .dynamicTypeSize(.accessibility5)
 }
+#endif

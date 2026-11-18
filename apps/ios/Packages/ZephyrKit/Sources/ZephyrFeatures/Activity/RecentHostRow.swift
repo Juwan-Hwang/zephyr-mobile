@@ -47,6 +47,7 @@ struct RecentHostRow: View {
     }
 }
 
+#if DEBUG
 #Preview {
     VStack(spacing: 0) {
         RecentHostRow(item: RecentHost(host: "claude.ai", scene: "ai", node: "US-Fixed-01", connections: 17,
@@ -56,3 +57,4 @@ struct RecentHostRow: View {
     }
     .zPageBackground()
 }
+#endif

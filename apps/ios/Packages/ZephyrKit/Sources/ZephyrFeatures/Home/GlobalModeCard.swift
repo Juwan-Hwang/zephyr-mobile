@@ -83,6 +83,8 @@ struct GlobalModeCard: View {
     }
 }
 
+#if DEBUG
 #Preview {
     HPreview(model: .preview(mode: .global)) { GlobalModeCard() }
 }
+#endif

@@ -101,7 +101,9 @@ private struct ZLatencySample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZLatencySample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZLatencySample() } }
 #Preview("强调色") { ZAccentMatrix { ZLatencyPill(ms: 64, style: .pill) } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZLatencySample() } }
+#endif

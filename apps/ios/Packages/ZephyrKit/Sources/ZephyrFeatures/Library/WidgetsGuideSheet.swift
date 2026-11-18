@@ -41,7 +41,9 @@ struct WidgetsGuideSheet: View {
     }
 }
 
+#if DEBUG
 #Preview {
     Color.clear.zSheet(isPresented: .constant(true), detents: [.medium, .large]) { WidgetsGuideSheet() }
         .preferredColorScheme(.dark)
 }
+#endif

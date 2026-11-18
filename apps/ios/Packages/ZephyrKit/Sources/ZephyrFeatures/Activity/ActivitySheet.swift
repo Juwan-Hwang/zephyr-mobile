@@ -194,6 +194,7 @@ struct ActivitySheet: View {
     }
 }
 
+#if DEBUG
 #Preview("刚才") {
     HPreview(model: .preview()) { ActivitySheet(initialHost: nil) }
 }
@@ -206,3 +207,4 @@ struct ActivitySheet: View {
     HPreview(model: .preview(), scheme: .light) { ActivitySheet(initialHost: nil) }
         .dynamicTypeSize(.accessibility5)
 }
+#endif

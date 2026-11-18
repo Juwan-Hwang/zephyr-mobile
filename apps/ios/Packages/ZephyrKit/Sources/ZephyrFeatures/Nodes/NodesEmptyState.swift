@@ -68,6 +68,7 @@ struct NodesErrorState: View {
     }
 }
 
+#if DEBUG
 #Preview("失败") {
     NodesErrorState {}
         .preferredColorScheme(.dark)
@@ -84,3 +85,4 @@ struct NodesErrorState: View {
         .zPageBackground()
         .preferredColorScheme(.dark)
 }
+#endif

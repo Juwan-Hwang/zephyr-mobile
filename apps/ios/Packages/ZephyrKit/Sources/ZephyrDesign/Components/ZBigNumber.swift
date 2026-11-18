@@ -104,7 +104,9 @@ private struct ZBigNumberSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZBigNumberSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZBigNumberSample() } }
 #Preview("强调色") { ZAccentMatrix { ZBigNumber("38", unit: "ms", size: .metric, tone: ZTokens.Accent.blue.color) } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZBigNumberSample() } }
+#endif

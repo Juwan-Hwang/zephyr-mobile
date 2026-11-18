@@ -110,7 +110,9 @@ private struct ZSegmentedSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZSegmentedSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZSegmentedSample() } }
 #Preview("强调色") { ZAccentMatrix { ZSegmentedSample() } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZSegmentedSample() } }
+#endif

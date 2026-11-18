@@ -48,6 +48,7 @@ public struct ZStatusDot: View {
     }
 }
 
+#if DEBUG
 #Preview("深色") {
     ZPreviewCanvas {
         HStack(spacing: ZTokens.Space.n6) {
@@ -66,3 +67,4 @@ public struct ZStatusDot: View {
         }
     }
 }
+#endif

@@ -84,7 +84,9 @@ private struct ZSurfaceSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZSurfaceSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZSurfaceSample() } }
 #Preview("强调色") { ZAccentMatrix { ZSurface { Text(verbatim: "强调").foregroundStyle(ZAccentStyle()).padding() } } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZSurfaceSample() } }
+#endif

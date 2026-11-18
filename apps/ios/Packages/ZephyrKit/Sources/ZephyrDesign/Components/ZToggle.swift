@@ -49,7 +49,9 @@ private struct ZToggleSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZToggleSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZToggleSample() } }
 #Preview("强调色") { ZAccentMatrix { ZToggle("强调色", isOn: .constant(true), tint: .accent) } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZToggleSample() } }
+#endif

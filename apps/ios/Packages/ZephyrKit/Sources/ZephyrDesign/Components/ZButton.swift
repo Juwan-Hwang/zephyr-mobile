@@ -112,7 +112,9 @@ private struct ZButtonSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZButtonSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZButtonSample() } }
 #Preview("强调色") { ZAccentMatrix { ZButton("应用", kind: .accent) {} } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZButtonSample() } }
+#endif

@@ -135,7 +135,9 @@ private struct ZConnectSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZConnectSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZConnectSample() } }
 #Preview("强调色") { ZAccentMatrix { ZConnectButton(phase: .on, tint: .accent) {} } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZConnectSample() } }
+#endif

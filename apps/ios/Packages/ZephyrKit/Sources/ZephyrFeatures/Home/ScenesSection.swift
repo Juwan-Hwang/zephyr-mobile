@@ -70,6 +70,8 @@ extension View {
     }
 }
 
+#if DEBUG
 #Preview("场景") {
     HPreview(model: .preview()) { ScrollView { ScenesSection() } }
 }
+#endif

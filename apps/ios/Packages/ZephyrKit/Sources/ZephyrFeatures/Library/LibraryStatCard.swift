@@ -42,6 +42,7 @@ struct LibraryStatCard: View {
     }
 }
 
+#if DEBUG
 #Preview {
     HStack(spacing: ZTokens.Layout.cardGap) {
         LibraryStatCard(value: "1,311 万", spokenValue: "13,109,802", caption: "节点") {}
@@ -51,3 +52,4 @@ struct LibraryStatCard: View {
     .zPageBackground()
     .preferredColorScheme(.dark)
 }
+#endif

@@ -108,6 +108,7 @@ struct ExitIPLine: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let from = NodeSummary(id: 1, name: "新加坡 02", region: "SG", protocol: "Hy2")
     let to = NodeSummary(id: 2, name: "东京 03", region: "JP", protocol: "VLESS")
@@ -120,3 +121,4 @@ struct ExitIPLine: View {
         }
     }
 }
+#endif

@@ -232,6 +232,7 @@ private struct DetailRow: View {
         .accessibilityElement(children: .combine)
     }
 }
+#if DEBUG
 
 #Preview("场景详情") {
     HPreview(model: .preview()) { SceneSheet(sceneId: "ai") }
@@ -242,6 +243,7 @@ private struct DetailRow: View {
         .dynamicTypeSize(.accessibility5)
 }
 
+#endif
 extension SceneSheet {
     /// “检测频率”行：结果超过延迟有效期（设置 › 延迟结果保留）后，回前台 / 后台刷新时自动重测（SceneRetestPlanner）。
     /// 24 小时仍说“每天”；其余按小时数，不再固定写“每天”（X-P1-5）。

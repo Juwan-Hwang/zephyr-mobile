@@ -178,6 +178,8 @@ private struct ErrorBanner: View {
     }
 }
 
+#if DEBUG
 #Preview("Root") {
     RootView(model: .preview())
 }
+#endif

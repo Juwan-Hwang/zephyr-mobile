@@ -27,8 +27,10 @@ struct PageFootnote: View {
     }
 }
 
+#if DEBUG
 #Preview {
     PageFootnote("规则集在设备上编译为只读索引，按需从磁盘读取。订阅更新时，覆写保持不变。")
         .zPageBackground()
         .preferredColorScheme(.dark)
 }
+#endif

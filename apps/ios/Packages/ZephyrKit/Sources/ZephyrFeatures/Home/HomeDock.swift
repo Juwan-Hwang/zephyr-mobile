@@ -28,8 +28,10 @@ struct HomeBottomFade: View {
     }
 }
 
+#if DEBUG
 #Preview {
     HPreview(model: .preview()) {
         VStack { Spacer(); HomeDock() }
     }
 }
+#endif

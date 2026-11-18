@@ -106,6 +106,8 @@ private struct SubscriptionRow: View {
     }
 }
 
+#if DEBUG
 #Preview {
     HPreview(model: .preview()) { ScrollView { SubscriptionsSection() } }
 }
+#endif

@@ -57,6 +57,7 @@ struct SceneCandidateRow: View {
     }
 }
 
+#if DEBUG
 #Preview {
     VStack(spacing: 0) {
         SceneCandidateRow(node: NodeSummary(id: 1, name: "台北 02", region: "TW", protocol: "VLESS", latencyMs: 48), isSelected: false, pinnedFor: nil)
@@ -65,3 +66,4 @@ struct SceneCandidateRow: View {
     }
     .zPageBackground()
 }
+#endif

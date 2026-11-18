@@ -39,6 +39,7 @@ public struct ZSettingsGroup<Content: View>: View {
     }
 }
 
+#if DEBUG
 #Preview("深色") {
     ZPreviewCanvas {
         ZSettingsGroup("检测", footer: "移动网络下不主动测速，节省流量。") {
@@ -73,3 +74,4 @@ public struct ZSettingsGroup<Content: View>: View {
         }
     }
 }
+#endif

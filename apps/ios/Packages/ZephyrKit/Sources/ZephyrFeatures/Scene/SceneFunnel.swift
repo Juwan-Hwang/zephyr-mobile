@@ -55,9 +55,11 @@ struct SceneFunnel: View {
     }
 }
 
+#if DEBUG
 #Preview {
     SceneFunnel(steps: [FunnelStep(count: 512, label: "全部"), FunnelStep(count: 138, label: "延迟低于 300 ms"),
                         FunnelStep(count: 27, label: "可访问 GPT"), FunnelStep(count: 9, label: "可访问 GPT、Claude 和 Gemini")])
         .padding()
         .zPageBackground()
 }
+#endif

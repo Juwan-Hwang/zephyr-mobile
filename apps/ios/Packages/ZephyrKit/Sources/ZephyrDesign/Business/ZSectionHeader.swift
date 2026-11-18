@@ -66,7 +66,9 @@ private struct ZSectionSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZSectionSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZSectionSample() } }
 #Preview("强调色") { ZAccentMatrix { ZSectionHeader("场景", trailing: "10 分钟前检测") } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZSectionSample() } }
+#endif

@@ -40,9 +40,11 @@ struct SubscriptionImportOptions: View {
     }
 }
 
+#if DEBUG
 #Preview {
     SubscriptionImportOptions(onSelect: { _ in })
         .padding()
         .zPageBackground()
         .preferredColorScheme(.dark)
 }
+#endif

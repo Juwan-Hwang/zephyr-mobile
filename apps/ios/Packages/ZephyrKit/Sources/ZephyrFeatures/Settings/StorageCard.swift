@@ -46,6 +46,7 @@ struct StorageCard: View {
     }
 }
 
+#if DEBUG
 #Preview {
     ZSettingsGroup("存储") {
         StorageCard(info: StorageInfo(nodesBytes: 600_000_000, rulesBytes: 1_900_000_000, freeBytes: 3_100_000_000))
@@ -54,3 +55,4 @@ struct StorageCard: View {
     .zPageBackground()
     .preferredColorScheme(.dark)
 }
+#endif

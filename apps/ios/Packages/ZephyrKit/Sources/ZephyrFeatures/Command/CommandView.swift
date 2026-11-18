@@ -129,6 +129,7 @@ private struct CommandField: View {
     }
 }
 
+#if DEBUG
 #Preview("指令 · Gemini 走日本") {
     HPreview(model: .preview()) { CommandView(prefill: "Gemini 走日本") }
 }
@@ -136,3 +137,4 @@ private struct CommandField: View {
 #Preview("指令 · 空") {
     HPreview(model: .preview()) { CommandView(prefill: "") }
 }
+#endif

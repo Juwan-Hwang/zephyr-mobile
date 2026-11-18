@@ -123,7 +123,9 @@ private struct ZSearchBarSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZSearchBarSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZSearchBarSample() } }
 #Preview("强调色") { ZAccentMatrix { ZSearchBar(onTap: {}, libraryAction: {}) } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZSearchBarSample() } }
+#endif

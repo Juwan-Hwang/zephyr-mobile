@@ -102,7 +102,9 @@ private struct ZProgressSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZProgressSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZProgressSample() } }
 #Preview("强调色") { ZAccentMatrix { ZProgressBar(value: 0.4, tone: .accent, thickness: .regular) } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZProgressSample() } }
+#endif

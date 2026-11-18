@@ -102,6 +102,8 @@ struct TraceOverrideSection: View {
     }
 }
 
+#if DEBUG
 #Preview {
     HPreview(model: .preview()) { TraceOverrideSection(host: "claude.ai", currentSceneId: "ai").padding() }
 }
+#endif

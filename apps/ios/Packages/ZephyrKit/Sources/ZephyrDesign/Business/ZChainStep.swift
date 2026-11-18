@@ -180,7 +180,9 @@ private struct ZChainSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZChainSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZChainSample() } }
 #Preview("强调色") { ZAccentMatrix { ZChainStep(label: "结果", value: "已拦截", position: .only) } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZChainSample() } }
+#endif

@@ -100,6 +100,7 @@ struct TodayCard: View {
     }
 }
 
+#if DEBUG
 #Preview("夜 / 晨 / 雾") {
     let u = UsageSummary(todayBytes: 1_800_000_000, regionsToday: 4, onlineMillisToday: 6 * 3_600_000, fastestLatencyMs: 38,
                          hourly: (0..<24).map { Int64(($0 * 37) % 11) * 10_000_000 })
@@ -111,3 +112,4 @@ struct TodayCard: View {
     }
     .zPageBackground()
 }
+#endif

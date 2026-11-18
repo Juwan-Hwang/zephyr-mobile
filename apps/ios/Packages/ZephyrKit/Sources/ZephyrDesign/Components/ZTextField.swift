@@ -130,7 +130,9 @@ private struct ZTextFieldSample: View {
 }
 #endif
 
+#if DEBUG
 #Preview("深色") { ZPreviewCanvas { ZTextFieldSample() } }
 #Preview("浅色") { ZPreviewCanvas(scheme: .light) { ZTextFieldSample() } }
 #Preview("强调色") { ZAccentMatrix { ZTextFieldSample() } }
 #Preview("AX5") { ZPreviewCanvas(dynamicType: .accessibility5) { ZTextFieldSample() } }
+#endif
