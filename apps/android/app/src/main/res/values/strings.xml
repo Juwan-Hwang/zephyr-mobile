@@ -2,6 +2,8 @@
 <!-- English: default and fallback locale. Chinese lives in values-zh. Keys: <screen>_<what>, snake_case. -->
 <resources>
     <string name="app_name" translatable="false">Zephyr</string>
+    <!-- Two clauses of one notice, e.g. "Added 3 subscriptions · 1 couldn’t be added". -->
+    <string name="common_joined_dot" translatable="false">%1$s · %2$s</string>
 
     <!-- ── Shared ── -->
     <string name="common_connect">Connect</string>
@@ -58,6 +60,7 @@
     <string name="common_mode_global_hint">All traffic through one node</string>
     <string name="common_mode_direct_hint">Bypass the proxy</string>
     <string name="common_try_again">Try again</string>
+    <string name="common_open_settings">Open settings</string>
     <string name="common_scene_ai">AI</string>
     <string name="common_scene_video">Video</string>
     <string name="common_scene_other">Other</string>
@@ -274,7 +277,10 @@
     <string name="trace_this_connection">This connection</string>
     <!-- Segment: keep the current routing for this host -->
     <string name="trace_option_unchanged">No change</string>
-    <string name="trace_override_failed">Couldn’t change: %1$s</string>
+    <string name="trace_override_error">Couldn’t change the route. Try again.</string>
+    <string name="trace_override_cleared">Cleared route override for %1$s</string>
+    <string name="trace_override_direct">%1$s now connects directly</string>
+    <string name="trace_override_scene">%1$s now uses %2$s</string>
     <string name="trace_always_apply">Always apply</string>
     <string name="trace_always_apply_hint">When off, only this connection changes</string>
 
@@ -346,7 +352,6 @@
     <string name="subs_paste_link">Paste link</string>
     <string name="subs_paste_clipboard">Paste from clipboard</string>
     <string name="subs_scan_qr">Scan QR code</string>
-    <string name="subs_coming_soon">Coming soon</string>
     <string name="subs_import_desktop">Import from Zephyr on your computer</string>
     <string name="subs_import_file">Import from file</string>
     <!-- %1$s subscription name, %2$s grouped node count -->
@@ -360,6 +365,38 @@
     <string name="subs_error_fetch">Couldn’t download this subscription. Check the link or your network.</string>
     <string name="subs_error_invalid_file">This isn’t a valid config file</string>
     <string name="subs_error_invalid_link">This isn’t a valid subscription link</string>
+    <string name="subs_error_import_version">This import code needs a newer version of Zephyr</string>
+    <string name="subs_import_source">Source: %1$s</string>
+    <string name="subs_import_desktop_source">Zephyr Desktop</string>
+    <string name="subs_import_insecure">This link isn’t encrypted (http); its contents could be read or altered.</string>
+    <string name="subs_import_trust">Only continue if you trust this provider.</string>
+    <string name="subs_scan_prompt">Position the subscription QR code in the frame to scan it automatically.</string>
+    <string name="subs_scan_camera_needed">Camera access is required to scan</string>
+    <string name="subs_scan_no_camera">No camera is available on this device</string>
+    <string name="subs_review_one">%1$s will be updated</string>
+    <string name="subs_review_note">Updating replaces the subscription’s nodes and rules. Zephyr’s overrides and scene choices stay the same.</string>
+    <string name="subs_deleted">Deleted %1$s</string>
+    <string name="subs_error_update_all">Couldn’t update subscriptions</string>
+    <plurals name="subs_import_confirm_title">
+        <item quantity="one">Import %1$d subscription?</item>
+        <item quantity="other">Import %1$d subscriptions?</item>
+    </plurals>
+    <plurals name="subs_added_many">
+        <item quantity="one">Added %1$d subscription</item>
+        <item quantity="other">Added %1$d subscriptions</item>
+    </plurals>
+    <plurals name="subs_import_some_failed">
+        <item quantity="one">%1$d couldn’t be added</item>
+        <item quantity="other">%1$d couldn’t be added</item>
+    </plurals>
+    <plurals name="subs_review_all">
+        <item quantity="one">%1$s subscription will be updated</item>
+        <item quantity="other">All %1$s subscriptions will be updated</item>
+    </plurals>
+    <plurals name="subs_updated_count">
+        <item quantity="one">Updated %1$d subscription</item>
+        <item quantity="other">Updated %1$d subscriptions</item>
+    </plurals>
     <!-- Unit after the big count; no number in the string -->
     <plurals name="subs_total_unit">
         <item quantity="one">subscription</item>

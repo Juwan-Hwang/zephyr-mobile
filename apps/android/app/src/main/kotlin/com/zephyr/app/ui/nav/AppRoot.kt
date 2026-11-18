@@ -110,7 +110,7 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
         var command by rememberSaveable { mutableStateOf(false) }
         var import by rememberSaveable { mutableStateOf(false) }
         var importPrefill by rememberSaveable { mutableStateOf<String?>(null) }
-        // A deep link only opens the sheet with the link filled in; the user still taps 添加 (review A-P1-4).
+        // A deep link only opens the sheet listing what it would add; the user still taps 添加 (review A-P1-4, U26).
         androidx.compose.runtime.LaunchedEffect(pendingImport) {
             if (pendingImport != null) { importPrefill = pendingImport; import = true; onImportShown() }
         }
@@ -150,7 +150,7 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                 // Back returns where the page was opened from; from the library it reopens the library (prototype 1287).
                 composable<Nodes> { e -> val r = e.toRoute<Nodes>(); NodesScreen(viewModel { NodesViewModel() }, r.query, back = r.back, onBack = { backTo(r.back) }, onImport = { import = true }) }
                 composable<Rules> { e -> val r = e.toRoute<Rules>(); RulesScreen(r.query, back = r.back) { backTo(r.back) } }
-                composable<Subs> { e -> val r = e.toRoute<Subs>(); SubscriptionsScreen(back = r.back, onBack = { backTo(r.back) }, onImport = { import = true }) }
+                composable<Subs> { e -> val r = e.toRoute<Subs>(); SubscriptionsScreen(back = r.back, onBack = { backTo(r.back) }, onImport = { import = true }, onNotice = { home.notify(it) }) }
                 composable<SettingsRoute> { e -> val r = e.toRoute<SettingsRoute>(); SettingsScreen(r.back, onLogs = { nav.navigate(Logs) }) { backTo(r.back) } }
                 composable<Logs> { com.zephyr.app.ui.settings.LogsScreen { nav.popBackStack() } }
                 composable<Today>(
@@ -190,8 +190,8 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                 retesting = scene?.id in retestingNow,
                 onRetest = { s -> home.retest(s.id) },
             )
-            ActivitySheet(activity, { activity = false; traceHost = null }, traceHost, onNotice = { home.notify(it) }) { traceHost = it }
-            ImportSheet(import, { import = false; importPrefill = null }, prefill = importPrefill) { import = false; importPrefill = null; home.notify(it) }
+            ActivitySheet(activity, { activity = false; traceHost = null }, traceHost, onNotice = { home.notify(it) }, onUndoable = { m, u -> home.notifyUndo(m, u) }) { traceHost = it }
+            ImportSheet(import, { import = false; importPrefill = null }, deepLink = importPrefill) { import = false; importPrefill = null; home.notify(it) }
             // Toasts sit above every sheet and the command layer, so an undo or a failover notice is never hidden.
             val toast by home.toast.collectAsStateWithLifecycle()
             val a11y = androidx.compose.ui.platform.LocalAccessibilityManager.current

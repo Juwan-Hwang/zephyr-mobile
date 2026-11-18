@@ -47,6 +47,7 @@
     <string name="common_mode_global_hint">모든 트래픽을 한 노드로</string>
     <string name="common_mode_direct_hint">프록시 우회</string>
     <string name="common_try_again">다시 시도</string>
+    <string name="common_open_settings">설정 열기</string>
     <string name="common_scene_ai">AI</string>
     <string name="common_scene_video">비디오</string>
     <string name="common_scene_other">기타</string>
@@ -216,7 +217,10 @@
     </plurals>
     <string name="trace_this_connection">이 연결</string>
     <string name="trace_option_unchanged">변경 없음</string>
-    <string name="trace_override_failed">변경할 수 없음: %1$s</string>
+    <string name="trace_override_error">경로를 변경할 수 없습니다. 다시 시도하세요.</string>
+    <string name="trace_override_cleared">%1$s의 경로 오버라이드를 지움</string>
+    <string name="trace_override_direct">%1$s 다이렉트로 변경됨</string>
+    <string name="trace_override_scene">%1$s 경로가 %2$s(으)로 변경됨</string>
     <string name="trace_always_apply">항상 적용</string>
     <string name="trace_always_apply_hint">끄면 이 연결만 변경됩니다</string>
     <string name="library_widgets">위젯 및 빠른 설정</string>
@@ -270,7 +274,6 @@
     <string name="subs_paste_link">링크 붙여넣기</string>
     <string name="subs_paste_clipboard">클립보드에서 붙여넣기</string>
     <string name="subs_scan_qr">QR 코드 스캔</string>
-    <string name="subs_coming_soon">지원 예정</string>
     <string name="subs_import_desktop">컴퓨터의 Zephyr에서 가져오기</string>
     <string name="subs_import_file">파일에서 가져오기</string>
     <plurals name="subs_added">
@@ -282,6 +285,33 @@
     <string name="subs_error_fetch">이 구독을 다운로드할 수 없습니다. 링크나 네트워크를 확인하세요.</string>
     <string name="subs_error_invalid_file">유효한 구성 파일이 아닙니다</string>
     <string name="subs_error_invalid_link">유효한 구독 링크가 아닙니다</string>
+    <string name="subs_error_import_version">이 가져오기 코드에는 최신 버전의 Zephyr가 필요합니다</string>
+    <string name="subs_import_source">출처: %1$s</string>
+    <string name="subs_import_desktop_source">Zephyr 데스크톱</string>
+    <string name="subs_import_insecure">이 링크는 암호화되지 않았으므로(http) 내용이 도청되거나 변조될 수 있습니다.</string>
+    <string name="subs_import_trust">신뢰하는 제공업체인 경우에만 계속하세요.</string>
+    <string name="subs_scan_prompt">구독 QR 코드를 프레임 안에 맞추면 자동으로 인식됩니다.</string>
+    <string name="subs_scan_camera_needed">스캔하려면 카메라 접근 권한이 필요합니다</string>
+    <string name="subs_scan_no_camera">이 기기에서 사용할 수 있는 카메라가 없음</string>
+    <string name="subs_review_one">%1$s 업데이트 예정</string>
+    <string name="subs_review_note">업데이트하면 구독의 노드와 규칙이 대체됩니다. Zephyr의 오버라이드와 시나리오 선택은 그대로 유지됩니다.</string>
+    <string name="subs_deleted">%1$s 삭제됨</string>
+    <string name="subs_error_update_all">구독을 업데이트할 수 없음</string>
+    <plurals name="subs_import_confirm_title">
+        <item quantity="other">구독 %1$d개를 가져오겠습니까?</item>
+    </plurals>
+    <plurals name="subs_added_many">
+        <item quantity="other">구독 %1$d개 추가됨</item>
+    </plurals>
+    <plurals name="subs_import_some_failed">
+        <item quantity="other">%1$d개를 추가하지 못함</item>
+    </plurals>
+    <plurals name="subs_review_all">
+        <item quantity="other">구독 %1$s개를 모두 업데이트합니다</item>
+    </plurals>
+    <plurals name="subs_updated_count">
+        <item quantity="other">구독 %1$d개 업데이트됨</item>
+    </plurals>
     <plurals name="subs_total_unit">
         <item quantity="other">개</item>
     </plurals>

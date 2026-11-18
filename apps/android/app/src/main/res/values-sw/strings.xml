@@ -49,6 +49,7 @@
     <string name="common_mode_global_hint">Trafiki yote kupitia nodi moja</string>
     <string name="common_mode_direct_hint">Bila kupitia proksi</string>
     <string name="common_try_again">Jaribu tena</string>
+    <string name="common_open_settings">Fungua Mipangilio</string>
     <string name="common_scene_ai">AI</string>
     <string name="common_scene_video">Video</string>
     <string name="common_scene_other">Nyingine</string>
@@ -232,7 +233,10 @@
     </plurals>
     <string name="trace_this_connection">Muunganisho huu</string>
     <string name="trace_option_unchanged">Hakuna mabadiliko</string>
-    <string name="trace_override_failed">Imeshindwa kubadilisha: %1$s</string>
+    <string name="trace_override_error">Imeshindwa kubadilisha njia. Jaribu tena.</string>
+    <string name="trace_override_cleared">Ubatilishaji wa njia wa %1$s umefutwa</string>
+    <string name="trace_override_direct">%1$s sasa inaunganishwa moja kwa moja</string>
+    <string name="trace_override_scene">%1$s sasa inatumia %2$s</string>
     <string name="trace_always_apply">Tumia kila wakati</string>
     <string name="trace_always_apply_hint">Ikizimwa, muunganisho huu pekee ndio hubadilika</string>
     <string name="library_widgets">Wijeti na Mipangilio ya Haraka</string>
@@ -290,7 +294,6 @@
     <string name="subs_paste_link">Bandika kiungo</string>
     <string name="subs_paste_clipboard">Bandika kutoka ubao wa kunakili</string>
     <string name="subs_scan_qr">Changanua msimbo wa QR</string>
-    <string name="subs_coming_soon">Inakuja hivi karibuni</string>
     <string name="subs_import_desktop">Leta kutoka Zephyr kwenye kompyuta</string>
     <string name="subs_import_file">Leta kutoka faili</string>
     <plurals name="subs_added">
@@ -303,6 +306,38 @@
     <string name="subs_error_fetch">Imeshindwa kupakua usajili huu. Kagua kiungo au mtandao wako.</string>
     <string name="subs_error_invalid_file">Hili si faili sahihi la usanidi</string>
     <string name="subs_error_invalid_link">Hiki si kiungo sahihi cha usajili</string>
+    <string name="subs_error_import_version">Msimbo huu wa kuleta unahitaji toleo jipya la Zephyr</string>
+    <string name="subs_import_source">Chanzo: %1$s</string>
+    <string name="subs_import_desktop_source">Zephyr ya Kompyuta</string>
+    <string name="subs_import_insecure">Kiungo hiki hakijasimbwa (http); maudhui yake yanaweza kusomwa au kubadilishwa.</string>
+    <string name="subs_import_trust">Endelea tu ikiwa unamwamini mtoa huduma huyu.</string>
+    <string name="subs_scan_prompt">Weka msimbo wa QR wa usajili ndani ya fremu ili uchanganuliwe kiotomatiki.</string>
+    <string name="subs_scan_camera_needed">Ruhusa ya kamera inahitajika ili kuchanganua</string>
+    <string name="subs_scan_no_camera">Hakuna kamera inayopatikana kwenye kifaa hiki</string>
+    <string name="subs_review_one">%1$s itasasishwa</string>
+    <string name="subs_review_note">Kusasisha hubadilisha nodi na sheria za usajili. Ubatilishaji na chaguo za mazingira za Zephyr hazibadiliki.</string>
+    <string name="subs_deleted">%1$s imefutwa</string>
+    <string name="subs_error_update_all">Imeshindwa kusasisha usajili</string>
+    <plurals name="subs_import_confirm_title">
+        <item quantity="one">Ungependa kuleta usajili %1$d?</item>
+        <item quantity="other">Ungependa kuleta usajili %1$d?</item>
+    </plurals>
+    <plurals name="subs_added_many">
+        <item quantity="one">Usajili %1$d umeongezwa</item>
+        <item quantity="other">Usajili %1$d umeongezwa</item>
+    </plurals>
+    <plurals name="subs_import_some_failed">
+        <item quantity="one">%1$d haikuweza kuongezwa</item>
+        <item quantity="other">%1$d hazikuweza kuongezwa</item>
+    </plurals>
+    <plurals name="subs_review_all">
+        <item quantity="one">Usajili wote %1$s utasasishwa</item>
+        <item quantity="other">Usajili wote %1$s utasasishwa</item>
+    </plurals>
+    <plurals name="subs_updated_count">
+        <item quantity="one">Usajili %1$d umesasishwa</item>
+        <item quantity="other">Usajili %1$d umesasishwa</item>
+    </plurals>
     <plurals name="subs_total_unit">
         <item quantity="one">usajili</item>
         <item quantity="other">usajili</item>

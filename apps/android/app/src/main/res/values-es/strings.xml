@@ -51,6 +51,7 @@
     <string name="common_mode_global_hint">Todo el tráfico por un nodo</string>
     <string name="common_mode_direct_hint">Omitir el proxy</string>
     <string name="common_try_again">Reintentar</string>
+    <string name="common_open_settings">Abrir ajustes</string>
     <string name="common_scene_ai">AI</string>
     <string name="common_scene_video">Vídeo</string>
     <string name="common_scene_other">Otros</string>
@@ -248,7 +249,10 @@
     </plurals>
     <string name="trace_this_connection">Esta conexión</string>
     <string name="trace_option_unchanged">Sin cambios</string>
-    <string name="trace_override_failed">No se ha podido cambiar: %1$s</string>
+    <string name="trace_override_error">No se ha podido cambiar la ruta. Inténtalo de nuevo.</string>
+    <string name="trace_override_cleared">Se ha borrado la sobrescritura de ruta de %1$s</string>
+    <string name="trace_override_direct">%1$s ahora se conecta directamente</string>
+    <string name="trace_override_scene">%1$s ahora usa %2$s</string>
     <string name="trace_always_apply">Aplicar siempre</string>
     <string name="trace_always_apply_hint">Si está desactivado, solo cambia esta conexión</string>
     <string name="library_widgets">Widgets y ajustes rápidos</string>
@@ -310,7 +314,6 @@
     <string name="subs_paste_link">Pegar enlace</string>
     <string name="subs_paste_clipboard">Pegar del portapapeles</string>
     <string name="subs_scan_qr">Escanear código QR</string>
-    <string name="subs_coming_soon">Próximamente</string>
     <string name="subs_import_desktop">Importar desde Zephyr en el ordenador</string>
     <string name="subs_import_file">Importar desde archivo</string>
     <plurals name="subs_added">
@@ -324,6 +327,43 @@
     <string name="subs_error_fetch">No se ha podido descargar la suscripción. Revisa el enlace o la red.</string>
     <string name="subs_error_invalid_file">No es un archivo de configuración válido</string>
     <string name="subs_error_invalid_link">No es un enlace de suscripción válido</string>
+    <string name="subs_error_import_version">Este código de importación requiere una versión más reciente de Zephyr</string>
+    <string name="subs_import_source">Origen: %1$s</string>
+    <string name="subs_import_desktop_source">Zephyr para escritorio</string>
+    <string name="subs_import_insecure">Este enlace no está cifrado (http); su contenido podría leerse o alterarse.</string>
+    <string name="subs_import_trust">Continúa solo si confías en este proveedor.</string>
+    <string name="subs_scan_prompt">Coloca el código QR de la suscripción dentro del marco para escanearlo automáticamente.</string>
+    <string name="subs_scan_camera_needed">Se necesita acceso a la cámara para escanear</string>
+    <string name="subs_scan_no_camera">No hay ninguna cámara disponible en este dispositivo</string>
+    <string name="subs_review_one">Se actualizará %1$s</string>
+    <string name="subs_review_note">Al actualizar se sustituyen los nodos y las reglas de la suscripción. Las sobrescrituras y las selecciones de escenarios de Zephyr no cambian.</string>
+    <string name="subs_deleted">%1$s eliminada</string>
+    <string name="subs_error_update_all">No se han podido actualizar las suscripciones</string>
+    <plurals name="subs_import_confirm_title">
+        <item quantity="one">¿Importar %1$d suscripción?</item>
+        <item quantity="many">¿Importar %1$d suscripciones?</item>
+        <item quantity="other">¿Importar %1$d suscripciones?</item>
+    </plurals>
+    <plurals name="subs_added_many">
+        <item quantity="one">%1$d suscripción añadida</item>
+        <item quantity="many">%1$d suscripciones añadidas</item>
+        <item quantity="other">%1$d suscripciones añadidas</item>
+    </plurals>
+    <plurals name="subs_import_some_failed">
+        <item quantity="one">No se ha podido añadir %1$d</item>
+        <item quantity="many">No se han podido añadir %1$d</item>
+        <item quantity="other">No se han podido añadir %1$d</item>
+    </plurals>
+    <plurals name="subs_review_all">
+        <item quantity="one">Se actualizará %1$s suscripción</item>
+        <item quantity="many">Se actualizarán las %1$s suscripciones</item>
+        <item quantity="other">Se actualizarán las %1$s suscripciones</item>
+    </plurals>
+    <plurals name="subs_updated_count">
+        <item quantity="one">%1$d suscripción actualizada</item>
+        <item quantity="many">%1$d suscripciones actualizadas</item>
+        <item quantity="other">%1$d suscripciones actualizadas</item>
+    </plurals>
     <plurals name="subs_total_unit">
         <item quantity="one">suscripción</item>
         <item quantity="many">suscripciones</item>

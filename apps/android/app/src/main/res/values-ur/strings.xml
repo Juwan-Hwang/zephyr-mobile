@@ -51,6 +51,7 @@
     <string name="common_mode_global_hint">تمام ٹریفک ایک نوڈ سے</string>
     <string name="common_mode_direct_hint">پراکسی کے بغیر</string>
     <string name="common_try_again">دوبارہ کوشش کریں</string>
+    <string name="common_open_settings">ترتیبات کھولیں</string>
     <string name="common_scene_ai">مصنوعی ذہانت</string>
     <string name="common_scene_video">ویڈیو</string>
     <string name="common_scene_other">دیگر</string>
@@ -244,7 +245,10 @@
     </plurals>
     <string name="trace_this_connection">یہ کنکشن</string>
     <string name="trace_option_unchanged">کوئی تبدیلی نہیں</string>
-    <string name="trace_override_failed">تبدیل نہیں ہو سکا: \u2068%1$s\u2069</string>
+    <string name="trace_override_error">روٹ تبدیل نہیں ہو سکا۔ دوبارہ کوشش کریں۔</string>
+    <string name="trace_override_cleared">\u2068%1$s\u2069 کا روٹ اوور رائیڈ صاف کر دیا گیا</string>
+    <string name="trace_override_direct">\u2068%1$s\u2069 اب براہ راست منسلک ہوتا ہے</string>
+    <string name="trace_override_scene">\u2068%1$s\u2069 اب \u2068%2$s\u2069 استعمال کرتا ہے</string>
     <string name="trace_always_apply">ہمیشہ لاگو کریں</string>
     <string name="trace_always_apply_hint">آف ہونے پر صرف یہ کنکشن تبدیل ہوگا</string>
 
@@ -310,7 +314,6 @@
     <string name="subs_paste_link">لنک پیسٹ کریں</string>
     <string name="subs_paste_clipboard">کلپ بورڈ سے پیسٹ کریں</string>
     <string name="subs_scan_qr">QR کوڈ اسکین کریں</string>
-    <string name="subs_coming_soon">جلد آ رہا ہے</string>
     <string name="subs_import_desktop">اپنے کمپیوٹر پر Zephyr سے امپورٹ کریں</string>
     <string name="subs_import_file">فائل سے امپورٹ کریں</string>
     <plurals name="subs_added">
@@ -323,6 +326,38 @@
     <string name="subs_error_fetch">یہ سبسکرپشن ڈاؤن لوڈ نہیں ہو سکی۔ لنک یا نیٹ ورک چیک کریں۔</string>
     <string name="subs_error_invalid_file">یہ درست کنفیگریشن فائل نہیں</string>
     <string name="subs_error_invalid_link">یہ درست سبسکرپشن لنک نہیں</string>
+    <string name="subs_error_import_version">اس امپورٹ کوڈ کے لیے Zephyr کا نیا ورژن درکار ہے</string>
+    <string name="subs_import_source">ماخذ: \u2068%1$s\u2069</string>
+    <string name="subs_import_desktop_source">Zephyr ڈیسک ٹاپ</string>
+    <string name="subs_import_insecure">یہ لنک انکرپٹڈ نہیں (http)؛ اس کا مواد پڑھا یا تبدیل کیا جا سکتا ہے۔</string>
+    <string name="subs_import_trust">صرف اسی صورت جاری رکھیں جب آپ اس فراہم کنندہ پر بھروسہ کرتے ہوں۔</string>
+    <string name="subs_scan_prompt">خود بخود اسکین کرنے کے لیے سبسکرپشن کا QR کوڈ فریم میں رکھیں۔</string>
+    <string name="subs_scan_camera_needed">اسکین کرنے کے لیے کیمرے تک رسائی درکار ہے</string>
+    <string name="subs_scan_no_camera">اس ڈیوائس پر کوئی کیمرہ دستیاب نہیں</string>
+    <string name="subs_review_one">\u2068%1$s\u2069 اپ ڈیٹ ہوگا</string>
+    <string name="subs_review_note">اپ ڈیٹ کرنے سے سبسکرپشن کے نوڈز اور قواعد بدل جاتے ہیں۔ Zephyr کے اوور رائیڈز اور منظر کے انتخاب برقرار رہتے ہیں۔</string>
+    <string name="subs_deleted">\u2068%1$s\u2069 حذف ہو گیا</string>
+    <string name="subs_error_update_all">سبسکرپشنز اپ ڈیٹ نہیں ہو سکیں</string>
+    <plurals name="subs_import_confirm_title">
+        <item quantity="one">%1$d سبسکرپشن امپورٹ کریں؟</item>
+        <item quantity="other">%1$d سبسکرپشنز امپورٹ کریں؟</item>
+    </plurals>
+    <plurals name="subs_added_many">
+        <item quantity="one">%1$d سبسکرپشن شامل ہو گئی</item>
+        <item quantity="other">%1$d سبسکرپشنز شامل ہو گئیں</item>
+    </plurals>
+    <plurals name="subs_import_some_failed">
+        <item quantity="one">%1$d شامل نہیں ہو سکی</item>
+        <item quantity="other">%1$d شامل نہیں ہو سکیں</item>
+    </plurals>
+    <plurals name="subs_review_all">
+        <item quantity="one">تمام \u2068%1$s\u2069 سبسکرپشنز اپ ڈیٹ ہوں گی</item>
+        <item quantity="other">تمام \u2068%1$s\u2069 سبسکرپشنز اپ ڈیٹ ہوں گی</item>
+    </plurals>
+    <plurals name="subs_updated_count">
+        <item quantity="one">%1$d سبسکرپشن اپ ڈیٹ ہو گئی</item>
+        <item quantity="other">%1$d سبسکرپشنز اپ ڈیٹ ہو گئیں</item>
+    </plurals>
     <plurals name="subs_total_unit">
         <item quantity="one">سبسکرپشن</item>
         <item quantity="other">سبسکرپشنز</item>

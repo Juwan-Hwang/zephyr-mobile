@@ -46,6 +46,11 @@ dependencies {
     implementation(project(":design"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.work.runtime)
+    // QR import (contract §15): CameraX preview + ZXing decoding, no Play services needed.
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.zxing.core)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)

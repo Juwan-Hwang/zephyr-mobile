@@ -47,6 +47,7 @@
     <string name="common_mode_global_hint">すべてを1つのノード経由で</string>
     <string name="common_mode_direct_hint">プロキシを経由しない</string>
     <string name="common_try_again">もう一度お試しください</string>
+    <string name="common_open_settings">設定を開く</string>
     <string name="common_scene_ai">AI</string>
     <string name="common_scene_video">ビデオ</string>
     <string name="common_scene_other">その他</string>
@@ -216,7 +217,10 @@
     </plurals>
     <string name="trace_this_connection">この接続</string>
     <string name="trace_option_unchanged">変更なし</string>
-    <string name="trace_override_failed">変更できませんでした：%1$s</string>
+    <string name="trace_override_error">ルートを変更できませんでした。もう一度お試しください。</string>
+    <string name="trace_override_cleared">%1$s のルートオーバーライドを解除しました</string>
+    <string name="trace_override_direct">%1$sはダイレクト接続に変更</string>
+    <string name="trace_override_scene">%1$sは%2$s経由に変更</string>
     <string name="trace_always_apply">常に適用</string>
     <string name="trace_always_apply_hint">オフの場合、この接続のみ変更されます</string>
     <string name="library_widgets">ウィジェットとクイック設定</string>
@@ -270,7 +274,6 @@
     <string name="subs_paste_link">リンクをペースト</string>
     <string name="subs_paste_clipboard">クリップボードからペースト</string>
     <string name="subs_scan_qr">QR コードをスキャン</string>
-    <string name="subs_coming_soon">近日対応</string>
     <string name="subs_import_desktop">コンピュータ上の Zephyr からインポート</string>
     <string name="subs_import_file">ファイルからインポート</string>
     <plurals name="subs_added">
@@ -282,6 +285,33 @@
     <string name="subs_error_fetch">このサブスクリプションをダウンロードできませんでした。リンクまたはネットワークを確認してください。</string>
     <string name="subs_error_invalid_file">有効な設定ファイルではありません</string>
     <string name="subs_error_invalid_link">有効なサブスクリプションのリンクではありません</string>
+    <string name="subs_error_import_version">このインポートコードには新しいバージョンの Zephyr が必要です</string>
+    <string name="subs_import_source">ソース：%1$s</string>
+    <string name="subs_import_desktop_source">Zephyr デスクトップ</string>
+    <string name="subs_import_insecure">このリンクは暗号化されていない（http）ため、内容が盗聴または改ざんされる可能性があります。</string>
+    <string name="subs_import_trust">信頼できるプロバイダの場合のみ続けてください。</string>
+    <string name="subs_scan_prompt">サブスクリプションの QR コードを枠内に合わせると、自動的に読み取られます。</string>
+    <string name="subs_scan_camera_needed">スキャンするにはカメラへのアクセスが必要です</string>
+    <string name="subs_scan_no_camera">このデバイスで使用できるカメラがありません</string>
+    <string name="subs_review_one">%1$sを更新します</string>
+    <string name="subs_review_note">更新すると、サブスクリプションのノードとルールが置き換えられます。Zephyr のオーバーライドとシーンの選択は変わりません。</string>
+    <string name="subs_deleted">%1$sを削除しました</string>
+    <string name="subs_error_update_all">サブスクリプションを更新できませんでした</string>
+    <plurals name="subs_import_confirm_title">
+        <item quantity="other">%1$d件のサブスクリプションをインポートしますか？</item>
+    </plurals>
+    <plurals name="subs_added_many">
+        <item quantity="other">%1$d件のサブスクリプションを追加しました</item>
+    </plurals>
+    <plurals name="subs_import_some_failed">
+        <item quantity="other">%1$d件を追加できませんでした</item>
+    </plurals>
+    <plurals name="subs_review_all">
+        <item quantity="other">%1$s件のサブスクリプションをすべて更新します</item>
+    </plurals>
+    <plurals name="subs_updated_count">
+        <item quantity="other">%1$d件のサブスクリプションを更新しました</item>
+    </plurals>
     <plurals name="subs_total_unit">
         <item quantity="other">件</item>
     </plurals>

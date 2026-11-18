@@ -49,6 +49,7 @@
     <string name="common_mode_global_hint">所有流量经由一个节点</string>
     <string name="common_mode_direct_hint">不经过代理</string>
     <string name="common_try_again">请重试</string>
+    <string name="common_open_settings">打开设置</string>
     <string name="common_scene_ai">AI</string>
     <string name="common_scene_video">视频</string>
     <string name="common_scene_other">其他</string>
@@ -229,7 +230,10 @@
     </plurals>
     <string name="trace_this_connection">本次连接</string>
     <string name="trace_option_unchanged">不变</string>
-    <string name="trace_override_failed">未能更改：%1$s</string>
+    <string name="trace_override_error">无法更改路由，请重试。</string>
+    <string name="trace_override_cleared">已清除 %1$s 的路由覆写</string>
+    <string name="trace_override_direct">%1$s 已改为直连</string>
+    <string name="trace_override_scene">%1$s 已改走 %2$s</string>
     <string name="trace_always_apply">始终应用</string>
     <string name="trace_always_apply_hint">关闭时仅更改本次连接</string>
 
@@ -291,7 +295,6 @@
     <string name="subs_paste_link">粘贴链接</string>
     <string name="subs_paste_clipboard">从剪贴板粘贴</string>
     <string name="subs_scan_qr">扫描二维码</string>
-    <string name="subs_coming_soon">即将支持</string>
     <string name="subs_import_desktop">从电脑上的 Zephyr 导入</string>
     <string name="subs_import_file">从文件导入</string>
     <plurals name="subs_added">
@@ -303,6 +306,33 @@
     <string name="subs_error_fetch">无法下载这个订阅，请检查链接或网络</string>
     <string name="subs_error_invalid_file">这不是有效的配置文件</string>
     <string name="subs_error_invalid_link">这不是有效的订阅链接</string>
+    <string name="subs_error_import_version">导入码版本过新，请更新 Zephyr</string>
+    <string name="subs_import_source">来源：%1$s</string>
+    <string name="subs_import_desktop_source">Zephyr 桌面</string>
+    <string name="subs_import_insecure">此链接未加密（http），内容可能被窃听或篡改。</string>
+    <string name="subs_import_trust">请确认这个链接来自你信任的服务商。</string>
+    <string name="subs_scan_prompt">将订阅二维码放入框内，即可自动识别。</string>
+    <string name="subs_scan_camera_needed">需要相机权限才能扫码</string>
+    <string name="subs_scan_no_camera">此设备没有可用的相机</string>
+    <string name="subs_review_one">将更新 %1$s</string>
+    <string name="subs_review_note">更新会替换订阅中的节点与规则。Zephyr 的覆写与场景选择保持不变。</string>
+    <string name="subs_deleted">已删除 %1$s</string>
+    <string name="subs_error_update_all">无法更新订阅</string>
+    <plurals name="subs_import_confirm_title">
+        <item quantity="other">导入 %1$d 个订阅？</item>
+    </plurals>
+    <plurals name="subs_added_many">
+        <item quantity="other">已添加 %1$d 个订阅</item>
+    </plurals>
+    <plurals name="subs_import_some_failed">
+        <item quantity="other">%1$d 个未能添加</item>
+    </plurals>
+    <plurals name="subs_review_all">
+        <item quantity="other">将更新全部 %1$s 个订阅</item>
+    </plurals>
+    <plurals name="subs_updated_count">
+        <item quantity="other">已更新 %1$d 个订阅</item>
+    </plurals>
     <plurals name="subs_total_unit">
         <item quantity="other">个</item>
     </plurals>

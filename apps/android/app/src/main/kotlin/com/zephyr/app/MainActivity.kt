@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    /** Subscription link from a clash:// or zephyr:// deep link, waiting in the import sheet for the user to tap 添加. */
+    /** A clash:// / clashmeta:// / mihomo:// / zephyr:// deep link, waiting in the import sheet for the user to confirm. */
     private val pendingImport = mutableStateOf<String?>(null)
 
     private val vpnPermission = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { r ->
@@ -72,13 +72,19 @@ class MainActivity : ComponentActivity() {
     }
 
     /**
-     * clash://install-config?url=… and zephyr://import?url=… are BROWSABLE, so any web page can fire them. They only
-     * prefill the import sheet; nothing is imported until the user taps 添加 (review A-P1-4). Connecting from the
-     * tile/widget goes through the non-exported VpnPermissionActivity, so this exported Activity takes no connect action.
+     * clash:// · clashmeta:// · mihomo://install-config?url=… and zephyr://import?… (contract §15, single or several)
+     * are BROWSABLE, so any web page can fire them. They only open the import sheet, where the parsed subscriptions,
+     * their source and an http warning are listed; nothing is imported until the user taps 添加 (review A-P1-4,
+     * audit U26). Connecting from the tile/widget goes through the non-exported VpnPermissionActivity, so this
+     * exported Activity takes no connect action.
      */
     private fun handle(intent: Intent?) {
-        val url = intent?.takeIf { it.action == Intent.ACTION_VIEW }?.data?.getQueryParameter("url")?.trim()
-        if (!url.isNullOrEmpty() && (url.startsWith("https://") || url.startsWith("http://"))) pendingImport.value = url
+        val data = intent?.takeIf { it.action == Intent.ACTION_VIEW }?.data
+        if (data != null && data.scheme?.lowercase() in DEEP_LINK_SCHEMES) pendingImport.value = data.toString()
         setIntent(Intent(this, MainActivity::class.java))
+    }
+
+    private companion object {
+        val DEEP_LINK_SCHEMES = setOf("clash", "clashmeta", "mihomo", "zephyr")
     }
 }

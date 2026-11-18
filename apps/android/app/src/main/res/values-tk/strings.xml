@@ -49,6 +49,7 @@
     <string name="common_mode_global_hint">Ähli trafik bir düwünden</string>
     <string name="common_mode_direct_hint">Proksisiz</string>
     <string name="common_try_again">Täzeden synanyş</string>
+    <string name="common_open_settings">Sazlamalary aç</string>
     <string name="common_scene_ai">AI</string>
     <string name="common_scene_video">Wideo</string>
     <string name="common_scene_other">Beýleki</string>
@@ -232,7 +233,10 @@
     </plurals>
     <string name="trace_this_connection">Şu birikme</string>
     <string name="trace_option_unchanged">Üýtgeşiksiz</string>
-    <string name="trace_override_failed">Üýtgedip bolmady: %1$s</string>
+    <string name="trace_override_error">Ugry üýtgedip bolmady. Gaýtadan synanyşyň.</string>
+    <string name="trace_override_cleared">%1$s üçin aýratyn ugur düzgüni aýryldy</string>
+    <string name="trace_override_direct">%1$s indi göni birigýär</string>
+    <string name="trace_override_scene">%1$s indi %2$s ulanýar</string>
     <string name="trace_always_apply">Hemişe ulan</string>
     <string name="trace_always_apply_hint">Öçük bolsa, diňe şu birikme üýtgeýär</string>
     <string name="library_widgets">Widjetler we Çalt sazlamalar</string>
@@ -290,7 +294,6 @@
     <string name="subs_paste_link">Salgyny goý</string>
     <string name="subs_paste_clipboard">Buferden goý</string>
     <string name="subs_scan_qr">QR koduny skanirle</string>
-    <string name="subs_coming_soon">Ýakynda</string>
     <string name="subs_import_desktop">Kompýuterdäki Zephyr-den import et</string>
     <string name="subs_import_file">Faýldan import et</string>
     <plurals name="subs_added">
@@ -303,6 +306,38 @@
     <string name="subs_error_fetch">Bu abunany ýükläp bolmady. Salgyny ýa-da tory barlaň.</string>
     <string name="subs_error_invalid_file">Bu dogry konfigurasiýa faýly däl</string>
     <string name="subs_error_invalid_link">Bu dogry abuna salgysy däl</string>
+    <string name="subs_error_import_version">Bu import kody üçin Zephyr-iň täze wersiýasy gerek</string>
+    <string name="subs_import_source">Çeşme: %1$s</string>
+    <string name="subs_import_desktop_source">Zephyr Desktop</string>
+    <string name="subs_import_insecure">Bu salgy şifrlenmedik (http); mazmuny okalyp ýa-da üýtgedilip bilner.</string>
+    <string name="subs_import_trust">Diňe bu üpjün edijä ynanýan bolsaňyz dowam ediň.</string>
+    <string name="subs_scan_prompt">Awtomatik skanirlemek üçin abunanyň QR koduny çarçuwanyň içinde ýerleşdiriň.</string>
+    <string name="subs_scan_camera_needed">Skanirlemek üçin kamera rugsady gerek</string>
+    <string name="subs_scan_no_camera">Bu enjamda elýeterli kamera ýok</string>
+    <string name="subs_review_one">%1$s täzelener</string>
+    <string name="subs_review_note">Täzelemek abunanyň düwünlerini we düzgünlerini çalyşýar. Zephyr-iň aýratyn düzgünleri we ssenariý saýlawlary üýtgemeýär.</string>
+    <string name="subs_deleted">%1$s pozuldy</string>
+    <string name="subs_error_update_all">Abunalary täzeläp bolmady</string>
+    <plurals name="subs_import_confirm_title">
+        <item quantity="one">%1$d abuna import edilsinmi?</item>
+        <item quantity="other">%1$d abuna import edilsinmi?</item>
+    </plurals>
+    <plurals name="subs_added_many">
+        <item quantity="one">%1$d abuna goşuldy</item>
+        <item quantity="other">%1$d abuna goşuldy</item>
+    </plurals>
+    <plurals name="subs_import_some_failed">
+        <item quantity="one">%1$d sanysy goşulmady</item>
+        <item quantity="other">%1$d sanysy goşulmady</item>
+    </plurals>
+    <plurals name="subs_review_all">
+        <item quantity="one">Ähli %1$s abuna täzelener</item>
+        <item quantity="other">Ähli %1$s abuna täzelener</item>
+    </plurals>
+    <plurals name="subs_updated_count">
+        <item quantity="one">%1$d abuna täzelendi</item>
+        <item quantity="other">%1$d abuna täzelendi</item>
+    </plurals>
     <plurals name="subs_total_unit">
         <item quantity="one">abuna</item>
         <item quantity="other">abuna</item>

@@ -2,6 +2,8 @@ package com.zephyr.app.ui.activity
 
 import com.zephyr.app.R
 import com.zephyr.app.ui.common.collectWhile
+import com.zephyr.app.ui.common.UiText
+import com.zephyr.app.ui.common.uiText
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -58,7 +60,7 @@ fun BoxScope.TraceSheet(host: String?, onDismiss: () -> Unit) {
 
 /** Trace content, shared by the stand-alone sheet and the in-place step inside "最近连接" (review H-P2-9). */
 @Composable
-internal fun androidx.compose.foundation.layout.ColumnScope.TraceBody(host: String?) {
+internal fun androidx.compose.foundation.layout.ColumnScope.TraceBody(host: String?, onApplied: ((UiText, suspend () -> Unit) -> Unit)? = null) {
     val engine = AppGraph.engine
     val c = ZTheme.colors
     val now = LocalNow.current()
@@ -97,8 +99,23 @@ internal fun androidx.compose.foundation.layout.ColumnScope.TraceBody(host: Stri
         val persistent = ov?.persistent ?: false
         fun apply(i: Int, keep: Boolean) = scope.launch {
             val (target, sid) = when (i) { 0 -> TraceTarget.UNCHANGED to null; 1 -> TraceTarget.DIRECT to null; else -> TraceTarget.SCENE to others[i - 2].id }
-            // Review H-P2-10: a failed override is shown instead of silently swallowed.
-            overrideError = runCatching { engine.overrideHost(t.host, target, sid, keep) }.exceptionOrNull()?.let { res.getString(R.string.trace_override_failed, it.message ?: res.getString(R.string.common_try_again)) }
+            val before = ov
+            // Review H-P2-10: a failed override is shown instead of silently swallowed; audit U27: in our own words,
+            // never the engine's message (contract §0.5), and a success can be undone.
+            runCatching { engine.overrideHost(t.host, target, sid, keep) }
+                .onSuccess {
+                    overrideError = null
+                    val msg = when (target) {
+                        TraceTarget.UNCHANGED -> uiText(R.string.trace_override_cleared, t.host)
+                        TraceTarget.DIRECT -> uiText(R.string.trace_override_direct, t.host)
+                        TraceTarget.SCENE -> uiText(R.string.trace_override_scene, t.host, opts[i])
+                    }
+                    onApplied?.invoke(msg) {
+                        engine.overrideHost(t.host, before?.target ?: TraceTarget.UNCHANGED, before?.sceneId, before?.persistent ?: false)
+                        reload++
+                    }
+                }
+                .onFailure { overrideError = res.getString(R.string.trace_override_error) }
             reload++
         }
         ZSegmented(opts, sel, { apply(it, persistent) }, Modifier.padding(horizontal = 16.dp))

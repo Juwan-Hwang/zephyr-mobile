@@ -59,6 +59,7 @@
     <string name="common_mode_global_hint">كل حركة المرور عبر عقدة واحدة</string>
     <string name="common_mode_direct_hint">تجاوز الوكيل</string>
     <string name="common_try_again">حاول مرة أخرى</string>
+    <string name="common_open_settings">فتح الإعدادات</string>
     <string name="common_scene_ai">الذكاء الاصطناعي</string>
     <string name="common_scene_video">الفيديو</string>
     <string name="common_scene_other">أخرى</string>
@@ -308,7 +309,10 @@
     </plurals>
     <string name="trace_this_connection">هذا الاتصال</string>
     <string name="trace_option_unchanged">بلا تغيير</string>
-    <string name="trace_override_failed">تعذّر التغيير: \u2068%1$s\u2069</string>
+    <string name="trace_override_error">تعذّر تغيير المسار. حاول مرة أخرى.</string>
+    <string name="trace_override_cleared">تم مسح تجاوز المسار لـ \u2068%1$s\u2069</string>
+    <string name="trace_override_direct">يتصل \u2068%1$s\u2069 الآن مباشرة</string>
+    <string name="trace_override_scene">يستخدم \u2068%1$s\u2069 الآن \u2068%2$s\u2069</string>
     <string name="trace_always_apply">التطبيق دائمًا</string>
     <string name="trace_always_apply_hint">عند إيقافه، يتغيّر هذا الاتصال فقط</string>
 
@@ -390,7 +394,6 @@
     <string name="subs_paste_link">لصق الرابط</string>
     <string name="subs_paste_clipboard">لصق من الحافظة</string>
     <string name="subs_scan_qr">مسح رمز QR</string>
-    <string name="subs_coming_soon">قريبًا</string>
     <string name="subs_import_desktop">استيراد من Zephyr على حاسوبك</string>
     <string name="subs_import_file">استيراد من ملف</string>
     <plurals name="subs_added">
@@ -407,6 +410,58 @@
     <string name="subs_error_fetch">تعذّر تنزيل هذا الاشتراك. تحقّق من الرابط أو من اتصالك بالشبكة.</string>
     <string name="subs_error_invalid_file">هذا ليس ملف إعداد صالحًا</string>
     <string name="subs_error_invalid_link">هذا ليس رابط اشتراك صالحًا</string>
+    <string name="subs_error_import_version">يتطلب رمز الاستيراد هذا إصدارًا أحدث من Zephyr</string>
+    <string name="subs_import_source">المصدر: \u2068%1$s\u2069</string>
+    <string name="subs_import_desktop_source">Zephyr لسطح المكتب</string>
+    <string name="subs_import_insecure">هذا الرابط غير مشفّر (http)؛ قد تُقرأ محتوياته أو تُعدَّل.</string>
+    <string name="subs_import_trust">تابع فقط إذا كنت تثق بهذا المزوّد.</string>
+    <string name="subs_scan_prompt">ضع رمز QR للاشتراك داخل الإطار لمسحه تلقائيًا.</string>
+    <string name="subs_scan_camera_needed">يلزم الوصول إلى الكاميرا للمسح</string>
+    <string name="subs_scan_no_camera">لا تتوفر كاميرا على هذا الجهاز</string>
+    <string name="subs_review_one">سيتم تحديث \u2068%1$s\u2069</string>
+    <string name="subs_review_note">يستبدل التحديث عقد الاشتراك وقواعده. تبقى تجاوزات Zephyr واختيارات المشاهد كما هي.</string>
+    <string name="subs_deleted">تم حذف \u2068%1$s\u2069</string>
+    <string name="subs_error_update_all">تعذّر تحديث الاشتراكات</string>
+    <plurals name="subs_import_confirm_title">
+        <item quantity="zero">استيراد %1$d اشتراك؟</item>
+        <item quantity="one">استيراد اشتراك واحد؟</item>
+        <item quantity="two">استيراد اشتراكين؟</item>
+        <item quantity="few">استيراد %1$d اشتراكات؟</item>
+        <item quantity="many">استيراد %1$d اشتراكًا؟</item>
+        <item quantity="other">استيراد %1$d اشتراك؟</item>
+    </plurals>
+    <plurals name="subs_added_many">
+        <item quantity="zero">تمت إضافة %1$d اشتراك</item>
+        <item quantity="one">تمت إضافة اشتراك واحد</item>
+        <item quantity="two">تمت إضافة اشتراكين</item>
+        <item quantity="few">تمت إضافة %1$d اشتراكات</item>
+        <item quantity="many">تمت إضافة %1$d اشتراكًا</item>
+        <item quantity="other">تمت إضافة %1$d اشتراك</item>
+    </plurals>
+    <plurals name="subs_import_some_failed">
+        <item quantity="zero">تعذّرت إضافة %1$d</item>
+        <item quantity="one">تعذّرت إضافة %1$d</item>
+        <item quantity="two">تعذّرت إضافة %1$d</item>
+        <item quantity="few">تعذّرت إضافة %1$d</item>
+        <item quantity="many">تعذّرت إضافة %1$d</item>
+        <item quantity="other">تعذّرت إضافة %1$d</item>
+    </plurals>
+    <plurals name="subs_review_all">
+        <item quantity="zero">سيتم تحديث كل الاشتراكات (\u2068%1$s\u2069)</item>
+        <item quantity="one">سيتم تحديث كل الاشتراكات (\u2068%1$s\u2069)</item>
+        <item quantity="two">سيتم تحديث كل الاشتراكات (\u2068%1$s\u2069)</item>
+        <item quantity="few">سيتم تحديث كل الاشتراكات (\u2068%1$s\u2069)</item>
+        <item quantity="many">سيتم تحديث كل الاشتراكات (\u2068%1$s\u2069)</item>
+        <item quantity="other">سيتم تحديث كل الاشتراكات (\u2068%1$s\u2069)</item>
+    </plurals>
+    <plurals name="subs_updated_count">
+        <item quantity="zero">تم تحديث %1$d اشتراك</item>
+        <item quantity="one">تم تحديث اشتراك واحد</item>
+        <item quantity="two">تم تحديث اشتراكين</item>
+        <item quantity="few">تم تحديث %1$d اشتراكات</item>
+        <item quantity="many">تم تحديث %1$d اشتراكًا</item>
+        <item quantity="other">تم تحديث %1$d اشتراك</item>
+    </plurals>
     <plurals name="subs_total_unit">
         <item quantity="zero">اشتراك</item>
         <item quantity="one">اشتراك</item>

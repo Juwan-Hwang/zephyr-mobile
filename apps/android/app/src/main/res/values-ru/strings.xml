@@ -53,6 +53,7 @@
     <string name="common_mode_global_hint">Весь трафик через один узел</string>
     <string name="common_mode_direct_hint">В обход прокси</string>
     <string name="common_try_again">Повторить</string>
+    <string name="common_open_settings">Открыть настройки</string>
     <string name="common_scene_ai">AI</string>
     <string name="common_scene_video">Видео</string>
     <string name="common_scene_other">Другое</string>
@@ -264,7 +265,10 @@
     </plurals>
     <string name="trace_this_connection">Это подключение</string>
     <string name="trace_option_unchanged">Без изменений</string>
-    <string name="trace_override_failed">Не удалось изменить: %1$s</string>
+    <string name="trace_override_error">Не удалось изменить маршрут. Повторите попытку.</string>
+    <string name="trace_override_cleared">Переопределение маршрута для %1$s удалено</string>
+    <string name="trace_override_direct">%1$s теперь подключается напрямую</string>
+    <string name="trace_override_scene">%1$s теперь через %2$s</string>
     <string name="trace_always_apply">Применять всегда</string>
     <string name="trace_always_apply_hint">Если выключено, изменится только это подключение</string>
     <string name="library_widgets">Виджеты и быстрые настройки</string>
@@ -330,7 +334,6 @@
     <string name="subs_paste_link">Вставить ссылку</string>
     <string name="subs_paste_clipboard">Вставить из буфера обмена</string>
     <string name="subs_scan_qr">Сканировать QR-код</string>
-    <string name="subs_coming_soon">Скоро</string>
     <string name="subs_import_desktop">Импорт из Zephyr на компьютере</string>
     <string name="subs_import_file">Импорт из файла</string>
     <plurals name="subs_added">
@@ -345,6 +348,48 @@
     <string name="subs_error_fetch">Не удалось загрузить подписку. Проверьте ссылку или подключение к сети.</string>
     <string name="subs_error_invalid_file">Это не файл конфигурации</string>
     <string name="subs_error_invalid_link">Это не ссылка на подписку</string>
+    <string name="subs_error_import_version">Для этого кода импорта нужна более новая версия Zephyr</string>
+    <string name="subs_import_source">Источник: %1$s</string>
+    <string name="subs_import_desktop_source">Zephyr для компьютера</string>
+    <string name="subs_import_insecure">Эта ссылка не зашифрована (http): её содержимое могут прочитать или изменить.</string>
+    <string name="subs_import_trust">Продолжайте, только если доверяете этому провайдеру.</string>
+    <string name="subs_scan_prompt">Поместите QR-код подписки в рамку, и он будет распознан автоматически.</string>
+    <string name="subs_scan_camera_needed">Для сканирования нужен доступ к камере</string>
+    <string name="subs_scan_no_camera">На этом устройстве нет доступной камеры</string>
+    <string name="subs_review_one">Будет обновлено: %1$s</string>
+    <string name="subs_review_note">При обновлении узлы и правила подписки заменяются. Переопределения и выбор сценариев в Zephyr не меняются.</string>
+    <string name="subs_deleted">Удалено: %1$s</string>
+    <string name="subs_error_update_all">Не удалось обновить подписки</string>
+    <plurals name="subs_import_confirm_title">
+        <item quantity="one">Импортировать %1$d подписку?</item>
+        <item quantity="few">Импортировать %1$d подписки?</item>
+        <item quantity="many">Импортировать %1$d подписок?</item>
+        <item quantity="other">Импортировать %1$d подписки?</item>
+    </plurals>
+    <plurals name="subs_added_many">
+        <item quantity="one">Добавлена %1$d подписка</item>
+        <item quantity="few">Добавлено %1$d подписки</item>
+        <item quantity="many">Добавлено %1$d подписок</item>
+        <item quantity="other">Добавлено %1$d подписки</item>
+    </plurals>
+    <plurals name="subs_import_some_failed">
+        <item quantity="one">Не удалось добавить: %1$d</item>
+        <item quantity="few">Не удалось добавить: %1$d</item>
+        <item quantity="many">Не удалось добавить: %1$d</item>
+        <item quantity="other">Не удалось добавить: %1$d</item>
+    </plurals>
+    <plurals name="subs_review_all">
+        <item quantity="one">Будет обновлена %1$s подписка</item>
+        <item quantity="few">Будут обновлены все подписки (%1$s)</item>
+        <item quantity="many">Будут обновлены все подписки (%1$s)</item>
+        <item quantity="other">Будут обновлены все подписки (%1$s)</item>
+    </plurals>
+    <plurals name="subs_updated_count">
+        <item quantity="one">Обновлена %1$d подписка</item>
+        <item quantity="few">Обновлено %1$d подписки</item>
+        <item quantity="many">Обновлено %1$d подписок</item>
+        <item quantity="other">Обновлено %1$d подписки</item>
+    </plurals>
     <plurals name="subs_total_unit" tools:ignore="ImpliedQuantity">
         <item quantity="one">подписка</item>
         <item quantity="few">подписки</item>
