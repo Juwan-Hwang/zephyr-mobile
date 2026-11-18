@@ -378,22 +378,31 @@ class MockEngine(
     override suspend fun subscriptionsSummary(): SubscriptionsSummary =
         SubscriptionsSummary(MockSubscriptions.TOTAL_COUNT + subscriptionState.value.size - 2, MockCatalog.TOTAL + subscriptionState.value.drop(2).sumOf { it.nodeCount })
 
+    /** Same §15 rules as core for url / qr / clipboard (contract: Mock must reject what core rejects). */
     override suspend fun importSubscription(source: ImportSource, payload: String): Subscription {
         val p = payload.trim()
         if (p.isEmpty()) throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "empty")
-        if (source == ImportSource.URL || source == ImportSource.CLIPBOARD) {
-            if (!(p.startsWith("https://") || p.startsWith("http://") || p.startsWith("clash://") || p.startsWith("zephyr://"))) {
-                throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "not a subscription link")
-            }
+        if (source == ImportSource.FILE || (source == ImportSource.CLIPBOARD && ImportPayloads.looksLikeConfig(p))) return addMock(p, null, null)
+        val items = try { ImportPayloads.parse(p).items } catch (e: ImportPayloadException) {
+            throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, e.message ?: "invalid")
         }
+        var first: Subscription? = null
+        for (it in items) { val s = addMock(it.url, it.name, it.autoUpdateHours); if (first == null) first = s }
+        return first!!
+    }
+
+    override suspend fun importItem(source: ImportSource, item: ImportItem): Subscription = addMock(item.url.trim(), item.name, item.autoUpdateHours)
+
+    private suspend fun addMock(p: String, name: String?, autoHours: Int?): Subscription {
         delay(scaled(800))
         val h = MockCatalog.hsh(11, p.hashCode() and 0x7FFF_FFFF)
-        val name = runCatching { java.net.URI(p).host?.substringBeforeLast('.')?.substringAfterLast('.')?.replaceFirstChar { it.uppercase() } }.getOrNull()
-            ?: "新订阅"
+        val id = "sub-${h.toString(16)}"
+        subscriptionState.value.firstOrNull { it.id == id }?.let { return it } // same link: core dedupes too
+        val host = runCatching { java.net.URI(p).host?.substringBeforeLast('.')?.substringAfterLast('.')?.replaceFirstChar { it.uppercase() } }.getOrNull()
         val sub = Subscription(
-            id = "sub-${h.toString(16)}", name = name, url = MockSubscriptions.redact(p),
+            id = id, name = name ?: host ?: "新订阅", url = MockSubscriptions.redact(p),
             nodeCount = 120 + h % 600, totalBytes = 200_000_000_000L, usedBytes = 0, remainingBytes = 200_000_000_000L,
-            expiresAt = clock() + 30L * DAY_MS, updatedAt = clock(), autoUpdateHours = settingsState.value.autoUpdateHours,
+            expiresAt = clock() + 30L * DAY_MS, updatedAt = clock(), autoUpdateHours = autoHours ?: settingsState.value.autoUpdateHours,
         )
         subscriptionState.update { it + sub }
         return sub

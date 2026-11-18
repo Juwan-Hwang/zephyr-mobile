@@ -87,6 +87,18 @@ interface ZephyrEngine {
     fun subscriptions(): Flow<List<Subscription>>
     suspend fun subscriptionsSummary(): SubscriptionsSummary
     suspend fun importSubscription(source: ImportSource, payload: String): Subscription
+
+    /**
+     * Contract §15 `parseImportPayload`: pure parsing, no network. Throws [ImportPayloadException].
+     * The real engine asks core-mobile; the default is the Kotlin twin checked against the same fixture.
+     */
+    fun parseImportPayload(payload: String): ImportPayload = ImportPayloads.parse(payload)
+
+    /**
+     * Imports one item of a parsed payload (§15 platform flow: parse → confirm → fetch and import each), keeping the
+     * payload's name and auto-update interval. The default only knows the link.
+     */
+    suspend fun importItem(source: ImportSource, item: ImportItem): Subscription = importSubscription(source, item.url)
     suspend fun previewUpdate(id: String): SubscriptionDiff
     suspend fun updateSubscription(id: String): SubscriptionDiff
     suspend fun updateAll(): List<SubscriptionDiff>

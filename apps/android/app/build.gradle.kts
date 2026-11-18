@@ -61,6 +61,12 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
+// Contract fixtures (command-parse-v1.json …) live at repo root; tests read them via this system property.
+tasks.withType<Test>().configureEach {
+    systemProperty("zephyr.fixtures", rootProject.file("../../contract/fixtures").absolutePath)
+    inputs.dir(rootProject.file("../../contract/fixtures")).withPropertyName("contractFixtures").withPathSensitivity(PathSensitivity.RELATIVE)
+}
+
 // Local-only: run unit/screenshot tests on another JVM (e.g. x86_64 under qemu on aarch64 hosts, where
 // Paparazzi's layoutlib has no native build). `-Pzephyr.testJava=/path/to/java`. CI leaves it unset.
 providers.gradleProperty("zephyr.testJava").orNull?.let { java ->

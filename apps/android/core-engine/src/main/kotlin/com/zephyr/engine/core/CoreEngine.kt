@@ -162,25 +162,73 @@ class CoreEngine(
         return withContext(io) { wrap { c.subscriptionsSummary() } }.let { SubscriptionsSummary(it.count.toInt(), it.totalNodes.toLong()) }
     }
 
+    /** §15: the core parses (single source of truth); Kotlin twin when the native library is absent (tests, mock). */
+    override fun parseImportPayload(payload: String): com.zephyr.engine.ImportPayload {
+        if (core == null) return com.zephyr.engine.ImportPayloads.parse(payload)
+        val p = try { com.zephyr.core.mobile.parseImportPayload(payload) } catch (e: MobileException) {
+            val cat = if (e is MobileException.SubscriptionInvalid) com.zephyr.engine.ImportPayloadException.Category.SUBSCRIPTION_INVALID
+            else com.zephyr.engine.ImportPayloadException.Category.INVALID
+            // Core says "导入码版本 vN 过新"; the Kotlin twin knows the shape, so ask it which case this is.
+            val tooNew = runCatching { com.zephyr.engine.ImportPayloads.parse(payload); false }
+                .getOrElse { (it as? com.zephyr.engine.ImportPayloadException)?.versionTooNew == true }
+            throw com.zephyr.engine.ImportPayloadException(cat, e.message ?: e.javaClass.simpleName, versionTooNew = tooNew)
+        }
+        val kind = when (p.kind) {
+            com.zephyr.core.mobile.ImportPayloadKind.ZEPHYR -> com.zephyr.engine.ImportPayloadKind.ZEPHYR
+            com.zephyr.core.mobile.ImportPayloadKind.CLASH_INSTALL -> com.zephyr.engine.ImportPayloadKind.CLASH_INSTALL
+            com.zephyr.core.mobile.ImportPayloadKind.URL -> com.zephyr.engine.ImportPayloadKind.URL
+        }
+        return com.zephyr.engine.ImportPayload(kind, p.items.map { com.zephyr.engine.ImportItem(it.name, it.url, it.autoUpdateHours) })
+    }
+
+    /**
+     * url / qr / clipboard go through §15 (desktop sync codes, clash:// install links, bare links; possibly several);
+     * a whole Clash config pasted from the clipboard and file imports are local profiles. Returns the first import.
+     */
     override suspend fun importSubscription(source: ImportSource, payload: String): Subscription {
         val c = core ?: return if (mockData) fallback.importSubscription(source, payload) else throw noCore()
         val p = payload.trim()
         if (p.isEmpty()) throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "empty")
-        val isUrl = p.startsWith("https://") || p.startsWith("http://")
-        if ((source == ImportSource.URL || source == ImportSource.QR) && !isUrl) throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "not a subscription link")
-        return withContext(io) {
-            val got = if (isUrl) {
-                runCatching { fetcher(p) }.getOrElse { throw ZephyrException(ErrorCode.SUBSCRIPTION_FETCH_FAILED, it.message ?: "fetch failed") }
-            } else SubscriptionFetcher.Fetched(p, null, null)
-            val name = got.fileName?.substringBeforeLast('.')?.takeIf { it.isNotBlank() } ?: defaultName(p, isUrl)
-            val hours = runCatching { fallback.settings().first().autoUpdateHours }.getOrDefault(12)
-            val s = wrap { c.importSubscription(name, if (isUrl) p else null, FetchedSubscription(got.body, got.userInfo, clock()), hours, null) }
-            nodesReady = null
-            refreshSubs()
-            rulesReady = null
-            refreshRuleProvidersLater()
-            sub(s)
+        val local = source == ImportSource.FILE || (source == ImportSource.CLIPBOARD && com.zephyr.engine.ImportPayloads.looksLikeConfig(p))
+        if (local) return withContext(io) { importOne(c, null, p, null, null).also { afterImport() } }
+        val items = try { parseImportPayload(p).items } catch (e: com.zephyr.engine.ImportPayloadException) {
+            throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, e.message ?: "invalid")
         }
+        return withContext(io) {
+            var first: Subscription? = null
+            try { for (it in items) { val s = importOne(c, it.url, p, it.name, it.autoUpdateHours); if (first == null) first = s } }
+            finally { if (first != null) afterImport() }
+            first ?: throw ZephyrException(ErrorCode.CANCELLED, "nothing imported")
+        }
+    }
+
+    override suspend fun importItem(source: ImportSource, item: com.zephyr.engine.ImportItem): Subscription {
+        val c = core ?: return if (mockData) fallback.importItem(source, item) else throw noCore()
+        return withContext(io) { importOne(c, item.url.trim(), item.url, item.name, item.autoUpdateHours).also { afterImport() } }
+    }
+
+    /** Fetches (when [url] is set) and imports one. Name: payload's > the response's file name > host. */
+    private suspend fun importOne(c: MobileCore, url: String?, body: String, name: String?, autoHours: Int?): Subscription {
+        if (url != null && !(url.startsWith("https://", true) || url.startsWith("http://", true))) throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "not a subscription link")
+        val got = if (url != null) {
+            runCatching { fetcher(url) }.getOrElse { throw ZephyrException(ErrorCode.SUBSCRIPTION_FETCH_FAILED, it.message ?: "fetch failed") }
+        } else SubscriptionFetcher.Fetched(body, null, null)
+        val n = name ?: got.fileName?.substringBeforeLast('.')?.takeIf { it.isNotBlank() } ?: defaultName(url ?: body, url != null)
+        val hours = autoHours ?: runCatching { fallback.settings().first().autoUpdateHours }.getOrDefault(12)
+        val s = wrapImport { c.importSubscription(n, url, FetchedSubscription(got.body, got.userInfo, clock()), hours, null) }
+        nodesReady = null
+        return sub(s)
+    }
+
+    /** Core's Invalid on import is about the subscription, not a rule (audit E43 / iOS parity). */
+    private inline fun <T> wrapImport(block: () -> T): T = try { block() } catch (e: MobileException) {
+        throw ZephyrException(ZephyrError(if (e is MobileException.Invalid) ErrorCode.SUBSCRIPTION_INVALID else code(e), e.message ?: e.javaClass.simpleName))
+    }
+
+    private suspend fun afterImport() {
+        refreshSubs()
+        rulesReady = null
+        refreshRuleProvidersLater()
     }
 
     override suspend fun updateSubscription(id: String): SubscriptionDiff {
