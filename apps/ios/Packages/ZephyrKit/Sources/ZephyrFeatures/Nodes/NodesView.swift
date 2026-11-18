@@ -14,6 +14,8 @@ import ZephyrMock
 public struct NodesView: View {
     @State private var model: NodesModel
     @State private var selected: NodeSummary?
+    /// 宿主（RouteDestination 注入）；预览 / 快照里没有，空库态就不显示“添加订阅”。
+    @Environment(AppModel.self) private var app: AppModel?
 
     /// - Parameters:
     ///   - engine: 引擎（App 注入 CoreEngine，预览/快照注入 MockEngine）
@@ -36,7 +38,7 @@ public struct NodesView: View {
                     if model.failed {
                         NodesErrorState { model.runQuery() }
                     } else if model.isEmptyResult {
-                        NodesEmptyState(query: model.query)
+                        NodesEmptyState(query: model.query, onImport: importAction)
                     }
                 }
                 .padding(.top, ZTokens.Space.n4)
@@ -54,6 +56,12 @@ public struct NodesView: View {
         .sheet(item: $selected) { node in
             NodeDetailSheet(engine: model.engine, node: node) { model.store.testVisible([node]) }
         }
+    }
+
+    /// 空库态“添加订阅”：进订阅页（那里有导入入口）。没有宿主时为 nil。
+    private var importAction: (() -> Void)? {
+        guard let app else { return nil }
+        return { app.push(.subscriptions) }
     }
 
     /// 原型右上角“排序”按钮：契约暂无排序，提供“回到顶部 / 跳到地区”。

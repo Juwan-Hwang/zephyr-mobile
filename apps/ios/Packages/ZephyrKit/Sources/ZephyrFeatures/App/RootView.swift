@@ -56,7 +56,11 @@ public struct RootView: View {
         }
         .overlay(alignment: .top) { if model.sheet == nil { ErrorBanner() } }
         .fullScreenCover(isPresented: needsOnboarding) {
-            OnboardingView(engine: model.engine, onFinishChoosing: { _ in onboardingDone = true })
+            OnboardingView(engine: model.engine, onFinishChoosing: { choice in
+                onboardingDone = true
+                // “简单 / 优选”写入所有场景的节点来源（#207 U3，对齐 Android）。
+                Task { await model.applyOnboardingChoice(choice) }
+            })
                 .zAccent(accent)
         }
         .onChange(of: model.subscriptions.isEmpty) { _, empty in
