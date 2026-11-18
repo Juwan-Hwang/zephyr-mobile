@@ -121,6 +121,13 @@
     <plurals name="scene_tested_from" tools:ignore="StringFormatMatches">
         <item quantity="other">စာရင်းသွင်းမှု %1$d ခုမှ စမ်းသပ်ထားသည်</item>
     </plurals>
+    <string name="scene_tested_from_pool">စာရင်းသွင်းမှု %1$d ခုမှ နုဒ် %2$s ခုကို စမ်းသပ်ပြီး</string>
+    <string name="scene_test_frequency">စမ်းသပ်မှု ကြိမ်နှုန်း</string>
+    <string name="scene_test_daily">နေ့စဉ်</string>
+    <string name="scene_test_wifi_only">%1$s (Wi‑Fi သာ)</string>
+    <plurals name="scene_test_every_hours">
+        <item quantity="other">%1$d နာရီတိုင်း</item>
+    </plurals>
     <string name="scene_pinned_for">%1$s အတွက် ပုံသေ</string>
     <string name="scene_when_unavailable">နုဒ် မရနိုင်သည့်အခါ</string>
     <string name="scene_ask">မေးရန်</string>
@@ -224,6 +231,10 @@
     <string name="trace_always_apply">အမြဲ အသုံးချရန်</string>
     <string name="trace_always_apply_hint">ပိတ်ထားလျှင် ဤချိတ်ဆက်မှုသာ ပြောင်းမည်</string>
     <string name="library_widgets">ဝစ်ဂျက်နှင့် အမြန်ဆက်တင်များ</string>
+    <string name="widgets_home_title">ပင်မစခရင် ဝစ်ဂျက်များ</string>
+    <string name="widgets_home_steps">ပင်မစခရင်ရှိ နေရာလွတ်ကို ဖိထားပါ › ဝစ်ဂျက်များ › Zephyr ကိုရွေးပြီး ပင်မစခရင်ပေါ်သို့ ဆွဲထည့်ပါ။</string>
+    <string name="widgets_tile_title">အမြန်ဆက်တင် အကွက်</string>
+    <string name="widgets_tile_steps">စခရင်ထိပ်မှ အောက်သို့ နှစ်ကြိမ် ပွတ်ဆွဲပါ › တည်းဖြတ်ရန် › Zephyr ကို အမြန်ဆက်တင်ထဲသို့ ဆွဲထည့်ပါ။ ချိတ်ဆက်ရန် သို့မဟုတ် အဆက်ဖြတ်ရန် တို့ပါ။</string>
     <plurals name="nodes_total_unit">
         <item quantity="other">ခု</item>
     </plurals>
@@ -280,7 +291,7 @@
         <item quantity="other">%1$s ထည့်ပြီး (နုဒ် %2$s ခု)</item>
     </plurals>
     <string name="subs_error_clipboard_empty">ကလစ်ဘုတ်တွင် ဘာမှမရှိပါ</string>
-    <string name="subs_hint_desktop">QR ကုဒ်ပြရန် ကွန်ပျူတာရှိ Zephyr တွင် ဆက်တင်များ › မိုဘိုင်း ကို ဖွင့်ပါ</string>
+    <string name="subs_hint_desktop">QR ကုဒ်ပြရန် ကွန်ပျူတာရှိ Zephyr တွင် ဆက်တင်များ › ဖုန်းသို့ စင့်ခ်လုပ်ရန် ကို ဖွင့်ပါ</string>
     <string name="subs_error_read_file">ဤဖိုင်ကို ဖတ်၍ မရပါ</string>
     <string name="subs_error_fetch">ဤစာရင်းသွင်းမှုကို ဒေါင်းလုဒ်လုပ်၍ မရပါ။ လင့်ခ် သို့မဟုတ် ကွန်ရက်ကို စစ်ပါ။</string>
     <string name="subs_error_invalid_file">မှန်ကန်သော ဖွဲ့စည်းပုံဖိုင် မဟုတ်ပါ</string>
@@ -359,6 +370,16 @@
     <string name="settings_trusted_wifi_hint">ချိတ်မိလျှင် အလိုအလျောက် အဆက်ဖြတ်</string>
     <string name="settings_trusted_wifi_location">Wi‑Fi အမည်များကို သိရှိရန် တည်နေရာ ခွင့်ပြုပါ</string>
     <string name="settings_password_required">စကားဝှက် လိုအပ်သည်</string>
+    <string name="trusted_wifi_disconnect">ဤ Wi‑Fi များတွင် အဆက်ဖြတ်ရန်</string>
+    <string name="trusted_wifi_footer">အိမ် သို့မဟုတ် အလုပ်ကဲ့သို့ ယုံကြည်ရသော ကွန်ရက်များတွင် Zephyr သည် အလိုအလျောက် အဆက်ဖြတ်ပြီး ထွက်ခွာသောအခါ လိုအပ်သလို ပြန်ချိတ်ဆက်သည်။</string>
+    <string name="trusted_wifi_networks">ကွန်ရက်များ</string>
+    <string name="trusted_wifi_add_hint">Wi‑Fi အမည် ထည့်ရန်</string>
+    <string name="local_proxy_footer">ဖွင့်ထားလျှင် Zephyr သည် 127.0.0.1 တွင်သာ နားထောင်သဖြင့် ကွန်ရက်ရှိ အခြားစက်များ ချိတ်ဆက်၍ မရပါ။</string>
+    <string name="local_proxy_port">ပေါ့တ်</string>
+    <string name="local_proxy_port_footer">အခြားအက်ပ်များသည် 127.0.0.1 ပေါ်ရှိ ဤပေါ့တ်မှတစ်ဆင့် Zephyr ၏ စည်းမျဉ်းများနှင့် မြင်ကွင်းများကို သုံးနိုင်သည်။</string>
+    <string name="local_proxy_security">လုံခြုံရေး</string>
+    <string name="local_proxy_auth_footer">ဖွင့်ထားလျှင် စက်တွင်း ပေါ့တ်သို့ ချိတ်ဆက်ရန် အသုံးပြုသူအမည်နှင့် စကားဝှက် လိုအပ်သဖြင့် အခြားအက်ပ်များ ခွင့်ပြုချက်မရှိဘဲ ပရောက်စီကို မသုံးနိုင်ပါ။</string>
+    <string name="local_proxy_port_invalid">%1$d မှ %2$d အတွင်း ပေါ့တ် ထည့်ပါ</string>
     <string name="settings_section_testing">စမ်းသပ်ခြင်း</string>
     <string name="settings_test_wifi_only">Wi‑Fi ဖြင့်သာ အမြန်နှုန်း စမ်းသပ်ရန်</string>
     <string name="settings_keep_results">ရလဒ် သိမ်းထားချိန်</string>
@@ -377,12 +398,6 @@
     <string name="settings_accent_green">အစိမ်းရောင်</string>
     <string name="settings_accent_orange">လိမ္မော်ရောင်</string>
     <string name="settings_accent_pink">ပန်းရောင်</string>
-    <string name="settings_accent_purple">ခရမ်းရောင်</string>
-    <string name="settings_accent_red">အနီရောင်</string>
-    <string name="settings_accent_teal">စိမ်းပြာရောင်</string>
-    <string name="settings_accent_indigo">မဲနယ်ရောင်</string>
-    <string name="settings_accent_yellow">အဝါရောင်</string>
-    <string name="settings_accent_graphite">မီးခိုးရောင်</string>
     <string name="settings_section_privacy">ကိုယ်ရေးလုံခြုံမှု</string>
     <string name="settings_share_diagnostics">ပြဿနာရှာ ဒေတာ မျှဝေရန်</string>
     <string name="settings_section_diagnostics">ပြဿနာရှာဖွေခြင်း</string>

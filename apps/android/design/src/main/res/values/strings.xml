@@ -41,6 +41,8 @@
     <string name="common_expiry_tomorrow">Expires tomorrow</string>
     <!-- %1$s is a weekday from common_weekdays -->
     <string name="common_expiry_weekday">Expires %1$s</string>
+    <!-- %1$s is a month and day, e.g. "Nov 9" -->
+    <string name="common_expiry_date">Expires %1$s</string>
     <plurals name="common_expiry_in_days">
         <item quantity="one">Expires in %1$d day</item>
         <item quantity="other">Expires in %1$d days</item>

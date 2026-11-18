@@ -70,3 +70,25 @@ class SettingsStore(private val context: Context, private val engine: ZephyrEngi
         runCatching { context.getSystemService(android.app.UiModeManager::class.java)?.setApplicationNightMode(mode) }
     }
 }
+
+/**
+ * Trusted Wi‑Fi list edits (audit #208 U10; iOS TrustedWifiView): names are trimmed, kept unique and in the order
+ * added. Pure so the library page and tests share one rule; the engine settings flow persists the result.
+ */
+object TrustedWifi {
+    fun normalize(name: String): String = name.trim()
+
+    /** Null when [name] is blank or already listed (nothing to write). */
+    fun add(s: Settings, name: String): Settings? {
+        val n = normalize(name)
+        if (n.isEmpty() || n in s.trustedWifi) return null
+        return s.copy(trustedWifi = s.trustedWifi + n)
+    }
+
+    fun remove(s: Settings, name: String): Settings = s.copy(trustedWifi = s.trustedWifi.filterNot { it == name })
+}
+
+suspend fun ZephyrEngine.addTrustedWifi(name: String): Boolean =
+    TrustedWifi.add(settings().first(), name)?.let { updateSettings(it); true } ?: false
+
+suspend fun ZephyrEngine.removeTrustedWifi(name: String) = updateSettings(TrustedWifi.remove(settings().first(), name))

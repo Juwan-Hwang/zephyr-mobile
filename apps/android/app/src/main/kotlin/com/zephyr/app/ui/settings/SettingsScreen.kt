@@ -27,7 +27,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -58,7 +57,7 @@ import com.zephyr.engine.StorageInfo
 import kotlinx.coroutines.launch
 
 @Composable
-fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onBack: () -> Unit) {
+fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onTrustedWifi: () -> Unit = {}, onLocalProxy: () -> Unit = {}, onBack: () -> Unit) {
     val engine = AppGraph.engine
     val c = ZTheme.colors
     val s by engine.settings().collectAsState(Settings())
@@ -72,12 +71,14 @@ fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onBack: () -> Unit) {
             ZListGroup {
                 ZSettingsRow(stringResource(R.string.settings_on_demand), checked = s.onDemand, onCheckedChange = { v -> set { it.copy(onDemand = v) } })
                 ZDivider()
-                TrustedWifiRow(s)
+                // Audit #208 U10: both rows open their editable pages (shared with the library). The trusted Wi‑Fi page
+                // also carries the location-permission row (#225); here the subtitle only flags that it is missing.
+                TrustedWifiRow(s, onTrustedWifi)
                 ZDivider()
-                ChoiceRow(
-                    stringResource(R.string.settings_local_proxy), listOf(true to stringResource(R.string.common_on), false to stringResource(R.string.common_off)), s.localProxyEnabled,
-                    onSelect = { v -> set { it.copy(localProxyEnabled = v) } },
+                ZSettingsRow(
+                    stringResource(R.string.settings_local_proxy),
                     subtitle = "127.0.0.1:${s.localProxyPort}" + if (s.localProxyAuth) " · " + stringResource(R.string.settings_password_required) else "",
+                    value = stringResource(if (s.localProxyEnabled) R.string.common_on else R.string.common_off), chevron = true, onClick = onLocalProxy,
                 )
             }
             ZSectionHeader(stringResource(R.string.settings_section_testing), Modifier.padding(top = 12.dp))
@@ -117,7 +118,7 @@ fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onBack: () -> Unit) {
                     // Review L-P1-5: 28 dp dot inside a 44 dp radio target, Chinese names, selected semantics, one group.
                     Row(Modifier.selectableGroup(), horizontalArrangement = Arrangement.spacedBy(0.dp)) {
                         Accent.entries.forEach { a ->
-                            val name = accentName(a)?.let { stringResource(it) } ?: a.name.lowercase()
+                            val name = stringResource(accentName(a))
                             val z = ZAccent.valueOf(a.name)
                             val col = if (c.isDark) z.darkVariant() else z.color
                             Box(
@@ -161,44 +162,28 @@ private fun StorageBar(s: StorageInfo) {
 }
 
 @StringRes
-private fun accentName(a: Accent): Int? = when (a.name) {
-    "BLUE" -> R.string.settings_accent_blue; "GREEN" -> R.string.settings_accent_green; "ORANGE" -> R.string.settings_accent_orange
-    "PINK" -> R.string.settings_accent_pink; "PURPLE" -> R.string.settings_accent_purple; "RED" -> R.string.settings_accent_red
-    "TEAL" -> R.string.settings_accent_teal; "INDIGO" -> R.string.settings_accent_indigo; "YELLOW" -> R.string.settings_accent_yellow
-    "GRAPHITE" -> R.string.settings_accent_graphite
-    else -> null
+private fun accentName(a: Accent): Int = when (a) {
+    Accent.BLUE -> R.string.settings_accent_blue
+    Accent.GREEN -> R.string.settings_accent_green
+    Accent.ORANGE -> R.string.settings_accent_orange
+    Accent.PINK -> R.string.settings_accent_pink
 }
 
 /**
- * 受信任 Wi‑Fi (audit E01/U1). Android 10+ only tells an app the current SSID with location permission, so while
- * trusted networks are in use and it is missing, the row says so and tapping it asks. Without it the tunnel simply
- * stays up on every network (never a wrong disconnect). Not shown where no network monitor runs (previews/tests).
+ * 受信任 Wi‑Fi entry (audit E01/U1, U10). Android 10+ only tells an app the current SSID with location permission;
+ * while trusted networks are in use and it is missing, the subtitle says so. The list editor and the permission
+ * request live on [com.zephyr.app.ui.library.TrustedWifiScreen]. Previews/tests (no network monitor) skip the check.
  */
 @Composable
-private fun TrustedWifiRow(s: Settings) {
-    val monitor = AppGraph.network
-    // Previews / screenshot tests have no Activity result registry; nothing to ask there.
-    if (monitor == null) { TrustedWifiRowContent(s, needs = false, onAsk = null); return }
+private fun TrustedWifiRow(s: Settings, onClick: () -> Unit) {
     val ctx = androidx.compose.ui.platform.LocalContext.current
-    var granted by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(com.zephyr.app.vpn.NetworkMonitor.hasLocationPermission(ctx)) }
-    val ask = androidx.activity.compose.rememberLauncherForActivityResult(
-        androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions(),
-    ) { res ->
-        granted = res[android.Manifest.permission.ACCESS_FINE_LOCATION] == true
-        if (granted) monitor.refresh()
-    }
-    val needs = !granted && s.disconnectOnTrusted && s.trustedWifi.any { it.isNotBlank() }
-    TrustedWifiRowContent(s, needs) {
-        ask.launch(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION))
-    }
-}
-
-@Composable
-private fun TrustedWifiRowContent(s: Settings, needs: Boolean, onAsk: (() -> Unit)?) {
+    val needs = AppGraph.network != null && s.disconnectOnTrusted && s.trustedWifi.any { it.isNotBlank() } &&
+        !com.zephyr.app.vpn.NetworkMonitor.hasLocationPermission(ctx)
     ZSettingsRow(
         stringResource(R.string.settings_trusted_wifi),
         subtitle = stringResource(if (needs) R.string.settings_trusted_wifi_location else R.string.settings_trusted_wifi_hint),
         value = joinList(s.trustedWifi).ifEmpty { stringResource(R.string.common_none) },
-        onClick = if (needs) onAsk else null,
+        chevron = true,
+        onClick = onClick,
     )
 }

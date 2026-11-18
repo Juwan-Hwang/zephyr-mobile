@@ -52,7 +52,8 @@ class MockEngine(
     )
     private val sceneState = MutableStateFlow(MockScenes.initial(clock()))
     private val subscriptionState = MutableStateFlow(MockSubscriptions.initial(clock()))
-    private val settingsState = MutableStateFlow(Settings())
+    // Demo keeps the prototype's trusted network; a real first install starts empty (audit #208 U7).
+    private val settingsState = MutableStateFlow(if (demo) Settings(trustedWifi = listOf("家"), disconnectOnTrusted = true) else Settings())
     private val groupState = MutableStateFlow(MockGroups.initial(clock()))
     private val latencyBus = MutableSharedFlow<List<LatencyUpdate>>(extraBufferCapacity = 64)
     private val tested = ConcurrentHashMap<Long, Int>()

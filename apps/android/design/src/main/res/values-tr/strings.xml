@@ -31,6 +31,7 @@
     <string name="common_expiry_today">Bugün bitiyor</string>
     <string name="common_expiry_tomorrow">Yarın bitiyor</string>
     <string name="common_expiry_weekday">%1$s günü bitiyor</string>
+    <string name="common_expiry_date">Bitiş: %1$s</string>
     <plurals name="common_expiry_in_days">
         <item quantity="one">%1$d gün sonra bitiyor</item>
         <item quantity="other">%1$d gün sonra bitiyor</item>

@@ -121,6 +121,13 @@
     <plurals name="scene_tested_from">
         <item quantity="other">Kiểm tra từ %1$d gói đăng ký</item>
     </plurals>
+    <string name="scene_tested_from_pool">Đã kiểm tra %2$s nút từ %1$d đăng ký</string>
+    <string name="scene_test_frequency">Tần suất kiểm tra</string>
+    <string name="scene_test_daily">Hằng ngày</string>
+    <string name="scene_test_wifi_only">%1$s (chỉ Wi‑Fi)</string>
+    <plurals name="scene_test_every_hours">
+        <item quantity="other">Mỗi %1$d giờ</item>
+    </plurals>
     <string name="scene_pinned_for">Đã ghim cho %1$s</string>
     <string name="scene_when_unavailable">Khi nút không khả dụng</string>
     <string name="scene_ask">Hỏi</string>
@@ -224,6 +231,10 @@
     <string name="trace_always_apply">Luôn áp dụng</string>
     <string name="trace_always_apply_hint">Khi tắt, chỉ thay đổi kết nối này</string>
     <string name="library_widgets">Tiện ích và Cài đặt nhanh</string>
+    <string name="widgets_home_title">Tiện ích màn hình chính</string>
+    <string name="widgets_home_steps">Chạm và giữ vào chỗ trống trên màn hình chính › Tiện ích › Zephyr, rồi kéo một tiện ích ra màn hình chính.</string>
+    <string name="widgets_tile_title">Ô Cài đặt nhanh</string>
+    <string name="widgets_tile_steps">Vuốt xuống hai lần từ đầu màn hình › Chỉnh sửa › kéo Zephyr vào Cài đặt nhanh. Chạm để kết nối hoặc ngắt kết nối.</string>
     <plurals name="nodes_total_unit">
         <item quantity="other">nút</item>
     </plurals>
@@ -280,7 +291,7 @@
         <item quantity="other">Đã thêm %1$s (%2$s nút)</item>
     </plurals>
     <string name="subs_error_clipboard_empty">Bộ nhớ tạm đang trống</string>
-    <string name="subs_hint_desktop">Trên máy tính, mở Cài đặt › Di động trong Zephyr để hiện mã QR</string>
+    <string name="subs_hint_desktop">Trên máy tính, mở Cài đặt › Đồng bộ với điện thoại trong Zephyr để hiện mã QR</string>
     <string name="subs_error_read_file">Không thể đọc tệp này</string>
     <string name="subs_error_fetch">Không thể tải gói đăng ký này. Hãy kiểm tra liên kết hoặc mạng.</string>
     <string name="subs_error_invalid_file">Đây không phải tệp cấu hình hợp lệ</string>
@@ -359,6 +370,16 @@
     <string name="settings_trusted_wifi_hint">Tự động ngắt kết nối khi tham gia</string>
     <string name="settings_trusted_wifi_location">Cho phép truy cập vị trí để nhận diện tên Wi‑Fi</string>
     <string name="settings_password_required">Yêu cầu mật khẩu</string>
+    <string name="trusted_wifi_disconnect">Ngắt kết nối khi dùng các Wi‑Fi này</string>
+    <string name="trusted_wifi_footer">Trên mạng tin cậy như ở nhà hoặc nơi làm việc, Zephyr tự động ngắt kết nối và kết nối lại khi cần sau khi bạn rời đi.</string>
+    <string name="trusted_wifi_networks">Mạng</string>
+    <string name="trusted_wifi_add_hint">Thêm tên Wi‑Fi</string>
+    <string name="local_proxy_footer">Khi bật, Zephyr chỉ lắng nghe trên 127.0.0.1, nên các thiết bị khác trong mạng không thể kết nối.</string>
+    <string name="local_proxy_port">Cổng</string>
+    <string name="local_proxy_port_footer">Ứng dụng khác có thể dùng quy tắc và ngữ cảnh của Zephyr qua cổng này trên 127.0.0.1.</string>
+    <string name="local_proxy_security">Bảo mật</string>
+    <string name="local_proxy_auth_footer">Khi bật, kết nối tới cổng cục bộ cần tên người dùng và mật khẩu, giúp ngăn ứng dụng khác dùng proxy khi chưa được phép.</string>
+    <string name="local_proxy_port_invalid">Nhập cổng từ %1$d đến %2$d</string>
     <string name="settings_section_testing">Kiểm tra</string>
     <string name="settings_test_wifi_only">Chỉ đo tốc độ qua Wi‑Fi</string>
     <string name="settings_keep_results">Lưu giữ kết quả</string>
@@ -377,12 +398,6 @@
     <string name="settings_accent_green">Xanh lá</string>
     <string name="settings_accent_orange">Cam</string>
     <string name="settings_accent_pink">Hồng</string>
-    <string name="settings_accent_purple">Tím</string>
-    <string name="settings_accent_red">Đỏ</string>
-    <string name="settings_accent_teal">Xanh mòng két</string>
-    <string name="settings_accent_indigo">Chàm</string>
-    <string name="settings_accent_yellow">Vàng</string>
-    <string name="settings_accent_graphite">Than chì</string>
     <string name="settings_section_privacy">Quyền riêng tư</string>
     <string name="settings_share_diagnostics">Chia sẻ dữ liệu chẩn đoán</string>
     <string name="settings_section_diagnostics">Chẩn đoán</string>

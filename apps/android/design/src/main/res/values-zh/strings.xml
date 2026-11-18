@@ -29,6 +29,7 @@
     <string name="common_expiry_today">今天到期</string>
     <string name="common_expiry_tomorrow">明天到期</string>
     <string name="common_expiry_weekday">%1$s到期</string>
+    <string name="common_expiry_date">%1$s到期</string>
     <plurals name="common_expiry_in_days">
         <item quantity="other">%1$d 天后到期</item>
     </plurals>

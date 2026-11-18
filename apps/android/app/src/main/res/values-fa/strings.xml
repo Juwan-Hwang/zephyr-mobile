@@ -134,6 +134,14 @@
         <item quantity="one">آزمایش‌شده از %1$d اشتراک</item>
         <item quantity="other">آزمایش‌شده از %1$d اشتراک</item>
     </plurals>
+    <string name="scene_tested_from_pool">%2$s نود از %1$d اشتراک آزمایش شد</string>
+    <string name="scene_test_frequency">دورهٔ آزمایش</string>
+    <string name="scene_test_daily">روزانه</string>
+    <string name="scene_test_wifi_only">%1$s (فقط Wi‑Fi)</string>
+    <plurals name="scene_test_every_hours">
+        <item quantity="one">هر ساعت</item>
+        <item quantity="other">هر %1$d ساعت</item>
+    </plurals>
     <string name="scene_pinned_for">ثابت برای \u2068%1$s\u2069</string>
     <string name="scene_when_unavailable">وقتی نودی در دسترس نیست</string>
     <string name="scene_ask">پرسیدن</string>
@@ -254,6 +262,10 @@
 
     <!-- ── Library ── -->
     <string name="library_widgets">ابزارک‌ها و تنظیمات سریع</string>
+    <string name="widgets_home_title">ابزارک‌های صفحهٔ اصلی</string>
+    <string name="widgets_home_steps">روی جای خالی صفحهٔ اصلی انگشت خود را نگه دارید › ابزارک‌ها › Zephyr، سپس یکی را به صفحهٔ اصلی بکشید.</string>
+    <string name="widgets_tile_title">کاشی تنظیمات سریع</string>
+    <string name="widgets_tile_steps">دو بار از بالای صفحه به پایین بکشید › ویرایش › Zephyr را به تنظیمات سریع بکشید. برای وصل یا قطع اتصال روی آن بزنید.</string>
 
     <!-- ── Nodes ── -->
     <plurals name="nodes_total_unit">
@@ -321,7 +333,7 @@
         <item quantity="other">\u2068%1$s\u2069 اضافه شد (\u2068%2$s\u2069 نود)</item>
     </plurals>
     <string name="subs_error_clipboard_empty">کلیپ‌بورد خالی است</string>
-    <string name="subs_hint_desktop">روی رایانه، در Zephyr به تنظیمات › موبایل بروید تا کد QR نمایش داده شود</string>
+    <string name="subs_hint_desktop">روی رایانه، در Zephyr به «تنظیمات › همگام‌سازی با تلفن» بروید تا کد QR نمایش داده شود</string>
     <string name="subs_error_read_file">خواندن این فایل ممکن نشد</string>
     <string name="subs_error_fetch">این اشتراک دانلود نشد. پیوند یا شبکه را بررسی کنید.</string>
     <string name="subs_error_invalid_file">این فایل پیکربندی معتبری نیست</string>
@@ -413,6 +425,16 @@
     <string name="settings_trusted_wifi_hint">هنگام اتصال به آن، به‌طور خودکار قطع شود</string>
     <string name="settings_trusted_wifi_location">برای شناسایی نام Wi‑Fi، دسترسی به موقعیت مکانی را مجاز کنید</string>
     <string name="settings_password_required">نیاز به گذرواژه</string>
+    <string name="trusted_wifi_disconnect">قطع اتصال در این شبکه‌های Wi‑Fi</string>
+    <string name="trusted_wifi_footer">در شبکه‌های مورد اعتماد مثل خانه یا محل کار، Zephyr خودکار قطع می‌شود و پس از ترک آن‌ها در صورت نیاز دوباره وصل می‌شود.</string>
+    <string name="trusted_wifi_networks">شبکه‌ها</string>
+    <string name="trusted_wifi_add_hint">افزودن نام Wi‑Fi</string>
+    <string name="local_proxy_footer">در حالت روشن، Zephyr فقط روی 127.0.0.1 گوش می‌دهد و دستگاه‌های دیگر شبکهٔ شما نمی‌توانند وصل شوند.</string>
+    <string name="local_proxy_port">پورت</string>
+    <string name="local_proxy_port_footer">برنامه‌های دیگر می‌توانند از طریق این پورت روی 127.0.0.1 از قوانین و صحنه‌های Zephyr استفاده کنند.</string>
+    <string name="local_proxy_security">امنیت</string>
+    <string name="local_proxy_auth_footer">در حالت روشن، اتصال به پورت محلی به نام کاربری و گذرواژه نیاز دارد تا برنامه‌های دیگر بدون اجازه از پروکسی استفاده نکنند.</string>
+    <string name="local_proxy_port_invalid">پورتی بین %1$d تا %2$d وارد کنید</string>
     <string name="settings_section_testing">آزمایش</string>
     <string name="settings_test_wifi_only">آزمایش سرعت فقط با Wi‑Fi</string>
     <string name="settings_keep_results">نگه‌داری نتایج</string>
@@ -432,12 +454,6 @@
     <string name="settings_accent_green">سبز</string>
     <string name="settings_accent_orange">نارنجی</string>
     <string name="settings_accent_pink">صورتی</string>
-    <string name="settings_accent_purple">بنفش</string>
-    <string name="settings_accent_red">قرمز</string>
-    <string name="settings_accent_teal">سبزآبی</string>
-    <string name="settings_accent_indigo">نیلی</string>
-    <string name="settings_accent_yellow">زرد</string>
-    <string name="settings_accent_graphite">گرافیتی</string>
     <string name="settings_section_privacy">حریم خصوصی</string>
     <string name="settings_share_diagnostics">اشتراک‌گذاری داده‌های عیب‌یابی</string>
     <string name="settings_section_diagnostics">عیب‌یابی</string>

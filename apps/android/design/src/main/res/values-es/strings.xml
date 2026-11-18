@@ -35,6 +35,7 @@
     <string name="common_expiry_today">Caduca hoy</string>
     <string name="common_expiry_tomorrow">Caduca mañana</string>
     <string name="common_expiry_weekday">Caduca el %1$s</string>
+    <string name="common_expiry_date">Caduca el %1$s</string>
     <plurals name="common_expiry_in_days">
         <item quantity="one">Caduca en %1$d día</item>
         <item quantity="many">Caduca en %1$d días</item>

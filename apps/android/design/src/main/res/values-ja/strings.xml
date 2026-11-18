@@ -27,6 +27,7 @@
     <string name="common_expiry_today">今日で期限切れ</string>
     <string name="common_expiry_tomorrow">明日で期限切れ</string>
     <string name="common_expiry_weekday">%1$s曜日に期限切れ</string>
+    <string name="common_expiry_date">有効期限：%1$s</string>
     <plurals name="common_expiry_in_days">
         <item quantity="other">あと%1$d日で期限切れ</item>
     </plurals>

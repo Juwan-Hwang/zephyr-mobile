@@ -1,5 +1,6 @@
 package com.zephyr.app.ui.home
 
+import com.zephyr.app.ui.common.sceneNameText
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
@@ -98,8 +99,8 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         (engine as? com.zephyr.engine.core.CoreEngine)?.let { core ->
             viewModelScope.launch { core.failovers.collect { f ->
                 val to = f.now
-                if (to == null) showToast(uiText(R.string.home_failover_none, f.sceneName), null, null)
-                else showToast(uiText(R.string.home_failover_switched, f.sceneName, to), f.sceneId, f.previous)
+                if (to == null) showToast(uiText(R.string.home_failover_none, sceneNameText(f.sceneName)), null, null)
+                else showToast(uiText(R.string.home_failover_switched, sceneNameText(f.sceneName), to), f.sceneId, f.previous)
             } }
         }
         viewModelScope.launch {

@@ -134,6 +134,14 @@
         <item quantity="one">%1$d سبسکرپشن سے ٹیسٹ کیا گیا</item>
         <item quantity="other">%1$d سبسکرپشنز سے ٹیسٹ کیا گیا</item>
     </plurals>
+    <string name="scene_tested_from_pool">%1$d سبسکرپشنز کے %2$s نوڈز ٹیسٹ کیے گئے</string>
+    <string name="scene_test_frequency">ٹیسٹ کی تعدد</string>
+    <string name="scene_test_daily">روزانہ</string>
+    <string name="scene_test_wifi_only">%1$s (صرف Wi‑Fi)</string>
+    <plurals name="scene_test_every_hours">
+        <item quantity="one">ہر گھنٹے</item>
+        <item quantity="other">ہر %1$d گھنٹے</item>
+    </plurals>
     <string name="scene_pinned_for">\u2068%1$s\u2069 کے لیے پن شدہ</string>
     <string name="scene_when_unavailable">جب نوڈ دستیاب نہ ہو</string>
     <string name="scene_ask">پوچھیں</string>
@@ -254,6 +262,10 @@
 
     <!-- ── Library ── -->
     <string name="library_widgets">ویجیٹس اور فوری ترتیبات</string>
+    <string name="widgets_home_title">ہوم اسکرین ویجٹس</string>
+    <string name="widgets_home_steps">ہوم اسکرین پر خالی جگہ کو دبا کر رکھیں › ویجٹس › Zephyr، پھر کسی ایک کو ہوم اسکرین پر گھسیٹیں۔</string>
+    <string name="widgets_tile_title">فوری ترتیبات ٹائل</string>
+    <string name="widgets_tile_steps">اسکرین کے اوپر سے دو بار نیچے سوائپ کریں › ترمیم › Zephyr کو فوری ترتیبات میں گھسیٹیں۔ منسلک یا منقطع کرنے کے لیے اسے تھپتھپائیں۔</string>
 
     <!-- ── Nodes ── -->
     <plurals name="nodes_total_unit">
@@ -321,7 +333,7 @@
         <item quantity="other">\u2068%1$s\u2069 شامل ہو گیا (\u2068%2$s\u2069 نوڈز)</item>
     </plurals>
     <string name="subs_error_clipboard_empty">کلپ بورڈ خالی ہے</string>
-    <string name="subs_hint_desktop">اپنے کمپیوٹر پر Zephyr میں ترتیبات › موبائل کھولیں تاکہ QR کوڈ دکھائی دے</string>
+    <string name="subs_hint_desktop">اپنے کمپیوٹر پر Zephyr میں ترتیبات › فون سے سنک کریں کھولیں تاکہ QR کوڈ دکھائی دے</string>
     <string name="subs_error_read_file">یہ فائل پڑھی نہیں جا سکی</string>
     <string name="subs_error_fetch">یہ سبسکرپشن ڈاؤن لوڈ نہیں ہو سکی۔ لنک یا نیٹ ورک چیک کریں۔</string>
     <string name="subs_error_invalid_file">یہ درست کنفیگریشن فائل نہیں</string>
@@ -413,6 +425,16 @@
     <string name="settings_trusted_wifi_hint">ان سے جڑنے پر خود بخود منقطع ہو جائے</string>
     <string name="settings_trusted_wifi_location">Wi‑Fi کے نام پہچاننے کے لیے مقام تک رسائی کی اجازت دیں</string>
     <string name="settings_password_required">پاس ورڈ درکار</string>
+    <string name="trusted_wifi_disconnect">ان Wi‑Fi نیٹ ورکس پر منقطع کریں</string>
+    <string name="trusted_wifi_footer">گھر یا دفتر جیسے قابلِ اعتماد نیٹ ورکس پر Zephyr خود بخود منقطع ہو جاتا ہے اور وہاں سے جانے پر ضرورت کے مطابق دوبارہ منسلک ہو جاتا ہے۔</string>
+    <string name="trusted_wifi_networks">نیٹ ورکس</string>
+    <string name="trusted_wifi_add_hint">Wi‑Fi کا نام شامل کریں</string>
+    <string name="local_proxy_footer">آن ہونے پر Zephyr صرف 127.0.0.1 پر سنتا ہے، اس لیے آپ کے نیٹ ورک کے دوسرے ڈیوائسز منسلک نہیں ہو سکتے۔</string>
+    <string name="local_proxy_port">پورٹ</string>
+    <string name="local_proxy_port_footer">دوسری ایپس 127.0.0.1 پر اس پورٹ کے ذریعے Zephyr کے قواعد اور مناظر استعمال کر سکتی ہیں۔</string>
+    <string name="local_proxy_security">سیکیورٹی</string>
+    <string name="local_proxy_auth_footer">آن ہونے پر لوکل پورٹ سے منسلک ہونے کے لیے صارف نام اور پاس ورڈ درکار ہوگا، تاکہ دوسری ایپس اجازت کے بغیر پراکسی استعمال نہ کر سکیں۔</string>
+    <string name="local_proxy_port_invalid">%1$d سے %2$d تک کا پورٹ درج کریں</string>
     <string name="settings_section_testing">ٹیسٹنگ</string>
     <string name="settings_test_wifi_only">صرف Wi‑Fi پر اسپیڈ ٹیسٹ</string>
     <string name="settings_keep_results">نتائج محفوظ رکھیں</string>
@@ -432,12 +454,6 @@
     <string name="settings_accent_green">سبز</string>
     <string name="settings_accent_orange">نارنجی</string>
     <string name="settings_accent_pink">گلابی</string>
-    <string name="settings_accent_purple">جامنی</string>
-    <string name="settings_accent_red">سرخ</string>
-    <string name="settings_accent_teal">فیروزی</string>
-    <string name="settings_accent_indigo">نیلگوں</string>
-    <string name="settings_accent_yellow">پیلا</string>
-    <string name="settings_accent_graphite">گریفائٹ</string>
     <string name="settings_section_privacy">رازداری</string>
     <string name="settings_share_diagnostics">تشخیصی ڈیٹا شیئر کریں</string>
     <string name="settings_section_diagnostics">تشخیص</string>

@@ -127,6 +127,13 @@
     <plurals name="scene_tested_from">
         <item quantity="other">检测自 %1$d 个订阅</item>
     </plurals>
+    <string name="scene_tested_from_pool">检测自 %1$d 个订阅中的 %2$s 个节点</string>
+    <string name="scene_test_frequency">检测频率</string>
+    <string name="scene_test_daily">每天</string>
+    <string name="scene_test_wifi_only">%1$s（仅 Wi‑Fi）</string>
+    <plurals name="scene_test_every_hours">
+        <item quantity="other">每 %1$d 小时</item>
+    </plurals>
     <string name="scene_pinned_for">%1$s 固定</string>
     <string name="scene_when_unavailable">节点不可用时</string>
     <string name="scene_ask">询问</string>
@@ -239,6 +246,10 @@
 
     <!-- ── Library ── -->
     <string name="library_widgets">小组件与快捷开关</string>
+    <string name="widgets_home_title">主屏幕小组件</string>
+    <string name="widgets_home_steps">长按主屏幕空白处 › 小组件 › Zephyr，然后拖到主屏幕上。</string>
+    <string name="widgets_tile_title">快速设置磁贴</string>
+    <string name="widgets_tile_steps">从屏幕顶部向下滑动两次 › 编辑 › 将 Zephyr 拖入快速设置。点按即可连接或断开。</string>
 
     <!-- ── Nodes ── -->
     <plurals name="nodes_total_unit">
@@ -301,7 +312,7 @@
         <item quantity="other">已添加 %1$s（%2$s 个节点）</item>
     </plurals>
     <string name="subs_error_clipboard_empty">剪贴板是空的</string>
-    <string name="subs_hint_desktop">在电脑端打开 设置 › 移动端，即可显示二维码</string>
+    <string name="subs_hint_desktop">在电脑上的 Zephyr 打开“设置 › 同步到手机”，即可显示二维码</string>
     <string name="subs_error_read_file">无法读取这个文件</string>
     <string name="subs_error_fetch">无法下载这个订阅，请检查链接或网络</string>
     <string name="subs_error_invalid_file">这不是有效的配置文件</string>
@@ -384,6 +395,16 @@
     <string name="settings_trusted_wifi_hint">连接后自动断开</string>
     <string name="settings_trusted_wifi_location">允许访问位置信息以识别 Wi‑Fi 名称</string>
     <string name="settings_password_required">需要密码</string>
+    <string name="trusted_wifi_disconnect">连上这些 Wi‑Fi 时自动断开</string>
+    <string name="trusted_wifi_footer">在家或公司等可信网络中，Zephyr 会自动断开，离开后按需重新连接。</string>
+    <string name="trusted_wifi_networks">网络</string>
+    <string name="trusted_wifi_add_hint">添加 Wi‑Fi 名称</string>
+    <string name="local_proxy_footer">开启后仅监听 127.0.0.1，局域网中的其他设备无法连接。</string>
+    <string name="local_proxy_port">端口</string>
+    <string name="local_proxy_port_footer">其他 App 可通过 127.0.0.1 上的这个端口使用 Zephyr 的规则与场景。</string>
+    <string name="local_proxy_security">安全</string>
+    <string name="local_proxy_auth_footer">开启后，连接本地端口需要用户名与密码，可防止其他 App 未经允许使用代理。</string>
+    <string name="local_proxy_port_invalid">请输入 %1$d–%2$d 之间的端口</string>
     <string name="settings_section_testing">检测</string>
     <string name="settings_test_wifi_only">仅在 Wi‑Fi 下测速</string>
     <string name="settings_keep_results">结果保留</string>
@@ -402,12 +423,6 @@
     <string name="settings_accent_green">绿色</string>
     <string name="settings_accent_orange">橙色</string>
     <string name="settings_accent_pink">粉色</string>
-    <string name="settings_accent_purple">紫色</string>
-    <string name="settings_accent_red">红色</string>
-    <string name="settings_accent_teal">青色</string>
-    <string name="settings_accent_indigo">靛蓝</string>
-    <string name="settings_accent_yellow">黄色</string>
-    <string name="settings_accent_graphite">石墨</string>
     <string name="settings_section_privacy">隐私</string>
     <string name="settings_share_diagnostics">共享诊断数据</string>
     <string name="settings_section_diagnostics">诊断</string>

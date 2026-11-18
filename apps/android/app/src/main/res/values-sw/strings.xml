@@ -128,6 +128,14 @@
         <item quantity="one">Imepimwa kutoka usajili %1$d</item>
         <item quantity="other">Imepimwa kutoka usajili %1$d</item>
     </plurals>
+    <string name="scene_tested_from_pool">Nodi %2$s kutoka usajili %1$d zimepimwa</string>
+    <string name="scene_test_frequency">Marudio ya upimaji</string>
+    <string name="scene_test_daily">Kila siku</string>
+    <string name="scene_test_wifi_only">%1$s (Wi‑Fi pekee)</string>
+    <plurals name="scene_test_every_hours">
+        <item quantity="one">Kila saa</item>
+        <item quantity="other">Kila saa %1$d</item>
+    </plurals>
     <string name="scene_pinned_for">Imebanwa kwa %1$s</string>
     <string name="scene_when_unavailable">Nodi isipopatikana</string>
     <string name="scene_ask">Uliza</string>
@@ -240,6 +248,10 @@
     <string name="trace_always_apply">Tumia kila wakati</string>
     <string name="trace_always_apply_hint">Ikizimwa, muunganisho huu pekee ndio hubadilika</string>
     <string name="library_widgets">Wijeti na Mipangilio ya Haraka</string>
+    <string name="widgets_home_title">Wijeti za skrini ya kwanza</string>
+    <string name="widgets_home_steps">Gusa na ushikilie sehemu tupu kwenye skrini ya kwanza › Wijeti › Zephyr, kisha buruta mojawapo kwenye skrini.</string>
+    <string name="widgets_tile_title">Kigae cha Mipangilio ya Haraka</string>
+    <string name="widgets_tile_steps">Telezesha chini mara mbili kutoka juu ya skrini › Hariri › buruta Zephyr kwenye Mipangilio ya Haraka. Igonge ili kuunganisha au kutenganisha.</string>
     <plurals name="nodes_total_unit">
         <item quantity="one">nodi</item>
         <item quantity="other">nodi</item>
@@ -301,7 +313,7 @@
         <item quantity="other">%1$s imeongezwa (nodi %2$s)</item>
     </plurals>
     <string name="subs_error_clipboard_empty">Ubao wa kunakili hauna kitu</string>
-    <string name="subs_hint_desktop">Kwenye kompyuta, fungua Mipangilio › Simu katika Zephyr ili kuonyesha msimbo wa QR</string>
+    <string name="subs_hint_desktop">Kwenye kompyuta, fungua Mipangilio › Sawazisha na Simu katika Zephyr ili kuonyesha msimbo wa QR</string>
     <string name="subs_error_read_file">Imeshindwa kusoma faili hili</string>
     <string name="subs_error_fetch">Imeshindwa kupakua usajili huu. Kagua kiungo au mtandao wako.</string>
     <string name="subs_error_invalid_file">Hili si faili sahihi la usanidi</string>
@@ -389,6 +401,16 @@
     <string name="settings_trusted_wifi_hint">Tenganisha kiotomatiki ukijiunga</string>
     <string name="settings_trusted_wifi_location">Ruhusu ufikiaji wa mahali ili kutambua majina ya Wi‑Fi</string>
     <string name="settings_password_required">Hitaji nenosiri</string>
+    <string name="trusted_wifi_disconnect">Tenganisha kwenye Wi‑Fi hizi</string>
+    <string name="trusted_wifi_footer">Kwenye mitandao inayoaminika kama nyumbani au kazini, Zephyr hujitenganisha kiotomatiki na kuunganisha tena inapohitajika ukiondoka.</string>
+    <string name="trusted_wifi_networks">Mitandao</string>
+    <string name="trusted_wifi_add_hint">Ongeza jina la Wi‑Fi</string>
+    <string name="local_proxy_footer">Ikiwashwa, Zephyr husikiliza kwenye 127.0.0.1 pekee, kwa hivyo vifaa vingine kwenye mtandao wako haviwezi kuunganisha.</string>
+    <string name="local_proxy_port">Mlango</string>
+    <string name="local_proxy_port_footer">Programu nyingine zinaweza kutumia sheria na mazingira ya Zephyr kupitia mlango huu kwenye 127.0.0.1.</string>
+    <string name="local_proxy_security">Usalama</string>
+    <string name="local_proxy_auth_footer">Ikiwashwa, kuunganisha kwenye mlango wa ndani kunahitaji jina la mtumiaji na nenosiri, hivyo programu nyingine haziwezi kutumia proksi bila ruhusa.</string>
+    <string name="local_proxy_port_invalid">Weka mlango kati ya %1$d na %2$d</string>
     <string name="settings_section_testing">Upimaji</string>
     <string name="settings_test_wifi_only">Pima kasi kupitia Wi‑Fi pekee</string>
     <string name="settings_keep_results">Hifadhi matokeo</string>
@@ -408,12 +430,6 @@
     <string name="settings_accent_green">Kijani</string>
     <string name="settings_accent_orange">Chungwa</string>
     <string name="settings_accent_pink">Waridi</string>
-    <string name="settings_accent_purple">Zambarau</string>
-    <string name="settings_accent_red">Nyekundu</string>
-    <string name="settings_accent_teal">Kijani-bluu</string>
-    <string name="settings_accent_indigo">Nili</string>
-    <string name="settings_accent_yellow">Njano</string>
-    <string name="settings_accent_graphite">Kijivu</string>
     <string name="settings_section_privacy">Faragha</string>
     <string name="settings_share_diagnostics">Shiriki data ya uchunguzi</string>
     <string name="settings_section_diagnostics">Uchunguzi</string>

@@ -162,6 +162,18 @@
         <item quantity="many">اختُبرت من %1$d اشتراكًا</item>
         <item quantity="other">اختُبرت من %1$d اشتراك</item>
     </plurals>
+    <string name="scene_tested_from_pool">تم اختبار %2$s عقدة من %1$d اشتراك</string>
+    <string name="scene_test_frequency">تكرار الاختبار</string>
+    <string name="scene_test_daily">يوميًا</string>
+    <string name="scene_test_wifi_only">%1$s (Wi‑Fi فقط)</string>
+    <plurals name="scene_test_every_hours">
+        <item quantity="zero">كل %1$d ساعة</item>
+        <item quantity="one">كل ساعة</item>
+        <item quantity="two">كل ساعتين</item>
+        <item quantity="few">كل %1$d ساعات</item>
+        <item quantity="many">كل %1$d ساعة</item>
+        <item quantity="other">كل %1$d ساعة</item>
+    </plurals>
     <string name="scene_pinned_for">مثبّتة لتطبيق \u2068%1$s\u2069</string>
     <string name="scene_when_unavailable">عند تعذّر الوصول إلى عقدة</string>
     <string name="scene_ask">اسألني</string>
@@ -318,6 +330,10 @@
 
     <!-- ── Library ── -->
     <string name="library_widgets">الأدوات والإعدادات السريعة</string>
+    <string name="widgets_home_title">أدوات الشاشة الرئيسية</string>
+    <string name="widgets_home_steps">المس مكانًا فارغًا في الشاشة الرئيسية مع الاستمرار › الأدوات › Zephyr، ثم اسحب أداة إلى الشاشة الرئيسية.</string>
+    <string name="widgets_tile_title">مربع الإعدادات السريعة</string>
+    <string name="widgets_tile_steps">اسحب لأسفل مرتين من أعلى الشاشة › تعديل › اسحب Zephyr إلى الإعدادات السريعة. انقر عليه للاتصال أو قطع الاتصال.</string>
 
     <!-- ── Nodes ── -->
     <plurals name="nodes_total_unit">
@@ -405,7 +421,7 @@
         <item quantity="other">تمت إضافة \u2068%1$s\u2069 (\u2068%2$s\u2069 عقدة)</item>
     </plurals>
     <string name="subs_error_clipboard_empty">الحافظة فارغة</string>
-    <string name="subs_hint_desktop">على حاسوبك، افتح الإعدادات › الجوّال في Zephyr لعرض رمز QR</string>
+    <string name="subs_hint_desktop">على حاسوبك، افتح الإعدادات › المزامنة مع الهاتف في Zephyr لعرض رمز QR</string>
     <string name="subs_error_read_file">تعذّرت قراءة هذا الملف</string>
     <string name="subs_error_fetch">تعذّر تنزيل هذا الاشتراك. تحقّق من الرابط أو من اتصالك بالشبكة.</string>
     <string name="subs_error_invalid_file">هذا ليس ملف إعداد صالحًا</string>
@@ -533,6 +549,16 @@
     <string name="settings_trusted_wifi_hint">قطع الاتصال تلقائيًا عند الانضمام إليها</string>
     <string name="settings_trusted_wifi_location">اسمح بالوصول إلى الموقع للتعرّف على أسماء شبكات Wi‑Fi</string>
     <string name="settings_password_required">طلب كلمة المرور</string>
+    <string name="trusted_wifi_disconnect">قطع الاتصال على شبكات Wi‑Fi هذه</string>
+    <string name="trusted_wifi_footer">على الشبكات الموثوقة مثل المنزل أو العمل، يقطع Zephyr الاتصال تلقائيًا، ثم يعيد الاتصال عند الحاجة بعد مغادرتها.</string>
+    <string name="trusted_wifi_networks">الشبكات</string>
+    <string name="trusted_wifi_add_hint">إضافة اسم Wi‑Fi</string>
+    <string name="local_proxy_footer">عند التشغيل، يستمع Zephyr على 127.0.0.1 فقط، فلا يمكن للأجهزة الأخرى على شبكتك الاتصال به.</string>
+    <string name="local_proxy_port">المنفذ</string>
+    <string name="local_proxy_port_footer">يمكن للتطبيقات الأخرى استخدام قواعد Zephyr ومشاهده عبر هذا المنفذ على 127.0.0.1.</string>
+    <string name="local_proxy_security">الأمان</string>
+    <string name="local_proxy_auth_footer">عند التشغيل، يتطلب الاتصال بالمنفذ المحلي اسم مستخدم وكلمة سر، مما يمنع التطبيقات الأخرى من استخدام الوكيل دون إذن.</string>
+    <string name="local_proxy_port_invalid">أدخل منفذًا من %1$d إلى %2$d</string>
     <string name="settings_section_testing">الاختبار</string>
     <string name="settings_test_wifi_only">اختبار السرعة عبر Wi‑Fi فقط</string>
     <string name="settings_keep_results">الاحتفاظ بالنتائج</string>
@@ -556,12 +582,6 @@
     <string name="settings_accent_green">أخضر</string>
     <string name="settings_accent_orange">برتقالي</string>
     <string name="settings_accent_pink">وردي</string>
-    <string name="settings_accent_purple">بنفسجي</string>
-    <string name="settings_accent_red">أحمر</string>
-    <string name="settings_accent_teal">فيروزي</string>
-    <string name="settings_accent_indigo">نيلي</string>
-    <string name="settings_accent_yellow">أصفر</string>
-    <string name="settings_accent_graphite">جرافيتي</string>
     <string name="settings_section_privacy">الخصوصية</string>
     <string name="settings_share_diagnostics">مشاركة بيانات التشخيص</string>
     <string name="settings_section_diagnostics">التشخيص</string>

@@ -1,5 +1,6 @@
 package com.zephyr.app.ui.home
 
+import com.zephyr.app.ui.common.displayName
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -173,7 +174,7 @@ private fun SceneRow(
                     slots.getOrNull(current - 1)?.let { n -> CustomAccessibilityAction(res.getString(R.string.home_scene_prev_region, n.name)) { onPick(n); true } },
                 )
             }
-            .zPressable(row = true, label = stringResource(R.string.home_scene_details_a11y, s.name), onClick = onOpen)
+            .zPressable(row = true, label = stringResource(R.string.home_scene_details_a11y, s.displayName()), onClick = onOpen)
             .padding(horizontal = 16.dp, vertical = 15.dp), // review H-P2-4: `.row` 15/16
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -183,7 +184,7 @@ private fun SceneRow(
         val lines = if (stacked) 2 else 1
         val left: @Composable (Modifier) -> Unit = { m -> Column(m) {
             // Review H-P2-4: prototype `.row .n` 17 / −0.01em, `.m` 13 with 3 px gap, `.ex` 15, `.pin` 12 with 5 px gap.
-            ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight, fontSize = 17.sp, letterSpacing = (-0.01).em), maxLines = lines)
+            ZText(s.displayName(), style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight, fontSize = 17.sp, letterSpacing = (-0.01).em), maxLines = lines)
             Spacer(Modifier.height(3.dp))
             val down = s.services.filter { !it.ok }
             if (probing != null) {
@@ -264,7 +265,7 @@ private fun ExitConfirm(p: PendingChange, onConfirm: () -> Unit, onCancel: () ->
             Box(Modifier.size(6.dp).background(c.warning, CircleShape))
             Spacer(Modifier.width(8.dp))
             ZText(
-                if (apps.isNotEmpty()) stringResource(R.string.home_confirm_apps, LocalResources.current.joinAnd(apps)) else stringResource(R.string.home_confirm_scene, p.scene.name),
+                if (apps.isNotEmpty()) stringResource(R.string.home_confirm_apps, LocalResources.current.joinAnd(apps)) else stringResource(R.string.home_confirm_scene, p.scene.displayName()),
                 style = ZTheme.type.body.copy(fontSize = androidx.compose.ui.unit.TextUnit(14f, androidx.compose.ui.unit.TextUnitType.Sp)),
             )
         }

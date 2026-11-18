@@ -1,5 +1,6 @@
 package com.zephyr.app.widget
 
+import com.zephyr.app.ui.common.sceneName
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -132,7 +133,7 @@ class ZephyrWidget : GlanceAppWidget() {
                     scenes.take(3).forEach { s ->
                         Spacer(GlanceModifier.height(8.dp))
                         Row(GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                            Text(s.name, style = TextStyle(color = t2, fontSize = 13.sp), modifier = GlanceModifier.width(40.dp))
+                            Text(ctx.resources.sceneName(s), style = TextStyle(color = t2, fontSize = 13.sp), modifier = GlanceModifier.width(40.dp))
                             Text("${s.selected.region}  ${s.selected.name}", style = TextStyle(color = t1, fontSize = 13.sp), maxLines = 1, modifier = GlanceModifier.defaultWeight())
                             // Review W-P2-3: prototype hs shows the scene's last measured latency ("61 ms"). It is a
                             // snapshot like everything else here, refreshed with the widget, never a live reading.

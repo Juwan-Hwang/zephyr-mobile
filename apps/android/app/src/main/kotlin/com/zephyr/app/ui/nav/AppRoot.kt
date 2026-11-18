@@ -74,6 +74,9 @@ import kotlinx.coroutines.launch
 @Serializable data class Subs(val back: BackTo = BackTo.LIBRARY)
 @Serializable data class SettingsRoute(val back: BackTo = BackTo.LIBRARY)
 @Serializable object Logs
+@Serializable data class TrustedWifiRoute(val back: BackTo = BackTo.LIBRARY)
+@Serializable data class LocalProxyRoute(val back: BackTo = BackTo.LIBRARY)
+@Serializable data class WidgetsRoute(val back: BackTo = BackTo.LIBRARY)
 @Serializable object Today
 @Serializable object Onboarding
 
@@ -151,7 +154,14 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                 composable<Nodes> { e -> val r = e.toRoute<Nodes>(); NodesScreen(viewModel { NodesViewModel() }, r.query, back = r.back, onBack = { backTo(r.back) }, onImport = { import = true }) }
                 composable<Rules> { e -> val r = e.toRoute<Rules>(); RulesScreen(r.query, back = r.back) { backTo(r.back) } }
                 composable<Subs> { e -> val r = e.toRoute<Subs>(); SubscriptionsScreen(back = r.back, onBack = { backTo(r.back) }, onImport = { import = true }, onNotice = { home.notify(it) }) }
-                composable<SettingsRoute> { e -> val r = e.toRoute<SettingsRoute>(); SettingsScreen(r.back, onLogs = { nav.navigate(Logs) }) { backTo(r.back) } }
+                composable<SettingsRoute> { e -> val r = e.toRoute<SettingsRoute>(); SettingsScreen(
+                    r.back, onLogs = { nav.navigate(Logs) },
+                    onTrustedWifi = { nav.navigate(TrustedWifiRoute(BackTo.SETTINGS)) }, onLocalProxy = { nav.navigate(LocalProxyRoute(BackTo.SETTINGS)) },
+                ) { backTo(r.back) } }
+                // Audit #208 U10: the library's three shortcuts open their own pages (iOS LibrarySheet subpages).
+                composable<TrustedWifiRoute> { e -> val r = e.toRoute<TrustedWifiRoute>(); com.zephyr.app.ui.library.TrustedWifiScreen(r.back) { backTo(r.back) } }
+                composable<LocalProxyRoute> { e -> val r = e.toRoute<LocalProxyRoute>(); com.zephyr.app.ui.library.LocalProxyScreen(r.back) { backTo(r.back) } }
+                composable<WidgetsRoute> { e -> val r = e.toRoute<WidgetsRoute>(); com.zephyr.app.ui.library.WidgetsScreen(r.back) { backTo(r.back) } }
                 composable<Logs> { com.zephyr.app.ui.settings.LogsScreen { nav.popBackStack() } }
                 composable<Today>(
                     enterTransition = { slideInVertically(ZAnim.slow()) { it / 3 } + fadeIn(ZAnim.standard()) },
@@ -177,7 +187,10 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                         scene = home.scenes.value.firstOrNull()
                             ?: kotlinx.coroutines.withTimeoutOrNull(2_000) { home.scenes.first { it.isNotEmpty() } }?.firstOrNull()
                     }
-                    LibraryDest.Settings, LibraryDest.TrustedWifi, LibraryDest.LocalProxy, LibraryDest.Widgets -> nav.navigate(SettingsRoute())
+                    LibraryDest.Settings -> nav.navigate(SettingsRoute())
+                    LibraryDest.TrustedWifi -> nav.navigate(TrustedWifiRoute())
+                    LibraryDest.LocalProxy -> nav.navigate(LocalProxyRoute())
+                    LibraryDest.Widgets -> nav.navigate(WidgetsRoute())
                 }
             }
             val scenesNow by home.scenes.collectAsStateWithLifecycle()

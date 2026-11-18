@@ -27,6 +27,7 @@
     <string name="common_expiry_today">ယနေ့ သက်တမ်းကုန်</string>
     <string name="common_expiry_tomorrow">မနက်ဖြန် သက်တမ်းကုန်</string>
     <string name="common_expiry_weekday">%1$s နေ့ သက်တမ်းကုန်</string>
+    <string name="common_expiry_date">%1$s သက်တမ်းကုန်မည်</string>
     <plurals name="common_expiry_in_days" tools:ignore="StringFormatMatches">
         <item quantity="other">သက်တမ်း %1$d ရက် ကျန်</item>
     </plurals>

@@ -1,5 +1,6 @@
 package com.zephyr.app.vpn
 
+import com.zephyr.app.ui.common.sceneName
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -66,7 +67,7 @@ object Notifications {
         val down = t?.let { ZFormat.rate(it.downBps) } ?: ("0" to "B")
         val up = t?.let { ZFormat.rate(it.upBps) } ?: ("0" to "B")
         val speed = "${down.first} ${down.second}/s ↓ · ${up.first} ${up.second}/s ↑"
-        val route = if (c.mode == ProxyMode.GLOBAL) ctx.getString(R.string.notif_route_global, globalNode ?: ctx.getString(R.string.notif_route_global_any)) else scenes.joinToString(" · ") { "${it.name} ${it.selected.name}" }
+        val route = if (c.mode == ProxyMode.GLOBAL) ctx.getString(R.string.notif_route_global, globalNode ?: ctx.getString(R.string.notif_route_global_any)) else scenes.joinToString(" · ") { "${ctx.resources.sceneName(it)} ${it.selected.name}" }
         // Uptime is a system chronometer (review W-P2-1): it ticks without us re-posting the notification every second.
         c.since?.let { b.setWhen(it).setShowWhen(true).setUsesChronometer(true) }
         return b
