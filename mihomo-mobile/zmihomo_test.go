@@ -11,6 +11,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/metacubex/mihomo/log"
 )
 
 // 冒烟：嵌入式启动 mihomo（混合端口 + unix 控制器），能连上端口与控制器，再干净停止。
@@ -121,5 +123,24 @@ func TestLogRing(t *testing.T) {
 	}
 	if _, none := logsSince(seq, "debug", 0); len(none) != 0 {
 		t.Fatal("since is exclusive")
+	}
+}
+
+func TestLogCollectorFollowsLevel(t *testing.T) {
+	prev := log.Level()
+	defer log.SetLevel(prev)
+	seq, _ := logsSince(0, "debug", 1)
+	log.SetLevel(log.WARNING)
+	collect(log.Event{LogLevel: log.DEBUG, Payload: "dbg"})
+	collect(log.Event{LogLevel: log.INFO, Payload: "inf"})
+	collect(log.Event{LogLevel: log.WARNING, Payload: "warn"})
+	_, got := logsSince(seq, "debug", 0)
+	if len(got) != 1 || got[0].Msg != "warn" {
+		t.Fatalf("log-level warning 时只收 warning 及以上：%+v", got)
+	}
+	log.SetLevel(log.DEBUG)
+	collect(log.Event{LogLevel: log.DEBUG, Payload: "dbg2"})
+	if _, got := logsSince(seq, "debug", 0); len(got) != 2 || got[1].Msg != "dbg2" {
+		t.Fatalf("调到 debug 后收 debug：%+v", got)
 	}
 }

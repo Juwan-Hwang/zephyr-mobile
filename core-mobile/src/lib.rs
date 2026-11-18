@@ -7,6 +7,7 @@
 //! - `engine`：UniFFI 对象 `MobileCore`
 //! - `mock`：原型数据生成器移植（基准与一致性测试）
 //! - `import_payload`：二维码 / 剪贴板导入载荷解析（contract §15）
+//! - `fetch_policy`：订阅拉取的 SSRF 判定（contract §16.i）
 
 #![allow(clippy::type_complexity)] // 索引/缓存元组类型集中在少数内部函数，拆别名反而难读
 uniffi::setup_scaffolding!("zephyr_mobile_core");
@@ -15,6 +16,7 @@ pub mod diff;
 pub mod engine;
 pub mod error;
 pub mod failover;
+pub mod fetch_policy;
 pub mod geo;
 pub mod import_payload;
 pub mod latency;

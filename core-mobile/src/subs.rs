@@ -49,6 +49,9 @@ pub struct SubscriptionsSummary {
     pub total_nodes: i64,
 }
 
+/// 自动更新间隔上限（小时），与 §15 导入码 `auto` 的范围一致。
+pub const MAX_AUTO_UPDATE_HOURS: i32 = 720;
+
 /// 平台拉取结果。
 #[derive(Debug, Clone, uniffi::Record)]
 pub struct FetchedSubscription {
@@ -279,14 +282,29 @@ impl SubStore {
         self.save()
     }
 
+    /// 改自动更新间隔（小时，0 = 手动更新；契约 §15 导入码同范围 0–720）。
+    pub fn set_auto_update(&mut self, id: &str, hours: i32) -> Result<Subscription, MobileError> {
+        if !(0..=MAX_AUTO_UPDATE_HOURS).contains(&hours) {
+            return Err(MobileError::Invalid(format!("自动更新间隔超出范围（0–{MAX_AUTO_UPDATE_HOURS} 小时）：{hours}")));
+        }
+        let i = self.find(id)?;
+        if self.entries[i].meta.auto_update_hours != hours {
+            self.entries[i].meta.auto_update_hours = hours;
+            self.save()?;
+        }
+        Ok(self.entries[i].meta.clone())
+    }
+
     pub fn full_url(&self, id: &str) -> Result<Option<String>, MobileError> {
         Ok(self.entries[self.find(id)?].full_url.clone())
     }
 
-    /// 自动更新到期的订阅 id（平台后台任务调用）。
+    /// 自动更新到期的订阅 id（平台后台任务调用）。没有 url 的本地订阅（剪贴板正文 / 文件导入）
+    /// 无从拉取，永不到期（契约 §16.g，E31）。
     pub fn due(&self, now_millis: i64) -> Vec<String> {
         self.entries
             .iter()
+            .filter(|e| e.full_url.is_some())
             .filter(|e| e.meta.auto_update_hours > 0 && e.meta.updated_at.is_none_or(|t| now_millis - t >= e.meta.auto_update_hours as i64 * 3_600_000))
             .map(|e| e.meta.id.clone())
             .collect()
@@ -383,8 +401,29 @@ mod tests {
         assert_eq!(s2.due(2000 + 24 * 3_600_000), vec![sub.id.clone()]);
 
         let mut s3 = s2;
+        assert_eq!(s3.set_auto_update(&sub.id, 0).unwrap().auto_update_hours, 0);
+        assert_eq!(s3.due(2000 + 240 * 3_600_000), Vec::<String>::new(), "0 = 手动，永不到期");
+        assert!(matches!(s3.set_auto_update(&sub.id, 721), Err(MobileError::Invalid(_))));
+        assert!(matches!(s3.set_auto_update(&sub.id, -1), Err(MobileError::Invalid(_))));
+        assert!(matches!(s3.set_auto_update("nope", 6), Err(MobileError::SubscriptionNotFound(_))));
+        s3.set_auto_update(&sub.id, 6).unwrap();
+        assert_eq!(SubStore::open(d.path()).unwrap().list()[0].auto_update_hours, 6, "落盘");
+        assert_eq!(s3.due(2000 + 6 * 3_600_000), vec![sub.id.clone()]);
         s3.delete(&sub.id).unwrap();
         assert!(matches!(s3.delete(&sub.id), Err(MobileError::SubscriptionNotFound(_))));
         assert_eq!(SubStore::open(d.path()).unwrap().summary().count, 0);
+    }
+
+    #[test]
+    fn due_skips_local_subscriptions_without_url() {
+        let d = tempfile::tempdir().unwrap();
+        let mut s = SubStore::open(d.path()).unwrap();
+        let body = y(&[("香港 01", "a.example", 443)], &["MATCH,DIRECT"]);
+        let local = s.import("剪贴板".into(), None, &f(body.clone(), 0), 12).unwrap();
+        let remote = s.import("Nebula".into(), Some("https://sub.example.com/s?token=T".into()), &f(body, 0), 12).unwrap();
+        assert_eq!(local.auto_update_hours, 12);
+        let later = 100 * 3_600_000;
+        assert_eq!(s.due(later), vec![remote.id.clone()], "本地订阅无 url，永不到期");
+        assert!(!SubStore::open(d.path()).unwrap().due(later).contains(&local.id), "重开后同样排除");
     }
 }
