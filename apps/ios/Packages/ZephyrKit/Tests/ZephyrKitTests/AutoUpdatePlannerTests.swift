@@ -16,10 +16,25 @@ final class AutoUpdatePlannerTests: XCTestCase {
         XCTAssertEqual(AutoUpdatePlanner.due(subs, settings: nil, now: now), ["old", "exact", "never"])
     }
 
-    func testPerSubscriptionIntervalWinsAndFallsBackToSettings() {
-        let subs = [sub("daily", updatedHoursAgo: 13, every: 24), sub("fast", updatedHoursAgo: 3, every: 2),
-                    sub("inherit", updatedHoursAgo: 7, every: 0)]
-        XCTAssertEqual(AutoUpdatePlanner.due(subs, settings: nil, now: now), ["fast"], "inherit 无设置 → 12h，7h 未到")
+    func testPerSubscriptionIntervalWins() {
+        let subs = [sub("daily", updatedHoursAgo: 13, every: 24), sub("fast", updatedHoursAgo: 3, every: 2)]
+        XCTAssertEqual(AutoUpdatePlanner.due(subs, settings: nil, now: now), ["fast"])
+    }
+
+    // E29：≤ 0 = 手动更新，与核心 dueSubscriptions 一致；不回落到设置或 12 h。
+    func testZeroOrNegativeIntervalMeansManualOnly() {
+        let subs = [sub("manual", updatedHoursAgo: 500, every: 0), sub("neg", updatedHoursAgo: 500, every: -1),
+                    sub("manualNever", updatedHoursAgo: nil, every: 0), sub("auto", updatedHoursAgo: 13, every: 12)]
+        XCTAssertEqual(AutoUpdatePlanner.due(subs, settings: nil, now: now), ["auto"])
+        XCTAssertEqual(AutoUpdatePlanner.due(subs, settings: settings(autoUpdateHours: 1), now: now), ["auto"],
+                       "设置里的间隔不覆盖订阅自己的“手动”")
+    }
+
+    private func settings(autoUpdateHours: Int32) -> Settings {
+        Settings(onDemand: false, trustedWifi: [], disconnectOnTrusted: false, localProxyPort: 7890, localProxyAuth: false,
+                 testOnWifiOnly: true, latencyTtlHours: 24, autoUpdateHours: autoUpdateHours, updateOnWifiOnly: true,
+                 showChangesBeforeUpdate: false, dns: DnsSettings(), tun: TunSettings(), accent: .blue,
+                 appearance: .system, shareAnonymousPattern: true)
     }
 
     func testRecentAttemptBacksOff() {

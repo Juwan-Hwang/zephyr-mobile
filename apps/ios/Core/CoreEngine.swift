@@ -741,10 +741,12 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
             items = [(name: nil, url: CoreEngine.httpURL(p), auto: nil)]
         }
 
+        // 契约 §15：`item.autoUpdateHours ?? 默认`，默认取设置里的自动更新间隔（E32，与 Android 一致）。
+        let defaultHours = loadSettings().autoUpdateHours
         var first: ZephyrKit.Subscription?
         for it in items {
             if Task.isCancelled { break }
-            let s = try await importOne(c, url: it.url, body: p, name: it.name, autoUpdateHours: it.auto ?? 12)
+            let s = try await importOne(c, url: it.url, body: p, name: it.name, autoUpdateHours: it.auto ?? defaultHours)
             if first == nil { first = s }
         }
         invalidateNodes()

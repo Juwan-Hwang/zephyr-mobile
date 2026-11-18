@@ -143,6 +143,8 @@ final class EngineTests: XCTestCase {
         // 契约 §15：桌面"同步到手机"二维码
         let synced = try await e.importSubscription(source: .qr, payload: "zephyr://import?url=https%3A%2F%2Fa.example.com%2Fs&name=Nebula%20Sync&auto=6")
         XCTAssertEqual(synced.name, "Nebula Sync")
+        XCTAssertEqual(synced.autoUpdateHours, 6, "导入码自带间隔优先（契约 §15）")
+        XCTAssertEqual(imported.autoUpdateHours, 12, "无间隔时取设置 autoUpdateHours（E32）")
         try await e.deleteSubscription(id: synced.id)
         do { _ = try await e.importSubscription(source: .qr, payload: "zephyr://import?v=2&url=https%3A%2F%2Fa.example.com"); XCTFail("新版本导入码应拒绝") }
         catch let err as ZephyrError { XCTAssertEqual(err.code, .subscriptionInvalid) }
