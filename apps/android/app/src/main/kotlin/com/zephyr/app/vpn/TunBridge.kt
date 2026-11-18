@@ -45,6 +45,7 @@ interface TunBridge {
             Mihomo.setMemoryLimit(MEMORY_LIMIT)
             sock.delete() // stale socket from a crashed run would make the listener fail
             val err = withContext(Dispatchers.IO) { Mihomo.start(sock.parentFile!!.path, cfg, sock.path) }
+            if (err == null) engine.tunnelStarted() // usage ledger: a fresh core counts from zero (audit E39)
             if (err == null) engine.reloader = {
                 // Scene/exception/override changes that need new groups or rules: same fd, fresh config.
                 val s = engine.settings().first(); val m = engine.connectionState().first().mode
@@ -58,6 +59,8 @@ interface TunBridge {
     companion object {
         /** Go soft limit for the VPN process (spec: core ≤ 60 MB RSS steady state on Android). */
         const val MEMORY_LIMIT = 48L * 1024 * 1024
+        const val MTU_MIN = 1280
+        const val MTU_MAX = 9000
 
         suspend fun pick(ctx: Context, engine: ZephyrEngine, settings: Settings, mode: ProxyMode): TunBridge {
             val core = engine as? CoreEngine
@@ -80,13 +83,16 @@ interface TunBridge {
 
         /** Tun parameters shared with core config (fake-ip range 198.18.0.0/15, like desktop TUN). */
         fun configure(b: VpnService.Builder, mtu: Int, ipv6: Boolean, excluded: List<String>, self: String): VpnService.Builder = b.apply {
-            setMtu(mtu)
+            // Audit E16: same clamp as iOS TunnelConfiguration (settings already reject < 576 / > 9000).
+            setMtu(mtu.coerceIn(MTU_MIN, MTU_MAX))
             addAddress("198.18.0.1", 30)
             addRoute("0.0.0.0", 0)
             addDnsServer("198.18.0.2")
             if (ipv6) { addAddress("fdfe:dcba:9876::1", 126); addRoute("::", 0) }
             setBlocking(false)
-            if (android.os.Build.VERSION.SDK_INT >= 29) setMetered(false) // API 29+; on Android 9 this crashed VPN start
+            // Audit E04: no setMetered(false). The VPN stays "metered if its underlying network is", and the service
+            // keeps setUnderlyingNetworks pointed at the real network, so apps (and WorkManager's UNMETERED) see
+            // cellular as metered.
             runCatching { addDisallowedApplication(self) }
             excluded.forEach { runCatching { addDisallowedApplication(it) } }
         }

@@ -382,6 +382,7 @@
     <string name="settings_section_connection">连接</string>
     <string name="settings_on_demand">按需连接</string>
     <string name="settings_trusted_wifi_hint">连接后自动断开</string>
+    <string name="settings_trusted_wifi_location">允许访问位置信息以识别 Wi‑Fi 名称</string>
     <string name="settings_password_required">需要密码</string>
     <string name="settings_section_testing">检测</string>
     <string name="settings_test_wifi_only">仅在 Wi‑Fi 下测速</string>

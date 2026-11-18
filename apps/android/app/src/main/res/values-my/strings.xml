@@ -357,6 +357,7 @@
     <string name="settings_section_connection">ချိတ်ဆက်မှု</string>
     <string name="settings_on_demand">လိုအပ်မှ ချိတ်ဆက်ရန်</string>
     <string name="settings_trusted_wifi_hint">ချိတ်မိလျှင် အလိုအလျောက် အဆက်ဖြတ်</string>
+    <string name="settings_trusted_wifi_location">Wi‑Fi အမည်များကို သိရှိရန် တည်နေရာ ခွင့်ပြုပါ</string>
     <string name="settings_password_required">စကားဝှက် လိုအပ်သည်</string>
     <string name="settings_section_testing">စမ်းသပ်ခြင်း</string>
     <string name="settings_test_wifi_only">Wi‑Fi ဖြင့်သာ အမြန်နှုန်း စမ်းသပ်ရန်</string>

@@ -14,8 +14,9 @@ import java.util.concurrent.TimeUnit
 
 /**
  * Hourly sweep for subscriptions whose own auto-update interval has elapsed (core's `dueSubscriptions`).
- * Hourly is the floor, not the cadence: a 24 h subscription is fetched once a day. Needs a network,
- * prefers not to run on a low battery; WorkManager survives reboots and app death.
+ * Hourly is the floor, not the cadence: a 24 h subscription is fetched once a day. Needs a network — an
+ * unmetered one while 「仅 Wi‑Fi 更新」 is on (audit E30) — and prefers not to run on a low battery;
+ * WorkManager survives reboots and app death. Manual「立即更新」 is not affected.
  */
 class SubscriptionWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params) {
     override suspend fun doWork(): Result {
@@ -26,11 +27,14 @@ class SubscriptionWorker(ctx: Context, params: WorkerParameters) : CoroutineWork
 
     companion object {
         private const val NAME = "zephyr.subscriptions.due"
-        fun schedule(ctx: Context) {
+        fun networkType(wifiOnly: Boolean): NetworkType = if (wifiOnly) NetworkType.UNMETERED else NetworkType.CONNECTED
+
+        /** UPDATE keeps the period's progress and swaps the constraints when the setting changes. */
+        fun schedule(ctx: Context, wifiOnly: Boolean) {
             val req = PeriodicWorkRequestBuilder<SubscriptionWorker>(1, TimeUnit.HOURS)
-                .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).setRequiresBatteryNotLow(true).build())
+                .setConstraints(Constraints.Builder().setRequiredNetworkType(networkType(wifiOnly)).setRequiresBatteryNotLow(true).build())
                 .build()
-            WorkManager.getInstance(ctx).enqueueUniquePeriodicWork(NAME, ExistingPeriodicWorkPolicy.KEEP, req)
+            runCatching { WorkManager.getInstance(ctx).enqueueUniquePeriodicWork(NAME, ExistingPeriodicWorkPolicy.UPDATE, req) }
         }
     }
 }

@@ -417,6 +417,7 @@
     <string name="settings_section_connection">Conexión</string>
     <string name="settings_on_demand">Conexión a petición</string>
     <string name="settings_trusted_wifi_hint">Desconectar automáticamente al unirse</string>
+    <string name="settings_trusted_wifi_location">Permite el acceso a la ubicación para reconocer las redes Wi‑Fi</string>
     <string name="settings_password_required">Solicitar contraseña</string>
     <string name="settings_section_testing">Pruebas</string>
     <string name="settings_test_wifi_only">Probar velocidad solo con Wi‑Fi</string>

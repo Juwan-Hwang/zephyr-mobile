@@ -7,6 +7,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.zephyr.engine.Settings
 import com.zephyr.engine.ZephyrEngine
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -32,8 +33,17 @@ class SettingsStore(private val context: Context, private val engine: ZephyrEngi
     init {
         scope.launch {
             context.store.data.first()[keySettings]?.let { raw ->
-                runCatching { json.decodeFromString(Settings.serializer(), raw) }.getOrNull()?.let { engine.updateSettings(it) }
+                // Audit E16: an older build may have stored out-of-range values; bring them into range, never crash.
+                runCatching { json.decodeFromString(Settings.serializer(), raw) }.getOrNull()
+                    ?.let { runCatching { engine.updateSettings(com.zephyr.engine.core.CoreEngine.sanitized(it)) } }
             }
+            // Audit E30: the subscription sweep follows 「仅 Wi‑Fi 更新」 (UNMETERED constraint), re-armed when it changes.
+            launch {
+                engine.settings().map { it.updateOnWifiOnly }.distinctUntilChanged()
+                    .collect { com.zephyr.app.vpn.SubscriptionWorker.schedule(context, wifiOnly = it) }
+            }
+            // Audit E44: the usage widget rolls over to an empty day at local midnight even while disconnected.
+            com.zephyr.app.widget.MidnightWidgetWorker.schedule(context)
             launch { engine.settings().collect { s -> syncSystemNightMode(s.appearance) } }
             engine.settings().drop(1).collect { s ->
                 context.store.edit { it[keySettings] = json.encodeToString(Settings.serializer(), s) }

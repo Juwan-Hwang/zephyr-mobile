@@ -357,6 +357,7 @@
     <string name="settings_section_connection">연결</string>
     <string name="settings_on_demand">요청 시 연결</string>
     <string name="settings_trusted_wifi_hint">연결되면 자동으로 해제</string>
+    <string name="settings_trusted_wifi_location">Wi‑Fi 이름을 확인하려면 위치 접근 허용</string>
     <string name="settings_password_required">암호 요구</string>
     <string name="settings_section_testing">테스트</string>
     <string name="settings_test_wifi_only">Wi‑Fi에서만 속도 테스트</string>
