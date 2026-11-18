@@ -5,6 +5,12 @@
     <string name="common_close">닫기</string>
     <string name="common_clear">지우기</string>
     <string name="common_latency_timeout">타임아웃</string>
+    <string name="common_latency_a11y_untested">지연 시간 측정 안 됨</string>
+    <string name="common_latency_a11y_testing">지연 시간 측정 중</string>
+    <string name="common_latency_a11y_timeout">지연 시간 초과</string>
+    <plurals name="common_latency_a11y_ms">
+        <item quantity="other">지연 시간 %1$d밀리초</item>
+    </plurals>
     <string name="common_traffic_a11y">다운로드 초당 %1$s %2$s, 업로드 초당 %3$s %4$s</string>
     <string name="common_time_just_now">방금</string>
     <string name="common_time_just_now_inline">방금</string>

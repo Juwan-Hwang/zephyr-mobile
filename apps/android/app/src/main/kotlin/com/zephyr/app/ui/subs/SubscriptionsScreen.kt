@@ -44,6 +44,7 @@ import com.zephyr.design.components.ZListGroup
 import com.zephyr.design.components.ZProgressBar
 import com.zephyr.design.components.ZSectionHeader
 import com.zephyr.design.components.ZSettingsRow
+import com.zephyr.design.components.ZSheet
 import com.zephyr.design.components.ZText
 import com.zephyr.design.components.ZToggle
 import com.zephyr.design.format.ZFormat
@@ -68,7 +69,13 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
     val now by androidx.compose.runtime.produceState(clock()) { while (true) { kotlinx.coroutines.delay(60_000); value = clock() } }
     var updating by remember { mutableStateOf(false) }
     val res = LocalResources.current
+    // Audit U14 (iOS SubscriptionsModel.metered/others): the traffic card lists subscriptions with traffic info; the rest
+    // fold into "其他 N 个 ›", which opens the full list. Mock data also counts its summary-only subscriptions there.
+    val metered = subs.filter { it.totalBytes != null || it.remainingBytes != null }
+    val unmetered = subs.filter { it.totalBytes == null && it.remainingBytes == null }
+    var showAll by remember { mutableStateOf(false) }
 
+    Box(Modifier.fillMaxSize()) {
     PageScaffold(back, stringResource(R.string.common_subscriptions), onBack, trailing = { ZIconButton(ZIcons.Plus, stringResource(R.string.subs_add), onImport, tint = c.accent) }) {
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
             Row(Modifier.padding(horizontal = 22.dp), verticalAlignment = Alignment.Bottom) {
@@ -103,7 +110,7 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
             Spacer(Modifier.height(18.dp))
             ZSectionHeader(stringResource(R.string.subs_section_data), trailing = stringResource(R.string.subs_this_month))
             ZCard(Modifier.padding(horizontal = 16.dp)) {
-                subs.forEachIndexed { i, s ->
+                metered.forEachIndexed { i, s ->
                     if (i > 0) ZDivider(inset = false)
                     val soon = (s.expiresAt ?: Long.MAX_VALUE) - now < 3 * 86_400_000L
                     val armed = pendingDelete == s.id
@@ -136,11 +143,17 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
                     }
                     }
                 }
-                val others = summary.count - subs.size
+                val listed = (summary.count - subs.size).coerceAtLeast(0)
+                val others = unmetered.size + listed
                 if (others > 0) {
-                    ZDivider(inset = false)
-                    val otherNodes = summary.totalNodes - subs.sumOf { it.nodeCount }
-                    ZSettingsRow(pluralStringResource(R.plurals.subs_others, others, others), subtitle = pluralStringResource(R.plurals.common_node_count, otherNodes.toPluralCount(), ZFormat.grouped(otherNodes)))
+                    if (metered.isNotEmpty()) ZDivider(inset = false)
+                    val unlisted = if (listed > 0) (summary.totalNodes - subs.sumOf { it.nodeCount }).coerceAtLeast(0) else 0L
+                    val otherNodes = unmetered.sumOf { it.nodeCount } + unlisted
+                    ZSettingsRow(
+                        pluralStringResource(R.plurals.subs_others, others, others),
+                        subtitle = pluralStringResource(R.plurals.common_node_count, otherNodes.toPluralCount(), ZFormat.grouped(otherNodes)),
+                        chevron = true, onClick = { showAll = true },
+                    )
                 }
             }
             error?.let { e ->
@@ -164,6 +177,34 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
             }
             Spacer(Modifier.height(48.dp))
         }
+    }
+    AllSubscriptionsSheet(showAll, subs, now, onDismiss = { showAll = false })
+    }
+}
+
+/** "全部订阅" (audit U14, iOS SubscriptionsAllView): every subscription with its node count and expiry. */
+@Composable
+private fun androidx.compose.foundation.layout.BoxScope.AllSubscriptionsSheet(visible: Boolean, subs: List<com.zephyr.engine.Subscription>, now: Long, onDismiss: () -> Unit) {
+    val c = ZTheme.colors
+    val res = LocalResources.current
+    ZSheet(visible, onDismiss, stringResource(R.string.subs_all_title)) {
+        ZListGroup {
+            subs.forEachIndexed { i, s ->
+                if (i > 0) ZDivider()
+                ZSettingsRow(
+                    s.name,
+                    subtitle = pluralStringResource(R.plurals.common_node_count, s.nodeCount.toPluralCount(), ZFormat.grouped(s.nodeCount)) +
+                        (s.expiresAt?.let { " · " + ZFormat.expires(res, it, now) } ?: ""),
+                    value = s.remainingBytes?.let(ZFormat::bytesText),
+                )
+            }
+        }
+        val nodes = subs.sumOf { it.nodeCount }
+        ZText(
+            "${ZFormat.grouped(subs.size.toLong())} " + pluralStringResource(R.plurals.subs_total_unit, subs.size) + " · " +
+                pluralStringResource(R.plurals.common_node_count, nodes.toPluralCount(), ZFormat.grouped(nodes)),
+            Modifier.padding(horizontal = 22.dp, vertical = 12.dp), style = ZTheme.type.footnote, color = c.text3,
+        )
     }
 }
 

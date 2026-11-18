@@ -128,6 +128,9 @@
     <string name="scene_uhd_only">4K နုဒ်များသာ</string>
     <string name="scene_pinned_value">%1$s (ပုံသေ)</string>
     <string name="scene_retest">ပြန်စမ်းသပ်ရန်</string>
+    <string name="scene_funnel_tested">စမ်းသပ်ပြီး</string>
+    <string name="scene_funnel_reachable">ချိတ်ဆက်နိုင်</string>
+    <string name="scene_funnel_under">%1$d ms အောက်</string>
     <string name="scene_note">ရွေးချယ်မှုများကို Zephyr တွင်သာ သိမ်းသည်။ စာရင်းသွင်းမှု ဖွဲ့စည်းပုံ မပြောင်းပါ။</string>
     <string name="scene_note_tested">%1$s နောက်ဆုံး စမ်းသပ်ချိန်: %2$s။</string>
     <string name="command_placeholder">ရှာရန် သို့မဟုတ် ညွှန်ကြားချက် ထည့်ပါ</string>
@@ -231,6 +234,12 @@
     <string name="nodes_no_match">“%1$s” နှင့် ကိုက်ညီသော နုဒ် မရှိပါ</string>
     <string name="nodes_tested">%1$s ခု စမ်းသပ်ပြီး</string>
     <string name="nodes_jump_to">%1$s သို့ သွားရန်</string>
+    <string name="nodes_detail_protocol">ပရိုတိုကော</string>
+    <string name="nodes_detail_latency">နောက်ကျမှု</string>
+    <string name="nodes_detail_server">ဆာဗာ</string>
+    <string name="nodes_detail_route">လမ်းကြောင်း</string>
+    <string name="nodes_detail_test">နောက်ကျမှု စမ်းသပ်ရန်</string>
+    <string name="nodes_error_title">နုဒ်များကို ဖွင့်၍ မရပါ</string>
     <string name="rules_add_override_a11y">ဒိုမိန်းအတွက် အစားထိုးချက် ထည့်ရန်</string>
     <plurals name="rules_total_unit">
         <item quantity="other">ခု</item>
@@ -293,6 +302,7 @@
     <string name="subs_error_update">%1$s ကို အပ်ဒိတ်လုပ်၍ မရပါ</string>
     <string name="subs_error_delete">%1$s ကို ဖျက်၍ မရပါ</string>
     <string name="subs_remaining">ကျန်ရှိ</string>
+    <string name="subs_all_title">စာရင်းသွင်းမှုများ အားလုံး</string>
     <plurals name="subs_others" tools:ignore="StringFormatMatches">
         <item quantity="other">အခြား %1$d ခု</item>
     </plurals>

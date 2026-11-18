@@ -135,6 +135,9 @@
     <string name="scene_uhd_only">Diňe 4K düwünler</string>
     <string name="scene_pinned_value">%1$s (berkidilen)</string>
     <string name="scene_retest">Gaýtadan barla</string>
+    <string name="scene_funnel_tested">Barlanan</string>
+    <string name="scene_funnel_reachable">Birikip bolýan</string>
+    <string name="scene_funnel_under">%1$d ms-den az</string>
     <string name="scene_note">Saýlananlar diňe Zephyr-de saklanýar. Abunaňyzyň konfigurasiýasy üýtgemeýär.</string>
     <string name="scene_note_tested">%1$s Soňky barlag: %2$s.</string>
     <string name="command_placeholder">Gözle ýa-da buýruk ýaz</string>
@@ -249,6 +252,12 @@
     <string name="nodes_no_match">“%1$s” bilen gabat gelýän düwün ýok</string>
     <string name="nodes_tested">%1$s barlandy</string>
     <string name="nodes_jump_to">%1$s bölümine geç</string>
+    <string name="nodes_detail_protocol">Protokol</string>
+    <string name="nodes_detail_latency">Gijikme</string>
+    <string name="nodes_detail_server">Serwer</string>
+    <string name="nodes_detail_route">Ugur</string>
+    <string name="nodes_detail_test">Gijikmäni barla</string>
+    <string name="nodes_error_title">Düwünler ýüklenmedi</string>
     <string name="rules_add_override_a11y">Domen üçin aýratyn düzgün goş</string>
     <plurals name="rules_total_unit">
         <item quantity="one">düzgün</item>
@@ -316,6 +325,7 @@
     <string name="subs_error_update">%1$s täzeläp bolmady</string>
     <string name="subs_error_delete">%1$s pozup bolmady</string>
     <string name="subs_remaining">Galan</string>
+    <string name="subs_all_title">Ähli abunalar</string>
     <plurals name="subs_others">
         <item quantity="one">Ýene %1$d</item>
         <item quantity="other">Ýene %1$d</item>

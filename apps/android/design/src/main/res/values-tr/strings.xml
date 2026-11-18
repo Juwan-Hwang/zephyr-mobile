@@ -5,6 +5,13 @@
     <string name="common_close">Kapat</string>
     <string name="common_clear">Temizle</string>
     <string name="common_latency_timeout">Zaman aşımı</string>
+    <string name="common_latency_a11y_untested">Gecikme test edilmedi</string>
+    <string name="common_latency_a11y_testing">Gecikme test ediliyor</string>
+    <string name="common_latency_a11y_timeout">Gecikme: zaman aşımı</string>
+    <plurals name="common_latency_a11y_ms">
+        <item quantity="one">Gecikme %1$d milisaniye</item>
+        <item quantity="other">Gecikme %1$d milisaniye</item>
+    </plurals>
     <string name="common_traffic_a11y">İndirme saniyede %1$s %2$s, yükleme saniyede %3$s %4$s</string>
     <string name="common_time_just_now">Az önce</string>
     <string name="common_time_just_now_inline">az önce</string>

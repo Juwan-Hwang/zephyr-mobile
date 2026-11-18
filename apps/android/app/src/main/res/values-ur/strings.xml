@@ -141,6 +141,9 @@
     <string name="scene_uhd_only">صرف 4K نوڈز</string>
     <string name="scene_pinned_value">\u2068%1$s\u2069 (پن شدہ)</string>
     <string name="scene_retest">دوبارہ ٹیسٹ کریں</string>
+    <string name="scene_funnel_tested">ٹیسٹ شدہ</string>
+    <string name="scene_funnel_reachable">قابلِ رسائی</string>
+    <string name="scene_funnel_under">%1$d ms سے کم</string>
     <string name="scene_note">انتخاب صرف Zephyr میں محفوظ ہوتے ہیں۔ آپ کی سبسکرپشن کی کنفیگریشن تبدیل نہیں ہوتی۔</string>
     <string name="scene_note_tested">\u2068%1$s\u2069 آخری ٹیسٹ: \u2068%2$s\u2069۔</string>
 
@@ -265,6 +268,12 @@
     <string name="nodes_no_match">“\u2068%1$s\u2069” سے کوئی نوڈ میل نہیں کھاتا</string>
     <string name="nodes_tested">\u2068%1$s\u2069 ٹیسٹ کیے گئے</string>
     <string name="nodes_jump_to">\u2068%1$s\u2069 پر جائیں</string>
+    <string name="nodes_detail_protocol">پروٹوکول</string>
+    <string name="nodes_detail_latency">تاخیر</string>
+    <string name="nodes_detail_server">سرور</string>
+    <string name="nodes_detail_route">روٹ</string>
+    <string name="nodes_detail_test">تاخیر ٹیسٹ کریں</string>
+    <string name="nodes_error_title">نوڈز لوڈ نہیں ہو سکے</string>
 
     <!-- ── Rules ── -->
     <string name="rules_add_override_a11y">ڈومین کے لیے اوور رائیڈ شامل کریں</string>
@@ -336,6 +345,7 @@
     <string name="subs_error_update">\u2068%1$s\u2069 اپ ڈیٹ نہیں ہو سکا</string>
     <string name="subs_error_delete">\u2068%1$s\u2069 حذف نہیں ہو سکا</string>
     <string name="subs_remaining">باقی</string>
+    <string name="subs_all_title">تمام سبسکرپشنز</string>
     <plurals name="subs_others">
         <item quantity="one">%1$d دیگر</item>
         <item quantity="other">%1$d دیگر</item>

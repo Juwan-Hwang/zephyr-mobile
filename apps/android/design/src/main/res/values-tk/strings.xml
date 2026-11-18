@@ -5,6 +5,13 @@
     <string name="common_close">Ýap</string>
     <string name="common_clear">Arassala</string>
     <string name="common_latency_timeout">Wagt gutardy</string>
+    <string name="common_latency_a11y_untested">Gijikme barlanmady</string>
+    <string name="common_latency_a11y_testing">Gijikme barlanýar</string>
+    <string name="common_latency_a11y_timeout">Gijikme: wagt gutardy</string>
+    <plurals name="common_latency_a11y_ms">
+        <item quantity="one">Gijikme %1$d millisekunt</item>
+        <item quantity="other">Gijikme %1$d millisekunt</item>
+    </plurals>
     <string name="common_traffic_a11y">Ýükleme sekuntda %1$s %2$s, iberme sekuntda %3$s %4$s</string>
     <string name="common_time_just_now">Ýaňy</string>
     <string name="common_time_just_now_inline">ýaňy</string>

@@ -135,6 +135,9 @@
     <string name="scene_uhd_only">Yalnızca 4K düğümler</string>
     <string name="scene_pinned_value">%1$s (sabit)</string>
     <string name="scene_retest">Yeniden test et</string>
+    <string name="scene_funnel_tested">Test edilen</string>
+    <string name="scene_funnel_reachable">Erişilebilir</string>
+    <string name="scene_funnel_under">%1$d ms altı</string>
     <string name="scene_note">Seçimler yalnızca Zephyr’de saklanır. Abonelik yapılandırmanız değişmez.</string>
     <string name="scene_note_tested">%1$s Son test: %2$s.</string>
     <string name="command_placeholder">Arayın veya komut girin</string>
@@ -249,6 +252,12 @@
     <string name="nodes_no_match">“%1$s” ile eşleşen düğüm yok</string>
     <string name="nodes_tested">%1$s test edildi</string>
     <string name="nodes_jump_to">%1$s bölümüne git</string>
+    <string name="nodes_detail_protocol">Protokol</string>
+    <string name="nodes_detail_latency">Gecikme</string>
+    <string name="nodes_detail_server">Sunucu</string>
+    <string name="nodes_detail_route">Hat</string>
+    <string name="nodes_detail_test">Gecikmeyi test et</string>
+    <string name="nodes_error_title">Düğümler yüklenemedi</string>
     <string name="rules_add_override_a11y">Alan adı için üzerine yazma ekle</string>
     <plurals name="rules_total_unit">
         <item quantity="one">kural</item>
@@ -316,6 +325,7 @@
     <string name="subs_error_update">%1$s güncellenemedi</string>
     <string name="subs_error_delete">%1$s silinemedi</string>
     <string name="subs_remaining">Kalan</string>
+    <string name="subs_all_title">Tüm abonelikler</string>
     <plurals name="subs_others">
         <item quantity="one">%1$d tane daha</item>
         <item quantity="other">%1$d tane daha</item>

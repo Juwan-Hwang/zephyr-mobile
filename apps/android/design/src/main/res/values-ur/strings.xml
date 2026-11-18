@@ -7,6 +7,13 @@
     <string name="common_close">بند کریں</string>
     <string name="common_clear">صاف کریں</string>
     <string name="common_latency_timeout">ٹائم آؤٹ</string>
+    <string name="common_latency_a11y_untested">تاخیر ٹیسٹ نہیں ہوئی</string>
+    <string name="common_latency_a11y_testing">تاخیر ٹیسٹ ہو رہی ہے</string>
+    <string name="common_latency_a11y_timeout">تاخیر: ٹائم آؤٹ</string>
+    <plurals name="common_latency_a11y_ms">
+        <item quantity="one">تاخیر %1$d ملی سیکنڈ</item>
+        <item quantity="other">تاخیر %1$d ملی سیکنڈ</item>
+    </plurals>
     <string name="common_traffic_a11y">ڈاؤن لوڈ \u2066%1$s %2$s\u2069 فی سیکنڈ، اپ لوڈ \u2066%3$s %4$s\u2069 فی سیکنڈ</string>
     <string name="common_time_just_now">ابھی ابھی</string>
     <string name="common_time_just_now_inline">ابھی ابھی</string>

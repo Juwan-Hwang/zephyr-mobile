@@ -169,6 +169,9 @@
     <string name="scene_uhd_only">عقد 4K فقط</string>
     <string name="scene_pinned_value">\u2068%1$s\u2069 (مثبّتة)</string>
     <string name="scene_retest">إعادة الاختبار</string>
+    <string name="scene_funnel_tested">مختبرة</string>
+    <string name="scene_funnel_reachable">قابلة للاتصال</string>
+    <string name="scene_funnel_under">أقل من %1$d ms</string>
     <string name="scene_note">تُحفظ الاختيارات في Zephyr فقط، ولا يتغيّر إعداد اشتراكك.</string>
     <string name="scene_note_tested">\u2068%1$s\u2069 آخر اختبار: \u2068%2$s\u2069.</string>
 
@@ -337,6 +340,12 @@
     <string name="nodes_no_match">لا توجد عقد تطابق «\u2068%1$s\u2069»</string>
     <string name="nodes_tested">تم اختبار \u2068%1$s\u2069</string>
     <string name="nodes_jump_to">الانتقال إلى \u2068%1$s\u2069</string>
+    <string name="nodes_detail_protocol">البروتوكول</string>
+    <string name="nodes_detail_latency">التأخير</string>
+    <string name="nodes_detail_server">الخادم</string>
+    <string name="nodes_detail_route">المسار</string>
+    <string name="nodes_detail_test">اختبار التأخير</string>
+    <string name="nodes_error_title">تعذّر تحميل العقد</string>
 
     <!-- ── Rules ── -->
     <string name="rules_add_override_a11y">إضافة تجاوز لنطاق</string>
@@ -428,6 +437,7 @@
     <string name="subs_error_update">تعذّر تحديث \u2068%1$s\u2069</string>
     <string name="subs_error_delete">تعذّر حذف \u2068%1$s\u2069</string>
     <string name="subs_remaining">المتبقي</string>
+    <string name="subs_all_title">كل الاشتراكات</string>
     <plurals name="subs_others">
         <item quantity="zero">%1$d اشتراك آخر</item>
         <item quantity="one">اشتراك آخر</item>

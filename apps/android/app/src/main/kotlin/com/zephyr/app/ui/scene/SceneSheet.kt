@@ -25,6 +25,7 @@ import com.zephyr.design.components.ZSheet
 import com.zephyr.design.components.ZText
 import com.zephyr.design.format.ZFormat
 import com.zephyr.design.theme.ZTheme
+import com.zephyr.engine.NodeFunnel
 import com.zephyr.engine.NodeSummary
 import com.zephyr.engine.Scene
 import com.zephyr.engine.SceneKind
@@ -34,9 +35,10 @@ import kotlinx.coroutines.flow.first
 
 /**
  * Scene detail (prototype `sceneSheet`, 804–823): count, source segment (订阅分组 / Zephyr 优选), the candidate
- * pool sorted by latency, then the scene's settings. Everything shown comes from the engine; the prototype's
- * funnel needs per-stage counts the contract does not carry yet, so it is left out rather than made up
- * (review H-P1-8). Read-only rows have no chevron and no press state.
+ * pool sorted by latency, then the scene's settings. Everything shown comes from the engine. The funnel under the
+ * segment is contract §15.c `nodeFunnel` (全部 → 已测速 → 可连通 → 延迟低于 300 ms, audit U11) and only shows for
+ * Zephyr 优选; the prototype's per-service steps ("可访问 GPT") need probes core does not run, so they are left out.
+ * Read-only rows have no chevron and no press state.
  */
 @Composable
 fun BoxScope.SceneSheet(
@@ -68,6 +70,18 @@ fun BoxScope.SceneSheet(
             { i -> val want = if (i == 1) SceneSource.AUTO else SceneSource.SUBSCRIPTION_GROUP; if (want != s.source) onSource(s, want) },
             Modifier.padding(horizontal = 16.dp),
         )
+        // §15.c/§15.e: same freshness window as the node list and scans (设置 › 结果保留).
+        val funnel by produceState<NodeFunnel?>(null, s.id, s.testedAt, s.source, s.nodeFilter) {
+            value = if (!pooled) null else runCatching {
+                val ttl = AppGraph.engine.settings().first().latencyTtlHours.coerceAtLeast(1) * 3_600_000L
+                AppGraph.engine.nodeFunnel(ttl, FUNNEL_THRESHOLD_MS)
+            }.getOrNull()
+        }
+        funnel?.takeIf { pooled && it.poolSize > 0 }?.let { f ->
+            Spacer(Modifier.height(18.dp))
+            SceneFunnel(funnelSteps(f))
+            Spacer(Modifier.height(6.dp))
+        }
         Spacer(Modifier.height(12.dp))
         if (pool.isNotEmpty()) {
             ZListGroup {
@@ -101,3 +115,6 @@ fun BoxScope.SceneSheet(
         )
     }
 }
+
+/** Funnel threshold: the prototype's "延迟低于 300 ms" (contract §15.c default). */
+private const val FUNNEL_THRESHOLD_MS = 300

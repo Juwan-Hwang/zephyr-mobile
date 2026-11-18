@@ -5,6 +5,13 @@
     <string name="common_close">Funga</string>
     <string name="common_clear">Futa</string>
     <string name="common_latency_timeout">Muda umeisha</string>
+    <string name="common_latency_a11y_untested">Kuchelewa hakujapimwa</string>
+    <string name="common_latency_a11y_testing">Inapima kuchelewa</string>
+    <string name="common_latency_a11y_timeout">Kuchelewa: muda umeisha</string>
+    <plurals name="common_latency_a11y_ms">
+        <item quantity="one">Kuchelewa milisekunde %1$d</item>
+        <item quantity="other">Kuchelewa milisekunde %1$d</item>
+    </plurals>
     <string name="common_traffic_a11y">Kupakua %1$s %2$s kwa sekunde, kupakia %3$s %4$s kwa sekunde</string>
     <string name="common_time_just_now">Sasa hivi</string>
     <string name="common_time_just_now_inline">sasa hivi</string>

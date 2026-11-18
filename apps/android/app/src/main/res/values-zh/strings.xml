@@ -134,6 +134,9 @@
     <string name="scene_uhd_only">仅 4K 节点</string>
     <string name="scene_pinned_value">%1$s（固定）</string>
     <string name="scene_retest">重新检测</string>
+    <string name="scene_funnel_tested">已测速</string>
+    <string name="scene_funnel_reachable">可连通</string>
+    <string name="scene_funnel_under">延迟低于 %1$d ms</string>
     <string name="scene_note">优选结果仅保存在 Zephyr 中，订阅配置保持原样。</string>
     <string name="scene_note_tested">%1$s 上次检测 %2$s。</string>
 
@@ -248,6 +251,12 @@
     <string name="nodes_no_match">没有与“%1$s”匹配的节点</string>
     <string name="nodes_tested">已检测 %1$s</string>
     <string name="nodes_jump_to">跳到 %1$s</string>
+    <string name="nodes_detail_protocol">协议</string>
+    <string name="nodes_detail_latency">延迟</string>
+    <string name="nodes_detail_server">服务器</string>
+    <string name="nodes_detail_route">线路</string>
+    <string name="nodes_detail_test">测速</string>
+    <string name="nodes_error_title">节点加载失败</string>
 
     <!-- ── Rules ── -->
     <string name="rules_add_override_a11y">为域名添加覆写</string>
@@ -314,6 +323,7 @@
     <string name="subs_error_update">无法更新 %1$s</string>
     <string name="subs_error_delete">无法删除 %1$s</string>
     <string name="subs_remaining">剩余</string>
+    <string name="subs_all_title">全部订阅</string>
     <plurals name="subs_others">
         <item quantity="other">其他 %1$d 个</item>
     </plurals>

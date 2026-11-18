@@ -124,6 +124,20 @@ data class NodeFilterPreview(
     val change: ExitChange?,
 )
 
+/**
+ * Contract §15.c `nodeFunnel`: per node only the latest sample counts; [tested] includes timeouts,
+ * [reachable] = ms ≥ 0, [underThreshold] = 0 ≤ ms < [thresholdMs].
+ */
+@Serializable
+data class NodeFunnel(
+    val sourceCount: Int,
+    val poolSize: Long,
+    val tested: Long,
+    val reachable: Long,
+    val underThreshold: Long,
+    val thresholdMs: Int,
+)
+
 /** Contract §15.d: platform-local progress of a scene re-test scan ("正在检测 138/512"); not part of the FFI. */
 data class ScanProgress(val done: Int, val total: Int) {
     val fraction: Float get() = if (total <= 0) 0f else (done.toFloat() / total).coerceIn(0f, 1f)

@@ -5,6 +5,15 @@
     <string name="common_close">Закрыть</string>
     <string name="common_clear">Очистить</string>
     <string name="common_latency_timeout">Тайм-аут</string>
+    <string name="common_latency_a11y_untested">Задержка не измерена</string>
+    <string name="common_latency_a11y_testing">Измерение задержки</string>
+    <string name="common_latency_a11y_timeout">Задержка: превышено время ожидания</string>
+    <plurals name="common_latency_a11y_ms">
+        <item quantity="one">Задержка %1$d миллисекунда</item>
+        <item quantity="few">Задержка %1$d миллисекунды</item>
+        <item quantity="many">Задержка %1$d миллисекунд</item>
+        <item quantity="other">Задержка %1$d миллисекунды</item>
+    </plurals>
     <string name="common_traffic_a11y">Загрузка %1$s %2$s в секунду, отдача %3$s %4$s в секунду</string>
     <string name="common_time_just_now">Только что</string>
     <string name="common_time_just_now_inline">только что</string>

@@ -39,6 +39,8 @@ data class NodesUi(
     val chips: List<Pair<String, Long>> = emptyList(),
     val subscriptionCount: Int = 0,
     val testedCount: Long = 0,
+    /** The query (or the page under it) failed: the list shows an error with "重试" instead of empty rows (audit U12). */
+    val failed: Boolean = false,
 )
 
 /**
@@ -62,7 +64,7 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
 
     init {
         viewModelScope.launch {
-            val idx = engine.nodeIndex()
+            val idx = runCatching { engine.nodeIndex() }.getOrNull() ?: return@launch
             val chips = idx.sections.filter { it.count > 0 }.sortedByDescending { it.count }.take(8).map { it.region to it.count }
             val subs = runCatching { engine.subscriptions().first().size }.getOrDefault(0)
             _ui.value = _ui.value.copy(total = idx.total, regionCount = idx.sections.size, testedCount = idx.testedCount, chips = chips, subscriptionCount = subs)
@@ -97,12 +99,20 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
     }
 
     private suspend fun run(q: String) {
-        val r = engine.queryNodes(q)
+        val r = try { engine.queryNodes(q) } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (_: Exception) {
+            _ui.value = _ui.value.copy(failed = true); return
+        }
         kotlinx.coroutines.currentCoroutineContext().ensureActive() // superseded by a newer query
         token = r.token
         pages.evictAll(); inflight.clear()
-        _ui.value = _ui.value.copy(result = r)
+        _ui.value = _ui.value.copy(result = r, failed = false)
         pageEpoch.intValue++
+    }
+
+    /** Error state's "重试": re-run the current query from scratch. */
+    fun retry() {
+        _ui.value = _ui.value.copy(failed = false)
+        launchRun(_ui.value.query)
     }
 
     fun rowAt(row: Int): NodeRow? {
@@ -145,9 +155,12 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
         if (!inflight.add(page)) return
         val t = token
         viewModelScope.launch {
-            val res = engine.nodeRows(t, page * PAGE, PAGE)
-            if (t == token) { pages.put(page, res.rows); pageEpoch.intValue++ }
-            inflight.remove(page)
+            try {
+                val res = engine.nodeRows(t, page * PAGE, PAGE)
+                if (t == token) { pages.put(page, res.rows); pageEpoch.intValue++ }
+            } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (_: Exception) {
+                if (t == token) _ui.value = _ui.value.copy(failed = true)
+            } finally { inflight.remove(page) }
         }
     }
 
@@ -156,8 +169,18 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
         val todo = ids.filter { latency[it] == null && testing[it] == null }.take(100)
         if (todo.isEmpty()) return
         todo.forEach { testing[it] = true }
-        testJob = viewModelScope.launch { engine.testLatency(todo) }
+        testJob = viewModelScope.launch { runCatching { engine.testLatency(todo) }.onFailure { todo.forEach { testing.remove(it) } } }
     }
+
+    /** Node detail sheet's "测速": one node, even if it already has a reading. */
+    fun testOne(id: NodeId) {
+        if (testing[id] == true) return
+        testing[id] = true
+        viewModelScope.launch { runCatching { engine.testLatency(listOf(id)) }.onFailure { testing.remove(id) } }
+    }
+
+    /** Detail sheet: server, port and subscription (null while loading or when the node is gone). */
+    suspend fun detail(id: NodeId): com.zephyr.engine.NodeDetail? = runCatching { engine.node(id) }.getOrNull()
 
     companion object {
         const val PAGE = 200

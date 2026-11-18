@@ -128,6 +128,9 @@
     <string name="scene_uhd_only">Chỉ nút 4K</string>
     <string name="scene_pinned_value">%1$s (đã ghim)</string>
     <string name="scene_retest">Kiểm tra lại</string>
+    <string name="scene_funnel_tested">Đã kiểm tra</string>
+    <string name="scene_funnel_reachable">Kết nối được</string>
+    <string name="scene_funnel_under">Dưới %1$d ms</string>
     <string name="scene_note">Kết quả chọn lọc chỉ được lưu trong Zephyr. Cấu hình đăng ký không thay đổi.</string>
     <string name="scene_note_tested">%1$s Kiểm tra lần cuối %2$s.</string>
     <string name="command_placeholder">Tìm kiếm hoặc nhập lệnh</string>
@@ -231,6 +234,12 @@
     <string name="nodes_no_match">Không có nút nào khớp với “%1$s”</string>
     <string name="nodes_tested">Đã kiểm tra %1$s</string>
     <string name="nodes_jump_to">Đến %1$s</string>
+    <string name="nodes_detail_protocol">Giao thức</string>
+    <string name="nodes_detail_latency">Độ trễ</string>
+    <string name="nodes_detail_server">Máy chủ</string>
+    <string name="nodes_detail_route">Tuyến</string>
+    <string name="nodes_detail_test">Kiểm tra độ trễ</string>
+    <string name="nodes_error_title">Không tải được nút</string>
     <string name="rules_add_override_a11y">Thêm ghi đè cho tên miền</string>
     <plurals name="rules_total_unit">
         <item quantity="other">quy tắc</item>
@@ -293,6 +302,7 @@
     <string name="subs_error_update">Không thể cập nhật %1$s</string>
     <string name="subs_error_delete">Không thể xóa %1$s</string>
     <string name="subs_remaining">Còn lại</string>
+    <string name="subs_all_title">Tất cả đăng ký</string>
     <plurals name="subs_others">
         <item quantity="other">%1$d gói khác</item>
     </plurals>

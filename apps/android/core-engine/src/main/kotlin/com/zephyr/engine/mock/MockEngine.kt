@@ -311,6 +311,23 @@ class MockEngine(
 
     override fun latencyUpdates(): Flow<List<LatencyUpdate>> = latencyBus.asSharedFlow()
 
+    /**
+     * Contract §15.c mock: sourceCount / poolSize are the prototype lede (2 / 512); the pool takes the first 512
+     * nodes round-robin across regions and counts their mock latencies (tested first, else cached). Same as iOS.
+     */
+    override suspend fun nodeFunnel(maxAgeMs: Long, thresholdMs: Int): NodeFunnel {
+        val threshold = if (thresholdMs > 0) thresholdMs else 300
+        var t = 0L; var ok = 0L; var under = 0L
+        val n = MockCatalog.REGIONS.size
+        for (i in 0 until FUNNEL_POOL) {
+            val r = i % n; val j = i / n
+            val ms = tested[MockCatalog.idOf(r, j)] ?: MockCatalog.cachedLatency(r, j) ?: continue
+            t++
+            if (ms >= 0) { ok++; if (ms < threshold) under++ }
+        }
+        return NodeFunnel(FUNNEL_SOURCES, FUNNEL_POOL.toLong(), t, ok, under, threshold)
+    }
+
     private fun latencyDelay(id: Long): Long {
         val r = (id / MockCatalog.ID_STRIDE).toInt()
         val j = (id % MockCatalog.ID_STRIDE).toInt()
@@ -472,6 +489,8 @@ class MockEngine(
         const val DISCONNECT_DELAY_MS = 250L
         const val TODAY_BYTES = 1_800_000_000L
         const val BASE_TESTED = 41_280L
+        const val FUNNEL_SOURCES = 2
+        const val FUNNEL_POOL = 512
         const val DAY_MS = 86_400_000L
     }
 }

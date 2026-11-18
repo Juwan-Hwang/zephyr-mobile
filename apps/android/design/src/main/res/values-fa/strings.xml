@@ -7,6 +7,13 @@
     <string name="common_close">بستن</string>
     <string name="common_clear">پاک کردن</string>
     <string name="common_latency_timeout">تایم‌اوت</string>
+    <string name="common_latency_a11y_untested">تأخیر بررسی نشده</string>
+    <string name="common_latency_a11y_testing">در حال بررسی تأخیر</string>
+    <string name="common_latency_a11y_timeout">تأخیر: مهلت تمام شد</string>
+    <plurals name="common_latency_a11y_ms">
+        <item quantity="one">تأخیر %1$d میلی‌ثانیه</item>
+        <item quantity="other">تأخیر %1$d میلی‌ثانیه</item>
+    </plurals>
     <string name="common_traffic_a11y">دانلود \u2066%1$s %2$s\u2069 در ثانیه، آپلود \u2066%3$s %4$s\u2069 در ثانیه</string>
     <string name="common_time_just_now">همین حالا</string>
     <string name="common_time_just_now_inline">همین حالا</string>

@@ -92,6 +92,8 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: BackTo = BackTo.
     LaunchedEffect(result?.token) { list.scrollToItem(0) }
 
     val res = LocalResources.current
+    var selected by remember { mutableStateOf<com.zephyr.engine.NodeSummary?>(null) }
+    Box(Modifier.fillMaxSize()) {
     PageScaffold(back = back, title = stringResource(R.string.common_nodes), onBack = onBack) {
         Column(Modifier.fillMaxSize()) {
             Row(Modifier.padding(horizontal = 22.dp), verticalAlignment = Alignment.Bottom) {
@@ -115,7 +117,10 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: BackTo = BackTo.
             }
             Spacer(Modifier.height(10.dp))
             Box(Modifier.weight(1f).fillMaxWidth()) {
-                if (result != null && rowCount == 0 && ui.query.isBlank()) {
+                if (ui.failed) {
+                    // Audit U12: a failed query / page shows an error with "重试" instead of an empty or frozen list.
+                    ZEmptyState(stringResource(R.string.nodes_error_title), Modifier.align(Alignment.Center), action = stringResource(R.string.common_try_again), onAction = { vm.retry() })
+                } else if (result != null && rowCount == 0 && ui.query.isBlank()) {
                     ZEmptyState(stringResource(R.string.nodes_empty_title), Modifier.align(Alignment.Center), message = stringResource(R.string.nodes_empty_message), action = stringResource(R.string.nodes_empty_action), onAction = onImport)
                 } else if (result != null && rowCount == 0) {
                     ZEmptyState(stringResource(R.string.common_no_results), Modifier.align(Alignment.Center), message = stringResource(R.string.nodes_no_match, ui.query.trim()))
@@ -136,7 +141,7 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: BackTo = BackTo.
                                 is NodeRow.Header -> SectionHeaderRow(r.section)
                                 is NodeRow.Node -> {
                                     val n = vm.node(r.ordinal)
-                                    NodeRowView(n, result?.highlights.orEmpty(), vm.latency[n?.id ?: -1L], n != null && vm.testing[n.id] == true)
+                                    NodeRowView(n, result?.highlights.orEmpty(), vm.latency[n?.id ?: -1L], n != null && vm.testing[n.id] == true, onClick = { selected = n })
                                 }
                                 null -> Unit
                             }
@@ -155,6 +160,12 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: BackTo = BackTo.
                 }
             }
         }
+    }
+    val sel = selected
+    NodeDetailSheet(
+        sel, sel?.let { vm.latency[it.id] }, sel != null && vm.testing[sel.id] == true,
+        load = { vm.detail(it) }, onTest = { vm.testOne(it.id) }, onDismiss = { selected = null },
+    )
     }
 }
 

@@ -112,7 +112,15 @@ class ZephyrVpnService : VpnService() {
         (engine as? com.zephyr.engine.core.CoreEngine)?.let { core ->
             prober?.cancel()
             // Scene exits are probed once a minute while connected; core's failover tracker decides when to switch.
-            prober = scope.launch { while (true) { kotlinx.coroutines.delay(PROBE_EVERY_MS); runCatching { core.probeScenes() } } }
+            // Same loop re-tests scenes whose results outlived 设置 › 结果保留 (audit E28); the app is excluded from its own
+            // tunnel, so the active network here is the physical one for 「仅 Wi‑Fi 测速」.
+            prober = scope.launch {
+                while (true) {
+                    kotlinx.coroutines.delay(PROBE_EVERY_MS)
+                    runCatching { core.probeScenes() }
+                    runCatching { core.retestStaleScenes(metered = getSystemService(android.net.ConnectivityManager::class.java)?.isActiveNetworkMetered ?: false) }
+                }
+            }
         }
     }
 
