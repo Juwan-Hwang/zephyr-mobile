@@ -546,7 +546,7 @@
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Badilisha hadi Hali ya Ulimwengu"
+            "value" : "Badilisha hadi Hali ya Jumla"
           }
         },
         "tk" : {
@@ -570,7 +570,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chuyển sang chế độ Toàn cầu"
+            "value" : "Chuyển sang chế độ toàn cục"
           }
         }
       }
@@ -2194,7 +2194,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "စစ်ဆေးချက်များ"
+            "value" : "ပြဿနာရှာဖွေခြင်း"
           }
         },
         "ru" : {
@@ -2294,7 +2294,7 @@
         "tk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Žurnallar"
+            "value" : "Günnamalar"
           }
         },
         "tr" : {
@@ -3032,7 +3032,7 @@
         "tk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tunel we ýadro žurnallary"
+            "value" : "Tunel we ýadro günnamalary"
           }
         },
         "tr" : {
@@ -4630,7 +4630,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Excepción de %@ · Fijado"
+            "value" : "Sobrescritura de %@ · Fijado"
           }
         },
         "fa" : {
@@ -4782,7 +4782,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "مخرج %@ لا يستجيب. لن يتغير IP المخرج تلقائيًا."
+            "value" : "مخرج %@ لا يستجيب. لن يتغير عنوان IP للخروج تلقائيًا."
           }
         },
         "en" : {
@@ -4842,7 +4842,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ çıkışı yanıt vermiyor. Çıkış IP'si otomatik olarak değişmeyecek."
+            "value" : "%@ çıkışı yanıt vermiyor. Çıkış IP’si otomatik olarak değişmeyecek."
           }
         },
         "ur" : {
@@ -10632,7 +10632,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ana Ekran Widget'ları"
+            "value" : "Ana Ekran Widget’ları"
           }
         },
         "ur" : {
@@ -11370,7 +11370,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Denetim Merkezi'ni açmak için sağ üst köşeden aşağı kaydırın › + (sol üst) › Denetim Ekle › Zephyr. iOS 18 gerekir."
+            "value" : "Denetim Merkezi’ni açmak için sağ üst köşeden aşağı kaydırın › + (sol üst) › Denetim Ekle › Zephyr. iOS 18 gerekir."
           }
         },
         "ur" : {
@@ -11534,7 +11534,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bilgisayardaki Zephyr'den İçe Aktar"
+            "value" : "Bilgisayardaki Zephyr’den İçe Aktar"
           }
         },
         "ur" : {
@@ -11944,7 +11944,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seçimler yalnızca Zephyr'de saklanır. Abonelik yapılandırmanız değişmez."
+            "value" : "Seçimler yalnızca Zephyr’de saklanır. Abonelik yapılandırmanız değişmez."
           }
         },
         "ur" : {
@@ -12506,7 +12506,7 @@
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ulimwengu"
+            "value" : "Jumla"
           }
         },
         "tk" : {
@@ -12530,7 +12530,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toàn cầu"
+            "value" : "Toàn cục"
           }
         }
       }
@@ -12588,7 +12588,7 @@
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hali ya Ulimwengu"
+            "value" : "Hali ya Jumla"
           }
         },
         "tk" : {
@@ -12612,7 +12612,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chế độ Toàn cầu"
+            "value" : "Chế độ toàn cục"
           }
         }
       }
@@ -13032,7 +13032,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "إيقاف"
+            "value" : "معطّل"
           }
         },
         "en" : {
@@ -13758,7 +13758,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Diğer uygulamalar, 127.0.0.1 üzerindeki bu port aracılığıyla Zephyr'in kurallarını ve senaryolarını kullanabilir."
+            "value" : "Diğer uygulamalar, 127.0.0.1 üzerindeki bu port aracılığıyla Zephyr’in kurallarını ve senaryolarını kullanabilir."
           }
         },
         "ur" : {
@@ -14026,7 +14026,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "IP المخرج"
+            "value" : "عنوان IP للخروج"
           }
         },
         "en" : {
@@ -14080,13 +14080,13 @@
         "tk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Çykyş IP"
+            "value" : "Çykyş IP-si"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Çıkış IP'si"
+            "value" : "Çıkış IP’si"
           }
         },
         "ur" : {
@@ -14108,7 +14108,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "سيتغير IP المخرج"
+            "value" : "سيتغير عنوان IP للخروج"
           }
         },
         "en" : {
@@ -14168,7 +14168,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Çıkış IP'si değişecek"
+            "value" : "Çıkış IP’si değişecek"
           }
         },
         "ur" : {
@@ -15972,7 +15972,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Başka bir uygulama Zephyr'i açmak istiyor."
+            "value" : "Başka bir uygulama Zephyr’i açmak istiyor."
           }
         },
         "ur" : {
@@ -16136,7 +16136,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Başka bir uygulama Zephyr'in bağlantısını kesmek istiyor. Trafik artık proxy üzerinden geçmeyecek."
+            "value" : "Başka bir uygulama Zephyr’in bağlantısını kesmek istiyor. Trafik artık proxy üzerinden geçmeyecek."
           }
         },
         "ur" : {
@@ -16218,7 +16218,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bunu istediğiniz zaman Ayarlar'dan değiştirebilirsiniz."
+            "value" : "Bunu istediğiniz zaman Ayarlar’dan değiştirebilirsiniz."
           }
         },
         "ur" : {
@@ -17202,7 +17202,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bilgisayarınızdaki Zephyr'de Ayarlar › Telefona Eşzamanla'yı açın, ardından gösterilen QR kodunu tarayın."
+            "value" : "Bilgisayarınızdaki Zephyr’de Ayarlar › Telefona Eşzamanla’yı açın, ardından gösterilen QR kodunu tarayın."
           }
         },
         "ur" : {
@@ -17272,7 +17272,7 @@
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hubadilisha hali ya proksi ya Zephyr kati ya Sheria, Ulimwengu na Moja kwa Moja."
+            "value" : "Hubadilisha hali ya proksi ya Zephyr kati ya Sheria, Jumla na Moja kwa Moja."
           }
         },
         "tk" : {
@@ -17284,7 +17284,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr'in proxy modunu Kural, Küresel ve Doğrudan arasında değiştirir."
+            "value" : "Zephyr’in proxy modunu Kural, Küresel ve Doğrudan arasında değiştirir."
           }
         },
         "ur" : {
@@ -17296,7 +17296,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chuyển chế độ proxy của Zephyr giữa Quy tắc, Toàn cầu và Trực tiếp."
+            "value" : "Chuyển chế độ proxy của Zephyr giữa Quy tắc, Toàn cục và Trực tiếp."
           }
         }
       }
@@ -19580,7 +19580,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sağladığı düğümler ve kurallar kaldırılacak. İstisnalar ve senaryo ayarları aynı kalır."
+            "value" : "Sağladığı düğümler ve kurallar kaldırılacak. Üzerine yazmalar ve senaryo ayarları aynı kalır."
           }
         },
         "ur" : {
@@ -19826,7 +19826,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Widget'lar ve Denetim Merkezi"
+            "value" : "Widget’lar ve Denetim Merkezi"
           }
         },
         "ur" : {
@@ -21182,7 +21182,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se ha borrado la excepción de ruta de %@"
+            "value" : "Se ha borrado la sobrescritura de ruta de %@"
           }
         },
         "fa" : {
@@ -22574,7 +22574,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تشغيل"
+            "value" : "مفعّل"
           }
         },
         "en" : {
@@ -22716,7 +22716,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Açık olduğunda yerel porta bağlanmak için kullanıcı adı ve parola gerekir; böylece diğer uygulamalar proxy'yi izinsiz kullanamaz."
+            "value" : "Açık olduğunda yerel porta bağlanmak için kullanıcı adı ve parola gerekir; böylece diğer uygulamalar proxy’yi izinsiz kullanamaz."
           }
         },
         "ur" : {
@@ -22804,7 +22804,7 @@
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ایکسنٹ رنگ"
+            "value" : "نمایاں رنگ"
           }
         },
         "vi" : {
@@ -23454,7 +23454,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr'i ${mode} moduna geçir"
+            "value" : "Zephyr’i ${mode} moduna geçir"
           }
         },
         "ur" : {
@@ -24706,7 +24706,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "لا شيء"
+            "value" : "بلا"
           }
         },
         "en" : {
@@ -24930,7 +24930,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kaydedilemedi. Ayarlar'da Zephyr'in fotoğraf eklemesine izin verin."
+            "value" : "Kaydedilemedi. Ayarlar’da Zephyr’in fotoğraf eklemesine izin verin."
           }
         },
         "ur" : {
@@ -26674,7 +26674,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تغيير IP المخرج لـ %@؟"
+            "value" : "تغيير عنوان IP للخروج لـ %@؟"
           }
         },
         "en" : {
@@ -26734,7 +26734,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ için çıkış IP'si değiştirilsin mi?"
+            "value" : "%@ için çıkış IP’si değiştirilsin mi?"
           }
         },
         "ur" : {
@@ -26980,7 +26980,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Güncelleme, abonelikteki düğümleri ve kuralları değiştirir. Zephyr'deki istisnalar ve senaryo seçimleri aynı kalır."
+            "value" : "Güncelleme, abonelikteki düğümleri ve kuralları değiştirir. Zephyr’deki istisnalar ve senaryo seçimleri aynı kalır."
           }
         },
         "ur" : {
@@ -27512,7 +27512,7 @@
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "درگاه پروکسی محلی"
+            "value" : "پورت پروکسی محلی"
           }
         },
         "ja" : {
@@ -27530,19 +27530,19 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "စက်တွင်း ပရောက်စီ ပို့တ်"
+            "value" : "စက်တွင်း ပရောက်စီ ပေါ့တ်"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Локальный порт прокси"
+            "value" : "Порт локального прокси"
           }
         },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mlango wa Proksi wa Ndani"
+            "value" : "Mlango wa proksi ya ndani"
           }
         },
         "tk" : {
@@ -27560,7 +27560,7 @@
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "لوکل پراکسی پورٹ"
+            "value" : "مقامی پراکسی پورٹ"
           }
         },
         "vi" : {
@@ -30056,7 +30056,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "جارٍ جلب IP المخرج"
+            "value" : "جارٍ جلب عنوان IP للخروج"
           }
         },
         "en" : {
@@ -30116,7 +30116,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Çıkış IP'si alınıyor"
+            "value" : "Çıkış IP’si alınıyor"
           }
         },
         "ur" : {
@@ -31110,7 +31110,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VPN izni yok. Zephyr'de VPN yapılandırmasına izin verin."
+            "value" : "VPN izni yok. Zephyr’de VPN yapılandırmasına izin verin."
           }
         },
         "ur" : {
@@ -32046,7 +32046,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Añadir excepción"
+            "value" : "Añadir sobrescritura"
           }
         },
         "fa" : {
@@ -32094,7 +32094,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "İstisna ekle"
+            "value" : "Üzerine yazma ekle"
           }
         },
         "ur" : {
@@ -34576,7 +34576,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "التحديثات التلقائية"
+            "value" : "التحديث التلقائي"
           }
         },
         "en" : {
@@ -34636,7 +34636,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Otomatik Güncellemeler"
+            "value" : "Otomatik Güncelleme"
           }
         },
         "ur" : {
@@ -35490,7 +35490,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Excepción"
+            "value" : "Sobrescritura"
           }
         },
         "fa" : {
@@ -35538,7 +35538,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "İstisna"
+            "value" : "Üzerine yazma"
           }
         },
         "ur" : {
@@ -35620,7 +35620,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "İstisnalar 1. katmanda, abonelik kurallarının üzerinde yer alır ve abonelikler güncellendiğinde değişmez. Alan adına göre eşleşir; alt alan adları da dahildir."
+            "value" : "Üzerine yazmalar 1. katmanda, abonelik kurallarının üzerinde yer alır ve abonelikler güncellendiğinde değişmez. Alan adına göre eşleşir; alt alan adları da dahildir."
           }
         },
         "ur" : {
@@ -35702,7 +35702,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "İstisnalar 1. katmanda, abonelik kurallarının üzerinde yer alır ve abonelikler güncellendiğinde değişmez. Bu sürümde istisnalar iPhone'da kaydedilemez. Bunları bilgisayarınızdaki Zephyr'de ekleyin; eşzamanlamadan sonra etkinleşir."
+            "value" : "Üzerine yazmalar 1. katmanda, abonelik kurallarının üzerinde yer alır ve abonelikler güncellendiğinde değişmez. Bu sürümde üzerine yazmalar iPhone’da kaydedilemez. Bunları bilgisayarınızdaki Zephyr’de ekleyin; eşzamanlamadan sonra etkinleşir."
           }
         },
         "ur" : {
@@ -35784,7 +35784,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "İstisnalar korunacak"
+            "value" : "Üzerine yazmalar korunacak"
           }
         },
         "ur" : {
@@ -35866,7 +35866,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "İstisnalar korundu"
+            "value" : "Üzerine yazmalar korundu"
           }
         },
         "ur" : {
@@ -38416,7 +38416,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Henüz yapılandırma yok. Zephyr'i açın ve önce bir abonelik ekleyin."
+            "value" : "Henüz yapılandırma yok. Zephyr’i açın ve önce bir abonelik ekleyin."
           }
         },
         "ur" : {
@@ -38826,7 +38826,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr'e Bağlan"
+            "value" : "Zephyr’e Bağlan"
           }
         },
         "ur" : {
@@ -38908,7 +38908,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr'e Bağlan: ${value}"
+            "value" : "Zephyr’e Bağlan: ${value}"
           }
         },
         "ur" : {
@@ -38990,7 +38990,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr'e bağlanılsın mı?"
+            "value" : "Zephyr’e bağlanılsın mı?"
           }
         },
         "ur" : {
@@ -39270,7 +39270,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No se ha podido conectar"
+            "value" : "Error de conexión"
           }
         },
         "fa" : {
@@ -39400,7 +39400,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr proxy'sine bağlanır veya bağlantıyı keser."
+            "value" : "Zephyr proxy’sine bağlanır veya bağlantıyı keser."
           }
         },
         "ur" : {
@@ -39564,7 +39564,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr'i Nasıl\nKullanacağınızı Seçin"
+            "value" : "Zephyr’i Nasıl\nKullanacağınızı Seçin"
           }
         },
         "ur" : {
@@ -40056,7 +40056,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ana Ekran'da boş bir alana dokunup basılı tutun › Düzenle (sol üst) › Widget Ekle › Zephyr'i arayın. Küçük widget bağlantı durumunu gösterir; orta boy widget canlı hızı da ekler."
+            "value" : "Ana Ekran’da boş bir alana dokunup basılı tutun › Düzenle (sol üst) › Widget Ekle › Zephyr’i arayın. Küçük widget bağlantı durumunu gösterir; orta boy widget canlı hızı da ekler."
           }
         },
         "ur" : {
@@ -40138,7 +40138,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kilitli Ekran'a dokunup basılı tutun › Özelleştir › Kilitli Ekran › Widget Ekle › Zephyr. Bağlıyken bir Canlı Etkinlik görünür."
+            "value" : "Kilitli Ekran’a dokunup basılı tutun › Özelleştir › Kilitli Ekran › Widget Ekle › Zephyr. Bağlıyken bir Canlı Etkinlik görünür."
           }
         },
         "ur" : {
@@ -40384,7 +40384,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr'in VPN yapılandırması eklemesine izin verin"
+            "value" : "Zephyr’in VPN yapılandırması eklemesine izin verin"
           }
         },
         "ur" : {
@@ -40406,7 +40406,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "طلب كلمة السر"
+            "value" : "طلب كلمة المرور"
           }
         },
         "en" : {
@@ -40876,7 +40876,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zephyr'den çıkıp yeniden açın. Sorun devam ederse uygulamayı yeniden yükleyin."
+            "value" : "Zephyr’den çıkıp yeniden açın. Sorun devam ederse uygulamayı yeniden yükleyin."
           }
         },
         "ur" : {
@@ -41286,7 +41286,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Yalnızca 4K'yı Kapat"
+            "value" : "Yalnızca 4K’yı Kapat"
           }
         },
         "ur" : {
