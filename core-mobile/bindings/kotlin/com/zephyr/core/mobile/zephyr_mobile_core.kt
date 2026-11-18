@@ -889,6 +889,10 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -930,6 +934,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_fn_method_mihomoclient_recent_hosts(`ptr`: Pointer,`limit`: Int,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mihomoclient_select_in_group(`ptr`: Pointer,`group`: RustBuffer.ByValue,`member`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): Unit
+    fun uniffi_zephyr_mobile_core_fn_method_mihomoclient_set_log_level(`ptr`: Pointer,`level`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mihomoclient_set_mode(`ptr`: Pointer,`mode`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
@@ -1046,6 +1052,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_node_filter(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`filter`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_source(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`source`: RustBuffer.ByValue,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_subscription_auto_update(`ptr`: Pointer,`id`: RustBuffer.ByValue,`hours`: Int,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_storage_info(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
@@ -1203,6 +1211,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_select_in_group(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_set_log_level(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_set_mode(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_test_group(
@@ -1313,6 +1323,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_source(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_subscription_auto_update(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_storage_info(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_subscription_fetch_url(
@@ -1382,6 +1394,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_select_in_group() != 300.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_set_log_level() != 27714.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_set_mode() != 26213.toShort()) {
@@ -1547,6 +1562,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_source() != 34889.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_subscription_auto_update() != 44049.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_storage_info() != 53541.toShort()) {
@@ -2069,6 +2087,12 @@ public interface MihomoClientInterface {
     fun `selectInGroup`(`group`: kotlin.String, `member`: kotlin.String)
     
     /**
+     * 热改 mihomo 日志级别（debug / info / warning / error / silent，不区分大小写），不重载配置。
+     * 未知级别 → Invalid。日志页选 debug 时临时调高，离开时恢复 info（契约 §16.h）。
+     */
+    fun `setLogLevel`(`level`: kotlin.String)
+    
+    /**
      * 模式切换（rule / global / direct）。
      */
     fun `setMode`(`mode`: kotlin.String)
@@ -2285,6 +2309,22 @@ open class MihomoClient: Disposable, AutoCloseable, MihomoClientInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mihomoclient_select_in_group(
         it, FfiConverterString.lower(`group`),FfiConverterString.lower(`member`),_status)
+}
+    }
+    
+    
+
+    
+    /**
+     * 热改 mihomo 日志级别（debug / info / warning / error / silent，不区分大小写），不重载配置。
+     * 未知级别 → Invalid。日志页选 debug 时临时调高，离开时恢复 info（契约 §16.h）。
+     */
+    @Throws(MobileException::class)override fun `setLogLevel`(`level`: kotlin.String)
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mihomoclient_set_log_level(
+        it, FfiConverterString.lower(`level`),_status)
 }
     }
     
@@ -2697,6 +2737,12 @@ public interface MobileCoreInterface {
      * 已是最优或没有测速数据时返回 None。Manual / SubscriptionGroup：只记录。
      */
     fun `setSceneSource`(`sceneId`: kotlin.String, `source`: SceneSource, `nowMillis`: kotlin.Long): SceneApply?
+    
+    /**
+     * 改订阅的自动更新间隔（小时，0 = 手动，0–720，越界 Invalid）。设置页"自动更新"改动时，
+     * 平台对每个间隔 > 0 的订阅调用（契约 §16.c / §16.g）。返回更新后的订阅。
+     */
+    fun `setSubscriptionAutoUpdate`(`id`: kotlin.String, `hours`: kotlin.Int): Subscription
     
     fun `storageInfo`(): StorageInfo
     
@@ -3598,6 +3644,23 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_set_scene_source(
         it, FfiConverterString.lower(`sceneId`),FfiConverterTypeSceneSource.lower(`source`),FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 改订阅的自动更新间隔（小时，0 = 手动，0–720，越界 Invalid）。设置页"自动更新"改动时，
+     * 平台对每个间隔 > 0 的订阅调用（契约 §16.c / §16.g）。返回更新后的订阅。
+     */
+    @Throws(MobileException::class)override fun `setSubscriptionAutoUpdate`(`id`: kotlin.String, `hours`: kotlin.Int): Subscription {
+            return FfiConverterTypeSubscription.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_set_subscription_auto_update(
+        it, FfiConverterString.lower(`id`),FfiConverterInt.lower(`hours`),_status)
 }
     }
     )
@@ -5276,6 +5339,9 @@ data class RuntimeOptions (
      * iOS 扩展里关掉进程识别（系统不给），Android 可开
      */
     var `findProcess`: kotlin.Boolean, 
+    /**
+     * mihomo `log-level`：debug / info / warning / error / silent（不区分大小写）；其他值按 info（契约 §16.h）
+     */
     var `logLevel`: kotlin.String, 
     /**
      * 本地代理（设置 → 本地代理端口）：只监听 127.0.0.1 的 mixed 端口；None = 关（默认）。

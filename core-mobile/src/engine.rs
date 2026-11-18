@@ -375,6 +375,12 @@ impl MobileCore {
         self.subs.lock().due(now_millis)
     }
 
+    /// 改订阅的自动更新间隔（小时，0 = 手动，0–720，越界 Invalid）。设置页"自动更新"改动时，
+    /// 平台对每个间隔 > 0 的订阅调用（契约 §16.c / §16.g）。返回更新后的订阅。
+    pub fn set_subscription_auto_update(&self, id: String, hours: i32) -> Result<Subscription, MobileError> {
+        self.subs.lock().set_auto_update(&id, hours)
+    }
+
     /// 导入并重建节点库。url 可空（剪贴板/文件导入）。
     pub fn import_subscription(
         &self,

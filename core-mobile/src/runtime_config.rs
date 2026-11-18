@@ -50,6 +50,7 @@ pub struct RuntimeOptions {
     pub controller_socket: String,
     /// iOS 扩展里关掉进程识别（系统不给），Android 可开
     pub find_process: bool,
+    /// mihomo `log-level`：debug / info / warning / error / silent（不区分大小写）；其他值按 info（契约 §16.h）
     pub log_level: String,
     /// 本地代理（设置 → 本地代理端口）：只监听 127.0.0.1 的 mixed 端口；None = 关（默认）。
     #[uniffi(default = None)]
@@ -67,6 +68,13 @@ fn s(v: &str) -> Value {
     Value::String(v.into())
 }
 
+/// mihomo 认得的日志级别（小写）；未知值 → None。
+pub fn mihomo_log_level(level: &str) -> Option<&'static str> {
+    const LEVELS: [&str; 5] = ["debug", "info", "warning", "error", "silent"];
+    let l = level.trim();
+    LEVELS.into_iter().find(|x| x.eq_ignore_ascii_case(l))
+}
+
 fn overlay(o: &RuntimeOptions) -> Value {
     let mut m = Mapping::new();
     m.insert(
@@ -77,7 +85,8 @@ fn overlay(o: &RuntimeOptions) -> Value {
             ProxyMode::Direct => "direct",
         }),
     );
-    m.insert(s("log-level"), s(&o.log_level));
+    // 未知级别不交给 mihomo（会整份配置加载失败），按契约默认 info
+    m.insert(s("log-level"), s(mihomo_log_level(&o.log_level).unwrap_or("info")));
     m.insert(s("ipv6"), Value::Bool(o.dns.ipv6 || o.tun.ipv6));
     m.insert(s("allow-lan"), Value::Bool(false));
     m.insert(s("unified-delay"), Value::Bool(true));
@@ -303,5 +312,17 @@ mod tests {
         assert_eq!(v["tun"]["enable"].as_bool(), Some(false));
         assert!(!build_runtime_config("proxies: []\n", &opts(None)).unwrap().contains("null"));
         assert_eq!(v["rules"][0].as_str(), Some("MATCH,DIRECT"));
+    }
+
+    #[test]
+    fn log_level_normalized() {
+        let mut o = opts(Some(3));
+        for (given, want) in
+            [("debug", "debug"), ("INFO", "info"), (" Warning ", "warning"), ("error", "error"), ("silent", "silent"), ("verbose", "info"), ("", "info")]
+        {
+            o.log_level = given.into();
+            let v: Value = serde_yaml::from_str(&build_runtime_config(SUB, &o).unwrap()).unwrap();
+            assert_eq!(v["log-level"].as_str(), Some(want), "{given:?}");
+        }
     }
 }

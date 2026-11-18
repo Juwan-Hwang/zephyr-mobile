@@ -52,10 +52,20 @@ func startLogCollector() {
 		sub := log.Subscribe()
 		go func() {
 			for ev := range sub {
-				appendLog(ev.LogLevel.String(), ev.Payload, time.Now().UnixMilli())
+				collect(ev)
 			}
 		}()
 	})
+}
+
+// mihomo 把所有级别的事件都推给订阅者，log-level 只管它自己的 stdout 输出。这里按当前 log-level
+// 过滤，免得默认 info 时 debug 行挤掉环形缓冲里的有用日志；日志页选 debug 时平台经
+// PATCH /configs 临时调到 debug（契约 §16.h）。
+func collect(ev log.Event) {
+	if ev.LogLevel < log.Level() {
+		return
+	}
+	appendLog(ev.LogLevel.String(), ev.Payload, time.Now().UnixMilli())
 }
 
 func appendLog(level, msg string, at int64) {
