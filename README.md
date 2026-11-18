@@ -122,4 +122,4 @@ cd design/prototype && python3 -m http.server   # 打开 index.html，左侧切�
 
 ## 许可
 
-本仓库的许可证尚未确定（嵌入的 mihomo 为 GPL-3.0，需用户决定），在此之前暂不添加根目录 LICENSE。
+嵌入的 mihomo 为 GPL-3.0。本仓库倾向整个 App 按 GPL-3.0 开源，最终确认前暂不添加根目录 LICENSE。
