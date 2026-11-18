@@ -24,6 +24,8 @@
     "ios local_proxy_port sw",
     "ios require_password ar",
     "ios accent ur",
-    "ios diagnostics my"
+    "ios diagnostics my",
+    "android override es",
+    "android override tr"
   ]
 }
