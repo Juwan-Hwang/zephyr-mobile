@@ -46,6 +46,11 @@ dependencies {
     implementation(project(":design"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.work.runtime)
+    // QR import (contract §15): CameraX preview + ZXing decoding, no Play services needed.
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.zxing.core)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -59,6 +64,12 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+}
+
+// Contract fixtures (command-parse-v1.json …) live at repo root; tests read them via this system property.
+tasks.withType<Test>().configureEach {
+    systemProperty("zephyr.fixtures", rootProject.file("../../contract/fixtures").absolutePath)
+    inputs.dir(rootProject.file("../../contract/fixtures")).withPropertyName("contractFixtures").withPathSensitivity(PathSensitivity.RELATIVE)
 }
 
 // Local-only: run unit/screenshot tests on another JVM (e.g. x86_64 under qemu on aarch64 hosts, where

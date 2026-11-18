@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Scan a subscription / desktop "同步到手机" QR code (asked only when the scanner opens). -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="false" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -35,12 +40,14 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- clash://install-config?url=… and zephyr://import?url=… -->
+            <!-- Contract §15: clash:// · clashmeta:// · mihomo://install-config?url=… and zephyr://import?… (always confirmed in-app) -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="clash" />
+                <data android:scheme="clashmeta" />
+                <data android:scheme="mihomo" />
                 <data android:scheme="zephyr" />
             </intent-filter>
             <intent-filter>

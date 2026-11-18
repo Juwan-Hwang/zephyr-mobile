@@ -67,7 +67,7 @@ fun OnboardingScreen(onDone: () -> Unit) {
     var saving by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     // Review L-P1-2: same import path as the sheet; failures are shown; the chosen mode is written before finishing.
-    val imp = rememberSubscriptionImporter { s -> addedName = s.name; addedNodes = s.nodeCount; step = 1 }
+    val imp = rememberSubscriptionImporter { r -> addedName = r.first.name; addedNodes = r.first.nodeCount; step = 1 }
     // Review L-P2-11: system back on step 2 returns to step 1 instead of leaving the app.
     androidx.activity.compose.BackHandler(enabled = step == 1) { step = 0 }
     val dir = com.zephyr.app.ui.common.startToEndSign()
@@ -92,7 +92,8 @@ fun OnboardingScreen(onDone: () -> Unit) {
                     ImportOptions(imp, clipboard = false, paste = if (showField) null else ({
                         // Prefill from the clipboard when it holds a link; otherwise open the field to paste by hand.
                         val t = imp.clipboardText().also { imp.error = null }
-                        if (t != null && (t.startsWith("https://") || t.startsWith("http://"))) { url = t; imp.submit(ImportSource.CLIPBOARD, t) }
+                        // Any §15 payload counts: a bare link, a desktop sync code or a clash:// link (the latter two ask to confirm).
+                        if (t != null && runCatching { com.zephyr.engine.ImportPayloads.parse(t) }.isSuccess) { if (t.startsWith("http", ignoreCase = true)) url = t; imp.submit(ImportSource.CLIPBOARD, t) }
                         showField = true
                     }))
                     if (imp.busy) {

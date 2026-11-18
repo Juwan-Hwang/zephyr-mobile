@@ -51,6 +51,7 @@
     <string name="common_mode_global_hint">همهٔ ترافیک از یک نود</string>
     <string name="common_mode_direct_hint">بدون عبور از پروکسی</string>
     <string name="common_try_again">دوباره امتحان کنید</string>
+    <string name="common_open_settings">باز کردن تنظیمات</string>
     <string name="common_scene_ai">هوش مصنوعی</string>
     <string name="common_scene_video">ویدیو</string>
     <string name="common_scene_other">سایر</string>
@@ -244,7 +245,10 @@
     </plurals>
     <string name="trace_this_connection">این اتصال</string>
     <string name="trace_option_unchanged">بدون تغییر</string>
-    <string name="trace_override_failed">تغییر انجام نشد: \u2068%1$s\u2069</string>
+    <string name="trace_override_error">تغییر مسیر ممکن نشد. دوباره امتحان کنید.</string>
+    <string name="trace_override_cleared">بازنویسی مسیر برای \u2068%1$s\u2069 پاک شد</string>
+    <string name="trace_override_direct">\u2068%1$s\u2069 اکنون مستقیم وصل می‌شود</string>
+    <string name="trace_override_scene">\u2068%1$s\u2069 اکنون با \u2068%2$s\u2069</string>
     <string name="trace_always_apply">همیشه اعمال شود</string>
     <string name="trace_always_apply_hint">در حالت خاموش، فقط همین اتصال تغییر می‌کند</string>
 
@@ -310,7 +314,6 @@
     <string name="subs_paste_link">جای‌گذاری پیوند</string>
     <string name="subs_paste_clipboard">جای‌گذاری از کلیپ‌بورد</string>
     <string name="subs_scan_qr">اسکن کد QR</string>
-    <string name="subs_coming_soon">به‌زودی</string>
     <string name="subs_import_desktop">وارد کردن از Zephyr روی رایانه</string>
     <string name="subs_import_file">وارد کردن از فایل</string>
     <plurals name="subs_added">
@@ -323,6 +326,38 @@
     <string name="subs_error_fetch">این اشتراک دانلود نشد. پیوند یا شبکه را بررسی کنید.</string>
     <string name="subs_error_invalid_file">این فایل پیکربندی معتبری نیست</string>
     <string name="subs_error_invalid_link">این پیوند اشتراک معتبری نیست</string>
+    <string name="subs_error_import_version">این کد وارد کردن به نسخهٔ جدیدتری از Zephyr نیاز دارد</string>
+    <string name="subs_import_source">منبع: \u2068%1$s\u2069</string>
+    <string name="subs_import_desktop_source">Zephyr دسکتاپ</string>
+    <string name="subs_import_insecure">این پیوند رمزگذاری نشده است (http)؛ ممکن است محتوای آن خوانده یا دستکاری شود.</string>
+    <string name="subs_import_trust">فقط اگر به این ارائه‌دهنده اعتماد دارید ادامه دهید.</string>
+    <string name="subs_scan_prompt">کد QR اشتراک را داخل کادر قرار دهید تا خودکار اسکن شود.</string>
+    <string name="subs_scan_camera_needed">برای اسکن، دسترسی به دوربین لازم است</string>
+    <string name="subs_scan_no_camera">دوربینی در این دستگاه در دسترس نیست</string>
+    <string name="subs_review_one">\u2068%1$s\u2069 به‌روزرسانی می‌شود</string>
+    <string name="subs_review_note">به‌روزرسانی، نودها و قوانین اشتراک را جایگزین می‌کند. بازنویسی‌ها و انتخاب‌های صحنه در Zephyr تغییر نمی‌کنند.</string>
+    <string name="subs_deleted">\u2068%1$s\u2069 حذف شد</string>
+    <string name="subs_error_update_all">اشتراک‌ها به‌روز نشدند</string>
+    <plurals name="subs_import_confirm_title">
+        <item quantity="one">%1$d اشتراک وارد شود؟</item>
+        <item quantity="other">%1$d اشتراک وارد شود؟</item>
+    </plurals>
+    <plurals name="subs_added_many">
+        <item quantity="one">%1$d اشتراک افزوده شد</item>
+        <item quantity="other">%1$d اشتراک افزوده شد</item>
+    </plurals>
+    <plurals name="subs_import_some_failed">
+        <item quantity="one">%1$d مورد افزوده نشد</item>
+        <item quantity="other">%1$d مورد افزوده نشد</item>
+    </plurals>
+    <plurals name="subs_review_all">
+        <item quantity="one">همهٔ \u2068%1$s\u2069 اشتراک به‌روزرسانی می‌شوند</item>
+        <item quantity="other">همهٔ \u2068%1$s\u2069 اشتراک به‌روزرسانی می‌شوند</item>
+    </plurals>
+    <plurals name="subs_updated_count">
+        <item quantity="one">%1$d اشتراک به‌روزرسانی شد</item>
+        <item quantity="other">%1$d اشتراک به‌روزرسانی شد</item>
+    </plurals>
     <plurals name="subs_total_unit">
         <item quantity="one">اشتراک</item>
         <item quantity="other">اشتراک</item>

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -32,30 +33,34 @@ import com.zephyr.design.theme.ZTheme
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-internal data class SwipeAction(val label: String, val color: Color, val onClick: () -> Unit)
+/** [keepOpen]: the row stays open after the tap (a first "删除" tap that arms "确认删除" in place). */
+internal data class SwipeAction(val label: String, val color: Color, val keepOpen: Boolean = false, val onClick: () -> Unit)
 
 /**
  * Review L-P2-9 (spec §4 “左滑更新/删除”): swipe a row toward the start edge (left in LTR, right in RTL) to reveal
  * its actions, which sit at the end edge; it snaps open past half the actions' width, closes on the opposite swipe
  * or after an action. TalkBack gets the same actions as custom actions.
- * [resetKey] closes the row when it changes (e.g. after the list updates).
+ * [resetKey] closes the row when it changes (e.g. after the list updates); [onClosed] runs whenever it closes
+ * (so an armed "确认删除" is disarmed when the row is swiped shut).
  */
 @Composable
-internal fun SwipeActionsRow(actions: List<SwipeAction>, resetKey: Any? = null, content: @Composable () -> Unit) {
+internal fun SwipeActionsRow(actions: List<SwipeAction>, resetKey: Any? = null, onClosed: () -> Unit = {}, content: @Composable () -> Unit) {
     val actionWidth = 76.dp
     val maxPx = with(LocalDensity.current) { (actionWidth * actions.size).toPx() }
     val offset = remember { Animatable(0f) }
     val scope = rememberCoroutineScope()
     // offset {} already mirrors x in RTL; the raw finger delta does not, so flip it to keep "drag follows finger".
     val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+    val closed by androidx.compose.runtime.rememberUpdatedState(onClosed)
     LaunchedEffect(resetKey) { offset.snapTo(0f) }
+    LaunchedEffect(Unit) { androidx.compose.runtime.snapshotFlow { offset.value == 0f && !offset.isRunning }.collect { if (it) closed() } }
     fun close() = scope.launch { offset.animateTo(0f) }
     Box(Modifier.semantics { customActions = actions.map { a -> CustomAccessibilityAction(a.label) { a.onClick(); true } } }) {
         Row(Modifier.matchParentSize(), horizontalArrangement = androidx.compose.foundation.layout.Arrangement.End) {
             if (offset.value < 0f) actions.forEach { a ->
                 Box(
                     Modifier.width(actionWidth).fillMaxHeight().background(a.color)
-                        .clickable(role = Role.Button) { close(); a.onClick() },
+                        .clickable(role = Role.Button) { if (!a.keepOpen) close(); a.onClick() },
                     contentAlignment = Alignment.Center,
                 ) { ZText(a.label, style = ZTheme.type.callout, color = Color.White) }
             }

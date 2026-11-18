@@ -47,6 +47,7 @@
     <string name="common_mode_global_hint">Mọi lưu lượng qua một nút</string>
     <string name="common_mode_direct_hint">Không qua proxy</string>
     <string name="common_try_again">Thử lại</string>
+    <string name="common_open_settings">Mở Cài đặt</string>
     <string name="common_scene_ai">AI</string>
     <string name="common_scene_video">Video</string>
     <string name="common_scene_other">Khác</string>
@@ -216,7 +217,10 @@
     </plurals>
     <string name="trace_this_connection">Kết nối này</string>
     <string name="trace_option_unchanged">Không đổi</string>
-    <string name="trace_override_failed">Không thể thay đổi: %1$s</string>
+    <string name="trace_override_error">Không thể thay đổi tuyến. Hãy thử lại.</string>
+    <string name="trace_override_cleared">Đã xóa ghi đè tuyến cho %1$s</string>
+    <string name="trace_override_direct">%1$s giờ kết nối trực tiếp</string>
+    <string name="trace_override_scene">%1$s giờ dùng %2$s</string>
     <string name="trace_always_apply">Luôn áp dụng</string>
     <string name="trace_always_apply_hint">Khi tắt, chỉ thay đổi kết nối này</string>
     <string name="library_widgets">Tiện ích và Cài đặt nhanh</string>
@@ -270,7 +274,6 @@
     <string name="subs_paste_link">Dán liên kết</string>
     <string name="subs_paste_clipboard">Dán từ bộ nhớ tạm</string>
     <string name="subs_scan_qr">Quét mã QR</string>
-    <string name="subs_coming_soon">Sắp ra mắt</string>
     <string name="subs_import_desktop">Nhập từ Zephyr trên máy tính</string>
     <string name="subs_import_file">Nhập từ tệp</string>
     <plurals name="subs_added">
@@ -282,6 +285,33 @@
     <string name="subs_error_fetch">Không thể tải gói đăng ký này. Hãy kiểm tra liên kết hoặc mạng.</string>
     <string name="subs_error_invalid_file">Đây không phải tệp cấu hình hợp lệ</string>
     <string name="subs_error_invalid_link">Đây không phải liên kết đăng ký hợp lệ</string>
+    <string name="subs_error_import_version">Mã nhập này cần phiên bản Zephyr mới hơn</string>
+    <string name="subs_import_source">Nguồn: %1$s</string>
+    <string name="subs_import_desktop_source">Zephyr cho máy tính</string>
+    <string name="subs_import_insecure">Liên kết này không được mã hóa (http); nội dung có thể bị đọc trộm hoặc sửa đổi.</string>
+    <string name="subs_import_trust">Chỉ tiếp tục nếu bạn tin tưởng nhà cung cấp này.</string>
+    <string name="subs_scan_prompt">Đặt mã QR đăng ký vào trong khung để tự động nhận diện.</string>
+    <string name="subs_scan_camera_needed">Cần quyền truy cập camera để quét mã</string>
+    <string name="subs_scan_no_camera">Thiết bị này không có camera khả dụng</string>
+    <string name="subs_review_one">%1$s sẽ được cập nhật</string>
+    <string name="subs_review_note">Cập nhật sẽ thay thế nút và quy tắc trong đăng ký. Ghi đè và lựa chọn ngữ cảnh của Zephyr vẫn giữ nguyên.</string>
+    <string name="subs_deleted">Đã xóa %1$s</string>
+    <string name="subs_error_update_all">Không thể cập nhật đăng ký</string>
+    <plurals name="subs_import_confirm_title">
+        <item quantity="other">Nhập %1$d đăng ký?</item>
+    </plurals>
+    <plurals name="subs_added_many">
+        <item quantity="other">Đã thêm %1$d đăng ký</item>
+    </plurals>
+    <plurals name="subs_import_some_failed">
+        <item quantity="other">Không thể thêm %1$d</item>
+    </plurals>
+    <plurals name="subs_review_all">
+        <item quantity="other">Cả %1$s đăng ký sẽ được cập nhật</item>
+    </plurals>
+    <plurals name="subs_updated_count">
+        <item quantity="other">Đã cập nhật %1$d đăng ký</item>
+    </plurals>
     <plurals name="subs_total_unit">
         <item quantity="other">gói đăng ký</item>
     </plurals>

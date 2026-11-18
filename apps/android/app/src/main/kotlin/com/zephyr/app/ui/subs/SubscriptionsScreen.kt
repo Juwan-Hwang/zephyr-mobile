@@ -35,7 +35,10 @@ import com.zephyr.app.R
 import com.zephyr.app.di.AppGraph
 import com.zephyr.app.ui.common.BackTo
 import com.zephyr.app.ui.common.PageScaffold
+import com.zephyr.app.ui.common.UiText
 import com.zephyr.app.ui.common.toPluralCount
+import com.zephyr.app.ui.common.uiPlural
+import com.zephyr.app.ui.common.uiText
 import com.zephyr.design.components.ZCard
 import com.zephyr.design.components.ZDivider
 import com.zephyr.design.components.ZIconButton
@@ -54,7 +57,7 @@ import com.zephyr.engine.SubscriptionsSummary
 import kotlinx.coroutines.launch
 
 @Composable
-fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImport: () -> Unit) {
+fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImport: () -> Unit, onNotice: (UiText) -> Unit = {}) {
     val engine = AppGraph.engine
     val c = ZTheme.colors
     val subs by engine.subscriptions().collectAsState(emptyList())
@@ -74,6 +77,41 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
     val metered = subs.filter { it.totalBytes != null || it.remainingBytes != null }
     val unmetered = subs.filter { it.totalBytes == null && it.remainingBytes == null }
     var showAll by remember { mutableStateOf(false) }
+    // Audit U2: "更新前显示更改" previews first and waits for 更新 on the review card.
+    var review by remember { mutableStateOf<UpdateReview?>(null) }
+    fun updateOne(s: com.zephyr.engine.Subscription) = scope.launch {
+        busyId = s.id
+        runCatching { engine.updateSubscription(s.id) }.onFailure { error = res.getString(R.string.subs_error_update, s.name) }
+        busyId = null
+    }
+    fun requestUpdate(s: com.zephyr.engine.Subscription) {
+        if (busyId != null || updating) return
+        if (!settings.showChangesBeforeUpdate) { updateOne(s); return }
+        scope.launch {
+            busyId = s.id
+            runCatching { engine.previewUpdate(s.id) }
+                .onSuccess { review = UpdateReview.One(s, it) }
+                .onFailure { error = res.getString(R.string.subs_error_update, s.name) }
+            busyId = null
+        }
+    }
+    fun runUpdateAll() = scope.launch {
+        updating = true
+        runCatching { engine.updateAll() }
+            .onSuccess { d -> onNotice(uiPlural(R.plurals.subs_updated_count, d.size)) }
+            .onFailure { error = res.getString(R.string.subs_error_update_all) }
+        updating = false
+    }
+    fun requestUpdateAll() {
+        if (updating || busyId != null) return
+        if (!settings.showChangesBeforeUpdate) { runUpdateAll(); return }
+        scope.launch {
+            updating = true
+            val r = runCatching { previewAll(engine) }.getOrNull()
+            updating = false
+            if (r != null) review = r else error = res.getString(R.string.subs_error_update_all)
+        }
+    }
 
     Box(Modifier.fillMaxSize()) {
     PageScaffold(back, stringResource(R.string.common_subscriptions), onBack, trailing = { ZIconButton(ZIcons.Plus, stringResource(R.string.subs_add), onImport, tint = c.accent) }) {
@@ -85,7 +123,16 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
                 ZText(unit + " · " + pluralStringResource(R.plurals.subs_update_every, settings.autoUpdateHours, settings.autoUpdateHours), Modifier.padding(bottom = 10.dp), style = ZTheme.type.body, color = c.text3)
             }
             Spacer(Modifier.height(16.dp))
-            subs.firstOrNull { it.lastDiff != null }?.let { s ->
+            review?.let { r ->
+                SubscriptionReviewCard(
+                    r,
+                    onConfirm = { review = null; when (r) { is UpdateReview.One -> updateOne(r.sub); is UpdateReview.All -> runUpdateAll() } },
+                    onCancel = { review = null },
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+                Spacer(Modifier.height(12.dp))
+            }
+            subs.firstOrNull { it.lastDiff != null }?.takeIf { review == null }?.let { s ->
                 val d = s.lastDiff!!
                 ZCard(Modifier.padding(horizontal = 16.dp), padding = 18.dp) {
                     Row {
@@ -116,16 +163,21 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
                     val armed = pendingDelete == s.id
                     SwipeActionsRow(
                         listOf(
-                            SwipeAction(stringResource(if (busyId == s.id) R.string.subs_swipe_updating else R.string.subs_swipe_update), c.accent) {
-                                scope.launch { busyId = s.id; runCatching { engine.updateSubscription(s.id) }.onFailure { error = res.getString(R.string.subs_error_update, s.name) }; busyId = null }
-                            },
-                            // Destructive: first tap arms, second tap deletes (no engine undo for deleteSubscription).
-                            SwipeAction(stringResource(if (armed) R.string.subs_swipe_confirm_delete else R.string.subs_swipe_delete), c.danger) {
+                            SwipeAction(stringResource(if (busyId == s.id) R.string.subs_swipe_updating else R.string.subs_swipe_update), c.accent) { requestUpdate(s) },
+                            // Destructive: first tap arms and keeps the row open on "确认删除", second tap deletes
+                            // (audit U15: arming used to close the row, hiding the confirmation). No engine undo.
+                            SwipeAction(stringResource(if (armed) R.string.subs_swipe_confirm_delete else R.string.subs_swipe_delete), c.danger, keepOpen = !armed) {
                                 if (!armed) pendingDelete = s.id
-                                else scope.launch { pendingDelete = null; runCatching { engine.deleteSubscription(s.id) }.onFailure { error = res.getString(R.string.subs_error_delete, s.name) } }
+                                else scope.launch {
+                                    pendingDelete = null
+                                    runCatching { engine.deleteSubscription(s.id) }
+                                        .onSuccess { onNotice(uiText(R.string.subs_deleted, s.name)) }
+                                        .onFailure { error = res.getString(R.string.subs_error_delete, s.name) }
+                                }
                             },
                         ),
                         resetKey = subs.size,
+                        onClosed = { if (pendingDelete == s.id) pendingDelete = null },
                     ) {
                     Row(Modifier.fillMaxWidth().padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
@@ -173,7 +225,7 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
                 ZDivider()
                 ZSettingsRow(stringResource(R.string.subs_show_changes), checked = settings.showChangesBeforeUpdate, onCheckedChange = { v -> scope.launch { engine.updateSettings(settings.copy(showChangesBeforeUpdate = v)) } })
                 ZDivider()
-                ZSettingsRow(stringResource(R.string.subs_update_all), onClick = { scope.launch { updating = true; runCatching { engine.updateAll() }; updating = false } }, value = if (updating) stringResource(R.string.common_updating) else null)
+                ZSettingsRow(stringResource(R.string.subs_update_all), onClick = { requestUpdateAll() }, value = if (updating) stringResource(R.string.common_updating) else null)
             }
             Spacer(Modifier.height(48.dp))
         }

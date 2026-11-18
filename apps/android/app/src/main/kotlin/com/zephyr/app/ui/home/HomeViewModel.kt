@@ -281,6 +281,9 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
     /** Plain notice without undo (e.g. "已添加 Orbit（512 个节点）" after an import, review L-P2-12). */
     fun notify(msg: UiText) = showToast(msg, null, null)
 
+    /** Notice with 撤销 (audit U27: a route override from the trace can be taken back like a scene change). */
+    fun notifyUndo(msg: UiText, undo: suspend () -> Unit) = showToast(msg, null, null, undo)
+
     /** Undo window in ms; AppRoot stretches it with TalkBack's recommended timeout (review H-P2-14). */
     var toastWindowMs: Long = com.zephyr.design.tokens.ZMotion.undoWindow.toLong()
 

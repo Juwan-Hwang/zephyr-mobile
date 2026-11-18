@@ -49,6 +49,7 @@
     <string name="common_mode_global_hint">Tüm trafik tek düğümden</string>
     <string name="common_mode_direct_hint">Proxy kullanılmaz</string>
     <string name="common_try_again">Tekrar dene</string>
+    <string name="common_open_settings">Ayarları aç</string>
     <string name="common_scene_ai">AI</string>
     <string name="common_scene_video">Video</string>
     <string name="common_scene_other">Diğer</string>
@@ -232,7 +233,10 @@
     </plurals>
     <string name="trace_this_connection">Bu bağlantı</string>
     <string name="trace_option_unchanged">Değişiklik yok</string>
-    <string name="trace_override_failed">Değiştirilemedi: %1$s</string>
+    <string name="trace_override_error">Rota değiştirilemedi. Yeniden deneyin.</string>
+    <string name="trace_override_cleared">%1$s için rota üzerine yazma temizlendi</string>
+    <string name="trace_override_direct">%1$s artık doğrudan bağlanıyor</string>
+    <string name="trace_override_scene">%1$s artık %2$s üzerinden</string>
     <string name="trace_always_apply">Her zaman uygula</string>
     <string name="trace_always_apply_hint">Kapalıyken yalnızca bu bağlantı değişir</string>
     <string name="library_widgets">Widget’lar ve Hızlı Ayarlar</string>
@@ -290,7 +294,6 @@
     <string name="subs_paste_link">Bağlantıyı yapıştır</string>
     <string name="subs_paste_clipboard">Panodan yapıştır</string>
     <string name="subs_scan_qr">QR kodu tara</string>
-    <string name="subs_coming_soon">Yakında</string>
     <string name="subs_import_desktop">Bilgisayardaki Zephyr’den içe aktar</string>
     <string name="subs_import_file">Dosyadan içe aktar</string>
     <plurals name="subs_added">
@@ -303,6 +306,38 @@
     <string name="subs_error_fetch">Abonelik indirilemedi. Bağlantıyı veya ağınızı kontrol edin.</string>
     <string name="subs_error_invalid_file">Bu geçerli bir yapılandırma dosyası değil</string>
     <string name="subs_error_invalid_link">Bu geçerli bir abonelik bağlantısı değil</string>
+    <string name="subs_error_import_version">Bu içe aktarma kodu için Zephyr’in daha yeni bir sürümü gerekiyor</string>
+    <string name="subs_import_source">Kaynak: %1$s</string>
+    <string name="subs_import_desktop_source">Zephyr Masaüstü</string>
+    <string name="subs_import_insecure">Bu bağlantı şifrelenmemiş (http); içeriği okunabilir veya değiştirilebilir.</string>
+    <string name="subs_import_trust">Yalnızca bu sağlayıcıya güveniyorsanız devam edin.</string>
+    <string name="subs_scan_prompt">Otomatik olarak taramak için abonelik QR kodunu çerçeveye yerleştirin.</string>
+    <string name="subs_scan_camera_needed">Taramak için kamera erişimi gerekir</string>
+    <string name="subs_scan_no_camera">Bu cihazda kullanılabilir kamera yok</string>
+    <string name="subs_review_one">%1$s güncellenecek</string>
+    <string name="subs_review_note">Güncelleme, abonelikteki düğümleri ve kuralları değiştirir. Zephyr’deki üzerine yazmalar ve senaryo seçimleri aynı kalır.</string>
+    <string name="subs_deleted">Silindi: %1$s</string>
+    <string name="subs_error_update_all">Abonelikler güncellenemedi</string>
+    <plurals name="subs_import_confirm_title">
+        <item quantity="one">%1$d abonelik içe aktarılsın mı?</item>
+        <item quantity="other">%1$d abonelik içe aktarılsın mı?</item>
+    </plurals>
+    <plurals name="subs_added_many">
+        <item quantity="one">%1$d abonelik eklendi</item>
+        <item quantity="other">%1$d abonelik eklendi</item>
+    </plurals>
+    <plurals name="subs_import_some_failed">
+        <item quantity="one">%1$d tanesi eklenemedi</item>
+        <item quantity="other">%1$d tanesi eklenemedi</item>
+    </plurals>
+    <plurals name="subs_review_all">
+        <item quantity="one">%1$s aboneliğin tümü güncellenecek</item>
+        <item quantity="other">%1$s aboneliğin tümü güncellenecek</item>
+    </plurals>
+    <plurals name="subs_updated_count">
+        <item quantity="one">%1$d abonelik güncellendi</item>
+        <item quantity="other">%1$d abonelik güncellendi</item>
+    </plurals>
     <plurals name="subs_total_unit">
         <item quantity="one">abonelik</item>
         <item quantity="other">abonelik</item>

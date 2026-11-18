@@ -47,6 +47,7 @@
     <string name="common_mode_global_hint">ဒေတာအားလုံး နုဒ်တစ်ခုမှတစ်ဆင့်</string>
     <string name="common_mode_direct_hint">ပရောက်စီ မသုံးပါ</string>
     <string name="common_try_again">ထပ်စမ်းကြည့်ပါ</string>
+    <string name="common_open_settings">ဆက်တင်များ ဖွင့်ရန်</string>
     <string name="common_scene_ai">AI</string>
     <string name="common_scene_video">ဗီဒီယို</string>
     <string name="common_scene_other">အခြား</string>
@@ -216,7 +217,10 @@
     </plurals>
     <string name="trace_this_connection">ဤချိတ်ဆက်မှု</string>
     <string name="trace_option_unchanged">မပြောင်းပါ</string>
-    <string name="trace_override_failed">ပြောင်း၍ မရပါ: %1$s</string>
+    <string name="trace_override_error">လမ်းကြောင်း ပြောင်း၍ မရပါ။ ထပ်စမ်းကြည့်ပါ။</string>
+    <string name="trace_override_cleared">%1$s ၏ လမ်းကြောင်း အစားထိုးချက်ကို ရှင်းပြီး</string>
+    <string name="trace_override_direct">%1$s ယခု တိုက်ရိုက် ချိတ်ဆက်သည်</string>
+    <string name="trace_override_scene">%1$s ယခု %2$s ကို သုံးသည်</string>
     <string name="trace_always_apply">အမြဲ အသုံးချရန်</string>
     <string name="trace_always_apply_hint">ပိတ်ထားလျှင် ဤချိတ်ဆက်မှုသာ ပြောင်းမည်</string>
     <string name="library_widgets">ဝစ်ဂျက်နှင့် အမြန်ဆက်တင်များ</string>
@@ -270,7 +274,6 @@
     <string name="subs_paste_link">လင့်ခ် ကူးထည့်ရန်</string>
     <string name="subs_paste_clipboard">ကလစ်ဘုတ်မှ ကူးထည့်ရန်</string>
     <string name="subs_scan_qr">QR ကုဒ် စကင်ဖတ်ရန်</string>
-    <string name="subs_coming_soon">မကြာမီ လာမည်</string>
     <string name="subs_import_desktop">ကွန်ပျူတာရှိ Zephyr မှ တင်သွင်းရန်</string>
     <string name="subs_import_file">ဖိုင်မှ တင်သွင်းရန်</string>
     <plurals name="subs_added">
@@ -282,6 +285,33 @@
     <string name="subs_error_fetch">ဤစာရင်းသွင်းမှုကို ဒေါင်းလုဒ်လုပ်၍ မရပါ။ လင့်ခ် သို့မဟုတ် ကွန်ရက်ကို စစ်ပါ။</string>
     <string name="subs_error_invalid_file">မှန်ကန်သော ဖွဲ့စည်းပုံဖိုင် မဟုတ်ပါ</string>
     <string name="subs_error_invalid_link">မှန်ကန်သော စာရင်းသွင်းမှု လင့်ခ် မဟုတ်ပါ</string>
+    <string name="subs_error_import_version">ဤတင်သွင်းကုဒ်အတွက် Zephyr ဗားရှင်းအသစ် လိုအပ်သည်</string>
+    <string name="subs_import_source">ရင်းမြစ်- %1$s</string>
+    <string name="subs_import_desktop_source">Zephyr (ကွန်ပျူတာ)</string>
+    <string name="subs_import_insecure">ဤလင့်ခ်ကို စာဝှက်မထားပါ (http)။ အကြောင်းအရာကို ဖတ်ရှု သို့မဟုတ် ပြင်ဆင်ခံရနိုင်သည်။</string>
+    <string name="subs_import_trust">ဤဝန်ဆောင်မှုပေးသူကို ယုံကြည်မှသာ ဆက်လုပ်ပါ။</string>
+    <string name="subs_scan_prompt">အလိုအလျောက် စကင်ဖတ်ရန် စာရင်းသွင်းမှု QR ကုဒ်ကို ဘောင်အတွင်း ထားပါ။</string>
+    <string name="subs_scan_camera_needed">စကင်ဖတ်ရန် ကင်မရာ ခွင့်ပြုချက် လိုအပ်သည်</string>
+    <string name="subs_scan_no_camera">ဤစက်တွင် ကင်မရာ မရှိပါ</string>
+    <string name="subs_review_one">%1$s ကို အပ်ဒိတ်လုပ်မည်</string>
+    <string name="subs_review_note">အပ်ဒိတ်လုပ်လျှင် စာရင်းသွင်းမှု၏ နုဒ်များနှင့် စည်းမျဉ်းများကို အစားထိုးမည်။ Zephyr ၏ အစားထိုးချက်များနှင့် မြင်ကွင်း ရွေးချယ်မှုများ မပြောင်းပါ။</string>
+    <string name="subs_deleted">%1$s ကို ဖျက်ပြီး</string>
+    <string name="subs_error_update_all">စာရင်းသွင်းမှုများကို အပ်ဒိတ်လုပ်၍ မရပါ</string>
+    <plurals name="subs_import_confirm_title">
+        <item quantity="other">စာရင်းသွင်းမှု %1$d ခု တင်သွင်းမလား။</item>
+    </plurals>
+    <plurals name="subs_added_many">
+        <item quantity="other">စာရင်းသွင်းမှု %1$d ခု ထည့်ပြီး</item>
+    </plurals>
+    <plurals name="subs_import_some_failed">
+        <item quantity="other">%1$d ခု ထည့်၍ မရပါ</item>
+    </plurals>
+    <plurals name="subs_review_all">
+        <item quantity="other">စာရင်းသွင်းမှု %1$s ခုလုံးကို အပ်ဒိတ်လုပ်မည်</item>
+    </plurals>
+    <plurals name="subs_updated_count">
+        <item quantity="other">စာရင်းသွင်းမှု %1$d ခု အပ်ဒိတ်ပြီး</item>
+    </plurals>
     <plurals name="subs_total_unit">
         <item quantity="other">ခု</item>
     </plurals>

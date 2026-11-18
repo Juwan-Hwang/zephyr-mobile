@@ -32,7 +32,10 @@ import com.zephyr.design.theme.ZTheme
 
 /** "最近连接" (prototype `actSheet`): recent hosts aggregated by domain; tap → trace. Android can name the app. */
 @Composable
-fun BoxScope.ActivitySheet(visible: Boolean, onDismiss: () -> Unit, trace: String? = null, onNotice: (UiText) -> Unit = {}, onHost: (String?) -> Unit) {
+fun BoxScope.ActivitySheet(
+    visible: Boolean, onDismiss: () -> Unit, trace: String? = null, onNotice: (UiText) -> Unit = {},
+    onUndoable: (UiText, suspend () -> Unit) -> Unit = { m, _ -> onNotice(m) }, onHost: (String?) -> Unit,
+) {
     val scope = androidx.compose.runtime.rememberCoroutineScope()
     val flow = remember { AppGraph.engine.recentHosts(5) }
     val hosts by flow.collectWhile(visible, emptyList())
@@ -48,7 +51,7 @@ fun BoxScope.ActivitySheet(visible: Boolean, onDismiss: () -> Unit, trace: Strin
                 Modifier.padding(start = 10.dp).zPressable(label = stringResource(R.string.common_back_to, title)) { onHost(null) }.padding(horizontal = 12.dp, vertical = 8.dp),
                 style = ZTheme.type.body, color = c.accent,
             )
-            TraceBody(trace)
+            TraceBody(trace, onApplied = onUndoable)
             return@ZSheet
         }
         if (hosts.isEmpty()) {
