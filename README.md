@@ -122,4 +122,6 @@ cd design/prototype && python3 -m http.server   # 打开 index.html，左侧切�
 
 ## 许可
 
-嵌入的 mihomo 为 GPL-3.0。本仓库倾向整个 App 按 GPL-3.0 开源，最终确认前暂不添加根目录 LICENSE。
+- 本仓库自有源码按 [MIT](LICENSE) 授权（版权行同桌面版 Zephyr）。
+- `mihomo-mobile/` 嵌入的 [mihomo](https://github.com/MetaCubeX/mihomo) 为 GPL-3.0（见 [mihomo-mobile/LICENSE](mihomo-mobile/LICENSE)）。移动端安装包（iOS / Android）因静态链接 mihomo，**整体按 GPL-3.0 分发**；每个发布版本的对应源码即本仓库对应的 tag（如 `mobile-v1.0`）。
+- 第三方依赖与许可见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
