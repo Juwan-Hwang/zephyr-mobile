@@ -267,7 +267,7 @@
     <string name="nodes_no_match">Ningún nodo coincide con «%1$s»</string>
     <string name="nodes_tested">%1$s probados</string>
     <string name="nodes_jump_to">Ir a %1$s</string>
-    <string name="rules_add_override_a11y">Añadir invalidación para un dominio</string>
+    <string name="rules_add_override_a11y">Añadir sobrescritura para un dominio</string>
     <plurals name="rules_total_unit">
         <item quantity="one">regla</item>
         <item quantity="many">reglas</item>
@@ -283,8 +283,8 @@
     <string name="rules_match_order">Orden de coincidencia</string>
     <string name="rules_top_to_bottom">De arriba abajo</string>
     <string name="rules_other_traffic">Resto del tráfico</string>
-    <string name="rules_note">Los conjuntos de reglas se compilan en el dispositivo en un índice de solo lectura y se leen del disco cuando hace falta. Las invalidaciones se mantienen al actualizar las suscripciones.</string>
-    <string name="rules_kind_override">Invalidación</string>
+    <string name="rules_note">Los conjuntos de reglas se compilan en el dispositivo en un índice de solo lectura y se leen del disco cuando hace falta. Las sobrescrituras se mantienen al actualizar las suscripciones.</string>
+    <string name="rules_kind_override">Sobrescritura</string>
     <string name="rules_kind_subscription">Suscripción</string>
     <string name="rules_kind_domain">Dominio</string>
     <string name="rules_kind_other">Otros</string>
@@ -328,7 +328,7 @@
     <string name="subs_diff_updating">Actualizando %1$s…</string>
     <string name="subs_diff_updated">%1$s actualizada</string>
     <string name="subs_rule_changes">Cambios en las reglas</string>
-    <string name="subs_overrides_kept">Invalidaciones conservadas</string>
+    <string name="subs_overrides_kept">Sobrescrituras conservadas</string>
     <string name="subs_scenes_retested">Escenarios probados de nuevo</string>
     <string name="subs_section_data">Datos</string>
     <string name="subs_this_month">Este mes</string>
