@@ -215,7 +215,7 @@ jobs:
       - name: build, unit test, paparazzi verify
         if: ${{ !inputs.record_android_snapshots }}
         working-directory: apps/android
-        run: ./gradlew --no-daemon -Pzephyr.rust=true assembleDebug testDebugUnitTest verifyPaparazziDebug
+        run: ./gradlew --no-daemon -Pzephyr.rust=true -Pzephyr.strict16k=true assembleDebug testDebugUnitTest verifyPaparazziDebug
       - name: paparazzi record（手动触发）
         if: ${{ inputs.record_android_snapshots }}
         working-directory: apps/android
