@@ -2430,6 +2430,102 @@ public func FfiConverterTypeFailoverPolicy_lower(_ value: FailoverPolicy) -> Rus
 }
 
 
+public struct FetchTarget {
+    /**
+     * 小写主机名或 IP 字面量（IPv6 不带方括号）
+     */
+    public var host: String
+    public var port: UInt16
+    public var https: Bool
+    /**
+     * 用户亲手输入的内网主机（私网字面量、.local/.lan 等内网后缀、单标签名）：允许，但解析结果不做公网校验，
+     * 重定向只能指向同一主机
+     */
+    public var userEnteredPrivate: Bool
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(
+        /**
+         * 小写主机名或 IP 字面量（IPv6 不带方括号）
+         */host: String, port: UInt16, https: Bool, 
+        /**
+         * 用户亲手输入的内网主机（私网字面量、.local/.lan 等内网后缀、单标签名）：允许，但解析结果不做公网校验，
+         * 重定向只能指向同一主机
+         */userEnteredPrivate: Bool) {
+        self.host = host
+        self.port = port
+        self.https = https
+        self.userEnteredPrivate = userEnteredPrivate
+    }
+}
+
+
+
+extension FetchTarget: Equatable, Hashable {
+    public static func ==(lhs: FetchTarget, rhs: FetchTarget) -> Bool {
+        if lhs.host != rhs.host {
+            return false
+        }
+        if lhs.port != rhs.port {
+            return false
+        }
+        if lhs.https != rhs.https {
+            return false
+        }
+        if lhs.userEnteredPrivate != rhs.userEnteredPrivate {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(host)
+        hasher.combine(port)
+        hasher.combine(https)
+        hasher.combine(userEnteredPrivate)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeFetchTarget: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> FetchTarget {
+        return
+            try FetchTarget(
+                host: FfiConverterString.read(from: &buf), 
+                port: FfiConverterUInt16.read(from: &buf), 
+                https: FfiConverterBool.read(from: &buf), 
+                userEnteredPrivate: FfiConverterBool.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: FetchTarget, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.host, into: &buf)
+        FfiConverterUInt16.write(value.port, into: &buf)
+        FfiConverterBool.write(value.https, into: &buf)
+        FfiConverterBool.write(value.userEnteredPrivate, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeFetchTarget_lift(_ buf: RustBuffer) throws -> FetchTarget {
+    return try FfiConverterTypeFetchTarget.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeFetchTarget_lower(_ value: FetchTarget) -> RustBuffer {
+    return FfiConverterTypeFetchTarget.lower(value)
+}
+
+
 /**
  * 平台拉取结果。
  */
@@ -8312,6 +8408,26 @@ public func coreGreeting() -> String {
 })
 }
 /**
+ * 联网前校验订阅 URL（scheme 仅 http/https、必须有 host、无控制字符）；不合法 → `SubscriptionInvalid`。
+ */
+public func fetchTarget(url: String)throws  -> FetchTarget {
+    return try  FfiConverterTypeFetchTarget.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_func_fetch_target(
+        FfiConverterString.lower(url),$0
+    )
+})
+}
+/**
+ * DNS 解析出的地址是否可以直连拉取订阅。无法解析的字符串 → false。
+ */
+public func isPublicFetchAddress(ip: String) -> Bool {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_func_is_public_fetch_address(
+        FfiConverterString.lower(ip),$0
+    )
+})
+}
+/**
  * contract §15：`parseImportPayload(payload) -> ImportPayload`。无法识别 / 校验失败 → `Invalid` / `SubscriptionInvalid`。
  */
 public func parseImportPayload(payload: String)throws  -> ImportPayload {
@@ -8338,6 +8454,12 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.contractVersionMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_func_core_greeting() != 3481) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_func_fetch_target() != 55269) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_func_is_public_fetch_address() != 57759) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_func_parse_import_payload() != 49370) {

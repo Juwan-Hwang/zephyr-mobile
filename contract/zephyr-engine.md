@@ -765,3 +765,41 @@ RuntimeOptions.logLevel                             // 同上取值；未知值�
 - mihomo 会把所有级别的事件推给订阅者，`log-level` 本来只影响它自己的 stdout；mihomo-mobile 的日志环形缓冲（`zm_logs`，500 条）现在**按当前 `log-level` 过滤**，所以默认 info 时 debug 行不会挤掉有用日志。
 - 日志页：分段选 **debug** 时平台调用 `setLogLevel("debug")`，离开日志页（或切回其他分段）时 `setLogLevel("info")`；选 warning / error 只是显示过滤，不改 mihomo 级别（这样切回 info 时历史还在）。隧道未运行时无需调用（下次连接按 `RuntimeOptions.logLevel = "info"`）。iOS 经 App Group 的 `MihomoClient(socketPath)` 直接调用，不必走 provider message。
 - 日志页级别不持久化（§16.c 末条），重进日志页回到 info。
+
+### 16.i 订阅拉取规范（E35，SSRF 判定 core-mobile 已实现，只追加）
+§14 说"平台拉取、核心解析，SSRF/DNS 校验在平台层"，此前两端超时、大小、重定向、UA 各不相同且都没做 SSRF 校验。统一如下（导入、手动更新、自动更新、规则集 / GEO 下载共用；规则集 / GEO 的 URL 来自订阅，同样过 SSRF 校验）。
+
+```
+record FetchTarget { host: String, port: UInt16, https: Bool, userEnteredPrivate: Bool }
+fetchTarget(url: String) throws -> FetchTarget      // 顶层函数；联网前校验，复用桌面 validate_subscription_url_basic；不合法 → SubscriptionInvalid
+isPublicFetchAddress(ip: String) -> Bool            // 顶层函数；DNS 结果可否直连（私网、回环、链路本地、CGNAT、保留段、fake-ip 段、IPv4 映射/内嵌的私网都算否）
+```
+
+**① 联网前**：先 `fetchTarget(url)`（不合法直接 `subscription_invalid`，不发任何请求）。导入时的 URL 先过 `parseImportPayload`（§15），再过 `fetchTarget`。
+
+**② 请求参数**（两端相同）：
+| 项 | 值 |
+|---|---|
+| 方法 | `GET`，不带 Cookie（临时会话，不存 Cookie / 缓存 / 凭据） |
+| User-Agent | `Zephyr/<App 版本> (<iOS\|Android> <系统版本>) clash.meta mihomo/<内置 mihomo 版本>`——含 `clash.meta` / `mihomo` 让机场返回 mihomo 格式 YAML |
+| 其他头 | `Accept: */*`；`Accept-Encoding: gzip`（自动解压，大小按解压后计） |
+| 超时 | 建连 15 s；整个请求（含重定向与读完正文）30 s |
+| 正文上限 | **32 MB**（解压后），超出中止 → `subscription_fetch_failed`；与 Android 文件导入上限一致（桌面为 10 MB，移动端聚合订阅常见更大的正文） |
+| 重定向 | 最多 **5** 跳，平台手动跟随，每跳都按 ③ 校验；`https → http` 降级拒绝 |
+| 状态码 | 只接受 2xx；其余 → `subscription_fetch_failed` |
+| 正文 | 必须是 UTF‑8（可带 BOM）；交给核心后解析失败 → `subscription_invalid` |
+| 头 | `subscription-userinfo`（大小写不敏感）原样放进 `FetchedSubscription.userinfo` |
+| 名称 | 导入时无名称：`Content-Disposition` 的 filename（去扩展名、≤ 64 字节）→ 否则 URL host |
+
+**③ SSRF / DNS 校验**（与桌面同语义）：
+- `userEnteredPrivate == true`（用户亲手输入的 `192.168.1.2`、`nas.local`、单标签名等）：**允许**——这是用户明确要访问的内网订阅服务；不做公网校验；重定向**只能**回到同一 host。
+- 否则：平台解析 host，**每个**解析结果都要 `isPublicFetchAddress == true` 才发请求；任一不通过 → `subscription_fetch_failed`（日志写明 SSRF，UI 不区分）。重定向目标若是私网字面量或解析为私网 → 拒绝。
+- **fake-ip 例外**：隧道已连接时，iOS App 的解析结果可能落在 fake-ip 段 `198.18.0.0/16`（请求会经隧道由 mihomo 按规则处理）。此时该段地址视为通过，不再判私网；其他私网结果照旧拒绝。
+- 检查与连接之间的 DNS 重绑定无法完全避免（系统 HTTP 栈自行解析）；这是已知残余风险，与桌面 DNS pin 方案相比较弱，记录在此。
+
+**④ 走不走隧道**：
+- iOS：App 的请求随系统路由，隧道连着时按规则经隧道，不连时直连。
+- Android：App 自身被排除在 VPN 之外（§16.f），为与 iOS 一致，**隧道已连接时经回环 mixed 端口（带凭据）拉取**，未连接时直连。这样被墙的订阅域名在两端都能在连上后更新。
+- 两端都不读系统 HTTP 代理设置。
+
+**⑤ 错误码**（补 §16.b①）：离线 → `network_unavailable`；DNS 失败、超时、TLS 失败、非 2xx、超大小、重定向过多 / 降级 / SSRF 拒绝 → `subscription_fetch_failed`；URL 不合法、正文不是订阅 → `subscription_invalid`。

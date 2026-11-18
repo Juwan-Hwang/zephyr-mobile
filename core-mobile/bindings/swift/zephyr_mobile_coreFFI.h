@@ -677,6 +677,16 @@ RustBuffer uniffi_zephyr_mobile_core_fn_func_core_greeting(RustCallStatus *_Nonn
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_FUNC_FETCH_TARGET
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_FUNC_FETCH_TARGET
+RustBuffer uniffi_zephyr_mobile_core_fn_func_fetch_target(RustBuffer url, RustCallStatus *_Nonnull out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_FUNC_IS_PUBLIC_FETCH_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_FUNC_IS_PUBLIC_FETCH_ADDRESS
+int8_t uniffi_zephyr_mobile_core_fn_func_is_public_fetch_address(RustBuffer ip, RustCallStatus *_Nonnull out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_FUNC_PARSE_IMPORT_PAYLOAD
 #define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_FN_FUNC_PARSE_IMPORT_PAYLOAD
 RustBuffer uniffi_zephyr_mobile_core_fn_func_parse_import_payload(RustBuffer payload, RustCallStatus *_Nonnull out_status
@@ -965,6 +975,18 @@ void ffi_zephyr_mobile_core_rust_future_complete_void(uint64_t handle, RustCallS
 #ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_FUNC_CORE_GREETING
 #define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_FUNC_CORE_GREETING
 uint16_t uniffi_zephyr_mobile_core_checksum_func_core_greeting(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_FUNC_FETCH_TARGET
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_FUNC_FETCH_TARGET
+uint16_t uniffi_zephyr_mobile_core_checksum_func_fetch_target(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_FUNC_IS_PUBLIC_FETCH_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_ZEPHYR_MOBILE_CORE_CHECKSUM_FUNC_IS_PUBLIC_FETCH_ADDRESS
+uint16_t uniffi_zephyr_mobile_core_checksum_func_is_public_fetch_address(void
     
 );
 #endif
