@@ -115,7 +115,7 @@ jobs:
     needs: detect
     if: needs.detect.outputs.ios == 'true'
     runs-on: macos-15
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
@@ -159,6 +159,18 @@ jobs:
             -parallel-testing-enabled NO \
             -resultBundlePath build/Test.xcresult \
             CODE_SIGNING_ALLOWED=NO test | xcbeautify || exit 1
+      - name: Release 构建（真机 arm64，-O + 非 DEBUG 分支，不签名；build number = run_number）
+        if: ${{ !inputs.record_ios_snapshots }}
+        working-directory: apps/ios
+        run: |
+          set -o pipefail
+          PROJ=$(find . -maxdepth 1 -name '*.xcodeproj' | head -1)
+          SCHEME=${IOS_SCHEME:-Zephyr}
+          xcodebuild -project "$PROJ" -scheme "$SCHEME" \
+            -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
+            -derivedDataPath build/Release \
+            CURRENT_PROJECT_VERSION=${{ github.run_number }} \
+            CODE_SIGNING_ALLOWED=NO build | xcbeautify || exit 1
       - name: snapshot record（手动触发，只跑 ZephyrSnapshotTests）
         if: ${{ inputs.record_ios_snapshots }}
         working-directory: apps/ios
@@ -216,6 +228,11 @@ jobs:
         if: ${{ !inputs.record_android_snapshots }}
         working-directory: apps/android
         run: ./gradlew --no-daemon -Pzephyr.rust=true -Pzephyr.strict16k=true assembleDebug testDebugUnitTest verifyPaparazziDebug
+      - name: Release 构建（R8 + shrinkResources，APK 与 AAB；16 KB 对齐严格）
+        if: ${{ !inputs.record_android_snapshots }}
+        working-directory: apps/android
+        # zephyr.versionCode：P1-1 规则，build number = run_number；app/build.gradle.kts 读取前不生效。
+        run: ./gradlew --no-daemon -Pzephyr.rust=true -Pzephyr.strict16k=true -Pzephyr.versionCode=${{ github.run_number }} assembleRelease bundleRelease
       - name: paparazzi record（手动触发）
         if: ${{ inputs.record_android_snapshots }}
         working-directory: apps/android
