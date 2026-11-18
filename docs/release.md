@@ -8,7 +8,7 @@
 
 | # | 事项 | 影响 | 状态 |
 |---|---|---|---|
-| D1 | **仓库许可证**：mihomo 为 GPL-3.0，静态链接进两端二进制（iOS c-archive、Android c-shared）。用户倾向**整个 App 按 GPL-3.0 开源**（参照 Clash Mi，App 名不含 mihomo），**仍待最终确认** | 根目录 LICENSE、App 内“开源许可”页、发布时提供对应源码 | 【待用户决定】（倾向 GPL-3.0） |
+| D1 | **许可证**（用户 2026-11-18 确认）：自有源码 MIT（根目录 `LICENSE`）；`mihomo-mobile/LICENSE` 为 GPL-3.0；移动端安装包因静态链接 mihomo 整体按 GPL-3.0 分发，对应源码 = 本仓库对应 tag | App 内“开源许可”页、发布时指明源码 tag | ✅ 已定（#219） |
 | D2 | **Apple 开发者团队**：必须是付费**组织**账号（App Store 审核指南 5.4：VPN App 须由组织发布），提供 Team ID | `apps/ios/project.yml` 的 `DEVELOPMENT_TEAM`（现为空）、描述文件 | 【待用户提供】 |
 | D3 | **应用标识统一**为 `com.juwanh.zephyr`，App Group `group.com.juwanh.zephyr`（用户 2026-11-18 确认）。现状：iOS `app.zephyr.mobile*` / `group.app.zephyr.mobile`，Android `com.zephyr.app`，需由 B/C 改到新标识（上架后不可更改） | 两端工程、Play/App Store 后台、App Group | ✅ 已定；待 B/C 改工程 |
 | D4 | **中国大陆区**：大陆 App Store 的 VPN App 需持牌，是否在 App Store Connect 排除中国大陆店面 | 上架地区 | 【待用户决定】 |
@@ -72,10 +72,10 @@
 
 ## 6. 许可与第三方声明
 
-- [ ] 【待用户决定】根目录 LICENSE（D1，倾向 GPL-3.0）。最终确认前不添加。
+- [ ] 根目录 `LICENSE`（MIT）与 `mihomo-mobile/LICENSE`（GPL-3.0）入库（#219）。
 - [ ] `THIRD_PARTY_NOTICES.md`：Rust（含 MPL-2.0 的 uniffi*，须附许可文本）与 Go（mihomo GPL-3.0 等）运行时依赖清单，由 `tools/gen-third-party.sh` 生成；依赖升级后重新生成。
 - [ ] B/C：设置 › 关于 › 开源许可页面，展示上述清单与许可全文。
-- [ ] 按 GPL-3.0 分发时（D1 倾向）：App 名不含 “mihomo”；每个发布版本提供对应源码（本仓库 tag + 子模块 commit + mihomo 版本）。
+- [ ] 安装包按 GPL-3.0 分发：App 名不含 “mihomo”；商店描述 / 关于页注明许可与源码地址，对应源码即本仓库该版本的 tag（含子模块 commit 与 `mihomo-mobile/go.sum` 锁定版本）。
 
 ## 7. 真机验证清单（模拟器 / 沙箱无法覆盖）
 
