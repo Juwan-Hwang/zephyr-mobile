@@ -736,3 +736,32 @@ IPv6：fe80::/10, fc00::/7, ff00::/8（::1 本就不进 TUN）
 | 订阅自动更新 | BGAppRefresh（系统决定，最早 4 h）+ 回前台检查 | WorkManager 每小时检查（按 §16.c 约束网络） |
 | 小组件刷新 | App 写入 + 15 分钟 timeline + 零点条目 | 连接期间每 60 s，**须加零点刷新**（E44） |
 | 实时活动 / 常驻通知 | 实时活动 120 s 后标记过期 | 常驻通知持续更新 |
+
+### 16.g 核心与引擎接口追加（U9 / E31 / E32，core-mobile 已实现，只追加）
+
+**① 本地代理凭据读接口（U9）**——平台引擎接口（不过 FFI；凭据存平台安全存储，核心不落盘）：
+```
+localProxyCredential() async -> String            // "zephyr:<24 位>"；不存在则生成并保存后返回；两端同一格式
+resetLocalProxyCredential() async -> String       // 换一个新密码（用户怀疑泄露时）；隧道运行中且本地代理开启 + 需要密码时随后热重载
+```
+- 格式：用户名固定 `zephyr`，密码 24 位，字母表 `abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789`（去掉易混的 0 O 1 l I），`SecureRandom` / `SystemRandomNumberGenerator`。
+- 存储：iOS 钥匙串（`kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`，不进 iCloud 备份）；Android 应改为 Keystore 加密（`EncryptedFile` 或 Keystore 包装的 AES），旧明文文件读出后迁移并删除（E42 加固）。
+- 本地代理页（资料库 → 本地代理端口）展示：开关、端口、"需要密码"开关；需要密码时显示用户名 `zephyr`、密码（默认遮挡，点按显示）、"复制"（复制 `http://zephyr:<密码>@127.0.0.1:<端口>`；另给 SOCKS5 同格式）、"重新生成密码"。复制时标记为敏感：iOS `UIPasteboard` 设 `expirationDate` 60 s + `localOnly`，Android 13+ 带 `ClipDescription.EXTRA_IS_SENSITIVE`。
+- Mock：固定返回 `zephyr:mockmockmockmockmockmock`（24 位），reset 返回同格式新值。
+
+**② 订阅自动更新间隔**（E32 / §16.c）
+```
+setSubscriptionAutoUpdate(id: String, hours: Int32) throws -> Subscription   // 0 = 手动；0–720，越界 Invalid；未知 id SubscriptionNotFound；落盘
+```
+
+**③ `dueSubscriptions` 排除本地订阅（E31）**：没有 url 的订阅（剪贴板正文、文件导入）无从拉取，**永不到期**（此前会每轮到期、每次拉取失败）。`autoUpdateHours == 0` 照旧不到期。
+
+### 16.h 日志级别（E46，core-mobile / mihomo-mobile 已实现，只追加）
+```
+MihomoClient.setLogLevel(level: String) throws     // PATCH /configs {"log-level"}，热生效不重载；debug|info|warning|error|silent，不区分大小写，其他 → Invalid
+RuntimeOptions.logLevel                             // 同上取值；未知值核心按 info 写入（不再让 mihomo 整份配置加载失败）
+```
+- **默认 `info`**（两端此前写死 `warning`，改为 `"info"`）：与日志页默认分段 info 一致。
+- mihomo 会把所有级别的事件推给订阅者，`log-level` 本来只影响它自己的 stdout；mihomo-mobile 的日志环形缓冲（`zm_logs`，500 条）现在**按当前 `log-level` 过滤**，所以默认 info 时 debug 行不会挤掉有用日志。
+- 日志页：分段选 **debug** 时平台调用 `setLogLevel("debug")`，离开日志页（或切回其他分段）时 `setLogLevel("info")`；选 warning / error 只是显示过滤，不改 mihomo 级别（这样切回 info 时历史还在）。隧道未运行时无需调用（下次连接按 `RuntimeOptions.logLevel = "info"`）。iOS 经 App Group 的 `MihomoClient(socketPath)` 直接调用，不必走 provider message。
+- 日志页级别不持久化（§16.c 末条），重进日志页回到 info。

@@ -610,6 +610,12 @@ public protocol MihomoClientProtocol : AnyObject {
     func selectInGroup(group: String, member: String) throws 
     
     /**
+     * 热改 mihomo 日志级别（debug / info / warning / error / silent，不区分大小写），不重载配置。
+     * 未知级别 → Invalid。日志页选 debug 时临时调高，离开时恢复 info（契约 §16.h）。
+     */
+    func setLogLevel(level: String) throws 
+    
+    /**
      * 模式切换（rule / global / direct）。
      */
     func setMode(mode: String) throws 
@@ -757,6 +763,17 @@ open func selectInGroup(group: String, member: String)throws  {try rustCallWithE
     uniffi_zephyr_mobile_core_fn_method_mihomoclient_select_in_group(self.uniffiClonePointer(),
         FfiConverterString.lower(group),
         FfiConverterString.lower(member),$0
+    )
+}
+}
+    
+    /**
+     * 热改 mihomo 日志级别（debug / info / warning / error / silent，不区分大小写），不重载配置。
+     * 未知级别 → Invalid。日志页选 debug 时临时调高，离开时恢复 info（契约 §16.h）。
+     */
+open func setLogLevel(level: String)throws  {try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mihomoclient_set_log_level(self.uniffiClonePointer(),
+        FfiConverterString.lower(level),$0
     )
 }
 }
@@ -1076,6 +1093,12 @@ public protocol MobileCoreProtocol : AnyObject {
      * 已是最优或没有测速数据时返回 None。Manual / SubscriptionGroup：只记录。
      */
     func setSceneSource(sceneId: String, source: SceneSource, nowMillis: Int64) throws  -> SceneApply?
+    
+    /**
+     * 改订阅的自动更新间隔（小时，0 = 手动，0–720，越界 Invalid）。设置页"自动更新"改动时，
+     * 平台对每个间隔 > 0 的订阅调用（契约 §16.c / §16.g）。返回更新后的订阅。
+     */
+    func setSubscriptionAutoUpdate(id: String, hours: Int32) throws  -> Subscription
     
     func storageInfo()  -> StorageInfo
     
@@ -1748,6 +1771,19 @@ open func setSceneSource(sceneId: String, source: SceneSource, nowMillis: Int64)
         FfiConverterString.lower(sceneId),
         FfiConverterTypeSceneSource.lower(source),
         FfiConverterInt64.lower(nowMillis),$0
+    )
+})
+}
+    
+    /**
+     * 改订阅的自动更新间隔（小时，0 = 手动，0–720，越界 Invalid）。设置页"自动更新"改动时，
+     * 平台对每个间隔 > 0 的订阅调用（契约 §16.c / §16.g）。返回更新后的订阅。
+     */
+open func setSubscriptionAutoUpdate(id: String, hours: Int32)throws  -> Subscription {
+    return try  FfiConverterTypeSubscription.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_set_subscription_auto_update(self.uniffiClonePointer(),
+        FfiConverterString.lower(id),
+        FfiConverterInt32.lower(hours),$0
     )
 })
 }
@@ -4937,6 +4973,9 @@ public struct RuntimeOptions {
      * iOS 扩展里关掉进程识别（系统不给），Android 可开
      */
     public var findProcess: Bool
+    /**
+     * mihomo `log-level`：debug / info / warning / error / silent（不区分大小写）；其他值按 info（契约 §16.h）
+     */
     public var logLevel: String
     /**
      * 本地代理（设置 → 本地代理端口）：只监听 127.0.0.1 的 mixed 端口；None = 关（默认）。
@@ -4951,7 +4990,10 @@ public struct RuntimeOptions {
          */controllerSocket: String, 
         /**
          * iOS 扩展里关掉进程识别（系统不给），Android 可开
-         */findProcess: Bool, logLevel: String, 
+         */findProcess: Bool, 
+        /**
+         * mihomo `log-level`：debug / info / warning / error / silent（不区分大小写）；其他值按 info（契约 §16.h）
+         */logLevel: String, 
         /**
          * 本地代理（设置 → 本地代理端口）：只监听 127.0.0.1 的 mixed 端口；None = 关（默认）。
          */localProxy: LocalProxy? = nil) {
@@ -8325,6 +8367,9 @@ private var initializationResult: InitializationResult = {
     if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_select_in_group() != 300) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_set_log_level() != 27714) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_set_mode() != 26213) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -8488,6 +8533,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_scene_source() != 34889) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_subscription_auto_update() != 44049) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_storage_info() != 53541) {

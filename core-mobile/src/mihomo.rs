@@ -382,6 +382,14 @@ impl MihomoClient {
         let body = serde_json::json!({ "mode": mode }).to_string();
         self.http.json("PATCH", "/configs", Some(&body)).map(|_| ())
     }
+
+    /// 热改 mihomo 日志级别（debug / info / warning / error / silent，不区分大小写），不重载配置。
+    /// 未知级别 → Invalid。日志页选 debug 时临时调高，离开时恢复 info（契约 §16.h）。
+    pub fn set_log_level(&self, level: String) -> Result<(), MobileError> {
+        let l = crate::runtime_config::mihomo_log_level(&level).ok_or_else(|| MobileError::Invalid(format!("未知日志级别：{level}")))?;
+        let body = serde_json::json!({ "log-level": l }).to_string();
+        self.http.json("PATCH", "/configs", Some(&body)).map(|_| ())
+    }
 }
 
 impl MihomoClient {
@@ -535,6 +543,18 @@ mod tests {
         assert!(seen.last().unwrap().starts_with("PUT /proxies/AI HTTP/1.1"));
         assert!(seen.last().unwrap().ends_with(r#"{"name":"新加坡 02"}"#));
         assert!(seen.iter().any(|r| r.starts_with("GET /group/AI/delay?url=https%3A%2F%2Fwww.gstatic.com%2Fgenerate_204&timeout=3000")));
+    }
+
+    #[test]
+    fn set_log_level_patches_configs() {
+        let d = tempfile::tempdir().unwrap();
+        let (sock, h) = serve(d.path(), 1);
+        let c = MihomoClient::new(sock);
+        assert!(matches!(c.set_log_level("verbose".into()), Err(MobileError::Invalid(_))), "未知级别不发请求");
+        c.set_log_level("DEBUG".into()).unwrap();
+        let seen = h.join().unwrap();
+        assert!(seen[0].starts_with("PATCH /configs HTTP/1.1"));
+        assert!(seen[0].ends_with(r#"{"log-level":"debug"}"#));
     }
 
     #[test]
