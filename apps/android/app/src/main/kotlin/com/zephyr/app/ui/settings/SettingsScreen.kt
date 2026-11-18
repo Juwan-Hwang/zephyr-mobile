@@ -27,6 +27,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -71,7 +72,7 @@ fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onBack: () -> Unit) {
             ZListGroup {
                 ZSettingsRow(stringResource(R.string.settings_on_demand), checked = s.onDemand, onCheckedChange = { v -> set { it.copy(onDemand = v) } })
                 ZDivider()
-                ZSettingsRow(stringResource(R.string.settings_trusted_wifi), subtitle = stringResource(R.string.settings_trusted_wifi_hint), value = joinList(s.trustedWifi).ifEmpty { stringResource(R.string.common_none) })
+                TrustedWifiRow(s)
                 ZDivider()
                 ChoiceRow(
                     stringResource(R.string.settings_local_proxy), listOf(true to stringResource(R.string.common_on), false to stringResource(R.string.common_off)), s.localProxyEnabled,
@@ -166,4 +167,38 @@ private fun accentName(a: Accent): Int? = when (a.name) {
     "TEAL" -> R.string.settings_accent_teal; "INDIGO" -> R.string.settings_accent_indigo; "YELLOW" -> R.string.settings_accent_yellow
     "GRAPHITE" -> R.string.settings_accent_graphite
     else -> null
+}
+
+/**
+ * 受信任 Wi‑Fi (audit E01/U1). Android 10+ only tells an app the current SSID with location permission, so while
+ * trusted networks are in use and it is missing, the row says so and tapping it asks. Without it the tunnel simply
+ * stays up on every network (never a wrong disconnect). Not shown where no network monitor runs (previews/tests).
+ */
+@Composable
+private fun TrustedWifiRow(s: Settings) {
+    val monitor = AppGraph.network
+    // Previews / screenshot tests have no Activity result registry; nothing to ask there.
+    if (monitor == null) { TrustedWifiRowContent(s, needs = false, onAsk = null); return }
+    val ctx = androidx.compose.ui.platform.LocalContext.current
+    var granted by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(com.zephyr.app.vpn.NetworkMonitor.hasLocationPermission(ctx)) }
+    val ask = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions(),
+    ) { res ->
+        granted = res[android.Manifest.permission.ACCESS_FINE_LOCATION] == true
+        if (granted) monitor.refresh()
+    }
+    val needs = !granted && s.disconnectOnTrusted && s.trustedWifi.any { it.isNotBlank() }
+    TrustedWifiRowContent(s, needs) {
+        ask.launch(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION))
+    }
+}
+
+@Composable
+private fun TrustedWifiRowContent(s: Settings, needs: Boolean, onAsk: (() -> Unit)?) {
+    ZSettingsRow(
+        stringResource(R.string.settings_trusted_wifi),
+        subtitle = stringResource(if (needs) R.string.settings_trusted_wifi_location else R.string.settings_trusted_wifi_hint),
+        value = joinList(s.trustedWifi).ifEmpty { stringResource(R.string.common_none) },
+        onClick = if (needs) onAsk else null,
+    )
 }

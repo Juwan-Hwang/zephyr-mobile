@@ -357,6 +357,7 @@
     <string name="settings_section_connection">接続</string>
     <string name="settings_on_demand">オンデマンド接続</string>
     <string name="settings_trusted_wifi_hint">接続したら自動的に切断</string>
+    <string name="settings_trusted_wifi_location">Wi‑Fi 名を識別するには位置情報へのアクセスを許可</string>
     <string name="settings_password_required">パスワードを要求</string>
     <string name="settings_section_testing">テスト</string>
     <string name="settings_test_wifi_only">Wi‑Fi 接続時のみ速度テスト</string>

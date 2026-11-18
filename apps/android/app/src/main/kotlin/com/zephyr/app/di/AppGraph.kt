@@ -22,6 +22,8 @@ object AppGraph {
     lateinit var engine: ZephyrEngine; private set
     lateinit var settings: SettingsStore; private set
     lateinit var connection: ConnectionController; private set
+    /** The physical network under the tunnel; null under [override] (screenshot tests / previews). */
+    var network: com.zephyr.app.vpn.NetworkMonitor? = null; private set
     /** False under [override] (screenshot tests / previews), where no SettingsStore exists. */
     val hasSettings: Boolean get() = ::settings.isInitialized
     val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -46,6 +48,14 @@ object AppGraph {
         )
         engine = core
         if (BuildConfig.DEBUG && BuildConfig.CORE_SEED > 0.0) appScope.launch { runCatching { core.seedMockNodes(BuildConfig.CORE_SEED) } }
+        network = com.zephyr.app.vpn.NetworkMonitor(app).also { m ->
+            m.start()
+            // Audit E08: ConnectionState.network is the real network (Release never shows the mock's「家」).
+            appScope.launch {
+                kotlinx.coroutines.flow.combine(m.state, core.settings()) { n, s -> com.zephyr.app.vpn.NetworkMonitor.info(n, s) }
+                    .collect { core.setNetwork(it) }
+            }
+        }
         settings = SettingsStore(app, engine, appScope)
         connection = ConnectionController(app, engine, appScope)
         Notifications.ensureChannels(app)

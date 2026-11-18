@@ -387,6 +387,7 @@
     <string name="settings_section_connection">Muunganisho</string>
     <string name="settings_on_demand">Unganisha inapohitajika</string>
     <string name="settings_trusted_wifi_hint">Tenganisha kiotomatiki ukijiunga</string>
+    <string name="settings_trusted_wifi_location">Ruhusu ufikiaji wa mahali ili kutambua majina ya Wi‑Fi</string>
     <string name="settings_password_required">Hitaji nenosiri</string>
     <string name="settings_section_testing">Upimaji</string>
     <string name="settings_test_wifi_only">Pima kasi kupitia Wi‑Fi pekee</string>

@@ -164,12 +164,27 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
         }
     }
 
-    /** Called 400 ms after scrolling settles with the visible node ids (≤ 100). */
+    /**
+     * Called 400 ms after scrolling settles with the visible node ids (≤ 100). This is an automatic test, so
+     * 「仅 Wi‑Fi 测速」 holds it back on a metered network (audit E23 / U1, iOS `autoTestAllowed`).
+     */
     fun testVisible(ids: List<NodeId>) {
         val todo = ids.filter { latency[it] == null && testing[it] == null }.take(100)
         if (todo.isEmpty()) return
-        todo.forEach { testing[it] = true }
-        testJob = viewModelScope.launch { runCatching { engine.testLatency(todo) }.onFailure { todo.forEach { testing.remove(it) } } }
+        val metered = AppGraph.network?.state?.value?.metered == true
+        if (metered) {
+            viewModelScope.launch {
+                val wifiOnly = runCatching { engine.settings().first().testOnWifiOnly }.getOrDefault(true)
+                if (com.zephyr.app.vpn.NetworkMonitor.autoTestAllowed(wifiOnly, metered)) startTest(todo)
+            }
+        } else startTest(todo)
+    }
+
+    private fun startTest(todo: List<NodeId>) {
+        val left = todo.filter { testing[it] == null }
+        if (left.isEmpty()) return
+        left.forEach { testing[it] = true }
+        testJob = viewModelScope.launch { runCatching { engine.testLatency(left) }.onFailure { left.forEach { testing.remove(it) } } }
     }
 
     /** Node detail sheet's "测速": one node, even if it already has a reading. */

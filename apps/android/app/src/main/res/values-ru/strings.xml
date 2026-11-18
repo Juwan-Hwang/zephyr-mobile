@@ -447,6 +447,7 @@
     <string name="settings_section_connection">Подключение</string>
     <string name="settings_on_demand">Подключение по запросу</string>
     <string name="settings_trusted_wifi_hint">Автоматически отключаться в этих сетях</string>
+    <string name="settings_trusted_wifi_location">Разрешите доступ к геолокации, чтобы распознавать сети Wi‑Fi</string>
     <string name="settings_password_required">Требовать пароль</string>
     <string name="settings_section_testing">Проверка</string>
     <string name="settings_test_wifi_only">Тест скорости только по Wi‑Fi</string>

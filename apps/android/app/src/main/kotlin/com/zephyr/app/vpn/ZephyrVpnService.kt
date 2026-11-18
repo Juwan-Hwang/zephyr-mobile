@@ -34,6 +34,7 @@ class ZephyrVpnService : VpnService() {
     private var tun: ParcelFileDescriptor? = null
     private var watcher: Job? = null
     private var widgetTicker: Job? = null
+    private var netWatcher: Job? = null
     private var bridge: TunBridge = TunBridge.Simulated
     private val engine get() = AppGraph.engine
 
@@ -112,13 +113,48 @@ class ZephyrVpnService : VpnService() {
         (engine as? com.zephyr.engine.core.CoreEngine)?.let { core ->
             prober?.cancel()
             // Scene exits are probed once a minute while connected; core's failover tracker decides when to switch.
-            // Same loop re-tests scenes whose results outlived 设置 › 结果保留 (audit E28); the app is excluded from its own
-            // tunnel, so the active network here is the physical one for 「仅 Wi‑Fi 测速」.
+            // Same loop re-tests scenes whose results outlived 设置 › 结果保留 (audit E28).
+            // Audit E23: probing is a speed test too, so 「仅 Wi‑Fi 测速」 skips it on a metered network (iOS does the same).
+            // The app is excluded from its own tunnel, so NetworkMonitor sees the physical network.
             prober = scope.launch {
                 while (true) {
                     kotlinx.coroutines.delay(PROBE_EVERY_MS)
-                    runCatching { core.probeScenes() }
-                    runCatching { core.retestStaleScenes(metered = getSystemService(android.net.ConnectivityManager::class.java)?.isActiveNetworkMetered ?: false) }
+                    val metered = AppGraph.network?.state?.value?.metered
+                        ?: (getSystemService(android.net.ConnectivityManager::class.java)?.isActiveNetworkMetered ?: false)
+                    val wifiOnly = runCatching { engine.settings().first().testOnWifiOnly }.getOrDefault(true)
+                    if (NetworkMonitor.autoTestAllowed(wifiOnly, metered)) runCatching { core.probeScenes() }
+                    runCatching { core.retestStaleScenes(metered = metered) }
+                }
+            }
+        }
+        watchNetwork()
+    }
+
+    /**
+     * Audit E04: the VPN follows the real network (metered/roaming flags, and the right uplink after a switch).
+     * Audit E01/U1: 「受信任 Wi‑Fi」 — joining a trusted network while connected drops the tunnel.
+     */
+    private fun watchNetwork() {
+        val monitor = AppGraph.network ?: return
+        netWatcher?.cancel()
+        netWatcher = scope.launch {
+            var lastNet: android.net.Network? = null
+            var lastSsid: String? = monitor.state.value.ssid
+            var first = true
+            monitor.state.collect { snap ->
+                if (first || snap.network != lastNet) {
+                    // null = "follow the system default", the right answer while no network is up.
+                    runCatching { setUnderlyingNetworks(snap.network?.let { arrayOf(it) }) }
+                    lastNet = snap.network
+                }
+                val settings = engine.settings().first()
+                val drop = !first && NetworkMonitor.shouldDisconnect(settings, lastSsid, snap.ssid)
+                first = false
+                if (snap.network != null) lastSsid = snap.ssid
+                if (drop) {
+                    android.util.Log.i("Zephyr", "trusted Wi‑Fi joined: disconnecting")
+                    scope.launch { stop() } // not inline: stop() cancels this very collector
+                    return@collect
                 }
             }
         }
@@ -142,6 +178,7 @@ class ZephyrVpnService : VpnService() {
     }
 
     private suspend fun stop() {
+        netWatcher?.cancel(); netWatcher = null
         prober?.cancel(); prober = null
         widgetTicker?.cancel(); widgetTicker = null
         watcher?.cancel()

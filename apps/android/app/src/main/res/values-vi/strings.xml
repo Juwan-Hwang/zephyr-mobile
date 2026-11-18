@@ -357,6 +357,7 @@
     <string name="settings_section_connection">Kết nối</string>
     <string name="settings_on_demand">Kết nối theo yêu cầu</string>
     <string name="settings_trusted_wifi_hint">Tự động ngắt kết nối khi tham gia</string>
+    <string name="settings_trusted_wifi_location">Cho phép truy cập vị trí để nhận diện tên Wi‑Fi</string>
     <string name="settings_password_required">Yêu cầu mật khẩu</string>
     <string name="settings_section_testing">Kiểm tra</string>
     <string name="settings_test_wifi_only">Chỉ đo tốc độ qua Wi‑Fi</string>

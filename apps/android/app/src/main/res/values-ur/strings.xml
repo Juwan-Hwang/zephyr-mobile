@@ -411,6 +411,7 @@
     <string name="settings_section_connection">کنکشن</string>
     <string name="settings_on_demand">ضرورت پر منسلک کریں</string>
     <string name="settings_trusted_wifi_hint">ان سے جڑنے پر خود بخود منقطع ہو جائے</string>
+    <string name="settings_trusted_wifi_location">Wi‑Fi کے نام پہچاننے کے لیے مقام تک رسائی کی اجازت دیں</string>
     <string name="settings_password_required">پاس ورڈ درکار</string>
     <string name="settings_section_testing">ٹیسٹنگ</string>
     <string name="settings_test_wifi_only">صرف Wi‑Fi پر اسپیڈ ٹیسٹ</string>

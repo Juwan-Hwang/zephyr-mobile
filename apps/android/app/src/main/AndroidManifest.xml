@@ -8,11 +8,16 @@
         android:name="android.hardware.camera.any"
         android:required="false" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 受信任 Wi‑Fi (audit E01/U1): reading the current SSID. ACCESS_WIFI_STATE is what WifiManager.getConnectionInfo
+         needs on API 28–30; Android 10+ only reveals the SSID with fine location, asked for from 设置 when trusted
+         Wi‑Fi is in use (COARSE must be declared next to FINE on API 31+). No background location is requested. -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- No RECEIVE_BOOT_COMPLETED (release P2-2): no boot receiver; WorkManager merges its own. -->
     <!-- Android 9 only: "存储图像" inserts into MediaStore, which needs this below API 29 (review A-P1-3). -->
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"

@@ -8,8 +8,9 @@ import java.time.ZoneId
 
 /**
  * Today's traffic in 24 hourly buckets plus online time, from mihomo's cumulative counters (same rules as
- * the iOS UsageLedger, contract §14.w): a counter that goes backwards means the core restarted; a new local
- * day starts from zero. Persisted at most every 30 s so a process kill loses little.
+ * the iOS UsageLedger, contract §14.w): a counter that goes backwards means the core restarted and the new
+ * reading is all fresh traffic; [tunnelStarted] drops the stale baseline so the first reading of a new core counts
+ * in full (audit E39). A new local day starts from zero. Persisted at most every 5 s (same as iOS).
  */
 class UsageLedger(private val file: File?, private val zone: () -> ZoneId = ZoneId::systemDefault) {
     @Serializable
@@ -26,7 +27,7 @@ class UsageLedger(private val file: File?, private val zone: () -> ZoneId = Zone
         val day = t.toLocalDate().toString()
         var s = if (state.day != day) State(day = day, lastTotal = state.lastTotal, lastAt = state.lastAt) else state
         val delta = when {
-            s.lastTotal < 0 || total < s.lastTotal -> 0L // first sample or core restarted
+            s.lastTotal < 0 || total < s.lastTotal -> total.coerceAtLeast(0) // fresh core: counters start at zero
             else -> total - s.lastTotal
         }
         val gap = now - s.lastAt
@@ -34,7 +35,13 @@ class UsageLedger(private val file: File?, private val zone: () -> ZoneId = Zone
         val hourly = s.hourly.toMutableList().also { it[t.hour] += delta }
         s = s.copy(hourly = hourly, onlineMs = s.onlineMs + online, lastTotal = total, lastAt = now)
         state = s
-        if (now - savedAt >= 30_000) save(now)
+        if (now - savedAt >= SAVE_EVERY_MS) save(now)
+    }
+
+    /** The core (re)started: forget the previous process's counter and sample time (iOS `tunnelStarted`). */
+    @Synchronized
+    fun tunnelStarted() {
+        state = state.copy(lastTotal = -1, lastAt = 0)
     }
 
     @Synchronized
@@ -49,4 +56,6 @@ class UsageLedger(private val file: File?, private val zone: () -> ZoneId = Zone
         runCatching { f.parentFile?.mkdirs(); val tmp = File(f.path + ".tmp"); tmp.writeText(json.encodeToString(State.serializer(), state)); tmp.renameTo(f) }
         savedAt = now
     }
+
+    private companion object { const val SAVE_EVERY_MS = 5_000L }
 }

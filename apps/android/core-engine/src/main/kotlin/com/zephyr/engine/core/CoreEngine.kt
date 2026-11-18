@@ -46,6 +46,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onStart
 import com.zephyr.engine.*
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
@@ -498,11 +499,19 @@ class CoreEngine(
         }
     }
 
-    /** Contract §15.e: core's scene freshness window follows 设置 › 测速 › 结果保留 (process-local, re-sent on every change). */
+    /**
+     * Contract §15.e: core's scene freshness window follows 设置 › 测速 › 结果保留 (process-local, re-sent on every change).
+     * Audit E16: out-of-range values are rejected like iOS (port, TTL, auto-update, MTU 576…9000).
+     * Audit E15: DNS / TUN stack / local-proxy changes rebuild the runtime config and hot-reload a running core.
+     * MTU, IPv6 and excluded apps live on the VpnService.Builder and still apply on the next connect (same as iOS NE).
+     */
     override suspend fun updateSettings(patch: Settings) {
+        if (!isValid(patch)) throw ZephyrException(ErrorCode.INTERNAL, "invalid settings value")
+        val old = runCatching { fallback.settings().first() }.getOrNull()
         fallback.updateSettings(patch)
         core?.let { c -> withContext(io) { runCatching { c.setLatencyTtlHours(patch.latencyTtlHours.coerceAtLeast(0).toUInt()) } } }
         scenesBump.value++
+        if (old != null && affectsRuntime(old, patch)) runCatching { reloadIfRunning() }
     }
 
     private val scan = kotlinx.coroutines.flow.MutableStateFlow<com.zephyr.engine.ScanProgress?>(null)
@@ -675,6 +684,7 @@ class CoreEngine(
         val c = nodes() ?: return if (mockData) fallback.setGlobalNode(id) else throw noSubscription()
         val preview = runCatching { previewGlobalChange(id) }.getOrNull()
         val a = withContext(io) { sceneCall { c.setGlobalNode(id.toULong()) } }
+        globalId.value = id // audit E06: notification / tile read the global exit off ConnectionState
         live()?.let { l ->
             if (a.needsReload) reloadIfRunning()
             withContext(io) { liveCall(ErrorCode.GROUP_NOT_FOUND) { l.select(a.group, a.member) } }
@@ -753,6 +763,9 @@ class CoreEngine(
     override suspend fun setMode(mode: ProxyMode) {
         live()?.let { r -> withContext(io) { liveCall { r.setMode(mode.name.lowercase()) } } }
         fallback.setMode(mode)
+        // Audit E06: the mode survives a process restart (START_STICKY / always-on bring the tunnel back in it).
+        modeState.value = mode
+        modeFile?.let { f -> withContext(io) { runCatching { f.parentFile?.mkdirs(); f.writeText(mode.name) } } }
     }
 
     override fun traffic(): Flow<TrafficSample> = switching({ _ ->
@@ -904,10 +917,28 @@ class CoreEngine(
     // ── Connection: the VPN service drives it; a failed start is surfaced instead of a fake "已连接" ─────
     private val connectError = kotlinx.coroutines.flow.MutableStateFlow<ZephyrError?>(null)
 
+    private val modeFile = dataDir?.let { java.io.File(it, "mode") }
+    private val modeState = kotlinx.coroutines.flow.MutableStateFlow(
+        modeFile?.takeIf { it.isFile }?.let { f -> runCatching { ProxyMode.valueOf(f.readText().trim()) }.getOrNull() },
+    )
+    /** Core's own global exit (audit E06); null until read or chosen. */
+    private val globalId = kotlinx.coroutines.flow.MutableStateFlow<NodeId?>(null)
+    /** Real network the platform layer observes (audit E08); null = unknown. */
+    private val networkState = kotlinx.coroutines.flow.MutableStateFlow<NetworkInfo?>(null)
+
+    /** Set by the platform layer from its ConnectivityManager callback. */
+    fun setNetwork(info: NetworkInfo?) { networkState.value = info }
+
     override fun connectionState(): Flow<com.zephyr.engine.ConnectionState> =
-        kotlinx.coroutines.flow.combine(fallback.connectionState(), connectError) { c, e ->
-            if (e != null && c.status == com.zephyr.engine.ConnectionStatus.DISCONNECTED) c.copy(status = com.zephyr.engine.ConnectionStatus.FAILED, error = e) else c
-        }
+        kotlinx.coroutines.flow.combine(fallback.connectionState(), connectError, modeState, globalId, networkState) { c, e, m, g, n ->
+            val base = c.copy(
+                mode = m ?: c.mode,
+                // Release never shows the mock's global exit or its「家」Wi‑Fi (audit E06 / E08).
+                globalNodeId = g ?: if (mockData) c.globalNodeId else null,
+                network = n ?: if (mockData) c.network else null,
+            )
+            if (e != null && c.status == com.zephyr.engine.ConnectionStatus.DISCONNECTED) base.copy(status = com.zephyr.engine.ConnectionStatus.FAILED, error = e) else base
+        }.onStart { if (globalId.value == null) globalNode()?.let { globalId.value = it.id } }
 
     override suspend fun connect() { connectError.value = null; fallback.connect() }
     override suspend fun disconnect() { fallback.disconnect() }
@@ -940,6 +971,9 @@ class CoreEngine(
         return UsageSummary(u.hourly.sum(), regions, u.onlineMs, fastest, u.hourly)
     }
 
+    /** The embedded core (re)started: its counters begin at zero again (audit E39, same as iOS `tunnelStarted`). */
+    fun tunnelStarted() = usage.tunnelStarted()
+
     /** Flushes the usage ledger (VPN stop / process trim). */
     fun flushUsage() = usage.save(clock())
 
@@ -955,6 +989,28 @@ class CoreEngine(
         if (mockData) fallback.commandSuggestions(input) else emptyList() // UI plans commands itself (CommandPlanner)
 
     companion object {
+        /** Audit E16: same ranges iOS validates (contract §8 Settings). */
+        val MTU_RANGE = 576..9000
+
+        fun isValid(s: Settings): Boolean =
+            s.localProxyPort in 1..65535 && s.latencyTtlHours > 0 && s.autoUpdateHours > 0 && s.tun.mtu in MTU_RANGE
+
+        /** Brings a stored (possibly older-version) settings blob back into range instead of rejecting it at launch. */
+        fun sanitized(s: Settings): Settings {
+            val d = Settings()
+            return s.copy(
+                localProxyPort = s.localProxyPort.takeIf { it in 1..65535 } ?: d.localProxyPort,
+                latencyTtlHours = s.latencyTtlHours.takeIf { it > 0 } ?: d.latencyTtlHours,
+                autoUpdateHours = s.autoUpdateHours.takeIf { it > 0 } ?: d.autoUpdateHours,
+                tun = s.tun.copy(mtu = s.tun.mtu.coerceIn(MTU_RANGE)),
+            )
+        }
+
+        /** Fields that end up in the mihomo runtime config (audit E15; iOS `affectsRuntime`). */
+        fun affectsRuntime(a: Settings, b: Settings): Boolean =
+            a.dns != b.dns || a.tun.stack != b.tun.stack || a.tun.strictRoute != b.tun.strictRoute ||
+                a.localProxyEnabled != b.localProxyEnabled || a.localProxyPort != b.localProxyPort || a.localProxyAuth != b.localProxyAuth
+
         const val GLOBAL = "GLOBAL"
         private val NAMES: Map<String, String> = MockCatalog.REGIONS.associate { it.code to it.name }
         fun regionName(code: String): String = NAMES[code] ?: code
