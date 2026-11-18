@@ -135,6 +135,9 @@
     <string name="scene_uhd_only">Nodi za 4K pekee</string>
     <string name="scene_pinned_value">%1$s (imebanwa)</string>
     <string name="scene_retest">Pima tena</string>
+    <string name="scene_funnel_tested">Zilizopimwa</string>
+    <string name="scene_funnel_reachable">Zinazofikika</string>
+    <string name="scene_funnel_under">Chini ya %1$d ms</string>
     <string name="scene_note">Chaguo huhifadhiwa ndani ya Zephyr pekee. Usanidi wa usajili wako haubadilishwi.</string>
     <string name="scene_note_tested">%1$s Ilipimwa mara ya mwisho %2$s.</string>
     <string name="command_placeholder">Tafuta au weka amri</string>
@@ -249,6 +252,12 @@
     <string name="nodes_no_match">Hakuna nodi zinazolingana na “%1$s”</string>
     <string name="nodes_tested">%1$s zimepimwa</string>
     <string name="nodes_jump_to">Nenda kwenye %1$s</string>
+    <string name="nodes_detail_protocol">Itifaki</string>
+    <string name="nodes_detail_latency">Kuchelewa</string>
+    <string name="nodes_detail_server">Seva</string>
+    <string name="nodes_detail_route">Njia</string>
+    <string name="nodes_detail_test">Pima kuchelewa</string>
+    <string name="nodes_error_title">Imeshindwa kupakia nodi</string>
     <string name="rules_add_override_a11y">Ongeza ubatilishaji wa kikoa</string>
     <plurals name="rules_total_unit">
         <item quantity="one">sheria</item>
@@ -316,6 +325,7 @@
     <string name="subs_error_update">Imeshindwa kusasisha %1$s</string>
     <string name="subs_error_delete">Imeshindwa kufuta %1$s</string>
     <string name="subs_remaining">Imesalia</string>
+    <string name="subs_all_title">Usajili wote</string>
     <plurals name="subs_others">
         <item quantity="one">%1$d nyingine</item>
         <item quantity="other">%1$d nyingine</item>

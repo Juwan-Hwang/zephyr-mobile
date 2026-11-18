@@ -142,6 +142,9 @@
     <string name="scene_uhd_only">Solo nodos 4K</string>
     <string name="scene_pinned_value">%1$s (fijado)</string>
     <string name="scene_retest">Volver a probar</string>
+    <string name="scene_funnel_tested">Probados</string>
+    <string name="scene_funnel_reachable">Accesibles</string>
+    <string name="scene_funnel_under">Menos de %1$d ms</string>
     <string name="scene_note">La selección solo se guarda en Zephyr. La configuración de tu suscripción no cambia.</string>
     <string name="scene_note_tested">%1$s Última prueba: %2$s.</string>
     <string name="command_placeholder">Buscar o introducir comando</string>
@@ -267,6 +270,12 @@
     <string name="nodes_no_match">Ningún nodo coincide con «%1$s»</string>
     <string name="nodes_tested">%1$s probados</string>
     <string name="nodes_jump_to">Ir a %1$s</string>
+    <string name="nodes_detail_protocol">Protocolo</string>
+    <string name="nodes_detail_latency">Latencia</string>
+    <string name="nodes_detail_server">Servidor</string>
+    <string name="nodes_detail_route">Ruta</string>
+    <string name="nodes_detail_test">Probar latencia</string>
+    <string name="nodes_error_title">No se pudieron cargar los nodos</string>
     <string name="rules_add_override_a11y">Añadir sobrescritura para un dominio</string>
     <plurals name="rules_total_unit">
         <item quantity="one">regla</item>
@@ -339,6 +348,7 @@
     <string name="subs_error_update">No se ha podido actualizar %1$s</string>
     <string name="subs_error_delete">No se ha podido eliminar %1$s</string>
     <string name="subs_remaining">Restante</string>
+    <string name="subs_all_title">Todas las suscripciones</string>
     <plurals name="subs_others">
         <item quantity="one">%1$d más</item>
         <item quantity="many">%1$d más</item>

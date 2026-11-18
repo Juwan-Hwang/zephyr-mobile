@@ -5,6 +5,14 @@
     <string name="common_close">Cerrar</string>
     <string name="common_clear">Borrar</string>
     <string name="common_latency_timeout">Tiempo agotado</string>
+    <string name="common_latency_a11y_untested">Latencia sin medir</string>
+    <string name="common_latency_a11y_testing">Midiendo latencia</string>
+    <string name="common_latency_a11y_timeout">Latencia: tiempo de espera agotado</string>
+    <plurals name="common_latency_a11y_ms">
+        <item quantity="one">Latencia de %1$d milisegundo</item>
+        <item quantity="many">Latencia de %1$d milisegundos</item>
+        <item quantity="other">Latencia de %1$d milisegundos</item>
+    </plurals>
     <string name="common_traffic_a11y">Descarga %1$s %2$s por segundo, subida %3$s %4$s por segundo</string>
     <string name="common_time_just_now">Ahora mismo</string>
     <string name="common_time_just_now_inline">ahora mismo</string>

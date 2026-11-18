@@ -33,6 +33,11 @@ interface ZephyrEngine {
     /** Progress of the node scan a [retestScene] runs (contract §15.d, platform-local); null = not scanning. */
     fun scanProgress(): Flow<ScanProgress?> = kotlinx.coroutines.flow.flowOf(null)
     /**
+     * Scene sheet funnel (contract §15.c): 全部 → 已测速 → 可连通 → 延迟低于 [thresholdMs]. [maxAgeMs] is the
+     * latency freshness window (设置 › 结果保留, §15.e). Null when the engine cannot count (no core, no data).
+     */
+    suspend fun nodeFunnel(maxAgeMs: Long, thresholdMs: Int): NodeFunnel? = null
+    /**
      * Pins one app of a scene to a node ("Gemini 走日本" → Gemini：东京 03; contract §14 setSceneException).
      * `nodeId = null` removes the pin. Never called by automation: only on an explicit, confirmed user action.
      */

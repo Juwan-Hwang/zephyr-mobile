@@ -176,7 +176,6 @@ class CoreEngine(
             val hours = runCatching { fallback.settings().first().autoUpdateHours }.getOrDefault(12)
             val s = wrap { c.importSubscription(name, if (isUrl) p else null, FetchedSubscription(got.body, got.userInfo, clock()), hours, null) }
             nodesReady = null
-            if (activeSubscription() == null) setActiveSubscription(s.id)
             refreshSubs()
             rulesReady = null
             refreshRuleProvidersLater()
@@ -217,9 +216,10 @@ class CoreEngine(
     suspend fun updateDue(): List<String> {
         val c = core ?: return emptyList()
         val due = withContext(io) { wrap { c.dueSubscriptions(clock()) } }
+        val active = activeSubscription()
         val done = due.filter { runCatching { updateSubscription(it) }.isSuccess }
         runCatching { refreshRuleProviders() } // hourly worker: also picks up rule sets whose own interval elapsed
-        if (activeSubscription() in done) runCatching { reloadIfRunning() }
+        if (active != null && active in done) runCatching { reloadIfRunning() }
         return done
     }
 
@@ -227,17 +227,20 @@ class CoreEngine(
         val c = core ?: return if (mockData) fallback.deleteSubscription(id) else throw noCore()
         withContext(io) { wrap { c.deleteSubscription(id) } }
         nodesReady = null; rulesReady = null
-        val left = refreshSubs()
-        if (activeSubscription() == id) setActiveSubscription(left.firstOrNull()?.id)
+        refreshSubs()
     }
 
     // ── Runtime config for the embedded mihomo (TunBridge.Embedded) ─────────────────────────────────
-    private val activeFile: java.io.File? = dataDir?.let { java.io.File(it, "active-subscription") }
-    fun activeSubscription(): String? = activeFile?.takeIf { it.isFile }?.readText()?.trim()?.ifEmpty { null }
-    fun setActiveSubscription(id: String?) {
-        val f = activeFile ?: return
-        if (id == null) f.delete() else { val t = java.io.File(f.parentFile, ".${f.name}.tmp"); t.writeText(id); t.renameTo(f) }
+    /**
+     * Contract §14.w: the active subscription is the first in the list, the same one core compiles into rule layer 2
+     * (audit E17). No separate pointer is kept; a stale `active-subscription` file from older builds is removed.
+     */
+    suspend fun activeSubscription(): String? {
+        val c = core ?: return null
+        return withContext(io) { runCatching { c.subscriptions().firstOrNull()?.id }.getOrNull() }
     }
+
+    init { dataDir?.let { runCatching { java.io.File(it, "active-subscription").delete() } } }
 
     /**
      * mihomo YAML for the active subscription with Zephyr's settings and the system TUN fd, or null when
@@ -245,7 +248,7 @@ class CoreEngine(
      */
     suspend fun runtimeConfig(tunFd: Int?, controllerSocket: String, settings: Settings, mode: ProxyMode): String? {
         val c = core ?: return null
-        val id = activeSubscription() ?: refreshSubs().firstOrNull()?.id ?: return null
+        val id = refreshSubs().firstOrNull()?.id ?: return null
         val opts = RuntimeOptions(
             dns = DnsConfig(settings.dns.fakeIp, settings.dns.nameservers, settings.dns.fallback, settings.dns.ipv6),
             tun = TunConfig(
@@ -431,6 +434,22 @@ class CoreEngine(
 
     private fun coreFilter(f: SceneNodeFilter) = when (f) { SceneNodeFilter.UHD -> com.zephyr.core.mobile.SceneNodeFilter.UHD }
 
+    /**
+     * Contract §15.e: one latency freshness window for node rows, testedCount, today's fastest, the funnel and
+     * scene scans = 设置 › 结果保留 (at least 1 h, same as iOS `latencyFreshMillis`; audit E36/E37/E26).
+     */
+    private suspend fun ttlMs(): Long =
+        runCatching { settings().first().latencyTtlHours }.getOrDefault(24).coerceAtLeast(1) * 3_600_000L
+
+    override suspend fun nodeFunnel(maxAgeMs: Long, thresholdMs: Int): NodeFunnel? {
+        val c = nodes() ?: return if (mockData) fallback.nodeFunnel(maxAgeMs, thresholdMs) else null
+        return withContext(io) {
+            runCatching { c.nodeFunnel(clock(), maxAgeMs, thresholdMs) }.getOrNull()?.let {
+                NodeFunnel(it.sourceCount.toInt(), it.poolSize.toLong(), it.tested.toLong(), it.reachable.toLong(), it.underThreshold.toLong(), it.thresholdMs)
+            }
+        }
+    }
+
     /** Contract §15.e: core's scene freshness window follows 设置 › 测速 › 结果保留 (process-local, re-sent on every change). */
     override suspend fun updateSettings(patch: Settings) {
         fallback.updateSettings(patch)
@@ -453,9 +472,11 @@ class CoreEngine(
                 runCatching { probeServices(listOf(sceneId)) }
             }
             // §15.d/§15.e: re-measure the scene's region pool (same query as `available`), at most one 512 batch,
-            // 64 at a time so the home row can show "正在检测 done/total". maxAge 1 ms = everything, stalest first.
+            // 64 at a time so the home row can show "正在检测 done/total". maxAge = the TTL: nodes tested within it are
+            // skipped, never-tested ones come first, then stalest first (audit E26).
             if (raw.scanQuery.isNotEmpty() && scan.value == null) {
-                val ids = runCatching { withContext(io) { c.scanTargets(raw.scanQuery, 512u, clock(), 1L) } }.getOrDefault(emptyList())
+                val ttl = ttlMs()
+                val ids = runCatching { withContext(io) { c.scanTargets(raw.scanQuery, 512u, clock(), ttl) } }.getOrDefault(emptyList())
                 if (ids.isNotEmpty()) try {
                     var done = 0
                     scan.value = com.zephyr.engine.ScanProgress(0, ids.size)
@@ -478,36 +499,83 @@ class CoreEngine(
     val failovers: kotlinx.coroutines.flow.SharedFlow<SceneFailoverEvent> = failoverEvents
 
     /**
+     * AI scenes whose exit is down and was already reported, keyed by scene → the node that failed. Same fault, same
+     * node: told once (audit E24, iOS `FailoverState`); cleared when the exit answers again or the scene moves on.
+     */
+    private val warned = java.util.concurrent.ConcurrentHashMap<String, Long>()
+
+    /**
      * One probe round (contract §14 场景自动切换): for every scene that owns traffic, test its mihomo group and
      * report whether the currently selected member answered. Name-agnostic: success is read off the group's own
      * `selected` member, so cross-subscription renames don't matter. Core decides (threshold/cooldown) and
      * returns a hot-standby switch, which we apply with selectInGroup — no reload, no dropped connections.
+     *
+     * Guards (audit E22, same as iOS `probeScenesOnce`):
+     *  - no member of the group answered: the probe itself is broken (offline, probe URL blocked) — not reported;
+     *  - the user picked another node while the probe ran: the result belongs to the old node — dropped;
+     *  - selectInGroup failed: core's choice is rolled back to `previous` and nothing says "已切换".
      */
     suspend fun probeScenes(): List<SceneFailoverEvent> {
         val c = nodes() ?: return emptyList()
         val l = live() ?: return emptyList()
         val scenes = withContext(io) { wrap { c.scenes(clock()) } }.filter { it.selected != null }
         if (scenes.isEmpty()) return emptyList()
-        val groups = withContext(io) { runCatching { l.groups() }.getOrDefault(emptyList()) }.associateBy { it.name }
+        // Controller unreachable: skip the round rather than count a control-plane hiccup as node failures.
+        val groups = withContext(io) { runCatching { l.groups() }.getOrNull() }?.associateBy { it.name } ?: return emptyList()
         val out = mutableListOf<SceneFailoverEvent>()
         for (sc in scenes) {
             val sel = groups[sc.group]?.selected ?: continue
-            val ok = withContext(io) { runCatching { l.test(sc.group, LivePort.TEST_URL, 5_000) }.getOrNull() }
-                ?.firstOrNull { it.name == sel }?.latencyMs?.let { it > 0 } ?: false
+            val nodeId = sc.selected?.id ?: continue
+            val tested = withContext(io) { runCatching { l.test(sc.group, LivePort.TEST_URL, 5_000) }.getOrNull() } ?: continue
+            if (tested.none { (it.latencyMs ?: 0) > 0 }) continue
+            val ok = (tested.firstOrNull { it.name == sel }?.latencyMs ?: 0) > 0
+            val still = withContext(io) { runCatching { c.scenes(clock()) }.getOrNull() }?.firstOrNull { it.id == sc.id }?.selected?.id
+            if (still != nodeId) continue
             if (sc.kind == CoreSceneKind.AI) {
                 // Prototype rule: an AI exit IP only changes after the user confirms ("更改 GPT 和 Gemini 的出口 IP？"),
-                // because AI services flag accounts whose IP jumps. So we never auto-switch AI; we only tell them.
-                if (!ok) { val e = SceneFailoverEvent(sc.id, sc.name, sel, null, null); out += e; failoverEvents.tryEmit(e) }
+                // because AI services flag accounts whose IP jumps. So we never auto-switch AI; we only tell them, once.
+                if (ok) warned.remove(sc.id)
+                else if (warned.put(sc.id, nodeId.toLong()) != nodeId.toLong()) {
+                    val e = SceneFailoverEvent(sc.id, sc.name, sel, null, null); out += e; failoverEvents.tryEmit(e)
+                }
                 continue
             }
             val f = withContext(io) { runCatching { c.reportSceneProbe(sc.id, ok, clock()) }.getOrNull() } ?: continue
-            withContext(io) { runCatching { l.select(f.apply.group, f.apply.member) } }
+            val moved = withContext(io) { runCatching { l.select(f.apply.group, f.apply.member) }.isSuccess }
+            if (!moved) {
+                // mihomo did not switch: undo core's choice so the UI never shows a node that isn't in use.
+                f.apply.previous?.let { prev -> withContext(io) { runCatching { c.applySceneChange(sc.id, prev, clock()) } } }
+                scenesBump.value++
+                continue
+            }
             val e = SceneFailoverEvent(sc.id, sc.name, f.failed.name, f.apply.member, f.apply.previous?.toLong())
             out += e; failoverEvents.tryEmit(e)
         }
         if (out.isNotEmpty()) scenesBump.value++
         if (serviceRound++ % 10 == 0) runCatching { probeServices() }
         return out
+    }
+
+    private val retestAttempts = java.util.concurrent.ConcurrentHashMap<String, Long>()
+
+    /**
+     * Stale scenes re-test themselves while the tunnel runs (audit E28, iOS `retestStaleScenes`): a scene whose result
+     * is older than 设置 › 结果保留 (or never tested) is re-tested through the VPN, at most once per 30 min per scene.
+     * 「仅 Wi‑Fi 测速」: skipped while [metered]. Returns the scene ids it re-tested.
+     */
+    suspend fun retestStaleScenes(metered: Boolean): List<String> {
+        nodes() ?: return emptyList()
+        live() ?: return emptyList()
+        val s = runCatching { settings().first() }.getOrNull() ?: return emptyList()
+        if (s.testOnWifiOnly && metered) return emptyList()
+        val now = clock()
+        val list = runCatching { scenes().first() }.getOrDefault(emptyList())
+        val due = SceneRetestPlanner.due(list, s.latencyTtlHours, connected = true, now = now, lastAttempt = retestAttempts)
+        for (id in due) {
+            retestAttempts[id] = now
+            runCatching { retestScene(id) }
+        }
+        return due
     }
 
     private val unselected = NodeSummary(id = -1, name = "未选择", region = "", protocol = "")
@@ -693,7 +761,8 @@ class CoreEngine(
     // ── Nodes ──────────────────────────────────────────────────────────────────────────────────────
     override suspend fun nodeIndex(): NodeIndex {
         val c = nodes() ?: return if (mockData) fallback.nodeIndex() else NodeIndex(0, emptyList(), 0)
-        val tested = withContext(io) { runCatching { c.testedCount(clock(), DAY_MS).toLong() }.getOrDefault(0L) }
+        val ttl = ttlMs()
+        val tested = withContext(io) { runCatching { c.testedCount(clock(), ttl).toLong() }.getOrDefault(0L) }
         return withContext(io) { wrap { c.nodeIndex() }.let { NodeIndex(it.total.toLong(), it.sections.map(::section), tested) } }
     }
 
@@ -711,6 +780,7 @@ class CoreEngine(
 
     override suspend fun nodeRows(token: Long, offset: Long, limit: Int): NodePage {
         val c = nodes() ?: return if (mockData) fallback.nodeRows(token, offset, limit) else NodePage(emptyList(), offset, 0)
+        val ttl = ttlMs()
         return withContext(io) {
             val t = remapped[token] ?: token
             val p = try { c.nodeRows(t.toULong(), offset.toULong(), limit.toUInt()) } catch (e: MobileException.StaleToken) {
@@ -720,9 +790,10 @@ class CoreEngine(
                 queries[fresh] = q; remapped[token] = fresh
                 wrap { c.nodeRows(fresh.toULong(), offset.toULong(), limit.toUInt()) }
             } catch (e: MobileException) { wrap { throw e } }
-            p.let { p ->
-                NodePage(p.rows.map(::row), p.offset.toLong(), p.total.toLong())
-            }
+            // §5 / scale-architecture: rows carry the cached latency (within the TTL, -1 = timeout), so tested nodes
+            // keep their reading across restarts and are not re-tested on settle (audit E37, same as iOS).
+            val lat = runCatching { c.cachedLatencies(p.rows.map { it.id }, clock(), ttl) }.getOrNull()
+            NodePage(p.rows.mapIndexed { i, r -> row(r).copy(latencyMs = lat?.getOrNull(i)) }, p.offset.toLong(), p.total.toLong())
         }
     }
 
@@ -816,7 +887,8 @@ class CoreEngine(
             val sc = scenes().first().mapNotNull { it.selected.takeIf { n -> n.id >= 0 }?.region }
             (sc + listOfNotNull(globalNode()?.region)).toSet().size
         }.getOrDefault(0)
-        val fastest = withContext(io) { runCatching { c.fastestNodes("", 1u, now, DAY_MS).firstOrNull()?.latencyMs?.takeIf { it > 0 } }.getOrNull() }
+        val ttl = ttlMs()
+        val fastest = withContext(io) { runCatching { c.fastestNodes("", 1u, now, ttl).firstOrNull()?.latencyMs?.takeIf { it > 0 } }.getOrNull() }
         return UsageSummary(u.hourly.sum(), regions, u.onlineMs, fastest, u.hourly)
     }
 
@@ -836,7 +908,6 @@ class CoreEngine(
 
     companion object {
         const val GLOBAL = "GLOBAL"
-        private const val DAY_MS = 86_400_000L
         private val NAMES: Map<String, String> = MockCatalog.REGIONS.associate { it.code to it.name }
         fun regionName(code: String): String = NAMES[code] ?: code
     }

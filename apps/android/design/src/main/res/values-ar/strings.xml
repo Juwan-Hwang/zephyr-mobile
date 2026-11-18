@@ -7,6 +7,17 @@
     <string name="common_close">إغلاق</string>
     <string name="common_clear">مسح</string>
     <string name="common_latency_timeout">انتهت المهلة</string>
+    <string name="common_latency_a11y_untested">لم يُختبر التأخير</string>
+    <string name="common_latency_a11y_testing">جارٍ اختبار التأخير</string>
+    <string name="common_latency_a11y_timeout">انتهت مهلة التأخير</string>
+    <plurals name="common_latency_a11y_ms">
+        <item quantity="zero">التأخير \u2068%1$d\u2069 مللي ثانية</item>
+        <item quantity="one">التأخير \u2068%1$d\u2069 مللي ثانية</item>
+        <item quantity="two">التأخير \u2068%1$d\u2069 مللي ثانية</item>
+        <item quantity="few">التأخير \u2068%1$d\u2069 مللي ثوانٍ</item>
+        <item quantity="many">التأخير \u2068%1$d\u2069 مللي ثانية</item>
+        <item quantity="other">التأخير \u2068%1$d\u2069 مللي ثانية</item>
+    </plurals>
     <string name="common_traffic_a11y">التنزيل \u2066%1$s %2$s\u2069 في الثانية، والرفع \u2066%3$s %4$s\u2069 في الثانية</string>
     <string name="common_time_just_now">الآن</string>
     <string name="common_time_just_now_inline">الآن</string>

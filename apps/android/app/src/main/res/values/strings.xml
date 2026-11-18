@@ -160,6 +160,9 @@
     <string name="scene_uhd_only">4K nodes only</string>
     <string name="scene_pinned_value">%1$s (pinned)</string>
     <string name="scene_retest">Test again</string>
+    <string name="scene_funnel_tested">Tested</string>
+    <string name="scene_funnel_reachable">Reachable</string>
+    <string name="scene_funnel_under">Under %1$d ms</string>
     <string name="scene_note">Picks are saved only in Zephyr. Your subscription configuration isn’t changed.</string>
     <!-- %1$s is scene_note, %2$s a relative time ("5 min ago") -->
     <string name="scene_note_tested">%1$s Last tested %2$s.</string>
@@ -299,6 +302,12 @@
     <string name="nodes_tested">%1$s tested</string>
     <!-- Accessibility: region index entry, %1$s is a region code -->
     <string name="nodes_jump_to">Jump to %1$s</string>
+    <string name="nodes_detail_protocol">Protocol</string>
+    <string name="nodes_detail_latency">Latency</string>
+    <string name="nodes_detail_server">Server</string>
+    <string name="nodes_detail_route">Route</string>
+    <string name="nodes_detail_test">Test latency</string>
+    <string name="nodes_error_title">Couldn’t load nodes</string>
 
     <!-- ── Rules ── -->
     <string name="rules_add_override_a11y">Add override for a domain</string>
@@ -375,6 +384,7 @@
     <string name="subs_error_update">Couldn’t update %1$s</string>
     <string name="subs_error_delete">Couldn’t delete %1$s</string>
     <string name="subs_remaining">Remaining</string>
+    <string name="subs_all_title">All subscriptions</string>
     <plurals name="subs_others">
         <item quantity="one">%1$d other</item>
         <item quantity="other">%1$d others</item>

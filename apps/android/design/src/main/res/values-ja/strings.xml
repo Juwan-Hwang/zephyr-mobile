@@ -5,6 +5,12 @@
     <string name="common_close">閉じる</string>
     <string name="common_clear">消去</string>
     <string name="common_latency_timeout">タイムアウト</string>
+    <string name="common_latency_a11y_untested">レイテンシ未測定</string>
+    <string name="common_latency_a11y_testing">レイテンシを測定中</string>
+    <string name="common_latency_a11y_timeout">レイテンシ タイムアウト</string>
+    <plurals name="common_latency_a11y_ms">
+        <item quantity="other">レイテンシ %1$d ミリ秒</item>
+    </plurals>
     <string name="common_traffic_a11y">ダウンロード 毎秒 %1$s %2$s、アップロード 毎秒 %3$s %4$s</string>
     <string name="common_time_just_now">たった今</string>
     <string name="common_time_just_now_inline">たった今</string>

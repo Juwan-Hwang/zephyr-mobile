@@ -5,6 +5,12 @@
     <string name="common_close">ပိတ်ရန်</string>
     <string name="common_clear">ရှင်းရန်</string>
     <string name="common_latency_timeout">အချိန်ကျော်</string>
+    <string name="common_latency_a11y_untested">နောက်ကျမှု မစစ်ရသေး</string>
+    <string name="common_latency_a11y_testing">နောက်ကျမှု စစ်ဆေးနေသည်</string>
+    <string name="common_latency_a11y_timeout">နောက်ကျမှု အချိန်ကုန်</string>
+    <plurals name="common_latency_a11y_ms">
+        <item quantity="other">နောက်ကျမှု %1$d မီလီစက္ကန့်</item>
+    </plurals>
     <string name="common_traffic_a11y">ဒေါင်းလုဒ် တစ်စက္ကန့် %1$s %2$s၊ အပ်လုဒ် တစ်စက္ကန့် %3$s %4$s</string>
     <string name="common_time_just_now">ယခုလေးတင်</string>
     <string name="common_time_just_now_inline">ယခုလေးတင်</string>

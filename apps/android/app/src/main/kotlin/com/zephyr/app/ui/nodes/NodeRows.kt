@@ -1,6 +1,7 @@
 package com.zephyr.app.ui.nodes
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -38,11 +39,13 @@ private fun isXl(): Boolean = LocalDensity.current.fontScale >= 1.3f
  * hides the protocol column and widens latency to 66 — the name gets the room instead of being clipped.
  */
 @Composable
-fun NodeRowView(n: NodeSummary?, highlights: List<String>, testedLatency: Int?, testing: Boolean) {
+fun NodeRowView(n: NodeSummary?, highlights: List<String>, testedLatency: Int?, testing: Boolean, onClick: (() -> Unit)? = null) {
     val c = ZTheme.colors
     val xl = isXl()
     val sp = ZTheme.spacing
-    Row(Modifier.fillMaxWidth().height(if (xl) sp.rowHeightLarge else sp.rowHeight).padding(start = 22.dp), verticalAlignment = Alignment.CenterVertically) {
+    // Audit U12: a row opens the node's detail sheet (server, subscription, "测速"), as on iOS.
+    val tap = if (n != null && onClick != null) Modifier.clickable(role = androidx.compose.ui.semantics.Role.Button, onClick = onClick) else Modifier
+    Row(Modifier.fillMaxWidth().then(tap).height(if (xl) sp.rowHeightLarge else sp.rowHeight).padding(start = 22.dp), verticalAlignment = Alignment.CenterVertically) {
         if (n == null) {
             ZSkeleton(Modifier.width(180.dp).height(14.dp))
             Spacer(Modifier.weight(1f))

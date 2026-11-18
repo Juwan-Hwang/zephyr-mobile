@@ -149,6 +149,9 @@
     <string name="scene_uhd_only">Только узлы 4K</string>
     <string name="scene_pinned_value">%1$s (закреплён)</string>
     <string name="scene_retest">Проверить снова</string>
+    <string name="scene_funnel_tested">Проверено</string>
+    <string name="scene_funnel_reachable">Доступно</string>
+    <string name="scene_funnel_under">Менее %1$d мс</string>
     <string name="scene_note">Результаты выбора сохраняются только в Zephyr. Конфигурация подписки не меняется.</string>
     <string name="scene_note_tested">%1$s Последняя проверка: %2$s.</string>
     <string name="command_placeholder">Поиск или команда</string>
@@ -285,6 +288,12 @@
     <string name="nodes_no_match">Нет узлов по запросу «%1$s»</string>
     <string name="nodes_tested">Проверено: %1$s</string>
     <string name="nodes_jump_to">Перейти к %1$s</string>
+    <string name="nodes_detail_protocol">Протокол</string>
+    <string name="nodes_detail_latency">Задержка</string>
+    <string name="nodes_detail_server">Сервер</string>
+    <string name="nodes_detail_route">Маршрут</string>
+    <string name="nodes_detail_test">Проверить задержку</string>
+    <string name="nodes_error_title">Не удалось загрузить узлы</string>
     <string name="rules_add_override_a11y">Добавить переопределение для домена</string>
     <plurals name="rules_total_unit" tools:ignore="ImpliedQuantity">
         <item quantity="one">правило</item>
@@ -362,6 +371,7 @@
     <string name="subs_error_update">Не удалось обновить %1$s</string>
     <string name="subs_error_delete">Не удалось удалить %1$s</string>
     <string name="subs_remaining">Осталось</string>
+    <string name="subs_all_title">Все подписки</string>
     <plurals name="subs_others">
         <item quantity="one">Ещё %1$d</item>
         <item quantity="few">Ещё %1$d</item>

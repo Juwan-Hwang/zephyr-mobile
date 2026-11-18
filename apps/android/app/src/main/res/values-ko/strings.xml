@@ -128,6 +128,9 @@
     <string name="scene_uhd_only">4K 노드만</string>
     <string name="scene_pinned_value">%1$s(고정)</string>
     <string name="scene_retest">다시 테스트</string>
+    <string name="scene_funnel_tested">측정됨</string>
+    <string name="scene_funnel_reachable">연결 가능</string>
+    <string name="scene_funnel_under">%1$d ms 미만</string>
     <string name="scene_note">추천 결과는 Zephyr에만 저장됩니다. 구독 구성은 변경되지 않습니다.</string>
     <string name="scene_note_tested">%1$s 마지막 테스트: %2$s.</string>
     <string name="command_placeholder">검색 또는 명령 입력</string>
@@ -231,6 +234,12 @@
     <string name="nodes_no_match">‘%1$s’와(과) 일치하는 노드 없음</string>
     <string name="nodes_tested">%1$s 테스트됨</string>
     <string name="nodes_jump_to">%1$s(으)로 이동</string>
+    <string name="nodes_detail_protocol">프로토콜</string>
+    <string name="nodes_detail_latency">지연 시간</string>
+    <string name="nodes_detail_server">서버</string>
+    <string name="nodes_detail_route">회선</string>
+    <string name="nodes_detail_test">속도 테스트</string>
+    <string name="nodes_error_title">노드를 불러오지 못했습니다</string>
     <string name="rules_add_override_a11y">도메인 오버라이드 추가</string>
     <plurals name="rules_total_unit">
         <item quantity="other">개</item>
@@ -293,6 +302,7 @@
     <string name="subs_error_update">%1$s을(를) 업데이트할 수 없음</string>
     <string name="subs_error_delete">%1$s을(를) 삭제할 수 없음</string>
     <string name="subs_remaining">남음</string>
+    <string name="subs_all_title">전체 구독</string>
     <plurals name="subs_others">
         <item quantity="other">그 외 %1$d개</item>
     </plurals>

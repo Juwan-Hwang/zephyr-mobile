@@ -59,7 +59,7 @@ interface TunBridge {
         /** Go soft limit for the VPN process (spec: core ≤ 60 MB RSS steady state on Android). */
         const val MEMORY_LIMIT = 48L * 1024 * 1024
 
-        fun pick(ctx: Context, engine: ZephyrEngine, settings: Settings, mode: ProxyMode): TunBridge {
+        suspend fun pick(ctx: Context, engine: ZephyrEngine, settings: Settings, mode: ProxyMode): TunBridge {
             val core = engine as? CoreEngine
             val ready = Mihomo.available && core != null && core.isNative && core.activeSubscription() != null
             return if (ready) Embedded(ctx, core!!, settings, mode) else Simulated

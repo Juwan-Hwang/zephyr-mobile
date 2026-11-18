@@ -7,6 +7,12 @@
     <string name="common_close">关闭</string>
     <string name="common_clear">清除</string>
     <string name="common_latency_timeout">超时</string>
+    <string name="common_latency_a11y_untested">延迟未检测</string>
+    <string name="common_latency_a11y_testing">延迟检测中</string>
+    <string name="common_latency_a11y_timeout">延迟超时</string>
+    <plurals name="common_latency_a11y_ms">
+        <item quantity="other">延迟 %1$d 毫秒</item>
+    </plurals>
     <string name="common_traffic_a11y">下载 %1$s %2$s 每秒，上传 %3$s %4$s 每秒</string>
     <string name="common_time_just_now">刚刚</string>
     <string name="common_time_just_now_inline">刚刚</string>

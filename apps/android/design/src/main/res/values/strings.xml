@@ -11,6 +11,13 @@
     <string name="common_clear">Clear</string>
     <!-- Latency column when a node test timed out -->
     <string name="common_latency_timeout">Timeout</string>
+    <string name="common_latency_a11y_untested">Latency not tested</string>
+    <string name="common_latency_a11y_testing">Testing latency</string>
+    <string name="common_latency_a11y_timeout">Latency timed out</string>
+    <plurals name="common_latency_a11y_ms">
+        <item quantity="one">Latency %1$d millisecond</item>
+        <item quantity="other">Latency %1$d milliseconds</item>
+    </plurals>
     <!-- Accessibility: live rate. %1$s/%3$s value, %2$s/%4$s unit (MB, KB) -->
     <string name="common_traffic_a11y">Download %1$s %2$s per second, upload %3$s %4$s per second</string>
     <!-- Standalone, e.g. subscription last updated -->
