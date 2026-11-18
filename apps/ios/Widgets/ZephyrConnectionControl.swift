@@ -32,8 +32,9 @@ struct ZephyrConnectionControl: ControlWidget {
     struct Provider: ControlValueProvider {
         var previewValue: Value { Value(isOn: false, accent: ZTokens.Accent.blue.rawValue) }
 
+        /// 以系统 VPN 状态为准（扩展被杀后 SharedState 可能停在 connected，#207 E05）。
         func currentValue() async throws -> Value {
-            let state = SharedStore.shared.read()
+            let state = await TunnelController.shared.reconciledSharedState()
             return Value(isOn: state.connection.isOn, accent: state.accent)
         }
     }

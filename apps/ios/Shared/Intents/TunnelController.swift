@@ -1,7 +1,10 @@
 // TunnelController —— 系统 VPN 配置（NETunnelProviderManager）的唯一入口。
 //
 // - 首次连接时创建 “Zephyr” VPN 配置（系统会弹 VPN 授权；拒绝 → ErrorCode.vpn_permission_denied）。
-// - 启动：startVPNTunnel；停止：stopVPNTunnel；模式：写 SharedState.tunnel.mode 并 sendProviderMessage(.setMode)。
+// - 启动：startVPNTunnel（按设置恢复按需）；停止：先暂停按需再 stopVPNTunnel（#207 E02）；
+//   模式：写 SharedState.tunnel.mode 并 sendProviderMessage(.setMode)。
+// - 只有权限 / 配置被拒才报 permissionDenied，其余系统错误原样抛出，由调用方按 `errorCode(for:)` 归类（#207 E07）。
+// - 小组件 / 控制中心读状态走 `reconciledSharedState()`：以系统 NEVPNStatus 校正 SharedState（#207 E05）。
 // - 模拟器不支持 Packet Tunnel：改走 PendingCommand（交给正在运行的 App 内 MockEngine）。
 // App 侧的 CoreEngine（ZephyrCore，Release）也应通过它启动隧道后再调用引擎的 connect()（契约 §11）。
 
@@ -32,6 +35,22 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
             case .configMissing: String(localized: "还没有可用的配置，请先打开 Zephyr 添加订阅。")
             }
         }
+
+        /// 契约 §10 ErrorCode 序列化名（configMissing 与扩展找不到配置时一致，见 §14.x）。
+        var code: String {
+            switch self {
+            case .permissionDenied: "vpn_permission_denied"
+            case .configMissing: "subscription_invalid"
+            case .notConnected: "not_running"
+            case .badResponse: "internal"
+            }
+        }
+    }
+
+    /// `setConnected` 抛出的任意错误 → 契约 §10 ErrorCode 序列化名。
+    static func errorCode(for error: Error) -> String {
+        if let e = error as? TunnelError { return e.code }
+        return TunnelStartFailure.code(for: error)
     }
 
     // MARK: ConnectionControlling
@@ -46,22 +65,52 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
                 throw TunnelError.configMissing
             }
         }
-        let manager = try await loadOrCreateManager()
         if on {
-            if !manager.isEnabled {
+            let manager = try await loadOrCreateManager()
+            // 手动断开时暂停过按需：按设置恢复（规则由 apply(onDemand:) 按当前设置写好）。
+            let resume = OnDemandPause.enabledBeforeStart(hasRules: !(manager.onDemandRules ?? []).isEmpty,
+                                                          current: manager.isOnDemandEnabled)
+            if !manager.isEnabled || resume != nil {
                 manager.isEnabled = true
-                try await manager.saveToPreferences()
+                if let resume { manager.isOnDemandEnabled = resume }
+                do { try await manager.saveToPreferences() } catch { throw Self.permissionMapped(error) }
                 try await manager.loadFromPreferences()
             }
-            do {
-                try manager.connection.startVPNTunnel(options: nil)
-            } catch {
-                throw TunnelError.permissionDenied
-            }
+            try await start(manager)
         } else {
+            guard let manager = try await existingManager() else { return }
+            // 开着按需时直接 stop，规则末尾的 NEOnDemandRuleConnect 会让系统马上重连（#207 E02）。先关按需并保存。
+            if let off = OnDemandPause.enabledBeforeStop(current: manager.isOnDemandEnabled) {
+                manager.isOnDemandEnabled = off
+                do {
+                    try await manager.saveToPreferences()
+                    try await manager.loadFromPreferences()
+                } catch {
+                    // 保存失败也要断开；系统可能按规则重连，但不能让用户点了断开却什么都不发生。
+                }
+            }
             manager.connection.stopVPNTunnel()
         }
         #endif
+    }
+
+    /// startVPNTunnel：配置过期 / 无效（另一进程刚改过配置）时重新 load 再试一次；
+    /// 权限 / 配置被拒 → permissionDenied；其余系统错误原样抛出（#207 E07）。
+    private func start(_ manager: NETunnelProviderManager) async throws {
+        do {
+            try manager.connection.startVPNTunnel(options: nil)
+        } catch let error as NSError where error.domain == NEVPNErrorDomain
+            && (error.code == NEVPNError.Code.configurationStale.rawValue || error.code == NEVPNError.Code.configurationInvalid.rawValue) {
+            try await manager.loadFromPreferences()
+            do { try manager.connection.startVPNTunnel(options: nil) } catch { throw Self.permissionMapped(error) }
+        } catch {
+            throw Self.permissionMapped(error)
+        }
+    }
+
+    /// 权限 / 配置被拒 → permissionDenied；其余错误原样返回。
+    private static func permissionMapped(_ error: Error) -> Error {
+        TunnelStartFailure.isPermissionDenial(error) ? TunnelError.permissionDenied : error
     }
 
     func setMode(_ mode: SharedState.Mode) async throws {
@@ -97,7 +146,9 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
         }
         if plan.connectElsewhere { rules.append(NEOnDemandRuleConnect()) } else if !rules.isEmpty { rules.append(NEOnDemandRuleIgnore()) }
 
-        let enabled = !plan.isEmpty
+        // 用户手动断开后按需处于暂停：设置变化只更新规则，不重新启用（下次手动连接时恢复，#207 E02）。
+        let paused = OnDemandPause.isPaused(hasRules: !(manager.onDemandRules ?? []).isEmpty, enabled: manager.isOnDemandEnabled)
+        let enabled = OnDemandPause.enabledAfterApply(plan: plan, wasPaused: paused)
         // 没有变化就不写系统配置（每次保存都会触发 NEVPNConfigurationChange 通知）。
         let sameRules = (manager.onDemandRules ?? []).count == rules.count
             && zip(manager.onDemandRules ?? [], rules).allSatisfy { type(of: $0) == type(of: $1) && ($0 as? NEOnDemandRuleDisconnect)?.ssidMatch == ($1 as? NEOnDemandRuleDisconnect)?.ssidMatch }
@@ -106,6 +157,45 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
         manager.isOnDemandEnabled = enabled
         try await manager.saveToPreferences()
         try await manager.loadFromPreferences()
+    }
+
+    // MARK: 状态校正（#207 E05）
+
+    /// 系统 VPN 状态与连接起始时间；没有 VPN 配置为 (.invalid, nil)；读取超过 `timeout` 秒为 nil。
+    func systemStatus(timeout: TimeInterval = 2) async -> (status: NEVPNStatus, since: Date?)? {
+        await Self.withTimeout(timeout) { [self] in
+            guard let manager = try? await existingManager() else { return (NEVPNStatus.invalid, nil) }
+            return (manager.connection.status, manager.connection.connectedDate)
+        }
+    }
+
+    /// 以系统状态为准的共享摘要：扩展被杀后 SharedState 可能停在 connected，读到不一致就校正并写回，
+    /// 让小组件、控制中心、实时活动不再显示假“已连接”。读不到系统状态时原样返回 SharedState。
+    func reconciledSharedState(store: SharedStore = .shared) async -> SharedState {
+        let current = store.read()
+        #if targetEnvironment(simulator)
+        return current   // 模拟器没有 Packet Tunnel：状态由 App 内 MockEngine 写入，不能被“系统未连接”覆盖
+        #else
+        guard let sys = await systemStatus() else { return current }
+        let system = SharedState.Status(vpn: sys.status)
+        let fixed = current.reconciled(withSystem: system, since: sys.since)
+        guard fixed.connection != current.connection else { return current }
+        // 写回时对最新内容再算一次，避免覆盖扩展刚写入的状态。
+        let written = try? store.update { state in state = state.reconciled(withSystem: system, since: sys.since) }
+        DarwinNotifier.post(.tunnelStatus)
+        return written ?? fixed
+        #endif
+    }
+
+    private static func withTimeout<T: Sendable>(_ seconds: TimeInterval, _ op: @escaping @Sendable () async -> T) async -> T? {
+        await withCheckedContinuation { (cont: CheckedContinuation<T?, Never>) in
+            let once = ResumeOnce(cont)
+            Task { once.resume(await op()) }
+            Task {
+                try? await Task.sleep(nanoseconds: UInt64(max(0, seconds) * 1_000_000_000))
+                once.resume(nil)
+            }
+        }
     }
 
     // MARK: 内部
@@ -126,11 +216,8 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
         manager.protocolConfiguration = proto
         manager.localizedDescription = Self.localizedDescription
         manager.isEnabled = true
-        do {
-            try await manager.saveToPreferences()
-        } catch {
-            throw TunnelError.permissionDenied
-        }
+        // 用户在授权弹窗点“不允许”→ permissionDenied；其他失败（如签名 / 权限配置问题）原样抛出，不误报成权限（#207 E07）。
+        do { try await manager.saveToPreferences() } catch { throw Self.permissionMapped(error) }
         // Apple 要求保存后重新 load，否则首次 startVPNTunnel 会失败（NEVPNErrorConfigurationInvalid）。
         try await manager.loadFromPreferences()
         remember(manager)
@@ -185,5 +272,16 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
                 cont.resume(throwing: error)
             }
         }
+    }
+}
+
+/// 只恢复一次的 continuation（超时与结果谁先到用谁）。
+private final class ResumeOnce<T: Sendable>: @unchecked Sendable {
+    private let lock = NSLock()
+    private var cont: CheckedContinuation<T?, Never>?
+    init(_ cont: CheckedContinuation<T?, Never>) { self.cont = cont }
+    func resume(_ value: T?) {
+        lock.lock(); let c = cont; cont = nil; lock.unlock()
+        c?.resume(returning: value)
     }
 }

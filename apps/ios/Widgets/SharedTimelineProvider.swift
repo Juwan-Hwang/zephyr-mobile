@@ -21,13 +21,25 @@ struct SharedTimelineProvider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SharedEntry) -> Void) {
-        let now = Date()
-        let state = context.isPreview ? SharedState.prototype(now: now) : SharedStore.shared.read()
-        completion(SharedEntry(date: now, state: state))
+        if context.isPreview {
+            let now = Date()
+            completion(SharedEntry(date: now, state: .prototype(now: now)))
+            return
+        }
+        let done = CompletionBox(completion)
+        Task {
+            let state = await TunnelController.shared.reconciledSharedState()
+            done.call(SharedEntry(date: Date(), state: state))
+        }
     }
 
+    /// 以系统 VPN 状态校正后的摘要：扩展被杀时 SharedState 会停在 connected（#207 E05）。
     func getTimeline(in context: Context, completion: @escaping (Timeline<SharedEntry>) -> Void) {
-        completion(Self.timeline(state: SharedStore.shared.read(), now: Date()))
+        let done = CompletionBox(completion)
+        Task {
+            let state = await TunnelController.shared.reconciledSharedState()
+            done.call(Self.timeline(state: state, now: Date()))
+        }
     }
 
     static func timeline(state: SharedState, now: Date, calendar: Calendar = .current) -> Timeline<SharedEntry> {
@@ -39,6 +51,13 @@ struct SharedTimelineProvider: TimelineProvider {
         }
         return Timeline(entries: entries, policy: .after(next))
     }
+}
+
+/// WidgetKit 的 completion 不是 Sendable；只调用一次，系统允许在任意线程回调。
+private struct CompletionBox<T>: @unchecked Sendable {
+    let body: (T) -> Void
+    init(_ body: @escaping (T) -> Void) { self.body = body }
+    func call(_ value: T) { body(value) }
 }
 
 /// 小组件统一外壳：背景 + 外边距由系统 containerBackground 处理。

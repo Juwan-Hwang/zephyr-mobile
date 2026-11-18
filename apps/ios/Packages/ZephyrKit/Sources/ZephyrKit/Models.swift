@@ -548,8 +548,15 @@ public struct DnsSettings: Sendable, Hashable, Codable {
     public var nameservers: [String]
     public var fallback: [String]
     public var ipv6: Bool
-    public init(fakeIp: Bool = true, nameservers: [String] = ["https://doh.pub/dns-query", "https://dns.alidns.com/dns-query"],
-                fallback: [String] = ["https://1.1.1.1/dns-query", "https://dns.google/dns-query"], ipv6: Bool = false) {
+    /// 契约 §13 默认值：主 alidns → doh.pub，fallback 仅 1.1.1.1（与 Android `Model.kt` 一致）。
+    public static let defaultNameservers = ["https://dns.alidns.com/dns-query", "https://doh.pub/dns-query"]
+    public static let defaultFallback = ["https://1.1.1.1/dns-query"]
+    /// #207 E09 之前 iOS 的出厂值（顺序反了、fallback 多了 dns.google）。设置页不能改 DNS，落盘值与之完全相同即视为“未改过”。
+    static let legacyNameservers = ["https://doh.pub/dns-query", "https://dns.alidns.com/dns-query"]
+    static let legacyFallback = ["https://1.1.1.1/dns-query", "https://dns.google/dns-query"]
+
+    public init(fakeIp: Bool = true, nameservers: [String] = DnsSettings.defaultNameservers,
+                fallback: [String] = DnsSettings.defaultFallback, ipv6: Bool = false) {
         self.fakeIp = fakeIp; self.nameservers = nameservers; self.fallback = fallback; self.ipv6 = ipv6
     }
     enum CodingKeys: String, CodingKey { case nameservers, fallback, ipv6; case fakeIp = "fake_ip" }
@@ -565,7 +572,10 @@ public struct TunSettings: Sendable, Hashable, Codable {
     public var mtu: Int32
     public var ipv6: Bool
     public var strictRoute: Bool
-    public init(stack: TunStack = .system, mtu: Int32 = 9000, ipv6: Bool = false, strictRoute: Bool = true) {
+    /// 契约 §13：“iOS NE 默认 gvisor”（#207 E09/U8；此前为 .system）。
+    public static let defaultStack: TunStack = .gvisor
+
+    public init(stack: TunStack = TunSettings.defaultStack, mtu: Int32 = 9000, ipv6: Bool = false, strictRoute: Bool = true) {
         self.stack = stack; self.mtu = mtu; self.ipv6 = ipv6; self.strictRoute = strictRoute
     }
     enum CodingKeys: String, CodingKey { case stack, mtu, ipv6; case strictRoute = "strict_route" }
@@ -625,6 +635,16 @@ extension Settings {
                   accent: try c.decode(Accent.self, forKey: .accent), appearance: try c.decode(Appearance.self, forKey: .appearance),
                   shareAnonymousPattern: try c.decode(Bool.self, forKey: .shareAnonymousPattern),
                   localProxyEnabled: try c.decodeIfPresent(Bool.self, forKey: .localProxyEnabled) ?? false)
+        migrateLegacyTunnelDefaults()
+    }
+
+    /// #207 E09：旧版本落盘的 settings.json 仍是旧出厂值（system 栈、旧 DNS 列表）时换成契约 §13 的默认值。
+    /// 设置页没有 DNS / 栈的入口，DNS 两个列表都与旧出厂值逐字相同才视为用户没改过；否则一律保留。
+    mutating func migrateLegacyTunnelDefaults() {
+        guard dns.nameservers == DnsSettings.legacyNameservers, dns.fallback == DnsSettings.legacyFallback else { return }
+        dns.nameservers = DnsSettings.defaultNameservers
+        dns.fallback = DnsSettings.defaultFallback
+        if tun.stack == .system { tun.stack = TunSettings.defaultStack }
     }
 }
 

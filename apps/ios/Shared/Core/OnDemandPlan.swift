@@ -25,3 +25,18 @@ struct OnDemandPlan: Equatable, Sendable {
     /// 没有任何规则：关闭系统按需。
     var isEmpty: Bool { disconnectSSIDs.isEmpty && !connectElsewhere }
 }
+
+/// 用户手动断开时暂停按需（#207 E02）。不另存标记，直接从系统 VPN 配置推断：
+/// 有按需规则却没启用 = 用户手动断开后暂停中（`apply` 写规则时 enabled 恒等于“有规则”，只有手动断开会把两者拆开）。
+enum OnDemandPause {
+    static func isPaused(hasRules: Bool, enabled: Bool) -> Bool { hasRules && !enabled }
+
+    /// 设置变化时写回系统的 isOnDemandEnabled：暂停中只更新规则、保持关闭，避免改个受信任 Wi‑Fi 就被系统重新连上。
+    static func enabledAfterApply(plan: OnDemandPlan, wasPaused: Bool) -> Bool { !plan.isEmpty && !wasPaused }
+
+    /// 手动断开：按需开着就先关掉（否则规则末尾的 Connect 会让系统立刻重连）。返回需要写入的新值，nil = 不用改。
+    static func enabledBeforeStop(current: Bool) -> Bool? { current ? false : nil }
+
+    /// 手动连接：有规则就恢复按需（按设置恢复）。返回需要写入的新值，nil = 不用改。
+    static func enabledBeforeStart(hasRules: Bool, current: Bool) -> Bool? { hasRules && !current ? true : nil }
+}
