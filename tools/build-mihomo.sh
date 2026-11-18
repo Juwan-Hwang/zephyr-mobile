@@ -20,10 +20,15 @@ android)
       x86_64) GA=amd64; CCB=x86_64-linux-android26-clang;;
     esac
     mkdir -p "$OUT/$abi"
-    GOOS=android GOARCH=$GA CC="$TC/$CCB" go build -trimpath -tags "$TAGS" -ldflags "$LDFLAGS" -buildmode=c-shared -o "$OUT/$abi/libzmihomo.so" .
+    # 16 KB 页对齐（Android 15+ / Play 要求 PT_LOAD p_align ≥ 16384），由外部链接器（NDK clang/lld）生效。
+    GOOS=android GOARCH=$GA CC="$TC/$CCB" go build -trimpath -tags "$TAGS" -ldflags "$LDFLAGS -extldflags=-Wl,-z,max-page-size=16384" -buildmode=c-shared -o "$OUT/$abi/libzmihomo.so" .
     rm -f "$OUT/$abi/libzmihomo.h"
   done
   find "$OUT" -name 'libzmihomo.so' -exec ls -la {} \;
+  # 打印每个 .so 的 LOAD 段对齐，便于在 CI 日志里核对（期望 0x4000）。
+  if command -v "$TC/llvm-readelf" >/dev/null; then
+    for so in "$OUT"/*/libzmihomo.so; do echo "$so"; "$TC/llvm-readelf" -lW "$so" | grep -E '^\s*LOAD' || true; done
+  fi
   ;;
 ios)
   OUT=$ROOT/build/ios/zmihomo; rm -rf "$OUT"; mkdir -p "$OUT"
