@@ -191,12 +191,65 @@ final class CoreEngineLiveTests: XCTestCase {
         s.localProxyAuth = true
         let lp = try XCTUnwrap(CoreEngine.localProxy(settings: s, defaults: d))
         XCTAssertEqual(lp.port, 7890)
-        XCTAssertEqual(lp.auth, CoreEngine.localProxyCredential(defaults: d), "凭据稳定")
-        XCTAssertTrue(lp.auth!.hasPrefix("zephyr:"))
+        XCTAssertEqual(lp.auth, CoreEngine.storedLocalProxyCredential(defaults: d), "凭据稳定")
+        XCTAssertTrue(LocalProxyCredential.isWellFormed(lp.auth!), lp.auth!)
         s.localProxyAuth = false
         XCTAssertNil(CoreEngine.localProxy(settings: s, defaults: d)?.auth)
         s.localProxyPort = 80
         XCTAssertNil(CoreEngine.localProxy(settings: s, defaults: d), "特权端口拒绝")
+    }
+
+    /// §16.g ①：引擎接口读到的凭据就是写进隧道配置的那个；重置后运行中热重载、配置换成新密码。
+    func testLocalProxyCredentialMatchesTunnelConfigAndResetReloads() async throws {
+        let d = UserDefaults(suiteName: "lpc-\(UUID().uuidString)")!
+        let t = FakeTunnel(dir: dir)
+        let e = CoreEngine(dataDir: dir.appendingPathComponent("core"), mockData: false, fetcher: { _ in
+            CoreEngine.FetchedBody(body: CoreEngineTests.yaml, fileName: "Demo.yaml")
+        }, tunnel: t, credentialDefaults: d)
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        let c1 = await e.localProxyCredential()
+        XCTAssertTrue(LocalProxyCredential.isWellFormed(c1), c1)
+        let again = await e.localProxyCredential()
+        XCTAssertEqual(again, c1, "稳定")
+        XCTAssertEqual(d.string(forKey: CoreEngine.credentialKey), c1, "自定义 defaults 不碰钥匙串")
+
+        // 未开本地代理：重置不触发重载
+        try await e.connect()
+        let base = t.reloads
+        let c2 = await e.resetLocalProxyCredential()
+        XCTAssertNotEqual(c2, c1)
+        XCTAssertTrue(LocalProxyCredential.isWellFormed(c2), c2)
+        XCTAssertEqual(t.reloads, base, "本地代理关闭时不重载")
+
+        var it = e.settings().makeAsyncIterator()
+        let first = await it.next()
+        var s = try XCTUnwrap(first)
+        s.localProxyEnabled = true
+        s.localProxyAuth = true
+        try await e.updateSettings(patch: s)
+        let yaml1 = try String(contentsOf: t.configURL, encoding: .utf8)
+        XCTAssertTrue(yaml1.contains(LocalProxyCredential.password(of: c2)), "隧道配置用同一凭据")
+        let afterEnable = t.reloads
+        let c3 = await e.resetLocalProxyCredential()
+        XCTAssertEqual(t.reloads, afterEnable + 1, "运行中 + 需要密码：热重载")
+        let yaml2 = try String(contentsOf: t.configURL, encoding: .utf8)
+        XCTAssertTrue(yaml2.contains(LocalProxyCredential.password(of: c3)))
+        XCTAssertFalse(yaml2.contains(LocalProxyCredential.password(of: c2)), "旧密码不再有效")
+
+        // 不需要密码：重置不重载
+        s.localProxyAuth = false
+        try await e.updateSettings(patch: s)
+        let afterNoAuth = t.reloads
+        _ = await e.resetLocalProxyCredential()
+        XCTAssertEqual(t.reloads, afterNoAuth)
+    }
+
+    func testStoredCredentialRegeneratesMalformed() {
+        let d = UserDefaults(suiteName: "lpm-\(UUID().uuidString)")!
+        d.set("zephyr:short", forKey: CoreEngine.credentialKey)
+        let v = CoreEngine.storedLocalProxyCredential(defaults: d)
+        XCTAssertTrue(LocalProxyCredential.isWellFormed(v), v)
+        XCTAssertEqual(CoreEngine.storedLocalProxyCredential(defaults: d), v)
     }
 
     func testLatencyViaTunnelRecordsAndStreams() async throws {

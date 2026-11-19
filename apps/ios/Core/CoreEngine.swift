@@ -57,6 +57,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
 
     /// 真机的系统隧道；nil = 模拟器 / 单测，实时数据走 fallback。
     let tunnel: (any TunnelPort)?
+    /// 本地代理凭据的存处（§16.g ①）：`.standard` = 钥匙串；单测传自定义 suite（不碰钥匙串）。
+    let credentialDefaults: UserDefaults
 
     /// 核心是否已加载（不代表已有数据）。
     public var isNative: Bool { core != nil }
@@ -79,7 +81,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
                 clock: @escaping @Sendable () -> Int64 = { ZFormat.nowMillis() },
                 fetcher: (@Sendable (URL) async throws -> FetchedBody)? = nil,
                 downloader: (@Sendable (URL, URL) async throws -> Void)? = nil,
-                tunnel: (any TunnelPort)? = nil) {
+                tunnel: (any TunnelPort)? = nil,
+                credentialDefaults: UserDefaults = .standard) {
         let dir = dataDir ?? CoreEngine.defaultDataDir()
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         self.core = try? MobileCore(dataDir: dir.path)
@@ -90,6 +93,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         self.fetcher = fetcher ?? CoreEngine.httpFetch
         self.downloader = downloader ?? CoreEngine.httpDownload
         self.tunnel = tunnel
+        self.credentialDefaults = credentialDefaults
         // 契约 §15.e：核心的测速有效期进程内有效，启动时按设置下发（设置变更时在 updateSettings 里再下发）。
         core?.setLatencyTtlHours(hours: UInt32(max(1, loadSettings().latencyTtlHours)))
     }
@@ -953,13 +957,15 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         let s = await currentSettings()
         var modeIterator = connectionState().makeAsyncIterator()
         let mode = await modeIterator.next()?.mode ?? .rule
-        let options = CoreEngine.runtimeOptions(settings: s, mode: mode, controllerSocket: controllerSocket)
+        let options = CoreEngine.runtimeOptions(settings: s, mode: mode, controllerSocket: controllerSocket,
+                                                credentialDefaults: credentialDefaults)
         let yaml = try await run(.subscriptionInvalid) { try c.runtimeConfig(subscriptionId: id, options: options) }
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         try Data(yaml.utf8).write(to: url, options: .atomic)
     }
 
-    static func runtimeOptions(settings s: ZephyrKit.Settings?, mode: ZephyrKit.ProxyMode, controllerSocket: String) -> RuntimeOptions {
+    static func runtimeOptions(settings s: ZephyrKit.Settings?, mode: ZephyrKit.ProxyMode, controllerSocket: String,
+                               credentialDefaults: UserDefaults = .standard) -> RuntimeOptions {
         let dns = s?.dns ?? DnsSettings()
         let tun = s?.tun ?? TunSettings()
         let stack: TunStackKind = switch tun.stack { case .system: .system; case .gvisor: .gvisor; case .mixed: .mixed }
@@ -968,31 +974,67 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
             dns: DnsConfig(fakeIp: dns.fakeIp, nameservers: dns.nameservers, fallback: dns.fallback, ipv6: dns.ipv6),
             tun: TunConfig(stack: stack, mtu: tun.mtu, ipv6: tun.ipv6, strictRoute: tun.strictRoute, fileDescriptor: -1),
             mode: coreMode, controllerSocket: controllerSocket, findProcess: false, logLevel: "warning",
-            localProxy: localProxy(settings: s))
+            localProxy: localProxy(settings: s, defaults: credentialDefaults))
     }
 
-    /// 本地代理（契约 §14.z）：只绑 127.0.0.1；开鉴权时用本机生成并保存的凭据。
+    /// 本地代理（契约 §14.z ④）：只绑 127.0.0.1；开鉴权时用本机生成并保存的凭据——
+    /// 与设置页 `localProxyCredential()` 展示 / 复制的是同一个（同一存处、同一 key）。
     static func localProxy(settings s: ZephyrKit.Settings?, defaults: UserDefaults = .standard) -> LocalProxy? {
         guard let s, s.localProxyEnabled, (1024...65535).contains(Int(s.localProxyPort)) else { return nil }
-        return LocalProxy(port: UInt16(s.localProxyPort), auth: s.localProxyAuth ? localProxyCredential(defaults: defaults) : nil)
+        return LocalProxy(port: UInt16(s.localProxyPort), auth: s.localProxyAuth ? storedLocalProxyCredential(defaults: defaults) : nil)
     }
 
-    /// "zephyr:<随机 24 位>"，首次生成后保存；UI 在设置页展示给需要配置的 App。
-    /// 标准 UserDefaults 时存钥匙串（REVIEW-Q2：凭据不落 plist），并把旧版 UserDefaults 里的值迁移过去；
-    /// 自定义 defaults（单测）或钥匙串不可用时存 defaults。
-    public static func localProxyCredential(defaults: UserDefaults = .standard) -> String {
-        let key = "zephyr.localProxyCredential"
+    // MARK: §16.g ① 本地代理凭据（U9）
+
+    public func localProxyCredential() async -> String {
+        CoreEngine.storedLocalProxyCredential(defaults: credentialDefaults)
+    }
+
+    /// 换新密码；隧道运行中且本地代理开启 + 需要密码时重写配置并热重载（未连接只重写配置，下次连接生效）。
+    public func resetLocalProxyCredential() async -> String {
+        let v = CoreEngine.resetStoredLocalProxyCredential(defaults: credentialDefaults)
+        if let t = tunnel, let s = await currentSettings(), s.localProxyEnabled, s.localProxyAuth {
+            await reloadTunnelIfRunning(t)
+        }
+        return v
+    }
+
+    static let credentialKey = "zephyr.localProxyCredential"
+    /// 首次生成与重置互斥，避免并发首读各生成一个。
+    private static let credentialLock = NSLock()
+
+    /// "zephyr:<24 位>"（`LocalProxyCredential` 格式），首次生成后保存。
+    /// 标准 UserDefaults 时存钥匙串（AfterFirstUnlockThisDeviceOnly、不同步 iCloud；REVIEW-Q2：凭据不落 plist），
+    /// 并把旧版 UserDefaults 里的值迁移过去；自定义 defaults（单测）或钥匙串不可用时存 defaults。
+    /// 不合法的存量值（格式不符）重新生成。
+    static func storedLocalProxyCredential(defaults: UserDefaults = .standard) -> String {
+        credentialLock.lock(); defer { credentialLock.unlock() }
         let useKeychain = defaults === UserDefaults.standard
-        if useKeychain, let v = KeychainStore.read(key), v.contains(":") { return v }
-        if let v = defaults.string(forKey: key), v.contains(":") {
-            if useKeychain, KeychainStore.write(key, v) { defaults.removeObject(forKey: key) }
+        if useKeychain, let v = KeychainStore.read(credentialKey), LocalProxyCredential.isWellFormed(v) { return v }
+        if let v = defaults.string(forKey: credentialKey), LocalProxyCredential.isWellFormed(v) {
+            if useKeychain, KeychainStore.write(credentialKey, v) { defaults.removeObject(forKey: credentialKey) }
             return v
         }
-        let alphabet = Array("abcdefghijkmnpqrstuvwxyzACDEFGHJKLMNPQRSTUVWXYZ23456789")
-        var rng = SystemRandomNumberGenerator()
-        let pass = String((0..<24).map { _ in alphabet.randomElement(using: &rng)! })
-        let v = "zephyr:\(pass)"
-        if !(useKeychain && KeychainStore.write(key, v)) { defaults.set(v, forKey: key) }
+        return saveCredential(LocalProxyCredential.generate(), defaults: defaults)
+    }
+
+    /// 生成并保存一个与当前不同的新凭据。
+    static func resetStoredLocalProxyCredential(defaults: UserDefaults = .standard) -> String {
+        credentialLock.lock(); defer { credentialLock.unlock() }
+        let useKeychain = defaults === UserDefaults.standard
+        let old = (useKeychain ? KeychainStore.read(credentialKey) : nil) ?? defaults.string(forKey: credentialKey)
+        var v = LocalProxyCredential.generate()
+        while v == old { v = LocalProxyCredential.generate() }
+        return saveCredential(v, defaults: defaults)
+    }
+
+    /// 调用方持有 credentialLock。钥匙串写不进时删掉钥匙串旧值，免得之后读到过期密码，再回落 defaults。
+    private static func saveCredential(_ v: String, defaults: UserDefaults) -> String {
+        if defaults === UserDefaults.standard {
+            if KeychainStore.write(credentialKey, v) { defaults.removeObject(forKey: credentialKey); return v }
+            KeychainStore.delete(credentialKey)
+        }
+        defaults.set(v, forKey: credentialKey)
         return v
     }
 

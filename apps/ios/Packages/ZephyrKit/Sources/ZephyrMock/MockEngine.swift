@@ -25,6 +25,9 @@ public final class MockEngine: ZephyrEngine, @unchecked Sendable {
         var closedConnections: Set<String> = []
         var logBacklog: [LogLine] = []
         var importCount = 0
+        /// 契约 §16.g ①：Mock 固定凭据；reset 后按种子确定性生成同格式新值。
+        var proxyCredential = MockEngine.mockProxyCredential
+        var credentialResets: UInt64 = 0
     }
 
     let lock = NSLock()
