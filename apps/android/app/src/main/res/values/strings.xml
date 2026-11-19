@@ -467,6 +467,9 @@
     <string name="settings_on_demand">Connect on demand</string>
     <string name="settings_trusted_wifi_hint">Disconnect automatically when joined</string>
     <string name="settings_trusted_wifi_location">Allow location access to recognize Wi‑Fi names</string>
+    <string name="settings_trusted_wifi_location_off">Turn on system location to recognize Wi‑Fi names</string>
+    <string name="settings_trusted_wifi_always_on">Managed by the system’s Always‑on VPN</string>
+    <string name="notif_paused_trusted">Disconnected on trusted Wi‑Fi “%1$s”. Reconnects automatically when you leave.</string>
     <string name="settings_password_required">Require password</string>
     <string name="trusted_wifi_disconnect">Disconnect on these Wi‑Fi networks</string>
     <string name="trusted_wifi_footer">On trusted networks like home or work, Zephyr disconnects automatically and reconnects on demand when you leave.</string>

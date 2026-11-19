@@ -86,9 +86,10 @@ interface TunBridge {
             // Audit E16: same clamp as iOS TunnelConfiguration (settings already reject < 576 / > 9000).
             setMtu(mtu.coerceIn(MTU_MIN, MTU_MAX))
             addAddress("198.18.0.1", 30)
-            addRoute("0.0.0.0", 0)
             addDnsServer("198.18.0.2")
-            if (ipv6) { addAddress("fdfe:dcba:9876::1", 126); addRoute("::", 0) }
+            if (ipv6) addAddress("fdfe:dcba:9876::1", 126)
+            // Contract §16.a①: default routes minus the LAN set (excludeRoute on 33+, complement table below).
+            LanBypass.apply(this, ipv6)
             setBlocking(false)
             // Audit E04: no setMetered(false). The VPN stays "metered if its underlying network is", and the service
             // keeps setUnderlyingNetworks pointed at the real network, so apps (and WorkManager's UNMETERED) see

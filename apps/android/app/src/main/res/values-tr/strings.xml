@@ -400,6 +400,9 @@
     <string name="settings_on_demand">İsteğe bağlı bağlan</string>
     <string name="settings_trusted_wifi_hint">Bu ağlarda bağlantıyı otomatik olarak kes</string>
     <string name="settings_trusted_wifi_location">Wi‑Fi adlarını tanımak için konum erişimine izin verin</string>
+    <string name="settings_trusted_wifi_location_off">Wi‑Fi adlarını tanımak için sistem konumunu açın</string>
+    <string name="settings_trusted_wifi_always_on">Sistemin «Her zaman açık VPN» ayarı tarafından yönetiliyor</string>
+    <string name="notif_paused_trusted">Güvenilen Wi‑Fi «%1$s» ağında bağlantı kesildi. Ayrıldığınızda otomatik olarak yeniden bağlanır.</string>
     <string name="settings_password_required">Parola gerektir</string>
     <string name="trusted_wifi_disconnect">Bu Wi‑Fi ağlarında bağlantıyı kes</string>
     <string name="trusted_wifi_footer">Ev veya iş gibi güvenilir ağlarda Zephyr bağlantıyı otomatik olarak keser; ayrıldığınızda gerektiğinde yeniden bağlanır.</string>

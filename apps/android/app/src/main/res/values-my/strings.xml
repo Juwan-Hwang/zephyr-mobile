@@ -369,6 +369,9 @@
     <string name="settings_on_demand">လိုအပ်မှ ချိတ်ဆက်ရန်</string>
     <string name="settings_trusted_wifi_hint">ချိတ်မိလျှင် အလိုအလျောက် အဆက်ဖြတ်</string>
     <string name="settings_trusted_wifi_location">Wi‑Fi အမည်များကို သိရှိရန် တည်နေရာ ခွင့်ပြုပါ</string>
+    <string name="settings_trusted_wifi_location_off">Wi‑Fi အမည်များကို သိရှိရန် စနစ်တည်နေရာကို ဖွင့်ပါ</string>
+    <string name="settings_trusted_wifi_always_on">စနစ်၏ «အမြဲဖွင့် VPN» က စီမံထားသည်</string>
+    <string name="notif_paused_trusted">ယုံကြည်ရသော Wi‑Fi «%1$s» တွင် ချိတ်ဆက်မှု ဖြတ်ထားသည်။ ထွက်သွားလျှင် အလိုအလျောက် ပြန်ချိတ်ပါမည်။</string>
     <string name="settings_password_required">စကားဝှက် လိုအပ်သည်</string>
     <string name="trusted_wifi_disconnect">ဤ Wi‑Fi များတွင် အဆက်ဖြတ်ရန်</string>
     <string name="trusted_wifi_footer">အိမ် သို့မဟုတ် အလုပ်ကဲ့သို့ ယုံကြည်ရသော ကွန်ရက်များတွင် Zephyr သည် အလိုအလျောက် အဆက်ဖြတ်ပြီး ထွက်ခွာသောအခါ လိုအပ်သလို ပြန်ချိတ်ဆက်သည်။</string>

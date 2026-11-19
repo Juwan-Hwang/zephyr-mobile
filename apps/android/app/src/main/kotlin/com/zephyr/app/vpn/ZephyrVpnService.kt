@@ -19,17 +19,28 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 /**
  * Foreground VPN service: builds the tun, hands it to the core, keeps the ongoing notification fresh (1 Hz)
- * and mirrors state to the QS tile and widget.
+ * and mirrors state to the QS tile and widget. Also owns on-demand and trusted Wi‑Fi (contract §16.a⑤, [OnDemand]):
+ * START_STICKY + [ACTION_RESUME] reconnects, and a tunnel dropped on trusted Wi‑Fi keeps the service in the
+ * foreground ("paused") so it can reconnect when the device leaves that network.
  */
 class ZephyrVpnService : VpnService() {
 
     private var prober: kotlinx.coroutines.Job? = null
+    private var pausedWatcher: Job? = null
+    private val lifecycle = kotlinx.coroutines.sync.Mutex()
+    /** Tunnel dropped on trusted Wi‑Fi, service still watching (contract §16.a⑤). */
+    @Volatile private var paused = false
+    /** §16.a③: a network switch asks the failover probe loop for its next round now. */
+    private val probeNow = kotlinx.coroutines.channels.Channel<Unit>(kotlinx.coroutines.channels.Channel.CONFLATED)
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private var tun: ParcelFileDescriptor? = null
     private var watcher: Job? = null
@@ -40,40 +51,75 @@ class ZephyrVpnService : VpnService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
-            ACTION_DISCONNECT -> { scope.launch { stop() }; return START_NOT_STICKY }
+            ACTION_DISCONNECT -> {
+                // Contract §16.a⑤: a manual disconnect from any surface (UI, widget, QS tile, notification) pauses
+                // on-demand until the next manual connect.
+                OnDemand.markManualDisconnect(this)
+                transition { stop() }
+                return START_NOT_STICKY
+            }
             ACTION_TOGGLE_MODE -> scope.launch { toggleMode() }
-            else -> start()
+            ACTION_CONNECT -> { OnDemand.markManualConnect(this); start(auto = false) }
+            // On-demand (boot / app update / network back) and the system's sticky restart after killing us.
+            ACTION_RESUME, null -> start(auto = true)
+            // android.net.VpnService: the system's 「始终开启的 VPN」 starts us; that is not on-demand's call to make.
+            else -> start(auto = false)
         }
         return START_STICKY
     }
 
-    private fun start() {
+    /** Lifecycle changes (connect / pause / stop) run one at a time, never interleaved. */
+    private fun transition(block: suspend () -> Unit) = scope.launch { lifecycle.withLock { block() } }
+
+    private fun start(auto: Boolean) {
         // Review W-P2-4: the very first "连接中…" post uses the last known accent too, not a hard-coded blue.
         val first = Notifications.ongoing(this, null, null, emptyList(), connecting = true, accent = lastAccent)
-        ServiceCompat.startForeground(this, Notifications.ID_ONGOING, first, fgsType())
-        scope.launch {
-            val s = engine.settings().first()
-            bridge = TunBridge.pick(this@ZephyrVpnService, engine, s, engine.connectionState().first().mode)
-            if (!bridge.createsTun && !com.zephyr.app.BuildConfig.DEBUG) {
-                // Release never pretends: without a tunnel the app must not say "已连接" while traffic goes direct.
-                fail(TunBridge.whyNoTunnel(engine)); return@launch
-            }
-            if (bridge.createsTun && tun == null) {
-                tun = TunBridge.configure(Builder().setSession("Zephyr"), s.tun.mtu, s.tun.ipv6, s.tun.excludedApps, packageName).establish()
-                val err = tun?.let { bridge.attach(it) } ?: "establish() returned null"
-                if (err != null) {
-                    android.util.Log.e("Zephyr", "core start failed: $err")
-                    fail(com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.CORE_CRASHED, err)); return@launch
+        if (runCatching { ServiceCompat.startForeground(this, Notifications.ID_ONGOING, first, fgsType()) }.isFailure) {
+            android.util.Log.w("Zephyr", "startForeground refused"); stopSelf(); return
+        }
+        running = true
+        transition {
+            if (auto && tun == null) {
+                // A cold boot / sticky restart: wait for the stored settings, then ask on-demand (never prompt consent).
+                AppGraph.settings.loaded.let { kotlinx.coroutines.withTimeoutOrNull(SETTINGS_WAIT_MS) { it.await() } }
+                val s = engine.settings().first()
+                val consent = prepare(this@ZephyrVpnService) == null
+                if (!OnDemand.mayAutoConnect(s.onDemand, OnDemand.armed(this@ZephyrVpnService), consent)) { stop(); return@transition }
+                val snap = AppGraph.network?.state?.value
+                if (tun == null && snap?.network != null && OnDemand.onTrustedNetwork(s, snap.ssid, alwaysOnNow())) {
+                    pause(snap.ssid)
+                    return@transition
                 }
             }
-            runCatching { engine.connect() }.onFailure { t ->
-                // Review A-P2-6: surface why, instead of silently falling back to "未连接".
-                val e = (t as? com.zephyr.engine.ZephyrException)?.error
-                    ?: com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.CORE_CRASHED, t.message ?: t.javaClass.simpleName)
-                fail(e); return@launch
-            }
-            watch()
+            if (tun == null) connectTunnel() else watch() // already up: re-post the live notification
         }
+    }
+
+    private suspend fun connectTunnel() {
+        pausedWatcher?.cancel(); pausedWatcher = null
+        paused = false
+        noteAlwaysOn()
+        val s = engine.settings().first()
+        bridge = TunBridge.pick(this@ZephyrVpnService, engine, s, engine.connectionState().first().mode)
+        if (!bridge.createsTun && !com.zephyr.app.BuildConfig.DEBUG) {
+            // Release never pretends: without a tunnel the app must not say "已连接" while traffic goes direct.
+            fail(TunBridge.whyNoTunnel(engine)); return
+        }
+        if (bridge.createsTun && tun == null) {
+            tun = TunBridge.configure(Builder().setSession("Zephyr"), s.tun.mtu, s.tun.ipv6, s.tun.excludedApps, packageName).establish()
+            val err = tun?.let { bridge.attach(it) } ?: "establish() returned null"
+            if (err != null) {
+                android.util.Log.e("Zephyr", "core start failed: $err")
+                fail(com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.CORE_CRASHED, err)); return
+            }
+        }
+        runCatching { engine.connect() }.onFailure { t ->
+            // Review A-P2-6: surface why, instead of silently falling back to "未连接".
+            val e = (t as? com.zephyr.engine.ZephyrException)?.error
+                ?: com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.CORE_CRASHED, t.message ?: t.javaClass.simpleName)
+            fail(e); return
+        }
+        watch()
     }
 
     private fun watch() {
@@ -113,16 +159,16 @@ class ZephyrVpnService : VpnService() {
         (engine as? com.zephyr.engine.core.CoreEngine)?.let { core ->
             prober?.cancel()
             // Scene exits are probed once a minute while connected; core's failover tracker decides when to switch.
-            // Same loop re-tests scenes whose results outlived 设置 › 结果保留 (audit E28).
-            // Audit E23: probing is a speed test too, so 「仅 Wi‑Fi 测速」 skips it on a metered network (iOS does the same).
+            // Contract §16.a③: a network switch runs the next round right away ([probeNow]).
+            // Contract §16.c: failover probing is NOT gated by 「仅 Wi‑Fi 测速」 (one generate_204 per scene per minute;
+            // skipping it would leave a broken scene broken on cellular). The stale-scene re-test is, inside core.
             // The app is excluded from its own tunnel, so NetworkMonitor sees the physical network.
             prober = scope.launch {
                 while (true) {
-                    kotlinx.coroutines.delay(PROBE_EVERY_MS)
+                    kotlinx.coroutines.withTimeoutOrNull(PROBE_EVERY_MS) { probeNow.receive() }
                     val metered = AppGraph.network?.state?.value?.metered
                         ?: (getSystemService(android.net.ConnectivityManager::class.java)?.isActiveNetworkMetered ?: false)
-                    val wifiOnly = runCatching { engine.settings().first().testOnWifiOnly }.getOrDefault(true)
-                    if (NetworkMonitor.autoTestAllowed(wifiOnly, metered)) runCatching { core.probeScenes() }
+                    runCatching { core.probeScenes() }
                     runCatching { core.retestStaleScenes(metered = metered) }
                 }
             }
@@ -131,36 +177,91 @@ class ZephyrVpnService : VpnService() {
     }
 
     /**
-     * Audit E04: the VPN follows the real network (metered/roaming flags, and the right uplink after a switch).
-     * Audit E01/U1: 「受信任 Wi‑Fi」 — joining a trusted network while connected drops the tunnel.
+     * Contract §16.a② (audit E04): the VPN follows the real network — `setUnderlyingNetworks` tracks the default
+     * network (null while there is none), so the VPN's metered/roaming flags are the real ones.
+     * Contract §16.a③: after the default network settles on a different one (Wi‑Fi ↔ cellular, another SSID; 2 s
+     * debounce), `closeAll` once, re-evaluate trusted Wi‑Fi (§16.a⑤), and run the failover probe now. No config
+     * reload, no new tun.
      */
     private fun watchNetwork() {
         val monitor = AppGraph.network ?: return
         netWatcher?.cancel()
         netWatcher = scope.launch {
-            var lastNet: android.net.Network? = null
-            var lastSsid: String? = monitor.state.value.ssid
-            var first = true
-            monitor.state.collect { snap ->
-                if (first || snap.network != lastNet) {
-                    // null = "follow the system default", the right answer while no network is up.
-                    runCatching { setUnderlyingNetworks(snap.network?.let { arrayOf(it) }) }
-                    lastNet = snap.network
+            launch {
+                var lastNet: android.net.Network? = null
+                var first = true
+                monitor.state.collect { snap ->
+                    if (first || snap.network != lastNet) {
+                        runCatching { setUnderlyingNetworks(snap.network?.let { arrayOf(it) }) }
+                        lastNet = snap.network; first = false
+                    }
                 }
+            }
+            val start = monitor.state.value
+            var lastKey = NetworkMonitor.changeKey(start)
+            var lastSsid = start.ssid
+            @OptIn(kotlinx.coroutines.FlowPreview::class)
+            monitor.state.drop(1).debounce(NETWORK_DEBOUNCE_MS).collect { snap ->
+                val key = NetworkMonitor.changeKey(snap) ?: return@collect // offline is not a switch
+                if (key == lastKey) return@collect
+                val previousSsid = lastSsid
+                lastKey = key; lastSsid = snap.ssid
                 val settings = engine.settings().first()
-                val drop = !first && NetworkMonitor.shouldDisconnect(settings, lastSsid, snap.ssid)
-                first = false
-                if (snap.network != null) lastSsid = snap.ssid
-                if (drop) {
+                noteAlwaysOn()
+                // System always-on VPN: never auto-disconnect (lockdown would cut the device off).
+                if (!alwaysOnNow() && NetworkMonitor.shouldDisconnect(settings, previousSsid, snap.ssid)) {
                     android.util.Log.i("Zephyr", "trusted Wi‑Fi joined: disconnecting")
-                    scope.launch { stop() } // not inline: stop() cancels this very collector
+                    // Not inline: both paths cancel this very collector.
+                    transition { if (tun != null) { if (settings.onDemand) pause(snap.ssid) else stop() } }
                     return@collect
+                }
+                runCatching { engine.closeAll() }
+                probeNow.trySend(Unit)
+            }
+        }
+    }
+
+    /**
+     * Contract §16.a⑤: dropped on a trusted Wi‑Fi with on-demand on. The tunnel is down but the service stays in the
+     * foreground watching the network, and reconnects once the device is off every trusted network (an unknown
+     * SSID counts as untrusted), on-demand is turned off (→ stop), or the user acts from the notification.
+     */
+    private suspend fun pause(ssid: String?) {
+        tearDown()
+        paused = true
+        val accent = runCatching { engine.settings().first().accent }.getOrDefault(lastAccent)
+        runCatching { ServiceCompat.startForeground(this, Notifications.ID_ONGOING, Notifications.pausedOnTrusted(this, ssid, accent), fgsType()) }
+        ZephyrTileService.requestRefresh(this)
+        ZephyrWidget.refreshAll(this)
+        val monitor = AppGraph.network ?: return
+        pausedWatcher?.cancel()
+        pausedWatcher = scope.launch {
+            @OptIn(kotlinx.coroutines.FlowPreview::class)
+            combine(monitor.state.debounce(NETWORK_DEBOUNCE_MS), engine.settings()) { n, st -> n to st }.collect { (n, st) ->
+                noteAlwaysOn()
+                when (OnDemand.whilePaused(st, n.network != null, n.ssid, alwaysOnNow())) {
+                    OnDemand.Paused.STAY -> Unit
+                    OnDemand.Paused.RESUME -> transition {
+                        if (paused && OnDemand.armed(this@ZephyrVpnService) && prepare(this@ZephyrVpnService) == null) {
+                            android.util.Log.i("Zephyr", "left trusted Wi‑Fi: reconnecting")
+                            connectTunnel()
+                        } else if (paused) stop()
+                    }
+                    OnDemand.Paused.STOP -> transition { if (paused) stop() }
                 }
             }
         }
     }
 
+    private fun alwaysOnNow(): Boolean = Build.VERSION.SDK_INT >= 29 && isAlwaysOn
+
+    private fun noteAlwaysOn() = OnDemand.setAlwaysOn(this, alwaysOnNow())
+
     private suspend fun fail(e: com.zephyr.engine.ZephyrError) {
+        // Nothing to connect to: on-demand would only fail again on every boot / network change.
+        if (e.code == com.zephyr.engine.ErrorCode.SUBSCRIPTION_NOT_FOUND || e.code == com.zephyr.engine.ErrorCode.SUBSCRIPTION_INVALID) {
+            OnDemand.markManualDisconnect(this)
+        }
         stop()
         (engine as? com.zephyr.engine.core.CoreEngine)?.reportConnectFailure(e)
     }
@@ -177,7 +278,8 @@ class ZephyrVpnService : VpnService() {
         engine.setMode(if (mode == com.zephyr.engine.ProxyMode.GLOBAL) com.zephyr.engine.ProxyMode.RULE else com.zephyr.engine.ProxyMode.GLOBAL)
     }
 
-    private suspend fun stop() {
+    /** Tunnel down (engine, core, tun, watchers); the service itself is [stop]'s or [pause]'s call. */
+    private suspend fun tearDown() {
         netWatcher?.cancel(); netWatcher = null
         prober?.cancel(); prober = null
         widgetTicker?.cancel(); widgetTicker = null
@@ -186,13 +288,24 @@ class ZephyrVpnService : VpnService() {
         (engine as? com.zephyr.engine.core.CoreEngine)?.flushUsage()
         bridge.detach()
         tun?.close(); tun = null
+    }
+
+    private suspend fun stop() {
+        pausedWatcher?.cancel(); pausedWatcher = null
+        paused = false
+        tearDown()
+        running = false
         ZephyrTileService.requestRefresh(this)
         ZephyrWidget.refreshAll(this)
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
 
-    override fun onRevoke() { scope.launch { stop() } }
+    /**
+     * The user turned the VPN off in system settings, or another VPN took over: treated as a manual disconnect so
+     * on-demand does not fight it (contract §16.a⑤).
+     */
+    override fun onRevoke() { OnDemand.markManualDisconnect(this); transition { stop() } }
 
     /** Low-memory signal: return Go heap to the OS before the LMK picks the VPN process. */
     override fun onTrimMemory(level: Int) {
@@ -201,6 +314,7 @@ class ZephyrVpnService : VpnService() {
     }
 
     override fun onDestroy() {
+        running = false
         scope.cancel()
         tun?.close()
         super.onDestroy()
@@ -212,9 +326,16 @@ class ZephyrVpnService : VpnService() {
     companion object {
         /** Last accent seen while connected; process-lifetime cache for the first foreground post (review W-P2-4). */
         @Volatile var lastAccent: com.zephyr.engine.Accent = com.zephyr.engine.Accent.BLUE
+        /** True from start() until stop(): the service is up (connecting, connected, or paused on trusted Wi‑Fi). */
+        @Volatile var running: Boolean = false; private set
         private const val PROBE_EVERY_MS = 60_000L
+        /** Contract §16.a③: the network has to stay put this long before a switch counts. */
+        const val NETWORK_DEBOUNCE_MS = 2_000L
+        private const val SETTINGS_WAIT_MS = 3_000L
         const val ACTION_CONNECT = "com.zephyr.app.CONNECT"
         const val ACTION_DISCONNECT = "com.zephyr.app.DISCONNECT"
         const val ACTION_TOGGLE_MODE = "com.zephyr.app.TOGGLE_MODE"
+        /** On-demand's automatic (re)connect: never prompts consent, honours trusted Wi‑Fi. */
+        const val ACTION_RESUME = "com.zephyr.app.RESUME"
     }
 }

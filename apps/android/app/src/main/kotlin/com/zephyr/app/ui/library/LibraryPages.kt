@@ -119,7 +119,7 @@ fun TrustedWifiScreen(back: BackTo, onBack: () -> Unit) {
                 )
             }
             Footer(stringResource(R.string.trusted_wifi_footer))
-            LocationPermissionRow(s)
+            TrustedWifiNoticeRow(s)
             ZSectionHeader(stringResource(R.string.trusted_wifi_networks), Modifier.padding(top = 12.dp))
             ZListGroup {
                 s.trustedWifi.forEach { ssid ->
@@ -138,27 +138,93 @@ fun TrustedWifiScreen(back: BackTo, onBack: () -> Unit) {
     }
 }
 
+/** What the trusted Wi‑Fi row has to tell the user (contract §16.a⑤), most important first. */
+enum class TrustedWifiNotice { NONE, ALWAYS_ON, NEEDS_PERMISSION, LOCATION_OFF }
+
 /**
- * Location permission for trusted Wi‑Fi (audit E01/U1, from #225). Android 10+ only reveals the current SSID with
- * location permission; while trusted networks are in use and it is missing, this row says so and tapping it asks.
- * Without it the tunnel simply stays up on every network (never a wrong disconnect). Not shown where no network
- * monitor runs (previews / screenshot tests have no Activity result registry).
+ * Pure rule shared by 设置 and the trusted Wi‑Fi page: the system's 「始终开启的 VPN」 overrides everything (Zephyr
+ * never auto-disconnects then); otherwise, while trusted networks are in use, say why the SSID can't be read.
+ */
+fun trustedWifiNotice(s: Settings, alwaysOn: Boolean, hasPermission: Boolean, locationOn: Boolean): TrustedWifiNotice = when {
+    alwaysOn -> TrustedWifiNotice.ALWAYS_ON
+    !s.disconnectOnTrusted || s.trustedWifi.none { it.isNotBlank() } -> TrustedWifiNotice.NONE
+    !hasPermission -> TrustedWifiNotice.NEEDS_PERMISSION
+    !locationOn -> TrustedWifiNotice.LOCATION_OFF
+    else -> TrustedWifiNotice.NONE
+}
+
+fun TrustedWifiNotice.textRes(): Int? = when (this) {
+    TrustedWifiNotice.NONE -> null
+    TrustedWifiNotice.ALWAYS_ON -> R.string.settings_trusted_wifi_always_on
+    TrustedWifiNotice.NEEDS_PERMISSION -> R.string.settings_trusted_wifi_location
+    TrustedWifiNotice.LOCATION_OFF -> R.string.settings_trusted_wifi_location_off
+}
+
+/**
+ * Current [TrustedWifiNotice], re-read every time the screen resumes — so coming back from the system's app or
+ * location settings updates the row (and re-reads the SSID once it became readable). [NONE] where no network
+ * monitor runs (previews / screenshot tests).
  */
 @Composable
-private fun LocationPermissionRow(s: Settings) {
+fun rememberTrustedWifiNotice(s: Settings): TrustedWifiNotice {
+    val monitor = AppGraph.network ?: return TrustedWifiNotice.NONE
+    val ctx = LocalContext.current
+    var perm by remember { mutableStateOf(NetworkMonitor.hasLocationPermission(ctx)) }
+    var loc by remember { mutableStateOf(NetworkMonitor.locationEnabled(ctx)) }
+    var always by remember { mutableStateOf(com.zephyr.app.vpn.OnDemand.alwaysOn(ctx)) }
+    androidx.lifecycle.compose.LifecycleResumeEffect(Unit) {
+        val readable = perm && loc
+        perm = NetworkMonitor.hasLocationPermission(ctx)
+        loc = NetworkMonitor.locationEnabled(ctx)
+        always = com.zephyr.app.vpn.OnDemand.alwaysOn(ctx)
+        if (!readable && perm && loc) monitor.refresh()
+        onPauseOrDispose { }
+    }
+    return trustedWifiNotice(s, always, perm, loc)
+}
+
+/**
+ * Trusted Wi‑Fi notice row (audit E01/U1; permission row from #225). Android 10+ only reveals the current SSID with
+ * location permission and the system location switch on; while trusted networks are in use and either is missing,
+ * this row says so and tapping it asks (or, once denied, opens the app's system settings; location off opens the
+ * location settings). Without it the tunnel simply stays up on every network (never a wrong disconnect).
+ * Under the system's 「始终开启的 VPN」 it only states that the system manages it (contract §16.a⑤).
+ */
+@Composable
+private fun TrustedWifiNoticeRow(s: Settings) {
     val monitor = AppGraph.network ?: return
     val ctx = LocalContext.current
-    var granted by remember { mutableStateOf(NetworkMonitor.hasLocationPermission(ctx)) }
+    val notice = rememberTrustedWifiNotice(s)
+    var denied by rememberSaveable { mutableStateOf(false) }
     val ask = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { res ->
-        granted = res[Manifest.permission.ACCESS_FINE_LOCATION] == true
+        val granted = res[Manifest.permission.ACCESS_FINE_LOCATION] == true
+        denied = !granted
         if (granted) monitor.refresh()
     }
-    if (granted || !s.disconnectOnTrusted || s.trustedWifi.none { it.isNotBlank() }) return
+    val text = notice.textRes() ?: return
+    val open: (() -> Unit)? = when (notice) {
+        TrustedWifiNotice.NEEDS_PERMISSION -> {
+            {
+                if (denied) {
+                    // Asked before and refused: the system won't show the dialog again, so go to app settings.
+                    runCatching {
+                        ctx.startActivity(
+                            android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, android.net.Uri.fromParts("package", ctx.packageName, null))
+                                .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK),
+                        )
+                    }
+                } else {
+                    ask.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+                }
+            }
+        }
+        TrustedWifiNotice.LOCATION_OFF -> {
+            { runCatching { ctx.startActivity(android.content.Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)) } }
+        }
+        else -> null
+    }
     ZListGroup(Modifier.padding(top = 4.dp)) {
-        ZSettingsRow(
-            stringResource(R.string.settings_trusted_wifi_location), chevron = true,
-            onClick = { ask.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) },
-        )
+        ZSettingsRow(stringResource(text), chevron = open != null, onClick = open)
     }
 }
 

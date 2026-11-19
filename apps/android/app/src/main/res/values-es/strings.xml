@@ -431,6 +431,9 @@
     <string name="settings_on_demand">Conexión a petición</string>
     <string name="settings_trusted_wifi_hint">Desconectar automáticamente al unirse</string>
     <string name="settings_trusted_wifi_location">Permite el acceso a la ubicación para reconocer las redes Wi‑Fi</string>
+    <string name="settings_trusted_wifi_location_off">Activa la ubicación del sistema para reconocer las redes Wi‑Fi</string>
+    <string name="settings_trusted_wifi_always_on">Gestionado por «VPN siempre activada» del sistema</string>
+    <string name="notif_paused_trusted">Desconectado en la red Wi‑Fi de confianza «%1$s». Se reconectará automáticamente al salir.</string>
     <string name="settings_password_required">Solicitar contraseña</string>
     <string name="trusted_wifi_disconnect">Desconectar en estas redes Wi‑Fi</string>
     <string name="trusted_wifi_footer">En redes de confianza, como en casa o en el trabajo, Zephyr se desconecta automáticamente y vuelve a conectarse a petición cuando te vas.</string>

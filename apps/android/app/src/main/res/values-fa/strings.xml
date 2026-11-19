@@ -424,6 +424,9 @@
     <string name="settings_on_demand">اتصال در صورت نیاز</string>
     <string name="settings_trusted_wifi_hint">هنگام اتصال به آن، به‌طور خودکار قطع شود</string>
     <string name="settings_trusted_wifi_location">برای شناسایی نام Wi‑Fi، دسترسی به موقعیت مکانی را مجاز کنید</string>
+    <string name="settings_trusted_wifi_location_off">برای شناسایی نام Wi‑Fi، موقعیت مکانی سیستم را روشن کنید</string>
+    <string name="settings_trusted_wifi_always_on">توسط «VPN همیشه روشن» سیستم مدیریت می‌شود</string>
+    <string name="notif_paused_trusted">در Wi‑Fi مورد اعتماد «%1$s» قطع شد. پس از خروج، خودکار دوباره وصل می‌شود.</string>
     <string name="settings_password_required">نیاز به گذرواژه</string>
     <string name="trusted_wifi_disconnect">قطع اتصال در این شبکه‌های Wi‑Fi</string>
     <string name="trusted_wifi_footer">در شبکه‌های مورد اعتماد مثل خانه یا محل کار، Zephyr خودکار قطع می‌شود و پس از ترک آن‌ها در صورت نیاز دوباره وصل می‌شود.</string>

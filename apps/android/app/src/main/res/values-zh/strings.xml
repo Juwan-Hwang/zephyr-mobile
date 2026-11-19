@@ -394,6 +394,9 @@
     <string name="settings_on_demand">按需连接</string>
     <string name="settings_trusted_wifi_hint">连接后自动断开</string>
     <string name="settings_trusted_wifi_location">允许访问位置信息以识别 Wi‑Fi 名称</string>
+    <string name="settings_trusted_wifi_location_off">打开系统定位以识别 Wi‑Fi 名称</string>
+    <string name="settings_trusted_wifi_always_on">由系统『始终开启的 VPN』管理</string>
+    <string name="notif_paused_trusted">已在受信任的 Wi‑Fi「%1$s」上断开，离开后自动重新连接</string>
     <string name="settings_password_required">需要密码</string>
     <string name="trusted_wifi_disconnect">连上这些 Wi‑Fi 时自动断开</string>
     <string name="trusted_wifi_footer">在家或公司等可信网络中，Zephyr 会自动断开，离开后按需重新连接。</string>

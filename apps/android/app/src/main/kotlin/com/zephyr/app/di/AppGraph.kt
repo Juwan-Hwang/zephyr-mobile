@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 
 /**
  * Process-wide object graph. Hand-rolled on purpose: three singletons don't justify a DI framework's
@@ -48,6 +49,7 @@ object AppGraph {
         )
         engine = core
         if (BuildConfig.DEBUG && BuildConfig.CORE_SEED > 0.0) appScope.launch { runCatching { core.seedMockNodes(BuildConfig.CORE_SEED) } }
+        settings = SettingsStore(app, engine, appScope)
         network = com.zephyr.app.vpn.NetworkMonitor(app).also { m ->
             m.start()
             // Audit E08: ConnectionState.network is the real network (Release never shows the mock's「家」).
@@ -55,8 +57,21 @@ object AppGraph {
                 kotlinx.coroutines.flow.combine(m.state, core.settings()) { n, s -> com.zephyr.app.vpn.NetworkMonitor.info(n, s) }
                     .collect { core.setNetwork(it) }
             }
+            // Contract §16.a⑤: 「按需连接」 also reconnects when the network comes back from none (e.g. the tunnel
+            // failed to come up offline). The running service handles every other switch itself.
+            appScope.launch {
+                var had = m.state.value.network != null
+                m.state.collect { snap ->
+                    val has = snap.network != null
+                    if (has && !had && !com.zephyr.app.vpn.ZephyrVpnService.running) {
+                        settings.loaded.await()
+                        val on = runCatching { core.settings().first().onDemand }.getOrDefault(false)
+                        com.zephyr.app.vpn.OnDemand.reconnectIfWanted(app, on, "network up")
+                    }
+                    had = has
+                }
+            }
         }
-        settings = SettingsStore(app, engine, appScope)
         connection = ConnectionController(app, engine, appScope)
         Notifications.ensureChannels(app)
         ready = true
