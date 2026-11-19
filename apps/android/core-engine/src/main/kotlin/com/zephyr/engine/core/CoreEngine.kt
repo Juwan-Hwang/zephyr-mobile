@@ -623,11 +623,12 @@ class CoreEngine(
         val old = runCatching { fallback.settings().first() }.getOrNull()
         fallback.updateSettings(patch)
         core?.let { c -> withContext(io) { runCatching { c.setLatencyTtlHours(patch.latencyTtlHours.coerceAtLeast(0).toUInt()) } } }
-        if (old != null && old.autoUpdateHours != patch.autoUpdateHours) applyAutoUpdateToAll(patch.autoUpdateHours)
+        val changedSubs = if (old != null && old.autoUpdateHours != patch.autoUpdateHours) applyAutoUpdateToAll(patch.autoUpdateHours) else emptyList()
         scenesBump.value++
         if (old != null && affectsRuntime(old, patch)) try { reloadIfRunning() } catch (t: Throwable) {
             // §16.b③: the running core keeps the old config, so the stored settings must say so too.
             fallback.updateSettings(old)
+            if (changedSubs.isNotEmpty()) restoreAutoUpdate(changedSubs)
             core?.let { c -> withContext(io) { runCatching { c.setLatencyTtlHours(old.latencyTtlHours.coerceAtLeast(0).toUInt()) } } }
             scenesBump.value++
             throw t
@@ -638,13 +639,23 @@ class CoreEngine(
      * §16.c / §16.g ②: 自动更新 is also the interval of every subscription. Each one with `autoUpdateHours > 0` takes the
      * new value; `0` (an import code's "manual") stays manual.
      */
-    private suspend fun applyAutoUpdateToAll(hours: Int) {
-        val c = core ?: return
-        withContext(io) {
-            runCatching { c.subscriptions() }.getOrDefault(emptyList()).filter { it.autoUpdateHours > 0 && it.autoUpdateHours != hours }.forEach { sub ->
-                runCatching { c.setSubscriptionAutoUpdate(sub.id, hours) }.onFailure { android.util.Log.w("Zephyr", "setSubscriptionAutoUpdate: ${it.message}") }
+    private suspend fun applyAutoUpdateToAll(hours: Int): List<Pair<String, Int>> {
+        val c = core ?: return emptyList()
+        val changed = withContext(io) {
+            runCatching { c.subscriptions() }.getOrDefault(emptyList()).filter { it.autoUpdateHours > 0 && it.autoUpdateHours != hours }.mapNotNull { sub ->
+                runCatching { c.setSubscriptionAutoUpdate(sub.id, hours) }
+                    .onFailure { android.util.Log.w("Zephyr", "setSubscriptionAutoUpdate: ${it.message}") }
+                    .map { sub.id to sub.autoUpdateHours }.getOrNull()
             }
         }
+        runCatching { refreshSubs() }
+        return changed
+    }
+
+    /** §16.b③ rollback: puts back each subscription's interval that [applyAutoUpdateToAll] changed. */
+    private suspend fun restoreAutoUpdate(prev: List<Pair<String, Int>>) {
+        val c = core ?: return
+        withContext(io) { prev.forEach { (id, h) -> runCatching { c.setSubscriptionAutoUpdate(id, h) } } }
         runCatching { refreshSubs() }
     }
 
