@@ -3,7 +3,7 @@
 //   指令  [服务 Gemini] [地区 日本] [范围 AI]
 //   预览卡：Gemini 使用日本节点 / 3 个可用，将使用东京 03。/ 出口 IP 将更改 SG … → JP … / [应用]
 //   其余建议（引擎 commandSuggestions，≤ 8 条）
-// 空输入时显示"建议"。回车 = 应用主预览（没有则执行第一条建议）。
+// 空输入时显示"建议"（§16.d U24 示例短语，点按只填入）。回车 = 应用主预览（没有则执行第一条建议）。
 
 import SwiftUI
 import ZephyrDesign
@@ -30,7 +30,7 @@ struct CommandView: View {
                     CommandField(model: model, focused: $focused, onSubmit: submit, onCancel: close)
                         .offset(y: appeared || reduceMotion ? 0 : ZTokens.Space.n4)
                     ScrollView {
-                        CommandResults(model: model, onRun: run, onApply: apply)
+                        CommandResults(model: model, onRun: run, onApply: apply, onFill: { model.fill($0) })
                             .padding(.bottom, ZTokens.Space.n8)
                     }
                     .scrollDismissesKeyboard(.interactively)

@@ -1,5 +1,8 @@
-// 指令层的状态：输入 → 本地 token 化（即时）+ 引擎 commandSuggestions（80ms 防抖）→ 主预览（switch_node 时
-// 向引擎要出口变化）→ "应用"。
+// 指令层的状态：输入 → 本地 token 化（即时）+ 引擎 commandSuggestions（80ms 防抖）→ 主预览 → "应用"。
+//
+// 主预览按契约 §16.d 由平台计划（CommandPlanner）：识别出服务 / 场景词时只出本地预览卡（或只显示解析卡片），
+// 不再拿引擎的 switch_node 当主预览——那会把“Gemini 走日本”执行成整个 AI 场景换节点。
+// 没有识别出服务 / 场景词时（如输入节点名），仍用第一个 switch_node 建议作主预览（§16.d 允许的增强）。
 //
 // 契约 §9 的 switch_node payload 只有节点 id（Mock：String(nodeId)）。落到哪个场景按以下顺序决定：
 //   1. payload 若为 "sceneId:nodeId" 直接用（建议 A 在契约里固定这个格式，见 NOTES-H.md）
@@ -23,6 +26,11 @@ final class CommandModel {
     private(set) var isApplying = false
     /// 契约 §15.h：输入含“4K”操作时的场景节点过滤预览（取代 switch_node 主预览）。
     private(set) var filterPreview: FilterPreview?
+    /// 契约 §16.d：单服务例外 / 整场景 / 单域名直连的预览卡。
+    private(set) var plan: CommandPlan?
+
+    /// 契约 §16.d U24：空输入的“建议”，原型 SUG 四条（按界面语言本地化），点按只填入输入框。
+    static var examples: [String] { ["Gemini 走日本", "GitHub 直连", "视频只用 4K 节点", "香港"].map { ZL.tr($0) } }
 
     struct FilterPreview: Equatable {
         var sceneId: String
@@ -35,7 +43,14 @@ final class CommandModel {
     }
 
     /// 回车 / “应用”是否有可执行的主预览。
-    var hasPrimary: Bool { filterPreview?.canApply ?? (preview?.node != nil) }
+    var hasPrimary: Bool {
+        if let f = filterPreview { return f.canApply }
+        if let p = plan { return p.canApply }
+        return preview?.node != nil
+    }
+
+    /// 解析卡片之外是否有任何内容（预览卡 / 结果行）；都没有才显示“无结果”。
+    var hasContent: Bool { filterPreview != nil || plan != nil || preview != nil || !parse.isEmpty || !suggestions.isEmpty }
 
     struct Preview: Equatable {
         var suggestion: CommandSuggestion
@@ -72,10 +87,18 @@ final class CommandModel {
     private func buildPreview(text: String) async {
         if let f = await buildFilterPreview(text: text) {
             guard input == text else { return }
-            filterPreview = f; preview = nil; return
+            filterPreview = f; plan = nil; preview = nil; return
         }
         guard input == text else { return }
         filterPreview = nil
+        // §16.d：识别出服务 / 场景词时由平台计划；计划为空（如“Gemini 直连”）只显示解析卡片，不借用引擎建议。
+        if !text.isEmpty, parse.sceneId != nil {
+            let parsed = parse
+            let planned = await CommandPlanner.plan(parsed, scenes: app.scenes, engine: app.engine)
+            guard input == text else { return }
+            plan = planned; preview = nil; return
+        }
+        plan = nil
         guard !text.isEmpty, let s = suggestions.first(where: { $0.kind == .switchNode }) else { preview = nil; return }
         var p = Preview(suggestion: s)
         guard let (sceneHint, nodeId) = Self.splitPayload(s.payload) else { preview = p; return }
@@ -131,17 +154,44 @@ final class CommandModel {
     /// 应用主预览。返回 true 表示已执行（调用方收起指令层）。
     func applyPreview() async -> Bool {
         if let f = filterPreview { return await applyFilter(f) }
+        if let p = plan { return await applyPlan(p) }
         guard let p = preview, let node = p.node else { return false }
         isApplying = true
         defer { isApplying = false }
         if let sid = p.sceneId, let scene = app.scene(id: sid) {
-            await app.applySceneChange(sceneId: sid, from: scene.selected, to: node)
-            if let who = parse.serviceName { app.toast?.message = ZL.s("%@ 现使用%@", who, node.name) }
+            // §16.d：整场景切换的吐司主语是场景，不是服务。
+            await app.applySceneChange(sceneId: sid, from: scene.selected, to: node,
+                                       message: ZL.s("%@ 现使用%@", scene.displayName, node.name))
         } else {
             await app.setGlobalNode(node)
         }
         return true
     }
+
+    /// 契约 §16.d：例外只钉该服务；整场景换 selected；直连只覆写该域名（persistent）。
+    private func applyPlan(_ plan: CommandPlan) async -> Bool {
+        guard plan.canApply else { return false }
+        isApplying = true
+        defer { isApplying = false }
+        switch plan {
+        case .exit(let e):
+            if let appId = e.appId {
+                return await app.applySceneException(sceneId: e.sceneId, appId: appId, service: e.who,
+                                                     node: e.node, previous: e.previous)
+            }
+            let from = e.previous ?? app.scene(id: e.sceneId)?.selected ?? e.node
+            return await app.applySceneChange(sceneId: e.sceneId, from: from, to: e.node,
+                                              message: ZL.s("%@ 现使用%@", e.who, e.node.name))
+        case .direct(let d):
+            return await app.overrideHost(d.host, target: .direct, sceneId: nil, persistent: true,
+                                          message: ZL.s("%@ 现为直连", d.who))
+        case .noNodes:
+            return false
+        }
+    }
+
+    /// 契约 §16.d U24：点建议短语只填入输入框并重新解析，不直接执行。
+    func fill(_ example: String) { input = example }
 
     /// 契约 §15.h：开启时若当前节点不满足，用户已在卡片上看到出口 IP 变化，点“应用”即确认换到 suggested。
     private func applyFilter(_ f: FilterPreview) async -> Bool {

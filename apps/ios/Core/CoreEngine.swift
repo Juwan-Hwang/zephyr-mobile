@@ -481,6 +481,14 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         if let t = tunnel { await reloadTunnelIfRunning(t) }
     }
 
+    /// 契约 §10 / §16.d：单服务例外（"Gemini 走日本"）。改完需重载（同 overrideHost）。
+    public func setSceneException(sceneId: String, appId: String, nodeId: NodeId?) async throws {
+        guard let c = await nodes() else { return try await demo(.sceneNotFound) { try await fallback.setSceneException(sceneId: sceneId, appId: appId, nodeId: nodeId) } }
+        try await run(.sceneNotFound) { try c.setSceneException(sceneId: sceneId, appId: appId, nodeId: nodeId) }
+        await bumpScenes()
+        if let t = tunnel { await reloadTunnelIfRunning(t) }
+    }
+
     /// 该域名当前生效的覆写（核心 hostOverride），轨迹页分段回填用。
     public func hostOverride(host: String) async -> HostOverrideInfo? {
         guard let c = core else { return nil }
@@ -1204,7 +1212,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         if let ms = s.selectedLatencyMs, ms > 0 { selected.latencyMs = ms }
         return ZephyrKit.Scene(id: s.id, kind: kind, name: s.name, available: s.available, selected: selected, exitIp: s.exitIp,
                                source: source, testedAt: s.testedAt, note: s.note,
-                               exceptions: s.exceptions.compactMap { e in e.node.map { ZephyrKit.SceneException(app: e.app, node: row($0)) } },
+                               exceptions: s.exceptions.compactMap { e in e.node.map { ZephyrKit.SceneException(app: e.app, node: row($0), appId: e.appId) } },
                                services: s.services.map { ZephyrKit.ServiceHealth(appId: $0.appId, name: $0.name, ok: $0.ok, checkedAt: $0.checkedAt) },
                                scanQuery: s.scanQuery, nodeFilter: s.nodeFilter.map(kitFilter))
     }

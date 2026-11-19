@@ -55,7 +55,7 @@ enum MockFixtures {
         let tested = now - 2 * 3_600_000
         return [
             Scene(id: "ai", kind: .ai, name: "AI", available: 9, selected: sg02.summary, exitIp: sg02.ip, source: .auto,
-                  testedAt: tested, note: nil, exceptions: [SceneException(app: "Claude", node: usFixed.summary)]),
+                  testedAt: tested, note: nil, exceptions: [SceneException(app: "Claude", node: usFixed.summary, appId: "claude")]),
             Scene(id: "video", kind: .video, name: "视频", available: 22, selected: hkHKT.summary, exitIp: hkHKT.ip, source: .auto,
                   testedAt: tested, note: "Netflix 完整片库", exceptions: []),
             // 原型显示"—"：订阅分组，可用数未知 → 0（UI 对 subscription_group 显示"—"）。

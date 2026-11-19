@@ -154,9 +154,14 @@ public enum TraceTarget: String, Sendable, Hashable, Codable, CaseIterable {
 }
 
 public struct SceneException: Sendable, Hashable, Codable {
+    /// 显示名（核心按应用目录给出，如 "ChatGPT"）。
     public var app: String
     public var node: NodeSummary
-    public init(app: String, node: NodeSummary) { self.app = app; self.node = node }
+    /// 应用目录 id（契约 §10 场景：chatgpt / claude / gemini …），`setSceneException` 用。
+    /// 不参与编码（fixture 无此字段）；未知时为 nil，按显示名匹配。
+    public var appId: String?
+    public init(app: String, node: NodeSummary, appId: String? = nil) { self.app = app; self.node = node; self.appId = appId }
+    enum CodingKeys: String, CodingKey { case app, node }
 }
 
 public struct Scene: Sendable, Hashable, Codable, Identifiable {
