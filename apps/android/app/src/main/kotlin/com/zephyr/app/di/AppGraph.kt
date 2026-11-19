@@ -43,12 +43,17 @@ object AppGraph {
             MockEngine(scope = appScope, demo = demo),
             dataDir = java.io.File(app.filesDir, "core").apply { mkdirs() }.path,
             mockData = BuildConfig.DEBUG,
+            appVersion = BuildConfig.VERSION_NAME, // §16.i fetch User-Agent
             live = run {
                 // Same socket TunBridge.Embedded hands to zm_start; only dialled while mihomo runs in-process.
                 val rest by lazy { RustLive(com.zephyr.app.vpn.TunBridge.controllerSocket(app).path) }
                 return@run { if (Mihomo.running) rest else null }
             },
         )
+        // §16.i ⑤: no network at all → network_unavailable instead of a DNS failure. The app is outside its own VPN,
+        // so its default network is the physical one.
+        val cm = app.getSystemService(android.net.ConnectivityManager::class.java)
+        core.online = { cm?.activeNetwork != null }
         engine = core
         if (BuildConfig.DEBUG && BuildConfig.CORE_SEED > 0.0) appScope.launch { runCatching { core.seedMockNodes(BuildConfig.CORE_SEED) } }
         settings = SettingsStore(app, engine, appScope)

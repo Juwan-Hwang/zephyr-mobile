@@ -76,8 +76,11 @@ class CoreEngine(
     private val live: () -> LivePort? = { null },
     private val tick: Long = 1_000,
     private val clock: () -> Long = System::currentTimeMillis,
-    private val fetcher: (String) -> SubscriptionFetcher.Fetched = SubscriptionFetcher::httpFetch,
-    private val geoDownloader: (String, java.io.File) -> Unit = { u, f -> SubscriptionFetcher.download(u, f) },
+    /** Test seam; null = the §16.i fetcher ([SubscriptionFetcher]) with the core's SSRF policy and the tunnel route. */
+    fetcher: ((String) -> SubscriptionFetcher.Fetched)? = null,
+    geoDownloader: ((String, java.io.File) -> Unit)? = null,
+    /** App version for the fetch User-Agent (§16.i ②). */
+    private val appVersion: String = "dev",
     private val tcpPing: suspend (String, Int) -> Int = TcpPinger.probe,
 ) : ZephyrEngine by fallback {
 
@@ -86,6 +89,27 @@ class CoreEngine(
     }
 
     private val bg = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + io)
+
+    // ── §16.i subscription / rule-set / GEO fetching ─────────────────────────────────────────────────
+    /** Set by the platform from its network monitor; false → `network_unavailable` before any request. */
+    @Volatile var online: () -> Boolean = { true }
+
+    private val fetchPolicy by lazy { SubscriptionFetcher.corePolicy(core != null) }
+
+    private fun fetchOptions(): SubscriptionFetcher.Options {
+        val ua = SubscriptionFetcher.userAgent(appVersion, runCatching { android.os.Build.VERSION.RELEASE }.getOrNull(), runCatching { Mihomo.version }.getOrNull())
+        // §16.i ④: the app is outside its own VPN, so while the tunnel runs it fetches through the loopback mixed port.
+        val route = activeProxyPort.takeIf { it > 0 && runCatching { Mihomo.running }.getOrDefault(false) }?.let { SubscriptionFetcher.Route(it, activeProxyAuth) }
+        return SubscriptionFetcher.Options(fetchPolicy, ua, route, runCatching { online() }.getOrDefault(true))
+    }
+
+    private val fetcher: (String) -> SubscriptionFetcher.Fetched = fetcher ?: { url -> SubscriptionFetcher.fetch(url, fetchOptions()) }
+    private val geoDownloader: (String, java.io.File) -> Unit = geoDownloader ?: { u, f -> SubscriptionFetcher.download(u, f, fetchOptions()) }
+
+    /** Keeps `network_unavailable` / `subscription_invalid` / `subscription_fetch_failed` from the fetcher (§16.i ⑤). */
+    private fun fetchOrThrow(url: String): SubscriptionFetcher.Fetched = try { fetcher(url) } catch (e: ZephyrException) { throw e } catch (t: Throwable) {
+        throw ZephyrException(ErrorCode.SUBSCRIPTION_FETCH_FAILED, t.message ?: "fetch failed")
+    }
 
     /**
      * Rule sets referenced by the active subscription (RULE-SET, contract §14.w): fetch each due one and
@@ -226,9 +250,9 @@ class CoreEngine(
     private suspend fun importOne(c: MobileCore, url: String?, body: String, name: String?, autoHours: Int?): Subscription {
         if (url != null && !(url.startsWith("https://", true) || url.startsWith("http://", true))) throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "not a subscription link")
         val got = if (url != null) {
-            runCatching { fetcher(url) }.getOrElse { throw ZephyrException(ErrorCode.SUBSCRIPTION_FETCH_FAILED, it.message ?: "fetch failed") }
+            fetchOrThrow(url)
         } else SubscriptionFetcher.Fetched(body, null, null)
-        val n = name ?: got.fileName?.substringBeforeLast('.')?.takeIf { it.isNotBlank() } ?: defaultName(url ?: body, url != null)
+        val n = name ?: got.fileName?.takeIf { it.isNotBlank() } ?: defaultName(url ?: body, url != null)
         val hours = autoHours ?: runCatching { fallback.settings().first().autoUpdateHours }.getOrDefault(12)
         val s = wrapImport { c.importSubscription(n, url, FetchedSubscription(got.body, got.userInfo, clock()), hours, null) }
         nodesReady = null
@@ -258,7 +282,7 @@ class CoreEngine(
     /** Fetch + core update, no reload (callers merge reloads). */
     private suspend fun fetchAndUpdate(c: MobileCore, id: String): SubscriptionDiff = withContext(io) {
         val url = wrap { c.subscriptionFetchUrl(id) } ?: throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "local profile")
-        val got = runCatching { fetcher(url) }.getOrElse { throw ZephyrException(ErrorCode.SUBSCRIPTION_FETCH_FAILED, it.message ?: "fetch failed") }
+        val got = fetchOrThrow(url)
         val d = wrap(ErrorMapping.Call.UPDATE_SUBSCRIPTION) { c.updateSubscription(id, FetchedSubscription(got.body, got.userInfo, clock()), null) }
         nodesReady = null; rulesReady = null; refreshSubs(); refreshRuleProvidersLater(); diff(d)
     }
@@ -269,7 +293,7 @@ class CoreEngine(
         val c = core ?: return if (mockData) fallback.previewUpdate(id) else throw noCore()
         return withContext(io) {
             val url = wrap { c.subscriptionFetchUrl(id) } ?: throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "local profile")
-            val got = runCatching { fetcher(url) }.getOrElse { throw ZephyrException(ErrorCode.SUBSCRIPTION_FETCH_FAILED, it.message ?: "fetch failed") }
+            val got = fetchOrThrow(url)
             diff(wrap(ErrorMapping.Call.PREVIEW_SUBSCRIPTION_UPDATE) { c.previewSubscriptionUpdate(id, FetchedSubscription(got.body, got.userInfo, clock())) })
         }
     }
@@ -421,9 +445,8 @@ class CoreEngine(
 
     private fun defaultName(p: String, isUrl: Boolean): String {
         if (!isUrl) return "本地配置"
-        val host = runCatching { java.net.URI(p).host }.getOrNull() ?: return "新订阅"
-        val parts = host.split('.').filter { it.isNotEmpty() }
-        return (if (parts.size >= 2) parts[parts.size - 2] else parts.firstOrNull() ?: "新订阅").replaceFirstChar { it.uppercase() }
+        // §16.i ②: no name in the payload or the response → the URL's host.
+        return runCatching { java.net.URI(p.trim()).host?.trim('[', ']') }.getOrNull()?.takeIf { it.isNotBlank() } ?: "新订阅"
     }
 
     // ── Live mihomo (scenes, policy groups, connections, mode, delay) ───────────────────────────────
