@@ -124,7 +124,7 @@ fun TrustedWifiScreen(back: BackTo, onBack: () -> Unit) {
             ZListGroup {
                 ZSettingsRow(
                     stringResource(R.string.trusted_wifi_disconnect), checked = s.disconnectOnTrusted,
-                    onCheckedChange = { v -> writeSettings(s.copy(disconnectOnTrusted = v)) },
+                    onCheckedChange = { v -> writeSettings { it.copy(disconnectOnTrusted = v) } },
                 )
             }
             Footer(stringResource(R.string.trusted_wifi_footer))

@@ -8,7 +8,6 @@ import com.zephyr.engine.Settings
 import com.zephyr.engine.ZephyrEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -49,8 +48,9 @@ class SettingsStore(private val context: Context, private val engine: ZephyrEngi
             com.zephyr.app.widget.MidnightWidgetWorker.schedule(context)
             launch { engine.settings().collect { s -> syncSystemNightMode(s.appearance) } }
             // §16.c: a failed write rolls the engine back to the last stored value and says so (toast); never silent.
+            // No drop(1): a change landing between this read and the collect below is still written.
             var persisted = engine.settings().first()
-            engine.settings().drop(1).collect { s ->
+            engine.settings().collect { s ->
                 if (s == persisted) return@collect
                 runCatching { context.store.edit { it[keySettings] = com.zephyr.engine.SettingsCodec.encode(s) } }
                     .onSuccess { persisted = s }
