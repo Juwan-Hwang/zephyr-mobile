@@ -16,7 +16,17 @@ final class FakeTunnel: TunnelPort, @unchecked Sendable {
     init(dir: URL) {
         configURL = dir.appendingPathComponent("tunnel/config.yaml")
         controllerSocketPath = dir.appendingPathComponent("none.sock").path
+        let network = AsyncStream<Void>.makeStream(bufferingPolicy: .bufferingNewest(1))
+        networkStream = network.stream
+        networkChange = network.continuation
     }
+
+    /// §16.a③：扩展发来的“底层网络变了”。
+    let networkStream: AsyncStream<Void>
+    let networkChange: AsyncStream<Void>.Continuation
+    var statusChecks = 0
+    func networkChanges() -> AsyncStream<Void> { networkStream }
+    func currentStatus() async -> ConnectionStatus { lock.withLock { statusChecks += 1; return status } }
 
     func states() -> AsyncStream<ConnectionState> {
         let s = lock.withLock { ConnectionState(status: status, mode: mode) }
@@ -267,6 +277,23 @@ final class CoreEngineLiveTests: XCTestCase {
         s.disconnectOnTrusted = true
         try await e.updateSettings(patch: s)
         XCTAssertEqual(t.onDemandCalls.last, FakeTunnel.OnDemandCall(onDemand: true, trusted: ["Home"], disconnectOnTrusted: true, create: false))
+    }
+
+    /// 契约 §16.a③：底层网络变化后，前台场景故障探测立即跑下一轮（不等 60 s）。
+    func testNetworkChangeTriggersImmediateFailoverRound() async throws {
+        let (e, t) = make()
+        _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")
+        try await e.connect()
+        let sub = Task { for await _ in e.sceneFailovers() {} }
+        defer { sub.cancel() }
+        try await Task.sleep(nanoseconds: 300_000_000)   // 等订阅建立
+        let before = t.lock.withLock { t.statusChecks }
+        t.networkChange.yield()
+        let deadline = Date().addingTimeInterval(5)
+        while t.lock.withLock({ t.statusChecks }) == before, Date() < deadline {
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        XCTAssertGreaterThan(t.lock.withLock { t.statusChecks }, before, "网络变化后应立即检查连接并探测")
     }
 
     func testLogsFromTunnel() async throws {

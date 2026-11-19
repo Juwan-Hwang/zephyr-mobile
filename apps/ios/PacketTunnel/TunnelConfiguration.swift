@@ -9,6 +9,8 @@ struct TunnelConfiguration: Equatable, Sendable {
     var mode: SharedState.Mode
     var mtu: Int
     var ipv6: Bool
+    /// 旧字段，仅为解码兼容保留。契约 §16.a① 起局域网排除是两端共同行为、用户不可关：
+    /// `TunnelNetworkSettingsFactory` 不再读它，始终排除 `lanIPv4` / `lanIPv6`。
     var bypassLAN: Bool
 
     // 地址规划与 mihomo 默认一致：fake-ip-range 198.18.0.1/16，tun inet4 198.18.0.1/30，DNS 劫持到 198.18.0.2。
@@ -20,7 +22,9 @@ struct TunnelConfiguration: Equatable, Sendable {
     /// 可选：系统 HTTP 代理指向 mihomo mixed-port，遵守系统代理的 App 走代理而不经 TUN（更省 NE 内存）。
     var httpProxyPort: Int?
 
-    /// 局域网 / 链路本地 / 组播，bypassLAN 时排除出隧道。
+    /// 局域网绕过（契约 §16.a① E10，与 Android 同一张表）：这些目的地址走系统网络、不进 TUN，规则 / 全局 / 直连三种模式一样。
+    /// 按契约顺序逐条对应：10/8、127/8、169.254/16、172.16/12、192.168/16、224/4（组播）、255.255.255.255/32（受限广播）。
+    /// **不排除** 198.18.0.0/16（fake-ip 与 DNS 劫持依赖它进 TUN）和 100.64.0.0/10（运营商 NAT 段，可能是公网服务）。
     static let lanIPv4: [(address: String, mask: String)] = [
         ("10.0.0.0", "255.0.0.0"),
         ("127.0.0.0", "255.0.0.0"),
@@ -28,7 +32,9 @@ struct TunnelConfiguration: Equatable, Sendable {
         ("172.16.0.0", "255.240.0.0"),
         ("192.168.0.0", "255.255.0.0"),
         ("224.0.0.0", "240.0.0.0"),
+        ("255.255.255.255", "255.255.255.255"),
     ]
+    /// fe80::/10（链路本地）、fc00::/7（ULA）、ff00::/8（组播）；::1 本就不进 TUN。
     static let lanIPv6: [(address: String, prefix: Int)] = [
         ("fe80::", 10),
         ("fc00::", 7),

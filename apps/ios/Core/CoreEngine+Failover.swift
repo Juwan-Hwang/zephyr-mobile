@@ -1,7 +1,7 @@
 // 场景自动切换（契约 v0.2「场景自动切换」+ §14.y，REVIEW-Q2 X-P1-5 余项）。
 //
-// iOS 的 PacketTunnel 不链接核心（NE 内存上限），所以探测在 App 进程里做：AppModel 只在“前台且已连接”时订阅，每 60 s 一轮；
-// 设置“仅在 Wi‑Fi 下测速”打开且当前网络计费 / 受限时跳过本轮。
+// iOS 的 PacketTunnel 不链接核心（NE 内存上限），所以探测在 App 进程里做：AppModel 只在“前台且已连接”时订阅，每 60 s 一轮，
+// 底层网络变化后立即一轮（契约 §16.a③）。计费网络下不跳过（§16.c：testOnWifiOnly 不管故障探测）。
 // 每个已选节点的场景：在 mihomo 里测该场景的策略组，按组自己的 `selected` 成员判断是否可达（不依赖成员名映射），
 // 把结果上报核心 reportSceneProbe，由核心按阈值 / 冷却决定是否在热备内切换；返回非空即需 selectInGroup（不重载、不断连）。
 //   - 组内所有成员都不通：多半是探测地址本身被墙 / 本机断网，不算节点失败，不上报。
@@ -11,7 +11,6 @@
 // 与 Android probeScenes 同规则。
 
 import Foundation
-import Network
 import ZephyrKit
 
 /// 跨轮次的探测状态（AI 场景已提示过的故障）。
@@ -27,21 +26,40 @@ extension CoreEngine {
     static let failoverProbeInterval: UInt64 = 60_000_000_000
     static let failoverProbeURL = "https://www.gstatic.com/generate_204"
 
+    /// 每 60 s 一轮；底层网络变化（扩展去抖 2 s 并 closeAll 后经 `TunnelPort.networkChanges()` 通知）时立即再跑一轮（§16.a③）。
+    /// 只在 AppModel 订阅时运行，即“前台且已连接”（§16.f E21）。
+    /// 计费网络下**不**跳过：故障探测每场景每轮一个 generate_204，流量可忽略；testOnWifiOnly 只管自动测速（§16.c）。
     public func sceneFailovers() -> AsyncStream<SceneFailoverNotice> {
         guard let t = tunnel, core != nil else { return AsyncStream { $0.finish() } }
         return failoverBroadcast.subscribe { [weak self] in
             AsyncStream(bufferingPolicy: .bufferingNewest(8)) { k in
-                let task = Task {
+                // 两个来源合并成“该跑一轮了”；缓冲 1 个，探测中再来的触发合并为下一轮。
+                let (ticks, tick) = AsyncStream<Void>.makeStream(bufferingPolicy: .bufferingNewest(1))
+                let timer = Task {
                     while !Task.isCancelled {
                         try? await Task.sleep(nanoseconds: CoreEngine.failoverProbeInterval)
+                        if Task.isCancelled { break }
+                        tick.yield()
+                    }
+                }
+                let network = Task {
+                    for await _ in t.networkChanges() {
+                        if Task.isCancelled { break }
+                        tick.yield()
+                    }
+                }
+                let task = Task {
+                    for await _ in ticks {
                         guard !Task.isCancelled, let self else { break }
                         guard await self.isTunnelConnected(t) else { continue }
-                        if self.loadSettings().testOnWifiOnly, !(await CoreEngine.isUnmeteredNetwork()) { continue }
                         for notice in await self.probeScenesOnce(t) { k.yield(notice) }
                     }
                     k.finish()
                 }
-                k.onTermination = { _ in task.cancel() }
+                k.onTermination = { _ in
+                    timer.cancel(); network.cancel(); task.cancel()
+                    tick.finish()
+                }
             }
         }
     }
@@ -110,37 +128,5 @@ extension CoreEngine {
         }
         if out.contains(where: { $0.switchedTo != nil }) { await bumpScenes() }
         return out
-    }
-
-    /// 当前网络是否“不计费且不受限”（Wi‑Fi / 以太网）；1.5 秒内没有结果按否处理。与 App 的 NetworkPathProbe 同规则。
-    static func isUnmeteredNetwork() async -> Bool {
-        await withCheckedContinuation { (cont: CheckedContinuation<Bool, Never>) in
-            let monitor = NWPathMonitor()
-            let queue = DispatchQueue(label: "app.zephyr.core.failover-path")
-            let once = ResumeOnce(cont, monitor: monitor)
-            let finish: @Sendable (Bool) -> Void = { once.resume($0) }
-            monitor.pathUpdateHandler = { path in
-                finish(path.status == .satisfied && !path.isExpensive && !path.isConstrained)
-            }
-            monitor.start(queue: queue)
-            queue.asyncAfter(deadline: .now() + 1.5) { finish(false) }
-        }
-    }
-}
-
-/// 只恢复一次的续体（路径回调与超时谁先到用谁）。
-private final class ResumeOnce: @unchecked Sendable {
-    private let lock = NSLock()
-    private var cont: CheckedContinuation<Bool, Never>?
-    private let monitor: NWPathMonitor
-    init(_ cont: CheckedContinuation<Bool, Never>, monitor: NWPathMonitor) { self.cont = cont; self.monitor = monitor }
-    func resume(_ value: Bool) {
-        lock.lock()
-        let c = cont
-        cont = nil
-        lock.unlock()
-        guard let c else { return }
-        monitor.cancel()
-        c.resume(returning: value)
     }
 }

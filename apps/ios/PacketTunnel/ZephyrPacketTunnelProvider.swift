@@ -13,8 +13,13 @@
 //     Swift 侧需要窥探配置时用 MappedFile，绝不 Data(contentsOf:) 整份读入。
 //   - 收到内存压力（DispatchSource.memoryPressure）立即 zm_free_os_memory()。
 //   - 流量轮询 1 Hz，只保留一个最新值；共享文件每 5 秒最多写一次。
+//
+// 网络切换（契约 §16.a③ E04）：NWPathMonitor（排除 utun 所在的 .other 接口，看到的是底层物理网络）→ NetworkChangeDetector
+// （忽略 reasserting、同一网络上的短暂掉线）→ 去抖 2 s → closeAll（ControllerSocket）+ Darwin `.networkChanged`
+// （App 在前台时据此立即跑下一轮场景故障探测）。不重载配置、不重建 TUN；受信任 Wi‑Fi 由系统按需规则自行重评。
 
 import Foundation
+import Network
 import NetworkExtension
 import os
 
@@ -64,6 +69,12 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider, @unchecked Senda
     private var memoryPressure: DispatchSourceMemoryPressure?
     /// 今日用量账本；只在 `queue` 上读写。
     private var ledger: UsageLedger?
+    /// 底层网络监视（§16.a③）；detector 只在 `queue` 上读写。
+    private var pathMonitor: NWPathMonitor?
+    private var networkDetector = NetworkChangeDetector()
+    /// 去抖到点后在独立队列上 closeAll（阻塞 socket 调用不占 `queue`）。
+    private let networkDebounce = Debouncer(delay: Debouncer.networkChangeDelay,
+                                            queue: DispatchQueue(label: "app.zephyr.mobile.PacketTunnel.network", qos: .utility))
 
     // MARK: 生命周期
 
@@ -219,11 +230,67 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider, @unchecked Senda
         }
         pressure.resume()
         memoryPressure = pressure
+
+        startPathMonitor()
     }
 
     private func stopMonitors() {
         queue.async { [weak self] in self?.cancelTrafficTimer() }
         memoryPressure?.cancel(); memoryPressure = nil
+        stopPathMonitor()
+    }
+
+    // MARK: 网络切换（§16.a③）
+
+    private func startPathMonitor() {
+        stopPathMonitor()
+        // 排除 .other（utun 自己）：否则默认路径永远是隧道接口，看不到 Wi‑Fi ↔ 蜂窝。
+        let monitor = NWPathMonitor(prohibitedInterfaceTypes: [.other])
+        monitor.pathUpdateHandler = { [weak self] path in
+            // 回调就在 `queue` 上（start(queue:)）。
+            self?.handlePathUpdate(Self.fingerprint(path))
+        }
+        queue.async { [weak self] in self?.networkDetector.reset() }
+        monitor.start(queue: queue)
+        pathMonitor = monitor
+    }
+
+    private func stopPathMonitor() {
+        pathMonitor?.cancel(); pathMonitor = nil
+        networkDebounce.cancel()
+    }
+
+    /// 只在 `queue` 上调用。
+    private func handlePathUpdate(_ fp: NetworkFingerprint) {
+        // reasserting：同一网络上的短暂重连，不算网络变化（§16.a③）。
+        guard networkDetector.observe(fp, reasserting: reasserting) else { return }
+        logger.info("network changed: \(fp.primaryInterface ?? "-", privacy: .public)")
+        networkDebounce.schedule { [weak self] in
+            guard let self, self.bridge.isRunning else { return }
+            let ok = ControllerSocket.closeAllConnections(socketPath: AppGroup.controllerSocketPath)
+            self.logger.info("network changed: closeAll \(ok ? "ok" : "failed", privacy: .public)")
+            DarwinNotifier.post(.networkChanged)
+        }
+    }
+
+    static func fingerprint(_ path: NWPath) -> NetworkFingerprint {
+        let primary = path.availableInterfaces.first { $0.type != .other && $0.type != .loopback }
+        return NetworkFingerprint(
+            satisfied: path.status == .satisfied,
+            primaryInterface: primary.map { "\(Self.name($0.type)):\($0.name)" },
+            gateways: path.gateways.map { "\($0)" }
+        )
+    }
+
+    private static func name(_ t: NWInterface.InterfaceType) -> String {
+        switch t {
+        case .wifi: "wifi"
+        case .cellular: "cellular"
+        case .wiredEthernet: "wiredEthernet"
+        case .loopback: "loopback"
+        case .other: "other"
+        @unknown default: "unknown"
+        }
     }
 
     /// 只在 `queue` 上调用。

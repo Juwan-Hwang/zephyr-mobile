@@ -42288,6 +42288,170 @@
           }
         }
       }
+    },
+    "Wi‑Fi 名称不能超过 32 字节" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يمكن أن يتجاوز اسم Wi‑Fi 32 بايت"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wi‑Fi names can be at most 32 bytes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El nombre de la red Wi‑Fi no puede superar los 32 bytes"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نام Wi‑Fi نمی‌تواند بیشتر از 32 بایت باشد"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wi‑Fi 名は 32 バイト以内にしてください"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wi‑Fi 이름은 32바이트를 넘을 수 없습니다"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wi‑Fi အမည်သည် 32 ဘိုက်ထက် မပိုရပါ"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Имя сети Wi‑Fi не может превышать 32 байта"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jina la Wi‑Fi haliwezi kuzidi baiti 32"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wi‑Fi ady 32 baýtdan uzyn bolup bilmeýär"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wi‑Fi adı en fazla 32 bayt olabilir"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wi‑Fi کا نام 32 بائٹس سے زیادہ نہیں ہو سکتا"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tên Wi‑Fi không được dài quá 32 byte"
+          }
+        }
+      }
+    },
+    "最多添加 50 个 Wi‑Fi" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يمكنك إضافة 50 شبكة Wi‑Fi كحد أقصى"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can add up to 50 Wi‑Fi networks"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puedes añadir hasta 50 redes Wi‑Fi"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حداکثر 50 Wi‑Fi می‌توانید اضافه کنید"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wi‑Fi は最大 50 件まで追加できます"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wi‑Fi는 최대 50개까지 추가할 수 있습니다"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wi‑Fi အများဆုံး 50 ခု ထည့်နိုင်သည်"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Можно добавить не более 50 сетей Wi‑Fi"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unaweza kuongeza hadi Wi‑Fi 50"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iň köp 50 Wi‑Fi goşup bilersiňiz"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En fazla 50 Wi‑Fi ekleyebilirsiniz"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "آپ زیادہ سے زیادہ 50 Wi‑Fi شامل کر سکتے ہیں"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn có thể thêm tối đa 50 Wi‑Fi"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

@@ -1,5 +1,6 @@
 // TrustedWifiView — 受信任的 Wi‑Fi：开关“连上这些 Wi‑Fi 时自动断开” + 名称列表（左滑删除）+ 手动添加。
 // 写回 Settings.trustedWifi / disconnectOnTrusted（全量 updateSettings）。
+// 输入按契约 §16.c 校验（TrustedWifi.check：1–32 字节 UTF‑8、去重、≤ 50 项），超长 / 已满时禁用“添加”并在输入框下说明原因。
 // 读取当前 Wi‑Fi 名称需要 NEHotspotNetwork + 定位授权（App 层能力），此处只支持手动输入（见 NOTES-L）。
 
 import SwiftUI
@@ -41,6 +42,8 @@ struct TrustedWifiView: View {
                 ZSectionHeader("网络", trailing: names.isEmpty ? nil : ZL.f("%lld 个", Int64(names.count)))
                     .listRowInsets(EdgeInsets())
                     .textCase(nil)
+            } footer: {
+                if let hint = inputHint { footnote(hint) }
             }
         }
         .listStyle(.insetGrouped)
@@ -53,17 +56,31 @@ struct TrustedWifiView: View {
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button { add() } label: { Text("添加") }
-                    .disabled(trimmed.isEmpty || names.contains(trimmed))
+                    .disabled(candidate == nil)
             }
         }
     }
 
     private var names: [String] { store.settings?.trustedWifi ?? [] }
-    private var trimmed: String { name.trimmingCharacters(in: .whitespacesAndNewlines) }
+    private var check: TrustedWifi.Check { TrustedWifi.check(name, existing: names) }
+
+    /// 可以添加的名称（已去首尾空白）；不可添加为 nil。
+    private var candidate: String? {
+        if case .ok(let ssid) = check { return ssid }
+        return nil
+    }
+
+    /// 输入框下的原因说明：只对用户需要知道的两种情况（超长 / 已满）提示，空与重复只禁用按钮。
+    private var inputHint: String? {
+        switch check {
+        case .tooLong: ZL.tr("Wi‑Fi 名称不能超过 32 字节")
+        case .full: ZL.tr("最多添加 50 个 Wi‑Fi")
+        case .ok, .empty, .duplicate: nil
+        }
+    }
 
     private func add() {
-        let ssid = trimmed
-        guard !ssid.isEmpty, !names.contains(ssid) else { return }
+        guard let ssid = candidate else { return }
         name = ""
         Task { await store.update { $0.trustedWifi.append(ssid) } }
     }
