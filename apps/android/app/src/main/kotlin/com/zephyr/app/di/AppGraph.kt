@@ -14,6 +14,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 
 /**
  * Process-wide object graph. Hand-rolled on purpose: three singletons don't justify a DI framework's
@@ -73,6 +75,12 @@ object AppGraph {
             }
         }
         connection = ConnectionController(app, engine, appScope)
+        // §16.e ⑤: (re)plan expiry alerts whenever a subscription or its expiry changes (import, update, renewal).
+        appScope.launch {
+            settings.loaded.await()
+            core.subscriptions().map { l -> l.map { it.id to it.expiresAt } }.distinctUntilChanged()
+                .collect { runCatching { com.zephyr.app.vpn.ExpiryAlerts.check(app) } }
+        }
         Notifications.ensureChannels(app)
         ready = true
     }

@@ -18,7 +18,12 @@ import java.util.TimeZone
  * Changing the level re-subscribes and starts over; pause only stops appending; export is plain text with no
  * credentials (the core redacts its log lines).
  */
-class LogsModel(private val engine: ZephyrEngine, private val scope: CoroutineScope) {
+class LogsModel(
+    private val engine: ZephyrEngine,
+    private val scope: CoroutineScope,
+    /** Outlives the page, so leaving it can still put mihomo back to info (§16.h). */
+    private val bg: CoroutineScope = scope,
+) {
     private val _lines = MutableStateFlow<List<LogLine>>(emptyList())
     val lines: StateFlow<List<LogLine>> = _lines.asStateFlow()
     private val _paused = MutableStateFlow(false)
@@ -28,13 +33,25 @@ class LogsModel(private val engine: ZephyrEngine, private val scope: CoroutineSc
     private var job: Job? = null
 
     fun start() { if (job == null) subscribe() }
-    fun stop() { job?.cancel(); job = null }
+
+    /** Leaving the page: §16.h puts mihomo back to info if the debug segment raised it. */
+    fun stop() {
+        job?.cancel(); job = null
+        if (_level.value == LogLevel.DEBUG) bg.launch { runCatching { engine.setLogLevel(LogLevel.INFO) } }
+    }
     fun clear() { _lines.value = emptyList() }
     fun togglePause() { _paused.update { !it } }
 
+    /**
+     * Contract §16.h: the debug segment raises mihomo to debug (its ring buffer filters by the current level);
+     * leaving it goes back to info. warning / error only filter the display, so info history survives.
+     */
     fun setLevel(l: LogLevel) {
         if (l == _level.value) return
+        val was = _level.value
         _level.value = l
+        if (l == LogLevel.DEBUG) bg.launch { runCatching { engine.setLogLevel(LogLevel.DEBUG) } }
+        else if (was == LogLevel.DEBUG) bg.launch { runCatching { engine.setLogLevel(LogLevel.INFO) } }
         if (job != null) subscribe()
     }
 
@@ -50,10 +67,42 @@ class LogsModel(private val engine: ZephyrEngine, private val scope: CoroutineSc
         job = scope.launch { engine.logs(l).collect { append(it) } }
     }
 
-    fun exportText(tz: TimeZone = TimeZone.getDefault()): String = _lines.value.joinToString("\n") { format(it, tz) }
+    /** Plain log text; with [diagnostics] (设置 › 共享诊断数据 on, §16.c) the summary goes first. */
+    fun exportText(tz: TimeZone = TimeZone.getDefault(), diagnostics: String? = null): String {
+        val log = _lines.value.joinToString("\n") { format(it, tz) }
+        return if (diagnostics == null) log else diagnostics + "\n\n" + log
+    }
 
     companion object {
         const val CAPACITY = 500
+
+        private val summaryJson = kotlinx.serialization.json.Json { encodeDefaults = true }
+
+        /**
+         * Contract §16.c shareDiagnostics summary: app version, OS version, this section's settings except
+         * `trustedWifi` (and the Android-only excludedApps list), and the last 20 error codes with their time.
+         */
+        fun diagnosticsSummary(
+            appVersion: String, os: String, settings: com.zephyr.engine.Settings,
+            errors: List<com.zephyr.engine.RecentErrors.Entry>, tz: TimeZone = TimeZone.getDefault(),
+        ): String {
+            val o = summaryJson.encodeToJsonElement(com.zephyr.engine.Settings.serializer(), settings) as kotlinx.serialization.json.JsonObject
+            val tun = (o["tun"] as? kotlinx.serialization.json.JsonObject)?.let { kotlinx.serialization.json.JsonObject(it - "excludedApps") }
+            val shown = kotlinx.serialization.json.JsonObject((o - "trustedWifi" - "shareAnonymousPattern").let { if (tun != null) it + ("tun" to tun) else it })
+            return buildString {
+                append("# Zephyr diagnostics\n")
+                append("app: ").append(appVersion).append('\n')
+                append("os: ").append(os).append('\n')
+                append("settings: ").append(shown.toString()).append('\n')
+                append("errors:")
+                if (errors.isEmpty()) append(" none")
+                errors.takeLast(com.zephyr.engine.RecentErrors.CAPACITY).forEach { e ->
+                    val c = Calendar.getInstance(tz).apply { timeInMillis = e.at }
+                    append("\n  ").append("%04d-%02d-%02d ".format(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH)))
+                        .append(time(e.at, tz)).append(' ').append(e.code.name.lowercase())
+                }
+            }
+        }
 
         /** "HH:mm:ss.SSS W message". */
         fun format(line: LogLine, tz: TimeZone = TimeZone.getDefault()): String = "${time(line.at, tz)} ${badge(line.level)} ${line.message}"

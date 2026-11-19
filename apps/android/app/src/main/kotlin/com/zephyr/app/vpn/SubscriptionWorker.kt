@@ -21,6 +21,8 @@ import java.util.concurrent.TimeUnit
 class SubscriptionWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params) {
     override suspend fun doWork(): Result {
         AppGraph.init(applicationContext)
+        // §16.e ⑤: the hourly background check also catches expiries learnt about inside the 3-day window.
+        runCatching { ExpiryAlerts.check(applicationContext) }
         val core = AppGraph.engine as? CoreEngine ?: return Result.success()
         return runCatching { core.updateDue() }.fold({ Result.success() }, { Result.retry() })
     }

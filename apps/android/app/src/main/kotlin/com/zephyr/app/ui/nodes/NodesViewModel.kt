@@ -41,6 +41,8 @@ data class NodesUi(
     val testedCount: Long = 0,
     /** The query (or the page under it) failed: the list shows an error with "重试" instead of empty rows (audit U12). */
     val failed: Boolean = false,
+    /** Bumped when a stale token could not be re-queried in place (§16.b ①): the list quietly goes back to the top. */
+    val scrollReset: Int = 0,
 )
 
 /**
@@ -158,8 +160,13 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
             try {
                 val res = engine.nodeRows(t, page * PAGE, PAGE)
                 if (t == token) { pages.put(page, res.rows); pageEpoch.intValue++ }
-            } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (_: Exception) {
-                if (t == token) _ui.value = _ui.value.copy(failed = true)
+            } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (e: Exception) {
+                if (t != token) return@launch
+                // §16.b ① stale_token (the engine already re-ran the query once): no message, run it again from the top.
+                if ((e as? com.zephyr.engine.ZephyrException)?.code == com.zephyr.engine.ErrorCode.STALE_TOKEN) {
+                    _ui.value = _ui.value.copy(scrollReset = _ui.value.scrollReset + 1)
+                    launchRun(_ui.value.query)
+                } else _ui.value = _ui.value.copy(failed = true)
             } finally { inflight.remove(page) }
         }
     }

@@ -114,6 +114,11 @@ interface ZephyrEngine {
     suspend fun connectionTrace(host: String): ConnectionTrace
     suspend fun overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Boolean)
     fun logs(minLevel: LogLevel): Flow<LogLine>
+    /**
+     * Contract §16.h: mihomo's own log level, hot (no reload). The log page sets DEBUG while its debug segment is
+     * shown and INFO when it leaves; never persisted. No-op while the core is not running (and in the mock).
+     */
+    suspend fun setLogLevel(level: LogLevel) {}
     fun settings(): Flow<Settings>
     suspend fun updateSettings(patch: Settings)
     suspend fun storage(): StorageInfo
@@ -161,6 +166,26 @@ data class ZephyrError(val code: ErrorCode, val message: String = "")
 class ZephyrException(val error: ZephyrError) : Exception("${error.code}: ${error.message}") {
     constructor(code: ErrorCode, message: String = "") : this(ZephyrError(code, message))
     val code: ErrorCode get() = error.code
+    init { RecentErrors.record(error.code) }
+}
+
+/**
+ * Last error codes with their time, for the diagnostics summary a log export may carry (contract §16.c
+ * shareDiagnostics: "最近 20 个错误码与时间"). Codes only, never messages. Process-local, not persisted.
+ */
+object RecentErrors {
+    const val CAPACITY = 20
+    data class Entry(val at: Long, val code: ErrorCode)
+    private val ring = ArrayDeque<Entry>()
+    @Volatile var clock: () -> Long = System::currentTimeMillis
+
+    fun record(code: ErrorCode) = synchronized(ring) {
+        ring.addLast(Entry(clock(), code))
+        while (ring.size > CAPACITY) ring.removeFirst()
+    }
+
+    fun snapshot(): List<Entry> = synchronized(ring) { ring.toList() }
+    fun clear() = synchronized(ring) { ring.clear() }
 }
 
 private fun setGlobalNodePreviewUnsupported(): Nothing = throw ZephyrException(ErrorCode.INTERNAL, "previewGlobalChange unsupported")

@@ -114,7 +114,9 @@ fun TrustedWifiScreen(back: BackTo, onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
     var name by rememberSaveable { mutableStateOf("") }
     val trimmed = name.trim()
-    val canAdd = trimmed.isNotEmpty() && trimmed !in s.trustedWifi
+    // §16.c: 1–32 bytes of UTF‑8, unique, at most 50.
+    val canAdd = com.zephyr.app.di.TrustedWifi.add(s, trimmed) != null
+    val writeSettings = com.zephyr.app.ui.settings.rememberSettingsWriter()
     fun add() { if (canAdd) { name = ""; scope.launch { engine.addTrustedWifi(trimmed) } } }
 
     PageScaffold(back, stringResource(R.string.settings_trusted_wifi), onBack) {
@@ -122,7 +124,7 @@ fun TrustedWifiScreen(back: BackTo, onBack: () -> Unit) {
             ZListGroup {
                 ZSettingsRow(
                     stringResource(R.string.trusted_wifi_disconnect), checked = s.disconnectOnTrusted,
-                    onCheckedChange = { v -> scope.launch { engine.updateSettings(s.copy(disconnectOnTrusted = v)) } },
+                    onCheckedChange = { v -> writeSettings(s.copy(disconnectOnTrusted = v)) },
                 )
             }
             Footer(stringResource(R.string.trusted_wifi_footer))

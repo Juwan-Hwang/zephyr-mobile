@@ -35,6 +35,8 @@ interface LivePort {
     fun setMode(mode: String)
     fun close(id: String)
     fun closeAll()
+    /** §16.h: PATCH /configs {"log-level"}; debug|info|warning|error|silent. */
+    fun setLogLevel(level: String) {}
 
     companion object { const val TEST_URL = "https://www.gstatic.com/generate_204" }
 }
@@ -63,6 +65,7 @@ class RustLive(socketPath: String) : LivePort {
     override fun setMode(mode: String) = c.setMode(mode)
     override fun close(id: String) = c.closeConnection(id)
     override fun closeAll() = c.closeAllConnections()
+    override fun setLogLevel(level: String) = c.setLogLevel(level)
 
     private fun type(t: com.zephyr.core.mobile.GroupType) = when (t) {
         com.zephyr.core.mobile.GroupType.SELECT -> GroupType.SELECT

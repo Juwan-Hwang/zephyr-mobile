@@ -365,10 +365,11 @@ data class TunSettings(
 
 @Serializable
 data class Settings(
-    val onDemand: Boolean = false,
+    /** Contract §16.c defaults (prototype settings page): on-demand on, trusted Wi‑Fi disconnects, no change review. */
+    val onDemand: Boolean = true,
     /** First-install default is empty (audit #208 U7); the prototype's "家" lives only in the demo engine. */
     val trustedWifi: List<String> = emptyList(),
-    val disconnectOnTrusted: Boolean = false,
+    val disconnectOnTrusted: Boolean = true,
     val localProxyPort: Int = 7890,
     val localProxyAuth: Boolean = true,
     val localProxyEnabled: Boolean = false,
@@ -376,12 +377,14 @@ data class Settings(
     val latencyTtlHours: Int = 24,
     val autoUpdateHours: Int = 12,
     val updateOnWifiOnly: Boolean = true,
-    val showChangesBeforeUpdate: Boolean = true,
+    val showChangesBeforeUpdate: Boolean = false,
     val dns: DnsSettings = DnsSettings(),
     val tun: TunSettings = TunSettings(),
     val accent: Accent = Accent.BLUE,
     val appearance: Appearance = Appearance.SYSTEM,
+    /** Deprecated (§16.c U19): kept only so older blobs decode; never shown, never read. */
     val shareAnonymousPattern: Boolean = false,
+    /** §16.c: only adds a diagnostics summary to the log export; read nowhere else. */
     val shareDiagnostics: Boolean = false,
 )
 

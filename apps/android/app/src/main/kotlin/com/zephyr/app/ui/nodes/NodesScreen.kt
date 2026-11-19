@@ -77,6 +77,7 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: BackTo = BackTo.
     val rowCount = result?.rowCount?.coerceAtMost(Int.MAX_VALUE.toLong())?.toInt() ?: 0
     val list = rememberLazyListState()
     val scope = rememberCoroutineScope()
+    LaunchedEffect(ui.scrollReset) { if (ui.scrollReset > 0) list.scrollToItem(0) }
 
     // Settle → test visible rows (tokens motion.settle-delay).
     LaunchedEffect(list, result?.token) {

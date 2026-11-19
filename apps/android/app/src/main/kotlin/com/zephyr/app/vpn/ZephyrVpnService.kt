@@ -168,7 +168,7 @@ class ZephyrVpnService : VpnService() {
                     kotlinx.coroutines.withTimeoutOrNull(PROBE_EVERY_MS) { probeNow.receive() }
                     val metered = AppGraph.network?.state?.value?.metered
                         ?: (getSystemService(android.net.ConnectivityManager::class.java)?.isActiveNetworkMetered ?: false)
-                    runCatching { core.probeScenes() }
+                    runCatching { core.probeScenes(metered = metered) }
                     runCatching { core.retestStaleScenes(metered = metered) }
                 }
             }

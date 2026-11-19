@@ -83,7 +83,7 @@ import kotlinx.coroutines.launch
 
 /** Root: theme from settings, nav graph, and the home-level overlays (library, scene, activity, command, import). */
 @Composable
-fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport: String? = null, onImportShown: () -> Unit = {}) {
+fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport: String? = null, onImportShown: () -> Unit = {}, openImport: Int = 0, openSubscriptions: Int = 0) {
     val settings by AppGraph.engine.settings().collectAsState(Settings())
     val dark = when (settings.appearance) { Appearance.SYSTEM -> isSystemInDarkTheme(); Appearance.DARK -> true; Appearance.LIGHT -> false }
     // System bar icons follow the App's appearance, not the system's (review A-P1-1): a forced light App on a dark
@@ -105,6 +105,8 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
     ZephyrTheme(dark = dark, accent = ZAccent.valueOf(settings.accent.name)) {
         androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalScrubHint provides scrubHint) {
         val nav = rememberNavController()
+        // Contract §16.e ⑤: tapping an expiry alert opens the subscriptions page.
+        androidx.compose.runtime.LaunchedEffect(openSubscriptions) { if (openSubscriptions > 0 && !startOnboarding) nav.navigate(Subs(back = BackTo.HOME)) }
         // Review A-P2-4: overlays survive rotation / fold / process death.
         var library by rememberSaveable { mutableStateOf(false) }
         val backTo: (BackTo) -> Unit = { to -> nav.popBackStack(); if (to == BackTo.LIBRARY) library = true }
@@ -118,6 +120,9 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
         androidx.compose.runtime.LaunchedEffect(pendingImport) {
             if (pendingImport != null) { importPrefill = pendingImport; import = true; onImportShown() }
         }
+        // Contract §16.b ②: connecting with no subscription (home switch, tile, widget, notification) opens the empty
+        // import panel instead of starting a tunnel.
+        androidx.compose.runtime.LaunchedEffect(openImport) { if (openImport > 0) { importPrefill = null; import = true } }
         val home: HomeViewModel = viewModel { HomeViewModel() }
 
         // Review H-P2-11: 原型 --cmdbg .72 + blur 30。API 31+ 模糊指令层下面的页面；更低版本 blur 无效，遮罩保持 .86。

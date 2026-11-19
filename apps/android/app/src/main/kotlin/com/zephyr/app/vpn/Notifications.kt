@@ -107,14 +107,21 @@ object Notifications {
             .build()
     }
 
-    /** "Orbit 将于 11月9日 到期 · 剩余 12.0 GB" alert. */
-    fun expiry(ctx: Context, name: String, date: String, remaining: String): Notification =
-        NotificationCompat.Builder(ctx, CH_ALERTS)
+    /** "Orbit 将于 11月9日 到期" · "剩余 12.0 GB" (no traffic info: title only). Tap → subscriptions (§16.e ⑤). */
+    fun expiry(ctx: Context, name: String, date: String, remaining: String?): Notification {
+        val open = PendingIntent.getActivity(
+            ctx, ID_EXPIRY,
+            Intent(ctx, MainActivity::class.java).setAction(MainActivity.ACTION_OPEN_SUBSCRIPTIONS).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
+        return NotificationCompat.Builder(ctx, CH_ALERTS)
             .setSmallIcon(R.drawable.ic_stat_zephyr)
             .setContentTitle(ctx.getString(R.string.notif_expiry_title, name, date))
-            .setContentText(ctx.getString(R.string.notif_expiry_text, remaining))
+            .apply { if (remaining != null) setContentText(ctx.getString(R.string.notif_expiry_text, remaining)) }
+            .setContentIntent(open)
             .setAutoCancel(true)
             .build()
+    }
 
     private fun action(ctx: Context, a: String): PendingIntent =
         PendingIntent.getService(ctx, a.hashCode(), Intent(ctx, ZephyrVpnService::class.java).setAction(a), PendingIntent.FLAG_IMMUTABLE)
