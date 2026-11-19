@@ -17,6 +17,7 @@ import "C"
 import (
 	"fmt"
 	"sync"
+	"sync/atomic"
 	"syscall"
 	"unsafe"
 
@@ -26,21 +27,40 @@ import (
 // socketHook 是 Go 侧的钩子形态；C ABI 只是它的一层包装，便于单测。
 type socketHook func(fd int, network string) error
 
-var hookMu sync.Mutex
+var (
+	hookMu        sync.Mutex
+	hookInstalled bool
+	curHook       atomic.Pointer[socketHook]
+)
 
 // setSocketHook 安装 / 卸载（nil）出站 socket 钩子。
 // 装上后 mihomo 的所有出站拨号与出站 UDP（含 DNS、URL 测试、订阅经内核的请求）都会先回调，
 // 且 mihomo 会忽略 interface-name / routing-mark（由钩子负责绑定物理网络，防止回环进 tun）。
+//
+// dialer.DefaultSocketHook 是 mihomo 拨号时无锁读取的包级变量，运行中改写它会与拨号竞争。
+// 所以只在首次安装时写一次（之后不再改写），真正的钩子放在 atomic 指针里，装卸只换指针；
+// 卸载后包装层直接放行。代价：进程内一旦装过，interface-name / routing-mark 就一直被忽略
+// （只有鸿蒙会调用本接口，iOS / Android 不受影响）。
 func setSocketHook(h socketHook) {
-	hookMu.Lock()
-	defer hookMu.Unlock()
 	if h == nil {
-		dialer.DefaultSocketHook = nil
+		curHook.Store(nil)
 		return
 	}
+	curHook.Store(&h)
+	hookMu.Lock()
+	defer hookMu.Unlock()
+	if hookInstalled {
+		return
+	}
+	hookInstalled = true
 	dialer.DefaultSocketHook = func(network, address string, conn syscall.RawConn) error {
+		hp := curHook.Load()
+		if hp == nil {
+			return nil
+		}
+		hook := *hp
 		var herr error
-		if err := conn.Control(func(fd uintptr) { herr = h(int(fd), network) }); err != nil {
+		if err := conn.Control(func(fd uintptr) { herr = hook(int(fd), network) }); err != nil {
 			return fmt.Errorf("socket hook: %w", err)
 		}
 		if herr != nil {
@@ -51,12 +71,12 @@ func setSocketHook(h socketHook) {
 }
 
 //export zm_set_socket_hook
-func zm_set_socket_hook(fn unsafe.Pointer, ctx unsafe.Pointer) {
+func zm_set_socket_hook(fn C.zm_socket_hook_fn, ctx unsafe.Pointer) {
 	if fn == nil {
 		setSocketHook(nil)
 		return
 	}
-	f, c := uintptr(fn), uintptr(ctx)
+	f, c := uintptr(unsafe.Pointer(fn)), uintptr(ctx)
 	setSocketHook(func(fd int, network string) error {
 		cn := C.CString(network)
 		defer C.free(unsafe.Pointer(cn))

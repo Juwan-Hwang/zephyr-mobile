@@ -67,8 +67,53 @@ func TestSocketHook(t *testing.T) {
 		t.Fatalf("udp listen did not go through hook, calls=%d", calls.Load())
 	}
 
+	// 卸载后放行：先装一个拒绝钩子再卸载，拨号必须成功且不再回调。
+	setSocketHook(func(fd int, network string) error { return errors.New("deny") })
 	setSocketHook(nil)
-	if dialer.DefaultSocketHook != nil {
+	if curHook.Load() != nil {
 		t.Fatal("hook not cleared")
 	}
+	c, err = dialer.DialContext(ctx, "tcp4", addr)
+	if err != nil {
+		t.Fatalf("dial after uninstall: %v", err)
+	}
+	c.Close()
+}
+
+// 装卸与拨号并发时不得有数据竞争（-race 下跑）。
+func TestSocketHookConcurrent(t *testing.T) {
+	ln, err := net.Listen("tcp4", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer ln.Close()
+	go func() {
+		for {
+			c, err := ln.Accept()
+			if err != nil {
+				return
+			}
+			c.Close()
+		}
+	}()
+	defer setSocketHook(nil)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		for i := 0; i < 200; i++ {
+			if i%2 == 0 {
+				setSocketHook(func(int, string) error { return nil })
+			} else {
+				setSocketHook(nil)
+			}
+		}
+	}()
+	for i := 0; i < 50; i++ {
+		if c, err := dialer.DialContext(ctx, "tcp4", ln.Addr().String()); err == nil {
+			c.Close()
+		}
+	}
+	<-done
 }
