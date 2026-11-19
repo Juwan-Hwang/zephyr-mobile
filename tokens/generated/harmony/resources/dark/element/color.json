@@ -1,0 +1,244 @@
+{
+  "color": [
+    {
+      "name": "text_primary",
+      "value": "#F2FFFFFF"
+    },
+    {
+      "name": "text_secondary",
+      "value": "#99FFFFFF"
+    },
+    {
+      "name": "text_tertiary",
+      "value": "#66FFFFFF"
+    },
+    {
+      "name": "text_muted",
+      "value": "#FF71717A"
+    },
+    {
+      "name": "text_danger",
+      "value": "#FFEF4444"
+    },
+    {
+      "name": "text_warning",
+      "value": "#FFF59E0B"
+    },
+    {
+      "name": "text_success",
+      "value": "#FF4ADE80"
+    },
+    {
+      "name": "text_info",
+      "value": "#FF38BDF8"
+    },
+    {
+      "name": "text_on_accent",
+      "value": "#FFFFFFFF"
+    },
+    {
+      "name": "text_badge",
+      "value": "#99FFFFFF"
+    },
+    {
+      "name": "bg_secondary",
+      "value": "#8C0C0C10"
+    },
+    {
+      "name": "bg_tertiary",
+      "value": "#800C0C10"
+    },
+    {
+      "name": "bg_subtle",
+      "value": "#08FFFFFF"
+    },
+    {
+      "name": "bg_muted",
+      "value": "#0DFFFFFF"
+    },
+    {
+      "name": "bg_input",
+      "value": "#66000000"
+    },
+    {
+      "name": "bg_elevated",
+      "value": "#F718181B"
+    },
+    {
+      "name": "bg_overlay",
+      "value": "#66000000"
+    },
+    {
+      "name": "surface_page",
+      "value": "#00000000"
+    },
+    {
+      "name": "surface_raised",
+      "value": "#8C0C0C10"
+    },
+    {
+      "name": "surface_elevated",
+      "value": "#F718181B"
+    },
+    {
+      "name": "surface_input",
+      "value": "#66000000"
+    },
+    {
+      "name": "surface_overlay",
+      "value": "#66000000"
+    },
+    {
+      "name": "border_primary",
+      "value": "#1AFFFFFF"
+    },
+    {
+      "name": "border_subtle",
+      "value": "#0DFFFFFF"
+    },
+    {
+      "name": "border_default",
+      "value": "#1AFFFFFF"
+    },
+    {
+      "name": "border_strong",
+      "value": "#33FFFFFF"
+    },
+    {
+      "name": "color_close_btn",
+      "value": "#FFFF5F57"
+    },
+    {
+      "name": "color_accent",
+      "value": "#FF007AFF"
+    },
+    {
+      "name": "color_danger",
+      "value": "#FFEF4444"
+    },
+    {
+      "name": "color_warning",
+      "value": "#FFF59E0B"
+    },
+    {
+      "name": "color_success",
+      "value": "#FF4ADE80"
+    },
+    {
+      "name": "color_info",
+      "value": "#FF38BDF8"
+    },
+    {
+      "name": "color_download",
+      "value": "#FF0A84FF"
+    },
+    {
+      "name": "color_upload",
+      "value": "#FFFF6B6B"
+    },
+    {
+      "name": "latency_normal",
+      "value": "#99FFFFFF"
+    },
+    {
+      "name": "latency_slow",
+      "value": "#FFFFD60A"
+    },
+    {
+      "name": "latency_timeout",
+      "value": "#FFFF453A"
+    },
+    {
+      "name": "latency_unknown",
+      "value": "#80FFFFFF"
+    },
+    {
+      "name": "screen_bg",
+      "value": "#FF000000"
+    },
+    {
+      "name": "screen_s1",
+      "value": "#FF0C0C0E"
+    },
+    {
+      "name": "screen_s2",
+      "value": "#FF141417"
+    },
+    {
+      "name": "screen_s3",
+      "value": "#FF1D1D21"
+    },
+    {
+      "name": "screen_s4",
+      "value": "#FF26262B"
+    },
+    {
+      "name": "screen_hl",
+      "value": "#13FFFFFF"
+    },
+    {
+      "name": "screen_hl2",
+      "value": "#21FFFFFF"
+    },
+    {
+      "name": "screen_t1",
+      "value": "#F2FFFFFF"
+    },
+    {
+      "name": "screen_t2",
+      "value": "#99FFFFFF"
+    },
+    {
+      "name": "screen_t3",
+      "value": "#80FFFFFF"
+    },
+    {
+      "name": "screen_t4",
+      "value": "#33FFFFFF"
+    },
+    {
+      "name": "screen_green",
+      "value": "#FF30D158"
+    },
+    {
+      "name": "screen_amber",
+      "value": "#FFFFD60A"
+    },
+    {
+      "name": "screen_amber_a",
+      "value": "#1FFFD60A"
+    },
+    {
+      "name": "screen_red",
+      "value": "#FFFF453A"
+    },
+    {
+      "name": "screen_up",
+      "value": "#FFFF6B6B"
+    },
+    {
+      "name": "screen_glass",
+      "value": "#D11C1C20"
+    },
+    {
+      "name": "screen_cmd_bg",
+      "value": "#B8000000"
+    },
+    {
+      "name": "screen_fade",
+      "value": "#FF000000"
+    },
+    {
+      "name": "screen_primary",
+      "value": "#FFF2F2F2"
+    },
+    {
+      "name": "screen_on_primary",
+      "value": "#FF000000"
+    },
+    {
+      "name": "screen_pressed",
+      "value": "#08FFFFFF"
+    }
+  ]
+}
