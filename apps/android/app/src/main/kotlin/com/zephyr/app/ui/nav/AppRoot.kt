@@ -74,6 +74,7 @@ import kotlinx.coroutines.launch
 @Serializable data class Subs(val back: BackTo = BackTo.LIBRARY)
 @Serializable data class SettingsRoute(val back: BackTo = BackTo.LIBRARY)
 @Serializable object Logs
+@Serializable object Licenses
 @Serializable data class TrustedWifiRoute(val back: BackTo = BackTo.LIBRARY)
 @Serializable data class LocalProxyRoute(val back: BackTo = BackTo.LIBRARY)
 @Serializable data class WidgetsRoute(val back: BackTo = BackTo.LIBRARY)
@@ -155,7 +156,7 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                 composable<Rules> { e -> val r = e.toRoute<Rules>(); RulesScreen(r.query, back = r.back) { backTo(r.back) } }
                 composable<Subs> { e -> val r = e.toRoute<Subs>(); SubscriptionsScreen(back = r.back, onBack = { backTo(r.back) }, onImport = { import = true }, onNotice = { home.notify(it) }) }
                 composable<SettingsRoute> { e -> val r = e.toRoute<SettingsRoute>(); SettingsScreen(
-                    r.back, onLogs = { nav.navigate(Logs) },
+                    r.back, onLogs = { nav.navigate(Logs) }, onLicenses = { nav.navigate(Licenses) },
                     onTrustedWifi = { nav.navigate(TrustedWifiRoute(BackTo.SETTINGS)) }, onLocalProxy = { nav.navigate(LocalProxyRoute(BackTo.SETTINGS)) },
                 ) { backTo(r.back) } }
                 // Audit #208 U10: the library's three shortcuts open their own pages (iOS LibrarySheet subpages).
@@ -163,6 +164,7 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                 composable<LocalProxyRoute> { e -> val r = e.toRoute<LocalProxyRoute>(); com.zephyr.app.ui.library.LocalProxyScreen(r.back) { backTo(r.back) } }
                 composable<WidgetsRoute> { e -> val r = e.toRoute<WidgetsRoute>(); com.zephyr.app.ui.library.WidgetsScreen(r.back) { backTo(r.back) } }
                 composable<Logs> { com.zephyr.app.ui.settings.LogsScreen { nav.popBackStack() } }
+                composable<Licenses> { com.zephyr.app.ui.settings.LicensesScreen { nav.popBackStack() } }
                 composable<Today>(
                     enterTransition = { slideInVertically(ZAnim.slow()) { it / 3 } + fadeIn(ZAnim.standard()) },
                     popExitTransition = { slideOutVertically(ZAnim.standard()) { it / 3 } + fadeOut(ZAnim.standard()) },

@@ -450,6 +450,14 @@
     <string name="settings_share_diagnostics">Shiriki data ya uchunguzi</string>
     <string name="settings_section_diagnostics">Uchunguzi</string>
     <string name="settings_local_data_note">Usajili, nodi na data ya trafiki huhifadhiwa kwenye kifaa hiki pekee.</string>
+    <string name="settings_section_about">Kuhusu</string>
+    <string name="settings_licenses">Leseni za programu huria</string>
+    <string name="settings_source_code">Msimbo chanzo</string>
+    <string name="licenses_intro">Msimbo wa Zephyr wenyewe uko chini ya leseni ya MIT. Programu hii inajumuisha mihomo (GPL-3.0), kwa hivyo programu nzima inasambazwa chini ya GPL-3.0. Msimbo chanzo husika: %1$s, lebo %2$s.</string>
+    <string name="licenses_section_app">Leseni ya Zephyr</string>
+    <string name="licenses_section_notices">Taarifa za wahusika wengine</string>
+    <string name="licenses_section_texts">Maandishi ya leseni</string>
+    <string name="licenses_unavailable">Faili za leseni hazipo katika toleo hili.</string>
     <string name="logs_title">Kumbukumbu</string>
     <string name="logs_level_debug">Utatuzi</string>
     <string name="logs_level_info">Taarifa</string>

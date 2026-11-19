@@ -418,6 +418,14 @@
     <string name="settings_share_diagnostics">진단 데이터 공유</string>
     <string name="settings_section_diagnostics">진단</string>
     <string name="settings_local_data_note">구독, 노드 및 트래픽 데이터는 이 기기에만 저장됩니다.</string>
+    <string name="settings_section_about">정보</string>
+    <string name="settings_licenses">오픈소스 라이선스</string>
+    <string name="settings_source_code">소스 코드</string>
+    <string name="licenses_intro">Zephyr 자체 코드는 MIT 라이선스입니다. 이 앱은 mihomo(GPL-3.0)를 포함하므로 앱 전체가 GPL-3.0으로 배포됩니다. 해당 소스: %1$s, 태그 %2$s.</string>
+    <string name="licenses_section_app">Zephyr 라이선스</string>
+    <string name="licenses_section_notices">타사 고지</string>
+    <string name="licenses_section_texts">라이선스 전문</string>
+    <string name="licenses_unavailable">이 빌드에 라이선스 파일이 없습니다.</string>
     <string name="logs_title">로그</string>
     <string name="logs_level_debug">디버그</string>
     <string name="logs_level_info">정보</string>

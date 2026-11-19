@@ -602,6 +602,14 @@
     <string name="settings_share_diagnostics">مشاركة بيانات التشخيص</string>
     <string name="settings_section_diagnostics">التشخيص</string>
     <string name="settings_local_data_note">تُحفظ الاشتراكات والعقد وبيانات حركة المرور على هذا الجهاز فقط.</string>
+    <string name="settings_section_about">حول</string>
+    <string name="settings_licenses">تراخيص المصادر المفتوحة</string>
+    <string name="settings_source_code">الشيفرة المصدرية</string>
+    <string name="licenses_intro">الشيفرة الخاصة بـ Zephyr مرخّصة بموجب MIT. يتضمن التطبيق mihomo ‏(GPL-3.0)، لذا يُوزَّع التطبيق ككل بموجب GPL-3.0. الشيفرة المصدرية المقابلة: %1$s، الوسم %2$s.</string>
+    <string name="licenses_section_app">ترخيص Zephyr</string>
+    <string name="licenses_section_notices">إشعارات الجهات الخارجية</string>
+    <string name="licenses_section_texts">نصوص التراخيص</string>
+    <string name="licenses_unavailable">ملفات التراخيص غير موجودة في هذا الإصدار.</string>
 
     <!-- ── Logs ── -->
     <string name="logs_title">السجلات</string>

@@ -332,10 +332,10 @@ class ZephyrVpnService : VpnService() {
         /** Contract §16.a③: the network has to stay put this long before a switch counts. */
         const val NETWORK_DEBOUNCE_MS = 2_000L
         private const val SETTINGS_WAIT_MS = 3_000L
-        const val ACTION_CONNECT = "com.zephyr.app.CONNECT"
-        const val ACTION_DISCONNECT = "com.zephyr.app.DISCONNECT"
-        const val ACTION_TOGGLE_MODE = "com.zephyr.app.TOGGLE_MODE"
+        const val ACTION_CONNECT = "com.juwanh.zephyr.CONNECT"
+        const val ACTION_DISCONNECT = "com.juwanh.zephyr.DISCONNECT"
+        const val ACTION_TOGGLE_MODE = "com.juwanh.zephyr.TOGGLE_MODE"
         /** On-demand's automatic (re)connect: never prompts consent, honours trusted Wi‑Fi. */
-        const val ACTION_RESUME = "com.zephyr.app.RESUME"
+        const val ACTION_RESUME = "com.juwanh.zephyr.RESUME"
     }
 }

@@ -474,6 +474,14 @@
     <string name="settings_share_diagnostics">اشتراک‌گذاری داده‌های عیب‌یابی</string>
     <string name="settings_section_diagnostics">عیب‌یابی</string>
     <string name="settings_local_data_note">اشتراک‌ها، نودها و داده‌های ترافیک فقط روی این دستگاه ذخیره می‌شوند.</string>
+    <string name="settings_section_about">درباره</string>
+    <string name="settings_licenses">مجوزهای متن‌باز</string>
+    <string name="settings_source_code">کد منبع</string>
+    <string name="licenses_intro">کد خود Zephyr تحت مجوز MIT است. این برنامه شامل mihomo (GPL-3.0) است، بنابراین برنامه در کل تحت GPL-3.0 توزیع می‌شود. کد منبع متناظر: %1$s، برچسب %2$s.</string>
+    <string name="licenses_section_app">مجوز Zephyr</string>
+    <string name="licenses_section_notices">اطلاعیه‌های شخص ثالث</string>
+    <string name="licenses_section_texts">متن مجوزها</string>
+    <string name="licenses_unavailable">فایل‌های مجوز در این نسخه وجود ندارد.</string>
 
     <!-- ── Logs ── -->
     <string name="logs_title">گزارش‌ها</string>

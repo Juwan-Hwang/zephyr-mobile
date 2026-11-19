@@ -418,6 +418,14 @@
     <string name="settings_share_diagnostics">Chia sẻ dữ liệu chẩn đoán</string>
     <string name="settings_section_diagnostics">Chẩn đoán</string>
     <string name="settings_local_data_note">Đăng ký, nút và dữ liệu lưu lượng chỉ được lưu trên thiết bị này.</string>
+    <string name="settings_section_about">Giới thiệu</string>
+    <string name="settings_licenses">Giấy phép mã nguồn mở</string>
+    <string name="settings_source_code">Mã nguồn</string>
+    <string name="licenses_intro">Mã riêng của Zephyr được cấp phép MIT. Ứng dụng có chứa mihomo (GPL-3.0), nên toàn bộ ứng dụng được phân phối theo GPL-3.0. Mã nguồn tương ứng: %1$s, tag %2$s.</string>
+    <string name="licenses_section_app">Giấy phép Zephyr</string>
+    <string name="licenses_section_notices">Thông báo bên thứ ba</string>
+    <string name="licenses_section_texts">Toàn văn giấy phép</string>
+    <string name="licenses_unavailable">Bản dựng này thiếu tệp giấy phép.</string>
     <string name="logs_title">Nhật ký</string>
     <string name="logs_level_debug">Gỡ lỗi</string>
     <string name="logs_level_info">Thông tin</string>
