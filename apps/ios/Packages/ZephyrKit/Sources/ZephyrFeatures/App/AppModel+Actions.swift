@@ -104,15 +104,34 @@ extension AppModel {
         await applySceneChange(sceneId: p.sceneId, from: p.from, to: p.to)
     }
 
-    /// 场景详情候选列表点选（原型 06），或确认卡确认后调用。带撤销。
-    public func applySceneChange(sceneId: String, from: NodeSummary, to: NodeSummary) async {
+    /// 场景详情候选列表点选（原型 06），或确认卡确认后调用。带撤销。`message` 为 nil 时用“已切换至<节点>”。
+    @discardableResult
+    public func applySceneChange(sceneId: String, from: NodeSummary, to: NodeSummary, message: String? = nil) async -> Bool {
         do {
             try await engine.applySceneChange(sceneId: sceneId, nodeId: to.id)
-            showUndo(ZL.s("已切换至%@", to.name)) { [weak self] in
+            showUndo(message ?? ZL.s("已切换至%@", to.name)) { [weak self] in
                 guard let self else { return }
                 do { try await self.engine.applySceneChange(sceneId: sceneId, nodeId: from.id) } catch { self.report(error) }
             }
-        } catch { report(error) }
+            return true
+        } catch { report(error); return false }
+    }
+
+    /// 契约 §16.d “Gemini 走日本”：只钉该服务的例外，场景 selected 与其他服务不变。
+    /// 吐司“<服务> 现使用<节点>”；撤销恢复原例外节点（原来没有则删除例外）。
+    @discardableResult
+    public func applySceneException(sceneId: String, appId: String, service: String, node: NodeSummary,
+                                    previous: NodeSummary?) async -> Bool {
+        do {
+            try await engine.setSceneException(sceneId: sceneId, appId: appId, nodeId: node.id)
+            let restore = previous?.id
+            showUndo(ZL.s("%@ 现使用%@", service, node.name)) { [weak self] in
+                guard let self else { return }
+                do { try await self.engine.setSceneException(sceneId: sceneId, appId: appId, nodeId: restore) }
+                catch { self.report(error) }
+            }
+            return true
+        } catch { report(error); return false }
     }
 
     /// 重新检测场景池（首页"检测中"变体）：服务探测与节点扫描（契约 §15.d）并行，
@@ -203,14 +222,16 @@ extension AppModel {
 
     /// 域名路由覆写（契约 §13 overrideHost）：直连 / 指定场景 / 清除（.unchanged）。成功后给可撤销吐司。
     @discardableResult
-    public func overrideHost(_ host: String, target: TraceTarget, sceneId: String?, persistent: Bool) async -> Bool {
+    /// `message` 覆盖默认吐司文案（指令“GitHub 直连”用“GitHub 现为直连”，契约 §16.d）。
+    public func overrideHost(_ host: String, target: TraceTarget, sceneId: String?, persistent: Bool,
+                             message: String? = nil) async -> Bool {
         do {
             try await engine.overrideHost(host: host, target: target, sceneId: sceneId, persistent: persistent)
             switch target {
             case .unchanged:
                 showUndo(ZL.s("已清除 %@ 的路由覆写", host))
             case .direct:
-                showUndo(ZL.s("%@ 已改为直连", host)) { [weak self] in
+                showUndo(message ?? ZL.s("%@ 已改为直连", host)) { [weak self] in
                     guard let self else { return }
                     do { try await self.engine.overrideHost(host: host, target: .unchanged, sceneId: nil, persistent: persistent) }
                     catch { self.report(error) }

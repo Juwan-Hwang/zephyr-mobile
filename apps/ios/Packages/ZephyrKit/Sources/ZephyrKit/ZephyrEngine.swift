@@ -43,6 +43,8 @@ public protocol ZephyrEngine: AnyObject, Sendable {
     func setSceneSource(sceneId: String, source: SceneSource) async throws
     /// 契约 §13：连接轨迹"本次连接 / 始终应用"。target = .unchanged 清除；persistent = false 只在本次运行有效。
     func overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Bool) async throws
+    /// 契约 §10 场景例外："Claude：US-Fixed-01"。只钉该应用，场景 selected 不变；nodeId = nil 删除例外。需重载。
+    func setSceneException(sceneId: String, appId: String, nodeId: NodeId?) async throws
 
     // MARK: §4 策略组
     func policyGroups() -> AsyncStream<[PolicyGroup]>
@@ -152,6 +154,9 @@ public extension ZephyrEngine {
     }
     func overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Bool) async throws {
         throw ZephyrError(code: .internal, message: "overrideHost unsupported")
+    }
+    func setSceneException(sceneId: String, appId: String, nodeId: NodeId?) async throws {
+        throw ZephyrError(code: .internal, message: "setSceneException unsupported")
     }
     /// 只读查询：没有实现即“无数据”（Mock / 预览走 testRule 预测，分段从“不变”开始）。
     func hostTrace(host: String) async -> HostTraceInfo? { nil }

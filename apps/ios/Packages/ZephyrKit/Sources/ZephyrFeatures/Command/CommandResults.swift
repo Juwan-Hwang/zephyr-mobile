@@ -1,4 +1,5 @@
 // 指令结果区：token 卡片、主预览卡、建议列表、无结果。
+// 空输入（契约 §16.d U24）：原型 SUG 四条示例短语，点按只填入输入框；引擎的空输入建议（如连接）列在其后。
 
 import SwiftUI
 import ZephyrDesign
@@ -9,6 +10,7 @@ struct CommandResults: View {
     let model: CommandModel
     let onRun: (CommandSuggestion) -> Void
     let onApply: () -> Void
+    var onFill: (String) -> Void = { _ in }
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.zStaticRendering) private var still
 
@@ -16,7 +18,11 @@ struct CommandResults: View {
         VStack(alignment: .leading, spacing: 0) {
             if model.input.trimmingCharacters(in: .whitespaces).isEmpty {
                 label(ZL.tr("建议"))
-                suggestionList(model.suggestions)
+                exampleList(CommandModel.examples)
+                if !model.suggestions.isEmpty {
+                    label(ZL.tr("更多"))
+                    suggestionList(model.suggestions)
+                }
             } else {
                 if !model.parse.isEmpty {
                     label(ZL.tr("指令"))
@@ -24,6 +30,11 @@ struct CommandResults: View {
                 }
                 if let f = model.filterPreview {
                     CommandFilterCard(preview: f, isApplying: model.isApplying, onApply: onApply)
+                        .padding(.top, ZTokens.Space.n4)
+                        .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 8)))
+                }
+                if let plan = model.plan {
+                    CommandPlanCard(plan: plan, isApplying: model.isApplying, onApply: onApply)
                         .padding(.top, ZTokens.Space.n4)
                         .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 8)))
                 }
@@ -36,7 +47,7 @@ struct CommandResults: View {
                 if !rest.isEmpty {
                     label(ZL.tr(model.preview == nil && model.parse.isEmpty ? "结果" : "更多"))
                     suggestionList(rest)
-                } else if model.preview == nil && model.filterPreview == nil {
+                } else if !model.hasContent {
                     Text("无结果")
                         .zType(.body).foregroundStyle(ZColor.t3)
                         .frame(maxWidth: .infinity)
@@ -46,6 +57,7 @@ struct CommandResults: View {
         }
         .animation((reduceMotion || still) ? nil : ZMotion.slow, value: model.preview)
         .animation((reduceMotion || still) ? nil : ZMotion.slow, value: model.filterPreview)
+        .animation((reduceMotion || still) ? nil : ZMotion.slow, value: model.plan)
         .animation((reduceMotion || still) ? nil : ZMotion.standard, value: model.suggestions)
     }
 
@@ -67,6 +79,28 @@ struct CommandResults: View {
                     if item.index > 0 { ZDivider() }
                     Button { onRun(s) } label: { SuggestionRow(s: s) }
                         .buttonStyle(ZRowButtonStyle())
+                }
+            }
+        }
+        .padding(.horizontal, HMetrics.cardInset)
+    }
+
+    /// 示例短语（原型 `.sugg`）：只有文字，点按填入输入框。
+    private func exampleList(_ list: [String]) -> some View {
+        ZCard(padding: 0, cornerRadius: ZTokens.Radius.overlay) {
+            VStack(spacing: 0) {
+                ForEach(Array(list.enumerated()), id: \.element) { i, text in
+                    if i > 0 { ZDivider() }
+                    Button { onFill(text) } label: {
+                        HStack {
+                            Text(verbatim: text).zType(.body).foregroundStyle(ZTokens.Colors.screenT1)
+                            Spacer(minLength: 0)
+                        }
+                        .padding(.vertical, ZTokens.Space.n4)
+                        .padding(.horizontal, ZTokens.Space.n5)
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(ZRowButtonStyle())
                 }
             }
         }

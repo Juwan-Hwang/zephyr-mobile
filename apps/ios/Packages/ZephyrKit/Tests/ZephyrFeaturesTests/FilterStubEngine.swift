@@ -1,4 +1,5 @@
-// 契约 §15.h 指令层测试用引擎：其余全部委托 MockEngine（冻结时钟），只替换场景节点过滤两条接口。
+// 契约 §15.h 指令层测试用引擎：其余全部委托 MockEngine（冻结时钟），只替换场景节点过滤两条接口；
+// 另记录 overrideHost 调用（§16.d 直连测试）。
 // Mock 的视频池没有名字含 4K 的节点（set 必抛错），无法覆盖“开启成功 / 撤销 / 已开启可取消”，故用可配置的预览结果。
 // 过滤状态叠加在 scenes() 上推送；set 时借 base.setSceneNodeFilter(nil) 触发一次场景重发。
 
@@ -12,6 +13,15 @@ final class FilterStubEngine: ZephyrEngine, @unchecked Sendable {
     private var _preview: NodeFilterPreview
     private var _filters: [String: SceneNodeFilter] = [:]
     private var _setCalls: [SceneNodeFilter?] = []
+    private var _overrides: [HostOverrideCall] = []
+
+    /// overrideHost 的调用记录（契约 §16.d “GitHub 直连”测试用；Mock 本身只写日志）。
+    struct HostOverrideCall: Equatable {
+        var host: String
+        var target: TraceTarget
+        var sceneId: String?
+        var persistent: Bool
+    }
 
     init(preview: NodeFilterPreview, active: [String: SceneNodeFilter] = [:]) {
         base = MockEngine(seed: 0, clock: .frozen941, startConnected: true)
@@ -27,6 +37,7 @@ final class FilterStubEngine: ZephyrEngine, @unchecked Sendable {
     }
     /// setSceneNodeFilter 的调用记录（被拒绝的调用不记录）。
     var setCalls: [SceneNodeFilter?] { locked { _setCalls } }
+    var overrideCalls: [HostOverrideCall] { locked { _overrides } }
 
     private func overlay(_ list: [ZephyrKit.Scene]) -> [ZephyrKit.Scene] {
         let f = locked { _filters }
@@ -91,6 +102,10 @@ final class FilterStubEngine: ZephyrEngine, @unchecked Sendable {
     }
     func overrideHost(host: String, target: TraceTarget, sceneId: String?, persistent: Bool) async throws {
         try await base.overrideHost(host: host, target: target, sceneId: sceneId, persistent: persistent)
+        locked { _overrides.append(HostOverrideCall(host: host, target: target, sceneId: sceneId, persistent: persistent)) }
+    }
+    func setSceneException(sceneId: String, appId: String, nodeId: NodeId?) async throws {
+        try await base.setSceneException(sceneId: sceneId, appId: appId, nodeId: nodeId)
     }
     func policyGroups() -> AsyncStream<[PolicyGroup]> { base.policyGroups() }
     func groupMembers(group: String, offset: Int32, limit: Int32) async throws -> NodePage {

@@ -114,6 +114,28 @@ extension MockEngine {
         log(.info, "覆写 \(host) → \(target.rawValue)\(persistent ? "（始终）" : "")")
     }
 
+    /// 契约 §10 场景例外。显示名按应用目录（Mock 只认内置 6 个）。
+    static let appNames: [String: String] = ["chatgpt": "ChatGPT", "claude": "Claude", "gemini": "Gemini",
+                                             "netflix": "Netflix", "youtube": "YouTube", "disney": "Disney+"]
+
+    public func setSceneException(sceneId: String, appId: String, nodeId: NodeId?) async throws {
+        guard let name = Self.appNames[appId] else { throw ZephyrError(code: .internal, message: "unknown app \(appId)") }
+        let node: NodeSummary?
+        if let nodeId {
+            guard let n = resolve(nodeId) else { throw ZephyrError(code: .nodeNotFound, message: "node \(nodeId)") }
+            node = n
+        } else { node = nil }
+        let ok = withState { s -> Bool in
+            guard let i = s.scenes.firstIndex(where: { $0.id == sceneId }) else { return false }
+            s.scenes[i].exceptions.removeAll { $0.appId == appId || $0.app == name }
+            if let node { s.scenes[i].exceptions.append(SceneException(app: name, node: node, appId: appId)) }
+            return true
+        }
+        guard ok else { throw ZephyrError(code: .sceneNotFound, message: sceneId) }
+        emitScenes()
+        log(.info, "场景 \(sceneId) 例外 \(name) → \(node?.name ?? "—")")
+    }
+
     public func retestScene(sceneId: String) async throws -> Scene {
         guard withState({ s in s.scenes.contains { $0.id == sceneId } }) else {
             throw ZephyrError(code: .sceneNotFound, message: sceneId)
