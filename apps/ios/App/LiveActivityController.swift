@@ -16,7 +16,7 @@ final class LiveActivityController {
     private var activity: Activity<ZephyrActivityAttributes>?
     private var lastContent: ZephyrActivityAttributes.ContentState?
     private var lastUpdate = Date.distantPast
-    private let log = Logger(subsystem: "app.zephyr.mobile", category: "live-activity")
+    private let log = Logger(subsystem: "com.juwanh.zephyr", category: "live-activity")
 
     init() {
         activity = Activity<ZephyrActivityAttributes>.activities.first

@@ -15,7 +15,7 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
     static let shared = TunnelController()
 
     /// 与 project.yml 中 PacketTunnel 的 PRODUCT_BUNDLE_IDENTIFIER 一致。
-    static let providerBundleIdentifier = "app.zephyr.mobile.PacketTunnel"
+    static let providerBundleIdentifier = "com.juwanh.zephyr.PacketTunnel"
     static let localizedDescription = "Zephyr"
     /// App 写、扩展读的 mihomo 配置（与 TunnelConfiguration.defaultConfigURL 一致）。
     static var defaultConfigURL: URL { AppGroup.coreDirectory.appendingPathComponent("config.yaml") }

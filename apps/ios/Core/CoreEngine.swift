@@ -23,7 +23,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     private let fetcher: @Sendable (URL) async throws -> FetchedBody
     /// 二进制下载（geosite.dat / geoip.dat）：(远端, 本地目标)。
     private let downloader: @Sendable (URL, URL) async throws -> Void
-    private let queue = DispatchQueue(label: "app.zephyr.core", qos: .userInitiated, attributes: .concurrent)
+    private let queue = DispatchQueue(label: "com.juwanh.zephyr.core", qos: .userInitiated, attributes: .concurrent)
     private let lock = NSLock()
 
     // 受 lock 保护

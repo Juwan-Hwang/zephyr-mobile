@@ -54,10 +54,10 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider, @unchecked Senda
     static let goMemoryLimitBytes: Int64 = 30 * 1024 * 1024
     static let publishInterval: TimeInterval = 5
 
-    private let logger = Logger(subsystem: "app.zephyr.mobile.PacketTunnel", category: "tunnel")
+    private let logger = Logger(subsystem: "com.juwanh.zephyr.PacketTunnel", category: "tunnel")
     private let bridge = MihomoBridge.shared
     private let store = SharedStore.shared
-    private let queue = DispatchQueue(label: "app.zephyr.mobile.PacketTunnel", qos: .utility)
+    private let queue = DispatchQueue(label: "com.juwanh.zephyr.PacketTunnel", qos: .utility)
 
     private let lock = NSLock()
     private var mode: SharedState.Mode = .rule
@@ -74,7 +74,7 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider, @unchecked Senda
     private var networkDetector = NetworkChangeDetector()
     /// 去抖到点后在独立队列上 closeAll（阻塞 socket 调用不占 `queue`）。
     private let networkDebounce = Debouncer(delay: Debouncer.networkChangeDelay,
-                                            queue: DispatchQueue(label: "app.zephyr.mobile.PacketTunnel.network", qos: .utility))
+                                            queue: DispatchQueue(label: "com.juwanh.zephyr.PacketTunnel.network", qos: .utility))
 
     // MARK: 生命周期
 

@@ -23,7 +23,7 @@ final class AppServices {
     private let liveActivity = LiveActivityController()
     private var commandObservation: DarwinObservation?
     private var started = false
-    private let log = Logger(subsystem: "app.zephyr.mobile", category: "services")
+    private let log = Logger(subsystem: "com.juwanh.zephyr", category: "services")
 
     init(engine: any ZephyrEngine, environment: LaunchEnvironment) {
         self.engine = engine

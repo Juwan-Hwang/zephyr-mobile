@@ -21,7 +21,7 @@
 name: Zephyr
 
 options:
-  bundleIdPrefix: app.zephyr
+  bundleIdPrefix: com.juwanh
   deploymentTarget:
     iOS: "17.0"
   developmentLanguage: zh-Hans
@@ -69,7 +69,7 @@ settings:
     SWIFT_EMIT_LOC_STRINGS: YES
     DEAD_CODE_STRIPPING: YES
     # App Group / 通知名统一由这里注入到 Info.plist（ZephyrAppGroup 键），代码里也有同名常量兜底。
-    ZEPHYR_APP_GROUP: group.app.zephyr.mobile
+    ZEPHYR_APP_GROUP: group.com.juwanh.zephyr
   configs:
     Debug:
       SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG $(inherited)"
@@ -151,7 +151,7 @@ targets:
         UIBackgroundModes:
           - fetch
         BGTaskSchedulerPermittedIdentifiers:
-          - app.zephyr.mobile.refresh
+          - com.juwanh.zephyr.refresh
         NSSupportsLiveActivities: true
         NSSupportsLiveActivitiesFrequentUpdates: false
         # 资料库 → 添加订阅 → 扫码（ZephyrFeatures/Subscriptions/QRScannerView）。缺这个键，首次调用相机会直接崩溃。
@@ -162,19 +162,26 @@ targets:
         NSPhotoLibraryAddUsageDescription: 将今日卡片保存到照片
         ZephyrAppGroup: $(ZEPHYR_APP_GROUP)
         CFBundleURLTypes:
-          - CFBundleURLName: app.zephyr.mobile
+          - CFBundleURLName: com.juwanh.zephyr
             CFBundleURLSchemes:
               - zephyr
-          - CFBundleURLName: app.zephyr.mobile.clash
+          - CFBundleURLName: com.juwanh.zephyr.clash
             CFBundleURLSchemes:
               - clash
               - mihomo
     entitlements:
       path: App/Zephyr.entitlements
+      # XcodeGen generate 会按 properties 重写此文件（无 properties 时写成空字典，签名包里就没有 App Group / NE 能力），
+      # 所以能力必须写在这里；文件本身随之提交，两处保持一致（AppIdentifiersTests 核对）。
+      properties:
+        com.apple.developer.networking.networkextension:
+          - packet-tunnel-provider
+        com.apple.security.application-groups:
+          - group.com.juwanh.zephyr
     settings:
       base:
         SWIFT_VERSION: "6.0"  # X-P1-8：App 与扩展切 Swift 6 语言模式（测试与 UniFFI 目标仍 5）
-        PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile
+        PRODUCT_BUNDLE_IDENTIFIER: com.juwanh.zephyr
         PRODUCT_NAME: Zephyr
         INFOPLIST_FILE: App/Info.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
@@ -217,7 +224,7 @@ targets:
       - path: ../../core-mobile/bindings/swift/ZephyrMobileCore.swift
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.core
+        PRODUCT_BUNDLE_IDENTIFIER: com.juwanh.zephyr.core
         PRODUCT_NAME: ZephyrCore
         MACH_O_TYPE: staticlib
         GENERATE_INFOPLIST_FILE: YES
@@ -257,10 +264,17 @@ targets:
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ZephyrPacketTunnelProvider
     entitlements:
       path: PacketTunnel/PacketTunnel.entitlements
+      # XcodeGen generate 会按 properties 重写此文件（无 properties 时写成空字典，签名包里就没有 App Group / NE 能力），
+      # 所以能力必须写在这里；文件本身随之提交，两处保持一致（AppIdentifiersTests 核对）。
+      properties:
+        com.apple.developer.networking.networkextension:
+          - packet-tunnel-provider
+        com.apple.security.application-groups:
+          - group.com.juwanh.zephyr
     settings:
       base:
         SWIFT_VERSION: "6.0"  # X-P1-8：App 与扩展切 Swift 6 语言模式（测试与 UniFFI 目标仍 5）
-        PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.PacketTunnel
+        PRODUCT_BUNDLE_IDENTIFIER: com.juwanh.zephyr.PacketTunnel
         PRODUCT_NAME: PacketTunnel
         INFOPLIST_FILE: PacketTunnel/Info.plist
         APPLICATION_EXTENSION_API_ONLY: YES
@@ -301,10 +315,17 @@ targets:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     entitlements:
       path: Widgets/ZephyrWidgets.entitlements
+      # XcodeGen generate 会按 properties 重写此文件（无 properties 时写成空字典，签名包里就没有 App Group / NE 能力），
+      # 所以能力必须写在这里；文件本身随之提交，两处保持一致（AppIdentifiersTests 核对）。
+      properties:
+        com.apple.developer.networking.networkextension:
+          - packet-tunnel-provider
+        com.apple.security.application-groups:
+          - group.com.juwanh.zephyr
     settings:
       base:
         SWIFT_VERSION: "6.0"  # X-P1-8：App 与扩展切 Swift 6 语言模式（测试与 UniFFI 目标仍 5）
-        PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.Widgets
+        PRODUCT_BUNDLE_IDENTIFIER: com.juwanh.zephyr.Widgets
         PRODUCT_NAME: ZephyrWidgets
         INFOPLIST_FILE: Widgets/Info.plist
         APPLICATION_EXTENSION_API_ONLY: YES
@@ -350,7 +371,7 @@ targets:
         group: Shared
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.juwanh.zephyr.tests
         GENERATE_INFOPLIST_FILE: YES
     dependencies:
       - sdk: NetworkExtension.framework
@@ -367,7 +388,7 @@ targets:
       - path: ../../core-mobile/bindings/swift/ZephyrMobileCore.swift
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.core-tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.juwanh.zephyr.core-tests
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_STRICT_CONCURRENCY: minimal
     dependencies:
@@ -390,7 +411,7 @@ targets:
         group: Shared
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.app-tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.juwanh.zephyr.app-tests
         GENERATE_INFOPLIST_FILE: YES
     dependencies:
       - package: ZephyrKit
@@ -425,7 +446,7 @@ targets:
         buildPhase: resources
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.zephyr.mobile.snapshot-tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.juwanh.zephyr.snapshot-tests
         GENERATE_INFOPLIST_FILE: YES
         # L2 页面（订阅 / 设置 / 资料库 / 引导）合入后删掉 Cases/L2PagesSnapshotTests.swift 里的 #if，
         # 或临时在这里加 SWIFT_ACTIVE_COMPILATION_CONDITIONS: "ZEPHYR_L2_PAGES $(inherited)"。

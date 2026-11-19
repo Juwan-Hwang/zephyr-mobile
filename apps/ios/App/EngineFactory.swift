@@ -23,7 +23,7 @@ enum EngineFactory {
         var coreUnavailable: Bool = false
     }
 
-    private static let log = Logger(subsystem: "app.zephyr.mobile", category: "engine")
+    private static let log = Logger(subsystem: "com.juwanh.zephyr", category: "engine")
 
     static func make(_ requested: LaunchEnvironment) -> Built {
         var environment = requested

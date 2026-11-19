@@ -8,8 +8,8 @@ final class TunnelSystemConfigurationTests: XCTestCase {
     // MARK: §16.a⑥
 
     func testProtocolDoesNotEnableIncludeAllNetworksOrEnforceRoutes() {
-        let p = TunnelProtocolFactory.make(providerBundleIdentifier: "app.zephyr.mobile.PacketTunnel", serverAddress: "Zephyr")
-        XCTAssertEqual(p.providerBundleIdentifier, "app.zephyr.mobile.PacketTunnel")
+        let p = TunnelProtocolFactory.make(providerBundleIdentifier: "com.juwanh.zephyr.PacketTunnel", serverAddress: "Zephyr")
+        XCTAssertEqual(p.providerBundleIdentifier, "com.juwanh.zephyr.PacketTunnel")
         XCTAssertEqual(p.serverAddress, "Zephyr")
         XCTAssertFalse(p.includeAllNetworks, "会让局域网排除失效（§16.a⑥）")
         XCTAssertFalse(p.enforceRoutes)
