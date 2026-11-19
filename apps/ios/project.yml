@@ -103,6 +103,17 @@ targets:
         group: Shared
       - path: Shared/LiveActivity
         group: Shared
+      # 设置 › 关于 › 开源许可（GPL-3.0 / MPL-2.0 合规，#209）：仓库根三份文件原样进 App 资源，
+      # tools/gen-third-party.sh 重新生成后无需改 App 代码（OpenSourceLicensesView 按文件名读取）。
+      - path: ../../THIRD_PARTY_NOTICES.md
+        group: Licenses
+        buildPhase: resources
+      - path: ../../THIRD_PARTY_LICENSES.txt
+        group: Licenses
+        buildPhase: resources
+      - path: ../../LICENSE
+        group: Licenses
+        buildPhase: resources
     info:
       path: App/Info.plist
       properties:

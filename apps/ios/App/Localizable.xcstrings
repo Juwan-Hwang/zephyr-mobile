@@ -42452,6 +42452,1564 @@
           }
         }
       }
+    },
+    "关于" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حول"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acerca de"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "درباره"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "情報"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "정보"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "အကြောင်း"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Об приложении"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuhusu"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barada"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hakkında"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "متعلق"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giới thiệu"
+          }
+        }
+      }
+    },
+    "开源许可" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تراخيص المصادر المفتوحة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Source Licenses"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Licencias de código abierto"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مجوزهای متن‌باز"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オープンソースライセンス"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오픈 소스 라이선스"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "အိုးပင်းဆို့စ် လိုင်စင်များ"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Лицензии открытого ПО"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leseni za programu huria"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açyk çeşme ygtyýarnamalary"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açık Kaynak Lisansları"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اوپن سورس لائسنس"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giấy phép nguồn mở"
+          }
+        }
+      }
+    },
+    "组件、版本与许可证全文" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المكونات والإصدارات والنصوص الكاملة للتراخيص"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Components, versions and full license texts"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Componentes, versiones y textos completos de las licencias"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اجزا، نسخه‌ها و متن کامل مجوزها"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コンポーネント、バージョン、ライセンス全文"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "구성 요소, 버전 및 라이선스 전문"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "အစိတ်အပိုင်းများ၊ ဗားရှင်းများနှင့် လိုင်စင်စာသားအပြည့်အစုံ"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Компоненты, версии и полные тексты лицензий"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vipengele, matoleo na maandishi kamili ya leseni"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bölekler, wersiýalar we ygtyýarnamalaryň doly tekstleri"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bileşenler, sürümler ve lisans metinlerinin tamamı"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اجزاء، ورژن اور لائسنس کا مکمل متن"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thành phần, phiên bản và toàn văn giấy phép"
+          }
+        }
+      }
+    },
+    "搜索组件或许可证" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ابحث عن مكوّن أو ترخيص"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search components or licenses"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar componentes o licencias"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جستجوی اجزا یا مجوزها"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コンポーネントまたはライセンスを検索"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "구성 요소 또는 라이선스 검색"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "အစိတ်အပိုင်း သို့မဟုတ် လိုင်စင် ရှာရန်"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск компонентов или лицензий"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tafuta vipengele au leseni"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bölekleri ýa-da ygtyýarnamalary gözle"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bileşen veya lisans ara"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اجزاء یا لائسنس تلاش کریں"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tìm thành phần hoặc giấy phép"
+          }
+        }
+      }
+    },
+    "源码获取" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الحصول على الشيفرة المصدرية"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Source Code"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Código fuente"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "دریافت کد منبع"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ソースコードの入手"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "소스 코드 받기"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ရင်းမြစ်ကုဒ် ရယူရန်"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Исходный код"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kupata msimbo chanzo"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çeşme kody"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaynak Kodu"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سورس کوڈ حاصل کریں"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lấy mã nguồn"
+          }
+        }
+      }
+    },
+    "本 App 静态链接了 mihomo（GPL-3.0），安装包整体按 GPL-3.0 分发；本 App 自有源码另以 MIT 许可发布。" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يرتبط هذا التطبيق بـ mihomo (GPL-3.0) ارتباطًا ثابتًا، لذا يُوزَّع التطبيق بأكمله وفق GPL-3.0. كما تُنشر الشيفرة المصدرية الخاصة بالتطبيق بموجب ترخيص MIT."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This app statically links mihomo (GPL-3.0), so the app as a whole is distributed under GPL-3.0. The app’s own source code is also released under the MIT License."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta app enlaza estáticamente mihomo (GPL-3.0), por lo que se distribuye en su conjunto bajo GPL-3.0. El código fuente propio de la app también se publica bajo la licencia MIT."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "این برنامه mihomo (GPL-3.0) را به‌صورت ایستا پیوند می‌دهد، بنابراین کل برنامه تحت GPL-3.0 توزیع می‌شود. کد منبع خود برنامه نیز با مجوز MIT منتشر شده است."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本アプリは mihomo（GPL-3.0）を静的リンクしているため、アプリ全体を GPL-3.0 で配布しています。本アプリ独自のソースコードは MIT ライセンスでも公開しています。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 앱은 mihomo(GPL-3.0)를 정적으로 링크하므로 앱 전체가 GPL-3.0으로 배포됩니다. 앱 자체 소스 코드는 별도로 MIT 라이선스로도 공개됩니다."
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ဤအက်ပ်သည် mihomo (GPL-3.0) ကို static link လုပ်ထားသဖြင့် အက်ပ်တစ်ခုလုံးကို GPL-3.0 ဖြင့် ဖြန့်ဝေပါသည်။ အက်ပ်၏ ကိုယ်ပိုင် ရင်းမြစ်ကုဒ်ကိုလည်း MIT လိုင်စင်ဖြင့် ထုတ်ပြန်ထားပါသည်။"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Приложение статически связано с mihomo (GPL-3.0), поэтому целиком распространяется на условиях GPL-3.0. Собственный исходный код приложения также доступен по лицензии MIT."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Programu hii inaunganisha mihomo (GPL-3.0) kwa njia tuli, kwa hiyo programu nzima inasambazwa chini ya GPL-3.0. Msimbo chanzo wa programu yenyewe pia umetolewa chini ya leseni ya MIT."
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu programma mihomo (GPL-3.0) bilen statik baglanyşýar, şonuň üçin programma tutuşlygyna GPL-3.0 boýunça ýaýradylýar. Programmanyň öz çeşme kody hem MIT ygtyýarnamasy bilen çap edilýär."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu uygulama mihomo’yu (GPL-3.0) statik olarak bağladığından uygulamanın tamamı GPL-3.0 kapsamında dağıtılır. Uygulamanın kendi kaynak kodu ayrıca MIT Lisansı ile yayımlanmıştır."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "یہ ایپ mihomo (GPL-3.0) کو static طور پر لنک کرتی ہے، اس لیے پوری ایپ GPL-3.0 کے تحت تقسیم کی جاتی ہے۔ ایپ کا اپنا سورس کوڈ MIT لائسنس کے تحت بھی جاری کیا گیا ہے۔"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ứng dụng này liên kết tĩnh mihomo (GPL-3.0), vì vậy toàn bộ ứng dụng được phân phối theo GPL-3.0. Mã nguồn riêng của ứng dụng cũng được phát hành theo giấy phép MIT."
+          }
+        }
+      }
+    },
+    "每个发布版本的对应源码即下方仓库中该版本的 tag，其中锁定了全部依赖版本。" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الشيفرة المصدرية المقابلة لكل إصدار هي وسم (tag) ذلك الإصدار في المستودع أدناه، وفيه تُثبَّت إصدارات جميع الاعتماديات."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The corresponding source code for each release is that version’s tag in the repository below, which pins every dependency version."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El código fuente correspondiente a cada versión es la etiqueta (tag) de esa versión en el repositorio de abajo, que fija las versiones de todas las dependencias."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "کد منبع متناظر هر نسخهٔ منتشرشده، برچسب (tag) همان نسخه در مخزن زیر است که نسخهٔ همهٔ وابستگی‌ها را ثابت می‌کند."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "各リリースの対応ソースコードは、下記リポジトリにある該当バージョンのタグです。すべての依存関係のバージョンが固定されています。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "각 릴리스에 대응하는 소스 코드는 아래 저장소의 해당 버전 태그이며, 모든 의존성 버전이 고정되어 있습니다."
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ထုတ်ဝေမှုတစ်ခုစီ၏ သက်ဆိုင်ရာ ရင်းမြစ်ကုဒ်မှာ အောက်ပါ repository ရှိ ထိုဗားရှင်း၏ tag ဖြစ်ပြီး မှီခိုမှုအားလုံး၏ ဗားရှင်းများကို သတ်မှတ်ထားပါသည်။"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Исходный код каждого выпуска — тег этой версии в репозитории ниже; в нём зафиксированы версии всех зависимостей."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Msimbo chanzo unaolingana na kila toleo ni tagi ya toleo hilo kwenye hazina iliyo hapa chini, ambayo inafunga matoleo ya vitegemezi vyote."
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her neşiriň degişli çeşme kody aşakdaky ammardaky şol wersiýanyň tag-ydyr; onda ähli baglylyklaryň wersiýalary berkidilen."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her sürümün karşılık gelen kaynak kodu, aşağıdaki depodaki o sürümün etiketidir (tag); tüm bağımlılık sürümleri burada sabitlenmiştir."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ہر ریلیز کا متعلقہ سورس کوڈ نیچے دی گئی ریپوزٹری میں اسی ورژن کا tag ہے، جس میں تمام dependencies کے ورژن طے شدہ ہیں۔"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mã nguồn tương ứng của mỗi bản phát hành là tag của phiên bản đó trong kho mã bên dưới, nơi cố định phiên bản của mọi thành phần phụ thuộc."
+          }
+        }
+      }
+    },
+    "MPL-2.0 组件（如 uniffi）的源码见 crates.io 对应版本，本项目未修改任何 MPL-2.0 文件。" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تتوفر الشيفرة المصدرية لمكونات MPL-2.0 (مثل uniffi) في الإصدار المقابل على crates.io. لم يعدّل هذا المشروع أي ملف خاضع لـ MPL-2.0."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Source code for MPL-2.0 components (such as uniffi) is available from the matching version on crates.io. This project has not modified any MPL-2.0 files."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El código fuente de los componentes MPL-2.0 (como uniffi) está disponible en la versión correspondiente de crates.io. Este proyecto no ha modificado ningún archivo MPL-2.0."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "کد منبع اجزای دارای MPL-2.0 (مانند uniffi) در نسخهٔ متناظر در crates.io در دسترس است. این پروژه هیچ فایل MPL-2.0 را تغییر نداده است."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MPL-2.0 のコンポーネント（uniffi など）のソースコードは crates.io の該当バージョンから入手できます。本プロジェクトは MPL-2.0 のファイルを一切変更していません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MPL-2.0 구성 요소(uniffi 등)의 소스 코드는 crates.io의 해당 버전에서 받을 수 있습니다. 이 프로젝트는 MPL-2.0 파일을 수정하지 않았습니다."
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MPL-2.0 အစိတ်အပိုင်းများ (ဥပမာ uniffi) ၏ ရင်းမြစ်ကုဒ်ကို crates.io ရှိ သက်ဆိုင်ရာ ဗားရှင်းတွင် ရယူနိုင်ပါသည်။ ဤပရောဂျက်သည် MPL-2.0 ဖိုင်များကို မပြင်ဆင်ထားပါ။"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Исходный код компонентов под MPL-2.0 (например, uniffi) доступен на crates.io в соответствующей версии. Файлы под MPL-2.0 в проекте не изменялись."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Msimbo chanzo wa vipengele vya MPL-2.0 (kama uniffi) unapatikana kwenye toleo linalolingana katika crates.io. Mradi huu haujabadilisha faili yoyote ya MPL-2.0."
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MPL-2.0 bölekleriniň (meselem, uniffi) çeşme kody crates.io-daky degişli wersiýada elýeterlidir. Bu taslama MPL-2.0 faýllarynyň hiç birini üýtgetmedi."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MPL-2.0 bileşenlerinin (ör. uniffi) kaynak kodu crates.io’daki ilgili sürümde bulunur. Bu proje hiçbir MPL-2.0 dosyasını değiştirmemiştir."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MPL-2.0 اجزاء (جیسے uniffi) کا سورس کوڈ crates.io پر متعلقہ ورژن میں دستیاب ہے۔ اس پروجیکٹ نے MPL-2.0 کی کسی فائل میں ترمیم نہیں کی۔"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mã nguồn của các thành phần MPL-2.0 (như uniffi) có tại phiên bản tương ứng trên crates.io. Dự án này không sửa đổi tệp MPL-2.0 nào."
+          }
+        }
+      }
+    },
+    "源码仓库" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مستودع الشيفرة المصدرية"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Source Repository"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repositorio de código fuente"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مخزن کد منبع"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ソースリポジトリ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "소스 저장소"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ရင်းမြစ်ကုဒ် repository"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Репозиторий исходного кода"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hazina ya msimbo chanzo"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çeşme kody ammary"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaynak Kodu Deposu"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سورس کوڈ ریپوزٹری"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kho mã nguồn"
+          }
+        }
+      }
+    },
+    "版本 tag" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وسوم الإصدارات"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Release Tags"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etiquetas de versión"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "برچسب‌های نسخه"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バージョンタグ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "버전 태그"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ဗားရှင်း tag များ"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Теги версий"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tagi za matoleo"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wersiýa tag-lary"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sürüm etiketleri"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ورژن tags"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tag phiên bản"
+          }
+        }
+      }
+    },
+    "mihomo 源码" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الشيفرة المصدرية لـ mihomo"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mihomo Source Code"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Código fuente de mihomo"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "کد منبع mihomo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mihomo のソースコード"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mihomo 소스 코드"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mihomo ရင်းမြစ်ကုဒ်"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Исходный код mihomo"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Msimbo chanzo wa mihomo"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mihomo çeşme kody"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mihomo kaynak kodu"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mihomo کا سورس کوڈ"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mã nguồn mihomo"
+          }
+        }
+      }
+    },
+    "本 App" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هذا التطبيق"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This App"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta app"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "این برنامه"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このアプリ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 앱"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ဤအက်ပ်"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Это приложение"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Programu hii"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu programma"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu Uygulama"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "یہ ایپ"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ứng dụng này"
+          }
+        }
+      }
+    },
+    "GPL-3.0 全文" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "النص الكامل لـ GPL-3.0"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full GPL-3.0 Text"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Texto completo de la GPL-3.0"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "متن کامل GPL-3.0"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPL-3.0 全文"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPL-3.0 전문"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPL-3.0 စာသားအပြည့်အစုံ"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Полный текст GPL-3.0"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maandishi kamili ya GPL-3.0"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPL-3.0 doly teksti"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPL-3.0 tam metni"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPL-3.0 کا مکمل متن"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toàn văn GPL-3.0"
+          }
+        }
+      }
+    },
+    "Rust 组件" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مكونات Rust"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rust Components"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Componentes de Rust"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اجزای Rust"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rust コンポーネント"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rust 구성 요소"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rust အစိတ်အပိုင်းများ"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Компоненты Rust"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vipengele vya Rust"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rust bölekleri"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rust bileşenleri"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rust اجزاء"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thành phần Rust"
+          }
+        }
+      }
+    },
+    "Go 组件" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مكونات Go"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go Components"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Componentes de Go"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اجزای Go"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go コンポーネント"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go 구성 요소"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go အစိတ်အပိုင်းများ"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Компоненты Go"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vipengele vya Go"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go bölekleri"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go bileşenleri"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go اجزاء"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thành phần Go"
+          }
+        }
+      }
+    },
+    "Go 标准库与运行时" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مكتبة Go القياسية وبيئة التشغيل"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go Standard Library and Runtime"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Biblioteca estándar y runtime de Go"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "کتابخانهٔ استاندارد و زمان اجرای Go"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go 標準ライブラリとランタイム"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go 표준 라이브러리 및 런타임"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go စံ library နှင့် runtime"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Стандартная библиотека и среда выполнения Go"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maktaba ya kawaida na mazingira ya utekelezaji ya Go"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go standart kitaphanasy we iş wagty gurşawy"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go standart kütüphanesi ve çalışma zamanı"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go اسٹینڈرڈ لائبریری اور رن ٹائم"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thư viện chuẩn và runtime của Go"
+          }
+        }
+      }
+    },
+    "未随包附带许可文件，许可依据其清单或仓库。" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا تتضمن الحزمة ملف ترخيص؛ والترخيص مأخوذ من ملف البيان أو المستودع الخاص بها."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No license file is included in the package; the license is taken from its manifest or repository."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El paquete no incluye archivo de licencia; la licencia se toma de su manifiesto o repositorio."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فایل مجوز همراه بسته نیست؛ مجوز بر اساس مانیفست یا مخزن آن است."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "パッケージにライセンスファイルが含まれていないため、マニフェストまたはリポジトリに記載のライセンスに従います。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "패키지에 라이선스 파일이 포함되어 있지 않아 매니페스트 또는 저장소에 명시된 라이선스를 따릅니다."
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ပက်ကေ့ဂျ်တွင် လိုင်စင်ဖိုင် မပါဝင်ပါ။ လိုင်စင်ကို ၎င်း၏ manifest သို့မဟုတ် repository အရ သတ်မှတ်ပါသည်။"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Файл лицензии в пакет не входит; лицензия указана в его манифесте или репозитории."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kifurushi hakina faili ya leseni; leseni imechukuliwa kutoka kwa manifesti au hazina yake."
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bukja ygtyýarnama faýly goşulmandyr; ygtyýarnama onuň manifestine ýa-da ammaryna görä."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pakette lisans dosyası yok; lisans, paketin bildiriminden (manifest) veya deposundan alınmıştır."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "پیکیج میں لائسنس فائل شامل نہیں؛ لائسنس اس کے manifest یا ریپوزٹری کے مطابق ہے۔"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gói không kèm tệp giấy phép; giấy phép được lấy theo tệp kê khai hoặc kho mã của gói."
+          }
+        }
+      }
+    },
+    "许可文件读取失败" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعذّرت قراءة ملفات التراخيص"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn’t Read License Files"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudieron leer los archivos de licencia"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "خواندن فایل‌های مجوز ممکن نشد"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ライセンスファイルを読み込めませんでした"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "라이선스 파일을 읽을 수 없습니다"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "လိုင်စင်ဖိုင်များကို ဖတ်၍ မရပါ"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось прочитать файлы лицензий"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imeshindwa kusoma faili za leseni"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ygtyýarnama faýllaryny okap bolmady"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lisans dosyaları okunamadı"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لائسنس فائلیں پڑھی نہیں جا سکیں"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không đọc được tệp giấy phép"
+          }
+        }
+      }
+    },
+    "没有匹配的组件" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا توجد مكونات مطابقة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No matching components"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay componentes coincidentes"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جزء منطبقی یافت نشد"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一致するコンポーネントはありません"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "일치하는 구성 요소가 없습니다"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ကိုက်ညီသော အစိတ်အပိုင်း မရှိပါ"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет подходящих компонентов"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hakuna vipengele vinavyolingana"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gabat gelýän bölek ýok"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eşleşen bileşen yok"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "کوئی مماثل جزو نہیں"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không có thành phần phù hợp"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
