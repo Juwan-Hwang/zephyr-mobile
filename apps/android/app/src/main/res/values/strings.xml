@@ -482,6 +482,19 @@
     <string name="local_proxy_auth_footer">When on, connecting to the local port requires a user name and password, preventing other apps from using the proxy without permission.</string>
     <!-- %1$d and %2$d are the lowest and highest allowed port -->
     <string name="local_proxy_port_invalid">Enter a port from %1$d to %2$d</string>
+    <string name="local_proxy_credentials">Credentials</string>
+    <string name="local_proxy_user_row">User name</string>
+    <string name="local_proxy_credential_row">Password</string>
+    <string name="local_proxy_reveal">Show password</string>
+    <string name="local_proxy_conceal">Hide password</string>
+    <string name="local_proxy_concealed">Password hidden</string>
+    <string name="local_proxy_copy_http">Copy HTTP proxy URL</string>
+    <string name="local_proxy_copy_socks">Copy SOCKS5 proxy URL</string>
+    <string name="local_proxy_copied">Copied</string>
+    <string name="local_proxy_regenerate">Regenerate password</string>
+    <string name="local_proxy_regenerated">New password generated</string>
+    <string name="local_proxy_regenerate_footer">After regenerating, the old password stops working right away; apps you set up need the new one.</string>
+    <string name="local_proxy_apply_failed">Couldn’t apply the change</string>
     <string name="settings_section_testing">Testing</string>
     <string name="settings_test_wifi_only">Test speed on Wi‑Fi only</string>
     <string name="settings_keep_results">Keep results</string>

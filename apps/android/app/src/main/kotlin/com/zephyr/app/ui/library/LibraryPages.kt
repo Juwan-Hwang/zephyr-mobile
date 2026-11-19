@@ -2,9 +2,14 @@ package com.zephyr.app.ui.library
 
 import android.Manifest
 import android.appwidget.AppWidgetManager
+import android.content.ClipData
+import android.content.ClipDescription
+import android.content.ClipboardManager
 import android.content.ComponentName
 import android.content.Context
 import android.os.Build
+import android.os.PersistableBundle
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -40,6 +45,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -61,6 +67,7 @@ import com.zephyr.design.components.ZSettingsRow
 import com.zephyr.design.components.ZText
 import com.zephyr.design.theme.ZTheme
 import com.zephyr.engine.Settings
+import com.zephyr.engine.core.LocalProxyCredential
 import kotlinx.coroutines.launch
 
 /*
@@ -230,21 +237,35 @@ private fun TrustedWifiNoticeRow(s: Settings) {
 
 private val VALID_PORTS = 1024..65535
 
-/** 本地代理端口: on/off, the port (1024–65535, applied explicitly) and 需要密码. */
+/**
+ * 本地代理端口 (contract §16.c / §16.g ①, audit U9): on/off, the port (1024–65535, applied explicitly), 需要密码 and,
+ * while it is on, the credential: user name `zephyr`, the password (hidden until tapped), copy as HTTP / SOCKS5 URL
+ * (marked sensitive on Android 13+) and 重新生成密码. Changes hot-reload a running core; a failed reload is rolled
+ * back by the engine and shown as 未能应用更改 (§16.b③). The credential is never put in saved instance state.
+ */
 @Composable
 fun LocalProxyScreen(back: BackTo, onBack: () -> Unit) {
     val engine = AppGraph.engine
+    val ctx = LocalContext.current
     val s by engine.settings().collectAsState(Settings())
     val scope = rememberCoroutineScope()
     val focus = LocalFocusManager.current
     var port by rememberSaveable { mutableStateOf("") }
     var edited by rememberSaveable { mutableStateOf(false) }
+    var credential by remember { mutableStateOf<String?>(null) }
+    var reveal by remember { mutableStateOf(false) }
+    var busy by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { credential = runCatching { engine.localProxyCredential() }.getOrNull() }
     LaunchedEffect(s.localProxyPort) { if (!edited) port = s.localProxyPort.toString() }
     val parsed = port.trim().toIntOrNull()?.takeIf { it in VALID_PORTS }
+    val failed = stringResource(R.string.local_proxy_apply_failed)
+    fun apply(next: Settings) = scope.launch {
+        runCatching { engine.updateSettings(next) }.onFailure { toast(ctx, failed) }
+    }
     fun save() {
         val p = parsed ?: return
         focus.clearFocus(); edited = false
-        if (p != s.localProxyPort) scope.launch { engine.updateSettings(s.copy(localProxyPort = p)) }
+        if (p != s.localProxyPort) apply(s.copy(localProxyPort = p))
     }
 
     PageScaffold(back, stringResource(R.string.settings_local_proxy), onBack) {
@@ -252,7 +273,7 @@ fun LocalProxyScreen(back: BackTo, onBack: () -> Unit) {
             ZListGroup {
                 ZSettingsRow(
                     stringResource(R.string.settings_local_proxy), checked = s.localProxyEnabled,
-                    onCheckedChange = { v -> scope.launch { engine.updateSettings(s.copy(localProxyEnabled = v)) } },
+                    onCheckedChange = { v -> apply(s.copy(localProxyEnabled = v)) },
                 )
             }
             Footer(stringResource(R.string.local_proxy_footer))
@@ -277,13 +298,80 @@ fun LocalProxyScreen(back: BackTo, onBack: () -> Unit) {
             ZListGroup {
                 ZSettingsRow(
                     stringResource(R.string.settings_password_required), checked = s.localProxyAuth,
-                    onCheckedChange = { v -> scope.launch { engine.updateSettings(s.copy(localProxyAuth = v)) } },
+                    onCheckedChange = { v -> apply(s.copy(localProxyAuth = v)) },
                 )
             }
             Footer(stringResource(R.string.local_proxy_auth_footer))
+            val cred = credential
+            if (s.localProxyAuth && cred != null) {
+                val pw = LocalProxyCredential.password(cred)
+                val shown = if (reveal) pw else MASK.repeat(8)
+                ZSectionHeader(stringResource(R.string.local_proxy_credentials), Modifier.padding(top = 12.dp))
+                ZListGroup {
+                    ZSettingsRow(stringResource(R.string.local_proxy_user_row), trailing = { ZText(LocalProxyCredential.USER, style = ZTheme.type.mono, color = ZTheme.colors.text3, maxLines = 1) })
+                    ZDivider()
+                    val toggleLabel = stringResource(if (reveal) R.string.local_proxy_conceal else R.string.local_proxy_reveal)
+                    val hiddenLabel = stringResource(R.string.local_proxy_concealed)
+                    ZSettingsRow(
+                        stringResource(R.string.local_proxy_credential_row),
+                        Modifier.semantics { onClick(label = toggleLabel, action = null) },
+                        onClick = { reveal = !reveal },
+                        trailing = {
+                            ZText(
+                                shown, if (reveal) Modifier else Modifier.clearAndSetSemantics { contentDescription = hiddenLabel },
+                                style = ZTheme.type.mono, color = ZTheme.colors.text3, maxLines = 1,
+                            )
+                        },
+                    )
+                    val p = s.localProxyPort
+                    val copied = stringResource(R.string.local_proxy_copied)
+                    for ((scheme, title) in listOf("http" to R.string.local_proxy_copy_http, "socks5" to R.string.local_proxy_copy_socks)) {
+                        ZDivider()
+                        ZSettingsRow(
+                            stringResource(title),
+                            subtitle = "\u2066" + LocalProxyCredential.url(scheme, "${LocalProxyCredential.USER}:$shown", p) + "\u2069", // LTR isolate in ar / fa / ur
+                            onClick = { copySensitive(ctx, LocalProxyCredential.url(scheme, cred, p), copied) },
+                        )
+                    }
+                }
+                ZListGroup(Modifier.padding(top = 12.dp)) {
+                    val regenerated = stringResource(R.string.local_proxy_regenerated)
+                    ZSettingsRow(
+                        stringResource(R.string.local_proxy_regenerate),
+                        onClick = {
+                            if (!busy) scope.launch {
+                                busy = true
+                                runCatching { engine.resetLocalProxyCredential() }
+                                    .onSuccess { credential = it; toast(ctx, regenerated) }
+                                    .onFailure { credential = runCatching { engine.localProxyCredential() }.getOrNull() ?: credential; toast(ctx, failed) }
+                                busy = false
+                            }
+                        },
+                    )
+                }
+                Footer(stringResource(R.string.local_proxy_regenerate_footer))
+            }
             Spacer(Modifier.height(32.dp))
         }
     }
+}
+
+private const val MASK = "\u2022"
+
+private fun toast(ctx: Context, text: String) = Toast.makeText(ctx, text, Toast.LENGTH_SHORT).show()
+
+/**
+ * Copies a proxy URL with the password in it. Android 13+ hides sensitive clips from the clipboard preview
+ * (`EXTRA_IS_SENSITIVE`) and shows its own confirmation, so the app only confirms on older versions.
+ */
+private fun copySensitive(ctx: Context, text: String, copied: String) {
+    val cm = ctx.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager ?: return
+    val clip = ClipData.newPlainText(LocalProxyCredential.USER, text)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        clip.description.extras = PersistableBundle().apply { putBoolean(ClipDescription.EXTRA_IS_SENSITIVE, true) }
+    }
+    runCatching { cm.setPrimaryClip(clip) }
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) toast(ctx, copied)
 }
 
 /**
