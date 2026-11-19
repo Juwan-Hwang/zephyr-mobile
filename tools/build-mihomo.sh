@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # 构建嵌入式 mihomo（mihomo-mobile/）。
 #   tools/build-mihomo.sh android   → apps/android/core-engine/src/main/jniLibs/<abi>/libzmihomo.so（需 ANDROID_NDK_HOME）
+#   tools/build-mihomo.sh ohos      → build/ohos/arm64-v8a/libzmihomo.so（需 OHOS_NDK_HOME=<OpenHarmony SDK>/native；c-shared，供 apps/harmony 拷入 libs/arm64-v8a）
 #   tools/build-mihomo.sh ios       → build/ios/Zmihomo.xcframework（macOS，c-archive，真机 + 模拟器）
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
@@ -30,6 +31,23 @@ android)
     for so in "$OUT"/*/libzmihomo.so; do echo "$so"; "$TC/llvm-readelf" -lW "$so" | grep -E '^\s*LOAD' || true; done
   fi
   ;;
+ohos)
+  # 鸿蒙：Go 没有 ohos GOOS，用 linux/arm64 + OHOS 的 clang/musl sysroot 外部链接。
+  # VpnExtensionAbility 里 dlopen，故不允许静态 TLS（initial-exec，R_AARCH64_TLS_TPREL64）；构建后检查，出现即失败。
+  NDK=${OHOS_NDK_HOME:?需要 OHOS_NDK_HOME（OpenHarmony SDK 的 native 目录）}
+  OUT=${OUT:-$ROOT/build/ohos}
+  CCO="$NDK/llvm/bin/clang --target=aarch64-linux-ohos --sysroot=$NDK/sysroot"
+  mkdir -p "$OUT/arm64-v8a"
+  GOOS=linux GOARCH=arm64 CC="$CCO" CGO_CFLAGS="-fPIC -mtls-dialect=desc" \
+    go build -trimpath -tags "$TAGS" -ldflags "$LDFLAGS -extldflags=-Wl,-z,max-page-size=16384" -buildmode=c-shared -o "$OUT/arm64-v8a/libzmihomo.so" .
+  rm -f "$OUT/arm64-v8a/libzmihomo.h"
+  RE="$NDK/llvm/bin/llvm-readelf"; command -v "$RE" >/dev/null || RE=readelf
+  ls -la "$OUT/arm64-v8a/libzmihomo.so"
+  "$RE" -lW "$OUT/arm64-v8a/libzmihomo.so" | grep -E '^\s*LOAD' || true
+  if "$RE" -rW "$OUT/arm64-v8a/libzmihomo.so" | grep -q 'TLS_TPREL'; then
+    echo "错误：libzmihomo.so 含 R_AARCH64_TLS_TPREL（静态 TLS），dlopen 会失败" >&2; exit 1
+  fi
+  ;;
 ios)
   OUT=$ROOT/build/ios/zmihomo; rm -rf "$OUT"; mkdir -p "$OUT"
   build() { # sdk goarch clangarch outdir
@@ -49,5 +67,5 @@ ios)
   printf 'module Zmihomo {\n  header "zmihomo.h"\n  export *\n}\n' > "$OUT/headers/Zmihomo/module.modulemap"
   xcodebuild -create-xcframework -library "$OUT/ios/libzmihomo.a" -headers "$OUT/headers" -library "$OUT/sim/libzmihomo.a" -headers "$OUT/headers" -output "$ROOT/build/ios/Zmihomo.xcframework"
   ;;
-*) echo "用法：$0 android|ios"; exit 2;;
+*) echo "用法：$0 android|ios|ohos"; exit 2;;
 esac
