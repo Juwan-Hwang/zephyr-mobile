@@ -306,29 +306,52 @@ class CoreEngine(
             ),
             mode = when (mode) { ProxyMode.RULE -> CoreMode.RULE; ProxyMode.GLOBAL -> CoreMode.GLOBAL; ProxyMode.DIRECT -> CoreMode.DIRECT },
             controllerSocket = controllerSocket, findProcess = true, logLevel = "warning",
-            localProxy = com.zephyr.core.mobile.LocalProxy(proxyPort(settings).toUShort(), localProxyCredential()),
+            localProxy = com.zephyr.core.mobile.LocalProxy(proxyPort(settings).toUShort(), proxyAuth(settings)),
         )
         return withContext(io) { wrap { c.runtimeConfig(id, opts) } }
     }
 
-    // ── Loopback mixed port: the user's "本地代理端口" when enabled, else a private port for service probes ──
+    // ── Loopback mixed port (§16.f E12): the user's "本地代理端口" when enabled, else a private port for service probes ──
     @Volatile private var activeProxyPort: Int = 0
+    /** The auth mihomo was last configured with (null = none), so probes keep working across a credential reset. */
+    @Volatile private var activeProxyAuth: String? = null
 
-    /** `zephyr:<24 random>`; generated once, kept in the private data dir, shown in Settings (§14.z ④). */
-    fun localProxyCredential(): String {
-        val f = dataDir?.let { java.io.File(it, "local-proxy-credential") }
-        f?.takeIf { it.isFile }?.readText()?.trim()?.takeIf { it.startsWith("zephyr:") }?.let { return it }
-        val rnd = java.security.SecureRandom()
-        val abc = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789"
-        val cred = "zephyr:" + (1..24).map { abc[rnd.nextInt(abc.length)] }.joinToString("")
-        runCatching { f?.writeText(cred) }
-        return cred
+    /** §16.g ①: Keystore-sealed `zephyr:<24>`; null without a data dir (screenshots / JVM tests → [fallback]). */
+    private val credentials: LocalProxyCredentialStore? = dataDir?.let { LocalProxyCredentialStore(java.io.File(it), runCatching { KeystoreSecretBox() }.getOrNull()) }
+
+    override suspend fun localProxyCredential(): String {
+        val st = credentials ?: return fallback.localProxyCredential()
+        return withContext(io) { st.get() }
     }
 
+    override suspend fun resetLocalProxyCredential(): String {
+        val st = credentials ?: return fallback.resetLocalProxyCredential()
+        val previous = withContext(io) { st.get() }
+        val fresh = withContext(io) { st.reset() }
+        val s = runCatching { fallback.settings().first() }.getOrNull()
+        if (s != null && s.localProxyEnabled && s.localProxyAuth) {
+            try { reloadIfRunning() } catch (t: Throwable) {
+                withContext(io) { st.restore(previous) } // §16.b③: the running core still has the old one
+                throw t
+            }
+        }
+        return fresh
+    }
+
+    /**
+     * §16.f E12: with 本地代理 on, the user's port and 需要密码 are honoured as set; with it off the port is a private
+     * random one (20000–60000) that always requires the credential, used only by the app's own probes.
+     */
     private fun proxyPort(settings: Settings): Int {
-        val p = if (settings.localProxyEnabled && settings.localProxyPort >= 1024) settings.localProxyPort else privateProbePort()
+        val p = if (usesUserPort(settings)) settings.localProxyPort else privateProbePort()
         activeProxyPort = p
         return p
+    }
+
+    private suspend fun proxyAuth(settings: Settings): String? {
+        val a = proxyAuthFor(settings, localProxyCredential())
+        activeProxyAuth = a
+        return a
     }
 
     private fun privateProbePort(): Int {
@@ -348,7 +371,7 @@ class CoreEngine(
     suspend fun probeServices(sceneIds: List<String>? = null) {
         val c = nodes() ?: return
         val port = activeProxyPort.takeIf { it > 0 && Mihomo.running } ?: return
-        val auth = localProxyCredential()
+        val auth = activeProxyAuth
         val ids = sceneIds ?: withContext(io) { wrap { c.scenes(clock()) } }.map { it.id }
         for (id in ids) withContext(io) {
             runCatching { c.sceneProbeTargets(id) }.getOrDefault(emptyList()).forEach { t ->
@@ -503,6 +526,7 @@ class CoreEngine(
      * Contract §15.e: core's scene freshness window follows 设置 › 测速 › 结果保留 (process-local, re-sent on every change).
      * Audit E16: out-of-range values are rejected like iOS (port, TTL, auto-update, MTU 576…9000).
      * Audit E15: DNS / TUN stack / local-proxy changes rebuild the runtime config and hot-reload a running core.
+     * A failed reload (§16.b③) restores the previous settings and rethrows, so the UI can say 未能应用更改.
      * MTU, IPv6 and excluded apps live on the VpnService.Builder and still apply on the next connect (same as iOS NE).
      */
     override suspend fun updateSettings(patch: Settings) {
@@ -511,7 +535,13 @@ class CoreEngine(
         fallback.updateSettings(patch)
         core?.let { c -> withContext(io) { runCatching { c.setLatencyTtlHours(patch.latencyTtlHours.coerceAtLeast(0).toUInt()) } } }
         scenesBump.value++
-        if (old != null && affectsRuntime(old, patch)) runCatching { reloadIfRunning() }
+        if (old != null && affectsRuntime(old, patch)) try { reloadIfRunning() } catch (t: Throwable) {
+            // §16.b③: the running core keeps the old config, so the stored settings must say so too.
+            fallback.updateSettings(old)
+            core?.let { c -> withContext(io) { runCatching { c.setLatencyTtlHours(old.latencyTtlHours.coerceAtLeast(0).toUInt()) } } }
+            scenesBump.value++
+            throw t
+        }
     }
 
     private val scan = kotlinx.coroutines.flow.MutableStateFlow<com.zephyr.engine.ScanProgress?>(null)
@@ -992,14 +1022,22 @@ class CoreEngine(
         /** Audit E16: same ranges iOS validates (contract §8 Settings). */
         val MTU_RANGE = 576..9000
 
+        /** §16.c: 本地代理端口 1024–65535; anything else is rejected on save. */
+        val LOCAL_PROXY_PORTS = 1024..65535
+
+        fun usesUserPort(s: Settings): Boolean = s.localProxyEnabled && s.localProxyPort in LOCAL_PROXY_PORTS
+
+        /** §16.f E12: mixed-port auth — none only when the user's own port is on with 需要密码 off. */
+        fun proxyAuthFor(s: Settings, credential: String): String? = if (usesUserPort(s) && !s.localProxyAuth) null else credential
+
         fun isValid(s: Settings): Boolean =
-            s.localProxyPort in 1..65535 && s.latencyTtlHours > 0 && s.autoUpdateHours > 0 && s.tun.mtu in MTU_RANGE
+            s.localProxyPort in LOCAL_PROXY_PORTS && s.latencyTtlHours > 0 && s.autoUpdateHours > 0 && s.tun.mtu in MTU_RANGE
 
         /** Brings a stored (possibly older-version) settings blob back into range instead of rejecting it at launch. */
         fun sanitized(s: Settings): Settings {
             val d = Settings()
             return s.copy(
-                localProxyPort = s.localProxyPort.takeIf { it in 1..65535 } ?: d.localProxyPort,
+                localProxyPort = s.localProxyPort.takeIf { it in LOCAL_PROXY_PORTS } ?: d.localProxyPort,
                 latencyTtlHours = s.latencyTtlHours.takeIf { it > 0 } ?: d.latencyTtlHours,
                 autoUpdateHours = s.autoUpdateHours.takeIf { it > 0 } ?: d.autoUpdateHours,
                 tun = s.tun.copy(mtu = s.tun.mtu.coerceIn(MTU_RANGE)),

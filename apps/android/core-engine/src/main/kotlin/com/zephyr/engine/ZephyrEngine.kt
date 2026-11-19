@@ -118,6 +118,18 @@ interface ZephyrEngine {
     suspend fun updateSettings(patch: Settings)
     suspend fun storage(): StorageInfo
 
+    /**
+     * Contract §16.g ① (U9): the local proxy credential `zephyr:<24>`, generated and saved on first use. Platform
+     * engine only (not FFI); kept in platform secure storage, never written by the core.
+     */
+    suspend fun localProxyCredential(): String
+
+    /**
+     * A new password (the user suspects a leak). While the tunnel runs with 本地代理 on and 需要密码 on, the core is
+     * hot-reloaded; a failed reload puts the old one back and throws (§16.b③).
+     */
+    suspend fun resetLocalProxyCredential(): String
+
     // 9. Command search
     suspend fun commandSuggestions(input: String): List<CommandSuggestion>
 }

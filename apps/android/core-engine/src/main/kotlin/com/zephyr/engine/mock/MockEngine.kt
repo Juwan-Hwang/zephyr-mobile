@@ -474,6 +474,12 @@ class MockEngine(
     override suspend fun updateSettings(patch: Settings) { settingsState.value = patch }
     override suspend fun storage(): StorageInfo = StorageInfo(600_000_000L, 1_900_000_000L, 3_100_000_000L)
 
+    // §16.g ①: fixed demo credential; reset hands out a fresh one in the same format.
+    @Volatile private var proxyCredential = MOCK_CREDENTIAL
+    override suspend fun localProxyCredential(): String = proxyCredential
+    override suspend fun resetLocalProxyCredential(): String =
+        com.zephyr.engine.core.LocalProxyCredential.generate().also { proxyCredential = it }
+
     // ── 9. Command search ────────────────────────────────────────────────────
     override suspend fun commandSuggestions(input: String): List<CommandSuggestion> =
         MockCommands.suggest(input, sceneState.value, connection.value)
@@ -494,6 +500,8 @@ class MockEngine(
     private suspend fun currentCoroutineContextActive() = kotlin.coroutines.coroutineContext.isActive
 
     companion object {
+        /** Contract §16.g ① Mock value (24 characters after `zephyr:`). */
+        const val MOCK_CREDENTIAL = "zephyr:mockmockmockmockmockmock"
         const val DEMO_UPTIME_MS = (2 * 3600 + 14 * 60 + 7) * 1000L
         const val CONNECT_DELAY_MS = 600L
         const val DISCONNECT_DELAY_MS = 250L

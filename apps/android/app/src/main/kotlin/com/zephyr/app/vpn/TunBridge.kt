@@ -51,6 +51,8 @@ interface TunBridge {
                 val s = engine.settings().first(); val m = engine.connectionState().first().mode
                 engine.runtimeConfig(fd.fd, sock.path, s, m)?.let { withContext(Dispatchers.IO) { Mihomo.reload(it) } } ?: "no active subscription"
             }
+            // §16.b③ 连接中: settings changed while connecting (e.g. 本地代理 port / 需要密码) are applied once, right after start.
+            if (err == null && CoreEngine.affectsRuntime(settings, engine.settings().first())) runCatching { engine.reloader?.invoke() }
             return err
         }
         override fun detach() { engine.reloader = null; Mihomo.stop(); Mihomo.trimMemory() }
