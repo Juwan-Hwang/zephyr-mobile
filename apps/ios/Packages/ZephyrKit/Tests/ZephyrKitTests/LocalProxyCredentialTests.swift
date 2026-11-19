@@ -21,18 +21,18 @@ final class LocalProxyCredentialTests: XCTestCase {
     func testWellFormedRejects() {
         XCTAssertFalse(LocalProxyCredential.isWellFormed(""))
         XCTAssertFalse(LocalProxyCredential.isWellFormed("zephyr:"))
-        XCTAssertFalse(LocalProxyCredential.isWellFormed("admin:abcdefghijkmnpqrstuvwxy"))
-        XCTAssertFalse(LocalProxyCredential.isWellFormed("zephyr:abcdefghijkmnpqrstuvwx"), "23 位")
-        XCTAssertFalse(LocalProxyCredential.isWellFormed("zephyr:0bcdefghijkmnpqrstuvwxy"), "含 0")
-        XCTAssertTrue(LocalProxyCredential.isWellFormed("zephyr:abcdefghijkmnpqrstuvwxy"))
+        XCTAssertFalse(LocalProxyCredential.isWellFormed("admin:abcdefghijkmnpqrstuvwxyz"))
+        XCTAssertFalse(LocalProxyCredential.isWellFormed("zephyr:abcdefghijkmnpqrstuvwxy"), "23 位")
+        XCTAssertFalse(LocalProxyCredential.isWellFormed("zephyr:0bcdefghijkmnpqrstuvwxyz"), "含 0")
+        XCTAssertTrue(LocalProxyCredential.isWellFormed("zephyr:abcdefghijkmnpqrstuvwxyz"))
     }
 
     func testURLs() {
-        let c = "zephyr:abcdefghijkmnpqrstuvwxy"
+        let c = "zephyr:abcdefghijkmnpqrstuvwxyz"
         XCTAssertEqual(LocalProxyCredential.url(.http, credential: c, port: 7890),
-                       "http://zephyr:abcdefghijkmnpqrstuvwxy@127.0.0.1:7890")
+                       "http://zephyr:abcdefghijkmnpqrstuvwxyz@127.0.0.1:7890")
         XCTAssertEqual(LocalProxyCredential.url(.socks5, credential: c, port: 1080),
-                       "socks5://zephyr:abcdefghijkmnpqrstuvwxy@127.0.0.1:1080")
+                       "socks5://zephyr:abcdefghijkmnpqrstuvwxyz@127.0.0.1:1080")
         XCTAssertEqual(LocalProxyCredential.user(of: c), "zephyr")
     }
 }
