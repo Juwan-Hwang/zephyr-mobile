@@ -1,7 +1,7 @@
 // SubscriptionAutoUpdater —— 订阅自动更新（REVIEW-Q2 X-P1-5）。
 //
 // 设置里的“自动更新间隔 / 仅 Wi‑Fi 更新”此前没有执行方。现在：
-//   - BGAppRefreshTask（app.zephyr.mobile.refresh）：系统在合适的时机唤醒，更新到期的订阅，再排下一次；
+//   - BGAppRefreshTask（com.juwanh.zephyr.refresh）：系统在合适的时机唤醒，更新到期的订阅，再排下一次；
 //   - 回到前台 / 启动时检查一次（退避 15 分钟，失败不会反复重试）；
 //   - “仅 Wi‑Fi”以 NWPath 判断：非计费、非受限网络才更新（蜂窝、个人热点、低数据模式都不更新）。
 // 到期判断在 ZephyrKit.AutoUpdatePlanner（纯函数，有单测）。Mock 引擎（Debug / 模拟器）不自动更新。
@@ -15,10 +15,10 @@ import ZephyrKit
 
 @MainActor
 final class SubscriptionAutoUpdater {
-    nonisolated static let taskIdentifier = "app.zephyr.mobile.refresh"
+    nonisolated static let taskIdentifier = "com.juwanh.zephyr.refresh"
     static let shared = SubscriptionAutoUpdater()
 
-    private let log = Logger(subsystem: "app.zephyr.mobile", category: "auto-update")
+    private let log = Logger(subsystem: "com.juwanh.zephyr", category: "auto-update")
     private var lastAttempt: [String: Int64] = [:]
     private var sceneLastAttempt: [String: Int64] = [:]
     private var running = false
@@ -132,7 +132,7 @@ enum NetworkPathProbe {
     static func isUnmetered() async -> Bool {
         await withCheckedContinuation { (cont: CheckedContinuation<Bool, Never>) in
             let monitor = NWPathMonitor()
-            let queue = DispatchQueue(label: "app.zephyr.mobile.pathprobe")
+            let queue = DispatchQueue(label: "com.juwanh.zephyr.pathprobe")
             let once = ProbeOnce()
             @Sendable func finish(_ value: Bool) {
                 guard once.fire() else { return }

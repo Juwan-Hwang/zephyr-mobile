@@ -8,13 +8,13 @@ import Foundation
 
 enum DarwinNotification: String, CaseIterable, Sendable {
     /// SharedState 写入完成。
-    case stateChanged = "app.zephyr.mobile.state-changed"
+    case stateChanged = "com.juwanh.zephyr.state-changed"
     /// 扩展（小组件 / 控制中心）投递了一条待 App 执行的命令（见 PendingCommand）。
-    case command = "app.zephyr.mobile.command"
+    case command = "com.juwanh.zephyr.command"
     /// PacketTunnel 的连接状态变化。
-    case tunnelStatus = "app.zephyr.mobile.tunnel-status"
+    case tunnelStatus = "com.juwanh.zephyr.tunnel-status"
     /// PacketTunnel 判定默认底层网络变了（去抖 2 s 后，已 closeAll），契约 §16.a③。
-    case networkChanged = "app.zephyr.mobile.network-changed"
+    case networkChanged = "com.juwanh.zephyr.network-changed"
 
     var cfName: CFNotificationName { CFNotificationName(rawValue as CFString) }
 }

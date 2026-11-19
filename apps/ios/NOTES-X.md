@@ -61,8 +61,8 @@
 
 ### 2. 签名
 - Apple Developer **Team ID**（写进 `project.yml` 的 `DEVELOPMENT_TEAM`，或只在本地 xcconfig 里覆盖）。
-- 三个 Bundle ID 的注册与能力：`app.zephyr.mobile`（App Groups、Network Extensions: Packet Tunnel、Push 不需要）、`app.zephyr.mobile.PacketTunnel`（App Groups、Network Extensions）、`app.zephyr.mobile.Widgets`（App Groups）。
-- App Group `group.app.zephyr.mobile` 注册到上述三个 ID。
+- 三个 Bundle ID 的注册与能力：`com.juwanh.zephyr`（App Groups、Network Extensions: Packet Tunnel、Push 不需要）、`com.juwanh.zephyr.PacketTunnel`（App Groups、Network Extensions）、`com.juwanh.zephyr.Widgets`（App Groups）。
+- App Group `group.com.juwanh.zephyr` 注册到上述三个 ID。
 - Provisioning：开发用 Automatic 即可；如要 CI 出 TestFlight 包，需要 Distribution 证书 + 三个 App Store profile（建议 fastlane match 或 App Store Connect API Key），并在 CI 用 secrets 注入；目前 CI 只跑无签名的模拟器测试，不需要。
 
 ### 3. CI：快照参考图 artifact（建议改 `.github/workflows/mobile.yml` 的 ios job，X 无权限改）

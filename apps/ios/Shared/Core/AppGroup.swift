@@ -7,7 +7,7 @@
 import Foundation
 
 enum AppGroup {
-    static let fallbackIdentifier = "group.app.zephyr.mobile"
+    static let fallbackIdentifier = "group.com.juwanh.zephyr"
 
     static let identifier: String = {
         if let id = Bundle.main.object(forInfoDictionaryKey: "ZephyrAppGroup") as? String,

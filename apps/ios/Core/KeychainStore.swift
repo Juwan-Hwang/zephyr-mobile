@@ -7,7 +7,7 @@ import Foundation
 import Security
 
 enum KeychainStore {
-    static let service = "app.zephyr.mobile"
+    static let service = "com.juwanh.zephyr"
 
     private static func query(_ account: String) -> [String: Any] {
         [kSecClass as String: kSecClassGenericPassword,

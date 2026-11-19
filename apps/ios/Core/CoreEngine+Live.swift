@@ -247,7 +247,7 @@ extension CoreEngine {
     }
 }
 
-let liveQueue = DispatchQueue(label: "app.zephyr.core.live", qos: .userInitiated, attributes: .concurrent)
+let liveQueue = DispatchQueue(label: "com.juwanh.zephyr.core.live", qos: .userInitiated, attributes: .concurrent)
 
 /// 限时等待：`op` 在 `seconds` 内没有结果返回 nil，调用方不会被挂起。
 /// 用两个非结构化任务竞速 + 一次性 continuation：任务组会等所有子任务结束，op 不响应取消时超时形同虚设

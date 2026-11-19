@@ -53,12 +53,12 @@ scheme `Zephyr` 的 test action 包含：`ZephyrTests`（Shared/Core 与 PacketT
 ### 签名
 
 默认 `DEVELOPMENT_TEAM` 为空、`CODE_SIGN_STYLE: Automatic`：模拟器和 CI（`CODE_SIGNING_ALLOWED=NO`）不需要签名。
-真机运行需要在 Xcode 里给三个 target 选自己的 Team，并确保 App Group `group.app.zephyr.mobile` 与 Network Extension（Packet Tunnel）能力可用。
+真机运行需要在 Xcode 里给三个 target 选自己的 Team，并确保 App Group `group.com.juwanh.zephyr` 与 Network Extension（Packet Tunnel）能力可用。
 无签名时 entitlements 不生效，App Group 容器回退到本进程的 `Application Support/ZephyrShared`（见 `Shared/Core/AppGroup.swift`）。
 
 ## 启动参数
 
-在 Xcode：Product → Scheme → Edit Scheme → Run → Arguments；或 `xcrun simctl launch booted app.zephyr.mobile -ZephyrEngine mock -ZephyrClock frozen941`。
+在 Xcode：Product → Scheme → Edit Scheme → Run → Arguments；或 `xcrun simctl launch booted com.juwanh.zephyr -ZephyrEngine mock -ZephyrClock frozen941`。
 参数经 `UserDefaults` 读取（`App/LaunchEnvironment.swift`）：
 
 | 参数 | 取值 | 作用 |
