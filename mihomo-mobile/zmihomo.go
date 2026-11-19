@@ -12,6 +12,7 @@
 //	void    zm_free_os_memory(void)                 // 内存告警时调用
 //	char*   zm_url_test(const char* proxies_json, const char* url, int timeout_ms, int concurrency)  // 见 urltest.go；返回 JSON
 //	char*   zm_logs(int64_t since, const char* min_level, int limit)   // 见 logs.go；返回 JSON
+//	void    zm_set_socket_hook(int (*fn)(void* ctx, int fd, const char* network), void* ctx)  // 见 sockethook.go；NULL 卸载；非 0 拒连（fail-closed）
 //	char*   zm_version(void)
 //	void    zm_free(char*)
 //
