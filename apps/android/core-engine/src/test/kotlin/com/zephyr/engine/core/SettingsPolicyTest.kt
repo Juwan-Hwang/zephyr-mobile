@@ -10,12 +10,12 @@ import org.junit.Test
 
 /** Release audit #208 E15 / E16: settings validation and which changes hot-reload the core. */
 class SettingsPolicyTest {
-    @Test fun validatesLikeIos() {
+    @Test fun validatesPerContract() {
         val d = Settings()
         assertTrue(CoreEngine.isValid(d))
-        assertFalse(CoreEngine.isValid(d.copy(tun = d.tun.copy(mtu = 575))))
+        assertFalse(CoreEngine.isValid(d.copy(tun = d.tun.copy(mtu = 1279)))) // §16.c: 1280–9000
         assertFalse(CoreEngine.isValid(d.copy(tun = d.tun.copy(mtu = 9001))))
-        assertTrue(CoreEngine.isValid(d.copy(tun = d.tun.copy(mtu = 576))))
+        assertTrue(CoreEngine.isValid(d.copy(tun = d.tun.copy(mtu = 1280))))
         assertFalse(CoreEngine.isValid(d.copy(localProxyPort = 0)))
         assertFalse(CoreEngine.isValid(d.copy(latencyTtlHours = 0)))
         assertFalse(CoreEngine.isValid(d.copy(autoUpdateHours = 0)))

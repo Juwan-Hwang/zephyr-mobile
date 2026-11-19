@@ -64,7 +64,8 @@ fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onTrustedWifi: () -> U
     val s by engine.settings().collectAsState(Settings())
     val storage by produceState(StorageInfo(0, 0, 0)) { value = engine.storage() }
     val scope = rememberCoroutineScope()
-    fun set(f: (Settings) -> Settings) = scope.launch { engine.updateSettings(f(s)) }
+    val write = rememberSettingsWriter()
+    fun set(f: (Settings) -> Settings) = write(f(s))
 
     PageScaffold(back, stringResource(R.string.common_settings), onBack) {
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
@@ -87,7 +88,7 @@ fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onTrustedWifi: () -> U
                 ZSettingsRow(stringResource(R.string.settings_test_wifi_only), checked = s.testOnWifiOnly, onCheckedChange = { v -> set { it.copy(testOnWifiOnly = v) } })
                 ZDivider()
                 ChoiceRow(
-                    stringResource(R.string.settings_keep_results), (listOf(6, 24, 72) + s.latencyTtlHours).distinct().sorted().map { it to pluralStringResource(R.plurals.settings_hours, it, it) }, s.latencyTtlHours,
+                    stringResource(R.string.settings_keep_results), com.zephyr.engine.SettingsCodec.LATENCY_TTL_OPTIONS.map { it to pluralStringResource(R.plurals.settings_hours, it, it) }, s.latencyTtlHours,
                     onSelect = { h -> set { it.copy(latencyTtlHours = h) } },
                 )
             }

@@ -37,6 +37,8 @@ import com.zephyr.design.components.zPressable
 import com.zephyr.design.theme.ZTheme
 import com.zephyr.engine.LogLevel
 import com.zephyr.engine.LogLine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 private val levels = listOf(
     LogLevel.DEBUG to R.string.logs_level_debug, LogLevel.INFO to R.string.logs_level_info,
@@ -47,7 +49,7 @@ private val levelNames = levels.toMap()
 @Composable
 fun LogsScreen(onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
-    val model = remember { LogsModel(AppGraph.engine, scope) }
+    val model = remember { LogsModel(AppGraph.engine, scope, AppGraph.appScope) }
     DisposableEffect(model) { model.start(); onDispose { model.stop() } }
     val lines by model.lines.collectAsState()
     val paused by model.paused.collectAsState()
@@ -60,8 +62,17 @@ fun LogsScreen(onBack: () -> Unit) {
             ToolbarText(stringResource(if (paused) R.string.logs_resume else R.string.logs_pause), enabled = true) { model.togglePause() }
             ToolbarText(stringResource(R.string.logs_clear), enabled = lines.isNotEmpty()) { model.clear() }
             ToolbarText(stringResource(R.string.common_share), enabled = lines.isNotEmpty()) {
-                val send = Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, model.exportText())
-                ctx.startActivity(Intent.createChooser(send, null))
+                scope.launch {
+                    // §16.c: 共享诊断数据 only decides whether a summary goes in front of the exported log.
+                    val s = AppGraph.engine.settings().first()
+                    val diag = if (s.shareDiagnostics) LogsModel.diagnosticsSummary(
+                        "${com.zephyr.app.BuildConfig.VERSION_NAME} (${com.zephyr.app.BuildConfig.VERSION_CODE})",
+                        "Android ${android.os.Build.VERSION.RELEASE} (API ${android.os.Build.VERSION.SDK_INT})",
+                        s, com.zephyr.engine.RecentErrors.snapshot(),
+                    ) else null
+                    val send = Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, model.exportText(diagnostics = diag))
+                    ctx.startActivity(Intent.createChooser(send, null))
+                }
             }
         }
     }) {

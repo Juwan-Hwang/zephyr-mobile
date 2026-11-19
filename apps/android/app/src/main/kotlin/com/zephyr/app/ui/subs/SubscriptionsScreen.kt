@@ -64,6 +64,7 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
     val settings by engine.settings().collectAsState(Settings())
     val summary by produceState(SubscriptionsSummary(0, 0), subs) { value = engine.subscriptionsSummary() }
     val scope = rememberCoroutineScope()
+    val writeSettings = com.zephyr.app.ui.settings.rememberSettingsWriter()
     val clock = com.zephyr.app.ui.common.LocalNow.current
     // Ticks once a minute so "2 小时前" / "26 天后到期" stay true while the page is open (review L-P2-9).
     var busyId by remember { mutableStateOf<String?>(null) }
@@ -159,7 +160,7 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
             ZCard(Modifier.padding(horizontal = 16.dp)) {
                 metered.forEachIndexed { i, s ->
                     if (i > 0) ZDivider(inset = false)
-                    val soon = (s.expiresAt ?: Long.MAX_VALUE) - now < 3 * 86_400_000L
+                    val soon = SubscriptionWarning.isWarning(s, now) // §16.e ④
                     val armed = pendingDelete == s.id
                     SwipeActionsRow(
                         listOf(
@@ -182,7 +183,7 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
                     Row(Modifier.fillMaxWidth().padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
                             ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight))
-                            ZText(pluralStringResource(R.plurals.common_node_count, s.nodeCount.toPluralCount(), ZFormat.grouped(s.nodeCount)) + (s.expiresAt?.let { " · " + ZFormat.expires(res, it, now) } ?: ""), style = ZTheme.type.footnote, color = c.text3)
+                            ZText(pluralStringResource(R.plurals.common_node_count, s.nodeCount.toPluralCount(), ZFormat.grouped(s.nodeCount)) + (s.expiresAt?.let { " · " + ZFormat.expires(res, it, now) } ?: ""), style = ZTheme.type.footnote, color = if (soon) c.warning else c.text3)
                             Spacer(Modifier.height(10.dp))
                             val u = s.usedBytes; val t = s.totalBytes
                             ZProgressBar(if (u != null && t != null && t > 0) u.toFloat() / t else 0f, color = if (soon) c.warning else c.text3)
@@ -217,13 +218,14 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
             ZListGroup {
                 // Review L-P2-9: "value ›" opens its options (same popup as Settings) instead of cycling on each tap.
                 com.zephyr.app.ui.settings.ChoiceRow(
-                    stringResource(R.string.subs_auto_update), options = listOf(6, 12, 24).map { it to pluralStringResource(R.plurals.subs_every_hours, it, it) }, selected = settings.autoUpdateHours,
-                    onSelect = { h -> scope.launch { engine.updateSettings(settings.copy(autoUpdateHours = h)) } },
+                    stringResource(R.string.subs_auto_update), options = com.zephyr.engine.SettingsCodec.AUTO_UPDATE_OPTIONS.map { it to pluralStringResource(R.plurals.subs_every_hours, it, it) }, selected = settings.autoUpdateHours,
+                    // §16.c / §16.g ②: also re-times every subscription with its own interval > 0 (engine side).
+                    onSelect = { h -> writeSettings(settings.copy(autoUpdateHours = h)) },
                 )
                 ZDivider()
-                ZSettingsRow(stringResource(R.string.subs_update_wifi_only), checked = settings.updateOnWifiOnly, onCheckedChange = { v -> scope.launch { engine.updateSettings(settings.copy(updateOnWifiOnly = v)) } })
+                ZSettingsRow(stringResource(R.string.subs_update_wifi_only), checked = settings.updateOnWifiOnly, onCheckedChange = { v -> writeSettings(settings.copy(updateOnWifiOnly = v)) })
                 ZDivider()
-                ZSettingsRow(stringResource(R.string.subs_show_changes), checked = settings.showChangesBeforeUpdate, onCheckedChange = { v -> scope.launch { engine.updateSettings(settings.copy(showChangesBeforeUpdate = v)) } })
+                ZSettingsRow(stringResource(R.string.subs_show_changes), checked = settings.showChangesBeforeUpdate, onCheckedChange = { v -> writeSettings(settings.copy(showChangesBeforeUpdate = v)) })
                 ZDivider()
                 ZSettingsRow(stringResource(R.string.subs_update_all), onClick = { requestUpdateAll() }, value = if (updating) stringResource(R.string.common_updating) else null)
             }

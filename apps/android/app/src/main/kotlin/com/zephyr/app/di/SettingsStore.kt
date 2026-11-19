@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 
 private val Context.store by preferencesDataStore("zephyr")
 
@@ -21,7 +20,6 @@ private val Context.store by preferencesDataStore("zephyr")
  * engine at launch. Also stores UI-only flags (onboarding done).
  */
 class SettingsStore(private val context: Context, private val engine: ZephyrEngine, scope: CoroutineScope) {
-    private val json = Json { ignoreUnknownKeys = true; encodeDefaults = false }
     private val keySettings = stringPreferencesKey("settings_v0")
     private val keyOnboarded = stringPreferencesKey("onboarded")
 
@@ -37,9 +35,8 @@ class SettingsStore(private val context: Context, private val engine: ZephyrEngi
         scope.launch {
             runCatching {
                 context.store.data.first()[keySettings]?.let { raw ->
-                    // Audit E16: an older build may have stored out-of-range values; bring them into range, never crash.
-                    runCatching { json.decodeFromString(Settings.serializer(), raw) }.getOrNull()
-                        ?.let { runCatching { engine.updateSettings(com.zephyr.engine.core.CoreEngine.sanitized(it)) } }
+                    // Contract §16.c (E42): field-by-field decoding; a bad or missing field falls back on its own.
+                    runCatching { engine.updateSettings(com.zephyr.engine.SettingsCodec.decode(raw)) }
                 }
             }
             loaded.complete(Unit)
@@ -51,10 +48,24 @@ class SettingsStore(private val context: Context, private val engine: ZephyrEngi
             // Audit E44: the usage widget rolls over to an empty day at local midnight even while disconnected.
             com.zephyr.app.widget.MidnightWidgetWorker.schedule(context)
             launch { engine.settings().collect { s -> syncSystemNightMode(s.appearance) } }
+            // §16.c: a failed write rolls the engine back to the last stored value and says so (toast); never silent.
+            var persisted = engine.settings().first()
             engine.settings().drop(1).collect { s ->
-                context.store.edit { it[keySettings] = json.encodeToString(Settings.serializer(), s) }
+                if (s == persisted) return@collect
+                runCatching { context.store.edit { it[keySettings] = com.zephyr.engine.SettingsCodec.encode(s) } }
+                    .onSuccess { persisted = s }
+                    .onFailure { t ->
+                        android.util.Log.w("Zephyr", "settings write failed: ${t.message}")
+                        val back = persisted
+                        runCatching { engine.updateSettings(back) }
+                        settingsFailed(context)
+                    }
             }
         }
+    }
+
+    private suspend fun settingsFailed(ctx: Context) = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+        android.widget.Toast.makeText(ctx, com.zephyr.app.R.string.settings_save_failed, android.widget.Toast.LENGTH_SHORT).show()
     }
 
     suspend fun setOnboarded() { context.store.edit { it[keyOnboarded] = "1" } }
@@ -84,10 +95,13 @@ class SettingsStore(private val context: Context, private val engine: ZephyrEngi
 object TrustedWifi {
     fun normalize(name: String): String = name.trim()
 
-    /** Null when [name] is blank or already listed (nothing to write). */
+    /** Contract §16.c: an SSID is 1–32 bytes of UTF‑8; the list holds at most 50. */
+    fun valid(name: String): Boolean = com.zephyr.engine.SettingsCodec.validSsid(name)
+
+    /** Null when [name] is blank, longer than 32 bytes, already listed, or the list is full (nothing to write). */
     fun add(s: Settings, name: String): Settings? {
         val n = normalize(name)
-        if (n.isEmpty() || n in s.trustedWifi) return null
+        if (!valid(n) || n in s.trustedWifi || s.trustedWifi.size >= com.zephyr.engine.SettingsCodec.TRUSTED_WIFI_MAX) return null
         return s.copy(trustedWifi = s.trustedWifi + n)
     }
 

@@ -32,6 +32,8 @@ import com.zephyr.design.components.zPressable
 import com.zephyr.design.format.ZFormat
 import com.zephyr.design.theme.ZTheme
 
+const val RECENT_HOSTS_MAX = 50
+
 /** "最近连接" (prototype `actSheet`): recent hosts aggregated by domain; tap → trace. Android can name the app. */
 @Composable
 fun BoxScope.ActivitySheet(
@@ -39,7 +41,8 @@ fun BoxScope.ActivitySheet(
     onUndoable: (UiText, suspend () -> Unit) -> Unit = { m, _ -> onNotice(m) }, onHost: (String?) -> Unit,
 ) {
     val scope = androidx.compose.runtime.rememberCoroutineScope()
-    val flow = remember { AppGraph.engine.recentHosts(5) }
+    // Contract §16.e ⑧ (U28): live connections grouped by host, newest first, up to 50 (the prototype's 5 is demo data).
+    val flow = remember { AppGraph.engine.recentHosts(RECENT_HOSTS_MAX) }
     val hosts by flow.collectWhile(visible, emptyList())
     val c = ZTheme.colors
     // Review H-P2-9: like the prototype, tapping a host turns this same sheet into its trace (one scrim, one sheet);

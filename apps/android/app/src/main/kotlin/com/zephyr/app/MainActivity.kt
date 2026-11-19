@@ -17,6 +17,10 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     /** A clash:// / clashmeta:// / mihomo:// / zephyr:// deep link, waiting in the import sheet for the user to confirm. */
     private val pendingImport = mutableStateOf<String?>(null)
+    /** Bumped to open the subscriptions page (expiry notification, §16.e ⑤). */
+    private val openSubscriptions = mutableStateOf(0)
+    /** Bumped to open the empty import panel (contract §16.b ②: connect with no subscription). */
+    private val openImport = mutableStateOf(0)
 
     private val vpnPermission = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { r ->
         if (r.resultCode == RESULT_OK) AppGraph.connection.connect()
@@ -53,6 +57,8 @@ class MainActivity : ComponentActivity() {
                     startOnboarding = onboard,
                     pendingImport = pendingImport.value,
                     onImportShown = { pendingImport.value = null },
+                    openImport = openImport.value,
+                    openSubscriptions = openSubscriptions.value,
                 )
             }
         }
@@ -67,8 +73,12 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun requestConnect() {
-        val ask = AppGraph.connection.permissionIntent()
-        if (ask != null) vpnPermission.launch(ask) else AppGraph.connection.connect()
+        lifecycleScope.launch {
+            // §16.b ②: no subscription → the import panel, never the VPN consent dialog or a doomed tunnel.
+            if (AppGraph.connection.hasNoSubscription()) { openImport.value++; return@launch }
+            val ask = AppGraph.connection.permissionIntent()
+            if (ask != null) vpnPermission.launch(ask) else AppGraph.connection.connect()
+        }
     }
 
     /**
@@ -81,10 +91,19 @@ class MainActivity : ComponentActivity() {
     private fun handle(intent: Intent?) {
         val data = intent?.takeIf { it.action == Intent.ACTION_VIEW }?.data
         if (data != null && data.scheme?.lowercase() in DEEP_LINK_SCHEMES) pendingImport.value = data.toString()
+        if (intent?.action == com.zephyr.app.vpn.ConnectionController.ACTION_OPEN_IMPORT) openImport.value++
+        if (intent?.action == ACTION_OPEN_SUBSCRIPTIONS) openSubscriptions.value++
         setIntent(Intent(this, MainActivity::class.java))
     }
 
-    private companion object {
-        val DEEP_LINK_SCHEMES = setOf("clash", "clashmeta", "mihomo", "zephyr")
+    override fun onStart() {
+        super.onStart()
+        // §16.e ⑤: back in the foreground is one of the checks that posts an expiry alert already due.
+        lifecycleScope.launch { AppGraph.settings.loaded.await(); runCatching { com.zephyr.app.vpn.ExpiryAlerts.check(applicationContext) } }
+    }
+
+    companion object {
+        const val ACTION_OPEN_SUBSCRIPTIONS = "com.juwanh.zephyr.OPEN_SUBSCRIPTIONS"
+        private val DEEP_LINK_SCHEMES = setOf("clash", "clashmeta", "mihomo", "zephyr")
     }
 }

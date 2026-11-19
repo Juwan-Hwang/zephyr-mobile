@@ -502,4 +502,8 @@
     <string name="notif_expiry_title">%1$s aboneliği %2$s tarihinde bitiyor</string>
     <string name="notif_expiry_text">%1$s kaldı</string>
     <string name="tile_a11y">%1$s, %2$s</string>
+    <!-- Contract §16.b ②: connect from the tile / widget / notification with nothing imported. -->
+    <string name="connect_no_subscription">Henüz abonelik yok</string>
+    <!-- Contract §16.c: the settings write failed and the change was rolled back. -->
+    <string name="settings_save_failed">Ayar kaydedilemedi</string>
 </resources>

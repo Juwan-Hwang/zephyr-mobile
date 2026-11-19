@@ -468,4 +468,8 @@
     <string name="notif_expiry_title">%1$s hết hạn vào %2$s</string>
     <string name="notif_expiry_text">Còn %1$s</string>
     <string name="tile_a11y">%1$s, %2$s</string>
+    <!-- Contract §16.b ②: connect from the tile / widget / notification with nothing imported. -->
+    <string name="connect_no_subscription">Chưa có gói đăng ký nào</string>
+    <!-- Contract §16.c: the settings write failed and the change was rolled back. -->
+    <string name="settings_save_failed">Không thể lưu cài đặt</string>
 </resources>

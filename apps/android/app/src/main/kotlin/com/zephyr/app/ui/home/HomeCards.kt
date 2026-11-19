@@ -80,14 +80,14 @@ fun GlobalModeCard(
     }
 }
 
-/** Subscriptions summary: name, remaining, usage bar, expiry (amber within 3 days). */
+/** Subscriptions summary: name, remaining, usage bar, expiry (amber per §16.e ④: ≤ 7 calendar days or ≥ 80% used). */
 @Composable
 fun SubscriptionsCard(subs: List<Subscription>, now: Long, onOpen: () -> Unit) {
     val c = ZTheme.colors
     ZCard(Modifier.padding(horizontal = 16.dp), level = ZSurfaceLevel.S1, shape = RoundedCornerShape(22.dp)) {
         subs.take(3).forEachIndexed { i, s ->
             if (i > 0) ZDivider(inset = false)
-            val soon = s.expiresAt != null && s.expiresAt!! - now < 3 * 86_400_000L
+            val soon = com.zephyr.app.ui.subs.SubscriptionWarning.isWarning(s, now)
             Row(Modifier.fillMaxWidth().zPressable(row = true, onClick = onOpen).padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     ZText(s.name, style = ZTheme.type.body, maxLines = 1)

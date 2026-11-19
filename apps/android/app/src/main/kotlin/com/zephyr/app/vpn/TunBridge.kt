@@ -39,6 +39,11 @@ interface TunBridge {
         override val createsTun = true
         override suspend fun attach(fd: ParcelFileDescriptor): String? {
             val sock = controllerSocket(ctx)
+            engine.tunnelStarting = true // §16.b ③: changes from here on are queued, applied once after start
+            try { return start(fd, sock) } finally { engine.tunnelStarting = false }
+        }
+
+        private suspend fun start(fd: ParcelFileDescriptor, sock: File): String? {
             val cfg = try {
                 engine.runtimeConfig(fd.fd, sock.path, settings, mode) ?: return "no active subscription"
             } catch (t: Throwable) { return t.message ?: "runtime config failed" }
@@ -52,7 +57,10 @@ interface TunBridge {
                 engine.runtimeConfig(fd.fd, sock.path, s, m)?.let { withContext(Dispatchers.IO) { Mihomo.reload(it) } } ?: "no active subscription"
             }
             // §16.b③ 连接中: settings changed while connecting (e.g. 本地代理 port / 需要密码) are applied once, right after start.
-            if (err == null && CoreEngine.affectsRuntime(settings, engine.settings().first())) runCatching { engine.reloader?.invoke() }
+            if (err == null) {
+                engine.tunnelStarting = false
+                engine.flushPendingReload(force = CoreEngine.affectsRuntime(settings, engine.settings().first()))
+            }
             return err
         }
         override fun detach() { engine.reloader = null; Mihomo.stop(); Mihomo.trimMemory() }

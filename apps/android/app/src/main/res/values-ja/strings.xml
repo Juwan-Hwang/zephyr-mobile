@@ -468,4 +468,8 @@
     <string name="notif_expiry_title">%1$sの有効期限は%2$sです</string>
     <string name="notif_expiry_text">残り %1$s</string>
     <string name="tile_a11y">%1$s、%2$s</string>
+    <!-- Contract §16.b ②: connect from the tile / widget / notification with nothing imported. -->
+    <string name="connect_no_subscription">サブスクリプションがまだありません</string>
+    <!-- Contract §16.c: the settings write failed and the change was rolled back. -->
+    <string name="settings_save_failed">設定を保存できませんでした</string>
 </resources>

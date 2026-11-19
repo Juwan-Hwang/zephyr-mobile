@@ -12,23 +12,46 @@ import kotlin.math.abs
  * Allocation-light and safe to call during composition (pass `LocalResources.current`).
  */
 object ZFormat {
-    /** 2_800_000 → ("2.8", "MB"); 195_000 → ("195", "KB"). Decimal units like the prototype. */
-    fun rate(bps: Long): Pair<String, String> = bytes(bps)
+    /**
+     * Contract §16.e ① (U21) rate: decimal units, half-up. B/s and KB/s whole; MB/s and GB/s one decimal; a value that
+     * rounds to 1000 moves up a unit (999.96 KB/s → "1.0 MB/s"). 194_600 → ("195", "KB"); 2_849_999 → ("2.8", "MB").
+     * The unit comes without "/s"; callers add it.
+     */
+    fun rate(bps: Long): Pair<String, String> = scaled(bps, RATE_UNITS) { unit, _ -> if (unit <= 1) 0 else 1 }
 
-    fun bytes(b: Long): Pair<String, String> {
-        val v = abs(b).toDouble()
-        return when {
-            v >= 1e12 -> one(v / 1e12) to "TB"
-            v >= 1e9 -> one(v / 1e9) to "GB"
-            v >= 1e6 -> one(v / 1e6) to "MB"
-            v >= 1e3 -> (v / 1e3).toLong().toString() to "KB"
-            else -> v.toLong().toString() to "B"
+    /**
+     * Contract §16.e ① (U21) bytes: decimal (1 KB = 1000 B), half-up, never truncated. B and KB whole; MB one decimal
+     * below 100, whole from 100; GB and TB always one decimal ("186.4 GB"); 999.6 KB → "1.0 MB".
+     */
+    fun bytes(b: Long): Pair<String, String> = scaled(b, BYTE_UNITS) { unit, v ->
+        when (unit) {
+            0, 1 -> 0
+            2 -> if (v.setScale(1, java.math.RoundingMode.HALF_UP) >= HUNDRED) 0 else 1
+            else -> 1
+        }
+    }
+
+    private val BYTE_UNITS = listOf("B", "KB", "MB", "GB", "TB")
+    private val RATE_UNITS = listOf("B", "KB", "MB", "GB")
+    private val THOUSAND = java.math.BigDecimal(1000)
+    private val HUNDRED = java.math.BigDecimal(100)
+
+    private inline fun scaled(n: Long, units: List<String>, decimals: (Int, java.math.BigDecimal) -> Int): Pair<String, String> {
+        val raw = java.math.BigDecimal(abs(n))
+        var unit = 0
+        while (unit < units.lastIndex && raw >= THOUSAND.pow(unit + 1)) unit++
+        while (true) {
+            val v = raw.movePointLeft(3 * unit)
+            val r = v.setScale(decimals(unit, v), java.math.RoundingMode.HALF_UP)
+            if (r >= THOUSAND && unit < units.lastIndex) { unit++; continue }
+            return r.toPlainString() to units[unit]
         }
     }
 
     fun bytesText(b: Long): String = bytes(b).let { "${it.first} ${it.second}" }
 
-    private fun one(v: Double): String = if (v >= 100) v.toLong().toString() else String.format(Locale.US, "%.1f", v)
+    /** "195 KB/s", "2.8 MB/s". */
+    fun rateText(bps: Long): String = rate(bps).let { "${it.first} ${it.second}/s" }
 
     /** 13109802 → "13,109,802". */
     fun grouped(n: Long): String = String.format(Locale.US, "%,d", n)
@@ -74,9 +97,9 @@ object ZFormat {
     }
 
     /**
-     * Expiry: "Expires in 26 days" / "Expires tomorrow" / "Expires today" / "Expired" (zh "26 天后到期" …). Days are
+     * Expiry (contract §16.e ③): "Expires in 26 days" / "Expires today" / "Expired" (zh "26 天后到期" …). Days are
      * calendar days in [zone] (audit #208 U16), so 23:00 → 01:00 the next day is "tomorrow", not "today".
-     * Expiries 2–6 days out read as the weekday with [weekday] (home card, review H-P2-7), otherwise as the month and
+     * Expiries 1–6 days out read as the weekday with [weekday] (home card, review H-P2-7), otherwise as the month and
      * day ("Expires Nov 9" / "11月9日到期", prototype subscriptions page; iOS ZFormat.expiry).
      */
     fun expires(res: Resources, at: Long, now: Long, weekday: Boolean = false, zone: java.time.ZoneId = java.time.ZoneId.systemDefault()): String {
@@ -85,7 +108,6 @@ object ZFormat {
         val days = java.time.temporal.ChronoUnit.DAYS.between(java.time.Instant.ofEpochMilli(now).atZone(zone).toLocalDate(), due)
         return when {
             days <= 0L -> res.getString(R.string.common_expiry_today)
-            days == 1L -> res.getString(R.string.common_expiry_tomorrow)
             days < 7 && weekday -> res.getString(R.string.common_expiry_weekday, res.getStringArray(R.array.common_weekdays)[due.dayOfWeek.value - 1])
             days < 7 -> res.getString(R.string.common_expiry_date, monthDay(res, due))
             else -> days.toInt().let { res.getQuantityString(R.plurals.common_expiry_in_days, it, it) }

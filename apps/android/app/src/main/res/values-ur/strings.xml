@@ -536,4 +536,8 @@
 
     <!-- ── Quick Settings tile ── -->
     <string name="tile_a11y">\u2068%1$s\u2069، \u2068%2$s\u2069</string>
+    <!-- Contract §16.b ②: connect from the tile / widget / notification with nothing imported. -->
+    <string name="connect_no_subscription">ابھی کوئی سبسکرپشن نہیں</string>
+    <!-- Contract §16.c: the settings write failed and the change was rolled back. -->
+    <string name="settings_save_failed">ترتیب محفوظ نہیں ہو سکی</string>
 </resources>
