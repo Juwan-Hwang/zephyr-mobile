@@ -450,6 +450,14 @@
     <string name="settings_share_diagnostics">Diagnostika maglumatlaryny paýlaş</string>
     <string name="settings_section_diagnostics">Diagnostika</string>
     <string name="settings_local_data_note">Abunalar, düwünler we trafik maglumatlary diňe şu enjamda saklanýar.</string>
+    <string name="settings_section_about">Barada</string>
+    <string name="settings_licenses">Açyk çeşme ygtyýarnamalary</string>
+    <string name="settings_source_code">Çeşme kody</string>
+    <string name="licenses_intro">Zephyr-iň öz kody MIT ygtyýarnamasy bilen. Programma mihomo (GPL-3.0) öz içine alýar, şonuň üçin programma tutuşlygyna GPL-3.0 boýunça ýaýradylýar. Degişli çeşme kody: %1$s, bellik %2$s.</string>
+    <string name="licenses_section_app">Zephyr ygtyýarnamasy</string>
+    <string name="licenses_section_notices">Üçünji tarap bildirişleri</string>
+    <string name="licenses_section_texts">Ygtyýarnama tekstleri</string>
+    <string name="licenses_unavailable">Bu gurluşda ygtyýarnama faýllary ýok.</string>
     <string name="logs_title">Günnamalar</string>
     <string name="logs_level_debug">Düzediş</string>
     <string name="logs_level_info">Maglumat</string>

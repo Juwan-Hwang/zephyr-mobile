@@ -518,6 +518,14 @@
     <string name="settings_share_diagnostics">Share diagnostic data</string>
     <string name="settings_section_diagnostics">Diagnostics</string>
     <string name="settings_local_data_note">Subscriptions, nodes, and traffic data are stored only on this device.</string>
+    <string name="settings_section_about">About</string>
+    <string name="settings_licenses">Open-source licenses</string>
+    <string name="settings_source_code">Source code</string>
+    <string name="licenses_intro">Zephyr\'s own code is MIT-licensed. The app includes mihomo (GPL-3.0), so the app as a whole is distributed under GPL-3.0. Corresponding source: %1$s, tag %2$s.</string>
+    <string name="licenses_section_app">Zephyr license</string>
+    <string name="licenses_section_notices">Third-party notices</string>
+    <string name="licenses_section_texts">License texts</string>
+    <string name="licenses_unavailable">License files are missing from this build.</string>
 
     <!-- ── Logs ── -->
     <string name="logs_title">Logs</string>

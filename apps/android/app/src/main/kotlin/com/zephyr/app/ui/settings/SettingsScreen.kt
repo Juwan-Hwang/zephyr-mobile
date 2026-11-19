@@ -58,7 +58,7 @@ import com.zephyr.engine.StorageInfo
 import kotlinx.coroutines.launch
 
 @Composable
-fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onTrustedWifi: () -> Unit = {}, onLocalProxy: () -> Unit = {}, onBack: () -> Unit) {
+fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onTrustedWifi: () -> Unit = {}, onLocalProxy: () -> Unit = {}, onLicenses: () -> Unit = {}, onBack: () -> Unit) {
     val engine = AppGraph.engine
     val c = ZTheme.colors
     val s by engine.settings().collectAsState(Settings())
@@ -144,6 +144,15 @@ fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onTrustedWifi: () -> U
             ZSectionHeader(stringResource(R.string.settings_section_diagnostics), Modifier.padding(top = 12.dp))
             ZListGroup {
                 ZSettingsRow(stringResource(R.string.logs_title), chevron = true, onClick = onLogs)
+            }
+            ZSectionHeader(stringResource(R.string.settings_section_about), Modifier.padding(top = 12.dp))
+            ZListGroup {
+                ZSettingsRow(stringResource(R.string.settings_licenses), chevron = true, onClick = onLicenses)
+                ZDivider()
+                val ctx = androidx.compose.ui.platform.LocalContext.current
+                ZSettingsRow(stringResource(R.string.settings_source_code), subtitle = SOURCE_URL.removePrefix("https://"), chevron = true, onClick = {
+                    runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(SOURCE_URL))) }
+                })
             }
             ZText(stringResource(R.string.settings_local_data_note), Modifier.padding(horizontal = 22.dp, vertical = 10.dp), style = ZTheme.type.footnote, color = c.text3)
             ZText("Zephyr ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})", Modifier.fillMaxWidth().padding(vertical = 24.dp), style = ZTheme.type.footnote.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = c.text4)

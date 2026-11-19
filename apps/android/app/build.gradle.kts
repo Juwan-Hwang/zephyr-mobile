@@ -9,7 +9,8 @@ android {
     namespace = "com.zephyr.app"
     compileSdk = 37
     defaultConfig {
-        applicationId = "com.zephyr.app"
+        // D3（docs/release.md）：上架标识 com.juwanh.zephyr；namespace / Kotlin 包名保持 com.zephyr.app（只影响代码包名）。
+        applicationId = "com.juwanh.zephyr"
         minSdk = 28
         targetSdk = 36
         versionCode = 1
@@ -120,8 +121,33 @@ abstract class Verify16kAlignment : DefaultTask() {
     }
 }
 
+// ── In-app 开源许可 page (GPL-3.0 distribution, docs/release.md §6) ────────────────────────────────
+// The repo-root LICENSE / THIRD_PARTY_NOTICES.md / THIRD_PARTY_LICENSES.txt (from tools/gen-third-party.sh) are
+// copied into the APK's assets/licenses/ at build time, so the App always ships the committed files, never a copy.
+abstract class BundleLicenses : DefaultTask() {
+    @get:InputFiles @get:PathSensitive(PathSensitivity.NAME_ONLY)
+    abstract val sources: ConfigurableFileCollection
+    @get:OutputDirectory abstract val outputDir: DirectoryProperty
+
+    @TaskAction fun copy() {
+        val dir = outputDir.get().dir("licenses").asFile
+        dir.deleteRecursively(); dir.mkdirs()
+        sources.forEach { f ->
+            if (!f.isFile) throw GradleException("Missing license file: $f (run tools/gen-third-party.sh)")
+            f.copyTo(File(dir, f.name), overwrite = true)
+        }
+    }
+}
+val bundleLicenses = tasks.register<BundleLicenses>("bundleLicenseAssets") {
+    group = "build"
+    description = "Copies the repo-root license files into assets/licenses/"
+    sources.from(listOf("LICENSE", "THIRD_PARTY_NOTICES.md", "THIRD_PARTY_LICENSES.txt").map { rootProject.file("../../$it") })
+    outputDir.set(layout.buildDirectory.dir("generated/licenseAssets"))
+}
+
 androidComponents {
     onVariants { variant ->
+        variant.sources.assets?.addGeneratedSourceDirectory(bundleLicenses, BundleLicenses::outputDir)
         val cap = variant.name.replaceFirstChar { it.uppercase() }
         val check = tasks.register<Verify16kAlignment>("verify16kAlignment$cap") {
             group = "verification"

@@ -482,6 +482,14 @@
     <string name="settings_share_diagnostics">Compartir datos de diagnóstico</string>
     <string name="settings_section_diagnostics">Diagnóstico</string>
     <string name="settings_local_data_note">Las suscripciones, los nodos y los datos de tráfico solo se guardan en este dispositivo.</string>
+    <string name="settings_section_about">Acerca de</string>
+    <string name="settings_licenses">Licencias de código abierto</string>
+    <string name="settings_source_code">Código fuente</string>
+    <string name="licenses_intro">El código propio de Zephyr tiene licencia MIT. La app incluye mihomo (GPL-3.0), por lo que se distribuye en conjunto bajo GPL-3.0. Código fuente correspondiente: %1$s, etiqueta %2$s.</string>
+    <string name="licenses_section_app">Licencia de Zephyr</string>
+    <string name="licenses_section_notices">Avisos de terceros</string>
+    <string name="licenses_section_texts">Textos de licencias</string>
+    <string name="licenses_unavailable">Faltan los archivos de licencia en esta compilación.</string>
     <string name="logs_title">Registros</string>
     <string name="logs_level_debug">Depuración</string>
     <string name="logs_level_info">Info</string>

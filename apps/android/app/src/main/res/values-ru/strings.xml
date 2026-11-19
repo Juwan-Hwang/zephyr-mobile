@@ -514,6 +514,14 @@
     <string name="settings_share_diagnostics">Отправлять диагностику</string>
     <string name="settings_section_diagnostics">Диагностика</string>
     <string name="settings_local_data_note">Подписки, узлы и данные о трафике хранятся только на этом устройстве.</string>
+    <string name="settings_section_about">О приложении</string>
+    <string name="settings_licenses">Лицензии открытого ПО</string>
+    <string name="settings_source_code">Исходный код</string>
+    <string name="licenses_intro">Собственный код Zephyr распространяется по лицензии MIT. Приложение включает mihomo (GPL-3.0), поэтому в целом оно распространяется по GPL-3.0. Соответствующий исходный код: %1$s, тег %2$s.</string>
+    <string name="licenses_section_app">Лицензия Zephyr</string>
+    <string name="licenses_section_notices">Сторонние уведомления</string>
+    <string name="licenses_section_texts">Тексты лицензий</string>
+    <string name="licenses_unavailable">В этой сборке нет файлов лицензий.</string>
     <string name="logs_title">Журналы</string>
     <string name="logs_level_debug">Отладка</string>
     <string name="logs_level_info">Инфо</string>

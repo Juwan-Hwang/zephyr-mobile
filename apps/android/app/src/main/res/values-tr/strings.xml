@@ -450,6 +450,14 @@
     <string name="settings_share_diagnostics">Tanılama verilerini paylaş</string>
     <string name="settings_section_diagnostics">Tanılama</string>
     <string name="settings_local_data_note">Abonelikler, düğümler ve trafik verileri yalnızca bu cihazda saklanır.</string>
+    <string name="settings_section_about">Hakkında</string>
+    <string name="settings_licenses">Açık kaynak lisansları</string>
+    <string name="settings_source_code">Kaynak kodu</string>
+    <string name="licenses_intro">Zephyr\'ın kendi kodu MIT lisanslıdır. Uygulama mihomo (GPL-3.0) içerdiğinden uygulamanın tamamı GPL-3.0 kapsamında dağıtılır. İlgili kaynak kodu: %1$s, etiket %2$s.</string>
+    <string name="licenses_section_app">Zephyr lisansı</string>
+    <string name="licenses_section_notices">Üçüncü taraf bildirimleri</string>
+    <string name="licenses_section_texts">Lisans metinleri</string>
+    <string name="licenses_unavailable">Bu derlemede lisans dosyaları eksik.</string>
     <string name="logs_title">Günlükler</string>
     <string name="logs_level_debug">Hata ayıklama</string>
     <string name="logs_level_info">Bilgi</string>

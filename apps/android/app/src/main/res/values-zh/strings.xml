@@ -443,6 +443,14 @@
     <string name="settings_share_diagnostics">共享诊断数据</string>
     <string name="settings_section_diagnostics">诊断</string>
     <string name="settings_local_data_note">订阅、节点与流量数据仅保存在此设备上。</string>
+    <string name="settings_section_about">关于</string>
+    <string name="settings_licenses">开源许可</string>
+    <string name="settings_source_code">源代码</string>
+    <string name="licenses_intro">Zephyr 自有代码采用 MIT 许可。本 App 包含 mihomo（GPL-3.0），因此整体按 GPL-3.0 分发。对应源码：%1$s，tag %2$s。</string>
+    <string name="licenses_section_app">Zephyr 许可</string>
+    <string name="licenses_section_notices">第三方声明</string>
+    <string name="licenses_section_texts">许可全文</string>
+    <string name="licenses_unavailable">此版本缺少许可文件。</string>
 
     <!-- ── Logs ── -->
     <string name="logs_title">日志</string>

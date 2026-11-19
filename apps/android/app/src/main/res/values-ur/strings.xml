@@ -474,6 +474,14 @@
     <string name="settings_share_diagnostics">تشخیصی ڈیٹا شیئر کریں</string>
     <string name="settings_section_diagnostics">تشخیص</string>
     <string name="settings_local_data_note">سبسکرپشنز، نوڈز اور ٹریفک ڈیٹا صرف اسی ڈیوائس پر محفوظ ہوتے ہیں۔</string>
+    <string name="settings_section_about">بارے میں</string>
+    <string name="settings_licenses">اوپن سورس لائسنس</string>
+    <string name="settings_source_code">سورس کوڈ</string>
+    <string name="licenses_intro">Zephyr کا اپنا کوڈ MIT لائسنس کے تحت ہے۔ ایپ میں mihomo ‏(GPL-3.0) شامل ہے، اس لیے پوری ایپ GPL-3.0 کے تحت تقسیم کی جاتی ہے۔ متعلقہ سورس: %1$s، ٹیگ %2$s۔</string>
+    <string name="licenses_section_app">Zephyr لائسنس</string>
+    <string name="licenses_section_notices">تیسرے فریق کے نوٹس</string>
+    <string name="licenses_section_texts">لائسنس کے متن</string>
+    <string name="licenses_unavailable">اس بلڈ میں لائسنس فائلیں موجود نہیں۔</string>
 
     <!-- ── Logs ── -->
     <string name="logs_title">لاگز</string>

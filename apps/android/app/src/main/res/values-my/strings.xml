@@ -418,6 +418,14 @@
     <string name="settings_share_diagnostics">ပြဿနာရှာ ဒေတာ မျှဝေရန်</string>
     <string name="settings_section_diagnostics">ပြဿနာရှာဖွေခြင်း</string>
     <string name="settings_local_data_note">စာရင်းသွင်းမှု၊ နုဒ်နှင့် ဒေတာအသုံးပြုမှုကို ဤစက်တွင်သာ သိမ်းသည်။</string>
+    <string name="settings_section_about">အကြောင်း</string>
+    <string name="settings_licenses">Open-source လိုင်စင်များ</string>
+    <string name="settings_source_code">ရင်းမြစ်ကုဒ်</string>
+    <string name="licenses_intro">Zephyr ၏ ကိုယ်ပိုင်ကုဒ်သည် MIT လိုင်စင်ဖြစ်သည်။ ဤအက်ပ်တွင် mihomo (GPL-3.0) ပါဝင်သဖြင့် အက်ပ်တစ်ခုလုံးကို GPL-3.0 ဖြင့် ဖြန့်ချိသည်။ သက်ဆိုင်ရာ ရင်းမြစ်ကုဒ်- %1$s၊ tag %2$s။</string>
+    <string name="licenses_section_app">Zephyr လိုင်စင်</string>
+    <string name="licenses_section_notices">ပြင်ပအဖွဲ့ အသိပေးချက်များ</string>
+    <string name="licenses_section_texts">လိုင်စင် စာသားများ</string>
+    <string name="licenses_unavailable">ဤဗားရှင်းတွင် လိုင်စင်ဖိုင်များ မပါဝင်ပါ။</string>
     <string name="logs_title">မှတ်တမ်းများ</string>
     <string name="logs_level_debug">အမှားရှာ</string>
     <string name="logs_level_info">အချက်အလက်</string>
