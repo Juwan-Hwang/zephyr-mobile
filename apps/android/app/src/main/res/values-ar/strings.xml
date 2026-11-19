@@ -548,6 +548,9 @@
     <string name="settings_on_demand">الاتصال عند الطلب</string>
     <string name="settings_trusted_wifi_hint">قطع الاتصال تلقائيًا عند الانضمام إليها</string>
     <string name="settings_trusted_wifi_location">اسمح بالوصول إلى الموقع للتعرّف على أسماء شبكات Wi‑Fi</string>
+    <string name="settings_trusted_wifi_location_off">شغّل خدمة الموقع في النظام للتعرّف على أسماء شبكات Wi‑Fi</string>
+    <string name="settings_trusted_wifi_always_on">تتم إدارته بواسطة «VPN الدائم التشغيل» في النظام</string>
+    <string name="notif_paused_trusted">تم قطع الاتصال على شبكة Wi‑Fi الموثوقة «%1$s». ستتم إعادة الاتصال تلقائيًا عند مغادرتها.</string>
     <string name="settings_password_required">طلب كلمة المرور</string>
     <string name="trusted_wifi_disconnect">قطع الاتصال على شبكات Wi‑Fi هذه</string>
     <string name="trusted_wifi_footer">على الشبكات الموثوقة مثل المنزل أو العمل، يقطع Zephyr الاتصال تلقائيًا، ثم يعيد الاتصال عند الحاجة بعد مغادرتها.</string>

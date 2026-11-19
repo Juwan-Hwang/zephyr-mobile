@@ -462,6 +462,9 @@
     <string name="settings_on_demand">Подключение по запросу</string>
     <string name="settings_trusted_wifi_hint">Автоматически отключаться в этих сетях</string>
     <string name="settings_trusted_wifi_location">Разрешите доступ к геолокации, чтобы распознавать сети Wi‑Fi</string>
+    <string name="settings_trusted_wifi_location_off">Включите геолокацию в системе, чтобы распознавать сети Wi‑Fi</string>
+    <string name="settings_trusted_wifi_always_on">Управляется системной функцией «Постоянная VPN»</string>
+    <string name="notif_paused_trusted">Отключено в доверенной сети Wi‑Fi «%1$s». Подключится снова, когда вы её покинете.</string>
     <string name="settings_password_required">Требовать пароль</string>
     <string name="trusted_wifi_disconnect">Отключаться в этих сетях Wi‑Fi</string>
     <string name="trusted_wifi_footer">В доверенных сетях, например дома или на работе, Zephyr отключается автоматически, а когда вы уходите, снова подключается по запросу.</string>

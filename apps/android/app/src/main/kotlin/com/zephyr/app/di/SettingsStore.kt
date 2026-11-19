@@ -30,13 +30,19 @@ class SettingsStore(private val context: Context, private val engine: ZephyrEngi
     val scrubHintSeen = context.store.data.map { it[keyScrubHint] == "1" }
     suspend fun setScrubHintSeen() { context.store.edit { it[keyScrubHint] = "1" } }
 
+    /** Completes once the stored settings were replayed into the engine (a cold boot reconnect waits for it). */
+    val loaded = kotlinx.coroutines.CompletableDeferred<Unit>()
+
     init {
         scope.launch {
-            context.store.data.first()[keySettings]?.let { raw ->
-                // Audit E16: an older build may have stored out-of-range values; bring them into range, never crash.
-                runCatching { json.decodeFromString(Settings.serializer(), raw) }.getOrNull()
-                    ?.let { runCatching { engine.updateSettings(com.zephyr.engine.core.CoreEngine.sanitized(it)) } }
+            runCatching {
+                context.store.data.first()[keySettings]?.let { raw ->
+                    // Audit E16: an older build may have stored out-of-range values; bring them into range, never crash.
+                    runCatching { json.decodeFromString(Settings.serializer(), raw) }.getOrNull()
+                        ?.let { runCatching { engine.updateSettings(com.zephyr.engine.core.CoreEngine.sanitized(it)) } }
+                }
             }
+            loaded.complete(Unit)
             // Audit E30: the subscription sweep follows 「仅 Wi‑Fi 更新」 (UNMETERED constraint), re-armed when it changes.
             launch {
                 engine.settings().map { it.updateOnWifiOnly }.distinctUntilChanged()

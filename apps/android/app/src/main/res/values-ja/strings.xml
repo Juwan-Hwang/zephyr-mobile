@@ -369,6 +369,9 @@
     <string name="settings_on_demand">オンデマンド接続</string>
     <string name="settings_trusted_wifi_hint">接続したら自動的に切断</string>
     <string name="settings_trusted_wifi_location">Wi‑Fi 名を識別するには位置情報へのアクセスを許可</string>
+    <string name="settings_trusted_wifi_location_off">Wi‑Fi 名を識別するにはシステムの位置情報をオンにしてください</string>
+    <string name="settings_trusted_wifi_always_on">システムの「常時接続 VPN」で管理されています</string>
+    <string name="notif_paused_trusted">信頼済み Wi‑Fi「%1$s」で切断しました。離れると自動で再接続します。</string>
     <string name="settings_password_required">パスワードを要求</string>
     <string name="trusted_wifi_disconnect">これらの Wi‑Fi に接続したら切断</string>
     <string name="trusted_wifi_footer">自宅や職場など信頼できるネットワークでは Zephyr が自動的に切断され、離れるとオンデマンドで再接続されます。</string>

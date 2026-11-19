@@ -1,6 +1,7 @@
 package com.zephyr.app.ui.settings
 
 import androidx.annotation.StringRes
+import com.zephyr.app.ui.library.textRes
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
@@ -176,12 +177,11 @@ private fun accentName(a: Accent): Int = when (a) {
  */
 @Composable
 private fun TrustedWifiRow(s: Settings, onClick: () -> Unit) {
-    val ctx = androidx.compose.ui.platform.LocalContext.current
-    val needs = AppGraph.network != null && s.disconnectOnTrusted && s.trustedWifi.any { it.isNotBlank() } &&
-        !com.zephyr.app.vpn.NetworkMonitor.hasLocationPermission(ctx)
+    // Re-checked on resume (coming back from system settings); 「始终开启的 VPN」 wins (contract §16.a⑤).
+    val notice = com.zephyr.app.ui.library.rememberTrustedWifiNotice(s)
     ZSettingsRow(
         stringResource(R.string.settings_trusted_wifi),
-        subtitle = stringResource(if (needs) R.string.settings_trusted_wifi_location else R.string.settings_trusted_wifi_hint),
+        subtitle = stringResource(notice.textRes() ?: R.string.settings_trusted_wifi_hint),
         value = joinList(s.trustedWifi).ifEmpty { stringResource(R.string.common_none) },
         chevron = true,
         onClick = onClick,

@@ -400,6 +400,9 @@
     <string name="settings_on_demand">Unganisha inapohitajika</string>
     <string name="settings_trusted_wifi_hint">Tenganisha kiotomatiki ukijiunga</string>
     <string name="settings_trusted_wifi_location">Ruhusu ufikiaji wa mahali ili kutambua majina ya Wi‑Fi</string>
+    <string name="settings_trusted_wifi_location_off">Washa mahali pa mfumo ili kutambua majina ya Wi‑Fi</string>
+    <string name="settings_trusted_wifi_always_on">Inasimamiwa na «VPN inayowashwa kila wakati» ya mfumo</string>
+    <string name="notif_paused_trusted">Imekatwa kwenye Wi‑Fi inayoaminika «%1$s». Itaunganisha tena kiotomatiki ukiondoka.</string>
     <string name="settings_password_required">Hitaji nenosiri</string>
     <string name="trusted_wifi_disconnect">Tenganisha kwenye Wi‑Fi hizi</string>
     <string name="trusted_wifi_footer">Kwenye mitandao inayoaminika kama nyumbani au kazini, Zephyr hujitenganisha kiotomatiki na kuunganisha tena inapohitajika ukiondoka.</string>

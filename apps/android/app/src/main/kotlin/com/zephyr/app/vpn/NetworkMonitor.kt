@@ -105,6 +105,10 @@ class NetworkMonitor(context: Context) {
         fun hasLocationPermission(ctx: Context): Boolean =
             ctx.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
+        /** System location switch (API 28+). Android 10+ also hides the SSID while it is off, even with permission. */
+        fun locationEnabled(ctx: Context): Boolean =
+            runCatching { ctx.getSystemService(android.location.LocationManager::class.java)?.isLocationEnabled ?: true }.getOrDefault(true)
+
         /** `"Home"` → `Home`; the OS placeholder `<unknown ssid>` and blanks → null. */
         fun cleanSsid(raw: String?): String? {
             val s = raw?.trim() ?: return null
@@ -126,6 +130,18 @@ class NetworkMonitor(context: Context) {
          */
         fun shouldDisconnect(settings: Settings, previousSsid: String?, ssid: String?): Boolean =
             settings.disconnectOnTrusted && ssid != null && ssid != previousSsid && isTrusted(settings, ssid)
+
+        /**
+         * Contract §16.a③: what counts as "the default underlying network changed" — Wi‑Fi ↔ cellular, or another
+         * SSID. When the SSID is unknown the network handle stands in (a Wi‑Fi reconnect then also counts, which only
+         * costs an extra closeAll). No network → null: losing the network is not a switch; the next one decides.
+         */
+        data class ChangeKey(val kind: NetworkKind, val ident: Any)
+
+        fun changeKey(hasNetwork: Boolean, kind: NetworkKind, ssid: String?, network: Any?): ChangeKey? =
+            if (!hasNetwork || network == null) null else ChangeKey(kind, ssid ?: network)
+
+        fun changeKey(s: Snapshot): ChangeKey? = changeKey(s.network != null, s.kind, s.ssid, s.network)
 
         /** 「仅 Wi‑Fi 测速」: automatic tests run unless the setting is on and the network is metered. */
         fun autoTestAllowed(wifiOnly: Boolean, metered: Boolean): Boolean = !(wifiOnly && metered)

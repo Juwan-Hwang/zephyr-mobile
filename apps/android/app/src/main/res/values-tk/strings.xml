@@ -400,6 +400,9 @@
     <string name="settings_on_demand">Zerur bolanda birikdir</string>
     <string name="settings_trusted_wifi_hint">Bu tora goşulanda birikmäni awtomatik kes</string>
     <string name="settings_trusted_wifi_location">Wi‑Fi atlaryny tanamak üçin ýerleşiş rugsadyny beriň</string>
+    <string name="settings_trusted_wifi_location_off">Wi‑Fi atlaryny tanamak üçin ulgamyň ýerleşişini açyň</string>
+    <string name="settings_trusted_wifi_always_on">Ulgamyň «Hemişe açyk VPN» sazlamasy dolandyrýar</string>
+    <string name="notif_paused_trusted">Ynamly Wi‑Fi «%1$s» ulgamynda baglanyşyk kesildi. Çykanyňyzda awtomatik täzeden birigýär.</string>
     <string name="settings_password_required">Parol talap et</string>
     <string name="trusted_wifi_disconnect">Şu Wi‑Fi torlarynda birikmäni kes</string>
     <string name="trusted_wifi_footer">Öý ýa-da iş ýaly ynamdar torlarda Zephyr birikmäni awtomatik kesýär we siz gideniňizde zerur bolanda gaýtadan birigýär.</string>

@@ -25,10 +25,13 @@ class ConnectionController(private val context: Context, private val engine: Zep
             context.startActivity(Intent(context, VpnPermissionActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
             return
         }
+        OnDemand.markManualConnect(context) // §16.a⑤: arms on-demand (the service marks it again, harmless)
         ContextCompat.startForegroundService(context, Intent(context, ZephyrVpnService::class.java).setAction(ZephyrVpnService.ACTION_CONNECT))
     }
 
+    /** Manual disconnect from any surface: pauses on-demand until the next manual connect (contract §16.a⑤). */
     fun disconnect() {
+        OnDemand.markManualDisconnect(context)
         context.startService(Intent(context, ZephyrVpnService::class.java).setAction(ZephyrVpnService.ACTION_DISCONNECT))
     }
 

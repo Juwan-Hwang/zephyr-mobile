@@ -17,7 +17,9 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <!-- No RECEIVE_BOOT_COMPLETED (release P2-2): no boot receiver; WorkManager merges its own. -->
+    <!-- 按需连接 (contract §16.a⑤): OnDemandReceiver reconnects after boot / app update, only when the user's last
+         manual action was "connect" and VPN consent already exists (never prompts). -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Android 9 only: "存储图像" inserts into MediaStore, which needs this below API 29 (review A-P1-3). -->
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -124,6 +126,15 @@
         <receiver
             android:name=".vpn.NotificationActionReceiver"
             android:exported="false" />
+
+        <receiver
+            android:name=".vpn.OnDemandReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
 
         <provider
             android:name="androidx.core.content.FileProvider"

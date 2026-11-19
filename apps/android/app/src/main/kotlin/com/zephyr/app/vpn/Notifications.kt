@@ -83,6 +83,30 @@ object Notifications {
             .build()
     }
 
+    /**
+     * Contract §16.a⑤: the tunnel was dropped on a trusted Wi‑Fi and on-demand will bring it back when the device
+     * leaves it. The service stays in the foreground (that is what keeps the network watch alive); 连接 connects here
+     * anyway, 断开连接 is a manual disconnect (pauses on-demand until the next manual connect).
+     */
+    fun pausedOnTrusted(ctx: Context, ssid: String?, accent: com.zephyr.engine.Accent): Notification {
+        val open = PendingIntent.getActivity(ctx, 0, Intent(ctx, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        return NotificationCompat.Builder(ctx, CH_VPN)
+            .setSmallIcon(R.drawable.ic_stat_zephyr)
+            .setOngoing(true)
+            .setOnlyAlertOnce(true)
+            .setSilent(true)
+            .setShowWhen(false)
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
+            .setContentIntent(open)
+            .setColor(com.zephyr.design.tokens.ZAccent.valueOf(accent.name).darkVariant().toArgb())
+            .setContentTitle(ctx.getString(R.string.app_name))
+            .setContentText(ctx.getString(R.string.notif_paused_trusted, ssid ?: ""))
+            .addAction(0, ctx.getString(R.string.common_connect), action(ctx, ZephyrVpnService.ACTION_CONNECT))
+            .addAction(0, ctx.getString(R.string.common_disconnect), action(ctx, ZephyrVpnService.ACTION_DISCONNECT))
+            .build()
+    }
+
     /** "Orbit 将于 11月9日 到期 · 剩余 12.0 GB" alert. */
     fun expiry(ctx: Context, name: String, date: String, remaining: String): Notification =
         NotificationCompat.Builder(ctx, CH_ALERTS)

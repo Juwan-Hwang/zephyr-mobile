@@ -369,6 +369,9 @@
     <string name="settings_on_demand">Kết nối theo yêu cầu</string>
     <string name="settings_trusted_wifi_hint">Tự động ngắt kết nối khi tham gia</string>
     <string name="settings_trusted_wifi_location">Cho phép truy cập vị trí để nhận diện tên Wi‑Fi</string>
+    <string name="settings_trusted_wifi_location_off">Bật vị trí hệ thống để nhận diện tên Wi‑Fi</string>
+    <string name="settings_trusted_wifi_always_on">Do «VPN luôn bật» của hệ thống quản lý</string>
+    <string name="notif_paused_trusted">Đã ngắt kết nối trên Wi‑Fi tin cậy “%1$s”. Sẽ tự kết nối lại khi bạn rời đi.</string>
     <string name="settings_password_required">Yêu cầu mật khẩu</string>
     <string name="trusted_wifi_disconnect">Ngắt kết nối khi dùng các Wi‑Fi này</string>
     <string name="trusted_wifi_footer">Trên mạng tin cậy như ở nhà hoặc nơi làm việc, Zephyr tự động ngắt kết nối và kết nối lại khi cần sau khi bạn rời đi.</string>
