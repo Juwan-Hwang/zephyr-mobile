@@ -323,11 +323,15 @@ targets:
         group: Shared
       - path: PacketTunnel/TunnelNetworkSettingsFactory.swift
         group: PacketTunnel
+      - path: Shared/Intents/TunnelSystemConfiguration.swift
+        group: Shared/Intents
       - path: PacketTunnel/TunnelConfiguration.swift
         group: PacketTunnel
       - path: PacketTunnel/MihomoBridge/MihomoBridge.swift
         group: PacketTunnel/MihomoBridge
       - path: PacketTunnel/MappedFile.swift
+        group: PacketTunnel
+      - path: PacketTunnel/ControllerSocket.swift
         group: PacketTunnel
       - path: App/ImportRequest.swift
         group: App

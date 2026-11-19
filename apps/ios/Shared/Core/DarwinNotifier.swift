@@ -13,6 +13,8 @@ enum DarwinNotification: String, CaseIterable, Sendable {
     case command = "app.zephyr.mobile.command"
     /// PacketTunnel 的连接状态变化。
     case tunnelStatus = "app.zephyr.mobile.tunnel-status"
+    /// PacketTunnel 判定默认底层网络变了（去抖 2 s 后，已 closeAll），契约 §16.a③。
+    case networkChanged = "app.zephyr.mobile.network-changed"
 
     var cfName: CFNotificationName { CFNotificationName(rawValue as CFString) }
 }

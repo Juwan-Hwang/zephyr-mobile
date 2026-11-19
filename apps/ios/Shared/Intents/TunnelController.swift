@@ -67,6 +67,8 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
         }
         if on {
             let manager = try await loadOrCreateManager()
+            // 用户手动连接：结束“手动断开暂停”（§16.a⑤）。
+            OnDemandPause.setUserPaused(false)
             // 手动断开时暂停过按需：按设置恢复（规则由 apply(onDemand:) 按当前设置写好）。
             let resume = OnDemandPause.enabledBeforeStart(hasRules: !(manager.onDemandRules ?? []).isEmpty,
                                                           current: manager.isOnDemandEnabled)
@@ -79,6 +81,8 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
             try await start(manager)
         } else {
             guard let manager = try await existingManager() else { return }
+            // 用户手动断开 = 暂停按需，直到下次手动连接（§16.a⑤）；没有规则时也记住，之后打开按需不会立刻重连。
+            OnDemandPause.setUserPaused(true)
             // 开着按需时直接 stop，规则末尾的 NEOnDemandRuleConnect 会让系统马上重连（#207 E02）。先关按需并保存。
             if let off = OnDemandPause.enabledBeforeStop(current: manager.isOnDemandEnabled) {
                 manager.isOnDemandEnabled = off
@@ -137,17 +141,11 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
         let manager: NETunnelProviderManager
         if createIfNeeded { manager = try await loadOrCreateManager() } else if let found = try await existingManager() { manager = found } else { return }
 
-        var rules: [NEOnDemandRule] = []
-        if !plan.disconnectSSIDs.isEmpty {
-            let disconnect = NEOnDemandRuleDisconnect()
-            disconnect.interfaceTypeMatch = .wiFi
-            disconnect.ssidMatch = plan.disconnectSSIDs
-            rules.append(disconnect)
-        }
-        if plan.connectElsewhere { rules.append(NEOnDemandRuleConnect()) } else if !rules.isEmpty { rules.append(NEOnDemandRuleIgnore()) }
+        let rules = OnDemandRules.make(plan)
 
         // 用户手动断开后按需处于暂停：设置变化只更新规则，不重新启用（下次手动连接时恢复，#207 E02）。
-        let paused = OnDemandPause.isPaused(hasRules: !(manager.onDemandRules ?? []).isEmpty, enabled: manager.isOnDemandEnabled)
+        let paused = OnDemandPause.isPaused(hasRules: !(manager.onDemandRules ?? []).isEmpty, enabled: manager.isOnDemandEnabled,
+                                            userPaused: OnDemandPause.userPaused())
         let enabled = OnDemandPause.enabledAfterApply(plan: plan, wasPaused: paused)
         // 没有变化就不写系统配置（每次保存都会触发 NEVPNConfigurationChange 通知）。
         let sameRules = (manager.onDemandRules ?? []).count == rules.count
@@ -209,11 +207,9 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
             return existing
         }
         let manager = NETunnelProviderManager()
-        let proto = NETunnelProviderProtocol()
-        proto.providerBundleIdentifier = Self.providerBundleIdentifier
-        proto.serverAddress = Self.localizedDescription
-        proto.disconnectOnSleep = false
-        manager.protocolConfiguration = proto
+        // 不开 includeAllNetworks / enforceRoutes（契约 §16.a⑥）。
+        manager.protocolConfiguration = TunnelProtocolFactory.make(providerBundleIdentifier: Self.providerBundleIdentifier,
+                                                                   serverAddress: Self.localizedDescription)
         manager.localizedDescription = Self.localizedDescription
         manager.isEnabled = true
         // 用户在授权弹窗点“不允许”→ permissionDenied；其他失败（如签名 / 权限配置问题）原样抛出，不误报成权限（#207 E07）。

@@ -56,6 +56,9 @@ final class SystemTunnelPort: TunnelPort, @unchecked Sendable {
         try? await controller.apply(onDemand: plan, createIfNeeded: create)
     }
 
+    /// 扩展判定底层网络变了（去抖 2 s、已 closeAll）后发的 Darwin 通知（§16.a③）。
+    func networkChanges() -> AsyncStream<Void> { DarwinNotifier.stream(.networkChanged) }
+
     func usageToday() async -> (hourly: [Int64], onlineMillis: Int64)? {
         guard let l = UsageLedger.load()?.today(Date()) else { return nil }
         return (l.hourly, l.onlineMillis)

@@ -35,10 +35,13 @@ public protocol TunnelPort: AnyObject, Sendable {
     /// 系统按需规则（按需连接 / 受信任 Wi‑Fi 自动断开）。`create == false` 时 VPN 配置尚未创建就什么都不做（避免提前弹授权）。
     /// 默认不支持（单测、模拟器）。
     func applyOnDemand(onDemand: Bool, trustedNetworks: [String], disconnectOnTrusted: Bool, create: Bool) async
+    /// 默认底层网络变化（扩展已去抖 2 s 并 closeAll，契约 §16.a③）。订阅方取消即停。默认不支持（单测、模拟器）。
+    func networkChanges() -> AsyncStream<Void>
 }
 
 public extension TunnelPort {
     func applyOnDemand(onDemand: Bool, trustedNetworks: [String], disconnectOnTrusted: Bool, create: Bool) async {}
+    func networkChanges() -> AsyncStream<Void> { AsyncStream { _ in } }
 }
 
 extension CoreEngine {
