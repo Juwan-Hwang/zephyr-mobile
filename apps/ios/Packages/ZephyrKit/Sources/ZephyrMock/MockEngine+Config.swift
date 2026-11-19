@@ -183,9 +183,42 @@ extension MockEngine {
 
     public func storage() async -> StorageInfo { MockFixtures.storage }
 
+    // MARK: §16.g ① 本地代理凭据
+
+    /// 契约 §16.g ①：Mock 固定返回这个值（24 位）。
+    public static let mockProxyCredential = "zephyr:mockmockmockmockmockmock"
+
+    public func localProxyCredential() async -> String { withState { $0.proxyCredential } }
+
+    /// 同种子同次数 → 同结果（mock-spec 确定性）；与当前值不同。
+    public func resetLocalProxyCredential() async -> String {
+        withState { s in
+            var next = s.proxyCredential
+            while next == s.proxyCredential {
+                s.credentialResets += 1
+                var rng = CredentialRNG(state: seed &+ s.credentialResets &* 0x9E37_79B9_7F4A_7C15)
+                next = LocalProxyCredential.generate(using: &rng)
+            }
+            s.proxyCredential = next
+            return next
+        }
+    }
+
     // MARK: §9 命令搜索
 
     public func commandSuggestions(input: String) async -> [CommandSuggestion] {
         await MockCommands.suggest(input: input, engine: self)
+    }
+}
+
+/// SplitMix64：只给 Mock 的凭据重置用，保证可复现。
+struct CredentialRNG: RandomNumberGenerator {
+    var state: UInt64
+    mutating func next() -> UInt64 {
+        state &+= 0x9E37_79B9_7F4A_7C15
+        var z = state
+        z = (z ^ (z >> 30)) &* 0xBF58_476D_1CE4_E5B9
+        z = (z ^ (z >> 27)) &* 0x94D0_49BB_1331_11EB
+        return z ^ (z >> 31)
     }
 }

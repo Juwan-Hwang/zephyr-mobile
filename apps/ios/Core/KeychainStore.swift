@@ -1,5 +1,6 @@
 // KeychainStore —— 小段敏感字符串（本地代理凭据）的钥匙串存取。
-// kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly：重启后首次解锁即可读，不随备份迁移。
+// kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly：重启后首次解锁即可读，不随备份迁移；
+// kSecAttrSynchronizable = false：不进 iCloud 钥匙串（契约 §16.g ①）。
 // 失败时返回 false / nil，由调用方回落（不抛错、不崩溃）。
 
 import Foundation
@@ -11,7 +12,8 @@ enum KeychainStore {
     private static func query(_ account: String) -> [String: Any] {
         [kSecClass as String: kSecClassGenericPassword,
          kSecAttrService as String: service,
-         kSecAttrAccount as String: account]
+         kSecAttrAccount as String: account,
+         kSecAttrSynchronizable as String: false]
     }
 
     static func read(_ account: String) -> String? {
@@ -26,7 +28,10 @@ enum KeychainStore {
     @discardableResult
     static func write(_ account: String, _ value: String) -> Bool {
         let data = Data(value.utf8)
-        let status = SecItemUpdate(query(account) as CFDictionary, [kSecValueData as String: data] as CFDictionary)
+        // 更新时一并重设可访问性，旧版本写入的条目也收紧到 ThisDeviceOnly。
+        let attrs: [String: Any] = [kSecValueData as String: data,
+                                    kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]
+        let status = SecItemUpdate(query(account) as CFDictionary, attrs as CFDictionary)
         if status == errSecSuccess { return true }
         guard status == errSecItemNotFound else { return false }
         var add = query(account)

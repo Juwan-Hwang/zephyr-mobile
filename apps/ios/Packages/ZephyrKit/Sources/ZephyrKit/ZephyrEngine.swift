@@ -96,6 +96,12 @@ public protocol ZephyrEngine: AnyObject, Sendable {
     func updateSettings(patch: Settings) async throws
     func storage() async -> StorageInfo
 
+    // MARK: §16.g ① 本地代理凭据（U9；不过 FFI，凭据存平台安全存储）
+    /// "zephyr:<24 位>"（`LocalProxyCredential` 格式）；不存在则生成并保存后返回。
+    func localProxyCredential() async -> String
+    /// 换一个新密码并返回；隧道运行中且本地代理开启 + 需要密码时随后热重载。
+    func resetLocalProxyCredential() async -> String
+
     // MARK: §9 命令搜索
     /// ≤ 8 条；空输入给"建议"。
     func commandSuggestions(input: String) async -> [CommandSuggestion]

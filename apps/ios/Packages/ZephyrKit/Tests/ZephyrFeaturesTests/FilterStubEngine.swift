@@ -127,5 +127,7 @@ final class FilterStubEngine: ZephyrEngine, @unchecked Sendable {
     func settings() -> AsyncStream<Settings> { base.settings() }
     func updateSettings(patch: Settings) async throws { try await base.updateSettings(patch: patch) }
     func storage() async -> StorageInfo { await base.storage() }
+    func localProxyCredential() async -> String { await base.localProxyCredential() }
+    func resetLocalProxyCredential() async -> String { await base.resetLocalProxyCredential() }
     func commandSuggestions(input: String) async -> [CommandSuggestion] { await base.commandSuggestions(input: input) }
 }
