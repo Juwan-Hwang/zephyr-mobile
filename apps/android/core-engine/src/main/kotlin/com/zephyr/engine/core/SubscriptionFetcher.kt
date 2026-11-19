@@ -162,7 +162,8 @@ object SubscriptionFetcher {
     fun download(url: String, dest: java.io.File, o: Options, maxBytes: Long = MAX_GEO_BYTES) {
         request(url, o).use { resp ->
             dest.parentFile?.mkdirs()
-            val tmp = java.io.File(dest.path + ".part")
+            // Unique temp per call: overlapping GEO refreshes must not truncate or rename each other's data.
+            val tmp = java.io.File.createTempFile(dest.name + ".", ".part", dest.absoluteFile.parentFile)
             try {
                 tmp.outputStream().use { out -> copyCapped(resp.body, out, maxBytes, resp.deadline, o.clock) }
                 if (!tmp.renameTo(dest)) throw failed("rename failed")
@@ -222,7 +223,7 @@ object SubscriptionFetcher {
             if (route != null && t.https) {
                 val authority = (if (t.host.contains(':')) "[${t.host}]" else t.host) + ":${t.port}"
                 sock.getOutputStream().write("CONNECT $authority HTTP/1.1\r\nHost: $authority\r\n$proxyAuth\r\n".toByteArray())
-                val head = readHead(sock.getInputStream())
+                val head = readHead(sock.getInputStream(), deadline, o.clock)
                 if (statusOf(head) != 200) throw failed("proxy CONNECT ${statusOf(head)}")
             } else if (route != null) {
                 requestTarget = "http://$hostHeader$path"
@@ -245,7 +246,7 @@ object SubscriptionFetcher {
             stream.getOutputStream().write(req.toByteArray())
             stream.getOutputStream().flush()
             val input = java.io.BufferedInputStream(stream.getInputStream())
-            val head = readHead(input)
+            val head = readHead(input, deadline, o.clock)
             val status = statusOf(head) ?: throw failed("bad response")
             val headers = parseHeaders(head)
             var body: InputStream = when {
@@ -273,9 +274,11 @@ object SubscriptionFetcher {
         throw last ?: IOException("no address")
     }
 
-    private fun readHead(input: InputStream): String {
+    /** soTimeout is per read, so a server trickling bytes is cut off by the total deadline here (§16.i 30 s). */
+    private fun readHead(input: InputStream, deadline: Long, clock: () -> Long): String {
         val sb = StringBuilder()
         while (sb.length < 65_536) {
+            if (clock() > deadline) throw failed("timeout")
             val b = input.read()
             if (b < 0) break
             sb.append(b.toChar())
