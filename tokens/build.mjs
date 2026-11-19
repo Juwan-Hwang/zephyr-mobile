@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Zephyr Mobile token 生成器（零依赖）。
 // 输入：vendor/zephyr/packages/tokens/src/{primitive,semantic,component}.json（桌面，只读）+ tokens/mobile.json（移动增补）
-// 输出：tokens/generated/ios/ZTokens.swift、tokens/generated/android/ZTokens.kt
+// 输出：tokens/generated/ios/ZTokens.swift、tokens/generated/android/ZTokens.kt、tokens/generated/harmony/{ZTokens.ets,resources/*/element/color.json}
 // 颜色输出为 light/dark 动态色：iOS 用 UIColor(dynamicProvider:)，Android 用 ZColors 两套实例 + CompositionLocal。组件里不写三元判断。
 // 用法：node tokens/build.mjs [--check]   （--check：产物与仓库不一致则退出 1，CI 用）
 import fs from 'node:fs';
@@ -350,9 +350,101 @@ ${thresholds.map((t) => `    const val ${t.name}: Int = ${t.v}`).join('\n')}
 }
 `;
 
+
+// ---------- ArkTS（HarmonyOS，apps/harmony 由 D 引用） ----------
+// 两种产物：ZTokens.ets（常量，深浅两套色对象）与资源 color.json（base=浅色、dark=深色，系统按深浅色自动切换，用 $r('app.color.xxx')）。
+const argb = (c) => '#' + hex8(c).slice(2);
+const snake = (n) => n.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
+const etsObj = (name, pick) => `export const ${name}: ZColors = {
+${colors.map((c) => `  ${c.name}: '${argb(pick(c))}',`).join('\n')}
+};`;
+const arkts = `${header('ets')}
+// 用法：颜色优先用资源 $r('app.color.<snake_name>')（自动跟随深浅色）；需要在代码里取值时用 zColors(isDark)。
+// 尺寸单位为 vp（字号 fp），时间为 ms。
+
+export interface ZColors {
+${colors.map((c) => `${c.comment ? `  /** ${c.comment} */\n` : ''}  ${c.name}: string;`).join('\n')}
+}
+
+${etsObj('ZColorsDark', (c) => c.dark)}
+
+${etsObj('ZColorsLight', (c) => c.light)}
+
+export function zColors(isDark: boolean): ZColors {
+  return isDark ? ZColorsDark : ZColorsLight;
+}
+
+export class ZPalette {
+${palette.map((p) => `  static readonly ${p.name}: string = '${argb(p.c)}';`).join('\n')}
+}
+
+export enum ZAccent {
+${Object.entries(ACCENTS).map(([k, h]) => `  ${k.toUpperCase()} = '${argb(parseColor(h))}',`).join('\n')}
+}
+
+export class ZSpace {
+${space.map((s) => `  static readonly ${s.name}: number = ${s.v};`).join('\n')}
+}
+
+export class ZRadius {
+${radius.map((s) => `  static readonly ${s.name}: number = ${s.v};`).join('\n')}
+}
+
+export class ZFontSize {
+${fontSize.map((s) => `  static readonly ${s.name}: number = ${s.v};`).join('\n')}
+}
+
+export interface ZTypeStyle {
+  size: number;
+  weight: number;
+  lineHeight: number;
+  tabularNums: boolean;
+}
+
+export class ZType {
+${types.map((t) => `${t.comment ? `  /** ${t.comment} */\n` : ''}  static readonly ${t.name}: ZTypeStyle = { size: ${t.size}, weight: ${t.weight}, lineHeight: ${t.line}, tabularNums: ${t.name.startsWith('metric')} };`).join('\n')}
+}
+
+export class ZTime {
+${time.map((s) => `  static readonly ${s.name}: number = ${s.v};`).join('\n')}
+}
+
+/** cubic-bezier 控制点，配合 curves.cubicBezierCurve(...ZEasing.x)。 */
+export class ZEasing {
+${easing.map((e) => `  static readonly ${e.name}: number[] = [${e.b.join(', ')}];`).join('\n')}
+}
+
+export class ZLayout {
+${[...layout, ...touch.map((t) => ({ ...t, name: 'touch' + t.name.replace(/^./, (c) => c.toUpperCase()) }))].map((s) => `${s.comment ? `  /** ${s.comment} */\n` : ''}  static readonly ${s.name}: number = ${s.v};`).join('\n')}
+  static readonly glassBlur: number = ${glassBlur};
+}
+
+export class ZMotion {
+${motion.map((s) => `${s.comment ? `  /** ${s.comment} */\n` : ''}  static readonly ${s.name}: number = ${s.v};${/ms|s$/.test(s.raw) ? '  // ms' : ''}`).join('\n')}
+  /** SwiftUI spring(response, damping) 换算：stiffness = (2π / response)²，damping 比例同值，供 curves.springMotion / interpolatingSpring 换算用。 */
+  static readonly springStiffness: number = Math.pow(2 * Math.PI / ${motion.find((m) => m.name === 'springResponse')?.v ?? 0.5}, 2);
+  static readonly glowRadius: number = ${glow.find((g) => g.name === 'connect').v};
+  static readonly glowAlpha: number = ${glow.find((g) => g.name === 'alpha').v};
+}
+
+export class ZLatency {
+${thresholds.map((t) => `  static readonly ${t.name}: number = ${t.v};`).join('\n')}
+  /** undefined = 未测，-1 = 超时 */
+  static color(ms: number | undefined, c: ZColors): string {
+    if (ms === undefined) return c.latencyUnknown;
+    if (ms < 0) return c.latencyTimeout;
+    return ms >= ZLatency.slow ? c.latencySlow : c.latencyNormal;
+  }
+}
+`;
+const colorRes = (pick) => JSON.stringify({ color: colors.map((c) => ({ name: snake(c.name), value: argb(pick(c)) })) }, null, 2) + '\n';
+
 // ---------- 写出 ----------
 const outs = {
   [path.join(here, 'generated/ios/ZTokens.swift')]: swift,
+  [path.join(here, 'generated/harmony/ZTokens.ets')]: arkts,
+  [path.join(here, 'generated/harmony/resources/base/element/color.json')]: colorRes((c) => c.light),
+  [path.join(here, 'generated/harmony/resources/dark/element/color.json')]: colorRes((c) => c.dark),
   [path.join(here, 'generated/android/ZTokens.kt')]: kotlin.replace('import androidx.compose.ui.text.font.FontFeature\n', ''),
 };
 const check = process.argv.includes('--check');
