@@ -220,12 +220,12 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
                 com.zephyr.app.ui.settings.ChoiceRow(
                     stringResource(R.string.subs_auto_update), options = com.zephyr.engine.SettingsCodec.AUTO_UPDATE_OPTIONS.map { it to pluralStringResource(R.plurals.subs_every_hours, it, it) }, selected = settings.autoUpdateHours,
                     // §16.c / §16.g ②: also re-times every subscription with its own interval > 0 (engine side).
-                    onSelect = { h -> writeSettings(settings.copy(autoUpdateHours = h)) },
+                    onSelect = { h -> writeSettings { it.copy(autoUpdateHours = h) } },
                 )
                 ZDivider()
-                ZSettingsRow(stringResource(R.string.subs_update_wifi_only), checked = settings.updateOnWifiOnly, onCheckedChange = { v -> writeSettings(settings.copy(updateOnWifiOnly = v)) })
+                ZSettingsRow(stringResource(R.string.subs_update_wifi_only), checked = settings.updateOnWifiOnly, onCheckedChange = { v -> writeSettings { it.copy(updateOnWifiOnly = v) } })
                 ZDivider()
-                ZSettingsRow(stringResource(R.string.subs_show_changes), checked = settings.showChangesBeforeUpdate, onCheckedChange = { v -> writeSettings(settings.copy(showChangesBeforeUpdate = v)) })
+                ZSettingsRow(stringResource(R.string.subs_show_changes), checked = settings.showChangesBeforeUpdate, onCheckedChange = { v -> writeSettings { it.copy(showChangesBeforeUpdate = v) } })
                 ZDivider()
                 ZSettingsRow(stringResource(R.string.subs_update_all), onClick = { requestUpdateAll() }, value = if (updating) stringResource(R.string.common_updating) else null)
             }

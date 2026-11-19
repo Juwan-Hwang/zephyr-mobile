@@ -65,7 +65,7 @@ fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onTrustedWifi: () -> U
     val storage by produceState(StorageInfo(0, 0, 0)) { value = engine.storage() }
     val scope = rememberCoroutineScope()
     val write = rememberSettingsWriter()
-    fun set(f: (Settings) -> Settings) = write(f(s))
+    fun set(f: (Settings) -> Settings) = write(f)
 
     PageScaffold(back, stringResource(R.string.common_settings), onBack) {
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {

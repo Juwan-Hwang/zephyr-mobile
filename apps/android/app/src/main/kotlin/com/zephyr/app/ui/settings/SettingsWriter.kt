@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.zephyr.app.R
 import com.zephyr.app.di.AppGraph
 import com.zephyr.engine.Settings
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -16,13 +17,14 @@ import kotlinx.coroutines.launch
  * are rolled back and reported by [com.zephyr.app.di.SettingsStore]. Never silent.
  */
 @Composable
-fun rememberSettingsWriter(): (Settings) -> Unit {
+fun rememberSettingsWriter(): ((Settings) -> Settings) -> Unit {
     val scope = rememberCoroutineScope()
     val ctx = LocalContext.current
     return remember(scope, ctx) {
-        { next ->
+        { change ->
             scope.launch {
-                runCatching { AppGraph.engine.updateSettings(next) }.onFailure {
+                // Applied to the engine's latest value, not the composition's snapshot, so two quick edits never undo each other.
+                runCatching { AppGraph.engine.updateSettings(change(AppGraph.engine.settings().first())) }.onFailure {
                     android.util.Log.w("Zephyr", "settings not applied: ${it.message}")
                     Toast.makeText(ctx, R.string.local_proxy_apply_failed, Toast.LENGTH_SHORT).show()
                 }
