@@ -1,4 +1,4 @@
-// SettingsView — 设置页（原型 25）。分组：连接 / 检测 / 存储 / 外观 / 隐私 / 诊断（日志）；页脚“数据仅保存在此设备上”与版本号。
+// SettingsView — 设置页（原型 25）。分组：连接 / 检测 / 存储 / 外观 / 隐私 / 诊断（日志）/ 关于（开源许可，GPL 合规 #209）；页脚“数据仅保存在此设备上”与版本号。
 // 每次改动都经 SettingsStore 全量写回 updateSettings(patch:)；失败回滚并以顶部横幅提示（与首页一致，REVIEW L-P2-11）。
 // 强调色与深浅色写回后由 RootView 读取 AppModel.settings 统一应用到整个 App。
 // “应用图标”不是引擎设置，走 AppIconModel → UIApplication.setAlternateIconName（REVIEW L-P2-14）。
@@ -39,6 +39,7 @@ public struct SettingsView: View {
                     appearance
                     privacy.disabled(store.settings == nil)
                     diagnostics
+                    about
                 }
                 .padding(.horizontal, PageMetrics.margin)
                 PageFootnote("订阅、节点与流量数据仅保存在此设备上。")
@@ -164,6 +165,18 @@ public struct SettingsView: View {
         ZSettingsGroup("诊断") {
             NavigationLink { LogsView(engine: store.engine) } label: {
                 ZSettingsRow("日志", subtitle: ZL.tr("隧道与核心的运行日志"), accessory: .chevron)
+            }
+            .buttonStyle(ZRowButtonStyle())
+        }
+    }
+
+    // MARK: 关于
+
+    /// 开源许可：依赖、版本、许可全文与本 App 源码获取方式（安装包整体按 GPL-3.0 分发，#209）。
+    private var about: some View {
+        ZSettingsGroup("关于") {
+            NavigationLink { OpenSourceLicensesView() } label: {
+                ZSettingsRow("开源许可", subtitle: ZL.tr("组件、版本与许可证全文"), accessory: .chevron)
             }
             .buttonStyle(ZRowButtonStyle())
         }
