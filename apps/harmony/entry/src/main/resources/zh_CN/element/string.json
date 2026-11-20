@@ -425,8 +425,44 @@
       "value": "超时"
     },
     {
+      "name": "hm_licenses_placeholder",
+      "value": "完整的许可列表将在后续版本中提供。"
+    },
+    {
       "name": "hm_rules_test",
       "value": "测试"
+    },
+    {
+      "name": "hm_settings_engine",
+      "value": "引擎"
+    },
+    {
+      "name": "hm_settings_engine_mock",
+      "value": "演示（仅界面）"
+    },
+    {
+      "name": "hm_settings_engine_native",
+      "value": "内置内核"
+    },
+    {
+      "name": "hm_settings_lan_bypass",
+      "value": "局域网不经代理"
+    },
+    {
+      "name": "hm_settings_lan_bypass_footer",
+      "value": "局域网、链路本地、回环与组播地址在任何模式下都不进入隧道，打印、投屏与路由器管理照常可用。此项不可关闭。"
+    },
+    {
+      "name": "hm_settings_log_level",
+      "value": "日志级别"
+    },
+    {
+      "name": "hm_settings_mode",
+      "value": "代理模式"
+    },
+    {
+      "name": "hm_settings_version",
+      "value": "版本"
     },
     {
       "name": "hm_time_days_ago",

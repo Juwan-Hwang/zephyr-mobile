@@ -18,7 +18,16 @@
     "hm_home_download": "Download",
     "hm_home_current_node": "Current node",
     "hm_home_simulated": "UI only: simulated connection, no tunnel",
-    "hm_rules_test": "Test"
+    "hm_rules_test": "Test",
+    "hm_settings_lan_bypass": "Bypass local network",
+    "hm_settings_lan_bypass_footer": "Local network, link-local, loopback and multicast addresses never enter the tunnel in any mode, so printers, casting and your router keep working. This can't be turned off.",
+    "hm_settings_log_level": "Log level",
+    "hm_settings_engine": "Engine",
+    "hm_settings_engine_mock": "Demo (UI only)",
+    "hm_settings_engine_native": "Built-in core",
+    "hm_settings_version": "Version",
+    "hm_settings_mode": "Default mode",
+    "hm_licenses_placeholder": "The full list of licenses will be included in a later build."
   },
   "zh": {
     "module_desc": "Zephyr 应用模块",
@@ -39,6 +48,15 @@
     "hm_home_download": "下载",
     "hm_home_current_node": "当前节点",
     "hm_home_simulated": "仅界面：模拟连接，未建立隧道",
-    "hm_rules_test": "测试"
+    "hm_rules_test": "测试",
+    "hm_settings_lan_bypass": "局域网不经代理",
+    "hm_settings_lan_bypass_footer": "局域网、链路本地、回环与组播地址在任何模式下都不进入隧道，打印、投屏与路由器管理照常可用。此项不可关闭。",
+    "hm_settings_log_level": "日志级别",
+    "hm_settings_engine": "引擎",
+    "hm_settings_engine_mock": "演示（仅界面）",
+    "hm_settings_engine_native": "内置内核",
+    "hm_settings_version": "版本",
+    "hm_settings_mode": "代理模式",
+    "hm_licenses_placeholder": "完整的许可列表将在后续版本中提供。"
   }
 }
