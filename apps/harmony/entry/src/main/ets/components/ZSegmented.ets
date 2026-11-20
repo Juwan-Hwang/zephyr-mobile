@@ -5,7 +5,7 @@
 export struct ZSegmented {
   @Param options: ResourceStr[] = [];
   @Param selected: number = 0;
-  @Param enabled: boolean = true;
+  @Param isEnabled: boolean = true;
   @Event onSelect: (index: number) => void = (index: number) => {};
 
   build() {
@@ -21,7 +21,7 @@ export struct ZSegmented {
           .borderRadius(8)
           .backgroundColor(i === this.selected ? $r('app.color.screen_s4') : Color.Transparent)
           .onClick(() => {
-            if (this.enabled && i !== this.selected) {
+            if (this.isEnabled && i !== this.selected) {
               this.onSelect(i);
             }
           })
@@ -31,6 +31,6 @@ export struct ZSegmented {
     .padding(2)
     .borderRadius(10)
     .backgroundColor($r('app.color.screen_s3'))
-    .opacity(this.enabled ? 1 : 0.5)
+    .opacity(this.isEnabled ? 1 : 0.5)
   }
 }

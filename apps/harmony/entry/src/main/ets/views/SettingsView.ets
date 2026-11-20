@@ -136,7 +136,7 @@ export struct SettingsView {
               });
             }
           })
-          ZToggleRow({ title: $r('app.string.hm_settings_lan_bypass'), isOn: true, enabled: false, divider: false })
+          ZToggleRow({ title: $r('app.string.hm_settings_lan_bypass'), isOn: true, isEnabled: false, divider: false })
         }
 
         ZSection({ header: $r('app.string.settings_section_testing') }) {
