@@ -49,10 +49,6 @@
       "value": "Hizmet"
     },
     {
-      "name": "command_direct_from_proxy",
-      "value": "Proxy"
-    },
-    {
       "name": "command_direct_note",
       "value": "%1$s trafiği proxy’yi kullanmayacak."
     },
@@ -181,14 +177,6 @@
       "value": "Ekleniyor…"
     },
     {
-      "name": "common_all",
-      "value": "Tümü"
-    },
-    {
-      "name": "common_apply",
-      "value": "Uygula"
-    },
-    {
       "name": "common_back_to",
       "value": "%1$s sayfasına dön"
     },
@@ -211,10 +199,6 @@
     {
       "name": "common_direct",
       "value": "Doğrudan"
-    },
-    {
-      "name": "common_disconnect",
-      "value": "Bağlantıyı kes"
     },
     {
       "name": "common_exit_ip_changes",
@@ -241,48 +225,16 @@
       "value": "Bu cihazın ağı"
     },
     {
-      "name": "common_mode_direct",
-      "value": "Doğrudan"
-    },
-    {
       "name": "common_mode_direct_hint",
       "value": "Proxy kullanılmaz"
-    },
-    {
-      "name": "common_mode_global",
-      "value": "Küresel"
     },
     {
       "name": "common_mode_global_hint",
       "value": "Tüm trafik tek düğümden"
     },
     {
-      "name": "common_mode_rule",
-      "value": "Kural"
-    },
-    {
       "name": "common_mode_rule_hint",
       "value": "Senaryoya göre yönlendir"
-    },
-    {
-      "name": "common_no_results",
-      "value": "Sonuç yok"
-    },
-    {
-      "name": "common_nodes",
-      "value": "Düğümler"
-    },
-    {
-      "name": "common_none",
-      "value": "Yok"
-    },
-    {
-      "name": "common_off",
-      "value": "Kapalı"
-    },
-    {
-      "name": "common_on",
-      "value": "Açık"
     },
     {
       "name": "common_open_settings",
@@ -297,10 +249,6 @@
       "value": "Test ediliyor…"
     },
     {
-      "name": "common_rules",
-      "value": "Kurallar"
-    },
-    {
       "name": "common_scene_ai",
       "value": "AI"
     },
@@ -311,14 +259,6 @@
     {
       "name": "common_scene_video",
       "value": "Video"
-    },
-    {
-      "name": "common_scenes",
-      "value": "Senaryolar"
-    },
-    {
-      "name": "common_settings",
-      "value": "Ayarlar"
     },
     {
       "name": "common_share",
@@ -337,40 +277,16 @@
       "value": "Bağlı"
     },
     {
-      "name": "common_status_connecting",
-      "value": "Bağlanıyor"
-    },
-    {
       "name": "common_status_connecting_ellipsis",
       "value": "Bağlanıyor…"
-    },
-    {
-      "name": "common_status_disconnected",
-      "value": "Bağlı değil"
     },
     {
       "name": "common_status_disconnecting",
       "value": "Bağlantı kesiliyor"
     },
     {
-      "name": "common_status_failed",
-      "value": "Bağlantı başarısız"
-    },
-    {
-      "name": "common_subscriptions",
-      "value": "Abonelikler"
-    },
-    {
-      "name": "common_today",
-      "value": "Bugün"
-    },
-    {
       "name": "common_try_again",
       "value": "Tekrar dene"
-    },
-    {
-      "name": "common_undo",
-      "value": "Geri al"
     },
     {
       "name": "common_updating",
@@ -485,10 +401,6 @@
       "value": "%1$s ile değiştir"
     },
     {
-      "name": "home_global_title",
-      "value": "Küresel mod"
-    },
-    {
       "name": "home_global_use_rule",
       "value": "Kural modunu kullan"
     },
@@ -545,10 +457,6 @@
       "value": "%1$s sorunsuz"
     },
     {
-      "name": "home_scene_testing",
-      "value": "Test ediliyor"
-    },
-    {
       "name": "home_scenes_tested",
       "value": "Son test: %1$s"
     },
@@ -559,10 +467,6 @@
     {
       "name": "home_spark_a11y",
       "value": "İndirme hızı, son 90 saniye"
-    },
-    {
-      "name": "home_switch_mode",
-      "value": "Modu değiştir"
     },
     {
       "name": "home_switched_to",
@@ -681,22 +585,6 @@
       "value": "Henüz günlük yok"
     },
     {
-      "name": "logs_level_debug",
-      "value": "Hata ayıklama"
-    },
-    {
-      "name": "logs_level_error",
-      "value": "Hata"
-    },
-    {
-      "name": "logs_level_info",
-      "value": "Bilgi"
-    },
-    {
-      "name": "logs_level_warning",
-      "value": "Uyarı"
-    },
-    {
       "name": "logs_line_a11y",
       "value": "%1$s %2$s %3$s"
     },
@@ -707,10 +595,6 @@
     {
       "name": "logs_resume",
       "value": "Sürdür"
-    },
-    {
-      "name": "logs_title",
-      "value": "Günlükler"
     },
     {
       "name": "nodes_detail_latency",
@@ -853,24 +737,12 @@
       "value": "Engellendi"
     },
     {
-      "name": "rules_kind_domain",
-      "value": "Alan adı"
-    },
-    {
       "name": "rules_kind_ip",
       "value": "IP"
     },
     {
       "name": "rules_kind_other",
       "value": "Diğer"
-    },
-    {
-      "name": "rules_kind_override",
-      "value": "Üzerine yazma"
-    },
-    {
-      "name": "rules_kind_subscription",
-      "value": "Abonelik"
     },
     {
       "name": "rules_match_order",
@@ -883,10 +755,6 @@
     {
       "name": "rules_other_traffic",
       "value": "Diğer tüm trafik"
-    },
-    {
-      "name": "rules_step_exit_ip",
-      "value": "Çıkış IP’si"
     },
     {
       "name": "rules_step_layer",
@@ -961,10 +829,6 @@
       "value": "%1$s (sabit)"
     },
     {
-      "name": "scene_retest",
-      "value": "Yeniden test et"
-    },
-    {
       "name": "scene_test_daily",
       "value": "Her gün"
     },
@@ -989,10 +853,6 @@
       "value": "Düğüm kullanılamadığında"
     },
     {
-      "name": "settings_accent",
-      "value": "Vurgu rengi"
-    },
-    {
       "name": "settings_accent_blue",
       "value": "Mavi"
     },
@@ -1009,22 +869,6 @@
       "value": "Pembe"
     },
     {
-      "name": "settings_appearance",
-      "value": "Görünüm"
-    },
-    {
-      "name": "settings_appearance_dark",
-      "value": "Koyu"
-    },
-    {
-      "name": "settings_appearance_light",
-      "value": "Açık"
-    },
-    {
-      "name": "settings_appearance_system",
-      "value": "Sistem"
-    },
-    {
       "name": "settings_keep_results",
       "value": "Sonuçları sakla"
     },
@@ -1037,16 +881,8 @@
       "value": "Abonelikler, düğümler ve trafik verileri yalnızca bu cihazda saklanır."
     },
     {
-      "name": "settings_local_proxy",
-      "value": "Yerel proxy portu"
-    },
-    {
       "name": "settings_on_demand",
       "value": "İsteğe bağlı bağlan"
-    },
-    {
-      "name": "settings_password_required",
-      "value": "Parola gerektir"
     },
     {
       "name": "settings_save_failed",
@@ -1059,10 +895,6 @@
     {
       "name": "settings_section_connection",
       "value": "Bağlantı"
-    },
-    {
-      "name": "settings_section_diagnostics",
-      "value": "Tanılama"
     },
     {
       "name": "settings_section_privacy",
@@ -1125,10 +957,6 @@
       "value": "Tüm abonelikler"
     },
     {
-      "name": "subs_auto_update",
-      "value": "Otomatik güncelleme"
-    },
-    {
       "name": "subs_deleted",
       "value": "Silindi: %1$s"
     },
@@ -1187,10 +1015,6 @@
     {
       "name": "subs_import_desktop_source",
       "value": "Zephyr Masaüstü"
-    },
-    {
-      "name": "subs_import_file",
-      "value": "Dosyadan içe aktar"
     },
     {
       "name": "subs_import_insecure",
@@ -1273,14 +1097,6 @@
       "value": "Silmeyi onayla"
     },
     {
-      "name": "subs_swipe_delete",
-      "value": "Sil"
-    },
-    {
-      "name": "subs_swipe_update",
-      "value": "Güncelle"
-    },
-    {
       "name": "subs_swipe_updating",
       "value": "Güncelleniyor"
     },
@@ -1295,6 +1111,214 @@
     {
       "name": "subs_update_wifi_only",
       "value": "Yalnızca Wi‑Fi’da güncelle"
+    },
+    {
+      "name": "term_accent",
+      "value": "Vurgu rengi"
+    },
+    {
+      "name": "term_all",
+      "value": "Tümü"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Görünüm"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Koyu"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Açık"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Sistem"
+    },
+    {
+      "name": "term_apply",
+      "value": "Uygula"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Otomatik güncelleme"
+    },
+    {
+      "name": "term_delete",
+      "value": "Sil"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Tanılama"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Bağlantıyı kes"
+    },
+    {
+      "name": "term_domain",
+      "value": "Alan adı"
+    },
+    {
+      "name": "term_exit",
+      "value": "Çıkış"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "Çıkış IP’si"
+    },
+    {
+      "name": "term_import",
+      "value": "İçe Aktar"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Dosyadan içe aktar"
+    },
+    {
+      "name": "term_latency",
+      "value": "Gecikme"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Yerel proxy portu"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Hata ayıklama"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Hata"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Bilgi"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Uyarı"
+    },
+    {
+      "name": "term_logs",
+      "value": "Günlükler"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Doğrudan"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Küresel"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Küresel mod"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Kural"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Sonuç yok"
+    },
+    {
+      "name": "term_node",
+      "value": "Düğüm"
+    },
+    {
+      "name": "term_nodes",
+      "value": "Düğümler"
+    },
+    {
+      "name": "term_none",
+      "value": "Yok"
+    },
+    {
+      "name": "term_off",
+      "value": "Kapalı"
+    },
+    {
+      "name": "term_on",
+      "value": "Açık"
+    },
+    {
+      "name": "term_override",
+      "value": "Üzerine yazma"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proxy"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Parola gerektir"
+    },
+    {
+      "name": "term_rule",
+      "value": "Kural"
+    },
+    {
+      "name": "term_rules",
+      "value": "Kurallar"
+    },
+    {
+      "name": "term_scene",
+      "value": "Senaryo"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Senaryolar"
+    },
+    {
+      "name": "term_settings",
+      "value": "Ayarlar"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Bağlanıyor"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Bağlı değil"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Bağlantı başarısız"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Abonelik"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Abonelikler"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Modu değiştir"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Yeniden test et"
+    },
+    {
+      "name": "term_testing",
+      "value": "Test ediliyor"
+    },
+    {
+      "name": "term_today",
+      "value": "Bugün"
+    },
+    {
+      "name": "term_undo",
+      "value": "Geri al"
+    },
+    {
+      "name": "term_update",
+      "value": "Güncelle"
     },
     {
       "name": "tile_a11y",
@@ -1373,20 +1397,8 @@
       "value": "%1$s artık %2$s üzerinden"
     },
     {
-      "name": "trace_step_exit",
-      "value": "Çıkış"
-    },
-    {
-      "name": "trace_step_node",
-      "value": "Düğüm"
-    },
-    {
       "name": "trace_step_rule",
       "value": "Kural"
-    },
-    {
-      "name": "trace_step_scene",
-      "value": "Senaryo"
     },
     {
       "name": "trace_this_connection",

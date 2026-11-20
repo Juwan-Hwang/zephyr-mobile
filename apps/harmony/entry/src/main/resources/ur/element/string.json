@@ -49,10 +49,6 @@
       "value": "سروس"
     },
     {
-      "name": "command_direct_from_proxy",
-      "value": "پراکسی"
-    },
-    {
       "name": "command_direct_note",
       "value": "\\u2068%1$s\\u2069 کا ٹریفک پراکسی سے نہیں گزرے گا۔"
     },
@@ -181,14 +177,6 @@
       "value": "شامل کیا جا رہا ہے…"
     },
     {
-      "name": "common_all",
-      "value": "سب"
-    },
-    {
-      "name": "common_apply",
-      "value": "لاگو کریں"
-    },
-    {
       "name": "common_back_to",
       "value": "\\u2068%1$s\\u2069 پر واپس جائیں"
     },
@@ -211,10 +199,6 @@
     {
       "name": "common_direct",
       "value": "براہ راست"
-    },
-    {
-      "name": "common_disconnect",
-      "value": "منقطع کریں"
     },
     {
       "name": "common_exit_ip_changes",
@@ -241,48 +225,16 @@
       "value": "اس ڈیوائس کا نیٹ ورک"
     },
     {
-      "name": "common_mode_direct",
-      "value": "براہ راست"
-    },
-    {
       "name": "common_mode_direct_hint",
       "value": "پراکسی کے بغیر"
-    },
-    {
-      "name": "common_mode_global",
-      "value": "گلوبل"
     },
     {
       "name": "common_mode_global_hint",
       "value": "تمام ٹریفک ایک نوڈ سے"
     },
     {
-      "name": "common_mode_rule",
-      "value": "قاعدہ"
-    },
-    {
       "name": "common_mode_rule_hint",
       "value": "منظر کے مطابق روٹنگ"
-    },
-    {
-      "name": "common_no_results",
-      "value": "کوئی نتیجہ نہیں"
-    },
-    {
-      "name": "common_nodes",
-      "value": "نوڈز"
-    },
-    {
-      "name": "common_none",
-      "value": "کوئی نہیں"
-    },
-    {
-      "name": "common_off",
-      "value": "آف"
-    },
-    {
-      "name": "common_on",
-      "value": "آن"
     },
     {
       "name": "common_open_settings",
@@ -297,10 +249,6 @@
       "value": "ٹیسٹ جاری…"
     },
     {
-      "name": "common_rules",
-      "value": "قواعد"
-    },
-    {
       "name": "common_scene_ai",
       "value": "مصنوعی ذہانت"
     },
@@ -311,14 +259,6 @@
     {
       "name": "common_scene_video",
       "value": "ویڈیو"
-    },
-    {
-      "name": "common_scenes",
-      "value": "مناظر"
-    },
-    {
-      "name": "common_settings",
-      "value": "ترتیبات"
     },
     {
       "name": "common_share",
@@ -337,40 +277,16 @@
       "value": "منسلک"
     },
     {
-      "name": "common_status_connecting",
-      "value": "منسلک ہو رہا ہے"
-    },
-    {
       "name": "common_status_connecting_ellipsis",
       "value": "منسلک ہو رہا ہے…"
-    },
-    {
-      "name": "common_status_disconnected",
-      "value": "غیر منسلک"
     },
     {
       "name": "common_status_disconnecting",
       "value": "منقطع ہو رہا ہے"
     },
     {
-      "name": "common_status_failed",
-      "value": "کنکشن ناکام"
-    },
-    {
-      "name": "common_subscriptions",
-      "value": "سبسکرپشنز"
-    },
-    {
-      "name": "common_today",
-      "value": "آج"
-    },
-    {
       "name": "common_try_again",
       "value": "دوبارہ کوشش کریں"
-    },
-    {
-      "name": "common_undo",
-      "value": "واپس کریں"
     },
     {
       "name": "common_updating",
@@ -485,10 +401,6 @@
       "value": "\\u2068%1$s\\u2069 پر تبدیل کریں"
     },
     {
-      "name": "home_global_title",
-      "value": "گلوبل موڈ"
-    },
-    {
       "name": "home_global_use_rule",
       "value": "قاعدہ موڈ استعمال کریں"
     },
@@ -545,10 +457,6 @@
       "value": "\\u2068%1$s\\u2069 دستیاب"
     },
     {
-      "name": "home_scene_testing",
-      "value": "ٹیسٹ جاری"
-    },
-    {
       "name": "home_scenes_tested",
       "value": "\\u2068%1$s\\u2069 ٹیسٹ کیا گیا"
     },
@@ -559,10 +467,6 @@
     {
       "name": "home_spark_a11y",
       "value": "پچھلے 90 سیکنڈ میں ڈاؤن لوڈ کی رفتار"
-    },
-    {
-      "name": "home_switch_mode",
-      "value": "موڈ تبدیل کریں"
     },
     {
       "name": "home_switched_to",
@@ -681,22 +585,6 @@
       "value": "ابھی کوئی لاگ نہیں"
     },
     {
-      "name": "logs_level_debug",
-      "value": "ڈیبگ"
-    },
-    {
-      "name": "logs_level_error",
-      "value": "خرابی"
-    },
-    {
-      "name": "logs_level_info",
-      "value": "معلومات"
-    },
-    {
-      "name": "logs_level_warning",
-      "value": "انتباہ"
-    },
-    {
       "name": "logs_line_a11y",
       "value": "%1$s %2$s %3$s"
     },
@@ -707,10 +595,6 @@
     {
       "name": "logs_resume",
       "value": "جاری رکھیں"
-    },
-    {
-      "name": "logs_title",
-      "value": "لاگز"
     },
     {
       "name": "nodes_detail_latency",
@@ -853,24 +737,12 @@
       "value": "بلاک شدہ"
     },
     {
-      "name": "rules_kind_domain",
-      "value": "ڈومین"
-    },
-    {
       "name": "rules_kind_ip",
       "value": "IP"
     },
     {
       "name": "rules_kind_other",
       "value": "دیگر"
-    },
-    {
-      "name": "rules_kind_override",
-      "value": "اوور رائیڈ"
-    },
-    {
-      "name": "rules_kind_subscription",
-      "value": "سبسکرپشن"
     },
     {
       "name": "rules_match_order",
@@ -883,10 +755,6 @@
     {
       "name": "rules_other_traffic",
       "value": "باقی تمام ٹریفک"
-    },
-    {
-      "name": "rules_step_exit_ip",
-      "value": "ایگزٹ IP"
     },
     {
       "name": "rules_step_layer",
@@ -961,10 +829,6 @@
       "value": "\\u2068%1$s\\u2069 (پن شدہ)"
     },
     {
-      "name": "scene_retest",
-      "value": "دوبارہ ٹیسٹ کریں"
-    },
-    {
       "name": "scene_test_daily",
       "value": "روزانہ"
     },
@@ -989,10 +853,6 @@
       "value": "جب نوڈ دستیاب نہ ہو"
     },
     {
-      "name": "settings_accent",
-      "value": "نمایاں رنگ"
-    },
-    {
       "name": "settings_accent_blue",
       "value": "نیلا"
     },
@@ -1009,22 +869,6 @@
       "value": "گلابی"
     },
     {
-      "name": "settings_appearance",
-      "value": "ظاہری شکل"
-    },
-    {
-      "name": "settings_appearance_dark",
-      "value": "تاریک"
-    },
-    {
-      "name": "settings_appearance_light",
-      "value": "روشن"
-    },
-    {
-      "name": "settings_appearance_system",
-      "value": "سسٹم"
-    },
-    {
       "name": "settings_keep_results",
       "value": "نتائج محفوظ رکھیں"
     },
@@ -1037,16 +881,8 @@
       "value": "سبسکرپشنز، نوڈز اور ٹریفک ڈیٹا صرف اسی ڈیوائس پر محفوظ ہوتے ہیں۔"
     },
     {
-      "name": "settings_local_proxy",
-      "value": "مقامی پراکسی پورٹ"
-    },
-    {
       "name": "settings_on_demand",
       "value": "ضرورت پر منسلک کریں"
-    },
-    {
-      "name": "settings_password_required",
-      "value": "پاس ورڈ درکار"
     },
     {
       "name": "settings_save_failed",
@@ -1059,10 +895,6 @@
     {
       "name": "settings_section_connection",
       "value": "کنکشن"
-    },
-    {
-      "name": "settings_section_diagnostics",
-      "value": "تشخیص"
     },
     {
       "name": "settings_section_privacy",
@@ -1125,10 +957,6 @@
       "value": "تمام سبسکرپشنز"
     },
     {
-      "name": "subs_auto_update",
-      "value": "خودکار اپ ڈیٹس"
-    },
-    {
       "name": "subs_deleted",
       "value": "\\u2068%1$s\\u2069 حذف ہو گیا"
     },
@@ -1187,10 +1015,6 @@
     {
       "name": "subs_import_desktop_source",
       "value": "Zephyr ڈیسک ٹاپ"
-    },
-    {
-      "name": "subs_import_file",
-      "value": "فائل سے امپورٹ کریں"
     },
     {
       "name": "subs_import_insecure",
@@ -1273,14 +1097,6 @@
       "value": "حذف کی تصدیق"
     },
     {
-      "name": "subs_swipe_delete",
-      "value": "حذف کریں"
-    },
-    {
-      "name": "subs_swipe_update",
-      "value": "اپ ڈیٹ"
-    },
-    {
       "name": "subs_swipe_updating",
       "value": "اپ ڈیٹ…"
     },
@@ -1295,6 +1111,214 @@
     {
       "name": "subs_update_wifi_only",
       "value": "صرف Wi‑Fi پر اپ ڈیٹ کریں"
+    },
+    {
+      "name": "term_accent",
+      "value": "نمایاں رنگ"
+    },
+    {
+      "name": "term_all",
+      "value": "سب"
+    },
+    {
+      "name": "term_appearance",
+      "value": "ظاہری شکل"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "تاریک"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "روشن"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "سسٹم"
+    },
+    {
+      "name": "term_apply",
+      "value": "لاگو کریں"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "خودکار اپ ڈیٹس"
+    },
+    {
+      "name": "term_delete",
+      "value": "حذف کریں"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "تشخیص"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "منقطع کریں"
+    },
+    {
+      "name": "term_domain",
+      "value": "ڈومین"
+    },
+    {
+      "name": "term_exit",
+      "value": "ایگزٹ"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "ایگزٹ IP"
+    },
+    {
+      "name": "term_import",
+      "value": "امپورٹ"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "فائل سے امپورٹ کریں"
+    },
+    {
+      "name": "term_latency",
+      "value": "تاخیر"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "مقامی پراکسی پورٹ"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "ڈیبگ"
+    },
+    {
+      "name": "term_log_error",
+      "value": "خرابی"
+    },
+    {
+      "name": "term_log_info",
+      "value": "معلومات"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "انتباہ"
+    },
+    {
+      "name": "term_logs",
+      "value": "لاگز"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "براہ راست"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "گلوبل"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "گلوبل موڈ"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "قاعدہ"
+    },
+    {
+      "name": "term_no_results",
+      "value": "کوئی نتیجہ نہیں"
+    },
+    {
+      "name": "term_node",
+      "value": "نوڈ"
+    },
+    {
+      "name": "term_nodes",
+      "value": "نوڈز"
+    },
+    {
+      "name": "term_none",
+      "value": "کوئی نہیں"
+    },
+    {
+      "name": "term_off",
+      "value": "آف"
+    },
+    {
+      "name": "term_on",
+      "value": "آن"
+    },
+    {
+      "name": "term_override",
+      "value": "اوور رائیڈ"
+    },
+    {
+      "name": "term_proxy",
+      "value": "پراکسی"
+    },
+    {
+      "name": "term_require_password",
+      "value": "پاس ورڈ درکار"
+    },
+    {
+      "name": "term_rule",
+      "value": "قاعدہ"
+    },
+    {
+      "name": "term_rules",
+      "value": "قواعد"
+    },
+    {
+      "name": "term_scene",
+      "value": "منظر"
+    },
+    {
+      "name": "term_scenes",
+      "value": "مناظر"
+    },
+    {
+      "name": "term_settings",
+      "value": "ترتیبات"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "منسلک ہو رہا ہے"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "غیر منسلک"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "کنکشن ناکام"
+    },
+    {
+      "name": "term_subscription",
+      "value": "سبسکرپشن"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "سبسکرپشنز"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "موڈ تبدیل کریں"
+    },
+    {
+      "name": "term_test_again",
+      "value": "دوبارہ ٹیسٹ کریں"
+    },
+    {
+      "name": "term_testing",
+      "value": "ٹیسٹ جاری"
+    },
+    {
+      "name": "term_today",
+      "value": "آج"
+    },
+    {
+      "name": "term_undo",
+      "value": "واپس کریں"
+    },
+    {
+      "name": "term_update",
+      "value": "اپ ڈیٹ"
     },
     {
       "name": "tile_a11y",
@@ -1373,20 +1397,8 @@
       "value": "\\u2068%1$s\\u2069 اب \\u2068%2$s\\u2069 استعمال کرتا ہے"
     },
     {
-      "name": "trace_step_exit",
-      "value": "ایگزٹ"
-    },
-    {
-      "name": "trace_step_node",
-      "value": "نوڈ"
-    },
-    {
       "name": "trace_step_rule",
       "value": "قاعدہ"
-    },
-    {
-      "name": "trace_step_scene",
-      "value": "منظر"
     },
     {
       "name": "trace_this_connection",

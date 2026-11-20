@@ -18,6 +18,7 @@ import { ZSegmented } from '../components/ZSegmented';
 import { ZToggleRow } from '../components/ZToggleRow';
 import { ConnectionState, copySettings, LogLevel, ProxyMode, Settings, StorageInfo } from '../engine/Model';
 import { Subscription as StreamSub } from '../engine/Stream';
+import { ZTerm } from '../generated/ZTerms';
 
 const MODES: ProxyMode[] = [ProxyMode.RULE, ProxyMode.GLOBAL, ProxyMode.DIRECT];
 const LEVELS: LogLevel[] = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARNING, LogLevel.ERROR];
@@ -101,7 +102,7 @@ export struct SettingsView {
   build() {
     Scroll() {
       Column({ space: 20 }) {
-        Text($r('app.string.common_settings'))
+        Text(ZTerm.settings)
           .fontSize(28)
           .fontWeight(FontWeight.Bold)
           .fontColor($r('app.color.screen_t1'))
@@ -153,7 +154,7 @@ export struct SettingsView {
           })
         }
 
-        ZSection({ header: $r('app.string.settings_section_diagnostics') }) {
+        ZSection({ header: ZTerm.diagnostics }) {
           Column({ space: 6 }) {
             Text($r('app.string.hm_settings_log_level'))
               .fontSize(16)
@@ -169,7 +170,7 @@ export struct SettingsView {
           .alignItems(HorizontalAlign.Start)
           .padding(16)
           Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
-          ZNavRow({ title: $r('app.string.logs_title'), onTap: () => this.onOpenLogs() })
+          ZNavRow({ title: ZTerm.logs, onTap: () => this.onOpenLogs() })
           ZToggleRow({
             title: $r('app.string.settings_share_diagnostics'),
             isOn: this.shareDiagnostics,

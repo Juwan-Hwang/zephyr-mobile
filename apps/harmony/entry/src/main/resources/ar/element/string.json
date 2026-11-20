@@ -49,10 +49,6 @@
       "value": "الخدمة"
     },
     {
-      "name": "command_direct_from_proxy",
-      "value": "الوكيل"
-    },
-    {
       "name": "command_direct_note",
       "value": "ستتجاوز حركة مرور \\u2068%1$s\\u2069 الوكيل."
     },
@@ -181,14 +177,6 @@
       "value": "جارٍ الإضافة…"
     },
     {
-      "name": "common_all",
-      "value": "الكل"
-    },
-    {
-      "name": "common_apply",
-      "value": "تطبيق"
-    },
-    {
       "name": "common_back_to",
       "value": "رجوع إلى \\u2068%1$s\\u2069"
     },
@@ -211,10 +199,6 @@
     {
       "name": "common_direct",
       "value": "مباشر"
-    },
-    {
-      "name": "common_disconnect",
-      "value": "قطع الاتصال"
     },
     {
       "name": "common_exit_ip_changes",
@@ -241,48 +225,16 @@
       "value": "شبكة هذا الجهاز"
     },
     {
-      "name": "common_mode_direct",
-      "value": "مباشر"
-    },
-    {
       "name": "common_mode_direct_hint",
       "value": "تجاوز الوكيل"
-    },
-    {
-      "name": "common_mode_global",
-      "value": "شامل"
     },
     {
       "name": "common_mode_global_hint",
       "value": "كل حركة المرور عبر عقدة واحدة"
     },
     {
-      "name": "common_mode_rule",
-      "value": "القاعدة"
-    },
-    {
       "name": "common_mode_rule_hint",
       "value": "توجيه حسب المشهد"
-    },
-    {
-      "name": "common_no_results",
-      "value": "لا توجد نتائج"
-    },
-    {
-      "name": "common_nodes",
-      "value": "العقد"
-    },
-    {
-      "name": "common_none",
-      "value": "بلا"
-    },
-    {
-      "name": "common_off",
-      "value": "معطّل"
-    },
-    {
-      "name": "common_on",
-      "value": "مفعّل"
     },
     {
       "name": "common_open_settings",
@@ -297,10 +249,6 @@
       "value": "جارٍ الاختبار…"
     },
     {
-      "name": "common_rules",
-      "value": "القواعد"
-    },
-    {
       "name": "common_scene_ai",
       "value": "الذكاء الاصطناعي"
     },
@@ -311,14 +259,6 @@
     {
       "name": "common_scene_video",
       "value": "الفيديو"
-    },
-    {
-      "name": "common_scenes",
-      "value": "المشاهد"
-    },
-    {
-      "name": "common_settings",
-      "value": "الإعدادات"
     },
     {
       "name": "common_share",
@@ -337,40 +277,16 @@
       "value": "متصل"
     },
     {
-      "name": "common_status_connecting",
-      "value": "جارٍ الاتصال"
-    },
-    {
       "name": "common_status_connecting_ellipsis",
       "value": "جارٍ الاتصال…"
-    },
-    {
-      "name": "common_status_disconnected",
-      "value": "غير متصل"
     },
     {
       "name": "common_status_disconnecting",
       "value": "جارٍ قطع الاتصال"
     },
     {
-      "name": "common_status_failed",
-      "value": "فشل الاتصال"
-    },
-    {
-      "name": "common_subscriptions",
-      "value": "الاشتراكات"
-    },
-    {
-      "name": "common_today",
-      "value": "اليوم"
-    },
-    {
       "name": "common_try_again",
       "value": "حاول مرة أخرى"
-    },
-    {
-      "name": "common_undo",
-      "value": "تراجع"
     },
     {
       "name": "common_updating",
@@ -485,10 +401,6 @@
       "value": "التغيير إلى \\u2068%1$s\\u2069"
     },
     {
-      "name": "home_global_title",
-      "value": "الوضع الشامل"
-    },
-    {
       "name": "home_global_use_rule",
       "value": "استخدام وضع القاعدة"
     },
@@ -545,10 +457,6 @@
       "value": "\\u2068%1$s\\u2069 متاح"
     },
     {
-      "name": "home_scene_testing",
-      "value": "جارٍ الاختبار"
-    },
-    {
       "name": "home_scenes_tested",
       "value": "اختُبرت \\u2068%1$s\\u2069"
     },
@@ -559,10 +467,6 @@
     {
       "name": "home_spark_a11y",
       "value": "سرعة التنزيل خلال آخر 90 ثانية"
-    },
-    {
-      "name": "home_switch_mode",
-      "value": "تبديل الوضع"
     },
     {
       "name": "home_switched_to",
@@ -681,22 +585,6 @@
       "value": "لا توجد سجلات بعد"
     },
     {
-      "name": "logs_level_debug",
-      "value": "تصحيح"
-    },
-    {
-      "name": "logs_level_error",
-      "value": "خطأ"
-    },
-    {
-      "name": "logs_level_info",
-      "value": "معلومات"
-    },
-    {
-      "name": "logs_level_warning",
-      "value": "تحذير"
-    },
-    {
       "name": "logs_line_a11y",
       "value": "%1$s %2$s %3$s"
     },
@@ -707,10 +595,6 @@
     {
       "name": "logs_resume",
       "value": "استئناف"
-    },
-    {
-      "name": "logs_title",
-      "value": "السجلات"
     },
     {
       "name": "nodes_detail_latency",
@@ -853,24 +737,12 @@
       "value": "محظور"
     },
     {
-      "name": "rules_kind_domain",
-      "value": "نطاق"
-    },
-    {
       "name": "rules_kind_ip",
       "value": "IP"
     },
     {
       "name": "rules_kind_other",
       "value": "أخرى"
-    },
-    {
-      "name": "rules_kind_override",
-      "value": "تجاوز"
-    },
-    {
-      "name": "rules_kind_subscription",
-      "value": "اشتراك"
     },
     {
       "name": "rules_match_order",
@@ -883,10 +755,6 @@
     {
       "name": "rules_other_traffic",
       "value": "كل حركة المرور الأخرى"
-    },
-    {
-      "name": "rules_step_exit_ip",
-      "value": "عنوان IP للخروج"
     },
     {
       "name": "rules_step_layer",
@@ -961,10 +829,6 @@
       "value": "\\u2068%1$s\\u2069 (مثبّتة)"
     },
     {
-      "name": "scene_retest",
-      "value": "إعادة الاختبار"
-    },
-    {
       "name": "scene_test_daily",
       "value": "يوميًا"
     },
@@ -989,10 +853,6 @@
       "value": "عند تعذّر الوصول إلى عقدة"
     },
     {
-      "name": "settings_accent",
-      "value": "لون التمييز"
-    },
-    {
       "name": "settings_accent_blue",
       "value": "أزرق"
     },
@@ -1009,22 +869,6 @@
       "value": "وردي"
     },
     {
-      "name": "settings_appearance",
-      "value": "المظهر"
-    },
-    {
-      "name": "settings_appearance_dark",
-      "value": "داكن"
-    },
-    {
-      "name": "settings_appearance_light",
-      "value": "فاتح"
-    },
-    {
-      "name": "settings_appearance_system",
-      "value": "النظام"
-    },
-    {
       "name": "settings_keep_results",
       "value": "الاحتفاظ بالنتائج"
     },
@@ -1037,16 +881,8 @@
       "value": "تُحفظ الاشتراكات والعقد وبيانات حركة المرور على هذا الجهاز فقط."
     },
     {
-      "name": "settings_local_proxy",
-      "value": "منفذ الوكيل المحلي"
-    },
-    {
       "name": "settings_on_demand",
       "value": "الاتصال عند الطلب"
-    },
-    {
-      "name": "settings_password_required",
-      "value": "طلب كلمة المرور"
     },
     {
       "name": "settings_save_failed",
@@ -1059,10 +895,6 @@
     {
       "name": "settings_section_connection",
       "value": "الاتصال"
-    },
-    {
-      "name": "settings_section_diagnostics",
-      "value": "التشخيص"
     },
     {
       "name": "settings_section_privacy",
@@ -1125,10 +957,6 @@
       "value": "كل الاشتراكات"
     },
     {
-      "name": "subs_auto_update",
-      "value": "التحديث التلقائي"
-    },
-    {
       "name": "subs_deleted",
       "value": "تم حذف \\u2068%1$s\\u2069"
     },
@@ -1187,10 +1015,6 @@
     {
       "name": "subs_import_desktop_source",
       "value": "Zephyr لسطح المكتب"
-    },
-    {
-      "name": "subs_import_file",
-      "value": "استيراد من ملف"
     },
     {
       "name": "subs_import_insecure",
@@ -1273,14 +1097,6 @@
       "value": "تأكيد الحذف"
     },
     {
-      "name": "subs_swipe_delete",
-      "value": "حذف"
-    },
-    {
-      "name": "subs_swipe_update",
-      "value": "تحديث"
-    },
-    {
       "name": "subs_swipe_updating",
       "value": "جارٍ التحديث…"
     },
@@ -1295,6 +1111,214 @@
     {
       "name": "subs_update_wifi_only",
       "value": "التحديث عبر Wi‑Fi فقط"
+    },
+    {
+      "name": "term_accent",
+      "value": "لون التمييز"
+    },
+    {
+      "name": "term_all",
+      "value": "الكل"
+    },
+    {
+      "name": "term_appearance",
+      "value": "المظهر"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "داكن"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "فاتح"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "النظام"
+    },
+    {
+      "name": "term_apply",
+      "value": "تطبيق"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "التحديث التلقائي"
+    },
+    {
+      "name": "term_delete",
+      "value": "حذف"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "التشخيص"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "قطع الاتصال"
+    },
+    {
+      "name": "term_domain",
+      "value": "نطاق"
+    },
+    {
+      "name": "term_exit",
+      "value": "المخرج"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "عنوان IP للخروج"
+    },
+    {
+      "name": "term_import",
+      "value": "استيراد"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "استيراد من ملف"
+    },
+    {
+      "name": "term_latency",
+      "value": "التأخير"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "منفذ الوكيل المحلي"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "تصحيح"
+    },
+    {
+      "name": "term_log_error",
+      "value": "خطأ"
+    },
+    {
+      "name": "term_log_info",
+      "value": "معلومات"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "تحذير"
+    },
+    {
+      "name": "term_logs",
+      "value": "السجلات"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "مباشر"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "شامل"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "الوضع الشامل"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "القاعدة"
+    },
+    {
+      "name": "term_no_results",
+      "value": "لا توجد نتائج"
+    },
+    {
+      "name": "term_node",
+      "value": "العقدة"
+    },
+    {
+      "name": "term_nodes",
+      "value": "العقد"
+    },
+    {
+      "name": "term_none",
+      "value": "بلا"
+    },
+    {
+      "name": "term_off",
+      "value": "معطّل"
+    },
+    {
+      "name": "term_on",
+      "value": "مفعّل"
+    },
+    {
+      "name": "term_override",
+      "value": "تجاوز"
+    },
+    {
+      "name": "term_proxy",
+      "value": "الوكيل"
+    },
+    {
+      "name": "term_require_password",
+      "value": "طلب كلمة المرور"
+    },
+    {
+      "name": "term_rule",
+      "value": "القاعدة"
+    },
+    {
+      "name": "term_rules",
+      "value": "القواعد"
+    },
+    {
+      "name": "term_scene",
+      "value": "المشهد"
+    },
+    {
+      "name": "term_scenes",
+      "value": "المشاهد"
+    },
+    {
+      "name": "term_settings",
+      "value": "الإعدادات"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "جارٍ الاتصال"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "غير متصل"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "فشل الاتصال"
+    },
+    {
+      "name": "term_subscription",
+      "value": "اشتراك"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "الاشتراكات"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "تبديل الوضع"
+    },
+    {
+      "name": "term_test_again",
+      "value": "إعادة الاختبار"
+    },
+    {
+      "name": "term_testing",
+      "value": "جارٍ الاختبار"
+    },
+    {
+      "name": "term_today",
+      "value": "اليوم"
+    },
+    {
+      "name": "term_undo",
+      "value": "تراجع"
+    },
+    {
+      "name": "term_update",
+      "value": "تحديث"
     },
     {
       "name": "tile_a11y",
@@ -1373,20 +1397,8 @@
       "value": "يستخدم \\u2068%1$s\\u2069 الآن \\u2068%2$s\\u2069"
     },
     {
-      "name": "trace_step_exit",
-      "value": "المخرج"
-    },
-    {
-      "name": "trace_step_node",
-      "value": "العقدة"
-    },
-    {
       "name": "trace_step_rule",
       "value": "القاعدة"
-    },
-    {
-      "name": "trace_step_scene",
-      "value": "المشهد"
     },
     {
       "name": "trace_this_connection",

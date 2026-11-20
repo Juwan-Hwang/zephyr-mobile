@@ -12,6 +12,7 @@ import { LibraryView } from '../views/LibraryView';
 import { SettingsView } from '../views/SettingsView';
 import { LogsPage } from './LogsPage';
 import { LicensesPage } from './LicensesPage';
+import { ZTerm } from '../generated/ZTerms';
 
 const ROUTE_LOGS: string = 'logs';
 const ROUTE_LICENSES: string = 'licenses';
@@ -90,7 +91,7 @@ struct Index {
         TabContent() {
           NodesView({ onImport: () => this.select(TAB_LIBRARY) })
         }
-        .tabBar(this.tabBar(TAB_NODES, $r('app.string.common_nodes')))
+        .tabBar(this.tabBar(TAB_NODES, ZTerm.nodes))
 
         TabContent() {
           LibraryView()
@@ -103,7 +104,7 @@ struct Index {
             onOpenLicenses: () => this.pathStack.pushPathByName(ROUTE_LICENSES, '')
           })
         }
-        .tabBar(this.tabBar(TAB_SETTINGS, $r('app.string.common_settings')))
+        .tabBar(this.tabBar(TAB_SETTINGS, ZTerm.settings))
       }
       .scrollable(false)
       .animationDuration(0)

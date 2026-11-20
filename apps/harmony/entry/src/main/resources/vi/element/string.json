@@ -49,10 +49,6 @@
       "value": "Dịch vụ"
     },
     {
-      "name": "command_direct_from_proxy",
-      "value": "Proxy"
-    },
-    {
       "name": "command_direct_note",
       "value": "Lưu lượng của %1$s sẽ không qua proxy."
     },
@@ -181,14 +177,6 @@
       "value": "Đang thêm…"
     },
     {
-      "name": "common_all",
-      "value": "Tất cả"
-    },
-    {
-      "name": "common_apply",
-      "value": "Áp dụng"
-    },
-    {
       "name": "common_back_to",
       "value": "Quay lại %1$s"
     },
@@ -211,10 +199,6 @@
     {
       "name": "common_direct",
       "value": "Trực tiếp"
-    },
-    {
-      "name": "common_disconnect",
-      "value": "Ngắt kết nối"
     },
     {
       "name": "common_exit_ip_changes",
@@ -241,48 +225,16 @@
       "value": "Mạng của thiết bị này"
     },
     {
-      "name": "common_mode_direct",
-      "value": "Trực tiếp"
-    },
-    {
       "name": "common_mode_direct_hint",
       "value": "Không qua proxy"
-    },
-    {
-      "name": "common_mode_global",
-      "value": "Toàn cục"
     },
     {
       "name": "common_mode_global_hint",
       "value": "Mọi lưu lượng qua một nút"
     },
     {
-      "name": "common_mode_rule",
-      "value": "Quy tắc"
-    },
-    {
       "name": "common_mode_rule_hint",
       "value": "Định tuyến theo ngữ cảnh"
-    },
-    {
-      "name": "common_no_results",
-      "value": "Không có kết quả"
-    },
-    {
-      "name": "common_nodes",
-      "value": "Nút"
-    },
-    {
-      "name": "common_none",
-      "value": "Không có"
-    },
-    {
-      "name": "common_off",
-      "value": "Tắt"
-    },
-    {
-      "name": "common_on",
-      "value": "Bật"
     },
     {
       "name": "common_open_settings",
@@ -297,10 +249,6 @@
       "value": "Đang kiểm tra…"
     },
     {
-      "name": "common_rules",
-      "value": "Quy tắc"
-    },
-    {
       "name": "common_scene_ai",
       "value": "AI"
     },
@@ -311,14 +259,6 @@
     {
       "name": "common_scene_video",
       "value": "Video"
-    },
-    {
-      "name": "common_scenes",
-      "value": "Ngữ cảnh"
-    },
-    {
-      "name": "common_settings",
-      "value": "Cài đặt"
     },
     {
       "name": "common_share",
@@ -337,40 +277,16 @@
       "value": "Đã kết nối"
     },
     {
-      "name": "common_status_connecting",
-      "value": "Đang kết nối"
-    },
-    {
       "name": "common_status_connecting_ellipsis",
       "value": "Đang kết nối…"
-    },
-    {
-      "name": "common_status_disconnected",
-      "value": "Chưa kết nối"
     },
     {
       "name": "common_status_disconnecting",
       "value": "Đang ngắt kết nối"
     },
     {
-      "name": "common_status_failed",
-      "value": "Kết nối không thành công"
-    },
-    {
-      "name": "common_subscriptions",
-      "value": "Đăng ký"
-    },
-    {
-      "name": "common_today",
-      "value": "Hôm nay"
-    },
-    {
       "name": "common_try_again",
       "value": "Thử lại"
-    },
-    {
-      "name": "common_undo",
-      "value": "Hoàn tác"
     },
     {
       "name": "common_updating",
@@ -485,10 +401,6 @@
       "value": "Đổi sang %1$s"
     },
     {
-      "name": "home_global_title",
-      "value": "Chế độ toàn cục"
-    },
-    {
       "name": "home_global_use_rule",
       "value": "Dùng chế độ quy tắc"
     },
@@ -545,10 +457,6 @@
       "value": "%1$s bình thường"
     },
     {
-      "name": "home_scene_testing",
-      "value": "Đang kiểm tra"
-    },
-    {
       "name": "home_scenes_tested",
       "value": "Đã kiểm tra %1$s"
     },
@@ -559,10 +467,6 @@
     {
       "name": "home_spark_a11y",
       "value": "Tốc độ tải xuống trong 90 giây qua"
-    },
-    {
-      "name": "home_switch_mode",
-      "value": "Đổi chế độ"
     },
     {
       "name": "home_switched_to",
@@ -681,22 +585,6 @@
       "value": "Chưa có nhật ký"
     },
     {
-      "name": "logs_level_debug",
-      "value": "Gỡ lỗi"
-    },
-    {
-      "name": "logs_level_error",
-      "value": "Lỗi"
-    },
-    {
-      "name": "logs_level_info",
-      "value": "Thông tin"
-    },
-    {
-      "name": "logs_level_warning",
-      "value": "Cảnh báo"
-    },
-    {
       "name": "logs_line_a11y",
       "value": "%1$s %2$s %3$s"
     },
@@ -707,10 +595,6 @@
     {
       "name": "logs_resume",
       "value": "Tiếp tục"
-    },
-    {
-      "name": "logs_title",
-      "value": "Nhật ký"
     },
     {
       "name": "nodes_detail_latency",
@@ -853,24 +737,12 @@
       "value": "Đã chặn"
     },
     {
-      "name": "rules_kind_domain",
-      "value": "Tên miền"
-    },
-    {
       "name": "rules_kind_ip",
       "value": "IP"
     },
     {
       "name": "rules_kind_other",
       "value": "Khác"
-    },
-    {
-      "name": "rules_kind_override",
-      "value": "Ghi đè"
-    },
-    {
-      "name": "rules_kind_subscription",
-      "value": "Đăng ký"
     },
     {
       "name": "rules_match_order",
@@ -883,10 +755,6 @@
     {
       "name": "rules_other_traffic",
       "value": "Mọi lưu lượng còn lại"
-    },
-    {
-      "name": "rules_step_exit_ip",
-      "value": "IP đầu ra"
     },
     {
       "name": "rules_step_layer",
@@ -961,10 +829,6 @@
       "value": "%1$s (đã ghim)"
     },
     {
-      "name": "scene_retest",
-      "value": "Kiểm tra lại"
-    },
-    {
       "name": "scene_test_daily",
       "value": "Hằng ngày"
     },
@@ -989,10 +853,6 @@
       "value": "Khi nút không khả dụng"
     },
     {
-      "name": "settings_accent",
-      "value": "Màu nhấn"
-    },
-    {
       "name": "settings_accent_blue",
       "value": "Xanh dương"
     },
@@ -1009,22 +869,6 @@
       "value": "Hồng"
     },
     {
-      "name": "settings_appearance",
-      "value": "Giao diện"
-    },
-    {
-      "name": "settings_appearance_dark",
-      "value": "Tối"
-    },
-    {
-      "name": "settings_appearance_light",
-      "value": "Sáng"
-    },
-    {
-      "name": "settings_appearance_system",
-      "value": "Hệ thống"
-    },
-    {
       "name": "settings_keep_results",
       "value": "Lưu giữ kết quả"
     },
@@ -1037,16 +881,8 @@
       "value": "Đăng ký, nút và dữ liệu lưu lượng chỉ được lưu trên thiết bị này."
     },
     {
-      "name": "settings_local_proxy",
-      "value": "Cổng proxy cục bộ"
-    },
-    {
       "name": "settings_on_demand",
       "value": "Kết nối theo yêu cầu"
-    },
-    {
-      "name": "settings_password_required",
-      "value": "Yêu cầu mật khẩu"
     },
     {
       "name": "settings_save_failed",
@@ -1059,10 +895,6 @@
     {
       "name": "settings_section_connection",
       "value": "Kết nối"
-    },
-    {
-      "name": "settings_section_diagnostics",
-      "value": "Chẩn đoán"
     },
     {
       "name": "settings_section_privacy",
@@ -1125,10 +957,6 @@
       "value": "Tất cả đăng ký"
     },
     {
-      "name": "subs_auto_update",
-      "value": "Tự động cập nhật"
-    },
-    {
       "name": "subs_deleted",
       "value": "Đã xóa %1$s"
     },
@@ -1187,10 +1015,6 @@
     {
       "name": "subs_import_desktop_source",
       "value": "Zephyr cho máy tính"
-    },
-    {
-      "name": "subs_import_file",
-      "value": "Nhập từ tệp"
     },
     {
       "name": "subs_import_insecure",
@@ -1273,14 +1097,6 @@
       "value": "Xác nhận xóa"
     },
     {
-      "name": "subs_swipe_delete",
-      "value": "Xóa"
-    },
-    {
-      "name": "subs_swipe_update",
-      "value": "Cập nhật"
-    },
-    {
       "name": "subs_swipe_updating",
       "value": "Đang cập nhật"
     },
@@ -1295,6 +1111,214 @@
     {
       "name": "subs_update_wifi_only",
       "value": "Chỉ cập nhật qua Wi‑Fi"
+    },
+    {
+      "name": "term_accent",
+      "value": "Màu nhấn"
+    },
+    {
+      "name": "term_all",
+      "value": "Tất cả"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Giao diện"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Tối"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Sáng"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Hệ thống"
+    },
+    {
+      "name": "term_apply",
+      "value": "Áp dụng"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Tự động cập nhật"
+    },
+    {
+      "name": "term_delete",
+      "value": "Xóa"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Chẩn đoán"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Ngắt kết nối"
+    },
+    {
+      "name": "term_domain",
+      "value": "Tên miền"
+    },
+    {
+      "name": "term_exit",
+      "value": "Đầu ra"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "IP đầu ra"
+    },
+    {
+      "name": "term_import",
+      "value": "Nhập"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Nhập từ tệp"
+    },
+    {
+      "name": "term_latency",
+      "value": "Độ trễ"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Cổng proxy cục bộ"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Gỡ lỗi"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Lỗi"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Thông tin"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Cảnh báo"
+    },
+    {
+      "name": "term_logs",
+      "value": "Nhật ký"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Trực tiếp"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Toàn cục"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Chế độ toàn cục"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Quy tắc"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Không có kết quả"
+    },
+    {
+      "name": "term_node",
+      "value": "Nút"
+    },
+    {
+      "name": "term_nodes",
+      "value": "Nút"
+    },
+    {
+      "name": "term_none",
+      "value": "Không có"
+    },
+    {
+      "name": "term_off",
+      "value": "Tắt"
+    },
+    {
+      "name": "term_on",
+      "value": "Bật"
+    },
+    {
+      "name": "term_override",
+      "value": "Ghi đè"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proxy"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Yêu cầu mật khẩu"
+    },
+    {
+      "name": "term_rule",
+      "value": "Quy tắc"
+    },
+    {
+      "name": "term_rules",
+      "value": "Quy tắc"
+    },
+    {
+      "name": "term_scene",
+      "value": "Ngữ cảnh"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Ngữ cảnh"
+    },
+    {
+      "name": "term_settings",
+      "value": "Cài đặt"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Đang kết nối"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Chưa kết nối"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Kết nối không thành công"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Đăng ký"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Đăng ký"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Đổi chế độ"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Kiểm tra lại"
+    },
+    {
+      "name": "term_testing",
+      "value": "Đang kiểm tra"
+    },
+    {
+      "name": "term_today",
+      "value": "Hôm nay"
+    },
+    {
+      "name": "term_undo",
+      "value": "Hoàn tác"
+    },
+    {
+      "name": "term_update",
+      "value": "Cập nhật"
     },
     {
       "name": "tile_a11y",
@@ -1373,20 +1397,8 @@
       "value": "%1$s giờ dùng %2$s"
     },
     {
-      "name": "trace_step_exit",
-      "value": "Đầu ra"
-    },
-    {
-      "name": "trace_step_node",
-      "value": "Nút"
-    },
-    {
       "name": "trace_step_rule",
       "value": "Quy tắc"
-    },
-    {
-      "name": "trace_step_scene",
-      "value": "Ngữ cảnh"
     },
     {
       "name": "trace_this_connection",

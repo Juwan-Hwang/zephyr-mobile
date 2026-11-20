@@ -49,10 +49,6 @@
       "value": "服务"
     },
     {
-      "name": "command_direct_from_proxy",
-      "value": "代理"
-    },
-    {
       "name": "command_direct_note",
       "value": "%1$s 的流量将不经过代理。"
     },
@@ -181,14 +177,6 @@
       "value": "正在添加…"
     },
     {
-      "name": "common_all",
-      "value": "全部"
-    },
-    {
-      "name": "common_apply",
-      "value": "应用"
-    },
-    {
       "name": "common_back_to",
       "value": "返回%1$s"
     },
@@ -211,10 +199,6 @@
     {
       "name": "common_direct",
       "value": "直连"
-    },
-    {
-      "name": "common_disconnect",
-      "value": "断开连接"
     },
     {
       "name": "common_exit_ip_changes",
@@ -241,48 +225,16 @@
       "value": "本机网络"
     },
     {
-      "name": "common_mode_direct",
-      "value": "直连"
-    },
-    {
       "name": "common_mode_direct_hint",
       "value": "不经过代理"
-    },
-    {
-      "name": "common_mode_global",
-      "value": "全局"
     },
     {
       "name": "common_mode_global_hint",
       "value": "所有流量经由一个节点"
     },
     {
-      "name": "common_mode_rule",
-      "value": "规则"
-    },
-    {
       "name": "common_mode_rule_hint",
       "value": "按场景分流"
-    },
-    {
-      "name": "common_no_results",
-      "value": "无结果"
-    },
-    {
-      "name": "common_nodes",
-      "value": "节点"
-    },
-    {
-      "name": "common_none",
-      "value": "无"
-    },
-    {
-      "name": "common_off",
-      "value": "关"
-    },
-    {
-      "name": "common_on",
-      "value": "开"
     },
     {
       "name": "common_open_settings",
@@ -297,10 +249,6 @@
       "value": "检测中…"
     },
     {
-      "name": "common_rules",
-      "value": "规则"
-    },
-    {
       "name": "common_scene_ai",
       "value": "AI"
     },
@@ -311,14 +259,6 @@
     {
       "name": "common_scene_video",
       "value": "视频"
-    },
-    {
-      "name": "common_scenes",
-      "value": "场景"
-    },
-    {
-      "name": "common_settings",
-      "value": "设置"
     },
     {
       "name": "common_share",
@@ -337,40 +277,16 @@
       "value": "已连接"
     },
     {
-      "name": "common_status_connecting",
-      "value": "连接中"
-    },
-    {
       "name": "common_status_connecting_ellipsis",
       "value": "连接中…"
-    },
-    {
-      "name": "common_status_disconnected",
-      "value": "未连接"
     },
     {
       "name": "common_status_disconnecting",
       "value": "正在断开"
     },
     {
-      "name": "common_status_failed",
-      "value": "连接失败"
-    },
-    {
-      "name": "common_subscriptions",
-      "value": "订阅"
-    },
-    {
-      "name": "common_today",
-      "value": "今日"
-    },
-    {
       "name": "common_try_again",
       "value": "请重试"
-    },
-    {
-      "name": "common_undo",
-      "value": "撤销"
     },
     {
       "name": "common_updating",
@@ -585,10 +501,6 @@
       "value": "更改为%1$s"
     },
     {
-      "name": "home_global_title",
-      "value": "全局模式"
-    },
-    {
       "name": "home_global_use_rule",
       "value": "使用规则模式"
     },
@@ -645,10 +557,6 @@
       "value": "%1$s 正常"
     },
     {
-      "name": "home_scene_testing",
-      "value": "检测中"
-    },
-    {
       "name": "home_scenes_tested",
       "value": "%1$s检测"
     },
@@ -659,10 +567,6 @@
     {
       "name": "home_spark_a11y",
       "value": "最近 90 秒下载速率"
-    },
-    {
-      "name": "home_switch_mode",
-      "value": "切换模式"
     },
     {
       "name": "home_switched_to",
@@ -781,22 +685,6 @@
       "value": "暂无日志"
     },
     {
-      "name": "logs_level_debug",
-      "value": "调试"
-    },
-    {
-      "name": "logs_level_error",
-      "value": "错误"
-    },
-    {
-      "name": "logs_level_info",
-      "value": "信息"
-    },
-    {
-      "name": "logs_level_warning",
-      "value": "警告"
-    },
-    {
       "name": "logs_line_a11y",
       "value": "%1$s %2$s %3$s"
     },
@@ -807,10 +695,6 @@
     {
       "name": "logs_resume",
       "value": "继续"
-    },
-    {
-      "name": "logs_title",
-      "value": "日志"
     },
     {
       "name": "module_desc",
@@ -957,24 +841,12 @@
       "value": "已拦截"
     },
     {
-      "name": "rules_kind_domain",
-      "value": "域名"
-    },
-    {
       "name": "rules_kind_ip",
       "value": "IP"
     },
     {
       "name": "rules_kind_other",
       "value": "其他"
-    },
-    {
-      "name": "rules_kind_override",
-      "value": "覆写"
-    },
-    {
-      "name": "rules_kind_subscription",
-      "value": "订阅"
     },
     {
       "name": "rules_match_order",
@@ -987,10 +859,6 @@
     {
       "name": "rules_other_traffic",
       "value": "其余流量"
-    },
-    {
-      "name": "rules_step_exit_ip",
-      "value": "出口 IP"
     },
     {
       "name": "rules_step_layer",
@@ -1065,10 +933,6 @@
       "value": "%1$s（固定）"
     },
     {
-      "name": "scene_retest",
-      "value": "重新检测"
-    },
-    {
       "name": "scene_test_daily",
       "value": "每天"
     },
@@ -1093,10 +957,6 @@
       "value": "节点不可用时"
     },
     {
-      "name": "settings_accent",
-      "value": "强调色"
-    },
-    {
       "name": "settings_accent_blue",
       "value": "蓝色"
     },
@@ -1113,22 +973,6 @@
       "value": "粉色"
     },
     {
-      "name": "settings_appearance",
-      "value": "外观"
-    },
-    {
-      "name": "settings_appearance_dark",
-      "value": "深色"
-    },
-    {
-      "name": "settings_appearance_light",
-      "value": "浅色"
-    },
-    {
-      "name": "settings_appearance_system",
-      "value": "跟随系统"
-    },
-    {
       "name": "settings_keep_results",
       "value": "结果保留"
     },
@@ -1141,16 +985,8 @@
       "value": "订阅、节点与流量数据仅保存在此设备上。"
     },
     {
-      "name": "settings_local_proxy",
-      "value": "本地代理端口"
-    },
-    {
       "name": "settings_on_demand",
       "value": "按需连接"
-    },
-    {
-      "name": "settings_password_required",
-      "value": "需要密码"
     },
     {
       "name": "settings_save_failed",
@@ -1163,10 +999,6 @@
     {
       "name": "settings_section_connection",
       "value": "连接"
-    },
-    {
-      "name": "settings_section_diagnostics",
-      "value": "诊断"
     },
     {
       "name": "settings_section_privacy",
@@ -1229,10 +1061,6 @@
       "value": "全部订阅"
     },
     {
-      "name": "subs_auto_update",
-      "value": "自动更新"
-    },
-    {
       "name": "subs_deleted",
       "value": "已删除 %1$s"
     },
@@ -1291,10 +1119,6 @@
     {
       "name": "subs_import_desktop_source",
       "value": "Zephyr 桌面"
-    },
-    {
-      "name": "subs_import_file",
-      "value": "从文件导入"
     },
     {
       "name": "subs_import_insecure",
@@ -1377,14 +1201,6 @@
       "value": "确认删除"
     },
     {
-      "name": "subs_swipe_delete",
-      "value": "删除"
-    },
-    {
-      "name": "subs_swipe_update",
-      "value": "更新"
-    },
-    {
       "name": "subs_swipe_updating",
       "value": "更新中"
     },
@@ -1399,6 +1215,214 @@
     {
       "name": "subs_update_wifi_only",
       "value": "仅在 Wi‑Fi 下更新"
+    },
+    {
+      "name": "term_accent",
+      "value": "强调色"
+    },
+    {
+      "name": "term_all",
+      "value": "全部"
+    },
+    {
+      "name": "term_appearance",
+      "value": "外观"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "深色"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "浅色"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "跟随系统"
+    },
+    {
+      "name": "term_apply",
+      "value": "应用"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "自动更新"
+    },
+    {
+      "name": "term_delete",
+      "value": "删除"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "诊断"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "断开连接"
+    },
+    {
+      "name": "term_domain",
+      "value": "域名"
+    },
+    {
+      "name": "term_exit",
+      "value": "出口"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "出口 IP"
+    },
+    {
+      "name": "term_import",
+      "value": "导入"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "从文件导入"
+    },
+    {
+      "name": "term_latency",
+      "value": "延迟"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "本地代理端口"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "调试"
+    },
+    {
+      "name": "term_log_error",
+      "value": "错误"
+    },
+    {
+      "name": "term_log_info",
+      "value": "信息"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "警告"
+    },
+    {
+      "name": "term_logs",
+      "value": "日志"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "直连"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "全局"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "全局模式"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "规则"
+    },
+    {
+      "name": "term_no_results",
+      "value": "无结果"
+    },
+    {
+      "name": "term_node",
+      "value": "节点"
+    },
+    {
+      "name": "term_nodes",
+      "value": "节点"
+    },
+    {
+      "name": "term_none",
+      "value": "无"
+    },
+    {
+      "name": "term_off",
+      "value": "关"
+    },
+    {
+      "name": "term_on",
+      "value": "开"
+    },
+    {
+      "name": "term_override",
+      "value": "覆写"
+    },
+    {
+      "name": "term_proxy",
+      "value": "代理"
+    },
+    {
+      "name": "term_require_password",
+      "value": "需要密码"
+    },
+    {
+      "name": "term_rule",
+      "value": "规则"
+    },
+    {
+      "name": "term_rules",
+      "value": "规则"
+    },
+    {
+      "name": "term_scene",
+      "value": "场景"
+    },
+    {
+      "name": "term_scenes",
+      "value": "场景"
+    },
+    {
+      "name": "term_settings",
+      "value": "设置"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "连接中"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "未连接"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "连接失败"
+    },
+    {
+      "name": "term_subscription",
+      "value": "订阅"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "订阅"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "切换模式"
+    },
+    {
+      "name": "term_test_again",
+      "value": "重新检测"
+    },
+    {
+      "name": "term_testing",
+      "value": "检测中"
+    },
+    {
+      "name": "term_today",
+      "value": "今日"
+    },
+    {
+      "name": "term_undo",
+      "value": "撤销"
+    },
+    {
+      "name": "term_update",
+      "value": "更新"
     },
     {
       "name": "tile_a11y",
@@ -1477,20 +1501,8 @@
       "value": "%1$s 已改走 %2$s"
     },
     {
-      "name": "trace_step_exit",
-      "value": "出口"
-    },
-    {
-      "name": "trace_step_node",
-      "value": "节点"
-    },
-    {
       "name": "trace_step_rule",
       "value": "规则"
-    },
-    {
-      "name": "trace_step_scene",
-      "value": "场景"
     },
     {
       "name": "trace_this_connection",

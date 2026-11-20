@@ -49,10 +49,6 @@
       "value": "Сервис"
     },
     {
-      "name": "command_direct_from_proxy",
-      "value": "Прокси"
-    },
-    {
       "name": "command_direct_note",
       "value": "Трафик %1$s пойдёт в обход прокси."
     },
@@ -181,14 +177,6 @@
       "value": "Добавление…"
     },
     {
-      "name": "common_all",
-      "value": "Все"
-    },
-    {
-      "name": "common_apply",
-      "value": "Применить"
-    },
-    {
       "name": "common_back_to",
       "value": "Назад: %1$s"
     },
@@ -211,10 +199,6 @@
     {
       "name": "common_direct",
       "value": "Напрямую"
-    },
-    {
-      "name": "common_disconnect",
-      "value": "Отключить"
     },
     {
       "name": "common_exit_ip_changes",
@@ -241,48 +225,16 @@
       "value": "Сеть этого устройства"
     },
     {
-      "name": "common_mode_direct",
-      "value": "Прямой"
-    },
-    {
       "name": "common_mode_direct_hint",
       "value": "В обход прокси"
-    },
-    {
-      "name": "common_mode_global",
-      "value": "Глобальный"
     },
     {
       "name": "common_mode_global_hint",
       "value": "Весь трафик через один узел"
     },
     {
-      "name": "common_mode_rule",
-      "value": "Правило"
-    },
-    {
       "name": "common_mode_rule_hint",
       "value": "Маршрут по сценариям"
-    },
-    {
-      "name": "common_no_results",
-      "value": "Нет результатов"
-    },
-    {
-      "name": "common_nodes",
-      "value": "Узлы"
-    },
-    {
-      "name": "common_none",
-      "value": "Нет"
-    },
-    {
-      "name": "common_off",
-      "value": "Выкл."
-    },
-    {
-      "name": "common_on",
-      "value": "Вкл."
     },
     {
       "name": "common_open_settings",
@@ -297,10 +249,6 @@
       "value": "Проверка…"
     },
     {
-      "name": "common_rules",
-      "value": "Правила"
-    },
-    {
       "name": "common_scene_ai",
       "value": "AI"
     },
@@ -311,14 +259,6 @@
     {
       "name": "common_scene_video",
       "value": "Видео"
-    },
-    {
-      "name": "common_scenes",
-      "value": "Сценарии"
-    },
-    {
-      "name": "common_settings",
-      "value": "Настройки"
     },
     {
       "name": "common_share",
@@ -337,40 +277,16 @@
       "value": "Подключено"
     },
     {
-      "name": "common_status_connecting",
-      "value": "Подключение"
-    },
-    {
       "name": "common_status_connecting_ellipsis",
       "value": "Подключение…"
-    },
-    {
-      "name": "common_status_disconnected",
-      "value": "Не подключено"
     },
     {
       "name": "common_status_disconnecting",
       "value": "Отключение"
     },
     {
-      "name": "common_status_failed",
-      "value": "Не удалось подключиться"
-    },
-    {
-      "name": "common_subscriptions",
-      "value": "Подписки"
-    },
-    {
-      "name": "common_today",
-      "value": "Сегодня"
-    },
-    {
       "name": "common_try_again",
       "value": "Повторить"
-    },
-    {
-      "name": "common_undo",
-      "value": "Отменить"
     },
     {
       "name": "common_updating",
@@ -485,10 +401,6 @@
       "value": "Сменить на %1$s"
     },
     {
-      "name": "home_global_title",
-      "value": "Глобальный режим"
-    },
-    {
       "name": "home_global_use_rule",
       "value": "Режим правил"
     },
@@ -545,10 +457,6 @@
       "value": "%1$s: в норме"
     },
     {
-      "name": "home_scene_testing",
-      "value": "Проверка"
-    },
-    {
       "name": "home_scenes_tested",
       "value": "Проверено %1$s"
     },
@@ -559,10 +467,6 @@
     {
       "name": "home_spark_a11y",
       "value": "Скорость загрузки за последние 90 секунд"
-    },
-    {
-      "name": "home_switch_mode",
-      "value": "Сменить режим"
     },
     {
       "name": "home_switched_to",
@@ -681,22 +585,6 @@
       "value": "Журнал пуст"
     },
     {
-      "name": "logs_level_debug",
-      "value": "Отладка"
-    },
-    {
-      "name": "logs_level_error",
-      "value": "Ошибка"
-    },
-    {
-      "name": "logs_level_info",
-      "value": "Инфо"
-    },
-    {
-      "name": "logs_level_warning",
-      "value": "Предупреждение"
-    },
-    {
       "name": "logs_line_a11y",
       "value": "%1$s %2$s %3$s"
     },
@@ -707,10 +595,6 @@
     {
       "name": "logs_resume",
       "value": "Продолжить"
-    },
-    {
-      "name": "logs_title",
-      "value": "Журналы"
     },
     {
       "name": "nodes_detail_latency",
@@ -853,24 +737,12 @@
       "value": "Заблокировано"
     },
     {
-      "name": "rules_kind_domain",
-      "value": "Домен"
-    },
-    {
       "name": "rules_kind_ip",
       "value": "IP"
     },
     {
       "name": "rules_kind_other",
       "value": "Другое"
-    },
-    {
-      "name": "rules_kind_override",
-      "value": "Переопределение"
-    },
-    {
-      "name": "rules_kind_subscription",
-      "value": "Подписка"
     },
     {
       "name": "rules_match_order",
@@ -883,10 +755,6 @@
     {
       "name": "rules_other_traffic",
       "value": "Весь остальной трафик"
-    },
-    {
-      "name": "rules_step_exit_ip",
-      "value": "IP выхода"
     },
     {
       "name": "rules_step_layer",
@@ -961,10 +829,6 @@
       "value": "%1$s (закреплён)"
     },
     {
-      "name": "scene_retest",
-      "value": "Проверить снова"
-    },
-    {
       "name": "scene_test_daily",
       "value": "Ежедневно"
     },
@@ -989,10 +853,6 @@
       "value": "Если узел недоступен"
     },
     {
-      "name": "settings_accent",
-      "value": "Цвет акцента"
-    },
-    {
       "name": "settings_accent_blue",
       "value": "Синий"
     },
@@ -1009,22 +869,6 @@
       "value": "Розовый"
     },
     {
-      "name": "settings_appearance",
-      "value": "Оформление"
-    },
-    {
-      "name": "settings_appearance_dark",
-      "value": "Тёмное"
-    },
-    {
-      "name": "settings_appearance_light",
-      "value": "Светлое"
-    },
-    {
-      "name": "settings_appearance_system",
-      "value": "Как в системе"
-    },
-    {
       "name": "settings_keep_results",
       "value": "Хранить результаты"
     },
@@ -1037,16 +881,8 @@
       "value": "Подписки, узлы и данные о трафике хранятся только на этом устройстве."
     },
     {
-      "name": "settings_local_proxy",
-      "value": "Порт локального прокси"
-    },
-    {
       "name": "settings_on_demand",
       "value": "Подключение по запросу"
-    },
-    {
-      "name": "settings_password_required",
-      "value": "Требовать пароль"
     },
     {
       "name": "settings_save_failed",
@@ -1059,10 +895,6 @@
     {
       "name": "settings_section_connection",
       "value": "Подключение"
-    },
-    {
-      "name": "settings_section_diagnostics",
-      "value": "Диагностика"
     },
     {
       "name": "settings_section_privacy",
@@ -1125,10 +957,6 @@
       "value": "Все подписки"
     },
     {
-      "name": "subs_auto_update",
-      "value": "Автообновление"
-    },
-    {
       "name": "subs_deleted",
       "value": "Удалено: %1$s"
     },
@@ -1187,10 +1015,6 @@
     {
       "name": "subs_import_desktop_source",
       "value": "Zephyr для компьютера"
-    },
-    {
-      "name": "subs_import_file",
-      "value": "Импорт из файла"
     },
     {
       "name": "subs_import_insecure",
@@ -1273,14 +1097,6 @@
       "value": "Точно удалить"
     },
     {
-      "name": "subs_swipe_delete",
-      "value": "Удалить"
-    },
-    {
-      "name": "subs_swipe_update",
-      "value": "Обновить"
-    },
-    {
       "name": "subs_swipe_updating",
       "value": "Обновление"
     },
@@ -1295,6 +1111,214 @@
     {
       "name": "subs_update_wifi_only",
       "value": "Обновлять только по Wi‑Fi"
+    },
+    {
+      "name": "term_accent",
+      "value": "Цвет акцента"
+    },
+    {
+      "name": "term_all",
+      "value": "Все"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Оформление"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Тёмное"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Светлое"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Как в системе"
+    },
+    {
+      "name": "term_apply",
+      "value": "Применить"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Автообновление"
+    },
+    {
+      "name": "term_delete",
+      "value": "Удалить"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Диагностика"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Отключить"
+    },
+    {
+      "name": "term_domain",
+      "value": "Домен"
+    },
+    {
+      "name": "term_exit",
+      "value": "Выход"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "IP выхода"
+    },
+    {
+      "name": "term_import",
+      "value": "Импорт"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Импорт из файла"
+    },
+    {
+      "name": "term_latency",
+      "value": "Задержка"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Порт локального прокси"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Отладка"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Ошибка"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Инфо"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Предупреждение"
+    },
+    {
+      "name": "term_logs",
+      "value": "Журналы"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Прямой"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Глобальный"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Глобальный режим"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Правило"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Нет результатов"
+    },
+    {
+      "name": "term_node",
+      "value": "Узел"
+    },
+    {
+      "name": "term_nodes",
+      "value": "Узлы"
+    },
+    {
+      "name": "term_none",
+      "value": "Нет"
+    },
+    {
+      "name": "term_off",
+      "value": "Выкл."
+    },
+    {
+      "name": "term_on",
+      "value": "Вкл."
+    },
+    {
+      "name": "term_override",
+      "value": "Переопределение"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Прокси"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Требовать пароль"
+    },
+    {
+      "name": "term_rule",
+      "value": "Правило"
+    },
+    {
+      "name": "term_rules",
+      "value": "Правила"
+    },
+    {
+      "name": "term_scene",
+      "value": "Сценарий"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Сценарии"
+    },
+    {
+      "name": "term_settings",
+      "value": "Настройки"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Подключение"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Не подключено"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Не удалось подключиться"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Подписка"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Подписки"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Сменить режим"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Проверить снова"
+    },
+    {
+      "name": "term_testing",
+      "value": "Проверка"
+    },
+    {
+      "name": "term_today",
+      "value": "Сегодня"
+    },
+    {
+      "name": "term_undo",
+      "value": "Отменить"
+    },
+    {
+      "name": "term_update",
+      "value": "Обновить"
     },
     {
       "name": "tile_a11y",
@@ -1373,20 +1397,8 @@
       "value": "%1$s теперь через %2$s"
     },
     {
-      "name": "trace_step_exit",
-      "value": "Выход"
-    },
-    {
-      "name": "trace_step_node",
-      "value": "Узел"
-    },
-    {
       "name": "trace_step_rule",
       "value": "Правило"
-    },
-    {
-      "name": "trace_step_scene",
-      "value": "Сценарий"
     },
     {
       "name": "trace_this_connection",

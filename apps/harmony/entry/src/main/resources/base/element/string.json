@@ -29,10 +29,6 @@
       "value": "Recent connections"
     },
     {
-      "name": "app_name",
-      "value": "Zephyr"
-    },
-    {
       "name": "command_chip_action",
       "value": "Action"
     },
@@ -51,10 +47,6 @@
     {
       "name": "command_chip_service",
       "value": "Service"
-    },
-    {
-      "name": "command_direct_from_proxy",
-      "value": "Proxy"
     },
     {
       "name": "command_direct_note",
@@ -185,14 +177,6 @@
       "value": "Adding…"
     },
     {
-      "name": "common_all",
-      "value": "All"
-    },
-    {
-      "name": "common_apply",
-      "value": "Apply"
-    },
-    {
       "name": "common_back_to",
       "value": "Back to %1$s"
     },
@@ -215,10 +199,6 @@
     {
       "name": "common_direct",
       "value": "Direct"
-    },
-    {
-      "name": "common_disconnect",
-      "value": "Disconnect"
     },
     {
       "name": "common_exit_ip_changes",
@@ -249,48 +229,16 @@
       "value": "This device’s network"
     },
     {
-      "name": "common_mode_direct",
-      "value": "Direct"
-    },
-    {
       "name": "common_mode_direct_hint",
       "value": "Bypass the proxy"
-    },
-    {
-      "name": "common_mode_global",
-      "value": "Global"
     },
     {
       "name": "common_mode_global_hint",
       "value": "All traffic through one node"
     },
     {
-      "name": "common_mode_rule",
-      "value": "Rule"
-    },
-    {
       "name": "common_mode_rule_hint",
       "value": "Route by scene"
-    },
-    {
-      "name": "common_no_results",
-      "value": "No results"
-    },
-    {
-      "name": "common_nodes",
-      "value": "Nodes"
-    },
-    {
-      "name": "common_none",
-      "value": "None"
-    },
-    {
-      "name": "common_off",
-      "value": "Off"
-    },
-    {
-      "name": "common_on",
-      "value": "On"
     },
     {
       "name": "common_open_settings",
@@ -305,10 +253,6 @@
       "value": "Testing…"
     },
     {
-      "name": "common_rules",
-      "value": "Rules"
-    },
-    {
       "name": "common_scene_ai",
       "value": "AI"
     },
@@ -319,14 +263,6 @@
     {
       "name": "common_scene_video",
       "value": "Video"
-    },
-    {
-      "name": "common_scenes",
-      "value": "Scenes"
-    },
-    {
-      "name": "common_settings",
-      "value": "Settings"
     },
     {
       "name": "common_share",
@@ -345,40 +281,16 @@
       "value": "Connected"
     },
     {
-      "name": "common_status_connecting",
-      "value": "Connecting"
-    },
-    {
       "name": "common_status_connecting_ellipsis",
       "value": "Connecting…"
-    },
-    {
-      "name": "common_status_disconnected",
-      "value": "Not connected"
     },
     {
       "name": "common_status_disconnecting",
       "value": "Disconnecting"
     },
     {
-      "name": "common_status_failed",
-      "value": "Connection failed"
-    },
-    {
-      "name": "common_subscriptions",
-      "value": "Subscriptions"
-    },
-    {
-      "name": "common_today",
-      "value": "Today"
-    },
-    {
       "name": "common_try_again",
       "value": "Try again"
-    },
-    {
-      "name": "common_undo",
-      "value": "Undo"
     },
     {
       "name": "common_updating",
@@ -593,10 +505,6 @@
       "value": "Change to %1$s"
     },
     {
-      "name": "home_global_title",
-      "value": "Global mode"
-    },
-    {
       "name": "home_global_use_rule",
       "value": "Use rule mode"
     },
@@ -653,10 +561,6 @@
       "value": "%1$s OK"
     },
     {
-      "name": "home_scene_testing",
-      "value": "Testing"
-    },
-    {
       "name": "home_scenes_tested",
       "value": "Tested %1$s"
     },
@@ -667,10 +571,6 @@
     {
       "name": "home_spark_a11y",
       "value": "Download speed, last 90 seconds"
-    },
-    {
-      "name": "home_switch_mode",
-      "value": "Switch mode"
     },
     {
       "name": "home_switched_to",
@@ -789,22 +689,6 @@
       "value": "No logs yet"
     },
     {
-      "name": "logs_level_debug",
-      "value": "Debug"
-    },
-    {
-      "name": "logs_level_error",
-      "value": "Error"
-    },
-    {
-      "name": "logs_level_info",
-      "value": "Info"
-    },
-    {
-      "name": "logs_level_warning",
-      "value": "Warning"
-    },
-    {
       "name": "logs_line_a11y",
       "value": "%1$s %2$s %3$s"
     },
@@ -815,10 +699,6 @@
     {
       "name": "logs_resume",
       "value": "Resume"
-    },
-    {
-      "name": "logs_title",
-      "value": "Logs"
     },
     {
       "name": "module_desc",
@@ -965,24 +845,12 @@
       "value": "Blocked"
     },
     {
-      "name": "rules_kind_domain",
-      "value": "Domain"
-    },
-    {
       "name": "rules_kind_ip",
       "value": "IP"
     },
     {
       "name": "rules_kind_other",
       "value": "Other"
-    },
-    {
-      "name": "rules_kind_override",
-      "value": "Override"
-    },
-    {
-      "name": "rules_kind_subscription",
-      "value": "Subscription"
     },
     {
       "name": "rules_match_order",
@@ -995,10 +863,6 @@
     {
       "name": "rules_other_traffic",
       "value": "All other traffic"
-    },
-    {
-      "name": "rules_step_exit_ip",
-      "value": "Exit IP"
     },
     {
       "name": "rules_step_layer",
@@ -1073,10 +937,6 @@
       "value": "%1$s (pinned)"
     },
     {
-      "name": "scene_retest",
-      "value": "Test again"
-    },
-    {
       "name": "scene_test_daily",
       "value": "Daily"
     },
@@ -1101,10 +961,6 @@
       "value": "When a node is unavailable"
     },
     {
-      "name": "settings_accent",
-      "value": "Accent color"
-    },
-    {
       "name": "settings_accent_blue",
       "value": "Blue"
     },
@@ -1121,22 +977,6 @@
       "value": "Pink"
     },
     {
-      "name": "settings_appearance",
-      "value": "Appearance"
-    },
-    {
-      "name": "settings_appearance_dark",
-      "value": "Dark"
-    },
-    {
-      "name": "settings_appearance_light",
-      "value": "Light"
-    },
-    {
-      "name": "settings_appearance_system",
-      "value": "System"
-    },
-    {
       "name": "settings_keep_results",
       "value": "Keep results"
     },
@@ -1149,16 +989,8 @@
       "value": "Subscriptions, nodes, and traffic data are stored only on this device."
     },
     {
-      "name": "settings_local_proxy",
-      "value": "Local proxy port"
-    },
-    {
       "name": "settings_on_demand",
       "value": "Connect on demand"
-    },
-    {
-      "name": "settings_password_required",
-      "value": "Require password"
     },
     {
       "name": "settings_save_failed",
@@ -1171,10 +1003,6 @@
     {
       "name": "settings_section_connection",
       "value": "Connection"
-    },
-    {
-      "name": "settings_section_diagnostics",
-      "value": "Diagnostics"
     },
     {
       "name": "settings_section_privacy",
@@ -1237,10 +1065,6 @@
       "value": "All subscriptions"
     },
     {
-      "name": "subs_auto_update",
-      "value": "Automatic updates"
-    },
-    {
       "name": "subs_deleted",
       "value": "Deleted %1$s"
     },
@@ -1299,10 +1123,6 @@
     {
       "name": "subs_import_desktop_source",
       "value": "Zephyr Desktop"
-    },
-    {
-      "name": "subs_import_file",
-      "value": "Import from file"
     },
     {
       "name": "subs_import_insecure",
@@ -1385,14 +1205,6 @@
       "value": "Confirm delete"
     },
     {
-      "name": "subs_swipe_delete",
-      "value": "Delete"
-    },
-    {
-      "name": "subs_swipe_update",
-      "value": "Update"
-    },
-    {
       "name": "subs_swipe_updating",
       "value": "Updating"
     },
@@ -1407,6 +1219,214 @@
     {
       "name": "subs_update_wifi_only",
       "value": "Update on Wi‑Fi only"
+    },
+    {
+      "name": "term_accent",
+      "value": "Accent color"
+    },
+    {
+      "name": "term_all",
+      "value": "All"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Appearance"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Dark"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Light"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "System"
+    },
+    {
+      "name": "term_apply",
+      "value": "Apply"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Automatic updates"
+    },
+    {
+      "name": "term_delete",
+      "value": "Delete"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Diagnostics"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Disconnect"
+    },
+    {
+      "name": "term_domain",
+      "value": "Domain"
+    },
+    {
+      "name": "term_exit",
+      "value": "Exit"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "Exit IP"
+    },
+    {
+      "name": "term_import",
+      "value": "Import"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Import from file"
+    },
+    {
+      "name": "term_latency",
+      "value": "Latency"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Local proxy port"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Debug"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Error"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Info"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Warning"
+    },
+    {
+      "name": "term_logs",
+      "value": "Logs"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Direct"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Global"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Global mode"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Rule"
+    },
+    {
+      "name": "term_no_results",
+      "value": "No results"
+    },
+    {
+      "name": "term_node",
+      "value": "Node"
+    },
+    {
+      "name": "term_nodes",
+      "value": "Nodes"
+    },
+    {
+      "name": "term_none",
+      "value": "None"
+    },
+    {
+      "name": "term_off",
+      "value": "Off"
+    },
+    {
+      "name": "term_on",
+      "value": "On"
+    },
+    {
+      "name": "term_override",
+      "value": "Override"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proxy"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Require password"
+    },
+    {
+      "name": "term_rule",
+      "value": "Rule"
+    },
+    {
+      "name": "term_rules",
+      "value": "Rules"
+    },
+    {
+      "name": "term_scene",
+      "value": "Scene"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Scenes"
+    },
+    {
+      "name": "term_settings",
+      "value": "Settings"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Connecting"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Not connected"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Connection failed"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Subscription"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Subscriptions"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Switch mode"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Test again"
+    },
+    {
+      "name": "term_testing",
+      "value": "Testing"
+    },
+    {
+      "name": "term_today",
+      "value": "Today"
+    },
+    {
+      "name": "term_undo",
+      "value": "Undo"
+    },
+    {
+      "name": "term_update",
+      "value": "Update"
     },
     {
       "name": "tile_a11y",
@@ -1485,20 +1505,8 @@
       "value": "%1$s now uses %2$s"
     },
     {
-      "name": "trace_step_exit",
-      "value": "Exit"
-    },
-    {
-      "name": "trace_step_node",
-      "value": "Node"
-    },
-    {
       "name": "trace_step_rule",
       "value": "Rule"
-    },
-    {
-      "name": "trace_step_scene",
-      "value": "Scene"
     },
     {
       "name": "trace_this_connection",

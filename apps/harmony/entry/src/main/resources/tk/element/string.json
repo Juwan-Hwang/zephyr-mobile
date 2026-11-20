@@ -49,10 +49,6 @@
       "value": "Hyzmat"
     },
     {
-      "name": "command_direct_from_proxy",
-      "value": "Proksi"
-    },
-    {
       "name": "command_direct_note",
       "value": "%1$s trafigi proksiden geçmez."
     },
@@ -181,14 +177,6 @@
       "value": "Goşulýar…"
     },
     {
-      "name": "common_all",
-      "value": "Ählisi"
-    },
-    {
-      "name": "common_apply",
-      "value": "Ulan"
-    },
-    {
       "name": "common_back_to",
       "value": "%1$s sahypasyna dolan"
     },
@@ -211,10 +199,6 @@
     {
       "name": "common_direct",
       "value": "Göni"
-    },
-    {
-      "name": "common_disconnect",
-      "value": "Birikmäni kes"
     },
     {
       "name": "common_exit_ip_changes",
@@ -241,48 +225,16 @@
       "value": "Bu enjamyň tory"
     },
     {
-      "name": "common_mode_direct",
-      "value": "Göni"
-    },
-    {
       "name": "common_mode_direct_hint",
       "value": "Proksisiz"
-    },
-    {
-      "name": "common_mode_global",
-      "value": "Global"
     },
     {
       "name": "common_mode_global_hint",
       "value": "Ähli trafik bir düwünden"
     },
     {
-      "name": "common_mode_rule",
-      "value": "Düzgün"
-    },
-    {
       "name": "common_mode_rule_hint",
       "value": "Ssenariý boýunça ugrukdyr"
-    },
-    {
-      "name": "common_no_results",
-      "value": "Netije ýok"
-    },
-    {
-      "name": "common_nodes",
-      "value": "Düwünler"
-    },
-    {
-      "name": "common_none",
-      "value": "Ýok"
-    },
-    {
-      "name": "common_off",
-      "value": "Öçük"
-    },
-    {
-      "name": "common_on",
-      "value": "Açyk"
     },
     {
       "name": "common_open_settings",
@@ -297,10 +249,6 @@
       "value": "Barlanýar…"
     },
     {
-      "name": "common_rules",
-      "value": "Düzgünler"
-    },
-    {
       "name": "common_scene_ai",
       "value": "AI"
     },
@@ -311,14 +259,6 @@
     {
       "name": "common_scene_video",
       "value": "Wideo"
-    },
-    {
-      "name": "common_scenes",
-      "value": "Ssenariýler"
-    },
-    {
-      "name": "common_settings",
-      "value": "Sazlamalar"
     },
     {
       "name": "common_share",
@@ -337,40 +277,16 @@
       "value": "Birikdirildi"
     },
     {
-      "name": "common_status_connecting",
-      "value": "Birikdirilýär"
-    },
-    {
       "name": "common_status_connecting_ellipsis",
       "value": "Birikdirilýär…"
-    },
-    {
-      "name": "common_status_disconnected",
-      "value": "Birikdirilmedi"
     },
     {
       "name": "common_status_disconnecting",
       "value": "Birikme kesilýär"
     },
     {
-      "name": "common_status_failed",
-      "value": "Birikme şowsuz"
-    },
-    {
-      "name": "common_subscriptions",
-      "value": "Abunalar"
-    },
-    {
-      "name": "common_today",
-      "value": "Şu gün"
-    },
-    {
       "name": "common_try_again",
       "value": "Täzeden synanyş"
-    },
-    {
-      "name": "common_undo",
-      "value": "Yzyna al"
     },
     {
       "name": "common_updating",
@@ -485,10 +401,6 @@
       "value": "%1$s bilen çalyş"
     },
     {
-      "name": "home_global_title",
-      "value": "Global režim"
-    },
-    {
       "name": "home_global_use_rule",
       "value": "Düzgün režimini ulan"
     },
@@ -545,10 +457,6 @@
       "value": "%1$s kadaly"
     },
     {
-      "name": "home_scene_testing",
-      "value": "Barlanýar"
-    },
-    {
       "name": "home_scenes_tested",
       "value": "Barlandy: %1$s"
     },
@@ -559,10 +467,6 @@
     {
       "name": "home_spark_a11y",
       "value": "Ýükleme tizligi, soňky 90 sekunt"
-    },
-    {
-      "name": "home_switch_mode",
-      "value": "Režimi çalyş"
     },
     {
       "name": "home_switched_to",
@@ -681,22 +585,6 @@
       "value": "Entek günnama ýok"
     },
     {
-      "name": "logs_level_debug",
-      "value": "Düzediş"
-    },
-    {
-      "name": "logs_level_error",
-      "value": "Ýalňyşlyk"
-    },
-    {
-      "name": "logs_level_info",
-      "value": "Maglumat"
-    },
-    {
-      "name": "logs_level_warning",
-      "value": "Duýduryş"
-    },
-    {
       "name": "logs_line_a11y",
       "value": "%1$s %2$s %3$s"
     },
@@ -707,10 +595,6 @@
     {
       "name": "logs_resume",
       "value": "Dowam et"
-    },
-    {
-      "name": "logs_title",
-      "value": "Günnamalar"
     },
     {
       "name": "nodes_detail_latency",
@@ -853,24 +737,12 @@
       "value": "Petiklendi"
     },
     {
-      "name": "rules_kind_domain",
-      "value": "Domen"
-    },
-    {
       "name": "rules_kind_ip",
       "value": "IP"
     },
     {
       "name": "rules_kind_other",
       "value": "Beýleki"
-    },
-    {
-      "name": "rules_kind_override",
-      "value": "Aýratyn düzgün"
-    },
-    {
-      "name": "rules_kind_subscription",
-      "value": "Abuna"
     },
     {
       "name": "rules_match_order",
@@ -883,10 +755,6 @@
     {
       "name": "rules_other_traffic",
       "value": "Galan ähli trafik"
-    },
-    {
-      "name": "rules_step_exit_ip",
-      "value": "Çykyş IP-si"
     },
     {
       "name": "rules_step_layer",
@@ -961,10 +829,6 @@
       "value": "%1$s (berkidilen)"
     },
     {
-      "name": "scene_retest",
-      "value": "Gaýtadan barla"
-    },
-    {
       "name": "scene_test_daily",
       "value": "Her gün"
     },
@@ -989,10 +853,6 @@
       "value": "Düwün elýeterli bolmasa"
     },
     {
-      "name": "settings_accent",
-      "value": "Aksent reňki"
-    },
-    {
       "name": "settings_accent_blue",
       "value": "Gök"
     },
@@ -1009,22 +869,6 @@
       "value": "Gülgüne"
     },
     {
-      "name": "settings_appearance",
-      "value": "Daşky görnüş"
-    },
-    {
-      "name": "settings_appearance_dark",
-      "value": "Garaňky"
-    },
-    {
-      "name": "settings_appearance_light",
-      "value": "Ýagty"
-    },
-    {
-      "name": "settings_appearance_system",
-      "value": "Ulgam"
-    },
-    {
       "name": "settings_keep_results",
       "value": "Netijeleri sakla"
     },
@@ -1037,16 +881,8 @@
       "value": "Abunalar, düwünler we trafik maglumatlary diňe şu enjamda saklanýar."
     },
     {
-      "name": "settings_local_proxy",
-      "value": "Ýerli proksi porty"
-    },
-    {
       "name": "settings_on_demand",
       "value": "Zerur bolanda birikdir"
-    },
-    {
-      "name": "settings_password_required",
-      "value": "Parol talap et"
     },
     {
       "name": "settings_save_failed",
@@ -1059,10 +895,6 @@
     {
       "name": "settings_section_connection",
       "value": "Birikme"
-    },
-    {
-      "name": "settings_section_diagnostics",
-      "value": "Diagnostika"
     },
     {
       "name": "settings_section_privacy",
@@ -1125,10 +957,6 @@
       "value": "Ähli abunalar"
     },
     {
-      "name": "subs_auto_update",
-      "value": "Awtomatik täzelenme"
-    },
-    {
       "name": "subs_deleted",
       "value": "%1$s pozuldy"
     },
@@ -1187,10 +1015,6 @@
     {
       "name": "subs_import_desktop_source",
       "value": "Zephyr Desktop"
-    },
-    {
-      "name": "subs_import_file",
-      "value": "Faýldan import et"
     },
     {
       "name": "subs_import_insecure",
@@ -1273,14 +1097,6 @@
       "value": "Pozmagy tassykla"
     },
     {
-      "name": "subs_swipe_delete",
-      "value": "Poz"
-    },
-    {
-      "name": "subs_swipe_update",
-      "value": "Täzele"
-    },
-    {
       "name": "subs_swipe_updating",
       "value": "Täzelenýär"
     },
@@ -1295,6 +1111,214 @@
     {
       "name": "subs_update_wifi_only",
       "value": "Diňe Wi‑Fi arkaly täzele"
+    },
+    {
+      "name": "term_accent",
+      "value": "Aksent reňki"
+    },
+    {
+      "name": "term_all",
+      "value": "Ählisi"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Daşky görnüş"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Garaňky"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Ýagty"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Ulgam"
+    },
+    {
+      "name": "term_apply",
+      "value": "Ulan"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Awtomatik täzelenme"
+    },
+    {
+      "name": "term_delete",
+      "value": "Poz"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Diagnostika"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Birikmäni kes"
+    },
+    {
+      "name": "term_domain",
+      "value": "Domen"
+    },
+    {
+      "name": "term_exit",
+      "value": "Çykyş"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "Çykyş IP-si"
+    },
+    {
+      "name": "term_import",
+      "value": "Import et"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Faýldan import et"
+    },
+    {
+      "name": "term_latency",
+      "value": "Gijikme"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Ýerli proksi porty"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Düzediş"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Ýalňyşlyk"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Maglumat"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Duýduryş"
+    },
+    {
+      "name": "term_logs",
+      "value": "Günnamalar"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Göni"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Global"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Global režim"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Düzgün"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Netije ýok"
+    },
+    {
+      "name": "term_node",
+      "value": "Düwün"
+    },
+    {
+      "name": "term_nodes",
+      "value": "Düwünler"
+    },
+    {
+      "name": "term_none",
+      "value": "Ýok"
+    },
+    {
+      "name": "term_off",
+      "value": "Öçük"
+    },
+    {
+      "name": "term_on",
+      "value": "Açyk"
+    },
+    {
+      "name": "term_override",
+      "value": "Aýratyn düzgün"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proksi"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Parol talap et"
+    },
+    {
+      "name": "term_rule",
+      "value": "Düzgün"
+    },
+    {
+      "name": "term_rules",
+      "value": "Düzgünler"
+    },
+    {
+      "name": "term_scene",
+      "value": "Ssenariý"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Ssenariýler"
+    },
+    {
+      "name": "term_settings",
+      "value": "Sazlamalar"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Birikdirilýär"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Birikdirilmedi"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Birikme şowsuz"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Abuna"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Abunalar"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Režimi çalyş"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Gaýtadan barla"
+    },
+    {
+      "name": "term_testing",
+      "value": "Barlanýar"
+    },
+    {
+      "name": "term_today",
+      "value": "Şu gün"
+    },
+    {
+      "name": "term_undo",
+      "value": "Yzyna al"
+    },
+    {
+      "name": "term_update",
+      "value": "Täzele"
     },
     {
       "name": "tile_a11y",
@@ -1373,20 +1397,8 @@
       "value": "%1$s indi %2$s ulanýar"
     },
     {
-      "name": "trace_step_exit",
-      "value": "Çykyş"
-    },
-    {
-      "name": "trace_step_node",
-      "value": "Düwün"
-    },
-    {
       "name": "trace_step_rule",
       "value": "Düzgün"
-    },
-    {
-      "name": "trace_step_scene",
-      "value": "Ssenariý"
     },
     {
       "name": "trace_this_connection",

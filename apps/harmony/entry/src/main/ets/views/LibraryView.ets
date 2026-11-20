@@ -8,6 +8,7 @@ import { ImportRequest } from '../entryability/DeepLink';
 import { Subscription as StreamSub } from '../engine/Stream';
 import { RulesView } from './RulesView';
 import { SubscriptionsView } from './SubscriptionsView';
+import { ZTerm } from '../generated/ZTerms';
 
 @ComponentV2
 export struct LibraryView {
@@ -37,7 +38,7 @@ export struct LibraryView {
         .fontColor($r('app.color.screen_t1'))
         .padding({ left: 16, right: 16, top: 24 })
       ZSegmented({
-        options: [$r('app.string.common_subscriptions'), $r('app.string.common_rules')],
+        options: [ZTerm.subscriptions, ZTerm.rules],
         selected: this.segment,
         onSelect: (i: number) => {
           this.segment = i;

@@ -49,10 +49,6 @@
       "value": "Huduma"
     },
     {
-      "name": "command_direct_from_proxy",
-      "value": "Proksi"
-    },
-    {
       "name": "command_direct_note",
       "value": "Trafiki ya %1$s haitapitia proksi."
     },
@@ -181,14 +177,6 @@
       "value": "Inaongeza…"
     },
     {
-      "name": "common_all",
-      "value": "Zote"
-    },
-    {
-      "name": "common_apply",
-      "value": "Tumia"
-    },
-    {
       "name": "common_back_to",
       "value": "Rudi kwenye %1$s"
     },
@@ -211,10 +199,6 @@
     {
       "name": "common_direct",
       "value": "Moja kwa moja"
-    },
-    {
-      "name": "common_disconnect",
-      "value": "Tenganisha"
     },
     {
       "name": "common_exit_ip_changes",
@@ -241,48 +225,16 @@
       "value": "Mtandao wa kifaa hiki"
     },
     {
-      "name": "common_mode_direct",
-      "value": "Moja kwa moja"
-    },
-    {
       "name": "common_mode_direct_hint",
       "value": "Bila kupitia proksi"
-    },
-    {
-      "name": "common_mode_global",
-      "value": "Jumla"
     },
     {
       "name": "common_mode_global_hint",
       "value": "Trafiki yote kupitia nodi moja"
     },
     {
-      "name": "common_mode_rule",
-      "value": "Sheria"
-    },
-    {
       "name": "common_mode_rule_hint",
       "value": "Elekeza kulingana na mazingira"
-    },
-    {
-      "name": "common_no_results",
-      "value": "Hakuna matokeo"
-    },
-    {
-      "name": "common_nodes",
-      "value": "Nodi"
-    },
-    {
-      "name": "common_none",
-      "value": "Hakuna"
-    },
-    {
-      "name": "common_off",
-      "value": "Imezimwa"
-    },
-    {
-      "name": "common_on",
-      "value": "Imewashwa"
     },
     {
       "name": "common_open_settings",
@@ -297,10 +249,6 @@
       "value": "Inapima…"
     },
     {
-      "name": "common_rules",
-      "value": "Sheria"
-    },
-    {
       "name": "common_scene_ai",
       "value": "AI"
     },
@@ -311,14 +259,6 @@
     {
       "name": "common_scene_video",
       "value": "Video"
-    },
-    {
-      "name": "common_scenes",
-      "value": "Mazingira"
-    },
-    {
-      "name": "common_settings",
-      "value": "Mipangilio"
     },
     {
       "name": "common_share",
@@ -337,40 +277,16 @@
       "value": "Imeunganishwa"
     },
     {
-      "name": "common_status_connecting",
-      "value": "Inaunganisha"
-    },
-    {
       "name": "common_status_connecting_ellipsis",
       "value": "Inaunganisha…"
-    },
-    {
-      "name": "common_status_disconnected",
-      "value": "Haijaunganishwa"
     },
     {
       "name": "common_status_disconnecting",
       "value": "Inatenganisha"
     },
     {
-      "name": "common_status_failed",
-      "value": "Muunganisho umeshindwa"
-    },
-    {
-      "name": "common_subscriptions",
-      "value": "Usajili"
-    },
-    {
-      "name": "common_today",
-      "value": "Leo"
-    },
-    {
       "name": "common_try_again",
       "value": "Jaribu tena"
-    },
-    {
-      "name": "common_undo",
-      "value": "Tendua"
     },
     {
       "name": "common_updating",
@@ -485,10 +401,6 @@
       "value": "Badilisha hadi %1$s"
     },
     {
-      "name": "home_global_title",
-      "value": "Hali ya Jumla"
-    },
-    {
       "name": "home_global_use_rule",
       "value": "Tumia hali ya sheria"
     },
@@ -545,10 +457,6 @@
       "value": "%1$s iko sawa"
     },
     {
-      "name": "home_scene_testing",
-      "value": "Inapima"
-    },
-    {
       "name": "home_scenes_tested",
       "value": "Imepimwa %1$s"
     },
@@ -559,10 +467,6 @@
     {
       "name": "home_spark_a11y",
       "value": "Kasi ya kupakua, sekunde 90 zilizopita"
-    },
-    {
-      "name": "home_switch_mode",
-      "value": "Badilisha hali"
     },
     {
       "name": "home_switched_to",
@@ -681,22 +585,6 @@
       "value": "Bado hakuna kumbukumbu"
     },
     {
-      "name": "logs_level_debug",
-      "value": "Utatuzi"
-    },
-    {
-      "name": "logs_level_error",
-      "value": "Hitilafu"
-    },
-    {
-      "name": "logs_level_info",
-      "value": "Taarifa"
-    },
-    {
-      "name": "logs_level_warning",
-      "value": "Onyo"
-    },
-    {
       "name": "logs_line_a11y",
       "value": "%1$s %2$s %3$s"
     },
@@ -707,10 +595,6 @@
     {
       "name": "logs_resume",
       "value": "Endelea"
-    },
-    {
-      "name": "logs_title",
-      "value": "Kumbukumbu"
     },
     {
       "name": "nodes_detail_latency",
@@ -853,24 +737,12 @@
       "value": "Imezuiwa"
     },
     {
-      "name": "rules_kind_domain",
-      "value": "Kikoa"
-    },
-    {
       "name": "rules_kind_ip",
       "value": "IP"
     },
     {
       "name": "rules_kind_other",
       "value": "Nyingine"
-    },
-    {
-      "name": "rules_kind_override",
-      "value": "Ubatilishaji"
-    },
-    {
-      "name": "rules_kind_subscription",
-      "value": "Usajili"
     },
     {
       "name": "rules_match_order",
@@ -883,10 +755,6 @@
     {
       "name": "rules_other_traffic",
       "value": "Trafiki nyingine yote"
-    },
-    {
-      "name": "rules_step_exit_ip",
-      "value": "IP ya kutoka"
     },
     {
       "name": "rules_step_layer",
@@ -961,10 +829,6 @@
       "value": "%1$s (imebanwa)"
     },
     {
-      "name": "scene_retest",
-      "value": "Pima tena"
-    },
-    {
       "name": "scene_test_daily",
       "value": "Kila siku"
     },
@@ -989,10 +853,6 @@
       "value": "Nodi isipopatikana"
     },
     {
-      "name": "settings_accent",
-      "value": "Rangi ya msisitizo"
-    },
-    {
       "name": "settings_accent_blue",
       "value": "Bluu"
     },
@@ -1009,22 +869,6 @@
       "value": "Waridi"
     },
     {
-      "name": "settings_appearance",
-      "value": "Mwonekano"
-    },
-    {
-      "name": "settings_appearance_dark",
-      "value": "Giza"
-    },
-    {
-      "name": "settings_appearance_light",
-      "value": "Mwanga"
-    },
-    {
-      "name": "settings_appearance_system",
-      "value": "Mfumo"
-    },
-    {
       "name": "settings_keep_results",
       "value": "Hifadhi matokeo"
     },
@@ -1037,16 +881,8 @@
       "value": "Usajili, nodi na data ya trafiki huhifadhiwa kwenye kifaa hiki pekee."
     },
     {
-      "name": "settings_local_proxy",
-      "value": "Mlango wa proksi ya ndani"
-    },
-    {
       "name": "settings_on_demand",
       "value": "Unganisha inapohitajika"
-    },
-    {
-      "name": "settings_password_required",
-      "value": "Hitaji nenosiri"
     },
     {
       "name": "settings_save_failed",
@@ -1059,10 +895,6 @@
     {
       "name": "settings_section_connection",
       "value": "Muunganisho"
-    },
-    {
-      "name": "settings_section_diagnostics",
-      "value": "Uchunguzi"
     },
     {
       "name": "settings_section_privacy",
@@ -1125,10 +957,6 @@
       "value": "Usajili wote"
     },
     {
-      "name": "subs_auto_update",
-      "value": "Masasisho ya kiotomatiki"
-    },
-    {
       "name": "subs_deleted",
       "value": "%1$s imefutwa"
     },
@@ -1187,10 +1015,6 @@
     {
       "name": "subs_import_desktop_source",
       "value": "Zephyr ya Kompyuta"
-    },
-    {
-      "name": "subs_import_file",
-      "value": "Leta kutoka faili"
     },
     {
       "name": "subs_import_insecure",
@@ -1273,14 +1097,6 @@
       "value": "Thibitisha"
     },
     {
-      "name": "subs_swipe_delete",
-      "value": "Futa"
-    },
-    {
-      "name": "subs_swipe_update",
-      "value": "Sasisha"
-    },
-    {
       "name": "subs_swipe_updating",
       "value": "Inasasisha"
     },
@@ -1295,6 +1111,214 @@
     {
       "name": "subs_update_wifi_only",
       "value": "Sasisha kupitia Wi‑Fi pekee"
+    },
+    {
+      "name": "term_accent",
+      "value": "Rangi ya msisitizo"
+    },
+    {
+      "name": "term_all",
+      "value": "Zote"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Mwonekano"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Giza"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Mwanga"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Mfumo"
+    },
+    {
+      "name": "term_apply",
+      "value": "Tumia"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Masasisho ya kiotomatiki"
+    },
+    {
+      "name": "term_delete",
+      "value": "Futa"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Uchunguzi"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Tenganisha"
+    },
+    {
+      "name": "term_domain",
+      "value": "Kikoa"
+    },
+    {
+      "name": "term_exit",
+      "value": "Njia ya kutoka"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "IP ya kutoka"
+    },
+    {
+      "name": "term_import",
+      "value": "Leta"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Leta kutoka faili"
+    },
+    {
+      "name": "term_latency",
+      "value": "Kuchelewa"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Mlango wa proksi ya ndani"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Utatuzi"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Hitilafu"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Taarifa"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Onyo"
+    },
+    {
+      "name": "term_logs",
+      "value": "Kumbukumbu"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Moja kwa moja"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Jumla"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Hali ya Jumla"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Sheria"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Hakuna matokeo"
+    },
+    {
+      "name": "term_node",
+      "value": "Nodi"
+    },
+    {
+      "name": "term_nodes",
+      "value": "Nodi"
+    },
+    {
+      "name": "term_none",
+      "value": "Hakuna"
+    },
+    {
+      "name": "term_off",
+      "value": "Imezimwa"
+    },
+    {
+      "name": "term_on",
+      "value": "Imewashwa"
+    },
+    {
+      "name": "term_override",
+      "value": "Ubatilishaji"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proksi"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Hitaji nenosiri"
+    },
+    {
+      "name": "term_rule",
+      "value": "Sheria"
+    },
+    {
+      "name": "term_rules",
+      "value": "Sheria"
+    },
+    {
+      "name": "term_scene",
+      "value": "Mazingira"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Mazingira"
+    },
+    {
+      "name": "term_settings",
+      "value": "Mipangilio"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Inaunganisha"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Haijaunganishwa"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Muunganisho umeshindwa"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Usajili"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Usajili"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Badilisha hali"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Pima tena"
+    },
+    {
+      "name": "term_testing",
+      "value": "Inapima"
+    },
+    {
+      "name": "term_today",
+      "value": "Leo"
+    },
+    {
+      "name": "term_undo",
+      "value": "Tendua"
+    },
+    {
+      "name": "term_update",
+      "value": "Sasisha"
     },
     {
       "name": "tile_a11y",
@@ -1373,20 +1397,8 @@
       "value": "%1$s sasa inatumia %2$s"
     },
     {
-      "name": "trace_step_exit",
-      "value": "Njia ya kutoka"
-    },
-    {
-      "name": "trace_step_node",
-      "value": "Nodi"
-    },
-    {
       "name": "trace_step_rule",
       "value": "Sheria"
-    },
-    {
-      "name": "trace_step_scene",
-      "value": "Mazingira"
     },
     {
       "name": "trace_this_connection",
