@@ -13,6 +13,7 @@ import { SettingsView } from '../views/SettingsView';
 import { LogsPage } from './LogsPage';
 import { LicensesPage } from './LicensesPage';
 import { ZTerm } from '../generated/ZTerms';
+import { ZTheme } from '../common/Theme';
 
 const ROUTE_LOGS: string = 'logs';
 const ROUTE_LICENSES: string = 'licenses';
@@ -26,6 +27,7 @@ const TAB_SETTINGS: number = 3;
 @ComponentV2
 struct Index {
   @Local tab: number = TAB_HOME;
+  @Local theme: ZTheme = ZTheme.shared();
   private pathStack: NavPathStack = new NavPathStack();
   private tabs: TabsController = new TabsController();
   private inboxSub: StreamSub | undefined = undefined;
@@ -60,7 +62,7 @@ struct Index {
       Divider()
         .width(16)
         .strokeWidth(2)
-        .color(this.tab === index ? $r('app.color.color_accent') : Color.Transparent)
+        .color(this.tab === index ? this.theme.accentColor() : Color.Transparent)
         .margin({ top: 4 })
     }
     .width('100%')

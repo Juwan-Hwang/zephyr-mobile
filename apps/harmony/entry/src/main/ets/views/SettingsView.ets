@@ -4,9 +4,10 @@
  * - 检测：仅 Wi‑Fi 测速；
  * - 诊断：日志级别（AppServices.logs，与日志页共用）、日志页、共享诊断数据；
  * - 存储：节点 / 规则 / 可用；
+ * - 外观：跟随系统 / 深色 / 浅色 + 强调色 4 种（§16.c，立即生效：EntryAbility 跟随设置流改色）；
  * - 关于：版本、引擎（演示 / 内置内核）、开源许可（占位页）。
  * 设置一律“读当前 → 改一项 → AppServices.settings.update 全量写回并落盘”；写失败时开关随状态流回弹并提示。
- * 暂未移植：受信任 Wi‑Fi、本地代理端口、外观 / 强调色、DNS / TUN 高级项。
+ * 暂未移植：受信任 Wi‑Fi、本地代理端口、DNS / TUN 高级项（v1 不展示）。
  */
 import { bundleManager } from '@kit.AbilityKit';
 import { AppServices } from '../app/AppServices';
@@ -16,12 +17,15 @@ import { ZNavRow } from '../components/ZNavRow';
 import { ZSection } from '../components/ZSection';
 import { ZSegmented } from '../components/ZSegmented';
 import { ZToggleRow } from '../components/ZToggleRow';
-import { ConnectionState, copySettings, LogLevel, ProxyMode, Settings, StorageInfo } from '../engine/Model';
+import { accentDark, accentLight, ZTheme } from '../common/Theme';
+import { Accent, Appearance, ConnectionState, copySettings, LogLevel, ProxyMode, Settings, StorageInfo } from '../engine/Model';
 import { Subscription as StreamSub } from '../engine/Stream';
 import { ZTerm } from '../generated/ZTerms';
 
 const MODES: ProxyMode[] = [ProxyMode.RULE, ProxyMode.GLOBAL, ProxyMode.DIRECT];
 const LEVELS: LogLevel[] = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARNING, LogLevel.ERROR];
+const APPEARANCES: Appearance[] = [Appearance.SYSTEM, Appearance.DARK, Appearance.LIGHT];
+const ACCENTS: Accent[] = [Accent.BLUE, Accent.GREEN, Accent.ORANGE, Accent.PINK];
 
 type SettingsPatch = (s: Settings) => void;
 
@@ -34,6 +38,9 @@ export struct SettingsView {
   @Local onDemand: boolean = true;
   @Local testOnWifiOnly: boolean = true;
   @Local shareDiagnostics: boolean = false;
+  @Local appearance: Appearance = Appearance.SYSTEM;
+  @Local accent: Accent = Accent.BLUE;
+  @Local theme: ZTheme = ZTheme.shared();
   @Local logLevel: LogLevel = LogLevel.INFO;
   @Local storage: StorageInfo | undefined = undefined;
   @Local version: string = '';
@@ -46,6 +53,8 @@ export struct SettingsView {
       this.onDemand = s.onDemand;
       this.testOnWifiOnly = s.testOnWifiOnly;
       this.shareDiagnostics = s.shareDiagnostics;
+      this.appearance = s.appearance;
+      this.accent = s.accent;
     }));
     this.subs.push(svc.engine.connectionState().subscribe((c: ConnectionState) => {
       this.mode = c.mode;
@@ -83,6 +92,8 @@ export struct SettingsView {
       this.onDemand = cur.onDemand;
       this.testOnWifiOnly = cur.testOnWifiOnly;
       this.shareDiagnostics = cur.shareDiagnostics;
+      this.appearance = cur.appearance;
+      this.accent = cur.accent;
     });
   }
 
@@ -93,6 +104,44 @@ export struct SettingsView {
     }
     return $r('app.string.settings_storage_detail', Format.bytesText(s.nodesBytes), Format.bytesText(s.rulesBytes),
       Format.bytesText(s.freeBytes));
+  }
+
+  private accentName(a: Accent): Resource {
+    switch (a) {
+      case Accent.GREEN:
+        return $r('app.string.settings_accent_green');
+      case Accent.ORANGE:
+        return $r('app.string.settings_accent_orange');
+      case Accent.PINK:
+        return $r('app.string.settings_accent_pink');
+      default:
+        return $r('app.string.settings_accent_blue');
+    }
+  }
+
+  /** 28vp 色点在 44vp 点按区内，选中描边 screen_t1；读屏按单选按钮朗读颜色名。 */
+  @Builder
+  accentDot(a: Accent) {
+    Stack() {
+      Circle()
+        .width(28)
+        .height(28)
+        .fill(this.theme.isDark ? accentDark(a) : accentLight(a))
+        .stroke(this.accent === a ? $r('app.color.screen_t1') : Color.Transparent)
+        .strokeWidth(2)
+    }
+    .width(44)
+    .height(44)
+    .accessibilityText(this.accentName(a))
+    .accessibilitySelected(this.accent === a)
+    .onClick(() => {
+      if (this.accent !== a) {
+        this.accent = a;
+        this.patch((s: Settings) => {
+          s.accent = a;
+        });
+      }
+    })
   }
 
   private engineLabel(): Resource {
@@ -187,6 +236,36 @@ export struct SettingsView {
 
         ZSection({ header: $r('app.string.settings_section_storage'), footer: $r('app.string.settings_local_data_note') }) {
           ZNavRow({ title: $r('app.string.settings_storage_title'), value: this.storageText(), chevron: false, divider: false })
+        }
+
+        ZSection({ header: ZTerm.appearance }) {
+          Column({ space: 6 }) {
+            ZSegmented({
+              options: [ZTerm.appearanceSystem, ZTerm.appearanceDark, ZTerm.appearanceLight],
+              selected: APPEARANCES.indexOf(this.appearance),
+              onSelect: (i: number) => {
+                const a = APPEARANCES[i];
+                this.appearance = a;
+                this.patch((s: Settings) => {
+                  s.appearance = a;
+                });
+              }
+            })
+          }
+          .width('100%')
+          .padding(16)
+          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+          Row() {
+            Text(ZTerm.accent)
+              .fontSize(16)
+              .fontColor($r('app.color.screen_t1'))
+              .layoutWeight(1)
+            ForEach(ACCENTS, (a: Accent) => {
+              this.accentDot(a)
+            }, (a: Accent) => a as string)
+          }
+          .width('100%')
+          .padding({ left: 16, right: 6, top: 4, bottom: 4 })
         }
 
         ZSection({ header: $r('app.string.settings_section_about') }) {

@@ -1,7 +1,10 @@
 /*
  * 开关行：标题 + 可选说明 + Switch。状态由父组件持有（@Param isOn 单向下发，@Event onChange 回传），
  * 父组件在引擎写入成功后再更新，写入失败时开关自然回弹。
+ * 打开时用当前强调色（ZTheme）。
  */
+import { ZTheme } from '../common/Theme';
+
 @ComponentV2
 export struct ZToggleRow {
   @Param title: ResourceStr = '';
@@ -11,6 +14,7 @@ export struct ZToggleRow {
   /** 最后一行不画分隔线。 */
   @Param divider: boolean = true;
   @Event onChange: (on: boolean) => void = (on: boolean) => {};
+  @Local theme: ZTheme = ZTheme.shared();
 
   build() {
     Column() {
@@ -29,6 +33,7 @@ export struct ZToggleRow {
         .alignItems(HorizontalAlign.Start)
 
         Toggle({ type: ToggleType.Switch, isOn: this.isOn })
+          .selectedColor(this.theme.accentColor())
           .enabled(this.isEnabled)
           .onChange((on: boolean) => {
             if (on !== this.isOn) {
