@@ -1,5 +1,21 @@
 import { NodeSummary } from '../Model';
 
+function gcd(a: number, b: number): number {
+  let x = a;
+  let y = b;
+  while (y !== 0) {
+    const t = x % y;
+    x = y;
+    y = t;
+  }
+  return x;
+}
+
+/** 模块级函数而非 MockCatalog 静态方法：Region 在 MockCatalog.REGIONS 的静态初始化里构造，此时外部的 MockCatalog 绑定尚未初始化（TDZ）。 */
+function lcm(a: number, b: number): number {
+  return a / gcd(a, b) * b;
+}
+
 /**
  * 确定性节点目录：design/prototype/pages.js 的逐位移植（contract/mock-spec.md §1–2），与 Android MockCatalog.kt 同算法。
  * 不物化任何节点：每个节点都是 (region, index) 的纯函数，1310 万节点 O(1) 内存。
@@ -22,7 +38,7 @@ export class Region {
     this.cities = cities;
     this.baseLatency = baseLatency;
     this.carriers = carriers;
-    this.namePeriod = MockCatalog.lcm(cities.length, 5 * carriers.length);
+    this.namePeriod = lcm(cities.length, 5 * carriers.length);
   }
 }
 
@@ -60,9 +76,12 @@ export class MockCatalog {
     return t;
   }
 
-  /** 32 位雪崩哈希（原型 hsh），返回无符号值。j ≤ 3,118,401 时 j*2654435761 < 2^53，double 乘法精确。 */
+  /**
+   * 32 位雪崩哈希（原型 hsh），返回无符号值。j*2654435761 取低 32 位用 Math.imul：对任意 0 ≤ j < 2^32 都精确
+   * （原型的 double 乘法只在 j*2654435761 < 2^53 时精确；Mock 订阅/分组按 hashCode 取 j 时会超出），与 Kotlin Long 运算一致。
+   */
   static hsh(r: number, j: number): number {
-    let h = (j * 2654435761 + r * 97) >>> 0;
+    let h = (Math.imul(j, 2654435761) + r * 97) >>> 0;
     h = (h ^ (h >>> 15)) >>> 0;
     h = Math.imul(h, 2246822519) >>> 0;
     h = (h ^ (h >>> 13)) >>> 0;
@@ -154,17 +173,10 @@ export class MockCatalog {
   }
 
   static gcd(a: number, b: number): number {
-    let x = a;
-    let y = b;
-    while (y !== 0) {
-      const t = x % y;
-      x = y;
-      y = t;
-    }
-    return x;
+    return gcd(a, b);
   }
 
   static lcm(a: number, b: number): number {
-    return a / MockCatalog.gcd(a, b) * b;
+    return lcm(a, b);
   }
 }
