@@ -3,16 +3,19 @@
  * - 状态 + 时长 + 连接开关（经 ConnectionCoordinator：先起 VPN 扩展再 engine.connect）、失败原因；
  * - 模式选择 规则 / 全局 / 直连（engine.setMode）；
  * - 实时上下行速率（engine.traffic）与今日用量；
- * - 当前节点：全局模式 = 全局节点；规则模式 = 各场景当前节点；直连 = 本机网络。点卡片去节点页。
- * 场景卡的换节点 / 预览出口 / 漏斗等交互暂未移植（见 PR #246 待办）。
+ * - 当前节点：全局模式 = 全局节点；直连 = 本机网络。点卡片去节点页。
+ * - 规则模式：场景行（U5）：左右滑换地区 → 内联“更改出口 IP？”确认卡（previewSceneChange）→ 更改后 5 s 撤销吐司。
+ * 场景详情 sheet / 漏斗 / 例外等暂未移植（M1-5）。
  */
 import { AppServices } from '../app/AppServices';
 import { Format } from '../common/Format';
 import { Labels } from '../common/Labels';
 import { ZCard } from '../components/ZCard';
 import { ZSegmented } from '../components/ZSegmented';
+import { SceneRow } from './SceneRow';
+import { HapticKind, Haptics } from '../app/Haptics';
 import {
-  ConnectionState, ConnectionStatus, ErrorCode, NodeDetail, NodeId, NodeSummary, ProxyMode, Scene,
+  ConnectionState, ConnectionStatus, ErrorCode, ExitChange, NodeDetail, NodeId, NodeSummary, ProxyMode, Scene, ServiceHealth,
   TrafficSample, UsageSummary
 } from '../engine/Model';
 import { Subscription as StreamSub } from '../engine/Stream';
@@ -38,6 +41,11 @@ export struct HomeView {
   @Local scenes: Scene[] = [];
   @Local simulated: boolean = false;
   @Local busy: boolean = false;
+  /** 场景行滑动后待确认的出口更改（同一时间一条）。 */
+  @Local pendingSceneId: string = '';
+  @Local pendingNode: NodeSummary | undefined = undefined;
+  @Local pendingChange: ExitChange | undefined = undefined;
+  @Local applying: boolean = false;
 
   private services: AppServices = AppServices.get();
   private subs: StreamSub[] = [];
@@ -137,6 +145,64 @@ export struct HomeView {
 
   private setMode(i: number): void {
     this.services.engine.setMode(MODES[i]).catch(() => {});
+  }
+
+  // ── 场景出口更改（U5）──────────────────────────────────────────────────
+  private pick(scene: Scene, node: NodeSummary): void {
+    const engine = this.services.engine;
+    engine.previewSceneChange(scene.id, node.id).then((c: ExitChange) => {
+      this.pendingSceneId = scene.id;
+      this.pendingNode = node;
+      this.pendingChange = c;
+    }).catch(() => {
+      this.cancelPending();
+    });
+  }
+
+  private cancelPending(): void {
+    this.pendingSceneId = '';
+    this.pendingNode = undefined;
+    this.pendingChange = undefined;
+  }
+
+  private confirmPending(): void {
+    const scene = this.scenes.find((s: Scene) => s.id === this.pendingSceneId);
+    const node = this.pendingNode;
+    if (scene === undefined || node === undefined || this.applying) {
+      return;
+    }
+    const previous = scene.selected.id;
+    const engine = this.services.engine;
+    this.applying = true;
+    engine.applySceneChange(scene.id, node.id).then(() => {
+      Haptics.play(HapticKind.SUCCESS);
+      this.cancelPending();
+      this.services.toasts.show(this.text($r('app.string.home_switched_to'), node.name), {
+        onUndo: () => {
+          engine.applySceneChange(scene.id, previous).catch(() => {});
+        }
+      });
+    }).catch(() => {
+      this.cancelPending();
+    }).finally(() => {
+      this.applying = false;
+    });
+  }
+
+  private text(r: Resource, arg: string): string {
+    try {
+      const ctx = this.getUIContext().getHostContext();
+      return ctx !== undefined ? ctx.resourceManager.getStringSync(r.id, arg) : arg;
+    } catch (e) {
+      return arg;
+    }
+  }
+
+  private confirmTitle(c: ExitChange, scene: Scene): ResourceStr {
+    if (c.affectedApps.length > 0) {
+      return $r('app.string.home_confirm_apps', c.affectedApps.join('、'));
+    }
+    return $r('app.string.home_confirm_scene', scene.name);
   }
 
   private isConnected(): boolean {
@@ -298,15 +364,104 @@ export struct HomeView {
               .fontSize(14)
               .fontColor($r('app.color.screen_t2'))
           }
-        } else {
-          ForEach(this.scenes, (s: Scene) => {
-            this.nodeLine(Labels.sceneName(s), s.selected.name, s.selected.latencyMs)
-          }, (s: Scene) => s.id + ':' + String(s.selected.id) + ':' + String(s.selected.latencyMs))
         }
       }
       .width('100%')
       .alignItems(HorizontalAlign.Start)
     }
+  }
+
+  /** 原型 .cf：琥珀点 + 标题、等宽“地区 IP → 地区 IP”、保持不变的应用、更改 / 取消。 */
+  @Builder
+  exitConfirm(scene: Scene, c: ExitChange) {
+    Column({ space: 6 }) {
+      Row({ space: 8 }) {
+        Circle({ width: 6, height: 6 }).fill($r('app.color.screen_amber'))
+        Text(this.confirmTitle(c, scene))
+          .fontSize(14)
+          .fontColor($r('app.color.screen_t1'))
+          .layoutWeight(1)
+      }
+      Row({ space: 8 }) {
+        Text(c.fromRegion + ' ' + (c.fromIp ?? '—'))
+          .fontSize(12.5)
+          .fontFamily('monospace')
+          .fontColor($r('app.color.screen_t2'))
+          .maxLines(1)
+        Text('→')
+          .fontSize(12.5)
+          .fontFamily('monospace')
+          .fontColor($r('app.color.screen_t4'))
+        Text(c.toRegion + ' ' + (c.toIp ?? '—'))
+          .fontSize(12.5)
+          .fontFamily('monospace')
+          .fontColor($r('app.color.screen_t1'))
+          .maxLines(1)
+      }
+      if (c.unchangedApps.length > 0) {
+        Text($r('app.string.home_confirm_unchanged', c.unchangedApps.join('、')))
+          .fontSize(12)
+          .fontColor($r('app.color.screen_t3'))
+      }
+      Row({ space: 8 }) {
+        Button($r('app.string.common_change'))
+          .type(ButtonType.Capsule)
+          .layoutWeight(1)
+          .height(40)
+          .fontSize(14)
+          .fontWeight(FontWeight.Medium)
+          .fontColor($r('app.color.screen_on_primary'))
+          .backgroundColor($r('app.color.screen_primary'))
+          .enabled(!this.applying)
+          .onClick(() => this.confirmPending())
+        Button($r('app.string.common_cancel'))
+          .type(ButtonType.Capsule)
+          .layoutWeight(1)
+          .height(40)
+          .fontSize(14)
+          .fontWeight(FontWeight.Medium)
+          .fontColor($r('app.color.screen_t1'))
+          .backgroundColor($r('app.color.screen_hl'))
+          .onClick(() => this.cancelPending())
+      }
+      .margin({ top: 2 })
+    }
+    .width('100%')
+    .padding(14)
+    .borderRadius(16)
+    .backgroundColor($r('app.color.screen_s3'))
+    .border({ width: 1, color: $r('app.color.screen_hl') })
+    .alignItems(HorizontalAlign.Start)
+  }
+
+  @Builder
+  sceneRows() {
+    Column() {
+      ForEach(this.scenes, (s: Scene, i: number) => {
+        SceneRow({
+          scene: s,
+          pendingNode: this.pendingSceneId === s.id ? this.pendingNode : undefined,
+          divider: i < this.scenes.length - 1 && this.pendingSceneId !== s.id,
+          onPick: (n: NodeSummary) => this.pick(s, n),
+          onScrubStart: () => {
+            if (this.pendingSceneId !== '') {
+              this.cancelPending();
+            }
+          }
+        })
+        if (this.pendingSceneId === s.id && this.pendingChange !== undefined) {
+          Column() {
+            this.exitConfirm(s, this.pendingChange)
+          }
+          .padding({ left: 16, right: 16, bottom: 14 })
+        }
+      }, (s: Scene) => s.id + ':' + String(s.selected.id) + ':' + s.source + ':' + String(s.available) + ':' +
+        String(s.exceptions.length) + ':' + String(s.services.filter((h: ServiceHealth) => !h.ok).length))
+    }
+    .width('100%')
+    .borderRadius(16)
+    .backgroundColor($r('app.color.screen_s1'))
+    .clip(true)
   }
 
   build() {
@@ -332,7 +487,11 @@ export struct HomeView {
         .alignItems(HorizontalAlign.Start)
 
         this.traffic()
-        this.currentNode()
+        if (this.mode === ProxyMode.RULE && this.scenes.length > 0) {
+          this.sceneRows()
+        } else {
+          this.currentNode()
+        }
       }
       .width('100%')
       .padding({ left: 16, right: 16, top: 24, bottom: 24 })
