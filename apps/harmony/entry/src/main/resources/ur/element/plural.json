@@ -1,0 +1,446 @@
+{
+  "plural": [
+    {
+      "name": "common_node_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "\\u2068%1$s\\u2069 نوڈ"
+        },
+        {
+          "quantity": "other",
+          "value": "\\u2068%1$s\\u2069 نوڈز"
+        }
+      ]
+    },
+    {
+      "name": "common_available_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d دستیاب"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d دستیاب"
+        }
+      ]
+    },
+    {
+      "name": "common_region_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d علاقہ"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d علاقے"
+        }
+      ]
+    },
+    {
+      "name": "home_subs_more",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d مزید سبسکرپشن"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d مزید سبسکرپشنز"
+        }
+      ]
+    },
+    {
+      "name": "home_scene_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d منظر"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d مناظر"
+        }
+      ]
+    },
+    {
+      "name": "scene_available_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "دستیاب نوڈ"
+        },
+        {
+          "quantity": "other",
+          "value": "دستیاب نوڈز"
+        }
+      ]
+    },
+    {
+      "name": "scene_tested_from",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d سبسکرپشن سے ٹیسٹ کیا گیا"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d سبسکرپشنز سے ٹیسٹ کیا گیا"
+        }
+      ]
+    },
+    {
+      "name": "scene_test_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "ہر گھنٹے"
+        },
+        {
+          "quantity": "other",
+          "value": "ہر %1$d گھنٹے"
+        }
+      ]
+    },
+    {
+      "name": "command_plan_exit_available",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d دستیاب۔ \\u2068%2$s\\u2069 استعمال ہوگا۔"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d دستیاب۔ \\u2068%2$s\\u2069 استعمال ہوگا۔"
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_untested",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "4K کا %1$d نوڈ ابھی ٹیسٹ نہیں ہوا۔ لاگو کرنے کے بعد منظر دوبارہ ٹیسٹ کریں۔"
+        },
+        {
+          "quantity": "other",
+          "value": "4K کے %1$d نوڈز ابھی ٹیسٹ نہیں ہوئے۔ لاگو کرنے کے بعد منظر دوبارہ ٹیسٹ کریں۔"
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_keep",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d میں سے %2$d 4K سپورٹ کرتا ہے؛ موجودہ نوڈ برقرار رہے گا۔"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d میں سے %2$d 4K سپورٹ کرتے ہیں؛ موجودہ نوڈ برقرار رہے گا۔"
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_switch",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d میں سے %2$d 4K سپورٹ کرتا ہے؛ \\u2068%3$s\\u2069 استعمال ہوگا۔"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d میں سے %2$d 4K سپورٹ کرتے ہیں؛ \\u2068%3$s\\u2069 استعمال ہوگا۔"
+        }
+      ]
+    },
+    {
+      "name": "activity_closed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d کنکشن بند کیا گیا"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d کنکشنز بند کیے گئے"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "کنکشن بند نہیں ہو سکا"
+        },
+        {
+          "quantity": "other",
+          "value": "کنکشنز بند نہیں ہو سکے"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_partial",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d کنکشن بند نہیں ہو سکا"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d کنکشنز بند نہیں ہو سکے"
+        }
+      ]
+    },
+    {
+      "name": "trace_connections",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d کنکشن"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d کنکشنز"
+        }
+      ]
+    },
+    {
+      "name": "trace_exit_stable",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d دن سے تبدیل نہیں ہوا"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d دن سے تبدیل نہیں ہوا"
+        }
+      ]
+    },
+    {
+      "name": "nodes_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "نوڈ"
+        },
+        {
+          "quantity": "other",
+          "value": "نوڈز"
+        }
+      ]
+    },
+    {
+      "name": "nodes_from_subs",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d سبسکرپشن سے"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d سبسکرپشنز سے"
+        }
+      ]
+    },
+    {
+      "name": "rules_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "قاعدہ"
+        },
+        {
+          "quantity": "other",
+          "value": "قواعد"
+        }
+      ]
+    },
+    {
+      "name": "rules_summary",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d پرت · کمپائل شدہ · ڈسک پر \\u2068%2$s\\u2069"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d پرتیں · کمپائل شدہ · ڈسک پر \\u2068%2$s\\u2069"
+        }
+      ]
+    },
+    {
+      "name": "subs_added",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "\\u2068%1$s\\u2069 شامل ہو گیا (\\u2068%2$s\\u2069 نوڈ)"
+        },
+        {
+          "quantity": "other",
+          "value": "\\u2068%1$s\\u2069 شامل ہو گیا (\\u2068%2$s\\u2069 نوڈز)"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_confirm_title",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d سبسکرپشن امپورٹ کریں؟"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d سبسکرپشنز امپورٹ کریں؟"
+        }
+      ]
+    },
+    {
+      "name": "subs_added_many",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d سبسکرپشن شامل ہو گئی"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d سبسکرپشنز شامل ہو گئیں"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_some_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d شامل نہیں ہو سکی"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d شامل نہیں ہو سکیں"
+        }
+      ]
+    },
+    {
+      "name": "subs_review_all",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "تمام \\u2068%1$s\\u2069 سبسکرپشنز اپ ڈیٹ ہوں گی"
+        },
+        {
+          "quantity": "other",
+          "value": "تمام \\u2068%1$s\\u2069 سبسکرپشنز اپ ڈیٹ ہوں گی"
+        }
+      ]
+    },
+    {
+      "name": "subs_updated_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d سبسکرپشن اپ ڈیٹ ہو گئی"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d سبسکرپشنز اپ ڈیٹ ہو گئیں"
+        }
+      ]
+    },
+    {
+      "name": "subs_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "سبسکرپشن"
+        },
+        {
+          "quantity": "other",
+          "value": "سبسکرپشنز"
+        }
+      ]
+    },
+    {
+      "name": "subs_update_every",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "ہر %1$d گھنٹے بعد اپ ڈیٹ"
+        },
+        {
+          "quantity": "other",
+          "value": "ہر %1$d گھنٹے بعد اپ ڈیٹ"
+        }
+      ]
+    },
+    {
+      "name": "subs_others",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d دیگر"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d دیگر"
+        }
+      ]
+    },
+    {
+      "name": "subs_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "ہر %1$d گھنٹے"
+        },
+        {
+          "quantity": "other",
+          "value": "ہر %1$d گھنٹے"
+        }
+      ]
+    },
+    {
+      "name": "settings_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d گھنٹہ"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d گھنٹے"
+        }
+      ]
+    },
+    {
+      "name": "today_regions",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "علاقہ"
+        },
+        {
+          "quantity": "other",
+          "value": "علاقے"
+        }
+      ]
+    },
+    {
+      "name": "today_hours_online",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "گھنٹہ آن لائن"
+        },
+        {
+          "quantity": "other",
+          "value": "گھنٹے آن لائن"
+        }
+      ]
+    }
+  ]
+}

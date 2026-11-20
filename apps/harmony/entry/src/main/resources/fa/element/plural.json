@@ -1,0 +1,446 @@
+{
+  "plural": [
+    {
+      "name": "common_node_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "\\u2068%1$s\\u2069 نود"
+        },
+        {
+          "quantity": "other",
+          "value": "\\u2068%1$s\\u2069 نود"
+        }
+      ]
+    },
+    {
+      "name": "common_available_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d در دسترس"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d در دسترس"
+        }
+      ]
+    },
+    {
+      "name": "common_region_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d منطقه"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d منطقه"
+        }
+      ]
+    },
+    {
+      "name": "home_subs_more",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d اشتراک دیگر"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d اشتراک دیگر"
+        }
+      ]
+    },
+    {
+      "name": "home_scene_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d صحنه"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d صحنه"
+        }
+      ]
+    },
+    {
+      "name": "scene_available_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "نود در دسترس"
+        },
+        {
+          "quantity": "other",
+          "value": "نود در دسترس"
+        }
+      ]
+    },
+    {
+      "name": "scene_tested_from",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "آزمایش‌شده از %1$d اشتراک"
+        },
+        {
+          "quantity": "other",
+          "value": "آزمایش‌شده از %1$d اشتراک"
+        }
+      ]
+    },
+    {
+      "name": "scene_test_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "هر ساعت"
+        },
+        {
+          "quantity": "other",
+          "value": "هر %1$d ساعت"
+        }
+      ]
+    },
+    {
+      "name": "command_plan_exit_available",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d در دسترس. از \\u2068%2$s\\u2069 استفاده می‌شود."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d در دسترس. از \\u2068%2$s\\u2069 استفاده می‌شود."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_untested",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d نود 4K هنوز آزمایش نشده است. پس از اعمال، صحنه را دوباره آزمایش کنید."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d نود 4K هنوز آزمایش نشده است. پس از اعمال، صحنه را دوباره آزمایش کنید."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_keep",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%2$d از %1$d نود از 4K پشتیبانی می‌کند؛ نود فعلی می‌ماند."
+        },
+        {
+          "quantity": "other",
+          "value": "%2$d از %1$d نود از 4K پشتیبانی می‌کنند؛ نود فعلی می‌ماند."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_switch",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%2$d از %1$d نود از 4K پشتیبانی می‌کند؛ از \\u2068%3$s\\u2069 استفاده می‌شود."
+        },
+        {
+          "quantity": "other",
+          "value": "%2$d از %1$d نود از 4K پشتیبانی می‌کنند؛ از \\u2068%3$s\\u2069 استفاده می‌شود."
+        }
+      ]
+    },
+    {
+      "name": "activity_closed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d اتصال بسته شد"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d اتصال بسته شد"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "اتصال بسته نشد"
+        },
+        {
+          "quantity": "other",
+          "value": "اتصال‌ها بسته نشدند"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_partial",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d اتصال بسته نشد"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d اتصال بسته نشد"
+        }
+      ]
+    },
+    {
+      "name": "trace_connections",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d اتصال"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d اتصال"
+        }
+      ]
+    },
+    {
+      "name": "trace_exit_stable",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d روز بدون تغییر"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d روز بدون تغییر"
+        }
+      ]
+    },
+    {
+      "name": "nodes_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "نود"
+        },
+        {
+          "quantity": "other",
+          "value": "نود"
+        }
+      ]
+    },
+    {
+      "name": "nodes_from_subs",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "از %1$d اشتراک"
+        },
+        {
+          "quantity": "other",
+          "value": "از %1$d اشتراک"
+        }
+      ]
+    },
+    {
+      "name": "rules_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "قانون"
+        },
+        {
+          "quantity": "other",
+          "value": "قانون"
+        }
+      ]
+    },
+    {
+      "name": "rules_summary",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d لایه · کامپایل‌شده · \\u2068%2$s\\u2069 روی دیسک"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d لایه · کامپایل‌شده · \\u2068%2$s\\u2069 روی دیسک"
+        }
+      ]
+    },
+    {
+      "name": "subs_added",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "\\u2068%1$s\\u2069 اضافه شد (\\u2068%2$s\\u2069 نود)"
+        },
+        {
+          "quantity": "other",
+          "value": "\\u2068%1$s\\u2069 اضافه شد (\\u2068%2$s\\u2069 نود)"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_confirm_title",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d اشتراک وارد شود؟"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d اشتراک وارد شود؟"
+        }
+      ]
+    },
+    {
+      "name": "subs_added_many",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d اشتراک افزوده شد"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d اشتراک افزوده شد"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_some_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d مورد افزوده نشد"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d مورد افزوده نشد"
+        }
+      ]
+    },
+    {
+      "name": "subs_review_all",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "همهٔ \\u2068%1$s\\u2069 اشتراک به‌روزرسانی می‌شوند"
+        },
+        {
+          "quantity": "other",
+          "value": "همهٔ \\u2068%1$s\\u2069 اشتراک به‌روزرسانی می‌شوند"
+        }
+      ]
+    },
+    {
+      "name": "subs_updated_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d اشتراک به‌روزرسانی شد"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d اشتراک به‌روزرسانی شد"
+        }
+      ]
+    },
+    {
+      "name": "subs_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "اشتراک"
+        },
+        {
+          "quantity": "other",
+          "value": "اشتراک"
+        }
+      ]
+    },
+    {
+      "name": "subs_update_every",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "به‌روزرسانی هر %1$d ساعت"
+        },
+        {
+          "quantity": "other",
+          "value": "به‌روزرسانی هر %1$d ساعت"
+        }
+      ]
+    },
+    {
+      "name": "subs_others",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d مورد دیگر"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d مورد دیگر"
+        }
+      ]
+    },
+    {
+      "name": "subs_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "هر %1$d ساعت"
+        },
+        {
+          "quantity": "other",
+          "value": "هر %1$d ساعت"
+        }
+      ]
+    },
+    {
+      "name": "settings_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d ساعت"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d ساعت"
+        }
+      ]
+    },
+    {
+      "name": "today_regions",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "منطقه"
+        },
+        {
+          "quantity": "other",
+          "value": "منطقه"
+        }
+      ]
+    },
+    {
+      "name": "today_hours_online",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "ساعت آنلاین"
+        },
+        {
+          "quantity": "other",
+          "value": "ساعت آنلاین"
+        }
+      ]
+    }
+  ]
+}

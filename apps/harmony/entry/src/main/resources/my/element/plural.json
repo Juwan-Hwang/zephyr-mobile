@@ -1,0 +1,310 @@
+{
+  "plural": [
+    {
+      "name": "common_node_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "နုဒ် %1$s ခု"
+        }
+      ]
+    },
+    {
+      "name": "common_available_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d ခု ရနိုင်"
+        }
+      ]
+    },
+    {
+      "name": "common_region_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "ဒေသ %1$d ခု"
+        }
+      ]
+    },
+    {
+      "name": "home_subs_more",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "နောက်ထပ် စာရင်းသွင်းမှု %1$d ခု"
+        }
+      ]
+    },
+    {
+      "name": "home_scene_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "မြင်ကွင်း %1$d ခု"
+        }
+      ]
+    },
+    {
+      "name": "scene_available_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "ရနိုင်သော နုဒ်"
+        }
+      ]
+    },
+    {
+      "name": "scene_tested_from",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "စာရင်းသွင်းမှု %1$d ခုမှ စမ်းသပ်ထားသည်"
+        }
+      ]
+    },
+    {
+      "name": "scene_test_every_hours",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d နာရီတိုင်း"
+        }
+      ]
+    },
+    {
+      "name": "command_plan_exit_available",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d ခု ရနိုင်သည်။ %2$s ကို သုံးမည်။"
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_untested",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "4K နုဒ် %1$d ခုကို မစမ်းသပ်ရသေးပါ။ အသုံးချပြီးနောက် မြင်ကွင်းကို ပြန်စမ်းသပ်ပါ။"
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_keep",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d ခုအနက် %2$d ခု 4K ပံ့ပိုးသည်၊ လက်ရှိနုဒ် မပြောင်းပါ။"
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_switch",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d ခုအနက် %2$d ခု 4K ပံ့ပိုးသည်၊ %3$s ကို သုံးမည်။"
+        }
+      ]
+    },
+    {
+      "name": "activity_closed",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "ချိတ်ဆက်မှု %1$d ခု ပိတ်လိုက်သည်"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_failed",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "ချိတ်ဆက်မှုများ ပိတ်၍ မရပါ"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_partial",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "ချိတ်ဆက်မှု %1$d ခု ပိတ်၍ မရပါ"
+        }
+      ]
+    },
+    {
+      "name": "trace_connections",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "ချိတ်ဆက်မှု %1$d ခု"
+        }
+      ]
+    },
+    {
+      "name": "trace_exit_stable",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d ရက် မပြောင်းလဲပါ"
+        }
+      ]
+    },
+    {
+      "name": "nodes_total_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "ခု"
+        }
+      ]
+    },
+    {
+      "name": "nodes_from_subs",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "စာရင်းသွင်းမှု %1$d ခုမှ"
+        }
+      ]
+    },
+    {
+      "name": "rules_total_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "ခု"
+        }
+      ]
+    },
+    {
+      "name": "rules_summary",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "အလွှာ %1$d ခု · compile ပြီး · ဒစ်ခ်ပေါ်တွင် %2$s"
+        }
+      ]
+    },
+    {
+      "name": "subs_added",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$s ထည့်ပြီး (နုဒ် %2$s ခု)"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_confirm_title",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "စာရင်းသွင်းမှု %1$d ခု တင်သွင်းမလား။"
+        }
+      ]
+    },
+    {
+      "name": "subs_added_many",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "စာရင်းသွင်းမှု %1$d ခု ထည့်ပြီး"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_some_failed",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d ခု ထည့်၍ မရပါ"
+        }
+      ]
+    },
+    {
+      "name": "subs_review_all",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "စာရင်းသွင်းမှု %1$s ခုလုံးကို အပ်ဒိတ်လုပ်မည်"
+        }
+      ]
+    },
+    {
+      "name": "subs_updated_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "စာရင်းသွင်းမှု %1$d ခု အပ်ဒိတ်ပြီး"
+        }
+      ]
+    },
+    {
+      "name": "subs_total_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "ခု"
+        }
+      ]
+    },
+    {
+      "name": "subs_update_every",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d နာရီတိုင်း အပ်ဒိတ်"
+        }
+      ]
+    },
+    {
+      "name": "subs_others",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "အခြား %1$d ခု"
+        }
+      ]
+    },
+    {
+      "name": "subs_every_hours",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d နာရီတိုင်း"
+        }
+      ]
+    },
+    {
+      "name": "settings_hours",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d နာရီ"
+        }
+      ]
+    },
+    {
+      "name": "today_regions",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "ဒေသ"
+        }
+      ]
+    },
+    {
+      "name": "today_hours_online",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "နာရီ အွန်လိုင်း"
+        }
+      ]
+    }
+  ]
+}

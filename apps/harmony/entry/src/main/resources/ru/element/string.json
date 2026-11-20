@@ -1,0 +1,1452 @@
+{
+  "string": [
+    {
+      "name": "activity_back",
+      "value": "‹ Недавние подключения"
+    },
+    {
+      "name": "activity_close_host_a11y",
+      "value": "Закрыть подключения к %1$s"
+    },
+    {
+      "name": "activity_close_none",
+      "value": "Нет активных подключений"
+    },
+    {
+      "name": "activity_empty",
+      "value": "После подключения здесь появятся недавно посещённые домены."
+    },
+    {
+      "name": "activity_host_a11y",
+      "value": "%1$s: подробности подключений"
+    },
+    {
+      "name": "activity_no_app_note",
+      "value": "Пока неизвестно, какое приложение открыло подключение, поэтому показаны только домены."
+    },
+    {
+      "name": "activity_title",
+      "value": "Недавние подключения"
+    },
+    {
+      "name": "command_chip_action",
+      "value": "Действие"
+    },
+    {
+      "name": "command_chip_region",
+      "value": "Регион"
+    },
+    {
+      "name": "command_chip_scene",
+      "value": "Сценарий"
+    },
+    {
+      "name": "command_chip_scope",
+      "value": "Охват"
+    },
+    {
+      "name": "command_chip_service",
+      "value": "Сервис"
+    },
+    {
+      "name": "command_direct_from_proxy",
+      "value": "Прокси"
+    },
+    {
+      "name": "command_direct_note",
+      "value": "Трафик %1$s пойдёт в обход прокси."
+    },
+    {
+      "name": "command_direct_title",
+      "value": "%1$s напрямую"
+    },
+    {
+      "name": "command_no_nodes_available",
+      "value": "Нет доступных узлов"
+    },
+    {
+      "name": "command_placeholder",
+      "value": "Поиск или команда"
+    },
+    {
+      "name": "command_plan_exit_title",
+      "value": "%1$s через узлы: %2$s"
+    },
+    {
+      "name": "command_plan_fallback_pause",
+      "value": "Если узлы %1$s недоступны, %2$s приостановится."
+    },
+    {
+      "name": "command_plan_fallback_scene",
+      "value": "Если узлы %1$s недоступны, будут использованы другие узлы сценария."
+    },
+    {
+      "name": "command_plan_no_nodes",
+      "value": "В %1$s нет узлов: %2$s."
+    },
+    {
+      "name": "command_plan_releases_pin",
+      "value": "%1$s больше не будет использовать закреплённый выход %2$s."
+    },
+    {
+      "name": "command_region_de",
+      "value": "Германия"
+    },
+    {
+      "name": "command_region_gb",
+      "value": "Великобритания"
+    },
+    {
+      "name": "command_region_hk",
+      "value": "Гонконг"
+    },
+    {
+      "name": "command_region_jp",
+      "value": "Япония"
+    },
+    {
+      "name": "command_region_kr",
+      "value": "Корея"
+    },
+    {
+      "name": "command_region_sg",
+      "value": "Сингапур"
+    },
+    {
+      "name": "command_region_tw",
+      "value": "Тайвань"
+    },
+    {
+      "name": "command_region_us",
+      "value": "США"
+    },
+    {
+      "name": "command_scene_ai",
+      "value": "сценарии AI"
+    },
+    {
+      "name": "command_scene_named",
+      "value": "сценарии «%1$s»"
+    },
+    {
+      "name": "command_section_command",
+      "value": "Команды"
+    },
+    {
+      "name": "command_section_suggestions",
+      "value": "Рекомендации"
+    },
+    {
+      "name": "command_see_all_nodes",
+      "value": "Все узлы (%1$s) в библиотеке"
+    },
+    {
+      "name": "command_test_rule",
+      "value": "Куда пойдёт %1$s?"
+    },
+    {
+      "name": "command_uhd_auto_note",
+      "value": "Теперь автопереключение выбирает только среди узлов 4K."
+    },
+    {
+      "name": "command_uhd_clear_note",
+      "value": "Сценарий «%1$s» использует только узлы 4K. Снова будут использоваться все узлы; текущий узел сохранится."
+    },
+    {
+      "name": "command_uhd_fastest",
+      "value": "самый быстрый узел 4K"
+    },
+    {
+      "name": "command_uhd_none",
+      "value": "Нет узлов с поддержкой 4K."
+    },
+    {
+      "name": "command_uhd_title_all",
+      "value": "%1$s: все узлы"
+    },
+    {
+      "name": "command_uhd_title_only",
+      "value": "%1$s: только узлы 4K"
+    },
+    {
+      "name": "command_zephyr_only",
+      "value": "Действует только в Zephyr. Конфигурация подписки не меняется."
+    },
+    {
+      "name": "common_add",
+      "value": "Добавить"
+    },
+    {
+      "name": "common_adding",
+      "value": "Добавление…"
+    },
+    {
+      "name": "common_all",
+      "value": "Все"
+    },
+    {
+      "name": "common_apply",
+      "value": "Применить"
+    },
+    {
+      "name": "common_back_to",
+      "value": "Назад: %1$s"
+    },
+    {
+      "name": "common_cancel",
+      "value": "Отмена"
+    },
+    {
+      "name": "common_change",
+      "value": "Изменить"
+    },
+    {
+      "name": "common_connect",
+      "value": "Подключить"
+    },
+    {
+      "name": "common_current",
+      "value": "Текущий"
+    },
+    {
+      "name": "common_direct",
+      "value": "Напрямую"
+    },
+    {
+      "name": "common_disconnect",
+      "value": "Отключить"
+    },
+    {
+      "name": "common_exit_ip_changes",
+      "value": "IP выхода изменится"
+    },
+    {
+      "name": "common_home",
+      "value": "Главная"
+    },
+    {
+      "name": "common_library",
+      "value": "Библиотека"
+    },
+    {
+      "name": "common_list_separator",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "common_local_data_note",
+      "value": "Подписки и данные о трафике хранятся только на этом устройстве."
+    },
+    {
+      "name": "common_local_network",
+      "value": "Сеть этого устройства"
+    },
+    {
+      "name": "common_mode_direct",
+      "value": "Прямой"
+    },
+    {
+      "name": "common_mode_direct_hint",
+      "value": "В обход прокси"
+    },
+    {
+      "name": "common_mode_global",
+      "value": "Глобальный"
+    },
+    {
+      "name": "common_mode_global_hint",
+      "value": "Весь трафик через один узел"
+    },
+    {
+      "name": "common_mode_rule",
+      "value": "Правило"
+    },
+    {
+      "name": "common_mode_rule_hint",
+      "value": "Маршрут по сценариям"
+    },
+    {
+      "name": "common_no_results",
+      "value": "Нет результатов"
+    },
+    {
+      "name": "common_nodes",
+      "value": "Узлы"
+    },
+    {
+      "name": "common_none",
+      "value": "Нет"
+    },
+    {
+      "name": "common_off",
+      "value": "Выкл."
+    },
+    {
+      "name": "common_on",
+      "value": "Вкл."
+    },
+    {
+      "name": "common_open_settings",
+      "value": "Открыть настройки"
+    },
+    {
+      "name": "common_pair_and",
+      "value": "%1$s и %2$s"
+    },
+    {
+      "name": "common_retesting",
+      "value": "Проверка…"
+    },
+    {
+      "name": "common_rules",
+      "value": "Правила"
+    },
+    {
+      "name": "common_scene_ai",
+      "value": "AI"
+    },
+    {
+      "name": "common_scene_other",
+      "value": "Другое"
+    },
+    {
+      "name": "common_scene_video",
+      "value": "Видео"
+    },
+    {
+      "name": "common_scenes",
+      "value": "Сценарии"
+    },
+    {
+      "name": "common_settings",
+      "value": "Настройки"
+    },
+    {
+      "name": "common_share",
+      "value": "Поделиться"
+    },
+    {
+      "name": "common_source_auto",
+      "value": "Выбор Zephyr"
+    },
+    {
+      "name": "common_source_group",
+      "value": "Группа подписки"
+    },
+    {
+      "name": "common_status_connected",
+      "value": "Подключено"
+    },
+    {
+      "name": "common_status_connecting",
+      "value": "Подключение"
+    },
+    {
+      "name": "common_status_connecting_ellipsis",
+      "value": "Подключение…"
+    },
+    {
+      "name": "common_status_disconnected",
+      "value": "Не подключено"
+    },
+    {
+      "name": "common_status_disconnecting",
+      "value": "Отключение"
+    },
+    {
+      "name": "common_status_failed",
+      "value": "Не удалось подключиться"
+    },
+    {
+      "name": "common_subscriptions",
+      "value": "Подписки"
+    },
+    {
+      "name": "common_today",
+      "value": "Сегодня"
+    },
+    {
+      "name": "common_try_again",
+      "value": "Повторить"
+    },
+    {
+      "name": "common_undo",
+      "value": "Отменить"
+    },
+    {
+      "name": "common_updating",
+      "value": "Обновление…"
+    },
+    {
+      "name": "connect_no_subscription",
+      "value": "Подписок пока нет"
+    },
+    {
+      "name": "home_action_load_nodes",
+      "value": "загрузить узлы"
+    },
+    {
+      "name": "home_action_preview_exit",
+      "value": "показать выход"
+    },
+    {
+      "name": "home_action_retest",
+      "value": "проверить снова"
+    },
+    {
+      "name": "home_action_switch_exit",
+      "value": "сменить выход"
+    },
+    {
+      "name": "home_action_switch_mode",
+      "value": "сменить режим"
+    },
+    {
+      "name": "home_action_switch_node",
+      "value": "сменить узел"
+    },
+    {
+      "name": "home_action_switch_source",
+      "value": "сменить источник"
+    },
+    {
+      "name": "home_action_undo",
+      "value": "отменить"
+    },
+    {
+      "name": "home_apply_failed",
+      "value": "Не удалось применить: %1$s"
+    },
+    {
+      "name": "home_confirm_apps",
+      "value": "Сменить IP выхода для %1$s?"
+    },
+    {
+      "name": "home_confirm_scene",
+      "value": "Сменить IP выхода для сценария %1$s?"
+    },
+    {
+      "name": "home_confirm_unchanged",
+      "value": "%1$s без изменений."
+    },
+    {
+      "name": "home_error_failed",
+      "value": "Не удалось %1$s"
+    },
+    {
+      "name": "home_error_node_gone",
+      "value": "Не удалось %1$s: узла больше нет"
+    },
+    {
+      "name": "home_error_not_connected",
+      "value": "Чтобы %1$s, сначала подключитесь"
+    },
+    {
+      "name": "home_failover_none",
+      "value": "Выход %1$s не отвечает. IP выхода не сменится автоматически."
+    },
+    {
+      "name": "home_failover_switched",
+      "value": "Выход %1$s автоматически переключён на %2$s"
+    },
+    {
+      "name": "home_failure_core",
+      "value": "Не удалось запустить ядро"
+    },
+    {
+      "name": "home_failure_network",
+      "value": "Сеть недоступна"
+    },
+    {
+      "name": "home_failure_no_subscription",
+      "value": "Сначала добавьте подписку"
+    },
+    {
+      "name": "home_failure_vpn_permission",
+      "value": "Нужно разрешение на VPN"
+    },
+    {
+      "name": "home_global_body",
+      "value": "Весь трафик идёт через %1$s. Сценарии приостановлены."
+    },
+    {
+      "name": "home_global_body_any",
+      "value": "Весь трафик идёт через один узел. Сценарии приостановлены."
+    },
+    {
+      "name": "home_global_change_node",
+      "value": "Сменить узел"
+    },
+    {
+      "name": "home_global_change_note",
+      "value": "Все приложения будут выходить через %1$s."
+    },
+    {
+      "name": "home_global_change_to",
+      "value": "Сменить на %1$s"
+    },
+    {
+      "name": "home_global_title",
+      "value": "Глобальный режим"
+    },
+    {
+      "name": "home_global_use_rule",
+      "value": "Режим правил"
+    },
+    {
+      "name": "home_now_all_nodes",
+      "value": "%1$s: снова все узлы"
+    },
+    {
+      "name": "home_now_direct",
+      "value": "%1$s теперь напрямую"
+    },
+    {
+      "name": "home_now_uhd_only",
+      "value": "%1$s теперь только через узлы 4K"
+    },
+    {
+      "name": "home_now_uses",
+      "value": "%1$s теперь через %2$s"
+    },
+    {
+      "name": "home_now_uses_uhd",
+      "value": "%1$s теперь через %2$s (только 4K)"
+    },
+    {
+      "name": "home_pin_line",
+      "value": "%1$s: %2$s"
+    },
+    {
+      "name": "home_scan_progress",
+      "value": "Проверка %1$d/%2$d"
+    },
+    {
+      "name": "home_scan_running",
+      "value": "Проверка…"
+    },
+    {
+      "name": "home_scene_details_a11y",
+      "value": "Сценарий %1$s: подробности"
+    },
+    {
+      "name": "home_scene_next_region",
+      "value": "Следующий регион: %1$s"
+    },
+    {
+      "name": "home_scene_prev_region",
+      "value": "Предыдущий регион: %1$s"
+    },
+    {
+      "name": "home_scene_services_down",
+      "value": "%1$s: недоступно"
+    },
+    {
+      "name": "home_scene_services_ok",
+      "value": "%1$s: в норме"
+    },
+    {
+      "name": "home_scene_testing",
+      "value": "Проверка"
+    },
+    {
+      "name": "home_scenes_tested",
+      "value": "Проверено %1$s"
+    },
+    {
+      "name": "home_scrub_hint",
+      "value": "Смахните влево или вправо, чтобы сменить регион"
+    },
+    {
+      "name": "home_spark_a11y",
+      "value": "Скорость загрузки за последние 90 секунд"
+    },
+    {
+      "name": "home_switch_mode",
+      "value": "Сменить режим"
+    },
+    {
+      "name": "home_switched_to",
+      "value": "Переключено на %1$s"
+    },
+    {
+      "name": "home_today_usage",
+      "value": "Сегодня %1$s"
+    },
+    {
+      "name": "library_widgets",
+      "value": "Виджеты и быстрые настройки"
+    },
+    {
+      "name": "licenses_intro",
+      "value": "Собственный код Zephyr распространяется по лицензии MIT. Приложение включает mihomo (GPL-3.0), поэтому в целом оно распространяется по GPL-3.0. Соответствующий исходный код: %1$s, тег %2$s."
+    },
+    {
+      "name": "licenses_section_app",
+      "value": "Лицензия Zephyr"
+    },
+    {
+      "name": "licenses_section_notices",
+      "value": "Сторонние уведомления"
+    },
+    {
+      "name": "licenses_section_texts",
+      "value": "Тексты лицензий"
+    },
+    {
+      "name": "licenses_unavailable",
+      "value": "В этой сборке нет файлов лицензий."
+    },
+    {
+      "name": "local_proxy_apply_failed",
+      "value": "Не удалось применить изменение"
+    },
+    {
+      "name": "local_proxy_auth_footer",
+      "value": "Если включено, для подключения к локальному порту нужны имя пользователя и пароль. Так другие приложения не смогут использовать прокси без разрешения."
+    },
+    {
+      "name": "local_proxy_conceal",
+      "value": "Скрыть пароль"
+    },
+    {
+      "name": "local_proxy_concealed",
+      "value": "Пароль скрыт"
+    },
+    {
+      "name": "local_proxy_copied",
+      "value": "Скопировано"
+    },
+    {
+      "name": "local_proxy_copy_http",
+      "value": "Копировать адрес HTTP-прокси"
+    },
+    {
+      "name": "local_proxy_copy_socks",
+      "value": "Копировать адрес SOCKS5-прокси"
+    },
+    {
+      "name": "local_proxy_credential_row",
+      "value": "Пароль"
+    },
+    {
+      "name": "local_proxy_credentials",
+      "value": "Данные для входа"
+    },
+    {
+      "name": "local_proxy_footer",
+      "value": "Если включено, Zephyr слушает только 127.0.0.1, и другие устройства в вашей сети не смогут подключиться."
+    },
+    {
+      "name": "local_proxy_port",
+      "value": "Порт"
+    },
+    {
+      "name": "local_proxy_port_footer",
+      "value": "Другие приложения могут использовать правила и сценарии Zephyr через этот порт на 127.0.0.1."
+    },
+    {
+      "name": "local_proxy_port_invalid",
+      "value": "Введите порт от %1$d до %2$d"
+    },
+    {
+      "name": "local_proxy_regenerate",
+      "value": "Создать новый пароль"
+    },
+    {
+      "name": "local_proxy_regenerate_footer",
+      "value": "После этого старый пароль сразу перестанет работать — в настроенных приложениях нужно указать новый."
+    },
+    {
+      "name": "local_proxy_regenerated",
+      "value": "Новый пароль создан"
+    },
+    {
+      "name": "local_proxy_reveal",
+      "value": "Показать пароль"
+    },
+    {
+      "name": "local_proxy_security",
+      "value": "Безопасность"
+    },
+    {
+      "name": "local_proxy_user_row",
+      "value": "Имя пользователя"
+    },
+    {
+      "name": "logs_clear",
+      "value": "Очистить"
+    },
+    {
+      "name": "logs_empty",
+      "value": "Журнал пуст"
+    },
+    {
+      "name": "logs_level_debug",
+      "value": "Отладка"
+    },
+    {
+      "name": "logs_level_error",
+      "value": "Ошибка"
+    },
+    {
+      "name": "logs_level_info",
+      "value": "Инфо"
+    },
+    {
+      "name": "logs_level_warning",
+      "value": "Предупреждение"
+    },
+    {
+      "name": "logs_line_a11y",
+      "value": "%1$s %2$s %3$s"
+    },
+    {
+      "name": "logs_pause",
+      "value": "Пауза"
+    },
+    {
+      "name": "logs_resume",
+      "value": "Продолжить"
+    },
+    {
+      "name": "logs_title",
+      "value": "Журналы"
+    },
+    {
+      "name": "nodes_detail_latency",
+      "value": "Задержка"
+    },
+    {
+      "name": "nodes_detail_protocol",
+      "value": "Протокол"
+    },
+    {
+      "name": "nodes_detail_route",
+      "value": "Маршрут"
+    },
+    {
+      "name": "nodes_detail_server",
+      "value": "Сервер"
+    },
+    {
+      "name": "nodes_detail_test",
+      "value": "Проверить задержку"
+    },
+    {
+      "name": "nodes_empty_action",
+      "value": "Импортировать подписку"
+    },
+    {
+      "name": "nodes_empty_message",
+      "value": "Импортируйте подписку, и её узлы появятся здесь"
+    },
+    {
+      "name": "nodes_empty_title",
+      "value": "Узлов пока нет"
+    },
+    {
+      "name": "nodes_error_title",
+      "value": "Не удалось загрузить узлы"
+    },
+    {
+      "name": "nodes_jump_to",
+      "value": "Перейти к %1$s"
+    },
+    {
+      "name": "nodes_no_match",
+      "value": "Нет узлов по запросу «%1$s»"
+    },
+    {
+      "name": "nodes_search_placeholder",
+      "value": "Регион, город или маршрут"
+    },
+    {
+      "name": "nodes_search_stats",
+      "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_tested",
+      "value": "Проверено: %1$s"
+    },
+    {
+      "name": "notif_action_global",
+      "value": "Глобальный режим"
+    },
+    {
+      "name": "notif_action_rule",
+      "value": "Режим правил"
+    },
+    {
+      "name": "notif_channel_alerts",
+      "value": "Уведомления о подписках"
+    },
+    {
+      "name": "notif_channel_alerts_desc",
+      "value": "Окончание подписки и мало трафика"
+    },
+    {
+      "name": "notif_channel_vpn",
+      "value": "Статус подключения"
+    },
+    {
+      "name": "notif_channel_vpn_desc",
+      "value": "Скорость и сценарии во время подключения"
+    },
+    {
+      "name": "notif_expiry_text",
+      "value": "Осталось %1$s"
+    },
+    {
+      "name": "notif_expiry_title",
+      "value": "%1$s истекает %2$s"
+    },
+    {
+      "name": "notif_paused_trusted",
+      "value": "Отключено в доверенной сети Wi‑Fi «%1$s». Подключится снова, когда вы её покинете."
+    },
+    {
+      "name": "notif_route_global",
+      "value": "Глобальный · %1$s"
+    },
+    {
+      "name": "notif_route_global_any",
+      "value": "Весь трафик через один узел"
+    },
+    {
+      "name": "onboarding_cancel_import_a11y",
+      "value": "Отменить импорт"
+    },
+    {
+      "name": "onboarding_change_later",
+      "value": "Это можно изменить в любой момент в настройках."
+    },
+    {
+      "name": "onboarding_choose_mode",
+      "value": "Выберите режим"
+    },
+    {
+      "name": "onboarding_continue",
+      "value": "Продолжить"
+    },
+    {
+      "name": "onboarding_optimized",
+      "value": "Оптимальный"
+    },
+    {
+      "name": "onboarding_optimized_desc",
+      "value": "Ежедневная проверка узлов по Wi‑Fi. AI и «Видео» используют только узлы, прошедшие проверку. Около 3 MB за раз."
+    },
+    {
+      "name": "onboarding_simple",
+      "value": "Простой"
+    },
+    {
+      "name": "onboarding_simple_desc",
+      "value": "Используются группы из подписки. Недоступные узлы обрабатываются автоматически."
+    },
+    {
+      "name": "rules_add_override_a11y",
+      "value": "Добавить переопределение для домена"
+    },
+    {
+      "name": "rules_blocked",
+      "value": "Заблокировано"
+    },
+    {
+      "name": "rules_kind_domain",
+      "value": "Домен"
+    },
+    {
+      "name": "rules_kind_ip",
+      "value": "IP"
+    },
+    {
+      "name": "rules_kind_other",
+      "value": "Другое"
+    },
+    {
+      "name": "rules_kind_override",
+      "value": "Переопределение"
+    },
+    {
+      "name": "rules_kind_subscription",
+      "value": "Подписка"
+    },
+    {
+      "name": "rules_match_order",
+      "value": "Порядок сопоставления"
+    },
+    {
+      "name": "rules_note",
+      "value": "Наборы правил компилируются на устройстве в индекс только для чтения и считываются с диска по мере необходимости. Переопределения не меняются при обновлении подписок."
+    },
+    {
+      "name": "rules_other_traffic",
+      "value": "Весь остальной трафик"
+    },
+    {
+      "name": "rules_step_exit_ip",
+      "value": "IP выхода"
+    },
+    {
+      "name": "rules_step_layer",
+      "value": "Слой %1$d · %2$s"
+    },
+    {
+      "name": "rules_step_request",
+      "value": "Запрос"
+    },
+    {
+      "name": "rules_step_result",
+      "value": "Результат"
+    },
+    {
+      "name": "rules_step_scene",
+      "value": "Сценарий · %1$s"
+    },
+    {
+      "name": "rules_test_hint",
+      "value": "Введите домен или IP-адрес, чтобы увидеть подходящее правило и выход."
+    },
+    {
+      "name": "rules_test_placeholder",
+      "value": "Проверить домен или IP"
+    },
+    {
+      "name": "rules_took",
+      "value": "Заняло %1$s"
+    },
+    {
+      "name": "rules_top_to_bottom",
+      "value": "Сверху вниз"
+    },
+    {
+      "name": "scene_ask",
+      "value": "Спрашивать"
+    },
+    {
+      "name": "scene_auto_switch",
+      "value": "Переключать автоматически"
+    },
+    {
+      "name": "scene_funnel_reachable",
+      "value": "Доступно"
+    },
+    {
+      "name": "scene_funnel_tested",
+      "value": "Проверено"
+    },
+    {
+      "name": "scene_funnel_under",
+      "value": "Менее %1$d мс"
+    },
+    {
+      "name": "scene_node_scope",
+      "value": "Какие узлы"
+    },
+    {
+      "name": "scene_note",
+      "value": "Результаты выбора сохраняются только в Zephyr. Конфигурация подписки не меняется."
+    },
+    {
+      "name": "scene_note_tested",
+      "value": "%1$s Последняя проверка: %2$s."
+    },
+    {
+      "name": "scene_pinned_for",
+      "value": "Закреплено для %1$s"
+    },
+    {
+      "name": "scene_pinned_value",
+      "value": "%1$s (закреплён)"
+    },
+    {
+      "name": "scene_retest",
+      "value": "Проверить снова"
+    },
+    {
+      "name": "scene_test_daily",
+      "value": "Ежедневно"
+    },
+    {
+      "name": "scene_test_frequency",
+      "value": "Частота проверки"
+    },
+    {
+      "name": "scene_test_wifi_only",
+      "value": "%1$s (только Wi‑Fi)"
+    },
+    {
+      "name": "scene_tested_from_pool",
+      "value": "Проверено узлов: %2$s (подписок: %1$d)"
+    },
+    {
+      "name": "scene_uhd_only",
+      "value": "Только узлы 4K"
+    },
+    {
+      "name": "scene_when_unavailable",
+      "value": "Если узел недоступен"
+    },
+    {
+      "name": "settings_accent",
+      "value": "Цвет акцента"
+    },
+    {
+      "name": "settings_accent_blue",
+      "value": "Синий"
+    },
+    {
+      "name": "settings_accent_green",
+      "value": "Зелёный"
+    },
+    {
+      "name": "settings_accent_orange",
+      "value": "Оранжевый"
+    },
+    {
+      "name": "settings_accent_pink",
+      "value": "Розовый"
+    },
+    {
+      "name": "settings_appearance",
+      "value": "Оформление"
+    },
+    {
+      "name": "settings_appearance_dark",
+      "value": "Тёмное"
+    },
+    {
+      "name": "settings_appearance_light",
+      "value": "Светлое"
+    },
+    {
+      "name": "settings_appearance_system",
+      "value": "Как в системе"
+    },
+    {
+      "name": "settings_keep_results",
+      "value": "Хранить результаты"
+    },
+    {
+      "name": "settings_licenses",
+      "value": "Лицензии открытого ПО"
+    },
+    {
+      "name": "settings_local_data_note",
+      "value": "Подписки, узлы и данные о трафике хранятся только на этом устройстве."
+    },
+    {
+      "name": "settings_local_proxy",
+      "value": "Порт локального прокси"
+    },
+    {
+      "name": "settings_on_demand",
+      "value": "Подключение по запросу"
+    },
+    {
+      "name": "settings_password_required",
+      "value": "Требовать пароль"
+    },
+    {
+      "name": "settings_save_failed",
+      "value": "Не удалось сохранить настройку"
+    },
+    {
+      "name": "settings_section_about",
+      "value": "О приложении"
+    },
+    {
+      "name": "settings_section_connection",
+      "value": "Подключение"
+    },
+    {
+      "name": "settings_section_diagnostics",
+      "value": "Диагностика"
+    },
+    {
+      "name": "settings_section_privacy",
+      "value": "Конфиденциальность"
+    },
+    {
+      "name": "settings_section_storage",
+      "value": "Хранилище"
+    },
+    {
+      "name": "settings_section_testing",
+      "value": "Проверка"
+    },
+    {
+      "name": "settings_share_diagnostics",
+      "value": "Отправлять диагностику"
+    },
+    {
+      "name": "settings_source_code",
+      "value": "Исходный код"
+    },
+    {
+      "name": "settings_storage_detail",
+      "value": "Узлы %1$s · Правила %2$s · Свободно %3$s"
+    },
+    {
+      "name": "settings_storage_title",
+      "value": "Узлы и правила"
+    },
+    {
+      "name": "settings_test_wifi_only",
+      "value": "Тест скорости только по Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi",
+      "value": "Доверенные сети Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi_always_on",
+      "value": "Управляется системной функцией «Постоянная VPN»"
+    },
+    {
+      "name": "settings_trusted_wifi_hint",
+      "value": "Автоматически отключаться в этих сетях"
+    },
+    {
+      "name": "settings_trusted_wifi_location",
+      "value": "Разрешите доступ к геолокации, чтобы распознавать сети Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi_location_off",
+      "value": "Включите геолокацию в системе, чтобы распознавать сети Wi‑Fi"
+    },
+    {
+      "name": "subs_add",
+      "value": "Добавить подписку"
+    },
+    {
+      "name": "subs_all_title",
+      "value": "Все подписки"
+    },
+    {
+      "name": "subs_auto_update",
+      "value": "Автообновление"
+    },
+    {
+      "name": "subs_deleted",
+      "value": "Удалено: %1$s"
+    },
+    {
+      "name": "subs_diff_updated",
+      "value": "%1$s: обновлено"
+    },
+    {
+      "name": "subs_diff_updating",
+      "value": "Обновление %1$s…"
+    },
+    {
+      "name": "subs_error_clipboard_empty",
+      "value": "Буфер обмена пуст"
+    },
+    {
+      "name": "subs_error_delete",
+      "value": "Не удалось удалить %1$s"
+    },
+    {
+      "name": "subs_error_fetch",
+      "value": "Не удалось загрузить подписку. Проверьте ссылку или подключение к сети."
+    },
+    {
+      "name": "subs_error_import_version",
+      "value": "Для этого кода импорта нужна более новая версия Zephyr"
+    },
+    {
+      "name": "subs_error_invalid_file",
+      "value": "Это не файл конфигурации"
+    },
+    {
+      "name": "subs_error_invalid_link",
+      "value": "Это не ссылка на подписку"
+    },
+    {
+      "name": "subs_error_read_file",
+      "value": "Не удалось прочитать этот файл"
+    },
+    {
+      "name": "subs_error_update",
+      "value": "Не удалось обновить %1$s"
+    },
+    {
+      "name": "subs_error_update_all",
+      "value": "Не удалось обновить подписки"
+    },
+    {
+      "name": "subs_hint_desktop",
+      "value": "На компьютере откройте в Zephyr «Настройки › Синхронизация с телефоном», чтобы показать QR-код"
+    },
+    {
+      "name": "subs_import_desktop",
+      "value": "Импорт из Zephyr на компьютере"
+    },
+    {
+      "name": "subs_import_desktop_source",
+      "value": "Zephyr для компьютера"
+    },
+    {
+      "name": "subs_import_file",
+      "value": "Импорт из файла"
+    },
+    {
+      "name": "subs_import_insecure",
+      "value": "Эта ссылка не зашифрована (http): её содержимое могут прочитать или изменить."
+    },
+    {
+      "name": "subs_import_source",
+      "value": "Источник: %1$s"
+    },
+    {
+      "name": "subs_import_trust",
+      "value": "Продолжайте, только если доверяете этому провайдеру."
+    },
+    {
+      "name": "subs_overrides_kept",
+      "value": "Переопределения сохранены"
+    },
+    {
+      "name": "subs_paste_clipboard",
+      "value": "Вставить из буфера обмена"
+    },
+    {
+      "name": "subs_paste_link",
+      "value": "Вставить ссылку"
+    },
+    {
+      "name": "subs_paste_placeholder",
+      "value": "Вставьте ссылку на подписку"
+    },
+    {
+      "name": "subs_remaining",
+      "value": "Осталось"
+    },
+    {
+      "name": "subs_review_note",
+      "value": "При обновлении узлы и правила подписки заменяются. Переопределения и выбор сценариев в Zephyr не меняются."
+    },
+    {
+      "name": "subs_review_one",
+      "value": "Будет обновлено: %1$s"
+    },
+    {
+      "name": "subs_rule_changes",
+      "value": "Изменения правил"
+    },
+    {
+      "name": "subs_scan_camera_needed",
+      "value": "Для сканирования нужен доступ к камере"
+    },
+    {
+      "name": "subs_scan_no_camera",
+      "value": "На этом устройстве нет доступной камеры"
+    },
+    {
+      "name": "subs_scan_prompt",
+      "value": "Поместите QR-код подписки в рамку, и он будет распознан автоматически."
+    },
+    {
+      "name": "subs_scan_qr",
+      "value": "Сканировать QR-код"
+    },
+    {
+      "name": "subs_scenes_retested",
+      "value": "Узлы сценариев проверены заново"
+    },
+    {
+      "name": "subs_section_data",
+      "value": "Трафик"
+    },
+    {
+      "name": "subs_section_update",
+      "value": "Обновление"
+    },
+    {
+      "name": "subs_show_changes",
+      "value": "Предпросмотр изменений"
+    },
+    {
+      "name": "subs_swipe_confirm_delete",
+      "value": "Точно удалить"
+    },
+    {
+      "name": "subs_swipe_delete",
+      "value": "Удалить"
+    },
+    {
+      "name": "subs_swipe_update",
+      "value": "Обновить"
+    },
+    {
+      "name": "subs_swipe_updating",
+      "value": "Обновление"
+    },
+    {
+      "name": "subs_this_month",
+      "value": "Этот месяц"
+    },
+    {
+      "name": "subs_update_all",
+      "value": "Обновить все сейчас"
+    },
+    {
+      "name": "subs_update_wifi_only",
+      "value": "Обновлять только по Wi‑Fi"
+    },
+    {
+      "name": "tile_a11y",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "today_date_pattern",
+      "value": "EEEE, d MMMM"
+    },
+    {
+      "name": "today_fastest",
+      "value": "ms — минимум"
+    },
+    {
+      "name": "today_pattern_note",
+      "value": "Узор создаётся на основе сегодняшнего трафика и не содержит названий узлов и IP-адресов."
+    },
+    {
+      "name": "today_save_failed",
+      "value": "Не удалось сохранить изображение"
+    },
+    {
+      "name": "today_save_image",
+      "value": "Сохранить изображение"
+    },
+    {
+      "name": "today_saved",
+      "value": "Сохранено в галерею"
+    },
+    {
+      "name": "today_storage_permission",
+      "value": "Чтобы сохранить изображение, нужен доступ к хранилищу"
+    },
+    {
+      "name": "today_style_dawn",
+      "value": "Рассвет"
+    },
+    {
+      "name": "today_style_mist",
+      "value": "Туман"
+    },
+    {
+      "name": "today_style_night",
+      "value": "Ночь"
+    },
+    {
+      "name": "trace_always_apply",
+      "value": "Применять всегда"
+    },
+    {
+      "name": "trace_always_apply_hint",
+      "value": "Если выключено, изменится только это подключение"
+    },
+    {
+      "name": "trace_from",
+      "value": "Из %1$s"
+    },
+    {
+      "name": "trace_option_unchanged",
+      "value": "Без изменений"
+    },
+    {
+      "name": "trace_override_cleared",
+      "value": "Переопределение маршрута для %1$s удалено"
+    },
+    {
+      "name": "trace_override_direct",
+      "value": "%1$s теперь подключается напрямую"
+    },
+    {
+      "name": "trace_override_error",
+      "value": "Не удалось изменить маршрут. Повторите попытку."
+    },
+    {
+      "name": "trace_override_scene",
+      "value": "%1$s теперь через %2$s"
+    },
+    {
+      "name": "trace_step_exit",
+      "value": "Выход"
+    },
+    {
+      "name": "trace_step_node",
+      "value": "Узел"
+    },
+    {
+      "name": "trace_step_rule",
+      "value": "Правило"
+    },
+    {
+      "name": "trace_step_scene",
+      "value": "Сценарий"
+    },
+    {
+      "name": "trace_this_connection",
+      "value": "Это подключение"
+    },
+    {
+      "name": "trace_via",
+      "value": "Через %1$s"
+    },
+    {
+      "name": "trusted_wifi_add_hint",
+      "value": "Добавить имя сети Wi‑Fi"
+    },
+    {
+      "name": "trusted_wifi_disconnect",
+      "value": "Отключаться в этих сетях Wi‑Fi"
+    },
+    {
+      "name": "trusted_wifi_footer",
+      "value": "В доверенных сетях, например дома или на работе, Zephyr отключается автоматически, а когда вы уходите, снова подключается по запросу."
+    },
+    {
+      "name": "trusted_wifi_networks",
+      "value": "Сети"
+    },
+    {
+      "name": "widget_description",
+      "value": "Статус подключения, скорость и сценарии"
+    },
+    {
+      "name": "widget_label",
+      "value": "Статус Zephyr"
+    },
+    {
+      "name": "widget_today",
+      "value": "Сегодня %1$s %2$s"
+    },
+    {
+      "name": "widget_usage_description",
+      "value": "Трафик за сегодня по часам"
+    },
+    {
+      "name": "widget_usage_label",
+      "value": "Zephyr: трафик за сегодня"
+    },
+    {
+      "name": "widgets_home_steps",
+      "value": "Нажмите и удерживайте пустое место на главном экране › Виджеты › Zephyr, затем перетащите виджет на экран."
+    },
+    {
+      "name": "widgets_home_title",
+      "value": "Виджеты на главном экране"
+    },
+    {
+      "name": "widgets_tile_steps",
+      "value": "Дважды проведите вниз от верхнего края экрана › Изменить › перетащите Zephyr в быстрые настройки. Нажмите на плитку, чтобы подключиться или отключиться."
+    },
+    {
+      "name": "widgets_tile_title",
+      "value": "Плитка быстрых настроек"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "en": {
+    "module_desc": "Zephyr app module",
+    "EntryAbility_desc": "Zephyr – scene-based proxy client",
+    "EntryAbility_label": "Zephyr",
+    "ZephyrVpnExtAbility_desc": "Runs the Zephyr VPN tunnel and the embedded proxy core",
+    "ZephyrVpnExtAbility_label": "Zephyr VPN"
+  },
+  "zh": {
+    "module_desc": "Zephyr 应用模块",
+    "EntryAbility_desc": "Zephyr：按场景分流的代理客户端",
+    "EntryAbility_label": "Zephyr",
+    "ZephyrVpnExtAbility_desc": "运行 Zephyr VPN 隧道与内置代理内核",
+    "ZephyrVpnExtAbility_label": "Zephyr VPN"
+  }
+}
