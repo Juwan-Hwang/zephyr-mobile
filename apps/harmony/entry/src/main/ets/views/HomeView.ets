@@ -17,6 +17,7 @@ import {
 } from '../engine/Model';
 import { Subscription as StreamSub } from '../engine/Stream';
 import { VpnState } from '../vpn/VpnController';
+import { ZTerm } from '../generated/ZTerms';
 
 const MODES: ProxyMode[] = [ProxyMode.RULE, ProxyMode.GLOBAL, ProxyMode.DIRECT];
 
@@ -183,7 +184,7 @@ export struct HomeView {
       }
 
       Button(this.isConnected() || this.status === ConnectionStatus.DISCONNECTING
-        ? $r('app.string.common_disconnect') : $r('app.string.common_connect'))
+        ? ZTerm.disconnect : $r('app.string.common_connect'))
         .type(ButtonType.Capsule)
         .width('100%')
         .height(52)
@@ -291,7 +292,7 @@ export struct HomeView {
             .fontColor($r('app.color.screen_t1'))
         } else if (this.mode === ProxyMode.GLOBAL) {
           if (this.globalNode !== undefined) {
-            this.nodeLine($r('app.string.common_mode_global'), this.globalNode.name, this.globalNode.latencyMs)
+            this.nodeLine(ZTerm.modeGlobal, this.globalNode.name, this.globalNode.latencyMs)
           } else {
             Text($r('app.string.home_global_body_any'))
               .fontSize(14)

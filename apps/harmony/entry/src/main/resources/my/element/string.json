@@ -49,10 +49,6 @@
       "value": "ဝန်ဆောင်မှု"
     },
     {
-      "name": "command_direct_from_proxy",
-      "value": "ပရောက်စီ"
-    },
-    {
       "name": "command_direct_note",
       "value": "%1$s ၏ ဒေတာသည် ပရောက်စီကို မဖြတ်တော့ပါ။"
     },
@@ -181,14 +177,6 @@
       "value": "ထည့်နေသည်…"
     },
     {
-      "name": "common_all",
-      "value": "အားလုံး"
-    },
-    {
-      "name": "common_apply",
-      "value": "အသုံးချရန်"
-    },
-    {
       "name": "common_back_to",
       "value": "%1$s သို့ ပြန်ရန်"
     },
@@ -211,10 +199,6 @@
     {
       "name": "common_direct",
       "value": "တိုက်ရိုက်"
-    },
-    {
-      "name": "common_disconnect",
-      "value": "အဆက်ဖြတ်ရန်"
     },
     {
       "name": "common_exit_ip_changes",
@@ -241,48 +225,16 @@
       "value": "ဤစက်၏ ကွန်ရက်"
     },
     {
-      "name": "common_mode_direct",
-      "value": "တိုက်ရိုက်"
-    },
-    {
       "name": "common_mode_direct_hint",
       "value": "ပရောက်စီ မသုံးပါ"
-    },
-    {
-      "name": "common_mode_global",
-      "value": "ကမ္ဘာလုံးဆိုင်ရာ"
     },
     {
       "name": "common_mode_global_hint",
       "value": "ဒေတာအားလုံး နုဒ်တစ်ခုမှတစ်ဆင့်"
     },
     {
-      "name": "common_mode_rule",
-      "value": "စည်းမျဉ်း"
-    },
-    {
       "name": "common_mode_rule_hint",
       "value": "မြင်ကွင်းအလိုက် လမ်းကြောင်းခွဲ"
-    },
-    {
-      "name": "common_no_results",
-      "value": "ရလဒ် မရှိပါ"
-    },
-    {
-      "name": "common_nodes",
-      "value": "နုဒ်များ"
-    },
-    {
-      "name": "common_none",
-      "value": "မရှိ"
-    },
-    {
-      "name": "common_off",
-      "value": "ပိတ်"
-    },
-    {
-      "name": "common_on",
-      "value": "ဖွင့်"
     },
     {
       "name": "common_open_settings",
@@ -297,10 +249,6 @@
       "value": "စမ်းသပ်နေသည်…"
     },
     {
-      "name": "common_rules",
-      "value": "စည်းမျဉ်းများ"
-    },
-    {
       "name": "common_scene_ai",
       "value": "AI"
     },
@@ -311,14 +259,6 @@
     {
       "name": "common_scene_video",
       "value": "ဗီဒီယို"
-    },
-    {
-      "name": "common_scenes",
-      "value": "မြင်ကွင်းများ"
-    },
-    {
-      "name": "common_settings",
-      "value": "ဆက်တင်များ"
     },
     {
       "name": "common_share",
@@ -337,40 +277,16 @@
       "value": "ချိတ်ဆက်ထားသည်"
     },
     {
-      "name": "common_status_connecting",
-      "value": "ချိတ်ဆက်နေသည်"
-    },
-    {
       "name": "common_status_connecting_ellipsis",
       "value": "ချိတ်ဆက်နေသည်…"
-    },
-    {
-      "name": "common_status_disconnected",
-      "value": "ချိတ်ဆက်မထားပါ"
     },
     {
       "name": "common_status_disconnecting",
       "value": "အဆက်ဖြတ်နေသည်"
     },
     {
-      "name": "common_status_failed",
-      "value": "ချိတ်ဆက်၍ မရပါ"
-    },
-    {
-      "name": "common_subscriptions",
-      "value": "စာရင်းသွင်းမှုများ"
-    },
-    {
-      "name": "common_today",
-      "value": "ယနေ့"
-    },
-    {
       "name": "common_try_again",
       "value": "ထပ်စမ်းကြည့်ပါ"
-    },
-    {
-      "name": "common_undo",
-      "value": "နောက်ပြန်ရန်"
     },
     {
       "name": "common_updating",
@@ -485,10 +401,6 @@
       "value": "%1$s သို့ ပြောင်းရန်"
     },
     {
-      "name": "home_global_title",
-      "value": "ကမ္ဘာလုံးဆိုင်ရာ မုဒ်"
-    },
-    {
       "name": "home_global_use_rule",
       "value": "စည်းမျဉ်း မုဒ် သုံးရန်"
     },
@@ -545,10 +457,6 @@
       "value": "%1$s အဆင်ပြေ"
     },
     {
-      "name": "home_scene_testing",
-      "value": "စမ်းသပ်နေသည်"
-    },
-    {
       "name": "home_scenes_tested",
       "value": "%1$s စမ်းသပ်ခဲ့"
     },
@@ -559,10 +467,6 @@
     {
       "name": "home_spark_a11y",
       "value": "ဒေါင်းလုဒ် အမြန်နှုန်း၊ နောက်ဆုံး 90 စက္ကန့်"
-    },
-    {
-      "name": "home_switch_mode",
-      "value": "မုဒ် ပြောင်းရန်"
     },
     {
       "name": "home_switched_to",
@@ -681,22 +585,6 @@
       "value": "မှတ်တမ်း မရှိသေးပါ"
     },
     {
-      "name": "logs_level_debug",
-      "value": "အမှားရှာ"
-    },
-    {
-      "name": "logs_level_error",
-      "value": "အမှား"
-    },
-    {
-      "name": "logs_level_info",
-      "value": "အချက်အလက်"
-    },
-    {
-      "name": "logs_level_warning",
-      "value": "သတိပေးချက်"
-    },
-    {
       "name": "logs_line_a11y",
       "value": "%1$s %2$s %3$s"
     },
@@ -707,10 +595,6 @@
     {
       "name": "logs_resume",
       "value": "ဆက်လုပ်ရန်"
-    },
-    {
-      "name": "logs_title",
-      "value": "မှတ်တမ်းများ"
     },
     {
       "name": "nodes_detail_latency",
@@ -853,24 +737,12 @@
       "value": "ပိတ်ဆို့ထားသည်"
     },
     {
-      "name": "rules_kind_domain",
-      "value": "ဒိုမိန်း"
-    },
-    {
       "name": "rules_kind_ip",
       "value": "IP"
     },
     {
       "name": "rules_kind_other",
       "value": "အခြား"
-    },
-    {
-      "name": "rules_kind_override",
-      "value": "အစားထိုးချက်"
-    },
-    {
-      "name": "rules_kind_subscription",
-      "value": "စာရင်းသွင်းမှု"
     },
     {
       "name": "rules_match_order",
@@ -883,10 +755,6 @@
     {
       "name": "rules_other_traffic",
       "value": "ကျန်ဒေတာအားလုံး"
-    },
-    {
-      "name": "rules_step_exit_ip",
-      "value": "ထွက်ပေါက် IP"
     },
     {
       "name": "rules_step_layer",
@@ -961,10 +829,6 @@
       "value": "%1$s (ပုံသေ)"
     },
     {
-      "name": "scene_retest",
-      "value": "ပြန်စမ်းသပ်ရန်"
-    },
-    {
       "name": "scene_test_daily",
       "value": "နေ့စဉ်"
     },
@@ -989,10 +853,6 @@
       "value": "နုဒ် မရနိုင်သည့်အခါ"
     },
     {
-      "name": "settings_accent",
-      "value": "အထူးပြု အရောင်"
-    },
-    {
       "name": "settings_accent_blue",
       "value": "အပြာရောင်"
     },
@@ -1009,22 +869,6 @@
       "value": "ပန်းရောင်"
     },
     {
-      "name": "settings_appearance",
-      "value": "အသွင်အပြင်"
-    },
-    {
-      "name": "settings_appearance_dark",
-      "value": "အမှောင်"
-    },
-    {
-      "name": "settings_appearance_light",
-      "value": "အလင်း"
-    },
-    {
-      "name": "settings_appearance_system",
-      "value": "စနစ်အတိုင်း"
-    },
-    {
       "name": "settings_keep_results",
       "value": "ရလဒ် သိမ်းထားချိန်"
     },
@@ -1037,16 +881,8 @@
       "value": "စာရင်းသွင်းမှု၊ နုဒ်နှင့် ဒေတာအသုံးပြုမှုကို ဤစက်တွင်သာ သိမ်းသည်။"
     },
     {
-      "name": "settings_local_proxy",
-      "value": "စက်တွင်း ပရောက်စီ ပေါ့တ်"
-    },
-    {
       "name": "settings_on_demand",
       "value": "လိုအပ်မှ ချိတ်ဆက်ရန်"
-    },
-    {
-      "name": "settings_password_required",
-      "value": "စကားဝှက် လိုအပ်သည်"
     },
     {
       "name": "settings_save_failed",
@@ -1059,10 +895,6 @@
     {
       "name": "settings_section_connection",
       "value": "ချိတ်ဆက်မှု"
-    },
-    {
-      "name": "settings_section_diagnostics",
-      "value": "ပြဿနာရှာဖွေခြင်း"
     },
     {
       "name": "settings_section_privacy",
@@ -1125,10 +957,6 @@
       "value": "စာရင်းသွင်းမှုများ အားလုံး"
     },
     {
-      "name": "subs_auto_update",
-      "value": "အလိုအလျောက် အပ်ဒိတ်"
-    },
-    {
       "name": "subs_deleted",
       "value": "%1$s ကို ဖျက်ပြီး"
     },
@@ -1187,10 +1015,6 @@
     {
       "name": "subs_import_desktop_source",
       "value": "Zephyr (ကွန်ပျူတာ)"
-    },
-    {
-      "name": "subs_import_file",
-      "value": "ဖိုင်မှ တင်သွင်းရန်"
     },
     {
       "name": "subs_import_insecure",
@@ -1273,14 +1097,6 @@
       "value": "ဖျက်ရန် အတည်ပြု"
     },
     {
-      "name": "subs_swipe_delete",
-      "value": "ဖျက်ရန်"
-    },
-    {
-      "name": "subs_swipe_update",
-      "value": "အပ်ဒိတ်"
-    },
-    {
       "name": "subs_swipe_updating",
       "value": "အပ်ဒိတ်လုပ်နေသည်"
     },
@@ -1295,6 +1111,214 @@
     {
       "name": "subs_update_wifi_only",
       "value": "Wi‑Fi ဖြင့်သာ အပ်ဒိတ်လုပ်ရန်"
+    },
+    {
+      "name": "term_accent",
+      "value": "အထူးပြု အရောင်"
+    },
+    {
+      "name": "term_all",
+      "value": "အားလုံး"
+    },
+    {
+      "name": "term_appearance",
+      "value": "အသွင်အပြင်"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "အမှောင်"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "အလင်း"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "စနစ်အတိုင်း"
+    },
+    {
+      "name": "term_apply",
+      "value": "အသုံးချရန်"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "အလိုအလျောက် အပ်ဒိတ်"
+    },
+    {
+      "name": "term_delete",
+      "value": "ဖျက်ရန်"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "ပြဿနာရှာဖွေခြင်း"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "အဆက်ဖြတ်ရန်"
+    },
+    {
+      "name": "term_domain",
+      "value": "ဒိုမိန်း"
+    },
+    {
+      "name": "term_exit",
+      "value": "ထွက်ပေါက်"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "ထွက်ပေါက် IP"
+    },
+    {
+      "name": "term_import",
+      "value": "တင်သွင်းရန်"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "ဖိုင်မှ တင်သွင်းရန်"
+    },
+    {
+      "name": "term_latency",
+      "value": "နောက်ကျမှု"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "စက်တွင်း ပရောက်စီ ပေါ့တ်"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "အမှားရှာ"
+    },
+    {
+      "name": "term_log_error",
+      "value": "အမှား"
+    },
+    {
+      "name": "term_log_info",
+      "value": "အချက်အလက်"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "သတိပေးချက်"
+    },
+    {
+      "name": "term_logs",
+      "value": "မှတ်တမ်းများ"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "တိုက်ရိုက်"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "ကမ္ဘာလုံးဆိုင်ရာ"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "ကမ္ဘာလုံးဆိုင်ရာ မုဒ်"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "စည်းမျဉ်း"
+    },
+    {
+      "name": "term_no_results",
+      "value": "ရလဒ် မရှိပါ"
+    },
+    {
+      "name": "term_node",
+      "value": "နုဒ်"
+    },
+    {
+      "name": "term_nodes",
+      "value": "နုဒ်များ"
+    },
+    {
+      "name": "term_none",
+      "value": "မရှိ"
+    },
+    {
+      "name": "term_off",
+      "value": "ပိတ်"
+    },
+    {
+      "name": "term_on",
+      "value": "ဖွင့်"
+    },
+    {
+      "name": "term_override",
+      "value": "အစားထိုးချက်"
+    },
+    {
+      "name": "term_proxy",
+      "value": "ပရောက်စီ"
+    },
+    {
+      "name": "term_require_password",
+      "value": "စကားဝှက် လိုအပ်သည်"
+    },
+    {
+      "name": "term_rule",
+      "value": "စည်းမျဉ်း"
+    },
+    {
+      "name": "term_rules",
+      "value": "စည်းမျဉ်းများ"
+    },
+    {
+      "name": "term_scene",
+      "value": "မြင်ကွင်း"
+    },
+    {
+      "name": "term_scenes",
+      "value": "မြင်ကွင်းများ"
+    },
+    {
+      "name": "term_settings",
+      "value": "ဆက်တင်များ"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "ချိတ်ဆက်နေသည်"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "ချိတ်ဆက်မထားပါ"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "ချိတ်ဆက်၍ မရပါ"
+    },
+    {
+      "name": "term_subscription",
+      "value": "စာရင်းသွင်းမှု"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "စာရင်းသွင်းမှုများ"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "မုဒ် ပြောင်းရန်"
+    },
+    {
+      "name": "term_test_again",
+      "value": "ပြန်စမ်းသပ်ရန်"
+    },
+    {
+      "name": "term_testing",
+      "value": "စမ်းသပ်နေသည်"
+    },
+    {
+      "name": "term_today",
+      "value": "ယနေ့"
+    },
+    {
+      "name": "term_undo",
+      "value": "နောက်ပြန်ရန်"
+    },
+    {
+      "name": "term_update",
+      "value": "အပ်ဒိတ်"
     },
     {
       "name": "tile_a11y",
@@ -1373,20 +1397,8 @@
       "value": "%1$s ယခု %2$s ကို သုံးသည်"
     },
     {
-      "name": "trace_step_exit",
-      "value": "ထွက်ပေါက်"
-    },
-    {
-      "name": "trace_step_node",
-      "value": "နုဒ်"
-    },
-    {
       "name": "trace_step_rule",
       "value": "စည်းမျဉ်း"
-    },
-    {
-      "name": "trace_step_scene",
-      "value": "မြင်ကွင်း"
     },
     {
       "name": "trace_this_connection",

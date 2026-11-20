@@ -49,10 +49,6 @@
       "value": "サービス"
     },
     {
-      "name": "command_direct_from_proxy",
-      "value": "プロキシ"
-    },
-    {
       "name": "command_direct_note",
       "value": "%1$sのトラフィックはプロキシを経由しなくなります。"
     },
@@ -181,14 +177,6 @@
       "value": "追加中…"
     },
     {
-      "name": "common_all",
-      "value": "すべて"
-    },
-    {
-      "name": "common_apply",
-      "value": "適用"
-    },
-    {
       "name": "common_back_to",
       "value": "%1$sに戻る"
     },
@@ -211,10 +199,6 @@
     {
       "name": "common_direct",
       "value": "ダイレクト"
-    },
-    {
-      "name": "common_disconnect",
-      "value": "切断"
     },
     {
       "name": "common_exit_ip_changes",
@@ -241,48 +225,16 @@
       "value": "このデバイスのネットワーク"
     },
     {
-      "name": "common_mode_direct",
-      "value": "ダイレクト"
-    },
-    {
       "name": "common_mode_direct_hint",
       "value": "プロキシを経由しない"
-    },
-    {
-      "name": "common_mode_global",
-      "value": "グローバル"
     },
     {
       "name": "common_mode_global_hint",
       "value": "すべてを1つのノード経由で"
     },
     {
-      "name": "common_mode_rule",
-      "value": "ルール"
-    },
-    {
       "name": "common_mode_rule_hint",
       "value": "シーンごとに振り分け"
-    },
-    {
-      "name": "common_no_results",
-      "value": "結果なし"
-    },
-    {
-      "name": "common_nodes",
-      "value": "ノード"
-    },
-    {
-      "name": "common_none",
-      "value": "なし"
-    },
-    {
-      "name": "common_off",
-      "value": "オフ"
-    },
-    {
-      "name": "common_on",
-      "value": "オン"
     },
     {
       "name": "common_open_settings",
@@ -297,10 +249,6 @@
       "value": "テスト中…"
     },
     {
-      "name": "common_rules",
-      "value": "ルール"
-    },
-    {
       "name": "common_scene_ai",
       "value": "AI"
     },
@@ -311,14 +259,6 @@
     {
       "name": "common_scene_video",
       "value": "ビデオ"
-    },
-    {
-      "name": "common_scenes",
-      "value": "シーン"
-    },
-    {
-      "name": "common_settings",
-      "value": "設定"
     },
     {
       "name": "common_share",
@@ -337,40 +277,16 @@
       "value": "接続済み"
     },
     {
-      "name": "common_status_connecting",
-      "value": "接続中"
-    },
-    {
       "name": "common_status_connecting_ellipsis",
       "value": "接続中…"
-    },
-    {
-      "name": "common_status_disconnected",
-      "value": "未接続"
     },
     {
       "name": "common_status_disconnecting",
       "value": "切断中"
     },
     {
-      "name": "common_status_failed",
-      "value": "接続できませんでした"
-    },
-    {
-      "name": "common_subscriptions",
-      "value": "サブスクリプション"
-    },
-    {
-      "name": "common_today",
-      "value": "今日"
-    },
-    {
       "name": "common_try_again",
       "value": "もう一度お試しください"
-    },
-    {
-      "name": "common_undo",
-      "value": "取り消す"
     },
     {
       "name": "common_updating",
@@ -485,10 +401,6 @@
       "value": "%1$sに変更"
     },
     {
-      "name": "home_global_title",
-      "value": "グローバルモード"
-    },
-    {
       "name": "home_global_use_rule",
       "value": "ルールモードを使用"
     },
@@ -545,10 +457,6 @@
       "value": "%1$sは正常"
     },
     {
-      "name": "home_scene_testing",
-      "value": "テスト中"
-    },
-    {
       "name": "home_scenes_tested",
       "value": "テスト：%1$s"
     },
@@ -559,10 +467,6 @@
     {
       "name": "home_spark_a11y",
       "value": "ダウンロード速度（直近90秒）"
-    },
-    {
-      "name": "home_switch_mode",
-      "value": "モードを切り替え"
     },
     {
       "name": "home_switched_to",
@@ -681,22 +585,6 @@
       "value": "ログはまだありません"
     },
     {
-      "name": "logs_level_debug",
-      "value": "デバッグ"
-    },
-    {
-      "name": "logs_level_error",
-      "value": "エラー"
-    },
-    {
-      "name": "logs_level_info",
-      "value": "情報"
-    },
-    {
-      "name": "logs_level_warning",
-      "value": "警告"
-    },
-    {
       "name": "logs_line_a11y",
       "value": "%1$s %2$s %3$s"
     },
@@ -707,10 +595,6 @@
     {
       "name": "logs_resume",
       "value": "再開"
-    },
-    {
-      "name": "logs_title",
-      "value": "ログ"
     },
     {
       "name": "nodes_detail_latency",
@@ -853,24 +737,12 @@
       "value": "ブロック済み"
     },
     {
-      "name": "rules_kind_domain",
-      "value": "ドメイン"
-    },
-    {
       "name": "rules_kind_ip",
       "value": "IP"
     },
     {
       "name": "rules_kind_other",
       "value": "その他"
-    },
-    {
-      "name": "rules_kind_override",
-      "value": "オーバーライド"
-    },
-    {
-      "name": "rules_kind_subscription",
-      "value": "サブスクリプション"
     },
     {
       "name": "rules_match_order",
@@ -883,10 +755,6 @@
     {
       "name": "rules_other_traffic",
       "value": "その他のトラフィック"
-    },
-    {
-      "name": "rules_step_exit_ip",
-      "value": "出口 IP"
     },
     {
       "name": "rules_step_layer",
@@ -961,10 +829,6 @@
       "value": "%1$s（固定）"
     },
     {
-      "name": "scene_retest",
-      "value": "再テスト"
-    },
-    {
       "name": "scene_test_daily",
       "value": "毎日"
     },
@@ -989,10 +853,6 @@
       "value": "ノードが利用できないとき"
     },
     {
-      "name": "settings_accent",
-      "value": "アクセントカラー"
-    },
-    {
       "name": "settings_accent_blue",
       "value": "ブルー"
     },
@@ -1009,22 +869,6 @@
       "value": "ピンク"
     },
     {
-      "name": "settings_appearance",
-      "value": "外観"
-    },
-    {
-      "name": "settings_appearance_dark",
-      "value": "ダーク"
-    },
-    {
-      "name": "settings_appearance_light",
-      "value": "ライト"
-    },
-    {
-      "name": "settings_appearance_system",
-      "value": "システム"
-    },
-    {
       "name": "settings_keep_results",
       "value": "結果を保持"
     },
@@ -1037,16 +881,8 @@
       "value": "サブスクリプション、ノード、トラフィックのデータは、このデバイスにのみ保存されます。"
     },
     {
-      "name": "settings_local_proxy",
-      "value": "ローカルプロキシポート"
-    },
-    {
       "name": "settings_on_demand",
       "value": "オンデマンド接続"
-    },
-    {
-      "name": "settings_password_required",
-      "value": "パスワードを要求"
     },
     {
       "name": "settings_save_failed",
@@ -1059,10 +895,6 @@
     {
       "name": "settings_section_connection",
       "value": "接続"
-    },
-    {
-      "name": "settings_section_diagnostics",
-      "value": "診断"
     },
     {
       "name": "settings_section_privacy",
@@ -1125,10 +957,6 @@
       "value": "すべてのサブスクリプション"
     },
     {
-      "name": "subs_auto_update",
-      "value": "自動更新"
-    },
-    {
       "name": "subs_deleted",
       "value": "%1$sを削除しました"
     },
@@ -1187,10 +1015,6 @@
     {
       "name": "subs_import_desktop_source",
       "value": "Zephyr デスクトップ"
-    },
-    {
-      "name": "subs_import_file",
-      "value": "ファイルからインポート"
     },
     {
       "name": "subs_import_insecure",
@@ -1273,14 +1097,6 @@
       "value": "削除を確認"
     },
     {
-      "name": "subs_swipe_delete",
-      "value": "削除"
-    },
-    {
-      "name": "subs_swipe_update",
-      "value": "更新"
-    },
-    {
       "name": "subs_swipe_updating",
       "value": "更新中"
     },
@@ -1295,6 +1111,214 @@
     {
       "name": "subs_update_wifi_only",
       "value": "Wi‑Fi 接続時のみ更新"
+    },
+    {
+      "name": "term_accent",
+      "value": "アクセントカラー"
+    },
+    {
+      "name": "term_all",
+      "value": "すべて"
+    },
+    {
+      "name": "term_appearance",
+      "value": "外観"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "ダーク"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "ライト"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "システム"
+    },
+    {
+      "name": "term_apply",
+      "value": "適用"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "自動更新"
+    },
+    {
+      "name": "term_delete",
+      "value": "削除"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "診断"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "切断"
+    },
+    {
+      "name": "term_domain",
+      "value": "ドメイン"
+    },
+    {
+      "name": "term_exit",
+      "value": "出口"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "出口 IP"
+    },
+    {
+      "name": "term_import",
+      "value": "インポート"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "ファイルからインポート"
+    },
+    {
+      "name": "term_latency",
+      "value": "レイテンシ"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "ローカルプロキシポート"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "デバッグ"
+    },
+    {
+      "name": "term_log_error",
+      "value": "エラー"
+    },
+    {
+      "name": "term_log_info",
+      "value": "情報"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "警告"
+    },
+    {
+      "name": "term_logs",
+      "value": "ログ"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "ダイレクト"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "グローバル"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "グローバルモード"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "ルール"
+    },
+    {
+      "name": "term_no_results",
+      "value": "結果なし"
+    },
+    {
+      "name": "term_node",
+      "value": "ノード"
+    },
+    {
+      "name": "term_nodes",
+      "value": "ノード"
+    },
+    {
+      "name": "term_none",
+      "value": "なし"
+    },
+    {
+      "name": "term_off",
+      "value": "オフ"
+    },
+    {
+      "name": "term_on",
+      "value": "オン"
+    },
+    {
+      "name": "term_override",
+      "value": "オーバーライド"
+    },
+    {
+      "name": "term_proxy",
+      "value": "プロキシ"
+    },
+    {
+      "name": "term_require_password",
+      "value": "パスワードを要求"
+    },
+    {
+      "name": "term_rule",
+      "value": "ルール"
+    },
+    {
+      "name": "term_rules",
+      "value": "ルール"
+    },
+    {
+      "name": "term_scene",
+      "value": "シーン"
+    },
+    {
+      "name": "term_scenes",
+      "value": "シーン"
+    },
+    {
+      "name": "term_settings",
+      "value": "設定"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "接続中"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "未接続"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "接続できませんでした"
+    },
+    {
+      "name": "term_subscription",
+      "value": "サブスクリプション"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "サブスクリプション"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "モードを切り替え"
+    },
+    {
+      "name": "term_test_again",
+      "value": "再テスト"
+    },
+    {
+      "name": "term_testing",
+      "value": "テスト中"
+    },
+    {
+      "name": "term_today",
+      "value": "今日"
+    },
+    {
+      "name": "term_undo",
+      "value": "取り消す"
+    },
+    {
+      "name": "term_update",
+      "value": "更新"
     },
     {
       "name": "tile_a11y",
@@ -1373,20 +1397,8 @@
       "value": "%1$sは%2$s経由に変更"
     },
     {
-      "name": "trace_step_exit",
-      "value": "出口"
-    },
-    {
-      "name": "trace_step_node",
-      "value": "ノード"
-    },
-    {
       "name": "trace_step_rule",
       "value": "ルール"
-    },
-    {
-      "name": "trace_step_scene",
-      "value": "シーン"
     },
     {
       "name": "trace_this_connection",

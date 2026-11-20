@@ -49,10 +49,6 @@
       "value": "Servicio"
     },
     {
-      "name": "command_direct_from_proxy",
-      "value": "Proxy"
-    },
-    {
       "name": "command_direct_note",
       "value": "El tráfico de %1$s no pasará por el proxy."
     },
@@ -181,14 +177,6 @@
       "value": "Añadiendo…"
     },
     {
-      "name": "common_all",
-      "value": "Todos"
-    },
-    {
-      "name": "common_apply",
-      "value": "Aplicar"
-    },
-    {
       "name": "common_back_to",
       "value": "Volver a %1$s"
     },
@@ -211,10 +199,6 @@
     {
       "name": "common_direct",
       "value": "Directo"
-    },
-    {
-      "name": "common_disconnect",
-      "value": "Desconectar"
     },
     {
       "name": "common_exit_ip_changes",
@@ -241,48 +225,16 @@
       "value": "Red de este dispositivo"
     },
     {
-      "name": "common_mode_direct",
-      "value": "Directo"
-    },
-    {
       "name": "common_mode_direct_hint",
       "value": "Omitir el proxy"
-    },
-    {
-      "name": "common_mode_global",
-      "value": "Global"
     },
     {
       "name": "common_mode_global_hint",
       "value": "Todo el tráfico por un nodo"
     },
     {
-      "name": "common_mode_rule",
-      "value": "Regla"
-    },
-    {
       "name": "common_mode_rule_hint",
       "value": "Según el escenario"
-    },
-    {
-      "name": "common_no_results",
-      "value": "Sin resultados"
-    },
-    {
-      "name": "common_nodes",
-      "value": "Nodos"
-    },
-    {
-      "name": "common_none",
-      "value": "Ninguno"
-    },
-    {
-      "name": "common_off",
-      "value": "No"
-    },
-    {
-      "name": "common_on",
-      "value": "Sí"
     },
     {
       "name": "common_open_settings",
@@ -297,10 +249,6 @@
       "value": "Probando…"
     },
     {
-      "name": "common_rules",
-      "value": "Reglas"
-    },
-    {
       "name": "common_scene_ai",
       "value": "AI"
     },
@@ -311,14 +259,6 @@
     {
       "name": "common_scene_video",
       "value": "Vídeo"
-    },
-    {
-      "name": "common_scenes",
-      "value": "Escenarios"
-    },
-    {
-      "name": "common_settings",
-      "value": "Ajustes"
     },
     {
       "name": "common_share",
@@ -337,40 +277,16 @@
       "value": "Conectado"
     },
     {
-      "name": "common_status_connecting",
-      "value": "Conectando"
-    },
-    {
       "name": "common_status_connecting_ellipsis",
       "value": "Conectando…"
-    },
-    {
-      "name": "common_status_disconnected",
-      "value": "No conectado"
     },
     {
       "name": "common_status_disconnecting",
       "value": "Desconectando"
     },
     {
-      "name": "common_status_failed",
-      "value": "Error de conexión"
-    },
-    {
-      "name": "common_subscriptions",
-      "value": "Suscripciones"
-    },
-    {
-      "name": "common_today",
-      "value": "Hoy"
-    },
-    {
       "name": "common_try_again",
       "value": "Reintentar"
-    },
-    {
-      "name": "common_undo",
-      "value": "Deshacer"
     },
     {
       "name": "common_updating",
@@ -485,10 +401,6 @@
       "value": "Cambiar a %1$s"
     },
     {
-      "name": "home_global_title",
-      "value": "Modo global"
-    },
-    {
       "name": "home_global_use_rule",
       "value": "Usar modo regla"
     },
@@ -545,10 +457,6 @@
       "value": "%1$s OK"
     },
     {
-      "name": "home_scene_testing",
-      "value": "Probando"
-    },
-    {
       "name": "home_scenes_tested",
       "value": "Probado %1$s"
     },
@@ -559,10 +467,6 @@
     {
       "name": "home_spark_a11y",
       "value": "Velocidad de descarga de los últimos 90 segundos"
-    },
-    {
-      "name": "home_switch_mode",
-      "value": "Cambiar modo"
     },
     {
       "name": "home_switched_to",
@@ -681,22 +585,6 @@
       "value": "Aún no hay registros"
     },
     {
-      "name": "logs_level_debug",
-      "value": "Depuración"
-    },
-    {
-      "name": "logs_level_error",
-      "value": "Error"
-    },
-    {
-      "name": "logs_level_info",
-      "value": "Info"
-    },
-    {
-      "name": "logs_level_warning",
-      "value": "Aviso"
-    },
-    {
       "name": "logs_line_a11y",
       "value": "%1$s %2$s %3$s"
     },
@@ -707,10 +595,6 @@
     {
       "name": "logs_resume",
       "value": "Reanudar"
-    },
-    {
-      "name": "logs_title",
-      "value": "Registros"
     },
     {
       "name": "nodes_detail_latency",
@@ -853,24 +737,12 @@
       "value": "Bloqueado"
     },
     {
-      "name": "rules_kind_domain",
-      "value": "Dominio"
-    },
-    {
       "name": "rules_kind_ip",
       "value": "IP"
     },
     {
       "name": "rules_kind_other",
       "value": "Otros"
-    },
-    {
-      "name": "rules_kind_override",
-      "value": "Sobrescritura"
-    },
-    {
-      "name": "rules_kind_subscription",
-      "value": "Suscripción"
     },
     {
       "name": "rules_match_order",
@@ -883,10 +755,6 @@
     {
       "name": "rules_other_traffic",
       "value": "Resto del tráfico"
-    },
-    {
-      "name": "rules_step_exit_ip",
-      "value": "IP de salida"
     },
     {
       "name": "rules_step_layer",
@@ -961,10 +829,6 @@
       "value": "%1$s (fijado)"
     },
     {
-      "name": "scene_retest",
-      "value": "Volver a probar"
-    },
-    {
       "name": "scene_test_daily",
       "value": "A diario"
     },
@@ -989,10 +853,6 @@
       "value": "Si un nodo no está disponible"
     },
     {
-      "name": "settings_accent",
-      "value": "Color de realce"
-    },
-    {
       "name": "settings_accent_blue",
       "value": "Azul"
     },
@@ -1009,22 +869,6 @@
       "value": "Rosa"
     },
     {
-      "name": "settings_appearance",
-      "value": "Apariencia"
-    },
-    {
-      "name": "settings_appearance_dark",
-      "value": "Oscuro"
-    },
-    {
-      "name": "settings_appearance_light",
-      "value": "Claro"
-    },
-    {
-      "name": "settings_appearance_system",
-      "value": "Sistema"
-    },
-    {
       "name": "settings_keep_results",
       "value": "Conservar resultados"
     },
@@ -1037,16 +881,8 @@
       "value": "Las suscripciones, los nodos y los datos de tráfico solo se guardan en este dispositivo."
     },
     {
-      "name": "settings_local_proxy",
-      "value": "Puerto de proxy local"
-    },
-    {
       "name": "settings_on_demand",
       "value": "Conexión a petición"
-    },
-    {
-      "name": "settings_password_required",
-      "value": "Solicitar contraseña"
     },
     {
       "name": "settings_save_failed",
@@ -1059,10 +895,6 @@
     {
       "name": "settings_section_connection",
       "value": "Conexión"
-    },
-    {
-      "name": "settings_section_diagnostics",
-      "value": "Diagnóstico"
     },
     {
       "name": "settings_section_privacy",
@@ -1125,10 +957,6 @@
       "value": "Todas las suscripciones"
     },
     {
-      "name": "subs_auto_update",
-      "value": "Actualizaciones automáticas"
-    },
-    {
       "name": "subs_deleted",
       "value": "%1$s eliminada"
     },
@@ -1187,10 +1015,6 @@
     {
       "name": "subs_import_desktop_source",
       "value": "Zephyr para escritorio"
-    },
-    {
-      "name": "subs_import_file",
-      "value": "Importar desde archivo"
     },
     {
       "name": "subs_import_insecure",
@@ -1273,14 +1097,6 @@
       "value": "Confirmar"
     },
     {
-      "name": "subs_swipe_delete",
-      "value": "Eliminar"
-    },
-    {
-      "name": "subs_swipe_update",
-      "value": "Actualizar"
-    },
-    {
       "name": "subs_swipe_updating",
       "value": "Actualizando"
     },
@@ -1295,6 +1111,214 @@
     {
       "name": "subs_update_wifi_only",
       "value": "Actualizar solo con Wi‑Fi"
+    },
+    {
+      "name": "term_accent",
+      "value": "Color de realce"
+    },
+    {
+      "name": "term_all",
+      "value": "Todos"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Apariencia"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Oscuro"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Claro"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Sistema"
+    },
+    {
+      "name": "term_apply",
+      "value": "Aplicar"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Actualizaciones automáticas"
+    },
+    {
+      "name": "term_delete",
+      "value": "Eliminar"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Diagnóstico"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Desconectar"
+    },
+    {
+      "name": "term_domain",
+      "value": "Dominio"
+    },
+    {
+      "name": "term_exit",
+      "value": "Salida"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "IP de salida"
+    },
+    {
+      "name": "term_import",
+      "value": "Importar"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Importar desde archivo"
+    },
+    {
+      "name": "term_latency",
+      "value": "Latencia"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Puerto de proxy local"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Depuración"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Error"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Info"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Aviso"
+    },
+    {
+      "name": "term_logs",
+      "value": "Registros"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Directo"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Global"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Modo global"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Regla"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Sin resultados"
+    },
+    {
+      "name": "term_node",
+      "value": "Nodo"
+    },
+    {
+      "name": "term_nodes",
+      "value": "Nodos"
+    },
+    {
+      "name": "term_none",
+      "value": "Ninguno"
+    },
+    {
+      "name": "term_off",
+      "value": "No"
+    },
+    {
+      "name": "term_on",
+      "value": "Sí"
+    },
+    {
+      "name": "term_override",
+      "value": "Sobrescritura"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proxy"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Solicitar contraseña"
+    },
+    {
+      "name": "term_rule",
+      "value": "Regla"
+    },
+    {
+      "name": "term_rules",
+      "value": "Reglas"
+    },
+    {
+      "name": "term_scene",
+      "value": "Escenario"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Escenarios"
+    },
+    {
+      "name": "term_settings",
+      "value": "Ajustes"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Conectando"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "No conectado"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Error de conexión"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Suscripción"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Suscripciones"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Cambiar modo"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Volver a probar"
+    },
+    {
+      "name": "term_testing",
+      "value": "Probando"
+    },
+    {
+      "name": "term_today",
+      "value": "Hoy"
+    },
+    {
+      "name": "term_undo",
+      "value": "Deshacer"
+    },
+    {
+      "name": "term_update",
+      "value": "Actualizar"
     },
     {
       "name": "tile_a11y",
@@ -1373,20 +1397,8 @@
       "value": "%1$s ahora usa %2$s"
     },
     {
-      "name": "trace_step_exit",
-      "value": "Salida"
-    },
-    {
-      "name": "trace_step_node",
-      "value": "Nodo"
-    },
-    {
       "name": "trace_step_rule",
       "value": "Regla"
-    },
-    {
-      "name": "trace_step_scene",
-      "value": "Escenario"
     },
     {
       "name": "trace_this_connection",

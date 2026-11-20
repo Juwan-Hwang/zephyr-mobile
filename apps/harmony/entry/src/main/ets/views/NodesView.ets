@@ -9,6 +9,7 @@ import { NodeListState, NodeRowItem, NodeRowKind, NodeRowSource } from '../app/N
 import { Format } from '../common/Format';
 import { Labels } from '../common/Labels';
 import { ZEmpty } from '../components/ZEmpty';
+import { ZTerm } from '../generated/ZTerms';
 
 const DEBOUNCE_MS: number = 80;
 const ROW_HEIGHT: number = 52;
@@ -228,7 +229,7 @@ export struct NodesView {
 
   build() {
     Column({ space: 10 }) {
-      Text($r('app.string.common_nodes'))
+      Text(ZTerm.nodes)
         .fontSize(28)
         .fontWeight(FontWeight.Bold)
         .fontColor($r('app.color.screen_t1'))

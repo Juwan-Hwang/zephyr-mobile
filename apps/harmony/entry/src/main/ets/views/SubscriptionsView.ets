@@ -17,6 +17,7 @@ import { ZEmpty } from '../components/ZEmpty';
 import { ImportRequest } from '../entryability/DeepLink';
 import { ImportItem, ImportSource, Subscription, SubscriptionDiff, SubscriptionsSummary } from '../engine/Model';
 import { Subscription as StreamSub } from '../engine/Stream';
+import { ZTerm } from '../generated/ZTerms';
 
 @ComponentV2
 export struct SubscriptionsView {
@@ -357,14 +358,14 @@ export struct SubscriptionsView {
             .fontColor($r('app.color.screen_t3'))
         }
         Row({ space: 8 }) {
-          Button(this.isUpdating(s) ? $r('app.string.subs_swipe_updating') : $r('app.string.subs_swipe_update'))
+          Button(this.isUpdating(s) ? $r('app.string.subs_swipe_updating') : ZTerm.update)
             .height(30)
             .fontSize(13)
             .enabled(!this.isUpdating(s))
             .fontColor($r('app.color.screen_t1'))
             .backgroundColor($r('app.color.screen_s3'))
             .onClick(() => this.update(s))
-          Button($r('app.string.subs_swipe_delete'))
+          Button(ZTerm.delete)
             .height(30)
             .fontSize(13)
             .fontColor($r('app.color.screen_red'))

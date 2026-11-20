@@ -9,6 +9,7 @@ import { ZEmpty } from '../components/ZEmpty';
 import { ZSegmented } from '../components/ZSegmented';
 import { LogLevel, LogLine } from '../engine/Model';
 import { Subscription as StreamSub } from '../engine/Stream';
+import { ZTerm } from '../generated/ZTerms';
 
 const LEVELS: LogLevel[] = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARNING, LogLevel.ERROR];
 
@@ -110,7 +111,7 @@ export struct LogsPage {
       .height('100%')
       .padding({ left: 16, right: 16, top: 8, bottom: 16 })
     }
-    .title($r('app.string.logs_title'))
+    .title(ZTerm.logs)
     .backgroundColor($r('app.color.screen_bg'))
   }
 }

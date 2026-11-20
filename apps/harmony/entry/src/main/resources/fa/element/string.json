@@ -49,10 +49,6 @@
       "value": "سرویس"
     },
     {
-      "name": "command_direct_from_proxy",
-      "value": "پروکسی"
-    },
-    {
       "name": "command_direct_note",
       "value": "ترافیک \\u2068%1$s\\u2069 از پروکسی عبور نمی‌کند."
     },
@@ -181,14 +177,6 @@
       "value": "در حال افزودن…"
     },
     {
-      "name": "common_all",
-      "value": "همه"
-    },
-    {
-      "name": "common_apply",
-      "value": "اعمال"
-    },
-    {
       "name": "common_back_to",
       "value": "بازگشت به \\u2068%1$s\\u2069"
     },
@@ -211,10 +199,6 @@
     {
       "name": "common_direct",
       "value": "مستقیم"
-    },
-    {
-      "name": "common_disconnect",
-      "value": "قطع اتصال"
     },
     {
       "name": "common_exit_ip_changes",
@@ -241,48 +225,16 @@
       "value": "شبکهٔ این دستگاه"
     },
     {
-      "name": "common_mode_direct",
-      "value": "مستقیم"
-    },
-    {
       "name": "common_mode_direct_hint",
       "value": "بدون عبور از پروکسی"
-    },
-    {
-      "name": "common_mode_global",
-      "value": "سراسری"
     },
     {
       "name": "common_mode_global_hint",
       "value": "همهٔ ترافیک از یک نود"
     },
     {
-      "name": "common_mode_rule",
-      "value": "قانون"
-    },
-    {
       "name": "common_mode_rule_hint",
       "value": "مسیریابی بر اساس صحنه"
-    },
-    {
-      "name": "common_no_results",
-      "value": "نتیجه‌ای نیست"
-    },
-    {
-      "name": "common_nodes",
-      "value": "نودها"
-    },
-    {
-      "name": "common_none",
-      "value": "هیچ"
-    },
-    {
-      "name": "common_off",
-      "value": "خاموش"
-    },
-    {
-      "name": "common_on",
-      "value": "روشن"
     },
     {
       "name": "common_open_settings",
@@ -297,10 +249,6 @@
       "value": "در حال آزمایش…"
     },
     {
-      "name": "common_rules",
-      "value": "قوانین"
-    },
-    {
       "name": "common_scene_ai",
       "value": "هوش مصنوعی"
     },
@@ -311,14 +259,6 @@
     {
       "name": "common_scene_video",
       "value": "ویدیو"
-    },
-    {
-      "name": "common_scenes",
-      "value": "صحنه‌ها"
-    },
-    {
-      "name": "common_settings",
-      "value": "تنظیمات"
     },
     {
       "name": "common_share",
@@ -337,40 +277,16 @@
       "value": "متصل"
     },
     {
-      "name": "common_status_connecting",
-      "value": "در حال اتصال"
-    },
-    {
       "name": "common_status_connecting_ellipsis",
       "value": "در حال اتصال…"
-    },
-    {
-      "name": "common_status_disconnected",
-      "value": "متصل نیست"
     },
     {
       "name": "common_status_disconnecting",
       "value": "در حال قطع اتصال"
     },
     {
-      "name": "common_status_failed",
-      "value": "اتصال ناموفق بود"
-    },
-    {
-      "name": "common_subscriptions",
-      "value": "اشتراک‌ها"
-    },
-    {
-      "name": "common_today",
-      "value": "امروز"
-    },
-    {
       "name": "common_try_again",
       "value": "دوباره امتحان کنید"
-    },
-    {
-      "name": "common_undo",
-      "value": "واگرد"
     },
     {
       "name": "common_updating",
@@ -485,10 +401,6 @@
       "value": "تغییر به \\u2068%1$s\\u2069"
     },
     {
-      "name": "home_global_title",
-      "value": "حالت سراسری"
-    },
-    {
       "name": "home_global_use_rule",
       "value": "استفاده از حالت قانون"
     },
@@ -545,10 +457,6 @@
       "value": "\\u2068%1$s\\u2069 در دسترس"
     },
     {
-      "name": "home_scene_testing",
-      "value": "در حال آزمایش"
-    },
-    {
       "name": "home_scenes_tested",
       "value": "آزمایش‌شده \\u2068%1$s\\u2069"
     },
@@ -559,10 +467,6 @@
     {
       "name": "home_spark_a11y",
       "value": "سرعت دانلود در 90 ثانیهٔ اخیر"
-    },
-    {
-      "name": "home_switch_mode",
-      "value": "تغییر حالت"
     },
     {
       "name": "home_switched_to",
@@ -681,22 +585,6 @@
       "value": "هنوز گزارشی نیست"
     },
     {
-      "name": "logs_level_debug",
-      "value": "اشکال‌زدایی"
-    },
-    {
-      "name": "logs_level_error",
-      "value": "خطا"
-    },
-    {
-      "name": "logs_level_info",
-      "value": "اطلاعات"
-    },
-    {
-      "name": "logs_level_warning",
-      "value": "هشدار"
-    },
-    {
       "name": "logs_line_a11y",
       "value": "%1$s %2$s %3$s"
     },
@@ -707,10 +595,6 @@
     {
       "name": "logs_resume",
       "value": "ادامه"
-    },
-    {
-      "name": "logs_title",
-      "value": "گزارش‌ها"
     },
     {
       "name": "nodes_detail_latency",
@@ -853,24 +737,12 @@
       "value": "مسدود"
     },
     {
-      "name": "rules_kind_domain",
-      "value": "دامنه"
-    },
-    {
       "name": "rules_kind_ip",
       "value": "IP"
     },
     {
       "name": "rules_kind_other",
       "value": "سایر"
-    },
-    {
-      "name": "rules_kind_override",
-      "value": "بازنویسی"
-    },
-    {
-      "name": "rules_kind_subscription",
-      "value": "اشتراک"
     },
     {
       "name": "rules_match_order",
@@ -883,10 +755,6 @@
     {
       "name": "rules_other_traffic",
       "value": "بقیهٔ ترافیک"
-    },
-    {
-      "name": "rules_step_exit_ip",
-      "value": "IP خروجی"
     },
     {
       "name": "rules_step_layer",
@@ -961,10 +829,6 @@
       "value": "\\u2068%1$s\\u2069 (ثابت)"
     },
     {
-      "name": "scene_retest",
-      "value": "آزمایش دوباره"
-    },
-    {
       "name": "scene_test_daily",
       "value": "روزانه"
     },
@@ -989,10 +853,6 @@
       "value": "وقتی نودی در دسترس نیست"
     },
     {
-      "name": "settings_accent",
-      "value": "رنگ تأکیدی"
-    },
-    {
       "name": "settings_accent_blue",
       "value": "آبی"
     },
@@ -1009,22 +869,6 @@
       "value": "صورتی"
     },
     {
-      "name": "settings_appearance",
-      "value": "ظاهر"
-    },
-    {
-      "name": "settings_appearance_dark",
-      "value": "تیره"
-    },
-    {
-      "name": "settings_appearance_light",
-      "value": "روشن"
-    },
-    {
-      "name": "settings_appearance_system",
-      "value": "سیستم"
-    },
-    {
       "name": "settings_keep_results",
       "value": "نگه‌داری نتایج"
     },
@@ -1037,16 +881,8 @@
       "value": "اشتراک‌ها، نودها و داده‌های ترافیک فقط روی این دستگاه ذخیره می‌شوند."
     },
     {
-      "name": "settings_local_proxy",
-      "value": "پورت پروکسی محلی"
-    },
-    {
       "name": "settings_on_demand",
       "value": "اتصال در صورت نیاز"
-    },
-    {
-      "name": "settings_password_required",
-      "value": "نیاز به گذرواژه"
     },
     {
       "name": "settings_save_failed",
@@ -1059,10 +895,6 @@
     {
       "name": "settings_section_connection",
       "value": "اتصال"
-    },
-    {
-      "name": "settings_section_diagnostics",
-      "value": "عیب‌یابی"
     },
     {
       "name": "settings_section_privacy",
@@ -1125,10 +957,6 @@
       "value": "همه اشتراک‌ها"
     },
     {
-      "name": "subs_auto_update",
-      "value": "به‌روزرسانی خودکار"
-    },
-    {
       "name": "subs_deleted",
       "value": "\\u2068%1$s\\u2069 حذف شد"
     },
@@ -1187,10 +1015,6 @@
     {
       "name": "subs_import_desktop_source",
       "value": "Zephyr دسکتاپ"
-    },
-    {
-      "name": "subs_import_file",
-      "value": "وارد کردن از فایل"
     },
     {
       "name": "subs_import_insecure",
@@ -1273,14 +1097,6 @@
       "value": "تأیید حذف"
     },
     {
-      "name": "subs_swipe_delete",
-      "value": "حذف"
-    },
-    {
-      "name": "subs_swipe_update",
-      "value": "به‌روزرسانی"
-    },
-    {
       "name": "subs_swipe_updating",
       "value": "به‌روزرسانی…"
     },
@@ -1295,6 +1111,214 @@
     {
       "name": "subs_update_wifi_only",
       "value": "به‌روزرسانی فقط با Wi‑Fi"
+    },
+    {
+      "name": "term_accent",
+      "value": "رنگ تأکیدی"
+    },
+    {
+      "name": "term_all",
+      "value": "همه"
+    },
+    {
+      "name": "term_appearance",
+      "value": "ظاهر"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "تیره"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "روشن"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "سیستم"
+    },
+    {
+      "name": "term_apply",
+      "value": "اعمال"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "به‌روزرسانی خودکار"
+    },
+    {
+      "name": "term_delete",
+      "value": "حذف"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "عیب‌یابی"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "قطع اتصال"
+    },
+    {
+      "name": "term_domain",
+      "value": "دامنه"
+    },
+    {
+      "name": "term_exit",
+      "value": "خروجی"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "IP خروجی"
+    },
+    {
+      "name": "term_import",
+      "value": "وارد کردن"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "وارد کردن از فایل"
+    },
+    {
+      "name": "term_latency",
+      "value": "تأخیر"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "پورت پروکسی محلی"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "اشکال‌زدایی"
+    },
+    {
+      "name": "term_log_error",
+      "value": "خطا"
+    },
+    {
+      "name": "term_log_info",
+      "value": "اطلاعات"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "هشدار"
+    },
+    {
+      "name": "term_logs",
+      "value": "گزارش‌ها"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "مستقیم"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "سراسری"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "حالت سراسری"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "قانون"
+    },
+    {
+      "name": "term_no_results",
+      "value": "نتیجه‌ای نیست"
+    },
+    {
+      "name": "term_node",
+      "value": "نود"
+    },
+    {
+      "name": "term_nodes",
+      "value": "نودها"
+    },
+    {
+      "name": "term_none",
+      "value": "هیچ"
+    },
+    {
+      "name": "term_off",
+      "value": "خاموش"
+    },
+    {
+      "name": "term_on",
+      "value": "روشن"
+    },
+    {
+      "name": "term_override",
+      "value": "بازنویسی"
+    },
+    {
+      "name": "term_proxy",
+      "value": "پروکسی"
+    },
+    {
+      "name": "term_require_password",
+      "value": "نیاز به گذرواژه"
+    },
+    {
+      "name": "term_rule",
+      "value": "قانون"
+    },
+    {
+      "name": "term_rules",
+      "value": "قوانین"
+    },
+    {
+      "name": "term_scene",
+      "value": "صحنه"
+    },
+    {
+      "name": "term_scenes",
+      "value": "صحنه‌ها"
+    },
+    {
+      "name": "term_settings",
+      "value": "تنظیمات"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "در حال اتصال"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "متصل نیست"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "اتصال ناموفق بود"
+    },
+    {
+      "name": "term_subscription",
+      "value": "اشتراک"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "اشتراک‌ها"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "تغییر حالت"
+    },
+    {
+      "name": "term_test_again",
+      "value": "آزمایش دوباره"
+    },
+    {
+      "name": "term_testing",
+      "value": "در حال آزمایش"
+    },
+    {
+      "name": "term_today",
+      "value": "امروز"
+    },
+    {
+      "name": "term_undo",
+      "value": "واگرد"
+    },
+    {
+      "name": "term_update",
+      "value": "به‌روزرسانی"
     },
     {
       "name": "tile_a11y",
@@ -1373,20 +1397,8 @@
       "value": "\\u2068%1$s\\u2069 اکنون با \\u2068%2$s\\u2069"
     },
     {
-      "name": "trace_step_exit",
-      "value": "خروجی"
-    },
-    {
-      "name": "trace_step_node",
-      "value": "نود"
-    },
-    {
       "name": "trace_step_rule",
       "value": "قانون"
-    },
-    {
-      "name": "trace_step_scene",
-      "value": "صحنه"
     },
     {
       "name": "trace_this_connection",

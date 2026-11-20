@@ -49,10 +49,6 @@
       "value": "서비스"
     },
     {
-      "name": "command_direct_from_proxy",
-      "value": "프록시"
-    },
-    {
       "name": "command_direct_note",
       "value": "%1$s 트래픽은 프록시를 거치지 않습니다."
     },
@@ -181,14 +177,6 @@
       "value": "추가 중…"
     },
     {
-      "name": "common_all",
-      "value": "전체"
-    },
-    {
-      "name": "common_apply",
-      "value": "적용"
-    },
-    {
       "name": "common_back_to",
       "value": "%1$s(으)로 돌아가기"
     },
@@ -211,10 +199,6 @@
     {
       "name": "common_direct",
       "value": "다이렉트"
-    },
-    {
-      "name": "common_disconnect",
-      "value": "연결 해제"
     },
     {
       "name": "common_exit_ip_changes",
@@ -241,48 +225,16 @@
       "value": "이 기기의 네트워크"
     },
     {
-      "name": "common_mode_direct",
-      "value": "다이렉트"
-    },
-    {
       "name": "common_mode_direct_hint",
       "value": "프록시 우회"
-    },
-    {
-      "name": "common_mode_global",
-      "value": "글로벌"
     },
     {
       "name": "common_mode_global_hint",
       "value": "모든 트래픽을 한 노드로"
     },
     {
-      "name": "common_mode_rule",
-      "value": "규칙"
-    },
-    {
       "name": "common_mode_rule_hint",
       "value": "시나리오별로 라우팅"
-    },
-    {
-      "name": "common_no_results",
-      "value": "결과 없음"
-    },
-    {
-      "name": "common_nodes",
-      "value": "노드"
-    },
-    {
-      "name": "common_none",
-      "value": "없음"
-    },
-    {
-      "name": "common_off",
-      "value": "끔"
-    },
-    {
-      "name": "common_on",
-      "value": "켬"
     },
     {
       "name": "common_open_settings",
@@ -297,10 +249,6 @@
       "value": "테스트 중…"
     },
     {
-      "name": "common_rules",
-      "value": "규칙"
-    },
-    {
       "name": "common_scene_ai",
       "value": "AI"
     },
@@ -311,14 +259,6 @@
     {
       "name": "common_scene_video",
       "value": "비디오"
-    },
-    {
-      "name": "common_scenes",
-      "value": "시나리오"
-    },
-    {
-      "name": "common_settings",
-      "value": "설정"
     },
     {
       "name": "common_share",
@@ -337,40 +277,16 @@
       "value": "연결됨"
     },
     {
-      "name": "common_status_connecting",
-      "value": "연결 중"
-    },
-    {
       "name": "common_status_connecting_ellipsis",
       "value": "연결 중…"
-    },
-    {
-      "name": "common_status_disconnected",
-      "value": "연결 안 됨"
     },
     {
       "name": "common_status_disconnecting",
       "value": "연결 해제 중"
     },
     {
-      "name": "common_status_failed",
-      "value": "연결 실패"
-    },
-    {
-      "name": "common_subscriptions",
-      "value": "구독"
-    },
-    {
-      "name": "common_today",
-      "value": "오늘"
-    },
-    {
       "name": "common_try_again",
       "value": "다시 시도"
-    },
-    {
-      "name": "common_undo",
-      "value": "실행 취소"
     },
     {
       "name": "common_updating",
@@ -485,10 +401,6 @@
       "value": "%1$s(으)로 변경"
     },
     {
-      "name": "home_global_title",
-      "value": "글로벌 모드"
-    },
-    {
       "name": "home_global_use_rule",
       "value": "규칙 모드 사용"
     },
@@ -545,10 +457,6 @@
       "value": "%1$s 정상"
     },
     {
-      "name": "home_scene_testing",
-      "value": "테스트 중"
-    },
-    {
       "name": "home_scenes_tested",
       "value": "%1$s 테스트함"
     },
@@ -559,10 +467,6 @@
     {
       "name": "home_spark_a11y",
       "value": "다운로드 속도, 최근 90초"
-    },
-    {
-      "name": "home_switch_mode",
-      "value": "모드 전환"
     },
     {
       "name": "home_switched_to",
@@ -681,22 +585,6 @@
       "value": "아직 로그 없음"
     },
     {
-      "name": "logs_level_debug",
-      "value": "디버그"
-    },
-    {
-      "name": "logs_level_error",
-      "value": "오류"
-    },
-    {
-      "name": "logs_level_info",
-      "value": "정보"
-    },
-    {
-      "name": "logs_level_warning",
-      "value": "경고"
-    },
-    {
       "name": "logs_line_a11y",
       "value": "%1$s %2$s %3$s"
     },
@@ -707,10 +595,6 @@
     {
       "name": "logs_resume",
       "value": "재개"
-    },
-    {
-      "name": "logs_title",
-      "value": "로그"
     },
     {
       "name": "nodes_detail_latency",
@@ -853,24 +737,12 @@
       "value": "차단됨"
     },
     {
-      "name": "rules_kind_domain",
-      "value": "도메인"
-    },
-    {
       "name": "rules_kind_ip",
       "value": "IP"
     },
     {
       "name": "rules_kind_other",
       "value": "기타"
-    },
-    {
-      "name": "rules_kind_override",
-      "value": "오버라이드"
-    },
-    {
-      "name": "rules_kind_subscription",
-      "value": "구독"
     },
     {
       "name": "rules_match_order",
@@ -883,10 +755,6 @@
     {
       "name": "rules_other_traffic",
       "value": "기타 모든 트래픽"
-    },
-    {
-      "name": "rules_step_exit_ip",
-      "value": "출구 IP"
     },
     {
       "name": "rules_step_layer",
@@ -961,10 +829,6 @@
       "value": "%1$s(고정)"
     },
     {
-      "name": "scene_retest",
-      "value": "다시 테스트"
-    },
-    {
       "name": "scene_test_daily",
       "value": "매일"
     },
@@ -989,10 +853,6 @@
       "value": "노드를 사용할 수 없을 때"
     },
     {
-      "name": "settings_accent",
-      "value": "강조 색상"
-    },
-    {
       "name": "settings_accent_blue",
       "value": "파란색"
     },
@@ -1009,22 +869,6 @@
       "value": "분홍색"
     },
     {
-      "name": "settings_appearance",
-      "value": "모양"
-    },
-    {
-      "name": "settings_appearance_dark",
-      "value": "다크"
-    },
-    {
-      "name": "settings_appearance_light",
-      "value": "라이트"
-    },
-    {
-      "name": "settings_appearance_system",
-      "value": "시스템"
-    },
-    {
       "name": "settings_keep_results",
       "value": "결과 유지"
     },
@@ -1037,16 +881,8 @@
       "value": "구독, 노드 및 트래픽 데이터는 이 기기에만 저장됩니다."
     },
     {
-      "name": "settings_local_proxy",
-      "value": "로컬 프록시 포트"
-    },
-    {
       "name": "settings_on_demand",
       "value": "요청 시 연결"
-    },
-    {
-      "name": "settings_password_required",
-      "value": "암호 요구"
     },
     {
       "name": "settings_save_failed",
@@ -1059,10 +895,6 @@
     {
       "name": "settings_section_connection",
       "value": "연결"
-    },
-    {
-      "name": "settings_section_diagnostics",
-      "value": "진단"
     },
     {
       "name": "settings_section_privacy",
@@ -1125,10 +957,6 @@
       "value": "전체 구독"
     },
     {
-      "name": "subs_auto_update",
-      "value": "자동 업데이트"
-    },
-    {
       "name": "subs_deleted",
       "value": "%1$s 삭제됨"
     },
@@ -1187,10 +1015,6 @@
     {
       "name": "subs_import_desktop_source",
       "value": "Zephyr 데스크톱"
-    },
-    {
-      "name": "subs_import_file",
-      "value": "파일에서 가져오기"
     },
     {
       "name": "subs_import_insecure",
@@ -1273,14 +1097,6 @@
       "value": "삭제 확인"
     },
     {
-      "name": "subs_swipe_delete",
-      "value": "삭제"
-    },
-    {
-      "name": "subs_swipe_update",
-      "value": "업데이트"
-    },
-    {
       "name": "subs_swipe_updating",
       "value": "업데이트 중"
     },
@@ -1295,6 +1111,214 @@
     {
       "name": "subs_update_wifi_only",
       "value": "Wi‑Fi에서만 업데이트"
+    },
+    {
+      "name": "term_accent",
+      "value": "강조 색상"
+    },
+    {
+      "name": "term_all",
+      "value": "전체"
+    },
+    {
+      "name": "term_appearance",
+      "value": "모양"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "다크"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "라이트"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "시스템"
+    },
+    {
+      "name": "term_apply",
+      "value": "적용"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "자동 업데이트"
+    },
+    {
+      "name": "term_delete",
+      "value": "삭제"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "진단"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "연결 해제"
+    },
+    {
+      "name": "term_domain",
+      "value": "도메인"
+    },
+    {
+      "name": "term_exit",
+      "value": "출구"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "출구 IP"
+    },
+    {
+      "name": "term_import",
+      "value": "가져오기"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "파일에서 가져오기"
+    },
+    {
+      "name": "term_latency",
+      "value": "지연 시간"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "로컬 프록시 포트"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "디버그"
+    },
+    {
+      "name": "term_log_error",
+      "value": "오류"
+    },
+    {
+      "name": "term_log_info",
+      "value": "정보"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "경고"
+    },
+    {
+      "name": "term_logs",
+      "value": "로그"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "다이렉트"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "글로벌"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "글로벌 모드"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "규칙"
+    },
+    {
+      "name": "term_no_results",
+      "value": "결과 없음"
+    },
+    {
+      "name": "term_node",
+      "value": "노드"
+    },
+    {
+      "name": "term_nodes",
+      "value": "노드"
+    },
+    {
+      "name": "term_none",
+      "value": "없음"
+    },
+    {
+      "name": "term_off",
+      "value": "끔"
+    },
+    {
+      "name": "term_on",
+      "value": "켬"
+    },
+    {
+      "name": "term_override",
+      "value": "오버라이드"
+    },
+    {
+      "name": "term_proxy",
+      "value": "프록시"
+    },
+    {
+      "name": "term_require_password",
+      "value": "암호 요구"
+    },
+    {
+      "name": "term_rule",
+      "value": "규칙"
+    },
+    {
+      "name": "term_rules",
+      "value": "규칙"
+    },
+    {
+      "name": "term_scene",
+      "value": "시나리오"
+    },
+    {
+      "name": "term_scenes",
+      "value": "시나리오"
+    },
+    {
+      "name": "term_settings",
+      "value": "설정"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "연결 중"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "연결 안 됨"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "연결 실패"
+    },
+    {
+      "name": "term_subscription",
+      "value": "구독"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "구독"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "모드 전환"
+    },
+    {
+      "name": "term_test_again",
+      "value": "다시 테스트"
+    },
+    {
+      "name": "term_testing",
+      "value": "테스트 중"
+    },
+    {
+      "name": "term_today",
+      "value": "오늘"
+    },
+    {
+      "name": "term_undo",
+      "value": "실행 취소"
+    },
+    {
+      "name": "term_update",
+      "value": "업데이트"
     },
     {
       "name": "tile_a11y",
@@ -1373,20 +1397,8 @@
       "value": "%1$s 경로가 %2$s(으)로 변경됨"
     },
     {
-      "name": "trace_step_exit",
-      "value": "출구"
-    },
-    {
-      "name": "trace_step_node",
-      "value": "노드"
-    },
-    {
       "name": "trace_step_rule",
       "value": "규칙"
-    },
-    {
-      "name": "trace_step_scene",
-      "value": "시나리오"
     },
     {
       "name": "trace_this_connection",

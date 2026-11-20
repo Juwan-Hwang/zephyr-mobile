@@ -4,16 +4,17 @@
  */
 import { ConnectionStatus, ErrorCode, LayerKind, LogLevel, ProxyMode, Scene, SceneKind } from '../engine/Model';
 import { AgoParts, AgoUnit, ExpiryKind, ExpiryParts, LatencyClass } from './Format';
+import { ZTerm } from '../generated/ZTerms';
 
 export class Labels {
   static mode(m: ProxyMode): Resource {
     switch (m) {
       case ProxyMode.GLOBAL:
-        return $r('app.string.common_mode_global');
+        return ZTerm.modeGlobal;
       case ProxyMode.DIRECT:
-        return $r('app.string.common_mode_direct');
+        return ZTerm.modeDirect;
       default:
-        return $r('app.string.common_mode_rule');
+        return ZTerm.modeRule;
     }
   }
 
@@ -37,9 +38,9 @@ export class Labels {
       case ConnectionStatus.DISCONNECTING:
         return $r('app.string.common_status_disconnecting');
       case ConnectionStatus.FAILED:
-        return $r('app.string.common_status_failed');
+        return ZTerm.statusFailed;
       default:
-        return $r('app.string.common_status_disconnected');
+        return ZTerm.statusDisconnected;
     }
   }
 
@@ -75,13 +76,13 @@ export class Labels {
   static logLevel(l: LogLevel): Resource {
     switch (l) {
       case LogLevel.DEBUG:
-        return $r('app.string.logs_level_debug');
+        return ZTerm.logDebug;
       case LogLevel.WARNING:
-        return $r('app.string.logs_level_warning');
+        return ZTerm.logWarning;
       case LogLevel.ERROR:
-        return $r('app.string.logs_level_error');
+        return ZTerm.logError;
       default:
-        return $r('app.string.logs_level_info');
+        return ZTerm.logInfo;
     }
   }
 
@@ -154,11 +155,11 @@ export class Labels {
   static layerKind(k: LayerKind): Resource {
     switch (k) {
       case LayerKind.OVERRIDE:
-        return $r('app.string.rules_kind_override');
+        return ZTerm.override;
       case LayerKind.SUBSCRIPTION:
-        return $r('app.string.rules_kind_subscription');
+        return ZTerm.subscription;
       case LayerKind.DOMAIN:
-        return $r('app.string.rules_kind_domain');
+        return ZTerm.domain;
       case LayerKind.IP:
         return $r('app.string.rules_kind_ip');
       default:
