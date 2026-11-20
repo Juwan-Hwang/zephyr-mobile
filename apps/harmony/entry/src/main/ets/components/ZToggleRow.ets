@@ -7,7 +7,7 @@ export struct ZToggleRow {
   @Param title: ResourceStr = '';
   @Param subtitle: ResourceStr | undefined = undefined;
   @Param isOn: boolean = false;
-  @Param enabled: boolean = true;
+  @Param isEnabled: boolean = true;
   /** 最后一行不画分隔线。 */
   @Param divider: boolean = true;
   @Event onChange: (on: boolean) => void = (on: boolean) => {};
@@ -18,7 +18,7 @@ export struct ZToggleRow {
         Column({ space: 2 }) {
           Text(this.title)
             .fontSize(16)
-            .fontColor(this.enabled ? $r('app.color.screen_t1') : $r('app.color.screen_t3'))
+            .fontColor(this.isEnabled ? $r('app.color.screen_t1') : $r('app.color.screen_t3'))
           if (this.subtitle !== undefined) {
             Text(this.subtitle)
               .fontSize(12)
@@ -29,7 +29,7 @@ export struct ZToggleRow {
         .alignItems(HorizontalAlign.Start)
 
         Toggle({ type: ToggleType.Switch, isOn: this.isOn })
-          .enabled(this.enabled)
+          .enabled(this.isEnabled)
           .onChange((on: boolean) => {
             if (on !== this.isOn) {
               this.onChange(on);
