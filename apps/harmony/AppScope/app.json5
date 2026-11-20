@@ -1,0 +1,11 @@
+{
+  "app": {
+    // 团队决定（#209 D3）：三端统一标识 com.juwanh.zephyr。
+    "bundleName": "com.juwanh.zephyr",
+    "vendor": "zephyr",
+    "versionCode": 1000000,
+    "versionName": "1.0.0",
+    "icon": "$media:app_icon",
+    "label": "$string:app_name"
+  }
+}

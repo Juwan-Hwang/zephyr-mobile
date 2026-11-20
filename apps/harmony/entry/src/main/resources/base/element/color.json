@@ -1,0 +1,248 @@
+{
+  "color": [
+    {
+      "name": "z_text_primary",
+      "value": "#F218181C"
+    },
+    {
+      "name": "z_text_secondary",
+      "value": "#A618181C"
+    },
+    {
+      "name": "z_text_tertiary",
+      "value": "#6618181C"
+    },
+    {
+      "name": "z_text_muted",
+      "value": "#FF71717A"
+    },
+    {
+      "name": "z_text_danger",
+      "value": "#FFDC2626"
+    },
+    {
+      "name": "z_text_warning",
+      "value": "#FFD97706"
+    },
+    {
+      "name": "z_text_success",
+      "value": "#FF16A34A"
+    },
+    {
+      "name": "z_text_info",
+      "value": "#FF2563EB"
+    },
+    {
+      "name": "z_text_on_accent",
+      "value": "#FFFFFFFF"
+    },
+    {
+      "name": "z_text_badge",
+      "value": "#A618181C"
+    },
+    {
+      "name": "z_bg_secondary",
+      "value": "#0A000000"
+    },
+    {
+      "name": "z_bg_tertiary",
+      "value": "#0F000000"
+    },
+    {
+      "name": "z_bg_subtle",
+      "value": "#08000000"
+    },
+    {
+      "name": "z_bg_muted",
+      "value": "#0D000000"
+    },
+    {
+      "name": "z_bg_input",
+      "value": "#CCFFFFFF"
+    },
+    {
+      "name": "z_bg_elevated",
+      "value": "#FFFFFFFF"
+    },
+    {
+      "name": "z_bg_overlay",
+      "value": "#40000000"
+    },
+    {
+      "name": "z_surface_page",
+      "value": "#00000000"
+    },
+    {
+      "name": "z_surface_raised",
+      "value": "#0A000000"
+    },
+    {
+      "name": "z_surface_elevated",
+      "value": "#FFFFFFFF"
+    },
+    {
+      "name": "z_surface_input",
+      "value": "#CCFFFFFF"
+    },
+    {
+      "name": "z_surface_overlay",
+      "value": "#40000000"
+    },
+    {
+      "name": "z_border_primary",
+      "value": "#26000000"
+    },
+    {
+      "name": "z_border_subtle",
+      "value": "#1A1E293B"
+    },
+    {
+      "name": "z_border_default",
+      "value": "#241E293B"
+    },
+    {
+      "name": "z_border_strong",
+      "value": "#331E293B"
+    },
+    {
+      "name": "z_color_close_btn",
+      "value": "#FFFF5F57"
+    },
+    {
+      "name": "z_color_accent",
+      "value": "#FF007AFF"
+    },
+    {
+      "name": "z_color_danger",
+      "value": "#FFDC2626"
+    },
+    {
+      "name": "z_color_warning",
+      "value": "#FFD97706"
+    },
+    {
+      "name": "z_color_success",
+      "value": "#FF16A34A"
+    },
+    {
+      "name": "z_color_info",
+      "value": "#FF2563EB"
+    },
+    {
+      "name": "z_color_download",
+      "value": "#FF007AFF"
+    },
+    {
+      "name": "z_color_upload",
+      "value": "#FFD13A3F"
+    },
+    {
+      "name": "z_latency_normal",
+      "value": "#94000000"
+    },
+    {
+      "name": "z_latency_slow",
+      "value": "#FFFF9F0A"
+    },
+    {
+      "name": "z_latency_timeout",
+      "value": "#FFFF3B30"
+    },
+    {
+      "name": "z_latency_unknown",
+      "value": "#8C000000"
+    },
+    {
+      "name": "z_screen_bg",
+      "value": "#FFF2F2F7"
+    },
+    {
+      "name": "z_screen_s1",
+      "value": "#FFFFFFFF"
+    },
+    {
+      "name": "z_screen_s2",
+      "value": "#FFFFFFFF"
+    },
+    {
+      "name": "z_screen_s3",
+      "value": "#FFE9E9EE"
+    },
+    {
+      "name": "z_screen_s4",
+      "value": "#FFDCDCE1"
+    },
+    {
+      "name": "z_screen_hl",
+      "value": "#12000000"
+    },
+    {
+      "name": "z_screen_hl2",
+      "value": "#1F000000"
+    },
+    {
+      "name": "z_screen_t1",
+      "value": "#E6000000"
+    },
+    {
+      "name": "z_screen_t2",
+      "value": "#94000000"
+    },
+    {
+      "name": "z_screen_t3",
+      "value": "#8C000000"
+    },
+    {
+      "name": "z_screen_t4",
+      "value": "#2E000000"
+    },
+    {
+      "name": "z_screen_green",
+      "value": "#FF34C759"
+    },
+    {
+      "name": "z_screen_amber",
+      "value": "#FFFF9F0A"
+    },
+    {
+      "name": "z_screen_amber_a",
+      "value": "#1FFF9F0A"
+    },
+    {
+      "name": "z_screen_red",
+      "value": "#FFFF3B30"
+    },
+    {
+      "name": "z_screen_up",
+      "value": "#FFFF5E57"
+    },
+    {
+      "name": "z_screen_glass",
+      "value": "#D1FFFFFF"
+    },
+    {
+      "name": "z_screen_cmd_bg",
+      "value": "#CCF2F2F7"
+    },
+    {
+      "name": "z_screen_fade",
+      "value": "#FFF2F2F7"
+    },
+    {
+      "name": "z_screen_primary",
+      "value": "#FF000000"
+    },
+    {
+      "name": "z_screen_on_primary",
+      "value": "#FFFFFFFF"
+    },
+    {
+      "name": "z_screen_pressed",
+      "value": "#08000000"
+    },
+    {
+      "name": "start_window_background",
+      "value": "#FFF2F2F7"
+    }
+  ]
+}
