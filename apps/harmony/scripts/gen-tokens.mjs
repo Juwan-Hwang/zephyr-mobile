@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-// 鸿蒙端本地 token 转换（角色 D，临时方案）。只读 tokens/ 与 vendor/zephyr 的桌面 token，不改它们。
-// 解析逻辑与 tokens/build.mjs 相同（拷自该文件 2026-11-19 版本）；待 A 在官方生成器里加 ArkTS 产物后删除本脚本（见 #241「请 A 协助」3）。
-// 输出（禁止手改）：
-//   entry/src/main/resources/base/element/color.json   浅色（HarmonyOS base = 浅色）
-//   entry/src/main/resources/dark/element/color.json   深色（系统深色模式自动切换，等价 iOS 动态色 / Android ZColors）
-//   entry/src/main/ets/generated/ZTokens.ets           尺寸、字阶、动效、延迟阈值、强调色
-// 用法：node apps/harmony/scripts/gen-tokens.mjs [--check]
+// 鸿蒙端 tokens 同步（角色 D）。
+// 默认：A 的官方生成器已产出 ArkTS（tokens/build.mjs → tokens/generated/harmony/，#242 已合），本脚本只**拷贝**它：
+//   tokens/generated/harmony/ZTokens.ets                          → entry/src/main/ets/generated/ZTokens.ets
+//   tokens/generated/harmony/resources/{base,dark}/element/color.json → entry/src/main/resources/{base,dark}/element/color.json
+//   （color.json 末尾追加 start_window_background = screen_bg，供 module.json5 startWindowBackground 引用）
+// 颜色资源名以官方产物为准：$r('app.color.<snake_name>')，如 app.color.text_primary。
+// --local：退回旧的本地转换（读 tokens/ 与 vendor/zephyr 桌面 token，资源名带 z_ 前缀），仅在官方产物缺失时用；待确认无用后删除。
+// 输出禁止手改。用法：node apps/harmony/scripts/gen-tokens.mjs [--check] [--local]
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -14,6 +15,33 @@ const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const app = path.resolve(scriptDir, '..');
 const root = path.resolve(app, '../..');
 const here = path.join(root, 'tokens');
+const check = process.argv.includes('--check');
+const upstream = path.join(root, 'tokens/generated/harmony');
+if (!process.argv.includes('--local') && fs.existsSync(path.join(upstream, 'ZTokens.ets'))) {
+  const withStart = (file) => {
+    const res = JSON.parse(fs.readFileSync(file, 'utf8'));
+    const bg = res.color.find((c) => c.name === 'screen_bg');
+    if (!bg) throw new Error(`${path.relative(root, file)} 缺少 screen_bg`);
+    res.color = res.color.filter((c) => c.name !== 'start_window_background').concat([{ name: 'start_window_background', value: bg.value }]);
+    return JSON.stringify(res, null, 2) + '\n';
+  };
+  const copies = {
+    [path.join(app, 'entry/src/main/ets/generated/ZTokens.ets')]: fs.readFileSync(path.join(upstream, 'ZTokens.ets'), 'utf8'),
+    [path.join(app, 'entry/src/main/resources/base/element/color.json')]: withStart(path.join(upstream, 'resources/base/element/color.json')),
+    [path.join(app, 'entry/src/main/resources/dark/element/color.json')]: withStart(path.join(upstream, 'resources/dark/element/color.json')),
+  };
+  let stale = false;
+  for (const [f, s] of Object.entries(copies)) {
+    if (check) {
+      if (!fs.existsSync(f) || fs.readFileSync(f, 'utf8') !== s) { console.error(`过期：${path.relative(root, f)}`); stale = true; }
+    } else {
+      fs.mkdirSync(path.dirname(f), { recursive: true });
+      fs.writeFileSync(f, s);
+      console.log(`拷贝 ${path.relative(root, f)}`);
+    }
+  }
+  process.exit(stale ? 1 : 0);
+}
 const desktopDir = path.join(root, 'vendor/zephyr/packages/tokens/src');
 const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 if (!fs.existsSync(desktopDir)) { console.error('缺少 vendor/zephyr 子模块：git submodule update --init vendor/zephyr'); process.exit(2); }
@@ -207,7 +235,6 @@ const outs = {
   [path.join(app, 'entry/src/main/resources/dark/element/color.json')]: colorJson((c) => c.dark),
   [path.join(app, 'entry/src/main/ets/generated/ZTokens.ets')]: ets,
 };
-const check = process.argv.includes('--check');
 let dirty = false;
 for (const [f, s] of Object.entries(outs)) {
   if (check) {

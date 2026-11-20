@@ -1,243 +1,243 @@
 {
   "color": [
     {
-      "name": "z_text_primary",
+      "name": "text_primary",
       "value": "#F2FFFFFF"
     },
     {
-      "name": "z_text_secondary",
+      "name": "text_secondary",
       "value": "#99FFFFFF"
     },
     {
-      "name": "z_text_tertiary",
+      "name": "text_tertiary",
       "value": "#66FFFFFF"
     },
     {
-      "name": "z_text_muted",
+      "name": "text_muted",
       "value": "#FF71717A"
     },
     {
-      "name": "z_text_danger",
+      "name": "text_danger",
       "value": "#FFEF4444"
     },
     {
-      "name": "z_text_warning",
+      "name": "text_warning",
       "value": "#FFF59E0B"
     },
     {
-      "name": "z_text_success",
+      "name": "text_success",
       "value": "#FF4ADE80"
     },
     {
-      "name": "z_text_info",
+      "name": "text_info",
       "value": "#FF38BDF8"
     },
     {
-      "name": "z_text_on_accent",
+      "name": "text_on_accent",
       "value": "#FFFFFFFF"
     },
     {
-      "name": "z_text_badge",
+      "name": "text_badge",
       "value": "#99FFFFFF"
     },
     {
-      "name": "z_bg_secondary",
+      "name": "bg_secondary",
       "value": "#8C0C0C10"
     },
     {
-      "name": "z_bg_tertiary",
+      "name": "bg_tertiary",
       "value": "#800C0C10"
     },
     {
-      "name": "z_bg_subtle",
+      "name": "bg_subtle",
       "value": "#08FFFFFF"
     },
     {
-      "name": "z_bg_muted",
+      "name": "bg_muted",
       "value": "#0DFFFFFF"
     },
     {
-      "name": "z_bg_input",
+      "name": "bg_input",
       "value": "#66000000"
     },
     {
-      "name": "z_bg_elevated",
+      "name": "bg_elevated",
       "value": "#F718181B"
     },
     {
-      "name": "z_bg_overlay",
+      "name": "bg_overlay",
       "value": "#66000000"
     },
     {
-      "name": "z_surface_page",
+      "name": "surface_page",
       "value": "#00000000"
     },
     {
-      "name": "z_surface_raised",
+      "name": "surface_raised",
       "value": "#8C0C0C10"
     },
     {
-      "name": "z_surface_elevated",
+      "name": "surface_elevated",
       "value": "#F718181B"
     },
     {
-      "name": "z_surface_input",
+      "name": "surface_input",
       "value": "#66000000"
     },
     {
-      "name": "z_surface_overlay",
+      "name": "surface_overlay",
       "value": "#66000000"
     },
     {
-      "name": "z_border_primary",
+      "name": "border_primary",
       "value": "#1AFFFFFF"
     },
     {
-      "name": "z_border_subtle",
+      "name": "border_subtle",
       "value": "#0DFFFFFF"
     },
     {
-      "name": "z_border_default",
+      "name": "border_default",
       "value": "#1AFFFFFF"
     },
     {
-      "name": "z_border_strong",
+      "name": "border_strong",
       "value": "#33FFFFFF"
     },
     {
-      "name": "z_color_close_btn",
+      "name": "color_close_btn",
       "value": "#FFFF5F57"
     },
     {
-      "name": "z_color_accent",
+      "name": "color_accent",
       "value": "#FF007AFF"
     },
     {
-      "name": "z_color_danger",
+      "name": "color_danger",
       "value": "#FFEF4444"
     },
     {
-      "name": "z_color_warning",
+      "name": "color_warning",
       "value": "#FFF59E0B"
     },
     {
-      "name": "z_color_success",
+      "name": "color_success",
       "value": "#FF4ADE80"
     },
     {
-      "name": "z_color_info",
+      "name": "color_info",
       "value": "#FF38BDF8"
     },
     {
-      "name": "z_color_download",
+      "name": "color_download",
       "value": "#FF0A84FF"
     },
     {
-      "name": "z_color_upload",
+      "name": "color_upload",
       "value": "#FFFF6B6B"
     },
     {
-      "name": "z_latency_normal",
+      "name": "latency_normal",
       "value": "#99FFFFFF"
     },
     {
-      "name": "z_latency_slow",
+      "name": "latency_slow",
       "value": "#FFFFD60A"
     },
     {
-      "name": "z_latency_timeout",
+      "name": "latency_timeout",
       "value": "#FFFF453A"
     },
     {
-      "name": "z_latency_unknown",
+      "name": "latency_unknown",
       "value": "#80FFFFFF"
     },
     {
-      "name": "z_screen_bg",
+      "name": "screen_bg",
       "value": "#FF000000"
     },
     {
-      "name": "z_screen_s1",
+      "name": "screen_s1",
       "value": "#FF0C0C0E"
     },
     {
-      "name": "z_screen_s2",
+      "name": "screen_s2",
       "value": "#FF141417"
     },
     {
-      "name": "z_screen_s3",
+      "name": "screen_s3",
       "value": "#FF1D1D21"
     },
     {
-      "name": "z_screen_s4",
+      "name": "screen_s4",
       "value": "#FF26262B"
     },
     {
-      "name": "z_screen_hl",
+      "name": "screen_hl",
       "value": "#13FFFFFF"
     },
     {
-      "name": "z_screen_hl2",
+      "name": "screen_hl2",
       "value": "#21FFFFFF"
     },
     {
-      "name": "z_screen_t1",
+      "name": "screen_t1",
       "value": "#F2FFFFFF"
     },
     {
-      "name": "z_screen_t2",
+      "name": "screen_t2",
       "value": "#99FFFFFF"
     },
     {
-      "name": "z_screen_t3",
+      "name": "screen_t3",
       "value": "#80FFFFFF"
     },
     {
-      "name": "z_screen_t4",
+      "name": "screen_t4",
       "value": "#33FFFFFF"
     },
     {
-      "name": "z_screen_green",
+      "name": "screen_green",
       "value": "#FF30D158"
     },
     {
-      "name": "z_screen_amber",
+      "name": "screen_amber",
       "value": "#FFFFD60A"
     },
     {
-      "name": "z_screen_amber_a",
+      "name": "screen_amber_a",
       "value": "#1FFFD60A"
     },
     {
-      "name": "z_screen_red",
+      "name": "screen_red",
       "value": "#FFFF453A"
     },
     {
-      "name": "z_screen_up",
+      "name": "screen_up",
       "value": "#FFFF6B6B"
     },
     {
-      "name": "z_screen_glass",
+      "name": "screen_glass",
       "value": "#D11C1C20"
     },
     {
-      "name": "z_screen_cmd_bg",
+      "name": "screen_cmd_bg",
       "value": "#B8000000"
     },
     {
-      "name": "z_screen_fade",
+      "name": "screen_fade",
       "value": "#FF000000"
     },
     {
-      "name": "z_screen_primary",
+      "name": "screen_primary",
       "value": "#FFF2F2F2"
     },
     {
-      "name": "z_screen_on_primary",
+      "name": "screen_on_primary",
       "value": "#FF000000"
     },
     {
-      "name": "z_screen_pressed",
+      "name": "screen_pressed",
       "value": "#08FFFFFF"
     },
     {
