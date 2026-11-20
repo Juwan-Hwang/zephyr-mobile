@@ -232,7 +232,8 @@ export struct SubscriptionsView {
                 .fontFamily('monospace')
                 .fontColor($r('app.color.screen_t3'))
                 .maxLines(1)
-                .textOverflow({ overflow: TextOverflow.MIDDLE })
+                .textOverflow({ overflow: TextOverflow.Ellipsis })
+                .ellipsisMode(EllipsisMode.CENTER)
             }
             .alignItems(HorizontalAlign.Start)
           }, (it: ImportItem) => it.url)
