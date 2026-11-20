@@ -40,7 +40,7 @@ export struct ZToastHost {
       }
       let text = t.message;
       if (t.undoable) {
-        text += ' ' + ctx.resourceManager.getStringSync(ZTerm.undo);
+        text += ' ' + ctx.resourceManager.getStringSync(ZTerm.undo.id);
       }
       const ev = new accessibility.EventInfo({
         type: 'announceForAccessibility',

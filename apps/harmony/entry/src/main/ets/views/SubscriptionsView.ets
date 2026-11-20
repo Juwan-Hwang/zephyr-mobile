@@ -219,7 +219,7 @@ export struct SubscriptionsView {
   private text(r: Resource, arg: string): string {
     try {
       const ctx = this.getUIContext().getHostContext();
-      return ctx !== undefined ? ctx.resourceManager.getStringSync(r, arg) : arg;
+      return ctx !== undefined ? ctx.resourceManager.getStringSync(r.id, arg) : arg;
     } catch (e) {
       return arg;
     }
