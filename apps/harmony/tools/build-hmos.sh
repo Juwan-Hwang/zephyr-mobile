@@ -9,6 +9,7 @@
 #   tools/build-hmos.sh --summary       重新打印上次日志摘要
 # 环境变量：
 #   BUILD_MODE=release|debug（默认 release）  CLEAN=1 全量重编
+#   TEST=0 跳过 ohosTest（默认在主 HAP 之后再编 entry@ohosTest 测试 HAP，只编译不运行；运行要真机 / 云调试）
 #   HMOS_WORK_DIR  临时副本 + 日志目录（默认 $HMOS_TOOLS_DIR/work/hmos）
 #   ZEPHYR_SIGNING_DIR  私有 zephyr-signing 克隆里含 sign-hap.sh 的目录（如 …/zephyr-signing/harmony）；
 #                       不设则只出未签名 HAP。签名材料从不进本仓库。
@@ -19,6 +20,7 @@ TOOLS=$(cd "$(dirname "$0")" && pwd)
 . "$TOOLS/env.sh"
 APP=$(cd "$TOOLS/.." && pwd)
 : "${BUILD_MODE:=release}"
+: "${TEST:=1}"
 : "${HMOS_WORK_DIR:=$HMOS_TOOLS_DIR/work/hmos}"
 PROJ=$HMOS_WORK_DIR/proj
 LOG=$HMOS_WORK_DIR/hv.log
@@ -32,8 +34,8 @@ summary() {
   grep -E '^(> hvigor ERROR|[0-9]+ ERROR:|Error Message:|COMPILE RESULT|> hvigor WARN|[0-9]+ WARN:)' -A1 "$L" \
     | grep -v '^--$' | grep -v 'For details about ArkTS syntax' || true
   echo "----"
-  grep -E 'COMPILE RESULT|BUILD (SUCCESSFUL|FAILED)|^rc=|^sign' "$L" || true
-  ls -la "$PROJ"/entry/build/default/outputs/default/*.hap "$SIGNED_HAP" 2>/dev/null || true
+  grep -E 'COMPILE RESULT|BUILD (SUCCESSFUL|FAILED)|^rc=|^sign|^ohosTest' "$L" || true
+  ls -la "$PROJ"/entry/build/default/outputs/default/*.hap "$PROJ"/entry/build/default/outputs/ohosTest/*.hap "$SIGNED_HAP" 2>/dev/null || true
 }
 case "$1" in
   --run-only) ;;
@@ -41,7 +43,7 @@ case "$1" in
   --wait) while ! grep -q '^rc=' "$LOG" 2>/dev/null; do sleep 5; done; summary; exit 0;;
   --bg)
     rm -f "$LOG"
-    BUILD_MODE=$BUILD_MODE CLEAN=$CLEAN setsid nohup sh "$0" --run-only >/dev/null 2>&1 < /dev/null &
+    BUILD_MODE=$BUILD_MODE CLEAN=$CLEAN TEST=$TEST setsid nohup sh "$0" --run-only >/dev/null 2>&1 < /dev/null &
     echo "started in background; then: $0 --wait"; exit 0;;
 esac
 
@@ -64,6 +66,18 @@ find "$PROJ" -mindepth 1 -maxdepth 1 ! -name entry ! -name .hvigor -exec rm -rf 
 #    用软链模拟，避免 ohpm 去访问网络；缺了它 MobileCore 会被推成 any，报假的 arkts-no-any-unknown。
 mkdir -p "$PROJ/entry/oh_modules"
 ln -sfn ../src/main/cpp/types/libcore_ohos "$PROJ/entry/oh_modules/libcore_ohos.so"
+# devDependencies @ohos/hypium（ohosTest 用）：从 ohpm 官方仓库取 .har 一次，sha256 固定，解到 oh_modules。
+HYPIUM_VER=1.0.24
+HYPIUM_SHA256=5ca5aba225fcf93df62a4d75b746ddd36f7ee8e5b891098e6aab142d91b4b41e
+HYPIUM_HAR=$HMOS_TOOLS_DIR/ohpm-cache/hypium-$HYPIUM_VER.har
+if [ ! -f "$HYPIUM_HAR" ]; then
+  mkdir -p "$(dirname "$HYPIUM_HAR")"
+  curl -fsSL -o "$HYPIUM_HAR.part" "https://ohpm.openharmony.cn/ohpm/@ohos/hypium/-/hypium-$HYPIUM_VER.har"
+  mv "$HYPIUM_HAR.part" "$HYPIUM_HAR"
+fi
+echo "$HYPIUM_SHA256  $HYPIUM_HAR" | sha256sum -c --quiet - || { echo "hypium sha256 mismatch: $HYPIUM_HAR" >&2; exit 1; }
+mkdir -p "$PROJ/entry/oh_modules/@ohos/hypium"
+tar xzf "$HYPIUM_HAR" -C "$PROJ/entry/oh_modules/@ohos/hypium" --strip-components=1
 
 run() {
   cd "$PROJ"
@@ -86,6 +100,15 @@ run() {
       [ $rc = 0 ] && break; echo "sign attempt $try rc=$rc" >> "$LOG"
     done
     echo "sign rc=$rc" >> "$LOG"
+  fi
+  if [ $rc = 0 ] && [ "$TEST" = 1 ]; then
+    echo "ohosTest: assembleHap entry@ohosTest" >> "$LOG"
+    set +e
+    "$NODE" "$CLT_DIR/hvigor/bin/hvigorw.js" --mode module -p module=entry@ohosTest -p isOhosTest=true \
+      -p product=default -p buildMode=debug assembleHap --no-daemon >> "$LOG" 2>&1
+    rc=$?
+    set -e
+    echo "ohosTest rc=$rc" >> "$LOG"
   fi
   echo "rc=$rc" >> "$LOG"
 }
