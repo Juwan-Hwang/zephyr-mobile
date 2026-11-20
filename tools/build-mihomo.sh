@@ -78,13 +78,13 @@ ohos)
   grep -oE 'R_AARCH64_[A-Z0-9_]*TLS[A-Z0-9_]*' <<<"$RELOCS" | sort | uniq -c || true
   if grep -Eq 'R_AARCH64_(TLS_TPREL|TLSLE_|TLSIE_)' <<<"$RELOCS"; then echo "错误：含 initial-exec/local-exec TLS 重定位，OHOS dlopen 会拒绝" >&2; fail=1; fi
   if grep -q STATIC_TLS <<<"$DYN"; then echo "错误：DF_STATIC_TLS 置位" >&2; fail=1; fi
-  for n in $(sed -n 's/.*(NEEDED).*\[\(.*\)\]/\1/p' <<<"$DYN"); do
-    [[ -e $NDK/sysroot/usr/lib/aarch64-linux-ohos/$n ]] || { echo "错误：DT_NEEDED $n 不在 OHOS sysroot" >&2; fail=1; }
-  done
+  while read -r n; do
+    [[ -z $n || -e $NDK/sysroot/usr/lib/aarch64-linux-ohos/$n ]] || { echo "错误：DT_NEEDED $n 不在 OHOS sysroot" >&2; fail=1; }
+  done < <(sed -n 's/.*(NEEDED).*\[\(.*\)\]/\1/p' <<<"$DYN")
   DEFS=$("$NM" -D --defined-only "$SO" | awk '{print $NF}')
-  for s in $(grep -h '^//export ' "$ROOT"/mihomo-mobile/*.go | awk '{print $2}'); do
+  while read -r s; do
     grep -qx "$s" <<<"$DEFS" || { echo "错误：缺少导出 $s" >&2; fail=1; }
-  done
+  done < <(grep -h '^//export ' "$ROOT"/mihomo-mobile/*.go | awk '{print $2}')
   [[ $fail == 0 ]] || exit 1
   echo "OK：无静态 TLS，DT_NEEDED 都在 sysroot，导出齐全"
   ;;
