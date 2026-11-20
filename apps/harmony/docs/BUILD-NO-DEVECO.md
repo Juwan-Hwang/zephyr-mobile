@@ -35,6 +35,16 @@ CLEAN=1 tools/build-hmos.sh    # 全量
   `module.deviceTypes` 含 `phone`。
 - 云调试（AGC）只收 release 证书 + release profile 签名的包（profile 不带设备列表）。
 
+## 单元测试（ohosTest + hypium）
+- `entry/src/ohosTest/`：`List.test.ets` 汇总；`MockFixtures.test.ets` 对拍 `contract/fixtures`（mock-v0 / import-payload-v1 /
+  uhd-names-v1），`MockEngine.test.ets` 是 MockEngine 冒烟。fixtures 由 `node scripts/gen-test-fixtures.mjs` 嵌进
+  `ets/test/fixtures/Fixtures.ets`（`--check` 校验是否过期），勿手改。
+- `build-hmos.sh` 默认在主 HAP 之后再编 `entry@ohosTest`（`TEST=0` 跳过），产物
+  `$HMOS_WORK_DIR/proj/entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap`。`@ohos/hypium` 1.0.24 从 ohpm 官方仓库取一次，
+  sha256 固定，缓存在 `$HMOS_TOOLS_DIR/ohpm-cache/`。
+- 沙箱里只能编译不能跑。真机 / 云调试上装主 HAP 与测试 HAP 后：
+  `hdc shell aa test -b com.juwanh.zephyr -m entry_test -s unittest OpenHarmonyTestRunner -s timeout 15000`。
+
 ## CLT 从哪来
 官方下载中心（https://developer.huawei.com/consumer/cn/download/）要登录且链接带会话签名，不能直接 curl。公开镜像：
 
