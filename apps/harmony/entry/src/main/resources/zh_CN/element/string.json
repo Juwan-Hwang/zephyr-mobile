@@ -405,6 +405,22 @@
       "value": "今天到期"
     },
     {
+      "name": "hm_home_current_node",
+      "value": "当前节点"
+    },
+    {
+      "name": "hm_home_download",
+      "value": "下载"
+    },
+    {
+      "name": "hm_home_simulated",
+      "value": "仅界面：模拟连接，未建立隧道"
+    },
+    {
+      "name": "hm_home_upload",
+      "value": "上传"
+    },
+    {
       "name": "hm_latency_timeout",
       "value": "超时"
     },

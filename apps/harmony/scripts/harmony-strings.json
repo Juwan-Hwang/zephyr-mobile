@@ -13,7 +13,11 @@
     "hm_expiry_today": "Expires today",
     "hm_expiry_in_days": "Expires in %1$d days",
     "hm_latency_timeout": "Timeout",
-    "hm_error_generic": "Something went wrong"
+    "hm_error_generic": "Something went wrong",
+    "hm_home_upload": "Upload",
+    "hm_home_download": "Download",
+    "hm_home_current_node": "Current node",
+    "hm_home_simulated": "UI only: simulated connection, no tunnel"
   },
   "zh": {
     "module_desc": "Zephyr 应用模块",
@@ -29,6 +33,10 @@
     "hm_expiry_today": "今天到期",
     "hm_expiry_in_days": "%1$d 天后到期",
     "hm_latency_timeout": "超时",
-    "hm_error_generic": "出错了"
+    "hm_error_generic": "出错了",
+    "hm_home_upload": "上传",
+    "hm_home_download": "下载",
+    "hm_home_current_node": "当前节点",
+    "hm_home_simulated": "仅界面：模拟连接，未建立隧道"
   }
 }

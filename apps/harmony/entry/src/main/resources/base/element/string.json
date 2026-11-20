@@ -413,6 +413,22 @@
       "value": "Expires today"
     },
     {
+      "name": "hm_home_current_node",
+      "value": "Current node"
+    },
+    {
+      "name": "hm_home_download",
+      "value": "Download"
+    },
+    {
+      "name": "hm_home_simulated",
+      "value": "UI only: simulated connection, no tunnel"
+    },
+    {
+      "name": "hm_home_upload",
+      "value": "Upload"
+    },
+    {
       "name": "hm_latency_timeout",
       "value": "Timeout"
     },
