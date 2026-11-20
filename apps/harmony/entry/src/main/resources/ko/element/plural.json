@@ -1,0 +1,310 @@
+{
+  "plural": [
+    {
+      "name": "common_node_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "노드 %1$s개"
+        }
+      ]
+    },
+    {
+      "name": "common_available_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d개 사용 가능"
+        }
+      ]
+    },
+    {
+      "name": "common_region_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d개 지역"
+        }
+      ]
+    },
+    {
+      "name": "home_subs_more",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "구독 %1$d개 더 보기"
+        }
+      ]
+    },
+    {
+      "name": "home_scene_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "시나리오 %1$d개"
+        }
+      ]
+    },
+    {
+      "name": "scene_available_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "개 노드 사용 가능"
+        }
+      ]
+    },
+    {
+      "name": "scene_tested_from",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "구독 %1$d개에서 테스트함"
+        }
+      ]
+    },
+    {
+      "name": "scene_test_every_hours",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d시간마다"
+        }
+      ]
+    },
+    {
+      "name": "command_plan_exit_available",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d개 사용 가능. %2$s을(를) 사용합니다."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_untested",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "아직 테스트하지 않은 4K 노드가 %1$d개 있습니다. 적용 후 시나리오를 다시 테스트하세요."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_keep",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d개 중 %2$d개가 4K 지원. 현재 노드는 유지됩니다."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_switch",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d개 중 %2$d개가 4K 지원. %3$s을(를) 사용합니다."
+        }
+      ]
+    },
+    {
+      "name": "activity_closed",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "연결 %1$d개를 닫음"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_failed",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "연결을 닫을 수 없음"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_partial",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "연결 %1$d개를 닫을 수 없음"
+        }
+      ]
+    },
+    {
+      "name": "trace_connections",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "연결 %1$d개"
+        }
+      ]
+    },
+    {
+      "name": "trace_exit_stable",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d일째 변동 없음"
+        }
+      ]
+    },
+    {
+      "name": "nodes_total_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "개"
+        }
+      ]
+    },
+    {
+      "name": "nodes_from_subs",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "구독 %1$d개에서"
+        }
+      ]
+    },
+    {
+      "name": "rules_total_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "개"
+        }
+      ]
+    },
+    {
+      "name": "rules_summary",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "레이어 %1$d개 · 컴파일됨 · 디스크 %2$s"
+        }
+      ]
+    },
+    {
+      "name": "subs_added",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$s 추가됨(노드 %2$s개)"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_confirm_title",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "구독 %1$d개를 가져오겠습니까?"
+        }
+      ]
+    },
+    {
+      "name": "subs_added_many",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "구독 %1$d개 추가됨"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_some_failed",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d개를 추가하지 못함"
+        }
+      ]
+    },
+    {
+      "name": "subs_review_all",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "구독 %1$s개를 모두 업데이트합니다"
+        }
+      ]
+    },
+    {
+      "name": "subs_updated_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "구독 %1$d개 업데이트됨"
+        }
+      ]
+    },
+    {
+      "name": "subs_total_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "개"
+        }
+      ]
+    },
+    {
+      "name": "subs_update_every",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d시간마다 업데이트"
+        }
+      ]
+    },
+    {
+      "name": "subs_others",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "그 외 %1$d개"
+        }
+      ]
+    },
+    {
+      "name": "subs_every_hours",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d시간마다"
+        }
+      ]
+    },
+    {
+      "name": "settings_hours",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d시간"
+        }
+      ]
+    },
+    {
+      "name": "today_regions",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "개 지역"
+        }
+      ]
+    },
+    {
+      "name": "today_hours_online",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "시간 온라인"
+        }
+      ]
+    }
+  ]
+}

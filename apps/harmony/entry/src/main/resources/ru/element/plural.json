@@ -1,0 +1,718 @@
+{
+  "plural": [
+    {
+      "name": "common_node_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$s узел"
+        },
+        {
+          "quantity": "few",
+          "value": "%1$s узла"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$s узлов"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$s узла"
+        }
+      ]
+    },
+    {
+      "name": "common_available_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d доступен"
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d доступно"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d доступно"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d доступно"
+        }
+      ]
+    },
+    {
+      "name": "common_region_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d регион"
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d региона"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d регионов"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d региона"
+        }
+      ]
+    },
+    {
+      "name": "home_subs_more",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Ещё %1$d подписка"
+        },
+        {
+          "quantity": "few",
+          "value": "Ещё %1$d подписки"
+        },
+        {
+          "quantity": "many",
+          "value": "Ещё %1$d подписок"
+        },
+        {
+          "quantity": "other",
+          "value": "Ещё %1$d подписки"
+        }
+      ]
+    },
+    {
+      "name": "home_scene_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d сценарий"
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d сценария"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d сценариев"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d сценария"
+        }
+      ]
+    },
+    {
+      "name": "scene_available_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "доступный узел"
+        },
+        {
+          "quantity": "few",
+          "value": "доступных узла"
+        },
+        {
+          "quantity": "many",
+          "value": "доступных узлов"
+        },
+        {
+          "quantity": "other",
+          "value": "доступных узла"
+        }
+      ]
+    },
+    {
+      "name": "scene_tested_from",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Проверено по %1$d подписке"
+        },
+        {
+          "quantity": "few",
+          "value": "Проверено по %1$d подпискам"
+        },
+        {
+          "quantity": "many",
+          "value": "Проверено по %1$d подпискам"
+        },
+        {
+          "quantity": "other",
+          "value": "Проверено по %1$d подпискам"
+        }
+      ]
+    },
+    {
+      "name": "scene_test_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Каждый %1$d час"
+        },
+        {
+          "quantity": "few",
+          "value": "Каждые %1$d часа"
+        },
+        {
+          "quantity": "many",
+          "value": "Каждые %1$d часов"
+        },
+        {
+          "quantity": "other",
+          "value": "Каждые %1$d часа"
+        }
+      ]
+    },
+    {
+      "name": "command_plan_exit_available",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Доступен %1$d. Будет использоваться %2$s."
+        },
+        {
+          "quantity": "few",
+          "value": "Доступно %1$d. Будет использоваться %2$s."
+        },
+        {
+          "quantity": "many",
+          "value": "Доступно %1$d. Будет использоваться %2$s."
+        },
+        {
+          "quantity": "other",
+          "value": "Доступно %1$d. Будет использоваться %2$s."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_untested",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d узел 4K ещё не проверен. После применения проверьте сценарий снова."
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d узла 4K ещё не проверены. После применения проверьте сценарий снова."
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d узлов 4K ещё не проверены. После применения проверьте сценарий снова."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d узла 4K ещё не проверены. После применения проверьте сценарий снова."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_keep",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "4K поддерживает %2$d из %1$d; текущий узел сохранится."
+        },
+        {
+          "quantity": "few",
+          "value": "4K поддерживают %2$d из %1$d; текущий узел сохранится."
+        },
+        {
+          "quantity": "many",
+          "value": "4K поддерживают %2$d из %1$d; текущий узел сохранится."
+        },
+        {
+          "quantity": "other",
+          "value": "4K поддерживают %2$d из %1$d; текущий узел сохранится."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_switch",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "4K поддерживает %2$d из %1$d; будет использоваться %3$s."
+        },
+        {
+          "quantity": "few",
+          "value": "4K поддерживают %2$d из %1$d; будет использоваться %3$s."
+        },
+        {
+          "quantity": "many",
+          "value": "4K поддерживают %2$d из %1$d; будет использоваться %3$s."
+        },
+        {
+          "quantity": "other",
+          "value": "4K поддерживают %2$d из %1$d; будет использоваться %3$s."
+        }
+      ]
+    },
+    {
+      "name": "activity_closed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Закрыто %1$d подключение"
+        },
+        {
+          "quantity": "few",
+          "value": "Закрыто %1$d подключения"
+        },
+        {
+          "quantity": "many",
+          "value": "Закрыто %1$d подключений"
+        },
+        {
+          "quantity": "other",
+          "value": "Закрыто %1$d подключения"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Не удалось закрыть подключение"
+        },
+        {
+          "quantity": "few",
+          "value": "Не удалось закрыть подключения"
+        },
+        {
+          "quantity": "many",
+          "value": "Не удалось закрыть подключения"
+        },
+        {
+          "quantity": "other",
+          "value": "Не удалось закрыть подключения"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_partial",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Не удалось закрыть %1$d подключение"
+        },
+        {
+          "quantity": "few",
+          "value": "Не удалось закрыть %1$d подключения"
+        },
+        {
+          "quantity": "many",
+          "value": "Не удалось закрыть %1$d подключений"
+        },
+        {
+          "quantity": "other",
+          "value": "Не удалось закрыть %1$d подключения"
+        }
+      ]
+    },
+    {
+      "name": "trace_connections",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d подключение"
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d подключения"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d подключений"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d подключения"
+        }
+      ]
+    },
+    {
+      "name": "trace_exit_stable",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Без изменений %1$d день"
+        },
+        {
+          "quantity": "few",
+          "value": "Без изменений %1$d дня"
+        },
+        {
+          "quantity": "many",
+          "value": "Без изменений %1$d дней"
+        },
+        {
+          "quantity": "other",
+          "value": "Без изменений %1$d дня"
+        }
+      ]
+    },
+    {
+      "name": "nodes_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "узел"
+        },
+        {
+          "quantity": "few",
+          "value": "узла"
+        },
+        {
+          "quantity": "many",
+          "value": "узлов"
+        },
+        {
+          "quantity": "other",
+          "value": "узла"
+        }
+      ]
+    },
+    {
+      "name": "nodes_from_subs",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Из %1$d подписки"
+        },
+        {
+          "quantity": "few",
+          "value": "Из %1$d подписок"
+        },
+        {
+          "quantity": "many",
+          "value": "Из %1$d подписок"
+        },
+        {
+          "quantity": "other",
+          "value": "Из %1$d подписок"
+        }
+      ]
+    },
+    {
+      "name": "rules_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "правило"
+        },
+        {
+          "quantity": "few",
+          "value": "правила"
+        },
+        {
+          "quantity": "many",
+          "value": "правил"
+        },
+        {
+          "quantity": "other",
+          "value": "правила"
+        }
+      ]
+    },
+    {
+      "name": "rules_summary",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d слой · скомпилировано · %2$s на диске"
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d слоя · скомпилировано · %2$s на диске"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d слоёв · скомпилировано · %2$s на диске"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d слоя · скомпилировано · %2$s на диске"
+        }
+      ]
+    },
+    {
+      "name": "subs_added",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Добавлено: %1$s (%2$s узел)"
+        },
+        {
+          "quantity": "few",
+          "value": "Добавлено: %1$s (%2$s узла)"
+        },
+        {
+          "quantity": "many",
+          "value": "Добавлено: %1$s (%2$s узлов)"
+        },
+        {
+          "quantity": "other",
+          "value": "Добавлено: %1$s (%2$s узла)"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_confirm_title",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Импортировать %1$d подписку?"
+        },
+        {
+          "quantity": "few",
+          "value": "Импортировать %1$d подписки?"
+        },
+        {
+          "quantity": "many",
+          "value": "Импортировать %1$d подписок?"
+        },
+        {
+          "quantity": "other",
+          "value": "Импортировать %1$d подписки?"
+        }
+      ]
+    },
+    {
+      "name": "subs_added_many",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Добавлена %1$d подписка"
+        },
+        {
+          "quantity": "few",
+          "value": "Добавлено %1$d подписки"
+        },
+        {
+          "quantity": "many",
+          "value": "Добавлено %1$d подписок"
+        },
+        {
+          "quantity": "other",
+          "value": "Добавлено %1$d подписки"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_some_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Не удалось добавить: %1$d"
+        },
+        {
+          "quantity": "few",
+          "value": "Не удалось добавить: %1$d"
+        },
+        {
+          "quantity": "many",
+          "value": "Не удалось добавить: %1$d"
+        },
+        {
+          "quantity": "other",
+          "value": "Не удалось добавить: %1$d"
+        }
+      ]
+    },
+    {
+      "name": "subs_review_all",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Будет обновлена %1$s подписка"
+        },
+        {
+          "quantity": "few",
+          "value": "Будут обновлены все подписки (%1$s)"
+        },
+        {
+          "quantity": "many",
+          "value": "Будут обновлены все подписки (%1$s)"
+        },
+        {
+          "quantity": "other",
+          "value": "Будут обновлены все подписки (%1$s)"
+        }
+      ]
+    },
+    {
+      "name": "subs_updated_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Обновлена %1$d подписка"
+        },
+        {
+          "quantity": "few",
+          "value": "Обновлено %1$d подписки"
+        },
+        {
+          "quantity": "many",
+          "value": "Обновлено %1$d подписок"
+        },
+        {
+          "quantity": "other",
+          "value": "Обновлено %1$d подписки"
+        }
+      ]
+    },
+    {
+      "name": "subs_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "подписка"
+        },
+        {
+          "quantity": "few",
+          "value": "подписки"
+        },
+        {
+          "quantity": "many",
+          "value": "подписок"
+        },
+        {
+          "quantity": "other",
+          "value": "подписки"
+        }
+      ]
+    },
+    {
+      "name": "subs_update_every",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "обновление раз в %1$d час"
+        },
+        {
+          "quantity": "few",
+          "value": "обновление раз в %1$d часа"
+        },
+        {
+          "quantity": "many",
+          "value": "обновление раз в %1$d часов"
+        },
+        {
+          "quantity": "other",
+          "value": "обновление раз в %1$d часа"
+        }
+      ]
+    },
+    {
+      "name": "subs_others",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Ещё %1$d"
+        },
+        {
+          "quantity": "few",
+          "value": "Ещё %1$d"
+        },
+        {
+          "quantity": "many",
+          "value": "Ещё %1$d"
+        },
+        {
+          "quantity": "other",
+          "value": "Ещё %1$d"
+        }
+      ]
+    },
+    {
+      "name": "subs_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Каждый %1$d час"
+        },
+        {
+          "quantity": "few",
+          "value": "Каждые %1$d часа"
+        },
+        {
+          "quantity": "many",
+          "value": "Каждые %1$d часов"
+        },
+        {
+          "quantity": "other",
+          "value": "Каждые %1$d часа"
+        }
+      ]
+    },
+    {
+      "name": "settings_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d час"
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d часа"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d часов"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d часа"
+        }
+      ]
+    },
+    {
+      "name": "today_regions",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "регион"
+        },
+        {
+          "quantity": "few",
+          "value": "региона"
+        },
+        {
+          "quantity": "many",
+          "value": "регионов"
+        },
+        {
+          "quantity": "other",
+          "value": "региона"
+        }
+      ]
+    },
+    {
+      "name": "today_hours_online",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "час в сети"
+        },
+        {
+          "quantity": "few",
+          "value": "часа в сети"
+        },
+        {
+          "quantity": "many",
+          "value": "часов в сети"
+        },
+        {
+          "quantity": "other",
+          "value": "часа в сети"
+        }
+      ]
+    }
+  ]
+}

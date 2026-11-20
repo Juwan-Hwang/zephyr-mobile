@@ -1,0 +1,446 @@
+{
+  "plural": [
+    {
+      "name": "common_node_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$s node"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$s nodes"
+        }
+      ]
+    },
+    {
+      "name": "common_available_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d available"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d available"
+        }
+      ]
+    },
+    {
+      "name": "common_region_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d region"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d regions"
+        }
+      ]
+    },
+    {
+      "name": "home_subs_more",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d more subscription"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d more subscriptions"
+        }
+      ]
+    },
+    {
+      "name": "home_scene_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d scene"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d scenes"
+        }
+      ]
+    },
+    {
+      "name": "scene_available_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "available node"
+        },
+        {
+          "quantity": "other",
+          "value": "available nodes"
+        }
+      ]
+    },
+    {
+      "name": "scene_tested_from",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Tested from %1$d subscription"
+        },
+        {
+          "quantity": "other",
+          "value": "Tested from %1$d subscriptions"
+        }
+      ]
+    },
+    {
+      "name": "scene_test_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Every hour"
+        },
+        {
+          "quantity": "other",
+          "value": "Every %1$d hours"
+        }
+      ]
+    },
+    {
+      "name": "command_plan_exit_available",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d available. Will use %2$s."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d available. Will use %2$s."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_untested",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d 4K node hasn’t been tested yet. Retest the scene after applying."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d 4K nodes haven’t been tested yet. Retest the scene after applying."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_keep",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%2$d of %1$d supports 4K; the current node stays."
+        },
+        {
+          "quantity": "other",
+          "value": "%2$d of %1$d support 4K; the current node stays."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_switch",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%2$d of %1$d supports 4K; will use %3$s."
+        },
+        {
+          "quantity": "other",
+          "value": "%2$d of %1$d support 4K; will use %3$s."
+        }
+      ]
+    },
+    {
+      "name": "activity_closed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Closed %1$d connection"
+        },
+        {
+          "quantity": "other",
+          "value": "Closed %1$d connections"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Couldn’t close the connection"
+        },
+        {
+          "quantity": "other",
+          "value": "Couldn’t close connections"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_partial",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d connection couldn’t be closed"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d connections couldn’t be closed"
+        }
+      ]
+    },
+    {
+      "name": "trace_connections",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d connection"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d connections"
+        }
+      ]
+    },
+    {
+      "name": "trace_exit_stable",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Unchanged for %1$d day"
+        },
+        {
+          "quantity": "other",
+          "value": "Unchanged for %1$d days"
+        }
+      ]
+    },
+    {
+      "name": "nodes_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "node"
+        },
+        {
+          "quantity": "other",
+          "value": "nodes"
+        }
+      ]
+    },
+    {
+      "name": "nodes_from_subs",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "From %1$d subscription"
+        },
+        {
+          "quantity": "other",
+          "value": "From %1$d subscriptions"
+        }
+      ]
+    },
+    {
+      "name": "rules_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "rule"
+        },
+        {
+          "quantity": "other",
+          "value": "rules"
+        }
+      ]
+    },
+    {
+      "name": "rules_summary",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d layer · compiled · %2$s on disk"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d layers · compiled · %2$s on disk"
+        }
+      ]
+    },
+    {
+      "name": "subs_added",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Added %1$s (%2$s node)"
+        },
+        {
+          "quantity": "other",
+          "value": "Added %1$s (%2$s nodes)"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_confirm_title",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Import %1$d subscription?"
+        },
+        {
+          "quantity": "other",
+          "value": "Import %1$d subscriptions?"
+        }
+      ]
+    },
+    {
+      "name": "subs_added_many",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Added %1$d subscription"
+        },
+        {
+          "quantity": "other",
+          "value": "Added %1$d subscriptions"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_some_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d couldn’t be added"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d couldn’t be added"
+        }
+      ]
+    },
+    {
+      "name": "subs_review_all",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$s subscription will be updated"
+        },
+        {
+          "quantity": "other",
+          "value": "All %1$s subscriptions will be updated"
+        }
+      ]
+    },
+    {
+      "name": "subs_updated_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Updated %1$d subscription"
+        },
+        {
+          "quantity": "other",
+          "value": "Updated %1$d subscriptions"
+        }
+      ]
+    },
+    {
+      "name": "subs_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "subscription"
+        },
+        {
+          "quantity": "other",
+          "value": "subscriptions"
+        }
+      ]
+    },
+    {
+      "name": "subs_update_every",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "updated every %1$d hour"
+        },
+        {
+          "quantity": "other",
+          "value": "updated every %1$d hours"
+        }
+      ]
+    },
+    {
+      "name": "subs_others",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d other"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d others"
+        }
+      ]
+    },
+    {
+      "name": "subs_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Every %1$d hour"
+        },
+        {
+          "quantity": "other",
+          "value": "Every %1$d hours"
+        }
+      ]
+    },
+    {
+      "name": "settings_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d hour"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d hours"
+        }
+      ]
+    },
+    {
+      "name": "today_regions",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "region"
+        },
+        {
+          "quantity": "other",
+          "value": "regions"
+        }
+      ]
+    },
+    {
+      "name": "today_hours_online",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "hour online"
+        },
+        {
+          "quantity": "other",
+          "value": "hours online"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "strarray": [
+    {
+      "name": "command_examples",
+      "value": [
+        {
+          "value": "Gemini 走日本"
+        },
+        {
+          "value": "GitHub 直连"
+        },
+        {
+          "value": "视频只用 4K 节点"
+        },
+        {
+          "value": "香港"
+        }
+      ]
+    }
+  ]
+}

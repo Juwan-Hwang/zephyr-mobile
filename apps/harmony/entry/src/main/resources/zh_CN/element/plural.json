@@ -1,0 +1,310 @@
+{
+  "plural": [
+    {
+      "name": "common_node_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$s 个节点"
+        }
+      ]
+    },
+    {
+      "name": "common_available_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d 个可用"
+        }
+      ]
+    },
+    {
+      "name": "common_region_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d 个地区"
+        }
+      ]
+    },
+    {
+      "name": "home_subs_more",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "更多 %1$d 个订阅"
+        }
+      ]
+    },
+    {
+      "name": "home_scene_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d 个场景"
+        }
+      ]
+    },
+    {
+      "name": "scene_available_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "个可用节点"
+        }
+      ]
+    },
+    {
+      "name": "scene_tested_from",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "检测自 %1$d 个订阅"
+        }
+      ]
+    },
+    {
+      "name": "scene_test_every_hours",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "每 %1$d 小时"
+        }
+      ]
+    },
+    {
+      "name": "command_plan_exit_available",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d 个可用，将使用%2$s。"
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_untested",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "有 %1$d 个 4K 节点尚未测速，应用后请重测场景。"
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_keep",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d 个中 %2$d 个支持 4K，当前节点保持不变。"
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_switch",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d 个中 %2$d 个支持 4K，将使用%3$s。"
+        }
+      ]
+    },
+    {
+      "name": "activity_closed",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "已关闭 %1$d 个连接"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_failed",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "连接未能关闭"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_partial",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d 个连接未能关闭"
+        }
+      ]
+    },
+    {
+      "name": "trace_connections",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d 个连接"
+        }
+      ]
+    },
+    {
+      "name": "trace_exit_stable",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d 天未变化"
+        }
+      ]
+    },
+    {
+      "name": "nodes_total_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "个"
+        }
+      ]
+    },
+    {
+      "name": "nodes_from_subs",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "来自 %1$d 个订阅"
+        }
+      ]
+    },
+    {
+      "name": "rules_total_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "条"
+        }
+      ]
+    },
+    {
+      "name": "rules_summary",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d 层 · 已编译 · 磁盘占用 %2$s"
+        }
+      ]
+    },
+    {
+      "name": "subs_added",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "已添加 %1$s（%2$s 个节点）"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_confirm_title",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "导入 %1$d 个订阅？"
+        }
+      ]
+    },
+    {
+      "name": "subs_added_many",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "已添加 %1$d 个订阅"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_some_failed",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d 个未能添加"
+        }
+      ]
+    },
+    {
+      "name": "subs_review_all",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "将更新全部 %1$s 个订阅"
+        }
+      ]
+    },
+    {
+      "name": "subs_updated_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "已更新 %1$d 个订阅"
+        }
+      ]
+    },
+    {
+      "name": "subs_total_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "个"
+        }
+      ]
+    },
+    {
+      "name": "subs_update_every",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "每 %1$d 小时更新"
+        }
+      ]
+    },
+    {
+      "name": "subs_others",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "其他 %1$d 个"
+        }
+      ]
+    },
+    {
+      "name": "subs_every_hours",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "每 %1$d 小时"
+        }
+      ]
+    },
+    {
+      "name": "settings_hours",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d 小时"
+        }
+      ]
+    },
+    {
+      "name": "today_regions",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "个地区"
+        }
+      ]
+    },
+    {
+      "name": "today_hours_online",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "小时在线"
+        }
+      ]
+    }
+  ]
+}

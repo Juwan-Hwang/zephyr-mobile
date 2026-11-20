@@ -1,0 +1,1452 @@
+{
+  "string": [
+    {
+      "name": "activity_back",
+      "value": "‹ اتصال‌های اخیر"
+    },
+    {
+      "name": "activity_close_host_a11y",
+      "value": "بستن اتصال‌های \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "activity_close_none",
+      "value": "اتصال فعالی وجود ندارد"
+    },
+    {
+      "name": "activity_empty",
+      "value": "پس از اتصال، دامنه‌هایی که اخیراً بازدید شده‌اند اینجا نمایش داده می‌شوند."
+    },
+    {
+      "name": "activity_host_a11y",
+      "value": "جزئیات اتصال \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "activity_no_app_note",
+      "value": "هنوز مشخص نیست کدام برنامه هر اتصال را برقرار کرده است، بنابراین فقط دامنه‌ها نمایش داده می‌شوند."
+    },
+    {
+      "name": "activity_title",
+      "value": "اتصال‌های اخیر"
+    },
+    {
+      "name": "command_chip_action",
+      "value": "عملیات"
+    },
+    {
+      "name": "command_chip_region",
+      "value": "منطقه"
+    },
+    {
+      "name": "command_chip_scene",
+      "value": "صحنه"
+    },
+    {
+      "name": "command_chip_scope",
+      "value": "محدوده"
+    },
+    {
+      "name": "command_chip_service",
+      "value": "سرویس"
+    },
+    {
+      "name": "command_direct_from_proxy",
+      "value": "پروکسی"
+    },
+    {
+      "name": "command_direct_note",
+      "value": "ترافیک \\u2068%1$s\\u2069 از پروکسی عبور نمی‌کند."
+    },
+    {
+      "name": "command_direct_title",
+      "value": "اتصال مستقیم \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "command_no_nodes_available",
+      "value": "نودی در دسترس نیست"
+    },
+    {
+      "name": "command_placeholder",
+      "value": "جستجو یا وارد کردن فرمان"
+    },
+    {
+      "name": "command_plan_exit_title",
+      "value": "\\u2068%1$s\\u2069 از نودهای \\u2068%2$s\\u2069 استفاده می‌کند"
+    },
+    {
+      "name": "command_plan_fallback_pause",
+      "value": "اگر هیچ نودی از \\u2068%1$s\\u2069 در دسترس نباشد، \\u2068%2$s\\u2069 متوقف می‌شود."
+    },
+    {
+      "name": "command_plan_fallback_scene",
+      "value": "اگر هیچ نودی از \\u2068%1$s\\u2069 در دسترس نباشد، از نودهای دیگر صحنه استفاده می‌شود."
+    },
+    {
+      "name": "command_plan_no_nodes",
+      "value": "در \\u2068%1$s\\u2069 نودی از \\u2068%2$s\\u2069 نیست."
+    },
+    {
+      "name": "command_plan_releases_pin",
+      "value": "\\u2068%1$s\\u2069 دیگر از خروجی ثابت \\u2068%2$s\\u2069 استفاده نمی‌کند."
+    },
+    {
+      "name": "command_region_de",
+      "value": "آلمان"
+    },
+    {
+      "name": "command_region_gb",
+      "value": "بریتانیا"
+    },
+    {
+      "name": "command_region_hk",
+      "value": "هنگ‌کنگ"
+    },
+    {
+      "name": "command_region_jp",
+      "value": "ژاپن"
+    },
+    {
+      "name": "command_region_kr",
+      "value": "کره"
+    },
+    {
+      "name": "command_region_sg",
+      "value": "سنگاپور"
+    },
+    {
+      "name": "command_region_tw",
+      "value": "تایوان"
+    },
+    {
+      "name": "command_region_us",
+      "value": "آمریکا"
+    },
+    {
+      "name": "command_scene_ai",
+      "value": "صحنهٔ هوش مصنوعی"
+    },
+    {
+      "name": "command_scene_named",
+      "value": "صحنهٔ \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "command_section_command",
+      "value": "فرمان‌ها"
+    },
+    {
+      "name": "command_section_suggestions",
+      "value": "پیشنهادها"
+    },
+    {
+      "name": "command_see_all_nodes",
+      "value": "دیدن همهٔ \\u2068%1$s\\u2069 نود در کتابخانهٔ نودها"
+    },
+    {
+      "name": "command_test_rule",
+      "value": "\\u2068%1$s\\u2069 از کدام مسیر می‌رود؟"
+    },
+    {
+      "name": "command_uhd_auto_note",
+      "value": "از این پس، تغییر خودکار فقط از میان نودهای 4K انتخاب می‌کند."
+    },
+    {
+      "name": "command_uhd_clear_note",
+      "value": "صحنهٔ \\u2068%1$s\\u2069 فقط از نودهای 4K استفاده می‌کند. دوباره از همهٔ نودها استفاده می‌شود و نود فعلی می‌ماند."
+    },
+    {
+      "name": "command_uhd_fastest",
+      "value": "سریع‌ترین نود 4K"
+    },
+    {
+      "name": "command_uhd_none",
+      "value": "هیچ نودی از 4K پشتیبانی نمی‌کند."
+    },
+    {
+      "name": "command_uhd_title_all",
+      "value": "\\u2068%1$s\\u2069: همهٔ نودها"
+    },
+    {
+      "name": "command_uhd_title_only",
+      "value": "\\u2068%1$s\\u2069: فقط نودهای 4K"
+    },
+    {
+      "name": "command_zephyr_only",
+      "value": "فقط در Zephyr اعمال می‌شود و پیکربندی اشتراک شما تغییر نمی‌کند."
+    },
+    {
+      "name": "common_add",
+      "value": "افزودن"
+    },
+    {
+      "name": "common_adding",
+      "value": "در حال افزودن…"
+    },
+    {
+      "name": "common_all",
+      "value": "همه"
+    },
+    {
+      "name": "common_apply",
+      "value": "اعمال"
+    },
+    {
+      "name": "common_back_to",
+      "value": "بازگشت به \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "common_cancel",
+      "value": "لغو"
+    },
+    {
+      "name": "common_change",
+      "value": "تغییر"
+    },
+    {
+      "name": "common_connect",
+      "value": "اتصال"
+    },
+    {
+      "name": "common_current",
+      "value": "فعلی"
+    },
+    {
+      "name": "common_direct",
+      "value": "مستقیم"
+    },
+    {
+      "name": "common_disconnect",
+      "value": "قطع اتصال"
+    },
+    {
+      "name": "common_exit_ip_changes",
+      "value": "IP خروجی تغییر می‌کند"
+    },
+    {
+      "name": "common_home",
+      "value": "خانه"
+    },
+    {
+      "name": "common_library",
+      "value": "کتابخانه"
+    },
+    {
+      "name": "common_list_separator",
+      "value": "\\u2068%1$s\\u2069، \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "common_local_data_note",
+      "value": "اشتراک‌ها و داده‌های ترافیک فقط روی این دستگاه ذخیره می‌شوند."
+    },
+    {
+      "name": "common_local_network",
+      "value": "شبکهٔ این دستگاه"
+    },
+    {
+      "name": "common_mode_direct",
+      "value": "مستقیم"
+    },
+    {
+      "name": "common_mode_direct_hint",
+      "value": "بدون عبور از پروکسی"
+    },
+    {
+      "name": "common_mode_global",
+      "value": "سراسری"
+    },
+    {
+      "name": "common_mode_global_hint",
+      "value": "همهٔ ترافیک از یک نود"
+    },
+    {
+      "name": "common_mode_rule",
+      "value": "قانون"
+    },
+    {
+      "name": "common_mode_rule_hint",
+      "value": "مسیریابی بر اساس صحنه"
+    },
+    {
+      "name": "common_no_results",
+      "value": "نتیجه‌ای نیست"
+    },
+    {
+      "name": "common_nodes",
+      "value": "نودها"
+    },
+    {
+      "name": "common_none",
+      "value": "هیچ"
+    },
+    {
+      "name": "common_off",
+      "value": "خاموش"
+    },
+    {
+      "name": "common_on",
+      "value": "روشن"
+    },
+    {
+      "name": "common_open_settings",
+      "value": "باز کردن تنظیمات"
+    },
+    {
+      "name": "common_pair_and",
+      "value": "\\u2068%1$s\\u2069 و \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "common_retesting",
+      "value": "در حال آزمایش…"
+    },
+    {
+      "name": "common_rules",
+      "value": "قوانین"
+    },
+    {
+      "name": "common_scene_ai",
+      "value": "هوش مصنوعی"
+    },
+    {
+      "name": "common_scene_other",
+      "value": "سایر"
+    },
+    {
+      "name": "common_scene_video",
+      "value": "ویدیو"
+    },
+    {
+      "name": "common_scenes",
+      "value": "صحنه‌ها"
+    },
+    {
+      "name": "common_settings",
+      "value": "تنظیمات"
+    },
+    {
+      "name": "common_share",
+      "value": "اشتراک‌گذاری"
+    },
+    {
+      "name": "common_source_auto",
+      "value": "منتخب Zephyr"
+    },
+    {
+      "name": "common_source_group",
+      "value": "گروه اشتراک"
+    },
+    {
+      "name": "common_status_connected",
+      "value": "متصل"
+    },
+    {
+      "name": "common_status_connecting",
+      "value": "در حال اتصال"
+    },
+    {
+      "name": "common_status_connecting_ellipsis",
+      "value": "در حال اتصال…"
+    },
+    {
+      "name": "common_status_disconnected",
+      "value": "متصل نیست"
+    },
+    {
+      "name": "common_status_disconnecting",
+      "value": "در حال قطع اتصال"
+    },
+    {
+      "name": "common_status_failed",
+      "value": "اتصال ناموفق بود"
+    },
+    {
+      "name": "common_subscriptions",
+      "value": "اشتراک‌ها"
+    },
+    {
+      "name": "common_today",
+      "value": "امروز"
+    },
+    {
+      "name": "common_try_again",
+      "value": "دوباره امتحان کنید"
+    },
+    {
+      "name": "common_undo",
+      "value": "واگرد"
+    },
+    {
+      "name": "common_updating",
+      "value": "در حال به‌روزرسانی…"
+    },
+    {
+      "name": "connect_no_subscription",
+      "value": "هنوز اشتراکی ندارید"
+    },
+    {
+      "name": "home_action_load_nodes",
+      "value": "بارگذاری نودها"
+    },
+    {
+      "name": "home_action_preview_exit",
+      "value": "پیش‌نمایش خروجی"
+    },
+    {
+      "name": "home_action_retest",
+      "value": "آزمایش دوباره"
+    },
+    {
+      "name": "home_action_switch_exit",
+      "value": "تغییر خروجی"
+    },
+    {
+      "name": "home_action_switch_mode",
+      "value": "تغییر حالت"
+    },
+    {
+      "name": "home_action_switch_node",
+      "value": "تغییر نود"
+    },
+    {
+      "name": "home_action_switch_source",
+      "value": "تغییر منبع"
+    },
+    {
+      "name": "home_action_undo",
+      "value": "واگرد"
+    },
+    {
+      "name": "home_apply_failed",
+      "value": "اعمال نشد: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_confirm_apps",
+      "value": "IP خروجی \\u2068%1$s\\u2069 تغییر کند؟"
+    },
+    {
+      "name": "home_confirm_scene",
+      "value": "IP خروجی صحنهٔ \\u2068%1$s\\u2069 تغییر کند؟"
+    },
+    {
+      "name": "home_confirm_unchanged",
+      "value": "\\u2068%1$s\\u2069 بدون تغییر می‌ماند."
+    },
+    {
+      "name": "home_error_failed",
+      "value": "\\u2068%1$s\\u2069 ناموفق بود"
+    },
+    {
+      "name": "home_error_node_gone",
+      "value": "\\u2068%1$s\\u2069 ناموفق بود: نود دیگر وجود ندارد"
+    },
+    {
+      "name": "home_error_not_connected",
+      "value": "برای \\u2068%1$s\\u2069 ابتدا متصل شوید"
+    },
+    {
+      "name": "home_failover_none",
+      "value": "خروجی \\u2068%1$s\\u2069 پاسخ نمی‌دهد. IP خروجی به‌طور خودکار تغییر نمی‌کند."
+    },
+    {
+      "name": "home_failover_switched",
+      "value": "خروجی \\u2068%1$s\\u2069 به‌طور خودکار به \\u2068%2$s\\u2069 تغییر کرد"
+    },
+    {
+      "name": "home_failure_core",
+      "value": "هسته اجرا نشد"
+    },
+    {
+      "name": "home_failure_network",
+      "value": "شبکه در دسترس نیست"
+    },
+    {
+      "name": "home_failure_no_subscription",
+      "value": "ابتدا یک اشتراک اضافه کنید"
+    },
+    {
+      "name": "home_failure_vpn_permission",
+      "value": "مجوز VPN لازم است"
+    },
+    {
+      "name": "home_global_body",
+      "value": "همهٔ ترافیک از \\u2068%1$s\\u2069 عبور می‌کند. صحنه‌ها متوقف شده‌اند."
+    },
+    {
+      "name": "home_global_body_any",
+      "value": "همهٔ ترافیک از یک نود عبور می‌کند. صحنه‌ها متوقف شده‌اند."
+    },
+    {
+      "name": "home_global_change_node",
+      "value": "تغییر نود"
+    },
+    {
+      "name": "home_global_change_note",
+      "value": "همهٔ برنامه‌ها از \\u2068%1$s\\u2069 خارج می‌شوند."
+    },
+    {
+      "name": "home_global_change_to",
+      "value": "تغییر به \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_global_title",
+      "value": "حالت سراسری"
+    },
+    {
+      "name": "home_global_use_rule",
+      "value": "استفاده از حالت قانون"
+    },
+    {
+      "name": "home_now_all_nodes",
+      "value": "\\u2068%1$s\\u2069: دوباره همهٔ نودها"
+    },
+    {
+      "name": "home_now_direct",
+      "value": "\\u2068%1$s\\u2069 اکنون مستقیم وصل می‌شود"
+    },
+    {
+      "name": "home_now_uhd_only",
+      "value": "\\u2068%1$s\\u2069 اکنون فقط از نودهای 4K استفاده می‌کند"
+    },
+    {
+      "name": "home_now_uses",
+      "value": "\\u2068%1$s\\u2069 اکنون از \\u2068%2$s\\u2069 استفاده می‌کند"
+    },
+    {
+      "name": "home_now_uses_uhd",
+      "value": "\\u2068%1$s\\u2069 اکنون از \\u2068%2$s\\u2069 استفاده می‌کند (فقط 4K)"
+    },
+    {
+      "name": "home_pin_line",
+      "value": "\\u2068%1$s\\u2069: \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "home_scan_progress",
+      "value": "در حال آزمایش \\u2066%1$d/%2$d\\u2069"
+    },
+    {
+      "name": "home_scan_running",
+      "value": "در حال آزمایش…"
+    },
+    {
+      "name": "home_scene_details_a11y",
+      "value": "جزئیات صحنهٔ \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_scene_next_region",
+      "value": "منطقهٔ بعدی: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_scene_prev_region",
+      "value": "منطقهٔ قبلی: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_scene_services_down",
+      "value": "\\u2068%1$s\\u2069 در دسترس نیست"
+    },
+    {
+      "name": "home_scene_services_ok",
+      "value": "\\u2068%1$s\\u2069 در دسترس"
+    },
+    {
+      "name": "home_scene_testing",
+      "value": "در حال آزمایش"
+    },
+    {
+      "name": "home_scenes_tested",
+      "value": "آزمایش‌شده \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_scrub_hint",
+      "value": "برای تغییر منطقه به چپ یا راست بکشید"
+    },
+    {
+      "name": "home_spark_a11y",
+      "value": "سرعت دانلود در 90 ثانیهٔ اخیر"
+    },
+    {
+      "name": "home_switch_mode",
+      "value": "تغییر حالت"
+    },
+    {
+      "name": "home_switched_to",
+      "value": "به \\u2068%1$s\\u2069 تغییر کرد"
+    },
+    {
+      "name": "home_today_usage",
+      "value": "امروز \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "library_widgets",
+      "value": "ابزارک‌ها و تنظیمات سریع"
+    },
+    {
+      "name": "licenses_intro",
+      "value": "کد خود Zephyr تحت مجوز MIT است. این برنامه شامل mihomo (GPL-3.0) است، بنابراین برنامه در کل تحت GPL-3.0 توزیع می‌شود. کد منبع متناظر: %1$s، برچسب %2$s."
+    },
+    {
+      "name": "licenses_section_app",
+      "value": "مجوز Zephyr"
+    },
+    {
+      "name": "licenses_section_notices",
+      "value": "اطلاعیه‌های شخص ثالث"
+    },
+    {
+      "name": "licenses_section_texts",
+      "value": "متن مجوزها"
+    },
+    {
+      "name": "licenses_unavailable",
+      "value": "فایل‌های مجوز در این نسخه وجود ندارد."
+    },
+    {
+      "name": "local_proxy_apply_failed",
+      "value": "اعمال تغییر ممکن نشد"
+    },
+    {
+      "name": "local_proxy_auth_footer",
+      "value": "در حالت روشن، اتصال به پورت محلی به نام کاربری و گذرواژه نیاز دارد تا برنامه‌های دیگر بدون اجازه از پروکسی استفاده نکنند."
+    },
+    {
+      "name": "local_proxy_conceal",
+      "value": "پنهان کردن گذرواژه"
+    },
+    {
+      "name": "local_proxy_concealed",
+      "value": "گذرواژه پنهان است"
+    },
+    {
+      "name": "local_proxy_copied",
+      "value": "کپی شد"
+    },
+    {
+      "name": "local_proxy_copy_http",
+      "value": "کپی نشانی پروکسی HTTP"
+    },
+    {
+      "name": "local_proxy_copy_socks",
+      "value": "کپی نشانی پروکسی SOCKS5"
+    },
+    {
+      "name": "local_proxy_credential_row",
+      "value": "گذرواژه"
+    },
+    {
+      "name": "local_proxy_credentials",
+      "value": "اطلاعات ورود"
+    },
+    {
+      "name": "local_proxy_footer",
+      "value": "در حالت روشن، Zephyr فقط روی 127.0.0.1 گوش می‌دهد و دستگاه‌های دیگر شبکهٔ شما نمی‌توانند وصل شوند."
+    },
+    {
+      "name": "local_proxy_port",
+      "value": "پورت"
+    },
+    {
+      "name": "local_proxy_port_footer",
+      "value": "برنامه‌های دیگر می‌توانند از طریق این پورت روی 127.0.0.1 از قوانین و صحنه‌های Zephyr استفاده کنند."
+    },
+    {
+      "name": "local_proxy_port_invalid",
+      "value": "پورتی بین %1$d تا %2$d وارد کنید"
+    },
+    {
+      "name": "local_proxy_regenerate",
+      "value": "ساخت گذرواژهٔ جدید"
+    },
+    {
+      "name": "local_proxy_regenerate_footer",
+      "value": "پس از ساخت، گذرواژهٔ قبلی فوراً از کار می‌افتد و برنامه‌هایی که تنظیم کرده‌اید به گذرواژهٔ جدید نیاز دارند."
+    },
+    {
+      "name": "local_proxy_regenerated",
+      "value": "گذرواژهٔ جدید ساخته شد"
+    },
+    {
+      "name": "local_proxy_reveal",
+      "value": "نمایش گذرواژه"
+    },
+    {
+      "name": "local_proxy_security",
+      "value": "امنیت"
+    },
+    {
+      "name": "local_proxy_user_row",
+      "value": "نام کاربری"
+    },
+    {
+      "name": "logs_clear",
+      "value": "پاک کردن"
+    },
+    {
+      "name": "logs_empty",
+      "value": "هنوز گزارشی نیست"
+    },
+    {
+      "name": "logs_level_debug",
+      "value": "اشکال‌زدایی"
+    },
+    {
+      "name": "logs_level_error",
+      "value": "خطا"
+    },
+    {
+      "name": "logs_level_info",
+      "value": "اطلاعات"
+    },
+    {
+      "name": "logs_level_warning",
+      "value": "هشدار"
+    },
+    {
+      "name": "logs_line_a11y",
+      "value": "%1$s %2$s %3$s"
+    },
+    {
+      "name": "logs_pause",
+      "value": "مکث"
+    },
+    {
+      "name": "logs_resume",
+      "value": "ادامه"
+    },
+    {
+      "name": "logs_title",
+      "value": "گزارش‌ها"
+    },
+    {
+      "name": "nodes_detail_latency",
+      "value": "تأخیر"
+    },
+    {
+      "name": "nodes_detail_protocol",
+      "value": "پروتکل"
+    },
+    {
+      "name": "nodes_detail_route",
+      "value": "مسیر"
+    },
+    {
+      "name": "nodes_detail_server",
+      "value": "سرور"
+    },
+    {
+      "name": "nodes_detail_test",
+      "value": "آزمایش تأخیر"
+    },
+    {
+      "name": "nodes_empty_action",
+      "value": "وارد کردن اشتراک"
+    },
+    {
+      "name": "nodes_empty_message",
+      "value": "یک اشتراک وارد کنید تا نودهایش اینجا نمایش داده شوند"
+    },
+    {
+      "name": "nodes_empty_title",
+      "value": "هنوز نودی وجود ندارد"
+    },
+    {
+      "name": "nodes_error_title",
+      "value": "بارگیری نودها ناموفق بود"
+    },
+    {
+      "name": "nodes_jump_to",
+      "value": "رفتن به \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "nodes_no_match",
+      "value": "هیچ نودی با «\\u2068%1$s\\u2069» مطابقت ندارد"
+    },
+    {
+      "name": "nodes_search_placeholder",
+      "value": "منطقه، شهر یا مسیر"
+    },
+    {
+      "name": "nodes_search_stats",
+      "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_tested",
+      "value": "\\u2068%1$s\\u2069 آزمایش‌شده"
+    },
+    {
+      "name": "notif_action_global",
+      "value": "حالت سراسری"
+    },
+    {
+      "name": "notif_action_rule",
+      "value": "حالت قانون"
+    },
+    {
+      "name": "notif_channel_alerts",
+      "value": "هشدارهای اشتراک"
+    },
+    {
+      "name": "notif_channel_alerts_desc",
+      "value": "انقضای اشتراک و کمبود حجم"
+    },
+    {
+      "name": "notif_channel_vpn",
+      "value": "وضعیت اتصال"
+    },
+    {
+      "name": "notif_channel_vpn_desc",
+      "value": "هنگام اتصال، سرعت و صحنه‌ها را نشان می‌دهد"
+    },
+    {
+      "name": "notif_expiry_text",
+      "value": "\\u2068%1$s\\u2069 باقی‌مانده"
+    },
+    {
+      "name": "notif_expiry_title",
+      "value": "\\u2068%1$s\\u2069 در \\u2068%2$s\\u2069 منقضی می‌شود"
+    },
+    {
+      "name": "notif_paused_trusted",
+      "value": "در Wi‑Fi مورد اعتماد «%1$s» قطع شد. پس از خروج، خودکار دوباره وصل می‌شود."
+    },
+    {
+      "name": "notif_route_global",
+      "value": "سراسری · \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "notif_route_global_any",
+      "value": "همهٔ ترافیک از یک نود"
+    },
+    {
+      "name": "onboarding_cancel_import_a11y",
+      "value": "لغو وارد کردن"
+    },
+    {
+      "name": "onboarding_change_later",
+      "value": "هر زمان می‌توانید این را در تنظیمات تغییر دهید."
+    },
+    {
+      "name": "onboarding_choose_mode",
+      "value": "یک حالت انتخاب کنید"
+    },
+    {
+      "name": "onboarding_continue",
+      "value": "ادامه"
+    },
+    {
+      "name": "onboarding_optimized",
+      "value": "بهینه"
+    },
+    {
+      "name": "onboarding_optimized_desc",
+      "value": "نودها را هر روز با Wi‑Fi آزمایش می‌کند. هوش مصنوعی و ویدیو فقط از نودهای موفق استفاده می‌کنند. هر بار حدود 3 MB."
+    },
+    {
+      "name": "onboarding_simple",
+      "value": "ساده"
+    },
+    {
+      "name": "onboarding_simple_desc",
+      "value": "از گروه‌های اشتراک شما استفاده می‌کند. نودهای خارج از دسترس به‌طور خودکار مدیریت می‌شوند."
+    },
+    {
+      "name": "rules_add_override_a11y",
+      "value": "افزودن بازنویسی برای دامنه"
+    },
+    {
+      "name": "rules_blocked",
+      "value": "مسدود"
+    },
+    {
+      "name": "rules_kind_domain",
+      "value": "دامنه"
+    },
+    {
+      "name": "rules_kind_ip",
+      "value": "IP"
+    },
+    {
+      "name": "rules_kind_other",
+      "value": "سایر"
+    },
+    {
+      "name": "rules_kind_override",
+      "value": "بازنویسی"
+    },
+    {
+      "name": "rules_kind_subscription",
+      "value": "اشتراک"
+    },
+    {
+      "name": "rules_match_order",
+      "value": "ترتیب تطبیق"
+    },
+    {
+      "name": "rules_note",
+      "value": "مجموعه‌قوانین روی دستگاه به یک نمایهٔ فقط‌خواندنی کامپایل می‌شوند و در صورت نیاز از دیسک خوانده می‌شوند. با به‌روزرسانی اشتراک‌ها، بازنویسی‌ها تغییر نمی‌کنند."
+    },
+    {
+      "name": "rules_other_traffic",
+      "value": "بقیهٔ ترافیک"
+    },
+    {
+      "name": "rules_step_exit_ip",
+      "value": "IP خروجی"
+    },
+    {
+      "name": "rules_step_layer",
+      "value": "لایهٔ %1$d · \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "rules_step_request",
+      "value": "درخواست"
+    },
+    {
+      "name": "rules_step_result",
+      "value": "نتیجه"
+    },
+    {
+      "name": "rules_step_scene",
+      "value": "صحنه · \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "rules_test_hint",
+      "value": "دامنه یا نشانی IP را وارد کنید تا قانون و خروجی مطابق را ببینید."
+    },
+    {
+      "name": "rules_test_placeholder",
+      "value": "آزمایش دامنه یا IP"
+    },
+    {
+      "name": "rules_took",
+      "value": "زمان: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "rules_top_to_bottom",
+      "value": "از بالا به پایین"
+    },
+    {
+      "name": "scene_ask",
+      "value": "پرسیدن"
+    },
+    {
+      "name": "scene_auto_switch",
+      "value": "تغییر خودکار"
+    },
+    {
+      "name": "scene_funnel_reachable",
+      "value": "قابل اتصال"
+    },
+    {
+      "name": "scene_funnel_tested",
+      "value": "آزمایش‌شده"
+    },
+    {
+      "name": "scene_funnel_under",
+      "value": "کمتر از %1$d ms"
+    },
+    {
+      "name": "scene_node_scope",
+      "value": "محدودهٔ نودها"
+    },
+    {
+      "name": "scene_note",
+      "value": "منتخب‌ها فقط در Zephyr ذخیره می‌شوند. پیکربندی اشتراک شما تغییر نمی‌کند."
+    },
+    {
+      "name": "scene_note_tested",
+      "value": "\\u2068%1$s\\u2069 آخرین آزمایش: \\u2068%2$s\\u2069."
+    },
+    {
+      "name": "scene_pinned_for",
+      "value": "ثابت برای \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "scene_pinned_value",
+      "value": "\\u2068%1$s\\u2069 (ثابت)"
+    },
+    {
+      "name": "scene_retest",
+      "value": "آزمایش دوباره"
+    },
+    {
+      "name": "scene_test_daily",
+      "value": "روزانه"
+    },
+    {
+      "name": "scene_test_frequency",
+      "value": "دورهٔ آزمایش"
+    },
+    {
+      "name": "scene_test_wifi_only",
+      "value": "%1$s (فقط Wi‑Fi)"
+    },
+    {
+      "name": "scene_tested_from_pool",
+      "value": "%2$s نود از %1$d اشتراک آزمایش شد"
+    },
+    {
+      "name": "scene_uhd_only",
+      "value": "فقط نودهای 4K"
+    },
+    {
+      "name": "scene_when_unavailable",
+      "value": "وقتی نودی در دسترس نیست"
+    },
+    {
+      "name": "settings_accent",
+      "value": "رنگ تأکیدی"
+    },
+    {
+      "name": "settings_accent_blue",
+      "value": "آبی"
+    },
+    {
+      "name": "settings_accent_green",
+      "value": "سبز"
+    },
+    {
+      "name": "settings_accent_orange",
+      "value": "نارنجی"
+    },
+    {
+      "name": "settings_accent_pink",
+      "value": "صورتی"
+    },
+    {
+      "name": "settings_appearance",
+      "value": "ظاهر"
+    },
+    {
+      "name": "settings_appearance_dark",
+      "value": "تیره"
+    },
+    {
+      "name": "settings_appearance_light",
+      "value": "روشن"
+    },
+    {
+      "name": "settings_appearance_system",
+      "value": "سیستم"
+    },
+    {
+      "name": "settings_keep_results",
+      "value": "نگه‌داری نتایج"
+    },
+    {
+      "name": "settings_licenses",
+      "value": "مجوزهای متن‌باز"
+    },
+    {
+      "name": "settings_local_data_note",
+      "value": "اشتراک‌ها، نودها و داده‌های ترافیک فقط روی این دستگاه ذخیره می‌شوند."
+    },
+    {
+      "name": "settings_local_proxy",
+      "value": "پورت پروکسی محلی"
+    },
+    {
+      "name": "settings_on_demand",
+      "value": "اتصال در صورت نیاز"
+    },
+    {
+      "name": "settings_password_required",
+      "value": "نیاز به گذرواژه"
+    },
+    {
+      "name": "settings_save_failed",
+      "value": "ذخیرهٔ تنظیم ممکن نشد"
+    },
+    {
+      "name": "settings_section_about",
+      "value": "درباره"
+    },
+    {
+      "name": "settings_section_connection",
+      "value": "اتصال"
+    },
+    {
+      "name": "settings_section_diagnostics",
+      "value": "عیب‌یابی"
+    },
+    {
+      "name": "settings_section_privacy",
+      "value": "حریم خصوصی"
+    },
+    {
+      "name": "settings_section_storage",
+      "value": "فضای ذخیره‌سازی"
+    },
+    {
+      "name": "settings_section_testing",
+      "value": "آزمایش"
+    },
+    {
+      "name": "settings_share_diagnostics",
+      "value": "اشتراک‌گذاری داده‌های عیب‌یابی"
+    },
+    {
+      "name": "settings_source_code",
+      "value": "کد منبع"
+    },
+    {
+      "name": "settings_storage_detail",
+      "value": "نودها \\u2068%1$s\\u2069 · قوانین \\u2068%2$s\\u2069 · آزاد \\u2068%3$s\\u2069"
+    },
+    {
+      "name": "settings_storage_title",
+      "value": "نودها و قوانین"
+    },
+    {
+      "name": "settings_test_wifi_only",
+      "value": "آزمایش سرعت فقط با Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi",
+      "value": "Wi‑Fi مورد اعتماد"
+    },
+    {
+      "name": "settings_trusted_wifi_always_on",
+      "value": "توسط «VPN همیشه روشن» سیستم مدیریت می‌شود"
+    },
+    {
+      "name": "settings_trusted_wifi_hint",
+      "value": "هنگام اتصال به آن، به‌طور خودکار قطع شود"
+    },
+    {
+      "name": "settings_trusted_wifi_location",
+      "value": "برای شناسایی نام Wi‑Fi، دسترسی به موقعیت مکانی را مجاز کنید"
+    },
+    {
+      "name": "settings_trusted_wifi_location_off",
+      "value": "برای شناسایی نام Wi‑Fi، موقعیت مکانی سیستم را روشن کنید"
+    },
+    {
+      "name": "subs_add",
+      "value": "افزودن اشتراک"
+    },
+    {
+      "name": "subs_all_title",
+      "value": "همه اشتراک‌ها"
+    },
+    {
+      "name": "subs_auto_update",
+      "value": "به‌روزرسانی خودکار"
+    },
+    {
+      "name": "subs_deleted",
+      "value": "\\u2068%1$s\\u2069 حذف شد"
+    },
+    {
+      "name": "subs_diff_updated",
+      "value": "\\u2068%1$s\\u2069 به‌روز شد"
+    },
+    {
+      "name": "subs_diff_updating",
+      "value": "در حال به‌روزرسانی \\u2068%1$s\\u2069…"
+    },
+    {
+      "name": "subs_error_clipboard_empty",
+      "value": "کلیپ‌بورد خالی است"
+    },
+    {
+      "name": "subs_error_delete",
+      "value": "\\u2068%1$s\\u2069 حذف نشد"
+    },
+    {
+      "name": "subs_error_fetch",
+      "value": "این اشتراک دانلود نشد. پیوند یا شبکه را بررسی کنید."
+    },
+    {
+      "name": "subs_error_import_version",
+      "value": "این کد وارد کردن به نسخهٔ جدیدتری از Zephyr نیاز دارد"
+    },
+    {
+      "name": "subs_error_invalid_file",
+      "value": "این فایل پیکربندی معتبری نیست"
+    },
+    {
+      "name": "subs_error_invalid_link",
+      "value": "این پیوند اشتراک معتبری نیست"
+    },
+    {
+      "name": "subs_error_read_file",
+      "value": "خواندن این فایل ممکن نشد"
+    },
+    {
+      "name": "subs_error_update",
+      "value": "\\u2068%1$s\\u2069 به‌روز نشد"
+    },
+    {
+      "name": "subs_error_update_all",
+      "value": "اشتراک‌ها به‌روز نشدند"
+    },
+    {
+      "name": "subs_hint_desktop",
+      "value": "روی رایانه، در Zephyr به «تنظیمات › همگام‌سازی با تلفن» بروید تا کد QR نمایش داده شود"
+    },
+    {
+      "name": "subs_import_desktop",
+      "value": "وارد کردن از Zephyr روی رایانه"
+    },
+    {
+      "name": "subs_import_desktop_source",
+      "value": "Zephyr دسکتاپ"
+    },
+    {
+      "name": "subs_import_file",
+      "value": "وارد کردن از فایل"
+    },
+    {
+      "name": "subs_import_insecure",
+      "value": "این پیوند رمزگذاری نشده است (http)؛ ممکن است محتوای آن خوانده یا دستکاری شود."
+    },
+    {
+      "name": "subs_import_source",
+      "value": "منبع: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "subs_import_trust",
+      "value": "فقط اگر به این ارائه‌دهنده اعتماد دارید ادامه دهید."
+    },
+    {
+      "name": "subs_overrides_kept",
+      "value": "بازنویسی‌ها حفظ شدند"
+    },
+    {
+      "name": "subs_paste_clipboard",
+      "value": "جای‌گذاری از کلیپ‌بورد"
+    },
+    {
+      "name": "subs_paste_link",
+      "value": "جای‌گذاری پیوند"
+    },
+    {
+      "name": "subs_paste_placeholder",
+      "value": "پیوند اشتراک را جای‌گذاری کنید"
+    },
+    {
+      "name": "subs_remaining",
+      "value": "باقی‌مانده"
+    },
+    {
+      "name": "subs_review_note",
+      "value": "به‌روزرسانی، نودها و قوانین اشتراک را جایگزین می‌کند. بازنویسی‌ها و انتخاب‌های صحنه در Zephyr تغییر نمی‌کنند."
+    },
+    {
+      "name": "subs_review_one",
+      "value": "\\u2068%1$s\\u2069 به‌روزرسانی می‌شود"
+    },
+    {
+      "name": "subs_rule_changes",
+      "value": "تغییرات قوانین"
+    },
+    {
+      "name": "subs_scan_camera_needed",
+      "value": "برای اسکن، دسترسی به دوربین لازم است"
+    },
+    {
+      "name": "subs_scan_no_camera",
+      "value": "دوربینی در این دستگاه در دسترس نیست"
+    },
+    {
+      "name": "subs_scan_prompt",
+      "value": "کد QR اشتراک را داخل کادر قرار دهید تا خودکار اسکن شود."
+    },
+    {
+      "name": "subs_scan_qr",
+      "value": "اسکن کد QR"
+    },
+    {
+      "name": "subs_scenes_retested",
+      "value": "مخزن‌های صحنه دوباره آزمایش شدند"
+    },
+    {
+      "name": "subs_section_data",
+      "value": "ترافیک"
+    },
+    {
+      "name": "subs_section_update",
+      "value": "به‌روزرسانی"
+    },
+    {
+      "name": "subs_show_changes",
+      "value": "نمایش تغییرات پیش از به‌روزرسانی"
+    },
+    {
+      "name": "subs_swipe_confirm_delete",
+      "value": "تأیید حذف"
+    },
+    {
+      "name": "subs_swipe_delete",
+      "value": "حذف"
+    },
+    {
+      "name": "subs_swipe_update",
+      "value": "به‌روزرسانی"
+    },
+    {
+      "name": "subs_swipe_updating",
+      "value": "به‌روزرسانی…"
+    },
+    {
+      "name": "subs_this_month",
+      "value": "این ماه"
+    },
+    {
+      "name": "subs_update_all",
+      "value": "به‌روزرسانی فوری همه"
+    },
+    {
+      "name": "subs_update_wifi_only",
+      "value": "به‌روزرسانی فقط با Wi‑Fi"
+    },
+    {
+      "name": "tile_a11y",
+      "value": "\\u2068%1$s\\u2069، \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "today_date_pattern",
+      "value": "EEEE d MMMM"
+    },
+    {
+      "name": "today_fastest",
+      "value": "سریع‌ترین (ms)"
+    },
+    {
+      "name": "today_pattern_note",
+      "value": "طرح از ترافیک امروز ساخته می‌شود و نام نودها یا نشانی‌های IP را در بر ندارد."
+    },
+    {
+      "name": "today_save_failed",
+      "value": "تصویر ذخیره نشد"
+    },
+    {
+      "name": "today_save_image",
+      "value": "ذخیرهٔ تصویر"
+    },
+    {
+      "name": "today_saved",
+      "value": "در گالری ذخیره شد"
+    },
+    {
+      "name": "today_storage_permission",
+      "value": "برای ذخیرهٔ تصویر، مجوز ذخیره‌سازی لازم است"
+    },
+    {
+      "name": "today_style_dawn",
+      "value": "سپیده‌دم"
+    },
+    {
+      "name": "today_style_mist",
+      "value": "مه"
+    },
+    {
+      "name": "today_style_night",
+      "value": "شب"
+    },
+    {
+      "name": "trace_always_apply",
+      "value": "همیشه اعمال شود"
+    },
+    {
+      "name": "trace_always_apply_hint",
+      "value": "در حالت خاموش، فقط همین اتصال تغییر می‌کند"
+    },
+    {
+      "name": "trace_from",
+      "value": "از \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "trace_option_unchanged",
+      "value": "بدون تغییر"
+    },
+    {
+      "name": "trace_override_cleared",
+      "value": "بازنویسی مسیر برای \\u2068%1$s\\u2069 پاک شد"
+    },
+    {
+      "name": "trace_override_direct",
+      "value": "\\u2068%1$s\\u2069 اکنون مستقیم وصل می‌شود"
+    },
+    {
+      "name": "trace_override_error",
+      "value": "تغییر مسیر ممکن نشد. دوباره امتحان کنید."
+    },
+    {
+      "name": "trace_override_scene",
+      "value": "\\u2068%1$s\\u2069 اکنون با \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "trace_step_exit",
+      "value": "خروجی"
+    },
+    {
+      "name": "trace_step_node",
+      "value": "نود"
+    },
+    {
+      "name": "trace_step_rule",
+      "value": "قانون"
+    },
+    {
+      "name": "trace_step_scene",
+      "value": "صحنه"
+    },
+    {
+      "name": "trace_this_connection",
+      "value": "این اتصال"
+    },
+    {
+      "name": "trace_via",
+      "value": "از طریق \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "trusted_wifi_add_hint",
+      "value": "افزودن نام Wi‑Fi"
+    },
+    {
+      "name": "trusted_wifi_disconnect",
+      "value": "قطع اتصال در این شبکه‌های Wi‑Fi"
+    },
+    {
+      "name": "trusted_wifi_footer",
+      "value": "در شبکه‌های مورد اعتماد مثل خانه یا محل کار، Zephyr خودکار قطع می‌شود و پس از ترک آن‌ها در صورت نیاز دوباره وصل می‌شود."
+    },
+    {
+      "name": "trusted_wifi_networks",
+      "value": "شبکه‌ها"
+    },
+    {
+      "name": "widget_description",
+      "value": "وضعیت اتصال، سرعت و صحنه‌ها"
+    },
+    {
+      "name": "widget_label",
+      "value": "وضعیت Zephyr"
+    },
+    {
+      "name": "widget_today",
+      "value": "امروز \\u2066%1$s %2$s\\u2069"
+    },
+    {
+      "name": "widget_usage_description",
+      "value": "ترافیک امروز و تفکیک 24 ساعته"
+    },
+    {
+      "name": "widget_usage_label",
+      "value": "مصرف امروز Zephyr"
+    },
+    {
+      "name": "widgets_home_steps",
+      "value": "روی جای خالی صفحهٔ اصلی انگشت خود را نگه دارید › ابزارک‌ها › Zephyr، سپس یکی را به صفحهٔ اصلی بکشید."
+    },
+    {
+      "name": "widgets_home_title",
+      "value": "ابزارک‌های صفحهٔ اصلی"
+    },
+    {
+      "name": "widgets_tile_steps",
+      "value": "دو بار از بالای صفحه به پایین بکشید › ویرایش › Zephyr را به تنظیمات سریع بکشید. برای وصل یا قطع اتصال روی آن بزنید."
+    },
+    {
+      "name": "widgets_tile_title",
+      "value": "کاشی تنظیمات سریع"
+    }
+  ]
+}

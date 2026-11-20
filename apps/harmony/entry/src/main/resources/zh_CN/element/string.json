@@ -1,0 +1,1472 @@
+{
+  "string": [
+    {
+      "name": "activity_back",
+      "value": "‹ 最近连接"
+    },
+    {
+      "name": "activity_close_host_a11y",
+      "value": "关闭 %1$s 的连接"
+    },
+    {
+      "name": "activity_close_none",
+      "value": "没有活动的连接"
+    },
+    {
+      "name": "activity_empty",
+      "value": "连接后这里会显示最近访问的域名。"
+    },
+    {
+      "name": "activity_host_a11y",
+      "value": "%1$s 连接详情"
+    },
+    {
+      "name": "activity_no_app_note",
+      "value": "暂未取得发起连接的应用，只显示域名。"
+    },
+    {
+      "name": "activity_title",
+      "value": "最近连接"
+    },
+    {
+      "name": "command_chip_action",
+      "value": "操作"
+    },
+    {
+      "name": "command_chip_region",
+      "value": "地区"
+    },
+    {
+      "name": "command_chip_scene",
+      "value": "场景"
+    },
+    {
+      "name": "command_chip_scope",
+      "value": "范围"
+    },
+    {
+      "name": "command_chip_service",
+      "value": "服务"
+    },
+    {
+      "name": "command_direct_from_proxy",
+      "value": "代理"
+    },
+    {
+      "name": "command_direct_note",
+      "value": "%1$s 的流量将不经过代理。"
+    },
+    {
+      "name": "command_direct_title",
+      "value": "%1$s 直连"
+    },
+    {
+      "name": "command_no_nodes_available",
+      "value": "无可用节点"
+    },
+    {
+      "name": "command_placeholder",
+      "value": "搜索或输入指令"
+    },
+    {
+      "name": "command_plan_exit_title",
+      "value": "%1$s 使用%2$s节点"
+    },
+    {
+      "name": "command_plan_fallback_pause",
+      "value": "%1$s节点均不可用时，%2$s 将暂停。"
+    },
+    {
+      "name": "command_plan_fallback_scene",
+      "value": "%1$s节点均不可用时，将使用场景中的其他节点。"
+    },
+    {
+      "name": "command_plan_no_nodes",
+      "value": "%1$s中没有%2$s节点。"
+    },
+    {
+      "name": "command_plan_releases_pin",
+      "value": "%1$s 将不再使用固定出口 %2$s。"
+    },
+    {
+      "name": "command_region_de",
+      "value": "德国"
+    },
+    {
+      "name": "command_region_gb",
+      "value": "英国"
+    },
+    {
+      "name": "command_region_hk",
+      "value": "香港"
+    },
+    {
+      "name": "command_region_jp",
+      "value": "日本"
+    },
+    {
+      "name": "command_region_kr",
+      "value": "韩国"
+    },
+    {
+      "name": "command_region_sg",
+      "value": "新加坡"
+    },
+    {
+      "name": "command_region_tw",
+      "value": "台湾"
+    },
+    {
+      "name": "command_region_us",
+      "value": "美国"
+    },
+    {
+      "name": "command_scene_ai",
+      "value": "AI 场景"
+    },
+    {
+      "name": "command_scene_named",
+      "value": "%1$s场景"
+    },
+    {
+      "name": "command_section_command",
+      "value": "指令"
+    },
+    {
+      "name": "command_section_suggestions",
+      "value": "建议"
+    },
+    {
+      "name": "command_see_all_nodes",
+      "value": "在节点库中查看全部 %1$s 个"
+    },
+    {
+      "name": "command_test_rule",
+      "value": "%1$s 走哪里？"
+    },
+    {
+      "name": "command_uhd_auto_note",
+      "value": "之后自动换最快只在 4K 节点中选择。"
+    },
+    {
+      "name": "command_uhd_clear_note",
+      "value": "%1$s场景当前仅使用 4K 节点，将恢复使用全部节点。当前节点保持不变。"
+    },
+    {
+      "name": "command_uhd_fastest",
+      "value": "最快的 4K 节点"
+    },
+    {
+      "name": "command_uhd_none",
+      "value": "没有支持 4K 的节点。"
+    },
+    {
+      "name": "command_uhd_title_all",
+      "value": "%1$s使用全部节点"
+    },
+    {
+      "name": "command_uhd_title_only",
+      "value": "%1$s仅使用 4K 节点"
+    },
+    {
+      "name": "command_zephyr_only",
+      "value": "仅在 Zephyr 中生效，订阅配置保持原样。"
+    },
+    {
+      "name": "common_add",
+      "value": "添加"
+    },
+    {
+      "name": "common_adding",
+      "value": "正在添加…"
+    },
+    {
+      "name": "common_all",
+      "value": "全部"
+    },
+    {
+      "name": "common_apply",
+      "value": "应用"
+    },
+    {
+      "name": "common_back_to",
+      "value": "返回%1$s"
+    },
+    {
+      "name": "common_cancel",
+      "value": "取消"
+    },
+    {
+      "name": "common_change",
+      "value": "更改"
+    },
+    {
+      "name": "common_connect",
+      "value": "连接"
+    },
+    {
+      "name": "common_current",
+      "value": "当前"
+    },
+    {
+      "name": "common_direct",
+      "value": "直连"
+    },
+    {
+      "name": "common_disconnect",
+      "value": "断开连接"
+    },
+    {
+      "name": "common_exit_ip_changes",
+      "value": "出口 IP 将更改"
+    },
+    {
+      "name": "common_home",
+      "value": "首页"
+    },
+    {
+      "name": "common_library",
+      "value": "资料库"
+    },
+    {
+      "name": "common_list_separator",
+      "value": "%1$s、%2$s"
+    },
+    {
+      "name": "common_local_data_note",
+      "value": "订阅与流量数据仅保存在此设备上。"
+    },
+    {
+      "name": "common_local_network",
+      "value": "本机网络"
+    },
+    {
+      "name": "common_mode_direct",
+      "value": "直连"
+    },
+    {
+      "name": "common_mode_direct_hint",
+      "value": "不经过代理"
+    },
+    {
+      "name": "common_mode_global",
+      "value": "全局"
+    },
+    {
+      "name": "common_mode_global_hint",
+      "value": "所有流量经由一个节点"
+    },
+    {
+      "name": "common_mode_rule",
+      "value": "规则"
+    },
+    {
+      "name": "common_mode_rule_hint",
+      "value": "按场景分流"
+    },
+    {
+      "name": "common_no_results",
+      "value": "无结果"
+    },
+    {
+      "name": "common_nodes",
+      "value": "节点"
+    },
+    {
+      "name": "common_none",
+      "value": "无"
+    },
+    {
+      "name": "common_off",
+      "value": "关"
+    },
+    {
+      "name": "common_on",
+      "value": "开"
+    },
+    {
+      "name": "common_open_settings",
+      "value": "打开设置"
+    },
+    {
+      "name": "common_pair_and",
+      "value": "%1$s 和 %2$s"
+    },
+    {
+      "name": "common_retesting",
+      "value": "检测中…"
+    },
+    {
+      "name": "common_rules",
+      "value": "规则"
+    },
+    {
+      "name": "common_scene_ai",
+      "value": "AI"
+    },
+    {
+      "name": "common_scene_other",
+      "value": "其他"
+    },
+    {
+      "name": "common_scene_video",
+      "value": "视频"
+    },
+    {
+      "name": "common_scenes",
+      "value": "场景"
+    },
+    {
+      "name": "common_settings",
+      "value": "设置"
+    },
+    {
+      "name": "common_share",
+      "value": "分享"
+    },
+    {
+      "name": "common_source_auto",
+      "value": "Zephyr 优选"
+    },
+    {
+      "name": "common_source_group",
+      "value": "订阅分组"
+    },
+    {
+      "name": "common_status_connected",
+      "value": "已连接"
+    },
+    {
+      "name": "common_status_connecting",
+      "value": "连接中"
+    },
+    {
+      "name": "common_status_connecting_ellipsis",
+      "value": "连接中…"
+    },
+    {
+      "name": "common_status_disconnected",
+      "value": "未连接"
+    },
+    {
+      "name": "common_status_disconnecting",
+      "value": "正在断开"
+    },
+    {
+      "name": "common_status_failed",
+      "value": "连接失败"
+    },
+    {
+      "name": "common_subscriptions",
+      "value": "订阅"
+    },
+    {
+      "name": "common_today",
+      "value": "今日"
+    },
+    {
+      "name": "common_try_again",
+      "value": "请重试"
+    },
+    {
+      "name": "common_undo",
+      "value": "撤销"
+    },
+    {
+      "name": "common_updating",
+      "value": "正在更新…"
+    },
+    {
+      "name": "connect_no_subscription",
+      "value": "还没有订阅"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "Zephyr：按场景分流的代理客户端"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "Zephyr"
+    },
+    {
+      "name": "home_action_load_nodes",
+      "value": "读取节点"
+    },
+    {
+      "name": "home_action_preview_exit",
+      "value": "预览出口"
+    },
+    {
+      "name": "home_action_retest",
+      "value": "重新检测"
+    },
+    {
+      "name": "home_action_switch_exit",
+      "value": "切换出口"
+    },
+    {
+      "name": "home_action_switch_mode",
+      "value": "切换模式"
+    },
+    {
+      "name": "home_action_switch_node",
+      "value": "切换节点"
+    },
+    {
+      "name": "home_action_switch_source",
+      "value": "切换来源"
+    },
+    {
+      "name": "home_action_undo",
+      "value": "撤销"
+    },
+    {
+      "name": "home_apply_failed",
+      "value": "未能应用：%1$s"
+    },
+    {
+      "name": "home_confirm_apps",
+      "value": "更改 %1$s 的出口 IP？"
+    },
+    {
+      "name": "home_confirm_scene",
+      "value": "更改 %1$s 场景的出口 IP？"
+    },
+    {
+      "name": "home_confirm_unchanged",
+      "value": "%1$s 保持不变。"
+    },
+    {
+      "name": "home_error_failed",
+      "value": "%1$s 失败"
+    },
+    {
+      "name": "home_error_node_gone",
+      "value": "%1$s 失败：节点已不存在"
+    },
+    {
+      "name": "home_error_not_connected",
+      "value": "%1$s 需要先连接"
+    },
+    {
+      "name": "home_failover_none",
+      "value": "%1$s 出口无响应，出口 IP 不会自动更换"
+    },
+    {
+      "name": "home_failover_switched",
+      "value": "%1$s 出口已自动切换到 %2$s"
+    },
+    {
+      "name": "home_failure_core",
+      "value": "内核未能启动"
+    },
+    {
+      "name": "home_failure_network",
+      "value": "网络不可用"
+    },
+    {
+      "name": "home_failure_no_subscription",
+      "value": "先添加一个订阅"
+    },
+    {
+      "name": "home_failure_vpn_permission",
+      "value": "需要允许 VPN 连接"
+    },
+    {
+      "name": "home_global_body",
+      "value": "所有流量均经由%1$s。场景已暂停。"
+    },
+    {
+      "name": "home_global_body_any",
+      "value": "所有流量均经由同一节点。场景已暂停。"
+    },
+    {
+      "name": "home_global_change_node",
+      "value": "更换节点"
+    },
+    {
+      "name": "home_global_change_note",
+      "value": "所有 App 的出口都将变为%1$s。"
+    },
+    {
+      "name": "home_global_change_to",
+      "value": "更改为%1$s"
+    },
+    {
+      "name": "home_global_title",
+      "value": "全局模式"
+    },
+    {
+      "name": "home_global_use_rule",
+      "value": "使用规则模式"
+    },
+    {
+      "name": "home_now_all_nodes",
+      "value": "%1$s现使用全部节点"
+    },
+    {
+      "name": "home_now_direct",
+      "value": "%1$s 现为直连"
+    },
+    {
+      "name": "home_now_uhd_only",
+      "value": "%1$s现仅使用 4K 节点"
+    },
+    {
+      "name": "home_now_uses",
+      "value": "%1$s 现使用%2$s"
+    },
+    {
+      "name": "home_now_uses_uhd",
+      "value": "%1$s现使用%2$s（仅 4K）"
+    },
+    {
+      "name": "home_pin_line",
+      "value": "%1$s：%2$s"
+    },
+    {
+      "name": "home_scan_progress",
+      "value": "正在检测 %1$d/%2$d"
+    },
+    {
+      "name": "home_scan_running",
+      "value": "正在检测…"
+    },
+    {
+      "name": "home_scene_details_a11y",
+      "value": "%1$s 场景详情"
+    },
+    {
+      "name": "home_scene_next_region",
+      "value": "下一个地区：%1$s"
+    },
+    {
+      "name": "home_scene_prev_region",
+      "value": "上一个地区：%1$s"
+    },
+    {
+      "name": "home_scene_services_down",
+      "value": "%1$s 不可用"
+    },
+    {
+      "name": "home_scene_services_ok",
+      "value": "%1$s 正常"
+    },
+    {
+      "name": "home_scene_testing",
+      "value": "检测中"
+    },
+    {
+      "name": "home_scenes_tested",
+      "value": "%1$s检测"
+    },
+    {
+      "name": "home_scrub_hint",
+      "value": "左右滑动以切换地区"
+    },
+    {
+      "name": "home_spark_a11y",
+      "value": "最近 90 秒下载速率"
+    },
+    {
+      "name": "home_switch_mode",
+      "value": "切换模式"
+    },
+    {
+      "name": "home_switched_to",
+      "value": "已切换至%1$s"
+    },
+    {
+      "name": "home_today_usage",
+      "value": "今日 %1$s"
+    },
+    {
+      "name": "library_widgets",
+      "value": "小组件与快捷开关"
+    },
+    {
+      "name": "licenses_intro",
+      "value": "Zephyr 自有代码采用 MIT 许可。本 App 包含 mihomo（GPL-3.0），因此整体按 GPL-3.0 分发。对应源码：%1$s，tag %2$s。"
+    },
+    {
+      "name": "licenses_section_app",
+      "value": "Zephyr 许可"
+    },
+    {
+      "name": "licenses_section_notices",
+      "value": "第三方声明"
+    },
+    {
+      "name": "licenses_section_texts",
+      "value": "许可全文"
+    },
+    {
+      "name": "licenses_unavailable",
+      "value": "此版本缺少许可文件。"
+    },
+    {
+      "name": "local_proxy_apply_failed",
+      "value": "未能应用更改"
+    },
+    {
+      "name": "local_proxy_auth_footer",
+      "value": "开启后，连接本地端口需要用户名与密码，可防止其他 App 未经允许使用代理。"
+    },
+    {
+      "name": "local_proxy_conceal",
+      "value": "隐藏密码"
+    },
+    {
+      "name": "local_proxy_concealed",
+      "value": "密码已隐藏"
+    },
+    {
+      "name": "local_proxy_copied",
+      "value": "已复制"
+    },
+    {
+      "name": "local_proxy_copy_http",
+      "value": "复制 HTTP 代理地址"
+    },
+    {
+      "name": "local_proxy_copy_socks",
+      "value": "复制 SOCKS5 代理地址"
+    },
+    {
+      "name": "local_proxy_credential_row",
+      "value": "密码"
+    },
+    {
+      "name": "local_proxy_credentials",
+      "value": "连接信息"
+    },
+    {
+      "name": "local_proxy_footer",
+      "value": "开启后仅监听 127.0.0.1，局域网中的其他设备无法连接。"
+    },
+    {
+      "name": "local_proxy_port",
+      "value": "端口"
+    },
+    {
+      "name": "local_proxy_port_footer",
+      "value": "其他 App 可通过 127.0.0.1 上的这个端口使用 Zephyr 的规则与场景。"
+    },
+    {
+      "name": "local_proxy_port_invalid",
+      "value": "请输入 %1$d–%2$d 之间的端口"
+    },
+    {
+      "name": "local_proxy_regenerate",
+      "value": "重新生成密码"
+    },
+    {
+      "name": "local_proxy_regenerate_footer",
+      "value": "重新生成后旧密码立即失效，已配置的 App 需要填入新密码。"
+    },
+    {
+      "name": "local_proxy_regenerated",
+      "value": "已生成新密码"
+    },
+    {
+      "name": "local_proxy_reveal",
+      "value": "显示密码"
+    },
+    {
+      "name": "local_proxy_security",
+      "value": "安全"
+    },
+    {
+      "name": "local_proxy_user_row",
+      "value": "用户名"
+    },
+    {
+      "name": "logs_clear",
+      "value": "清空"
+    },
+    {
+      "name": "logs_empty",
+      "value": "暂无日志"
+    },
+    {
+      "name": "logs_level_debug",
+      "value": "调试"
+    },
+    {
+      "name": "logs_level_error",
+      "value": "错误"
+    },
+    {
+      "name": "logs_level_info",
+      "value": "信息"
+    },
+    {
+      "name": "logs_level_warning",
+      "value": "警告"
+    },
+    {
+      "name": "logs_line_a11y",
+      "value": "%1$s %2$s %3$s"
+    },
+    {
+      "name": "logs_pause",
+      "value": "暂停"
+    },
+    {
+      "name": "logs_resume",
+      "value": "继续"
+    },
+    {
+      "name": "logs_title",
+      "value": "日志"
+    },
+    {
+      "name": "module_desc",
+      "value": "Zephyr 应用模块"
+    },
+    {
+      "name": "nodes_detail_latency",
+      "value": "延迟"
+    },
+    {
+      "name": "nodes_detail_protocol",
+      "value": "协议"
+    },
+    {
+      "name": "nodes_detail_route",
+      "value": "线路"
+    },
+    {
+      "name": "nodes_detail_server",
+      "value": "服务器"
+    },
+    {
+      "name": "nodes_detail_test",
+      "value": "测速"
+    },
+    {
+      "name": "nodes_empty_action",
+      "value": "导入订阅"
+    },
+    {
+      "name": "nodes_empty_message",
+      "value": "导入订阅后，节点会出现在这里"
+    },
+    {
+      "name": "nodes_empty_title",
+      "value": "还没有节点"
+    },
+    {
+      "name": "nodes_error_title",
+      "value": "节点加载失败"
+    },
+    {
+      "name": "nodes_jump_to",
+      "value": "跳到 %1$s"
+    },
+    {
+      "name": "nodes_no_match",
+      "value": "没有与“%1$s”匹配的节点"
+    },
+    {
+      "name": "nodes_search_placeholder",
+      "value": "地区、城市或线路"
+    },
+    {
+      "name": "nodes_search_stats",
+      "value": "%1$s 个 · %2$s"
+    },
+    {
+      "name": "nodes_tested",
+      "value": "已检测 %1$s"
+    },
+    {
+      "name": "notif_action_global",
+      "value": "全局模式"
+    },
+    {
+      "name": "notif_action_rule",
+      "value": "规则模式"
+    },
+    {
+      "name": "notif_channel_alerts",
+      "value": "订阅提醒"
+    },
+    {
+      "name": "notif_channel_alerts_desc",
+      "value": "订阅到期与流量不足"
+    },
+    {
+      "name": "notif_channel_vpn",
+      "value": "连接状态"
+    },
+    {
+      "name": "notif_channel_vpn_desc",
+      "value": "已连接时常驻显示速率与场景"
+    },
+    {
+      "name": "notif_expiry_text",
+      "value": "剩余 %1$s"
+    },
+    {
+      "name": "notif_expiry_title",
+      "value": "%1$s 将于 %2$s 到期"
+    },
+    {
+      "name": "notif_paused_trusted",
+      "value": "已在受信任的 Wi‑Fi「%1$s」上断开，离开后自动重新连接"
+    },
+    {
+      "name": "notif_route_global",
+      "value": "全局 · %1$s"
+    },
+    {
+      "name": "notif_route_global_any",
+      "value": "所有流量经由同一节点"
+    },
+    {
+      "name": "onboarding_cancel_import_a11y",
+      "value": "取消导入"
+    },
+    {
+      "name": "onboarding_change_later",
+      "value": "可随时在设置中更改。"
+    },
+    {
+      "name": "onboarding_choose_mode",
+      "value": "选择使用方式"
+    },
+    {
+      "name": "onboarding_continue",
+      "value": "继续"
+    },
+    {
+      "name": "onboarding_optimized",
+      "value": "优选"
+    },
+    {
+      "name": "onboarding_optimized_desc",
+      "value": "每天在 Wi‑Fi 下检测节点。AI 与视频仅使用检测通过的节点。每次约 3 MB。"
+    },
+    {
+      "name": "onboarding_simple",
+      "value": "简单"
+    },
+    {
+      "name": "onboarding_simple_desc",
+      "value": "使用订阅提供的分组。节点不可用时自动处理。"
+    },
+    {
+      "name": "rules_add_override_a11y",
+      "value": "为域名添加覆写"
+    },
+    {
+      "name": "rules_blocked",
+      "value": "已拦截"
+    },
+    {
+      "name": "rules_kind_domain",
+      "value": "域名"
+    },
+    {
+      "name": "rules_kind_ip",
+      "value": "IP"
+    },
+    {
+      "name": "rules_kind_other",
+      "value": "其他"
+    },
+    {
+      "name": "rules_kind_override",
+      "value": "覆写"
+    },
+    {
+      "name": "rules_kind_subscription",
+      "value": "订阅"
+    },
+    {
+      "name": "rules_match_order",
+      "value": "匹配顺序"
+    },
+    {
+      "name": "rules_note",
+      "value": "规则集在设备上编译为只读索引，按需从磁盘读取。订阅更新时，覆写保持不变。"
+    },
+    {
+      "name": "rules_other_traffic",
+      "value": "其余流量"
+    },
+    {
+      "name": "rules_step_exit_ip",
+      "value": "出口 IP"
+    },
+    {
+      "name": "rules_step_layer",
+      "value": "第 %1$d 层 · %2$s"
+    },
+    {
+      "name": "rules_step_request",
+      "value": "请求"
+    },
+    {
+      "name": "rules_step_result",
+      "value": "结果"
+    },
+    {
+      "name": "rules_step_scene",
+      "value": "场景 · %1$s"
+    },
+    {
+      "name": "rules_test_hint",
+      "value": "输入域名或 IP，查看匹配的规则与出口。"
+    },
+    {
+      "name": "rules_test_placeholder",
+      "value": "测试域名或 IP"
+    },
+    {
+      "name": "rules_took",
+      "value": "用时 %1$s"
+    },
+    {
+      "name": "rules_top_to_bottom",
+      "value": "从上到下"
+    },
+    {
+      "name": "scene_ask",
+      "value": "询问"
+    },
+    {
+      "name": "scene_auto_switch",
+      "value": "自动切换"
+    },
+    {
+      "name": "scene_funnel_reachable",
+      "value": "可连通"
+    },
+    {
+      "name": "scene_funnel_tested",
+      "value": "已测速"
+    },
+    {
+      "name": "scene_funnel_under",
+      "value": "延迟低于 %1$d ms"
+    },
+    {
+      "name": "scene_node_scope",
+      "value": "节点范围"
+    },
+    {
+      "name": "scene_note",
+      "value": "优选结果仅保存在 Zephyr 中，订阅配置保持原样。"
+    },
+    {
+      "name": "scene_note_tested",
+      "value": "%1$s 上次检测 %2$s。"
+    },
+    {
+      "name": "scene_pinned_for",
+      "value": "%1$s 固定"
+    },
+    {
+      "name": "scene_pinned_value",
+      "value": "%1$s（固定）"
+    },
+    {
+      "name": "scene_retest",
+      "value": "重新检测"
+    },
+    {
+      "name": "scene_test_daily",
+      "value": "每天"
+    },
+    {
+      "name": "scene_test_frequency",
+      "value": "检测频率"
+    },
+    {
+      "name": "scene_test_wifi_only",
+      "value": "%1$s（仅 Wi‑Fi）"
+    },
+    {
+      "name": "scene_tested_from_pool",
+      "value": "检测自 %1$d 个订阅中的 %2$s 个节点"
+    },
+    {
+      "name": "scene_uhd_only",
+      "value": "仅 4K 节点"
+    },
+    {
+      "name": "scene_when_unavailable",
+      "value": "节点不可用时"
+    },
+    {
+      "name": "settings_accent",
+      "value": "强调色"
+    },
+    {
+      "name": "settings_accent_blue",
+      "value": "蓝色"
+    },
+    {
+      "name": "settings_accent_green",
+      "value": "绿色"
+    },
+    {
+      "name": "settings_accent_orange",
+      "value": "橙色"
+    },
+    {
+      "name": "settings_accent_pink",
+      "value": "粉色"
+    },
+    {
+      "name": "settings_appearance",
+      "value": "外观"
+    },
+    {
+      "name": "settings_appearance_dark",
+      "value": "深色"
+    },
+    {
+      "name": "settings_appearance_light",
+      "value": "浅色"
+    },
+    {
+      "name": "settings_appearance_system",
+      "value": "跟随系统"
+    },
+    {
+      "name": "settings_keep_results",
+      "value": "结果保留"
+    },
+    {
+      "name": "settings_licenses",
+      "value": "开源许可"
+    },
+    {
+      "name": "settings_local_data_note",
+      "value": "订阅、节点与流量数据仅保存在此设备上。"
+    },
+    {
+      "name": "settings_local_proxy",
+      "value": "本地代理端口"
+    },
+    {
+      "name": "settings_on_demand",
+      "value": "按需连接"
+    },
+    {
+      "name": "settings_password_required",
+      "value": "需要密码"
+    },
+    {
+      "name": "settings_save_failed",
+      "value": "未能保存设置"
+    },
+    {
+      "name": "settings_section_about",
+      "value": "关于"
+    },
+    {
+      "name": "settings_section_connection",
+      "value": "连接"
+    },
+    {
+      "name": "settings_section_diagnostics",
+      "value": "诊断"
+    },
+    {
+      "name": "settings_section_privacy",
+      "value": "隐私"
+    },
+    {
+      "name": "settings_section_storage",
+      "value": "存储"
+    },
+    {
+      "name": "settings_section_testing",
+      "value": "检测"
+    },
+    {
+      "name": "settings_share_diagnostics",
+      "value": "共享诊断数据"
+    },
+    {
+      "name": "settings_source_code",
+      "value": "源代码"
+    },
+    {
+      "name": "settings_storage_detail",
+      "value": "节点 %1$s · 规则 %2$s · 可用 %3$s"
+    },
+    {
+      "name": "settings_storage_title",
+      "value": "节点与规则"
+    },
+    {
+      "name": "settings_test_wifi_only",
+      "value": "仅在 Wi‑Fi 下测速"
+    },
+    {
+      "name": "settings_trusted_wifi",
+      "value": "受信任的 Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi_always_on",
+      "value": "由系统『始终开启的 VPN』管理"
+    },
+    {
+      "name": "settings_trusted_wifi_hint",
+      "value": "连接后自动断开"
+    },
+    {
+      "name": "settings_trusted_wifi_location",
+      "value": "允许访问位置信息以识别 Wi‑Fi 名称"
+    },
+    {
+      "name": "settings_trusted_wifi_location_off",
+      "value": "打开系统定位以识别 Wi‑Fi 名称"
+    },
+    {
+      "name": "subs_add",
+      "value": "添加订阅"
+    },
+    {
+      "name": "subs_all_title",
+      "value": "全部订阅"
+    },
+    {
+      "name": "subs_auto_update",
+      "value": "自动更新"
+    },
+    {
+      "name": "subs_deleted",
+      "value": "已删除 %1$s"
+    },
+    {
+      "name": "subs_diff_updated",
+      "value": "%1$s 已更新"
+    },
+    {
+      "name": "subs_diff_updating",
+      "value": "%1$s 正在更新…"
+    },
+    {
+      "name": "subs_error_clipboard_empty",
+      "value": "剪贴板是空的"
+    },
+    {
+      "name": "subs_error_delete",
+      "value": "无法删除 %1$s"
+    },
+    {
+      "name": "subs_error_fetch",
+      "value": "无法下载这个订阅，请检查链接或网络"
+    },
+    {
+      "name": "subs_error_import_version",
+      "value": "导入码版本过新，请更新 Zephyr"
+    },
+    {
+      "name": "subs_error_invalid_file",
+      "value": "这不是有效的配置文件"
+    },
+    {
+      "name": "subs_error_invalid_link",
+      "value": "这不是有效的订阅链接"
+    },
+    {
+      "name": "subs_error_read_file",
+      "value": "无法读取这个文件"
+    },
+    {
+      "name": "subs_error_update",
+      "value": "无法更新 %1$s"
+    },
+    {
+      "name": "subs_error_update_all",
+      "value": "无法更新订阅"
+    },
+    {
+      "name": "subs_hint_desktop",
+      "value": "在电脑上的 Zephyr 打开“设置 › 同步到手机”，即可显示二维码"
+    },
+    {
+      "name": "subs_import_desktop",
+      "value": "从电脑上的 Zephyr 导入"
+    },
+    {
+      "name": "subs_import_desktop_source",
+      "value": "Zephyr 桌面"
+    },
+    {
+      "name": "subs_import_file",
+      "value": "从文件导入"
+    },
+    {
+      "name": "subs_import_insecure",
+      "value": "此链接未加密（http），内容可能被窃听或篡改。"
+    },
+    {
+      "name": "subs_import_source",
+      "value": "来源：%1$s"
+    },
+    {
+      "name": "subs_import_trust",
+      "value": "请确认这个链接来自你信任的服务商。"
+    },
+    {
+      "name": "subs_overrides_kept",
+      "value": "覆写已保留"
+    },
+    {
+      "name": "subs_paste_clipboard",
+      "value": "从剪贴板粘贴"
+    },
+    {
+      "name": "subs_paste_link",
+      "value": "粘贴链接"
+    },
+    {
+      "name": "subs_paste_placeholder",
+      "value": "粘贴订阅链接"
+    },
+    {
+      "name": "subs_remaining",
+      "value": "剩余"
+    },
+    {
+      "name": "subs_review_note",
+      "value": "更新会替换订阅中的节点与规则。Zephyr 的覆写与场景选择保持不变。"
+    },
+    {
+      "name": "subs_review_one",
+      "value": "将更新 %1$s"
+    },
+    {
+      "name": "subs_rule_changes",
+      "value": "规则变更"
+    },
+    {
+      "name": "subs_scan_camera_needed",
+      "value": "需要相机权限才能扫码"
+    },
+    {
+      "name": "subs_scan_no_camera",
+      "value": "此设备没有可用的相机"
+    },
+    {
+      "name": "subs_scan_prompt",
+      "value": "将订阅二维码放入框内，即可自动识别。"
+    },
+    {
+      "name": "subs_scan_qr",
+      "value": "扫描二维码"
+    },
+    {
+      "name": "subs_scenes_retested",
+      "value": "场景池已重新检测"
+    },
+    {
+      "name": "subs_section_data",
+      "value": "流量"
+    },
+    {
+      "name": "subs_section_update",
+      "value": "更新"
+    },
+    {
+      "name": "subs_show_changes",
+      "value": "更新前显示更改"
+    },
+    {
+      "name": "subs_swipe_confirm_delete",
+      "value": "确认删除"
+    },
+    {
+      "name": "subs_swipe_delete",
+      "value": "删除"
+    },
+    {
+      "name": "subs_swipe_update",
+      "value": "更新"
+    },
+    {
+      "name": "subs_swipe_updating",
+      "value": "更新中"
+    },
+    {
+      "name": "subs_this_month",
+      "value": "本月"
+    },
+    {
+      "name": "subs_update_all",
+      "value": "立即全部更新"
+    },
+    {
+      "name": "subs_update_wifi_only",
+      "value": "仅在 Wi‑Fi 下更新"
+    },
+    {
+      "name": "tile_a11y",
+      "value": "%1$s，%2$s"
+    },
+    {
+      "name": "today_date_pattern",
+      "value": "M月d日 · EEEE"
+    },
+    {
+      "name": "today_fastest",
+      "value": "ms 最快"
+    },
+    {
+      "name": "today_pattern_note",
+      "value": "图案由今天的流量生成，不含节点名称与 IP 地址。"
+    },
+    {
+      "name": "today_save_failed",
+      "value": "无法存储图像"
+    },
+    {
+      "name": "today_save_image",
+      "value": "存储图像"
+    },
+    {
+      "name": "today_saved",
+      "value": "已存储到相册"
+    },
+    {
+      "name": "today_storage_permission",
+      "value": "需要存储权限才能保存图像"
+    },
+    {
+      "name": "today_style_dawn",
+      "value": "晨"
+    },
+    {
+      "name": "today_style_mist",
+      "value": "雾"
+    },
+    {
+      "name": "today_style_night",
+      "value": "夜"
+    },
+    {
+      "name": "trace_always_apply",
+      "value": "始终应用"
+    },
+    {
+      "name": "trace_always_apply_hint",
+      "value": "关闭时仅更改本次连接"
+    },
+    {
+      "name": "trace_from",
+      "value": "来自 %1$s"
+    },
+    {
+      "name": "trace_option_unchanged",
+      "value": "不变"
+    },
+    {
+      "name": "trace_override_cleared",
+      "value": "已清除 %1$s 的路由覆写"
+    },
+    {
+      "name": "trace_override_direct",
+      "value": "%1$s 已改为直连"
+    },
+    {
+      "name": "trace_override_error",
+      "value": "无法更改路由，请重试。"
+    },
+    {
+      "name": "trace_override_scene",
+      "value": "%1$s 已改走 %2$s"
+    },
+    {
+      "name": "trace_step_exit",
+      "value": "出口"
+    },
+    {
+      "name": "trace_step_node",
+      "value": "节点"
+    },
+    {
+      "name": "trace_step_rule",
+      "value": "规则"
+    },
+    {
+      "name": "trace_step_scene",
+      "value": "场景"
+    },
+    {
+      "name": "trace_this_connection",
+      "value": "本次连接"
+    },
+    {
+      "name": "trace_via",
+      "value": "经由 %1$s"
+    },
+    {
+      "name": "trusted_wifi_add_hint",
+      "value": "添加 Wi‑Fi 名称"
+    },
+    {
+      "name": "trusted_wifi_disconnect",
+      "value": "连上这些 Wi‑Fi 时自动断开"
+    },
+    {
+      "name": "trusted_wifi_footer",
+      "value": "在家或公司等可信网络中，Zephyr 会自动断开，离开后按需重新连接。"
+    },
+    {
+      "name": "trusted_wifi_networks",
+      "value": "网络"
+    },
+    {
+      "name": "widget_description",
+      "value": "连接状态、实时速率与场景"
+    },
+    {
+      "name": "widget_label",
+      "value": "Zephyr 状态"
+    },
+    {
+      "name": "widget_today",
+      "value": "今日 %1$s %2$s"
+    },
+    {
+      "name": "widget_usage_description",
+      "value": "今日流量与 24 小时分布"
+    },
+    {
+      "name": "widget_usage_label",
+      "value": "Zephyr 今日用量"
+    },
+    {
+      "name": "widgets_home_steps",
+      "value": "长按主屏幕空白处 › 小组件 › Zephyr，然后拖到主屏幕上。"
+    },
+    {
+      "name": "widgets_home_title",
+      "value": "主屏幕小组件"
+    },
+    {
+      "name": "widgets_tile_steps",
+      "value": "从屏幕顶部向下滑动两次 › 编辑 › 将 Zephyr 拖入快速设置。点按即可连接或断开。"
+    },
+    {
+      "name": "widgets_tile_title",
+      "value": "快速设置磁贴"
+    },
+    {
+      "name": "ZephyrVpnExtAbility_desc",
+      "value": "运行 Zephyr VPN 隧道与内置代理内核"
+    },
+    {
+      "name": "ZephyrVpnExtAbility_label",
+      "value": "Zephyr VPN"
+    }
+  ]
+}

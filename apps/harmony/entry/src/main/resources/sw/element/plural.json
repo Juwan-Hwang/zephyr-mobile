@@ -1,0 +1,446 @@
+{
+  "plural": [
+    {
+      "name": "common_node_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Nodi %1$s"
+        },
+        {
+          "quantity": "other",
+          "value": "Nodi %1$s"
+        }
+      ]
+    },
+    {
+      "name": "common_available_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d inapatikana"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d zinapatikana"
+        }
+      ]
+    },
+    {
+      "name": "common_region_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Eneo %1$d"
+        },
+        {
+          "quantity": "other",
+          "value": "Maeneo %1$d"
+        }
+      ]
+    },
+    {
+      "name": "home_subs_more",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Usajili %1$d zaidi"
+        },
+        {
+          "quantity": "other",
+          "value": "Usajili %1$d zaidi"
+        }
+      ]
+    },
+    {
+      "name": "home_scene_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Mazingira %1$d"
+        },
+        {
+          "quantity": "other",
+          "value": "Mazingira %1$d"
+        }
+      ]
+    },
+    {
+      "name": "scene_available_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "nodi inayopatikana"
+        },
+        {
+          "quantity": "other",
+          "value": "nodi zinazopatikana"
+        }
+      ]
+    },
+    {
+      "name": "scene_tested_from",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Imepimwa kutoka usajili %1$d"
+        },
+        {
+          "quantity": "other",
+          "value": "Imepimwa kutoka usajili %1$d"
+        }
+      ]
+    },
+    {
+      "name": "scene_test_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Kila saa"
+        },
+        {
+          "quantity": "other",
+          "value": "Kila saa %1$d"
+        }
+      ]
+    },
+    {
+      "name": "command_plan_exit_available",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d inapatikana. Itatumia %2$s."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d zinapatikana. Itatumia %2$s."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_untested",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Nodi %1$d ya 4K bado haijapimwa. Pima mazingira upya baada ya kutumia."
+        },
+        {
+          "quantity": "other",
+          "value": "Nodi %1$d za 4K bado hazijapimwa. Pima mazingira upya baada ya kutumia."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_keep",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%2$d kati ya %1$d inaauni 4K; nodi ya sasa inabaki."
+        },
+        {
+          "quantity": "other",
+          "value": "%2$d kati ya %1$d zinaauni 4K; nodi ya sasa inabaki."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_switch",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%2$d kati ya %1$d inaauni 4K; itatumia %3$s."
+        },
+        {
+          "quantity": "other",
+          "value": "%2$d kati ya %1$d zinaauni 4K; itatumia %3$s."
+        }
+      ]
+    },
+    {
+      "name": "activity_closed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Muunganisho %1$d umefungwa"
+        },
+        {
+          "quantity": "other",
+          "value": "Miunganisho %1$d imefungwa"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Imeshindwa kufunga muunganisho"
+        },
+        {
+          "quantity": "other",
+          "value": "Imeshindwa kufunga miunganisho"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_partial",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Muunganisho %1$d haukufungwa"
+        },
+        {
+          "quantity": "other",
+          "value": "Miunganisho %1$d haikufungwa"
+        }
+      ]
+    },
+    {
+      "name": "trace_connections",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Muunganisho %1$d"
+        },
+        {
+          "quantity": "other",
+          "value": "Miunganisho %1$d"
+        }
+      ]
+    },
+    {
+      "name": "trace_exit_stable",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Haijabadilika kwa siku %1$d"
+        },
+        {
+          "quantity": "other",
+          "value": "Haijabadilika kwa siku %1$d"
+        }
+      ]
+    },
+    {
+      "name": "nodes_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "nodi"
+        },
+        {
+          "quantity": "other",
+          "value": "nodi"
+        }
+      ]
+    },
+    {
+      "name": "nodes_from_subs",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Kutoka usajili %1$d"
+        },
+        {
+          "quantity": "other",
+          "value": "Kutoka usajili %1$d"
+        }
+      ]
+    },
+    {
+      "name": "rules_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "sheria"
+        },
+        {
+          "quantity": "other",
+          "value": "sheria"
+        }
+      ]
+    },
+    {
+      "name": "rules_summary",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Tabaka %1$d · imekusanywa · %2$s kwenye diski"
+        },
+        {
+          "quantity": "other",
+          "value": "Tabaka %1$d · imekusanywa · %2$s kwenye diski"
+        }
+      ]
+    },
+    {
+      "name": "subs_added",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$s imeongezwa (nodi %2$s)"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$s imeongezwa (nodi %2$s)"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_confirm_title",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Ungependa kuleta usajili %1$d?"
+        },
+        {
+          "quantity": "other",
+          "value": "Ungependa kuleta usajili %1$d?"
+        }
+      ]
+    },
+    {
+      "name": "subs_added_many",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Usajili %1$d umeongezwa"
+        },
+        {
+          "quantity": "other",
+          "value": "Usajili %1$d umeongezwa"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_some_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d haikuweza kuongezwa"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d hazikuweza kuongezwa"
+        }
+      ]
+    },
+    {
+      "name": "subs_review_all",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Usajili wote %1$s utasasishwa"
+        },
+        {
+          "quantity": "other",
+          "value": "Usajili wote %1$s utasasishwa"
+        }
+      ]
+    },
+    {
+      "name": "subs_updated_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Usajili %1$d umesasishwa"
+        },
+        {
+          "quantity": "other",
+          "value": "Usajili %1$d umesasishwa"
+        }
+      ]
+    },
+    {
+      "name": "subs_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "usajili"
+        },
+        {
+          "quantity": "other",
+          "value": "usajili"
+        }
+      ]
+    },
+    {
+      "name": "subs_update_every",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "husasishwa kila baada ya saa %1$d"
+        },
+        {
+          "quantity": "other",
+          "value": "husasishwa kila baada ya saa %1$d"
+        }
+      ]
+    },
+    {
+      "name": "subs_others",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d nyingine"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d nyingine"
+        }
+      ]
+    },
+    {
+      "name": "subs_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Kila baada ya saa %1$d"
+        },
+        {
+          "quantity": "other",
+          "value": "Kila baada ya saa %1$d"
+        }
+      ]
+    },
+    {
+      "name": "settings_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Saa %1$d"
+        },
+        {
+          "quantity": "other",
+          "value": "Saa %1$d"
+        }
+      ]
+    },
+    {
+      "name": "today_regions",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "eneo"
+        },
+        {
+          "quantity": "other",
+          "value": "maeneo"
+        }
+      ]
+    },
+    {
+      "name": "today_hours_online",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "saa mtandaoni"
+        },
+        {
+          "quantity": "other",
+          "value": "saa mtandaoni"
+        }
+      ]
+    }
+  ]
+}

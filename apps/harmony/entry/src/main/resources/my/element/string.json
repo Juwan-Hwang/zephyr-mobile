@@ -1,0 +1,1452 @@
+{
+  "string": [
+    {
+      "name": "activity_back",
+      "value": "‹ မကြာသေးမီ ချိတ်ဆက်မှုများ"
+    },
+    {
+      "name": "activity_close_host_a11y",
+      "value": "%1$s သို့ ချိတ်ဆက်မှုများ ပိတ်ရန်"
+    },
+    {
+      "name": "activity_close_none",
+      "value": "လက်ရှိ ချိတ်ဆက်မှု မရှိပါ"
+    },
+    {
+      "name": "activity_empty",
+      "value": "ချိတ်ဆက်ပြီးနောက် မကြာသေးမီက ဝင်ခဲ့သော ဒိုမိန်းများ ဤနေရာတွင် ပေါ်မည်။"
+    },
+    {
+      "name": "activity_host_a11y",
+      "value": "%1$s ချိတ်ဆက်မှု အသေးစိတ်"
+    },
+    {
+      "name": "activity_no_app_note",
+      "value": "ချိတ်ဆက်မှုတစ်ခုစီကို မည်သည့်အက်ပ်က ပြုလုပ်သည်ကို မသိရသေးသဖြင့် ဒိုမိန်းများကိုသာ ပြသည်။"
+    },
+    {
+      "name": "activity_title",
+      "value": "မကြာသေးမီ ချိတ်ဆက်မှုများ"
+    },
+    {
+      "name": "command_chip_action",
+      "value": "လုပ်ဆောင်ချက်"
+    },
+    {
+      "name": "command_chip_region",
+      "value": "ဒေသ"
+    },
+    {
+      "name": "command_chip_scene",
+      "value": "မြင်ကွင်း"
+    },
+    {
+      "name": "command_chip_scope",
+      "value": "နယ်ပယ်"
+    },
+    {
+      "name": "command_chip_service",
+      "value": "ဝန်ဆောင်မှု"
+    },
+    {
+      "name": "command_direct_from_proxy",
+      "value": "ပရောက်စီ"
+    },
+    {
+      "name": "command_direct_note",
+      "value": "%1$s ၏ ဒေတာသည် ပရောက်စီကို မဖြတ်တော့ပါ။"
+    },
+    {
+      "name": "command_direct_title",
+      "value": "%1$s ကို တိုက်ရိုက် ချိတ်ဆက်ရန်"
+    },
+    {
+      "name": "command_no_nodes_available",
+      "value": "ရနိုင်သော နုဒ် မရှိပါ"
+    },
+    {
+      "name": "command_placeholder",
+      "value": "ရှာရန် သို့မဟုတ် ညွှန်ကြားချက် ထည့်ပါ"
+    },
+    {
+      "name": "command_plan_exit_title",
+      "value": "%1$s သည် %2$s နုဒ်များကို သုံးမည်"
+    },
+    {
+      "name": "command_plan_fallback_pause",
+      "value": "%1$s နုဒ် မရနိုင်ပါက %2$s ကို ခဏရပ်မည်။"
+    },
+    {
+      "name": "command_plan_fallback_scene",
+      "value": "%1$s နုဒ် မရနိုင်ပါက မြင်ကွင်းရှိ အခြားနုဒ်များကို သုံးမည်။"
+    },
+    {
+      "name": "command_plan_no_nodes",
+      "value": "%1$s တွင် %2$s နုဒ် မရှိပါ။"
+    },
+    {
+      "name": "command_plan_releases_pin",
+      "value": "%1$s သည် ပုံသေ ထွက်ပေါက် %2$s ကို မသုံးတော့ပါ။"
+    },
+    {
+      "name": "command_region_de",
+      "value": "ဂျာမနီ"
+    },
+    {
+      "name": "command_region_gb",
+      "value": "ယူကေ"
+    },
+    {
+      "name": "command_region_hk",
+      "value": "ဟောင်ကောင်"
+    },
+    {
+      "name": "command_region_jp",
+      "value": "ဂျပန်"
+    },
+    {
+      "name": "command_region_kr",
+      "value": "ကိုရီးယား"
+    },
+    {
+      "name": "command_region_sg",
+      "value": "စင်ကာပူ"
+    },
+    {
+      "name": "command_region_tw",
+      "value": "ထိုင်ဝမ်"
+    },
+    {
+      "name": "command_region_us",
+      "value": "အမေရိကန်"
+    },
+    {
+      "name": "command_scene_ai",
+      "value": "AI မြင်ကွင်း"
+    },
+    {
+      "name": "command_scene_named",
+      "value": "%1$s မြင်ကွင်း"
+    },
+    {
+      "name": "command_section_command",
+      "value": "ညွှန်ကြားချက်များ"
+    },
+    {
+      "name": "command_section_suggestions",
+      "value": "အကြံပြုချက်များ"
+    },
+    {
+      "name": "command_see_all_nodes",
+      "value": "နုဒ် စုစည်းမှုတွင် %1$s ခုလုံး ကြည့်ရန်"
+    },
+    {
+      "name": "command_test_rule",
+      "value": "%1$s ဘယ်လမ်းကြောင်း သွားသလဲ။"
+    },
+    {
+      "name": "command_uhd_auto_note",
+      "value": "ယခုမှစ၍ အလိုအလျောက်ပြောင်းခြင်းသည် 4K နုဒ်များထဲမှသာ ရွေးမည်။"
+    },
+    {
+      "name": "command_uhd_clear_note",
+      "value": "%1$s မြင်ကွင်းသည် 4K နုဒ်များကိုသာ သုံးနေသည်။ နုဒ်အားလုံးကို ပြန်သုံးမည်၊ လက်ရှိနုဒ် မပြောင်းပါ။"
+    },
+    {
+      "name": "command_uhd_fastest",
+      "value": "အမြန်ဆုံး 4K နုဒ်"
+    },
+    {
+      "name": "command_uhd_none",
+      "value": "4K ပံ့ပိုးသော နုဒ် မရှိပါ။"
+    },
+    {
+      "name": "command_uhd_title_all",
+      "value": "%1$s: နုဒ်အားလုံး"
+    },
+    {
+      "name": "command_uhd_title_only",
+      "value": "%1$s: 4K နုဒ်များသာ"
+    },
+    {
+      "name": "command_zephyr_only",
+      "value": "Zephyr တွင်သာ သက်ရောက်သည်။ စာရင်းသွင်းမှု ဖွဲ့စည်းပုံ မပြောင်းပါ။"
+    },
+    {
+      "name": "common_add",
+      "value": "ထည့်ရန်"
+    },
+    {
+      "name": "common_adding",
+      "value": "ထည့်နေသည်…"
+    },
+    {
+      "name": "common_all",
+      "value": "အားလုံး"
+    },
+    {
+      "name": "common_apply",
+      "value": "အသုံးချရန်"
+    },
+    {
+      "name": "common_back_to",
+      "value": "%1$s သို့ ပြန်ရန်"
+    },
+    {
+      "name": "common_cancel",
+      "value": "ပယ်ဖျက်ရန်"
+    },
+    {
+      "name": "common_change",
+      "value": "ပြောင်းရန်"
+    },
+    {
+      "name": "common_connect",
+      "value": "ချိတ်ဆက်ရန်"
+    },
+    {
+      "name": "common_current",
+      "value": "လက်ရှိ"
+    },
+    {
+      "name": "common_direct",
+      "value": "တိုက်ရိုက်"
+    },
+    {
+      "name": "common_disconnect",
+      "value": "အဆက်ဖြတ်ရန်"
+    },
+    {
+      "name": "common_exit_ip_changes",
+      "value": "ထွက်ပေါက် IP ပြောင်းမည်"
+    },
+    {
+      "name": "common_home",
+      "value": "ပင်မ"
+    },
+    {
+      "name": "common_library",
+      "value": "စုစည်းမှု"
+    },
+    {
+      "name": "common_list_separator",
+      "value": "%1$s၊ %2$s"
+    },
+    {
+      "name": "common_local_data_note",
+      "value": "စာရင်းသွင်းမှုနှင့် ဒေတာအသုံးပြုမှုကို ဤစက်တွင်သာ သိမ်းသည်။"
+    },
+    {
+      "name": "common_local_network",
+      "value": "ဤစက်၏ ကွန်ရက်"
+    },
+    {
+      "name": "common_mode_direct",
+      "value": "တိုက်ရိုက်"
+    },
+    {
+      "name": "common_mode_direct_hint",
+      "value": "ပရောက်စီ မသုံးပါ"
+    },
+    {
+      "name": "common_mode_global",
+      "value": "ကမ္ဘာလုံးဆိုင်ရာ"
+    },
+    {
+      "name": "common_mode_global_hint",
+      "value": "ဒေတာအားလုံး နုဒ်တစ်ခုမှတစ်ဆင့်"
+    },
+    {
+      "name": "common_mode_rule",
+      "value": "စည်းမျဉ်း"
+    },
+    {
+      "name": "common_mode_rule_hint",
+      "value": "မြင်ကွင်းအလိုက် လမ်းကြောင်းခွဲ"
+    },
+    {
+      "name": "common_no_results",
+      "value": "ရလဒ် မရှိပါ"
+    },
+    {
+      "name": "common_nodes",
+      "value": "နုဒ်များ"
+    },
+    {
+      "name": "common_none",
+      "value": "မရှိ"
+    },
+    {
+      "name": "common_off",
+      "value": "ပိတ်"
+    },
+    {
+      "name": "common_on",
+      "value": "ဖွင့်"
+    },
+    {
+      "name": "common_open_settings",
+      "value": "ဆက်တင်များ ဖွင့်ရန်"
+    },
+    {
+      "name": "common_pair_and",
+      "value": "%1$s နှင့် %2$s"
+    },
+    {
+      "name": "common_retesting",
+      "value": "စမ်းသပ်နေသည်…"
+    },
+    {
+      "name": "common_rules",
+      "value": "စည်းမျဉ်းများ"
+    },
+    {
+      "name": "common_scene_ai",
+      "value": "AI"
+    },
+    {
+      "name": "common_scene_other",
+      "value": "အခြား"
+    },
+    {
+      "name": "common_scene_video",
+      "value": "ဗီဒီယို"
+    },
+    {
+      "name": "common_scenes",
+      "value": "မြင်ကွင်းများ"
+    },
+    {
+      "name": "common_settings",
+      "value": "ဆက်တင်များ"
+    },
+    {
+      "name": "common_share",
+      "value": "မျှဝေရန်"
+    },
+    {
+      "name": "common_source_auto",
+      "value": "Zephyr ရွေးချယ်မှုများ"
+    },
+    {
+      "name": "common_source_group",
+      "value": "စာရင်းသွင်းမှု အုပ်စု"
+    },
+    {
+      "name": "common_status_connected",
+      "value": "ချိတ်ဆက်ထားသည်"
+    },
+    {
+      "name": "common_status_connecting",
+      "value": "ချိတ်ဆက်နေသည်"
+    },
+    {
+      "name": "common_status_connecting_ellipsis",
+      "value": "ချိတ်ဆက်နေသည်…"
+    },
+    {
+      "name": "common_status_disconnected",
+      "value": "ချိတ်ဆက်မထားပါ"
+    },
+    {
+      "name": "common_status_disconnecting",
+      "value": "အဆက်ဖြတ်နေသည်"
+    },
+    {
+      "name": "common_status_failed",
+      "value": "ချိတ်ဆက်၍ မရပါ"
+    },
+    {
+      "name": "common_subscriptions",
+      "value": "စာရင်းသွင်းမှုများ"
+    },
+    {
+      "name": "common_today",
+      "value": "ယနေ့"
+    },
+    {
+      "name": "common_try_again",
+      "value": "ထပ်စမ်းကြည့်ပါ"
+    },
+    {
+      "name": "common_undo",
+      "value": "နောက်ပြန်ရန်"
+    },
+    {
+      "name": "common_updating",
+      "value": "အပ်ဒိတ်လုပ်နေသည်…"
+    },
+    {
+      "name": "connect_no_subscription",
+      "value": "စာရင်းသွင်းမှု မရှိသေးပါ"
+    },
+    {
+      "name": "home_action_load_nodes",
+      "value": "နုဒ်များ ဖွင့်ခြင်း"
+    },
+    {
+      "name": "home_action_preview_exit",
+      "value": "ထွက်ပေါက် ကြိုကြည့်ခြင်း"
+    },
+    {
+      "name": "home_action_retest",
+      "value": "ပြန်စမ်းသပ်ခြင်း"
+    },
+    {
+      "name": "home_action_switch_exit",
+      "value": "ထွက်ပေါက် ပြောင်းခြင်း"
+    },
+    {
+      "name": "home_action_switch_mode",
+      "value": "မုဒ်ပြောင်းခြင်း"
+    },
+    {
+      "name": "home_action_switch_node",
+      "value": "နုဒ် ပြောင်းခြင်း"
+    },
+    {
+      "name": "home_action_switch_source",
+      "value": "ရင်းမြစ် ပြောင်းခြင်း"
+    },
+    {
+      "name": "home_action_undo",
+      "value": "နောက်ပြန်ခြင်း"
+    },
+    {
+      "name": "home_apply_failed",
+      "value": "အသုံးချ၍ မရပါ: %1$s"
+    },
+    {
+      "name": "home_confirm_apps",
+      "value": "%1$s အတွက် ထွက်ပေါက် IP ပြောင်းမလား။"
+    },
+    {
+      "name": "home_confirm_scene",
+      "value": "%1$s မြင်ကွင်း၏ ထွက်ပေါက် IP ပြောင်းမလား။"
+    },
+    {
+      "name": "home_confirm_unchanged",
+      "value": "%1$s မပြောင်းပါ။"
+    },
+    {
+      "name": "home_error_failed",
+      "value": "%1$s မအောင်မြင်ပါ"
+    },
+    {
+      "name": "home_error_node_gone",
+      "value": "%1$s မအောင်မြင်ပါ: နုဒ် မရှိတော့ပါ"
+    },
+    {
+      "name": "home_error_not_connected",
+      "value": "%1$s အတွက် အရင် ချိတ်ဆက်ပါ"
+    },
+    {
+      "name": "home_failover_none",
+      "value": "%1$s ထွက်ပေါက် တုံ့ပြန်မှု မရှိပါ။ ထွက်ပေါက် IP ကို အလိုအလျောက် မပြောင်းပါ။"
+    },
+    {
+      "name": "home_failover_switched",
+      "value": "%1$s ထွက်ပေါက်ကို %2$s သို့ အလိုအလျောက် ပြောင်းလိုက်သည်"
+    },
+    {
+      "name": "home_failure_core",
+      "value": "Core ကို စတင်၍ မရပါ"
+    },
+    {
+      "name": "home_failure_network",
+      "value": "ကွန်ရက် မရနိုင်ပါ"
+    },
+    {
+      "name": "home_failure_no_subscription",
+      "value": "စာရင်းသွင်းမှု အရင်ထည့်ပါ"
+    },
+    {
+      "name": "home_failure_vpn_permission",
+      "value": "VPN ခွင့်ပြုချက် လိုအပ်သည်"
+    },
+    {
+      "name": "home_global_body",
+      "value": "ဒေတာအားလုံး %1$s မှတစ်ဆင့် သွားသည်။ မြင်ကွင်းများ ခဏရပ်ထားသည်။"
+    },
+    {
+      "name": "home_global_body_any",
+      "value": "ဒေတာအားလုံး နုဒ်တစ်ခုမှတစ်ဆင့် သွားသည်။ မြင်ကွင်းများ ခဏရပ်ထားသည်။"
+    },
+    {
+      "name": "home_global_change_node",
+      "value": "နုဒ် ပြောင်းရန်"
+    },
+    {
+      "name": "home_global_change_note",
+      "value": "အက်ပ်အားလုံး %1$s မှတစ်ဆင့် ထွက်မည်။"
+    },
+    {
+      "name": "home_global_change_to",
+      "value": "%1$s သို့ ပြောင်းရန်"
+    },
+    {
+      "name": "home_global_title",
+      "value": "ကမ္ဘာလုံးဆိုင်ရာ မုဒ်"
+    },
+    {
+      "name": "home_global_use_rule",
+      "value": "စည်းမျဉ်း မုဒ် သုံးရန်"
+    },
+    {
+      "name": "home_now_all_nodes",
+      "value": "%1$s: နုဒ်အားလုံး ပြန်သုံးသည်"
+    },
+    {
+      "name": "home_now_direct",
+      "value": "%1$s ယခု တိုက်ရိုက် ချိတ်ဆက်သည်"
+    },
+    {
+      "name": "home_now_uhd_only",
+      "value": "%1$s ယခု 4K နုဒ်များကိုသာ သုံးသည်"
+    },
+    {
+      "name": "home_now_uses",
+      "value": "%1$s ယခု %2$s ကို သုံးသည်"
+    },
+    {
+      "name": "home_now_uses_uhd",
+      "value": "%1$s ယခု %2$s ကို သုံးသည် (4K သာ)"
+    },
+    {
+      "name": "home_pin_line",
+      "value": "%1$s: %2$s"
+    },
+    {
+      "name": "home_scan_progress",
+      "value": "စမ်းသပ်နေသည် %1$d/%2$d"
+    },
+    {
+      "name": "home_scan_running",
+      "value": "စမ်းသပ်နေသည်…"
+    },
+    {
+      "name": "home_scene_details_a11y",
+      "value": "%1$s မြင်ကွင်း အသေးစိတ်"
+    },
+    {
+      "name": "home_scene_next_region",
+      "value": "နောက်ဒေသ: %1$s"
+    },
+    {
+      "name": "home_scene_prev_region",
+      "value": "ယခင်ဒေသ: %1$s"
+    },
+    {
+      "name": "home_scene_services_down",
+      "value": "%1$s မရနိုင်ပါ"
+    },
+    {
+      "name": "home_scene_services_ok",
+      "value": "%1$s အဆင်ပြေ"
+    },
+    {
+      "name": "home_scene_testing",
+      "value": "စမ်းသပ်နေသည်"
+    },
+    {
+      "name": "home_scenes_tested",
+      "value": "%1$s စမ်းသပ်ခဲ့"
+    },
+    {
+      "name": "home_scrub_hint",
+      "value": "ဒေသပြောင်းရန် ဘယ် သို့မဟုတ် ညာသို့ ပွတ်ဆွဲပါ"
+    },
+    {
+      "name": "home_spark_a11y",
+      "value": "ဒေါင်းလုဒ် အမြန်နှုန်း၊ နောက်ဆုံး 90 စက္ကန့်"
+    },
+    {
+      "name": "home_switch_mode",
+      "value": "မုဒ် ပြောင်းရန်"
+    },
+    {
+      "name": "home_switched_to",
+      "value": "%1$s သို့ ပြောင်းလိုက်သည်"
+    },
+    {
+      "name": "home_today_usage",
+      "value": "ယနေ့ %1$s"
+    },
+    {
+      "name": "library_widgets",
+      "value": "ဝစ်ဂျက်နှင့် အမြန်ဆက်တင်များ"
+    },
+    {
+      "name": "licenses_intro",
+      "value": "Zephyr ၏ ကိုယ်ပိုင်ကုဒ်သည် MIT လိုင်စင်ဖြစ်သည်။ ဤအက်ပ်တွင် mihomo (GPL-3.0) ပါဝင်သဖြင့် အက်ပ်တစ်ခုလုံးကို GPL-3.0 ဖြင့် ဖြန့်ချိသည်။ သက်ဆိုင်ရာ ရင်းမြစ်ကုဒ်- %1$s၊ tag %2$s။"
+    },
+    {
+      "name": "licenses_section_app",
+      "value": "Zephyr လိုင်စင်"
+    },
+    {
+      "name": "licenses_section_notices",
+      "value": "ပြင်ပအဖွဲ့ အသိပေးချက်များ"
+    },
+    {
+      "name": "licenses_section_texts",
+      "value": "လိုင်စင် စာသားများ"
+    },
+    {
+      "name": "licenses_unavailable",
+      "value": "ဤဗားရှင်းတွင် လိုင်စင်ဖိုင်များ မပါဝင်ပါ။"
+    },
+    {
+      "name": "local_proxy_apply_failed",
+      "value": "ပြောင်းလဲမှုကို အသုံးချ၍ မရပါ"
+    },
+    {
+      "name": "local_proxy_auth_footer",
+      "value": "ဖွင့်ထားလျှင် စက်တွင်း ပေါ့တ်သို့ ချိတ်ဆက်ရန် အသုံးပြုသူအမည်နှင့် စကားဝှက် လိုအပ်သဖြင့် အခြားအက်ပ်များ ခွင့်ပြုချက်မရှိဘဲ ပရောက်စီကို မသုံးနိုင်ပါ။"
+    },
+    {
+      "name": "local_proxy_conceal",
+      "value": "စကားဝှက် ဖျောက်ရန်"
+    },
+    {
+      "name": "local_proxy_concealed",
+      "value": "စကားဝှက် ဖျောက်ထားသည်"
+    },
+    {
+      "name": "local_proxy_copied",
+      "value": "ကူးပြီးပါပြီ"
+    },
+    {
+      "name": "local_proxy_copy_http",
+      "value": "HTTP ပရောက်စီ URL ကူးရန်"
+    },
+    {
+      "name": "local_proxy_copy_socks",
+      "value": "SOCKS5 ပရောက်စီ URL ကူးရန်"
+    },
+    {
+      "name": "local_proxy_credential_row",
+      "value": "စကားဝှက်"
+    },
+    {
+      "name": "local_proxy_credentials",
+      "value": "ချိတ်ဆက်မှု အချက်အလက်"
+    },
+    {
+      "name": "local_proxy_footer",
+      "value": "ဖွင့်ထားလျှင် Zephyr သည် 127.0.0.1 တွင်သာ နားထောင်သဖြင့် ကွန်ရက်ရှိ အခြားစက်များ ချိတ်ဆက်၍ မရပါ။"
+    },
+    {
+      "name": "local_proxy_port",
+      "value": "ပေါ့တ်"
+    },
+    {
+      "name": "local_proxy_port_footer",
+      "value": "အခြားအက်ပ်များသည် 127.0.0.1 ပေါ်ရှိ ဤပေါ့တ်မှတစ်ဆင့် Zephyr ၏ စည်းမျဉ်းများနှင့် မြင်ကွင်းများကို သုံးနိုင်သည်။"
+    },
+    {
+      "name": "local_proxy_port_invalid",
+      "value": "%1$d မှ %2$d အတွင်း ပေါ့တ် ထည့်ပါ"
+    },
+    {
+      "name": "local_proxy_regenerate",
+      "value": "စကားဝှက် အသစ်ထုတ်ရန်"
+    },
+    {
+      "name": "local_proxy_regenerate_footer",
+      "value": "အသစ်ထုတ်ပြီးနောက် စကားဝှက်ဟောင်း ချက်ချင်း အသုံးမဝင်တော့ပါ။ သတ်မှတ်ထားသော အက်ပ်များတွင် အသစ်ကို ထည့်ရပါမည်။"
+    },
+    {
+      "name": "local_proxy_regenerated",
+      "value": "စကားဝှက်အသစ် ထုတ်ပြီးပါပြီ"
+    },
+    {
+      "name": "local_proxy_reveal",
+      "value": "စကားဝှက် ပြရန်"
+    },
+    {
+      "name": "local_proxy_security",
+      "value": "လုံခြုံရေး"
+    },
+    {
+      "name": "local_proxy_user_row",
+      "value": "အသုံးပြုသူအမည်"
+    },
+    {
+      "name": "logs_clear",
+      "value": "ရှင်းရန်"
+    },
+    {
+      "name": "logs_empty",
+      "value": "မှတ်တမ်း မရှိသေးပါ"
+    },
+    {
+      "name": "logs_level_debug",
+      "value": "အမှားရှာ"
+    },
+    {
+      "name": "logs_level_error",
+      "value": "အမှား"
+    },
+    {
+      "name": "logs_level_info",
+      "value": "အချက်အလက်"
+    },
+    {
+      "name": "logs_level_warning",
+      "value": "သတိပေးချက်"
+    },
+    {
+      "name": "logs_line_a11y",
+      "value": "%1$s %2$s %3$s"
+    },
+    {
+      "name": "logs_pause",
+      "value": "ခဏရပ်ရန်"
+    },
+    {
+      "name": "logs_resume",
+      "value": "ဆက်လုပ်ရန်"
+    },
+    {
+      "name": "logs_title",
+      "value": "မှတ်တမ်းများ"
+    },
+    {
+      "name": "nodes_detail_latency",
+      "value": "နောက်ကျမှု"
+    },
+    {
+      "name": "nodes_detail_protocol",
+      "value": "ပရိုတိုကော"
+    },
+    {
+      "name": "nodes_detail_route",
+      "value": "လမ်းကြောင်း"
+    },
+    {
+      "name": "nodes_detail_server",
+      "value": "ဆာဗာ"
+    },
+    {
+      "name": "nodes_detail_test",
+      "value": "နောက်ကျမှု စမ်းသပ်ရန်"
+    },
+    {
+      "name": "nodes_empty_action",
+      "value": "စာရင်းသွင်းမှု တင်သွင်းရန်"
+    },
+    {
+      "name": "nodes_empty_message",
+      "value": "စာရင်းသွင်းမှု တင်သွင်းလျှင် ၎င်း၏ နုဒ်များ ဤနေရာတွင် ပေါ်မည်"
+    },
+    {
+      "name": "nodes_empty_title",
+      "value": "နုဒ် မရှိသေးပါ"
+    },
+    {
+      "name": "nodes_error_title",
+      "value": "နုဒ်များကို ဖွင့်၍ မရပါ"
+    },
+    {
+      "name": "nodes_jump_to",
+      "value": "%1$s သို့ သွားရန်"
+    },
+    {
+      "name": "nodes_no_match",
+      "value": "“%1$s” နှင့် ကိုက်ညီသော နုဒ် မရှိပါ"
+    },
+    {
+      "name": "nodes_search_placeholder",
+      "value": "ဒေသ၊ မြို့ သို့မဟုတ် လမ်းကြောင်း"
+    },
+    {
+      "name": "nodes_search_stats",
+      "value": "%1$s ခု · %2$s"
+    },
+    {
+      "name": "nodes_tested",
+      "value": "%1$s ခု စမ်းသပ်ပြီး"
+    },
+    {
+      "name": "notif_action_global",
+      "value": "ကမ္ဘာလုံးဆိုင်ရာ မုဒ်"
+    },
+    {
+      "name": "notif_action_rule",
+      "value": "စည်းမျဉ်း မုဒ်"
+    },
+    {
+      "name": "notif_channel_alerts",
+      "value": "စာရင်းသွင်းမှု သတိပေးချက်"
+    },
+    {
+      "name": "notif_channel_alerts_desc",
+      "value": "စာရင်းသွင်းမှု သက်တမ်းကုန်ခြင်းနှင့် ဒေတာနည်းခြင်း"
+    },
+    {
+      "name": "notif_channel_vpn",
+      "value": "ချိတ်ဆက်မှု အခြေအနေ"
+    },
+    {
+      "name": "notif_channel_vpn_desc",
+      "value": "ချိတ်ဆက်ထားစဉ် အမြန်နှုန်းနှင့် မြင်ကွင်းများ ပြသည်"
+    },
+    {
+      "name": "notif_expiry_text",
+      "value": "%1$s ကျန်"
+    },
+    {
+      "name": "notif_expiry_title",
+      "value": "%1$s သည် %2$s တွင် သက်တမ်းကုန်မည်"
+    },
+    {
+      "name": "notif_paused_trusted",
+      "value": "ယုံကြည်ရသော Wi‑Fi «%1$s» တွင် ချိတ်ဆက်မှု ဖြတ်ထားသည်။ ထွက်သွားလျှင် အလိုအလျောက် ပြန်ချိတ်ပါမည်။"
+    },
+    {
+      "name": "notif_route_global",
+      "value": "ကမ္ဘာလုံးဆိုင်ရာ · %1$s"
+    },
+    {
+      "name": "notif_route_global_any",
+      "value": "ဒေတာအားလုံး နုဒ်တစ်ခုမှတစ်ဆင့်"
+    },
+    {
+      "name": "onboarding_cancel_import_a11y",
+      "value": "တင်သွင်းခြင်း ရပ်ရန်"
+    },
+    {
+      "name": "onboarding_change_later",
+      "value": "ဆက်တင်များတွင် အချိန်မရွေး ပြောင်းနိုင်သည်။"
+    },
+    {
+      "name": "onboarding_choose_mode",
+      "value": "အသုံးပြုပုံ ရွေးပါ"
+    },
+    {
+      "name": "onboarding_continue",
+      "value": "ဆက်လုပ်ရန်"
+    },
+    {
+      "name": "onboarding_optimized",
+      "value": "အကောင်းဆုံး"
+    },
+    {
+      "name": "onboarding_optimized_desc",
+      "value": "Wi‑Fi ဖြင့် နုဒ်များကို နေ့စဉ် စမ်းသပ်သည်။ AI နှင့် ဗီဒီယိုသည် စမ်းသပ်မှု အောင်သော နုဒ်များကိုသာ သုံးသည်။ တစ်ကြိမ်လျှင် 3 MB ခန့်။"
+    },
+    {
+      "name": "onboarding_simple",
+      "value": "ရိုးရှင်း"
+    },
+    {
+      "name": "onboarding_simple_desc",
+      "value": "စာရင်းသွင်းမှုမှ အုပ်စုများကို သုံးသည်။ မရနိုင်သော နုဒ်များကို အလိုအလျောက် ကိုင်တွယ်သည်။"
+    },
+    {
+      "name": "rules_add_override_a11y",
+      "value": "ဒိုမိန်းအတွက် အစားထိုးချက် ထည့်ရန်"
+    },
+    {
+      "name": "rules_blocked",
+      "value": "ပိတ်ဆို့ထားသည်"
+    },
+    {
+      "name": "rules_kind_domain",
+      "value": "ဒိုမိန်း"
+    },
+    {
+      "name": "rules_kind_ip",
+      "value": "IP"
+    },
+    {
+      "name": "rules_kind_other",
+      "value": "အခြား"
+    },
+    {
+      "name": "rules_kind_override",
+      "value": "အစားထိုးချက်"
+    },
+    {
+      "name": "rules_kind_subscription",
+      "value": "စာရင်းသွင်းမှု"
+    },
+    {
+      "name": "rules_match_order",
+      "value": "ကိုက်ညီမှု အစီအစဉ်"
+    },
+    {
+      "name": "rules_note",
+      "value": "စည်းမျဉ်း အစုများကို စက်ပေါ်တွင် ဖတ်ရန်သာ အညွှန်းအဖြစ် compile လုပ်ပြီး လိုအပ်သလို ဒစ်ခ်မှ ဖတ်သည်။ စာရင်းသွင်းမှု အပ်ဒိတ်ဖြစ်လည်း အစားထိုးချက်များ မပြောင်းပါ။"
+    },
+    {
+      "name": "rules_other_traffic",
+      "value": "ကျန်ဒေတာအားလုံး"
+    },
+    {
+      "name": "rules_step_exit_ip",
+      "value": "ထွက်ပေါက် IP"
+    },
+    {
+      "name": "rules_step_layer",
+      "value": "အလွှာ %1$d · %2$s"
+    },
+    {
+      "name": "rules_step_request",
+      "value": "တောင်းဆိုမှု"
+    },
+    {
+      "name": "rules_step_result",
+      "value": "ရလဒ်"
+    },
+    {
+      "name": "rules_step_scene",
+      "value": "မြင်ကွင်း · %1$s"
+    },
+    {
+      "name": "rules_test_hint",
+      "value": "ကိုက်ညီသော စည်းမျဉ်းနှင့် ထွက်ပေါက်ကို ကြည့်ရန် ဒိုမိန်း သို့မဟုတ် IP လိပ်စာ ထည့်ပါ။"
+    },
+    {
+      "name": "rules_test_placeholder",
+      "value": "ဒိုမိန်း သို့မဟုတ် IP စမ်းသပ်ရန်"
+    },
+    {
+      "name": "rules_took",
+      "value": "ကြာချိန် %1$s"
+    },
+    {
+      "name": "rules_top_to_bottom",
+      "value": "အပေါ်မှ အောက်သို့"
+    },
+    {
+      "name": "scene_ask",
+      "value": "မေးရန်"
+    },
+    {
+      "name": "scene_auto_switch",
+      "value": "အလိုအလျောက် ပြောင်းရန်"
+    },
+    {
+      "name": "scene_funnel_reachable",
+      "value": "ချိတ်ဆက်နိုင်"
+    },
+    {
+      "name": "scene_funnel_tested",
+      "value": "စမ်းသပ်ပြီး"
+    },
+    {
+      "name": "scene_funnel_under",
+      "value": "%1$d ms အောက်"
+    },
+    {
+      "name": "scene_node_scope",
+      "value": "နုဒ် နယ်ပယ်"
+    },
+    {
+      "name": "scene_note",
+      "value": "ရွေးချယ်မှုများကို Zephyr တွင်သာ သိမ်းသည်။ စာရင်းသွင်းမှု ဖွဲ့စည်းပုံ မပြောင်းပါ။"
+    },
+    {
+      "name": "scene_note_tested",
+      "value": "%1$s နောက်ဆုံး စမ်းသပ်ချိန်: %2$s။"
+    },
+    {
+      "name": "scene_pinned_for",
+      "value": "%1$s အတွက် ပုံသေ"
+    },
+    {
+      "name": "scene_pinned_value",
+      "value": "%1$s (ပုံသေ)"
+    },
+    {
+      "name": "scene_retest",
+      "value": "ပြန်စမ်းသပ်ရန်"
+    },
+    {
+      "name": "scene_test_daily",
+      "value": "နေ့စဉ်"
+    },
+    {
+      "name": "scene_test_frequency",
+      "value": "စမ်းသပ်မှု ကြိမ်နှုန်း"
+    },
+    {
+      "name": "scene_test_wifi_only",
+      "value": "%1$s (Wi‑Fi သာ)"
+    },
+    {
+      "name": "scene_tested_from_pool",
+      "value": "စာရင်းသွင်းမှု %1$d ခုမှ နုဒ် %2$s ခုကို စမ်းသပ်ပြီး"
+    },
+    {
+      "name": "scene_uhd_only",
+      "value": "4K နုဒ်များသာ"
+    },
+    {
+      "name": "scene_when_unavailable",
+      "value": "နုဒ် မရနိုင်သည့်အခါ"
+    },
+    {
+      "name": "settings_accent",
+      "value": "အထူးပြု အရောင်"
+    },
+    {
+      "name": "settings_accent_blue",
+      "value": "အပြာရောင်"
+    },
+    {
+      "name": "settings_accent_green",
+      "value": "အစိမ်းရောင်"
+    },
+    {
+      "name": "settings_accent_orange",
+      "value": "လိမ္မော်ရောင်"
+    },
+    {
+      "name": "settings_accent_pink",
+      "value": "ပန်းရောင်"
+    },
+    {
+      "name": "settings_appearance",
+      "value": "အသွင်အပြင်"
+    },
+    {
+      "name": "settings_appearance_dark",
+      "value": "အမှောင်"
+    },
+    {
+      "name": "settings_appearance_light",
+      "value": "အလင်း"
+    },
+    {
+      "name": "settings_appearance_system",
+      "value": "စနစ်အတိုင်း"
+    },
+    {
+      "name": "settings_keep_results",
+      "value": "ရလဒ် သိမ်းထားချိန်"
+    },
+    {
+      "name": "settings_licenses",
+      "value": "Open-source လိုင်စင်များ"
+    },
+    {
+      "name": "settings_local_data_note",
+      "value": "စာရင်းသွင်းမှု၊ နုဒ်နှင့် ဒေတာအသုံးပြုမှုကို ဤစက်တွင်သာ သိမ်းသည်။"
+    },
+    {
+      "name": "settings_local_proxy",
+      "value": "စက်တွင်း ပရောက်စီ ပေါ့တ်"
+    },
+    {
+      "name": "settings_on_demand",
+      "value": "လိုအပ်မှ ချိတ်ဆက်ရန်"
+    },
+    {
+      "name": "settings_password_required",
+      "value": "စကားဝှက် လိုအပ်သည်"
+    },
+    {
+      "name": "settings_save_failed",
+      "value": "ဆက်တင်ကို သိမ်း၍မရပါ"
+    },
+    {
+      "name": "settings_section_about",
+      "value": "အကြောင်း"
+    },
+    {
+      "name": "settings_section_connection",
+      "value": "ချိတ်ဆက်မှု"
+    },
+    {
+      "name": "settings_section_diagnostics",
+      "value": "ပြဿနာရှာဖွေခြင်း"
+    },
+    {
+      "name": "settings_section_privacy",
+      "value": "ကိုယ်ရေးလုံခြုံမှု"
+    },
+    {
+      "name": "settings_section_storage",
+      "value": "သိုလှောင်မှု"
+    },
+    {
+      "name": "settings_section_testing",
+      "value": "စမ်းသပ်ခြင်း"
+    },
+    {
+      "name": "settings_share_diagnostics",
+      "value": "ပြဿနာရှာ ဒေတာ မျှဝေရန်"
+    },
+    {
+      "name": "settings_source_code",
+      "value": "ရင်းမြစ်ကုဒ်"
+    },
+    {
+      "name": "settings_storage_detail",
+      "value": "နုဒ် %1$s · စည်းမျဉ်း %2$s · လွတ် %3$s"
+    },
+    {
+      "name": "settings_storage_title",
+      "value": "နုဒ်နှင့် စည်းမျဉ်းများ"
+    },
+    {
+      "name": "settings_test_wifi_only",
+      "value": "Wi‑Fi ဖြင့်သာ အမြန်နှုန်း စမ်းသပ်ရန်"
+    },
+    {
+      "name": "settings_trusted_wifi",
+      "value": "ယုံကြည်ရသော Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi_always_on",
+      "value": "စနစ်၏ «အမြဲဖွင့် VPN» က စီမံထားသည်"
+    },
+    {
+      "name": "settings_trusted_wifi_hint",
+      "value": "ချိတ်မိလျှင် အလိုအလျောက် အဆက်ဖြတ်"
+    },
+    {
+      "name": "settings_trusted_wifi_location",
+      "value": "Wi‑Fi အမည်များကို သိရှိရန် တည်နေရာ ခွင့်ပြုပါ"
+    },
+    {
+      "name": "settings_trusted_wifi_location_off",
+      "value": "Wi‑Fi အမည်များကို သိရှိရန် စနစ်တည်နေရာကို ဖွင့်ပါ"
+    },
+    {
+      "name": "subs_add",
+      "value": "စာရင်းသွင်းမှု ထည့်ရန်"
+    },
+    {
+      "name": "subs_all_title",
+      "value": "စာရင်းသွင်းမှုများ အားလုံး"
+    },
+    {
+      "name": "subs_auto_update",
+      "value": "အလိုအလျောက် အပ်ဒိတ်"
+    },
+    {
+      "name": "subs_deleted",
+      "value": "%1$s ကို ဖျက်ပြီး"
+    },
+    {
+      "name": "subs_diff_updated",
+      "value": "%1$s အပ်ဒိတ်ပြီး"
+    },
+    {
+      "name": "subs_diff_updating",
+      "value": "%1$s အပ်ဒိတ်လုပ်နေသည်…"
+    },
+    {
+      "name": "subs_error_clipboard_empty",
+      "value": "ကလစ်ဘုတ်တွင် ဘာမှမရှိပါ"
+    },
+    {
+      "name": "subs_error_delete",
+      "value": "%1$s ကို ဖျက်၍ မရပါ"
+    },
+    {
+      "name": "subs_error_fetch",
+      "value": "ဤစာရင်းသွင်းမှုကို ဒေါင်းလုဒ်လုပ်၍ မရပါ။ လင့်ခ် သို့မဟုတ် ကွန်ရက်ကို စစ်ပါ။"
+    },
+    {
+      "name": "subs_error_import_version",
+      "value": "ဤတင်သွင်းကုဒ်အတွက် Zephyr ဗားရှင်းအသစ် လိုအပ်သည်"
+    },
+    {
+      "name": "subs_error_invalid_file",
+      "value": "မှန်ကန်သော ဖွဲ့စည်းပုံဖိုင် မဟုတ်ပါ"
+    },
+    {
+      "name": "subs_error_invalid_link",
+      "value": "မှန်ကန်သော စာရင်းသွင်းမှု လင့်ခ် မဟုတ်ပါ"
+    },
+    {
+      "name": "subs_error_read_file",
+      "value": "ဤဖိုင်ကို ဖတ်၍ မရပါ"
+    },
+    {
+      "name": "subs_error_update",
+      "value": "%1$s ကို အပ်ဒိတ်လုပ်၍ မရပါ"
+    },
+    {
+      "name": "subs_error_update_all",
+      "value": "စာရင်းသွင်းမှုများကို အပ်ဒိတ်လုပ်၍ မရပါ"
+    },
+    {
+      "name": "subs_hint_desktop",
+      "value": "QR ကုဒ်ပြရန် ကွန်ပျူတာရှိ Zephyr တွင် ဆက်တင်များ › ဖုန်းသို့ စင့်ခ်လုပ်ရန် ကို ဖွင့်ပါ"
+    },
+    {
+      "name": "subs_import_desktop",
+      "value": "ကွန်ပျူတာရှိ Zephyr မှ တင်သွင်းရန်"
+    },
+    {
+      "name": "subs_import_desktop_source",
+      "value": "Zephyr (ကွန်ပျူတာ)"
+    },
+    {
+      "name": "subs_import_file",
+      "value": "ဖိုင်မှ တင်သွင်းရန်"
+    },
+    {
+      "name": "subs_import_insecure",
+      "value": "ဤလင့်ခ်ကို စာဝှက်မထားပါ (http)။ အကြောင်းအရာကို ဖတ်ရှု သို့မဟုတ် ပြင်ဆင်ခံရနိုင်သည်။"
+    },
+    {
+      "name": "subs_import_source",
+      "value": "ရင်းမြစ်- %1$s"
+    },
+    {
+      "name": "subs_import_trust",
+      "value": "ဤဝန်ဆောင်မှုပေးသူကို ယုံကြည်မှသာ ဆက်လုပ်ပါ။"
+    },
+    {
+      "name": "subs_overrides_kept",
+      "value": "အစားထိုးချက်များကို ထိန်းထားသည်"
+    },
+    {
+      "name": "subs_paste_clipboard",
+      "value": "ကလစ်ဘုတ်မှ ကူးထည့်ရန်"
+    },
+    {
+      "name": "subs_paste_link",
+      "value": "လင့်ခ် ကူးထည့်ရန်"
+    },
+    {
+      "name": "subs_paste_placeholder",
+      "value": "စာရင်းသွင်းမှု လင့်ခ် ကူးထည့်ပါ"
+    },
+    {
+      "name": "subs_remaining",
+      "value": "ကျန်ရှိ"
+    },
+    {
+      "name": "subs_review_note",
+      "value": "အပ်ဒိတ်လုပ်လျှင် စာရင်းသွင်းမှု၏ နုဒ်များနှင့် စည်းမျဉ်းများကို အစားထိုးမည်။ Zephyr ၏ အစားထိုးချက်များနှင့် မြင်ကွင်း ရွေးချယ်မှုများ မပြောင်းပါ။"
+    },
+    {
+      "name": "subs_review_one",
+      "value": "%1$s ကို အပ်ဒိတ်လုပ်မည်"
+    },
+    {
+      "name": "subs_rule_changes",
+      "value": "စည်းမျဉ်း ပြောင်းလဲမှုများ"
+    },
+    {
+      "name": "subs_scan_camera_needed",
+      "value": "စကင်ဖတ်ရန် ကင်မရာ ခွင့်ပြုချက် လိုအပ်သည်"
+    },
+    {
+      "name": "subs_scan_no_camera",
+      "value": "ဤစက်တွင် ကင်မရာ မရှိပါ"
+    },
+    {
+      "name": "subs_scan_prompt",
+      "value": "အလိုအလျောက် စကင်ဖတ်ရန် စာရင်းသွင်းမှု QR ကုဒ်ကို ဘောင်အတွင်း ထားပါ။"
+    },
+    {
+      "name": "subs_scan_qr",
+      "value": "QR ကုဒ် စကင်ဖတ်ရန်"
+    },
+    {
+      "name": "subs_scenes_retested",
+      "value": "မြင်ကွင်း အစုများကို ပြန်စမ်းသပ်ပြီး"
+    },
+    {
+      "name": "subs_section_data",
+      "value": "ဒေတာ"
+    },
+    {
+      "name": "subs_section_update",
+      "value": "အပ်ဒိတ်များ"
+    },
+    {
+      "name": "subs_show_changes",
+      "value": "အပ်ဒိတ်မလုပ်မီ ပြောင်းလဲမှုများ ပြရန်"
+    },
+    {
+      "name": "subs_swipe_confirm_delete",
+      "value": "ဖျက်ရန် အတည်ပြု"
+    },
+    {
+      "name": "subs_swipe_delete",
+      "value": "ဖျက်ရန်"
+    },
+    {
+      "name": "subs_swipe_update",
+      "value": "အပ်ဒိတ်"
+    },
+    {
+      "name": "subs_swipe_updating",
+      "value": "အပ်ဒိတ်လုပ်နေသည်"
+    },
+    {
+      "name": "subs_this_month",
+      "value": "ယခုလ"
+    },
+    {
+      "name": "subs_update_all",
+      "value": "ယခု အားလုံး အပ်ဒိတ်လုပ်ရန်"
+    },
+    {
+      "name": "subs_update_wifi_only",
+      "value": "Wi‑Fi ဖြင့်သာ အပ်ဒိတ်လုပ်ရန်"
+    },
+    {
+      "name": "tile_a11y",
+      "value": "%1$s၊ %2$s"
+    },
+    {
+      "name": "today_date_pattern",
+      "value": "MMMM d၊ EEEE"
+    },
+    {
+      "name": "today_fastest",
+      "value": "ms အမြန်ဆုံး"
+    },
+    {
+      "name": "today_pattern_note",
+      "value": "ပုံစံကို ယနေ့ ဒေတာအသုံးပြုမှုမှ ဖန်တီးထားပြီး နုဒ်အမည်နှင့် IP လိပ်စာများ မပါဝင်ပါ။"
+    },
+    {
+      "name": "today_save_failed",
+      "value": "ပုံကို သိမ်း၍ မရပါ"
+    },
+    {
+      "name": "today_save_image",
+      "value": "ပုံ သိမ်းရန်"
+    },
+    {
+      "name": "today_saved",
+      "value": "ဓာတ်ပုံပြခန်းတွင် သိမ်းပြီး"
+    },
+    {
+      "name": "today_storage_permission",
+      "value": "ပုံသိမ်းရန် သိုလှောင်ခွင့် လိုအပ်သည်"
+    },
+    {
+      "name": "today_style_dawn",
+      "value": "အရုဏ်"
+    },
+    {
+      "name": "today_style_mist",
+      "value": "မြူ"
+    },
+    {
+      "name": "today_style_night",
+      "value": "ည"
+    },
+    {
+      "name": "trace_always_apply",
+      "value": "အမြဲ အသုံးချရန်"
+    },
+    {
+      "name": "trace_always_apply_hint",
+      "value": "ပိတ်ထားလျှင် ဤချိတ်ဆက်မှုသာ ပြောင်းမည်"
+    },
+    {
+      "name": "trace_from",
+      "value": "%1$s မှ"
+    },
+    {
+      "name": "trace_option_unchanged",
+      "value": "မပြောင်းပါ"
+    },
+    {
+      "name": "trace_override_cleared",
+      "value": "%1$s ၏ လမ်းကြောင်း အစားထိုးချက်ကို ရှင်းပြီး"
+    },
+    {
+      "name": "trace_override_direct",
+      "value": "%1$s ယခု တိုက်ရိုက် ချိတ်ဆက်သည်"
+    },
+    {
+      "name": "trace_override_error",
+      "value": "လမ်းကြောင်း ပြောင်း၍ မရပါ။ ထပ်စမ်းကြည့်ပါ။"
+    },
+    {
+      "name": "trace_override_scene",
+      "value": "%1$s ယခု %2$s ကို သုံးသည်"
+    },
+    {
+      "name": "trace_step_exit",
+      "value": "ထွက်ပေါက်"
+    },
+    {
+      "name": "trace_step_node",
+      "value": "နုဒ်"
+    },
+    {
+      "name": "trace_step_rule",
+      "value": "စည်းမျဉ်း"
+    },
+    {
+      "name": "trace_step_scene",
+      "value": "မြင်ကွင်း"
+    },
+    {
+      "name": "trace_this_connection",
+      "value": "ဤချိတ်ဆက်မှု"
+    },
+    {
+      "name": "trace_via",
+      "value": "%1$s မှတစ်ဆင့်"
+    },
+    {
+      "name": "trusted_wifi_add_hint",
+      "value": "Wi‑Fi အမည် ထည့်ရန်"
+    },
+    {
+      "name": "trusted_wifi_disconnect",
+      "value": "ဤ Wi‑Fi များတွင် အဆက်ဖြတ်ရန်"
+    },
+    {
+      "name": "trusted_wifi_footer",
+      "value": "အိမ် သို့မဟုတ် အလုပ်ကဲ့သို့ ယုံကြည်ရသော ကွန်ရက်များတွင် Zephyr သည် အလိုအလျောက် အဆက်ဖြတ်ပြီး ထွက်ခွာသောအခါ လိုအပ်သလို ပြန်ချိတ်ဆက်သည်။"
+    },
+    {
+      "name": "trusted_wifi_networks",
+      "value": "ကွန်ရက်များ"
+    },
+    {
+      "name": "widget_description",
+      "value": "ချိတ်ဆက်မှု အခြေအနေ၊ အမြန်နှုန်းနှင့် မြင်ကွင်းများ"
+    },
+    {
+      "name": "widget_label",
+      "value": "Zephyr အခြေအနေ"
+    },
+    {
+      "name": "widget_today",
+      "value": "ယနေ့ %1$s %2$s"
+    },
+    {
+      "name": "widget_usage_description",
+      "value": "ယနေ့ ဒေတာနှင့် 24 နာရီ ခွဲခြမ်းချက်"
+    },
+    {
+      "name": "widget_usage_label",
+      "value": "Zephyr ယနေ့ အသုံးပြုမှု"
+    },
+    {
+      "name": "widgets_home_steps",
+      "value": "ပင်မစခရင်ရှိ နေရာလွတ်ကို ဖိထားပါ › ဝစ်ဂျက်များ › Zephyr ကိုရွေးပြီး ပင်မစခရင်ပေါ်သို့ ဆွဲထည့်ပါ။"
+    },
+    {
+      "name": "widgets_home_title",
+      "value": "ပင်မစခရင် ဝစ်ဂျက်များ"
+    },
+    {
+      "name": "widgets_tile_steps",
+      "value": "စခရင်ထိပ်မှ အောက်သို့ နှစ်ကြိမ် ပွတ်ဆွဲပါ › တည်းဖြတ်ရန် › Zephyr ကို အမြန်ဆက်တင်ထဲသို့ ဆွဲထည့်ပါ။ ချိတ်ဆက်ရန် သို့မဟုတ် အဆက်ဖြတ်ရန် တို့ပါ။"
+    },
+    {
+      "name": "widgets_tile_title",
+      "value": "အမြန်ဆက်တင် အကွက်"
+    }
+  ]
+}

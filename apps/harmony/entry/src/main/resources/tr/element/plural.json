@@ -1,0 +1,446 @@
+{
+  "plural": [
+    {
+      "name": "common_node_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$s düğüm"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$s düğüm"
+        }
+      ]
+    },
+    {
+      "name": "common_available_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d kullanılabilir"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d kullanılabilir"
+        }
+      ]
+    },
+    {
+      "name": "common_region_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d bölge"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d bölge"
+        }
+      ]
+    },
+    {
+      "name": "home_subs_more",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d abonelik daha"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d abonelik daha"
+        }
+      ]
+    },
+    {
+      "name": "home_scene_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d senaryo"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d senaryo"
+        }
+      ]
+    },
+    {
+      "name": "scene_available_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "kullanılabilir düğüm"
+        },
+        {
+          "quantity": "other",
+          "value": "kullanılabilir düğüm"
+        }
+      ]
+    },
+    {
+      "name": "scene_tested_from",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d abonelikten test edildi"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d abonelikten test edildi"
+        }
+      ]
+    },
+    {
+      "name": "scene_test_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Saatte bir"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d saatte bir"
+        }
+      ]
+    },
+    {
+      "name": "command_plan_exit_available",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d kullanılabilir. %2$s kullanılacak."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d kullanılabilir. %2$s kullanılacak."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_untested",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d 4K düğüm henüz test edilmedi. Uyguladıktan sonra senaryoyu yeniden test edin."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d 4K düğüm henüz test edilmedi. Uyguladıktan sonra senaryoyu yeniden test edin."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_keep",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d düğümün %2$d tanesi 4K destekliyor; mevcut düğüm aynı kalır."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d düğümün %2$d tanesi 4K destekliyor; mevcut düğüm aynı kalır."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_switch",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d düğümün %2$d tanesi 4K destekliyor; %3$s kullanılacak."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d düğümün %2$d tanesi 4K destekliyor; %3$s kullanılacak."
+        }
+      ]
+    },
+    {
+      "name": "activity_closed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d bağlantı kapatıldı"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d bağlantı kapatıldı"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Bağlantı kapatılamadı"
+        },
+        {
+          "quantity": "other",
+          "value": "Bağlantılar kapatılamadı"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_partial",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d bağlantı kapatılamadı"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d bağlantı kapatılamadı"
+        }
+      ]
+    },
+    {
+      "name": "trace_connections",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d bağlantı"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d bağlantı"
+        }
+      ]
+    },
+    {
+      "name": "trace_exit_stable",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d gündür değişmedi"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d gündür değişmedi"
+        }
+      ]
+    },
+    {
+      "name": "nodes_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "düğüm"
+        },
+        {
+          "quantity": "other",
+          "value": "düğüm"
+        }
+      ]
+    },
+    {
+      "name": "nodes_from_subs",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d abonelikten"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d abonelikten"
+        }
+      ]
+    },
+    {
+      "name": "rules_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "kural"
+        },
+        {
+          "quantity": "other",
+          "value": "kural"
+        }
+      ]
+    },
+    {
+      "name": "rules_summary",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d katman · derlendi · diskte %2$s"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d katman · derlendi · diskte %2$s"
+        }
+      ]
+    },
+    {
+      "name": "subs_added",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$s eklendi (%2$s düğüm)"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$s eklendi (%2$s düğüm)"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_confirm_title",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d abonelik içe aktarılsın mı?"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d abonelik içe aktarılsın mı?"
+        }
+      ]
+    },
+    {
+      "name": "subs_added_many",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d abonelik eklendi"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d abonelik eklendi"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_some_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d tanesi eklenemedi"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d tanesi eklenemedi"
+        }
+      ]
+    },
+    {
+      "name": "subs_review_all",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$s aboneliğin tümü güncellenecek"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$s aboneliğin tümü güncellenecek"
+        }
+      ]
+    },
+    {
+      "name": "subs_updated_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d abonelik güncellendi"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d abonelik güncellendi"
+        }
+      ]
+    },
+    {
+      "name": "subs_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "abonelik"
+        },
+        {
+          "quantity": "other",
+          "value": "abonelik"
+        }
+      ]
+    },
+    {
+      "name": "subs_update_every",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d saatte bir güncellenir"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d saatte bir güncellenir"
+        }
+      ]
+    },
+    {
+      "name": "subs_others",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d tane daha"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d tane daha"
+        }
+      ]
+    },
+    {
+      "name": "subs_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d saatte bir"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d saatte bir"
+        }
+      ]
+    },
+    {
+      "name": "settings_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d saat"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d saat"
+        }
+      ]
+    },
+    {
+      "name": "today_regions",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "bölge"
+        },
+        {
+          "quantity": "other",
+          "value": "bölge"
+        }
+      ]
+    },
+    {
+      "name": "today_hours_online",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "saat çevrimiçi"
+        },
+        {
+          "quantity": "other",
+          "value": "saat çevrimiçi"
+        }
+      ]
+    }
+  ]
+}

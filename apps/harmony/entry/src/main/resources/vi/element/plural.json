@@ -1,0 +1,310 @@
+{
+  "plural": [
+    {
+      "name": "common_node_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$s nút"
+        }
+      ]
+    },
+    {
+      "name": "common_available_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d khả dụng"
+        }
+      ]
+    },
+    {
+      "name": "common_region_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d khu vực"
+        }
+      ]
+    },
+    {
+      "name": "home_subs_more",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d gói đăng ký khác"
+        }
+      ]
+    },
+    {
+      "name": "home_scene_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d ngữ cảnh"
+        }
+      ]
+    },
+    {
+      "name": "scene_available_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "nút khả dụng"
+        }
+      ]
+    },
+    {
+      "name": "scene_tested_from",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "Kiểm tra từ %1$d gói đăng ký"
+        }
+      ]
+    },
+    {
+      "name": "scene_test_every_hours",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "Mỗi %1$d giờ"
+        }
+      ]
+    },
+    {
+      "name": "command_plan_exit_available",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d khả dụng. Sẽ dùng %2$s."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_untested",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d nút 4K chưa được kiểm tra. Hãy kiểm tra lại ngữ cảnh sau khi áp dụng."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_keep",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%2$d/%1$d nút hỗ trợ 4K; nút hiện tại giữ nguyên."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_switch",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%2$d/%1$d nút hỗ trợ 4K; sẽ dùng %3$s."
+        }
+      ]
+    },
+    {
+      "name": "activity_closed",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "Đã đóng %1$d kết nối"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_failed",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "Không thể đóng kết nối"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_partial",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "Không thể đóng %1$d kết nối"
+        }
+      ]
+    },
+    {
+      "name": "trace_connections",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d kết nối"
+        }
+      ]
+    },
+    {
+      "name": "trace_exit_stable",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "Không đổi trong %1$d ngày"
+        }
+      ]
+    },
+    {
+      "name": "nodes_total_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "nút"
+        }
+      ]
+    },
+    {
+      "name": "nodes_from_subs",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "Từ %1$d gói đăng ký"
+        }
+      ]
+    },
+    {
+      "name": "rules_total_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "quy tắc"
+        }
+      ]
+    },
+    {
+      "name": "rules_summary",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d lớp · đã biên dịch · %2$s trên ổ đĩa"
+        }
+      ]
+    },
+    {
+      "name": "subs_added",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "Đã thêm %1$s (%2$s nút)"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_confirm_title",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "Nhập %1$d đăng ký?"
+        }
+      ]
+    },
+    {
+      "name": "subs_added_many",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "Đã thêm %1$d đăng ký"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_some_failed",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "Không thể thêm %1$d"
+        }
+      ]
+    },
+    {
+      "name": "subs_review_all",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "Cả %1$s đăng ký sẽ được cập nhật"
+        }
+      ]
+    },
+    {
+      "name": "subs_updated_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "Đã cập nhật %1$d đăng ký"
+        }
+      ]
+    },
+    {
+      "name": "subs_total_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "gói đăng ký"
+        }
+      ]
+    },
+    {
+      "name": "subs_update_every",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "cập nhật mỗi %1$d giờ"
+        }
+      ]
+    },
+    {
+      "name": "subs_others",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d gói khác"
+        }
+      ]
+    },
+    {
+      "name": "subs_every_hours",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "Mỗi %1$d giờ"
+        }
+      ]
+    },
+    {
+      "name": "settings_hours",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d giờ"
+        }
+      ]
+    },
+    {
+      "name": "today_regions",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "khu vực"
+        }
+      ]
+    },
+    {
+      "name": "today_hours_online",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "giờ trực tuyến"
+        }
+      ]
+    }
+  ]
+}
