@@ -19,6 +19,7 @@ import { ImportItem, ImportSource, Subscription, SubscriptionDiff, Subscriptions
 import { Subscription as StreamSub } from '../engine/Stream';
 import { ZTerm } from '../generated/ZTerms';
 import { ZTheme } from '../common/Theme';
+import { HapticKind, Haptics } from '../app/Haptics';
 
 @ComponentV2
 export struct SubscriptionsView {
@@ -33,6 +34,8 @@ export struct SubscriptionsView {
   @Local updatingAll: boolean = false;
   @Local now: number = Date.now();
   @Local theme: ZTheme = ZTheme.shared();
+  /** 已确认删除、还在撤销窗口里的订阅（先从列表隐藏，窗口结束才真正删除）。 */
+  @Local pendingDeletes: string[] = [];
 
   private streamSubs: StreamSub[] = [];
 
@@ -194,12 +197,36 @@ export struct SubscriptionsView {
     });
   }
 
+  /** 确认后先隐藏，出撤销吐司（§16.e⑥）；窗口结束（或被下一条吐司顶替）才调 deleteSubscription。 */
   private delete(s: Subscription): void {
-    AppServices.get().engine.deleteSubscription(s.id).then(() => {
-      this.toast($r('app.string.subs_deleted', s.name));
-    }).catch((e: Object) => {
-      this.toast($r('app.string.subs_error_delete', s.name));
+    Haptics.play(HapticKind.WARNING);
+    this.pendingDeletes = this.pendingDeletes.concat([s.id]);
+    const unhide = () => {
+      this.pendingDeletes = this.pendingDeletes.filter((id: string) => id !== s.id);
+    };
+    const svc = AppServices.get();
+    svc.toasts.show(this.text($r('app.string.subs_deleted'), s.name), {
+      onUndo: unhide,
+      onCommit: () => {
+        svc.engine.deleteSubscription(s.id).then(unhide).catch((e: Object) => {
+          unhide();
+          this.toast($r('app.string.subs_error_delete', s.name));
+        });
+      }
     });
+  }
+
+  private text(r: Resource, arg: string): string {
+    try {
+      const ctx = this.getUIContext().getHostContext();
+      return ctx !== undefined ? ctx.resourceManager.getStringSync(r, arg) : arg;
+    } catch (e) {
+      return arg;
+    }
+  }
+
+  private visibleSubs(): Subscription[] {
+    return this.subs.filter((s: Subscription) => this.pendingDeletes.indexOf(s.id) < 0);
   }
 
   private isUpdating(s: Subscription): boolean {
@@ -413,7 +440,7 @@ export struct SubscriptionsView {
           this.addCard()
         }
 
-        if (this.subs.length === 0) {
+        if (this.visibleSubs().length === 0) {
           ZEmpty({
             title: $r('app.string.connect_no_subscription'),
             message: $r('app.string.nodes_empty_message'),
@@ -423,7 +450,7 @@ export struct SubscriptionsView {
             }
           })
         } else {
-          ForEach(this.subs, (s: Subscription) => {
+          ForEach(this.visibleSubs(), (s: Subscription) => {
             this.subCard(s)
           }, (s: Subscription) => s.id + ':' + String(s.updatedAt) + ':' + String(s.nodeCount) + ':' + String(this.isUpdating(s)))
 

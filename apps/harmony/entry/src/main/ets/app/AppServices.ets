@@ -12,6 +12,8 @@ import { VpnController } from '../vpn/VpnController';
 import { ConnectionCoordinator } from './ConnectionCoordinator';
 import { LogsModel } from './LogsModel';
 import { MemoryBackend, SettingsStore } from './SettingsStore';
+import { ToastCenter } from './ToastCenter';
+import { screenReaderOn } from '../common/A11y';
 
 export const ENGINE_KEY: string = 'zephyr.engine';
 export const VPN_KEY: string = 'zephyr.vpn';
@@ -25,6 +27,8 @@ export class AppServices {
   readonly logs: LogsModel;
   /** 页面改设置一律经 settings.update（落盘 + 失败回滚）。 */
   readonly settings: SettingsStore;
+  /** 全局吐司 / 撤销（§16.e⑥），根页面的 ZToastHost 显示。 */
+  readonly toasts: ToastCenter = new ToastCenter(screenReaderOn);
 
   private static instance: AppServices | undefined = undefined;
 

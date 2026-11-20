@@ -1,6 +1,9 @@
 /*
  * 分段选择（模式 规则 / 全局 / 直连、日志级别等）：options 为显示文案，selected 为下标，选中段 screen_s4 底。
+ * 切换时轻触感（S11）。
  */
+import { HapticKind, Haptics } from '../app/Haptics';
+
 @ComponentV2
 export struct ZSegmented {
   @Param options: ResourceStr[] = [];
@@ -22,6 +25,7 @@ export struct ZSegmented {
           .backgroundColor(i === this.selected ? $r('app.color.screen_s4') : Color.Transparent)
           .onClick(() => {
             if (this.isEnabled && i !== this.selected) {
+              Haptics.play(HapticKind.SELECTION);
               this.onSelect(i);
             }
           })
