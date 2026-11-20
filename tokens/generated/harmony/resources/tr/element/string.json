@@ -1,0 +1,212 @@
+{
+  "string": [
+    {
+      "name": "term_nodes",
+      "value": "Düğümler"
+    },
+    {
+      "name": "term_node",
+      "value": "Düğüm"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Abonelikler"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Abonelik"
+    },
+    {
+      "name": "term_rules",
+      "value": "Kurallar"
+    },
+    {
+      "name": "term_rule",
+      "value": "Kural"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Senaryolar"
+    },
+    {
+      "name": "term_scene",
+      "value": "Senaryo"
+    },
+    {
+      "name": "term_latency",
+      "value": "Gecikme"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proxy"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Kural"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Küresel"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Doğrudan"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Küresel mod"
+    },
+    {
+      "name": "term_override",
+      "value": "Üzerine yazma"
+    },
+    {
+      "name": "term_logs",
+      "value": "Günlükler"
+    },
+    {
+      "name": "term_settings",
+      "value": "Ayarlar"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Dosyadan içe aktar"
+    },
+    {
+      "name": "term_update",
+      "value": "Güncelle"
+    },
+    {
+      "name": "term_domain",
+      "value": "Alan adı"
+    },
+    {
+      "name": "term_exit",
+      "value": "Çıkış"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "Çıkış IP’si"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Hata ayıklama"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Bilgi"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Hata"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Görünüm"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Açık"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Koyu"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Sistem"
+    },
+    {
+      "name": "term_all",
+      "value": "Tümü"
+    },
+    {
+      "name": "term_none",
+      "value": "Yok"
+    },
+    {
+      "name": "term_on",
+      "value": "Açık"
+    },
+    {
+      "name": "term_off",
+      "value": "Kapalı"
+    },
+    {
+      "name": "term_today",
+      "value": "Bugün"
+    },
+    {
+      "name": "term_undo",
+      "value": "Geri al"
+    },
+    {
+      "name": "term_apply",
+      "value": "Uygula"
+    },
+    {
+      "name": "term_delete",
+      "value": "Sil"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Bağlantıyı kes"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Bağlanıyor"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Bağlı değil"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Bağlantı başarısız"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Sonuç yok"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Modu değiştir"
+    },
+    {
+      "name": "term_testing",
+      "value": "Test ediliyor"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Yeniden test et"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Otomatik güncelleme"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Yerel proxy portu"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Parola gerektir"
+    },
+    {
+      "name": "term_accent",
+      "value": "Vurgu rengi"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Tanılama"
+    },
+    {
+      "name": "term_import",
+      "value": "İçe Aktar"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Uyarı"
+    }
+  ]
+}

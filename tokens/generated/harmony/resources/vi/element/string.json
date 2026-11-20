@@ -1,0 +1,212 @@
+{
+  "string": [
+    {
+      "name": "term_nodes",
+      "value": "Nút"
+    },
+    {
+      "name": "term_node",
+      "value": "Nút"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Đăng ký"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Đăng ký"
+    },
+    {
+      "name": "term_rules",
+      "value": "Quy tắc"
+    },
+    {
+      "name": "term_rule",
+      "value": "Quy tắc"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Ngữ cảnh"
+    },
+    {
+      "name": "term_scene",
+      "value": "Ngữ cảnh"
+    },
+    {
+      "name": "term_latency",
+      "value": "Độ trễ"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proxy"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Quy tắc"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Toàn cục"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Trực tiếp"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Chế độ toàn cục"
+    },
+    {
+      "name": "term_override",
+      "value": "Ghi đè"
+    },
+    {
+      "name": "term_logs",
+      "value": "Nhật ký"
+    },
+    {
+      "name": "term_settings",
+      "value": "Cài đặt"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Nhập từ tệp"
+    },
+    {
+      "name": "term_update",
+      "value": "Cập nhật"
+    },
+    {
+      "name": "term_domain",
+      "value": "Tên miền"
+    },
+    {
+      "name": "term_exit",
+      "value": "Đầu ra"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "IP đầu ra"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Gỡ lỗi"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Thông tin"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Lỗi"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Giao diện"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Sáng"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Tối"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Hệ thống"
+    },
+    {
+      "name": "term_all",
+      "value": "Tất cả"
+    },
+    {
+      "name": "term_none",
+      "value": "Không có"
+    },
+    {
+      "name": "term_on",
+      "value": "Bật"
+    },
+    {
+      "name": "term_off",
+      "value": "Tắt"
+    },
+    {
+      "name": "term_today",
+      "value": "Hôm nay"
+    },
+    {
+      "name": "term_undo",
+      "value": "Hoàn tác"
+    },
+    {
+      "name": "term_apply",
+      "value": "Áp dụng"
+    },
+    {
+      "name": "term_delete",
+      "value": "Xóa"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Ngắt kết nối"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Đang kết nối"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Chưa kết nối"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Kết nối không thành công"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Không có kết quả"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Đổi chế độ"
+    },
+    {
+      "name": "term_testing",
+      "value": "Đang kiểm tra"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Kiểm tra lại"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Tự động cập nhật"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Cổng proxy cục bộ"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Yêu cầu mật khẩu"
+    },
+    {
+      "name": "term_accent",
+      "value": "Màu nhấn"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Chẩn đoán"
+    },
+    {
+      "name": "term_import",
+      "value": "Nhập"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Cảnh báo"
+    }
+  ]
+}

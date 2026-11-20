@@ -1,0 +1,212 @@
+{
+  "string": [
+    {
+      "name": "term_nodes",
+      "value": "노드"
+    },
+    {
+      "name": "term_node",
+      "value": "노드"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "구독"
+    },
+    {
+      "name": "term_subscription",
+      "value": "구독"
+    },
+    {
+      "name": "term_rules",
+      "value": "규칙"
+    },
+    {
+      "name": "term_rule",
+      "value": "규칙"
+    },
+    {
+      "name": "term_scenes",
+      "value": "시나리오"
+    },
+    {
+      "name": "term_scene",
+      "value": "시나리오"
+    },
+    {
+      "name": "term_latency",
+      "value": "지연 시간"
+    },
+    {
+      "name": "term_proxy",
+      "value": "프록시"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "규칙"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "글로벌"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "다이렉트"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "글로벌 모드"
+    },
+    {
+      "name": "term_override",
+      "value": "오버라이드"
+    },
+    {
+      "name": "term_logs",
+      "value": "로그"
+    },
+    {
+      "name": "term_settings",
+      "value": "설정"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "파일에서 가져오기"
+    },
+    {
+      "name": "term_update",
+      "value": "업데이트"
+    },
+    {
+      "name": "term_domain",
+      "value": "도메인"
+    },
+    {
+      "name": "term_exit",
+      "value": "출구"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "출구 IP"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "디버그"
+    },
+    {
+      "name": "term_log_info",
+      "value": "정보"
+    },
+    {
+      "name": "term_log_error",
+      "value": "오류"
+    },
+    {
+      "name": "term_appearance",
+      "value": "모양"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "라이트"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "다크"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "시스템"
+    },
+    {
+      "name": "term_all",
+      "value": "전체"
+    },
+    {
+      "name": "term_none",
+      "value": "없음"
+    },
+    {
+      "name": "term_on",
+      "value": "켬"
+    },
+    {
+      "name": "term_off",
+      "value": "끔"
+    },
+    {
+      "name": "term_today",
+      "value": "오늘"
+    },
+    {
+      "name": "term_undo",
+      "value": "실행 취소"
+    },
+    {
+      "name": "term_apply",
+      "value": "적용"
+    },
+    {
+      "name": "term_delete",
+      "value": "삭제"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "연결 해제"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "연결 중"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "연결 안 됨"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "연결 실패"
+    },
+    {
+      "name": "term_no_results",
+      "value": "결과 없음"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "모드 전환"
+    },
+    {
+      "name": "term_testing",
+      "value": "테스트 중"
+    },
+    {
+      "name": "term_test_again",
+      "value": "다시 테스트"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "자동 업데이트"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "로컬 프록시 포트"
+    },
+    {
+      "name": "term_require_password",
+      "value": "암호 요구"
+    },
+    {
+      "name": "term_accent",
+      "value": "강조 색상"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "진단"
+    },
+    {
+      "name": "term_import",
+      "value": "가져오기"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "경고"
+    }
+  ]
+}

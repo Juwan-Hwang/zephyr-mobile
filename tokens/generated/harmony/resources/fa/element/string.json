@@ -1,0 +1,212 @@
+{
+  "string": [
+    {
+      "name": "term_nodes",
+      "value": "نودها"
+    },
+    {
+      "name": "term_node",
+      "value": "نود"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "اشتراک‌ها"
+    },
+    {
+      "name": "term_subscription",
+      "value": "اشتراک"
+    },
+    {
+      "name": "term_rules",
+      "value": "قوانین"
+    },
+    {
+      "name": "term_rule",
+      "value": "قانون"
+    },
+    {
+      "name": "term_scenes",
+      "value": "صحنه‌ها"
+    },
+    {
+      "name": "term_scene",
+      "value": "صحنه"
+    },
+    {
+      "name": "term_latency",
+      "value": "تأخیر"
+    },
+    {
+      "name": "term_proxy",
+      "value": "پروکسی"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "قانون"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "سراسری"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "مستقیم"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "حالت سراسری"
+    },
+    {
+      "name": "term_override",
+      "value": "بازنویسی"
+    },
+    {
+      "name": "term_logs",
+      "value": "گزارش‌ها"
+    },
+    {
+      "name": "term_settings",
+      "value": "تنظیمات"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "وارد کردن از فایل"
+    },
+    {
+      "name": "term_update",
+      "value": "به‌روزرسانی"
+    },
+    {
+      "name": "term_domain",
+      "value": "دامنه"
+    },
+    {
+      "name": "term_exit",
+      "value": "خروجی"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "IP خروجی"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "اشکال‌زدایی"
+    },
+    {
+      "name": "term_log_info",
+      "value": "اطلاعات"
+    },
+    {
+      "name": "term_log_error",
+      "value": "خطا"
+    },
+    {
+      "name": "term_appearance",
+      "value": "ظاهر"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "روشن"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "تیره"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "سیستم"
+    },
+    {
+      "name": "term_all",
+      "value": "همه"
+    },
+    {
+      "name": "term_none",
+      "value": "هیچ"
+    },
+    {
+      "name": "term_on",
+      "value": "روشن"
+    },
+    {
+      "name": "term_off",
+      "value": "خاموش"
+    },
+    {
+      "name": "term_today",
+      "value": "امروز"
+    },
+    {
+      "name": "term_undo",
+      "value": "واگرد"
+    },
+    {
+      "name": "term_apply",
+      "value": "اعمال"
+    },
+    {
+      "name": "term_delete",
+      "value": "حذف"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "قطع اتصال"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "در حال اتصال"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "متصل نیست"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "اتصال ناموفق بود"
+    },
+    {
+      "name": "term_no_results",
+      "value": "نتیجه‌ای نیست"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "تغییر حالت"
+    },
+    {
+      "name": "term_testing",
+      "value": "در حال آزمایش"
+    },
+    {
+      "name": "term_test_again",
+      "value": "آزمایش دوباره"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "به‌روزرسانی خودکار"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "پورت پروکسی محلی"
+    },
+    {
+      "name": "term_require_password",
+      "value": "نیاز به گذرواژه"
+    },
+    {
+      "name": "term_accent",
+      "value": "رنگ تأکیدی"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "عیب‌یابی"
+    },
+    {
+      "name": "term_import",
+      "value": "وارد کردن"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "هشدار"
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+{
+  "string": [
+    {
+      "name": "term_nodes",
+      "value": "العقد"
+    },
+    {
+      "name": "term_node",
+      "value": "العقدة"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "الاشتراكات"
+    },
+    {
+      "name": "term_subscription",
+      "value": "اشتراك"
+    },
+    {
+      "name": "term_rules",
+      "value": "القواعد"
+    },
+    {
+      "name": "term_rule",
+      "value": "القاعدة"
+    },
+    {
+      "name": "term_scenes",
+      "value": "المشاهد"
+    },
+    {
+      "name": "term_scene",
+      "value": "المشهد"
+    },
+    {
+      "name": "term_latency",
+      "value": "التأخير"
+    },
+    {
+      "name": "term_proxy",
+      "value": "الوكيل"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "القاعدة"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "شامل"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "مباشر"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "الوضع الشامل"
+    },
+    {
+      "name": "term_override",
+      "value": "تجاوز"
+    },
+    {
+      "name": "term_logs",
+      "value": "السجلات"
+    },
+    {
+      "name": "term_settings",
+      "value": "الإعدادات"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "استيراد من ملف"
+    },
+    {
+      "name": "term_update",
+      "value": "تحديث"
+    },
+    {
+      "name": "term_domain",
+      "value": "نطاق"
+    },
+    {
+      "name": "term_exit",
+      "value": "المخرج"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "عنوان IP للخروج"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "تصحيح"
+    },
+    {
+      "name": "term_log_info",
+      "value": "معلومات"
+    },
+    {
+      "name": "term_log_error",
+      "value": "خطأ"
+    },
+    {
+      "name": "term_appearance",
+      "value": "المظهر"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "فاتح"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "داكن"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "النظام"
+    },
+    {
+      "name": "term_all",
+      "value": "الكل"
+    },
+    {
+      "name": "term_none",
+      "value": "بلا"
+    },
+    {
+      "name": "term_on",
+      "value": "مفعّل"
+    },
+    {
+      "name": "term_off",
+      "value": "معطّل"
+    },
+    {
+      "name": "term_today",
+      "value": "اليوم"
+    },
+    {
+      "name": "term_undo",
+      "value": "تراجع"
+    },
+    {
+      "name": "term_apply",
+      "value": "تطبيق"
+    },
+    {
+      "name": "term_delete",
+      "value": "حذف"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "قطع الاتصال"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "جارٍ الاتصال"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "غير متصل"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "فشل الاتصال"
+    },
+    {
+      "name": "term_no_results",
+      "value": "لا توجد نتائج"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "تبديل الوضع"
+    },
+    {
+      "name": "term_testing",
+      "value": "جارٍ الاختبار"
+    },
+    {
+      "name": "term_test_again",
+      "value": "إعادة الاختبار"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "التحديث التلقائي"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "منفذ الوكيل المحلي"
+    },
+    {
+      "name": "term_require_password",
+      "value": "طلب كلمة المرور"
+    },
+    {
+      "name": "term_accent",
+      "value": "لون التمييز"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "التشخيص"
+    },
+    {
+      "name": "term_import",
+      "value": "استيراد"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "تحذير"
+    }
+  ]
+}

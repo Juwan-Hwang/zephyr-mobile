@@ -1,0 +1,212 @@
+{
+  "string": [
+    {
+      "name": "term_nodes",
+      "value": "Düwünler"
+    },
+    {
+      "name": "term_node",
+      "value": "Düwün"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Abunalar"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Abuna"
+    },
+    {
+      "name": "term_rules",
+      "value": "Düzgünler"
+    },
+    {
+      "name": "term_rule",
+      "value": "Düzgün"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Ssenariýler"
+    },
+    {
+      "name": "term_scene",
+      "value": "Ssenariý"
+    },
+    {
+      "name": "term_latency",
+      "value": "Gijikme"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proksi"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Düzgün"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Global"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Göni"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Global režim"
+    },
+    {
+      "name": "term_override",
+      "value": "Aýratyn düzgün"
+    },
+    {
+      "name": "term_logs",
+      "value": "Günnamalar"
+    },
+    {
+      "name": "term_settings",
+      "value": "Sazlamalar"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Faýldan import et"
+    },
+    {
+      "name": "term_update",
+      "value": "Täzele"
+    },
+    {
+      "name": "term_domain",
+      "value": "Domen"
+    },
+    {
+      "name": "term_exit",
+      "value": "Çykyş"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "Çykyş IP-si"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Düzediş"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Maglumat"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Ýalňyşlyk"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Daşky görnüş"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Ýagty"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Garaňky"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Ulgam"
+    },
+    {
+      "name": "term_all",
+      "value": "Ählisi"
+    },
+    {
+      "name": "term_none",
+      "value": "Ýok"
+    },
+    {
+      "name": "term_on",
+      "value": "Açyk"
+    },
+    {
+      "name": "term_off",
+      "value": "Öçük"
+    },
+    {
+      "name": "term_today",
+      "value": "Şu gün"
+    },
+    {
+      "name": "term_undo",
+      "value": "Yzyna al"
+    },
+    {
+      "name": "term_apply",
+      "value": "Ulan"
+    },
+    {
+      "name": "term_delete",
+      "value": "Poz"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Birikmäni kes"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Birikdirilýär"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Birikdirilmedi"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Birikme şowsuz"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Netije ýok"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Režimi çalyş"
+    },
+    {
+      "name": "term_testing",
+      "value": "Barlanýar"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Gaýtadan barla"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Awtomatik täzelenme"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Ýerli proksi porty"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Parol talap et"
+    },
+    {
+      "name": "term_accent",
+      "value": "Aksent reňki"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Diagnostika"
+    },
+    {
+      "name": "term_import",
+      "value": "Import et"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Duýduryş"
+    }
+  ]
+}

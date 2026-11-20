@@ -1,0 +1,212 @@
+{
+  "string": [
+    {
+      "name": "term_nodes",
+      "value": "Nodi"
+    },
+    {
+      "name": "term_node",
+      "value": "Nodi"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Usajili"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Usajili"
+    },
+    {
+      "name": "term_rules",
+      "value": "Sheria"
+    },
+    {
+      "name": "term_rule",
+      "value": "Sheria"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Mazingira"
+    },
+    {
+      "name": "term_scene",
+      "value": "Mazingira"
+    },
+    {
+      "name": "term_latency",
+      "value": "Kuchelewa"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proksi"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Sheria"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Jumla"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Moja kwa moja"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Hali ya Jumla"
+    },
+    {
+      "name": "term_override",
+      "value": "Ubatilishaji"
+    },
+    {
+      "name": "term_logs",
+      "value": "Kumbukumbu"
+    },
+    {
+      "name": "term_settings",
+      "value": "Mipangilio"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Leta kutoka faili"
+    },
+    {
+      "name": "term_update",
+      "value": "Sasisha"
+    },
+    {
+      "name": "term_domain",
+      "value": "Kikoa"
+    },
+    {
+      "name": "term_exit",
+      "value": "Njia ya kutoka"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "IP ya kutoka"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Utatuzi"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Taarifa"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Hitilafu"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Mwonekano"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Mwanga"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Giza"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Mfumo"
+    },
+    {
+      "name": "term_all",
+      "value": "Zote"
+    },
+    {
+      "name": "term_none",
+      "value": "Hakuna"
+    },
+    {
+      "name": "term_on",
+      "value": "Imewashwa"
+    },
+    {
+      "name": "term_off",
+      "value": "Imezimwa"
+    },
+    {
+      "name": "term_today",
+      "value": "Leo"
+    },
+    {
+      "name": "term_undo",
+      "value": "Tendua"
+    },
+    {
+      "name": "term_apply",
+      "value": "Tumia"
+    },
+    {
+      "name": "term_delete",
+      "value": "Futa"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Tenganisha"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Inaunganisha"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Haijaunganishwa"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Muunganisho umeshindwa"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Hakuna matokeo"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Badilisha hali"
+    },
+    {
+      "name": "term_testing",
+      "value": "Inapima"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Pima tena"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Masasisho ya kiotomatiki"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Mlango wa proksi ya ndani"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Hitaji nenosiri"
+    },
+    {
+      "name": "term_accent",
+      "value": "Rangi ya msisitizo"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Uchunguzi"
+    },
+    {
+      "name": "term_import",
+      "value": "Leta"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Onyo"
+    }
+  ]
+}
