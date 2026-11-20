@@ -5,7 +5,7 @@
  * - 诊断：日志级别（AppServices.logs，与日志页共用）、日志页、共享诊断数据；
  * - 存储：节点 / 规则 / 可用；
  * - 关于：版本、引擎（演示 / 内置内核）、开源许可（占位页）。
- * 设置一律“读当前 → 改一项 → updateSettings 全量写回”；写失败时开关随状态流回弹并提示。
+ * 设置一律“读当前 → 改一项 → AppServices.settings.update 全量写回并落盘”；写失败时开关随状态流回弹并提示。
  * 暂未移植：受信任 Wi‑Fi、本地代理端口、外观 / 强调色、DNS / TUN 高级项。
  */
 import { bundleManager } from '@kit.AbilityKit';
@@ -72,10 +72,11 @@ export struct SettingsView {
   }
 
   private patch(f: SettingsPatch): void {
-    const engine = AppServices.get().engine;
+    const svc = AppServices.get();
+    const engine = svc.engine;
     const next = copySettings(engine.settings().value);
     f(next);
-    engine.updateSettings(next).catch(() => {
+    svc.settings.update(next).catch(() => {
       this.getUIContext().getPromptAction().showToast({ message: $r('app.string.settings_save_failed') });
       // 回弹：重新读一次当前值。
       const cur = engine.settings().value;
