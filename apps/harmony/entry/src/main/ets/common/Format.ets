@@ -174,6 +174,12 @@ export class Format {
     return String(Math.round(ms));
   }
 
+  /** "38 ms"；超时 / 未测为空串。 */
+  static latencyMsText(ms: number | undefined): string {
+    const v = Format.latencyValue(ms);
+    return v === undefined ? '' : v + ' ms';
+  }
+
   static latencyClass(ms: number | undefined): LatencyClass {
     if (ms === undefined) {
       return LatencyClass.UNKNOWN;

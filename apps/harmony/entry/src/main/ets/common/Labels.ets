@@ -2,7 +2,7 @@
  * 引擎枚举 / 格式化结构 → 字符串、颜色资源（对照 Android ui/common/Labels.kt）。返回 Resource，由 Text 在绘制时解析，
  * 应用语言切换后自动跟随。$r 的键必须是字面量（编译期解析），所以这里全是 switch，不拼接键名。
  */
-import { ConnectionStatus, ErrorCode, LogLevel, ProxyMode } from '../engine/Model';
+import { ConnectionStatus, ErrorCode, LogLevel, ProxyMode, Scene, SceneKind } from '../engine/Model';
 import { AgoParts, AgoUnit, ExpiryKind, ExpiryParts, LatencyClass } from './Format';
 
 export class Labels {
@@ -133,5 +133,21 @@ export class Labels {
       default:
         return $r('app.string.hm_expiry_in_days', p.days);
     }
+  }
+
+  /** 内置场景名随应用语言（核心用中文命名内置场景，Android Labels.builtInSceneNameRes）；自定义场景保留原名。 */
+  static sceneName(s: Scene): ResourceStr {
+    if (s.kind !== SceneKind.CUSTOM) {
+      if (s.name === 'AI') {
+        return $r('app.string.common_scene_ai');
+      }
+      if (s.name === '视频') {
+        return $r('app.string.common_scene_video');
+      }
+      if (s.name === '其他') {
+        return $r('app.string.common_scene_other');
+      }
+    }
+    return s.name;
   }
 }
