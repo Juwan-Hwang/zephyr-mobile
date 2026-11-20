@@ -1,0 +1,212 @@
+{
+  "string": [
+    {
+      "name": "term_nodes",
+      "value": "Nodes"
+    },
+    {
+      "name": "term_node",
+      "value": "Node"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Subscriptions"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Subscription"
+    },
+    {
+      "name": "term_rules",
+      "value": "Rules"
+    },
+    {
+      "name": "term_rule",
+      "value": "Rule"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Scenes"
+    },
+    {
+      "name": "term_scene",
+      "value": "Scene"
+    },
+    {
+      "name": "term_latency",
+      "value": "Latency"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proxy"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Rule"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Global"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Direct"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Global mode"
+    },
+    {
+      "name": "term_override",
+      "value": "Override"
+    },
+    {
+      "name": "term_logs",
+      "value": "Logs"
+    },
+    {
+      "name": "term_settings",
+      "value": "Settings"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Import from file"
+    },
+    {
+      "name": "term_update",
+      "value": "Update"
+    },
+    {
+      "name": "term_domain",
+      "value": "Domain"
+    },
+    {
+      "name": "term_exit",
+      "value": "Exit"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "Exit IP"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Debug"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Info"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Error"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Appearance"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Light"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Dark"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "System"
+    },
+    {
+      "name": "term_all",
+      "value": "All"
+    },
+    {
+      "name": "term_none",
+      "value": "None"
+    },
+    {
+      "name": "term_on",
+      "value": "On"
+    },
+    {
+      "name": "term_off",
+      "value": "Off"
+    },
+    {
+      "name": "term_today",
+      "value": "Today"
+    },
+    {
+      "name": "term_undo",
+      "value": "Undo"
+    },
+    {
+      "name": "term_apply",
+      "value": "Apply"
+    },
+    {
+      "name": "term_delete",
+      "value": "Delete"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Disconnect"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Connecting"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Not connected"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Connection failed"
+    },
+    {
+      "name": "term_no_results",
+      "value": "No results"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Switch mode"
+    },
+    {
+      "name": "term_testing",
+      "value": "Testing"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Test again"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Automatic updates"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Local proxy port"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Require password"
+    },
+    {
+      "name": "term_accent",
+      "value": "Accent color"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Diagnostics"
+    },
+    {
+      "name": "term_import",
+      "value": "Import"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Warning"
+    }
+  ]
+}

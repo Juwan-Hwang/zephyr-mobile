@@ -59,12 +59,14 @@ jobs:
         run: node tools/gen-mock-fixtures.js && git diff --exit-code contract/fixtures
       - name: command parse fixtures match prototype
         run: node tools/gen-command-parse-fixtures.mjs --check
-      - name: UniFFI 导出均写入契约
+      - name: UniFFI / 鸿蒙 napi 导出均写入契约
         run: node tools/check-contract-exports.mjs
       - name: 契约样本结构自检（可解析、主键唯一、字段类型）
         run: node tools/check-fixtures.mjs
       - name: 三端术语终版对齐（contract/i18n）
         run: node tools/check-glossary.mjs
+      - name: 鸿蒙术语资源最新（contract/i18n → tokens/generated/harmony）
+        run: node tools/gen-harmony-i18n.mjs --check
       - name: tools/*.sh 通过 shellcheck
         run: shellcheck --version | sed -n 2p && shellcheck tools/*.sh
       - name: workflow 通过 actionlint

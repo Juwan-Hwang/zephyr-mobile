@@ -1,0 +1,212 @@
+{
+  "string": [
+    {
+      "name": "term_nodes",
+      "value": "နုဒ်များ"
+    },
+    {
+      "name": "term_node",
+      "value": "နုဒ်"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "စာရင်းသွင်းမှုများ"
+    },
+    {
+      "name": "term_subscription",
+      "value": "စာရင်းသွင်းမှု"
+    },
+    {
+      "name": "term_rules",
+      "value": "စည်းမျဉ်းများ"
+    },
+    {
+      "name": "term_rule",
+      "value": "စည်းမျဉ်း"
+    },
+    {
+      "name": "term_scenes",
+      "value": "မြင်ကွင်းများ"
+    },
+    {
+      "name": "term_scene",
+      "value": "မြင်ကွင်း"
+    },
+    {
+      "name": "term_latency",
+      "value": "နောက်ကျမှု"
+    },
+    {
+      "name": "term_proxy",
+      "value": "ပရောက်စီ"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "စည်းမျဉ်း"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "ကမ္ဘာလုံးဆိုင်ရာ"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "တိုက်ရိုက်"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "ကမ္ဘာလုံးဆိုင်ရာ မုဒ်"
+    },
+    {
+      "name": "term_override",
+      "value": "အစားထိုးချက်"
+    },
+    {
+      "name": "term_logs",
+      "value": "မှတ်တမ်းများ"
+    },
+    {
+      "name": "term_settings",
+      "value": "ဆက်တင်များ"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "ဖိုင်မှ တင်သွင်းရန်"
+    },
+    {
+      "name": "term_update",
+      "value": "အပ်ဒိတ်"
+    },
+    {
+      "name": "term_domain",
+      "value": "ဒိုမိန်း"
+    },
+    {
+      "name": "term_exit",
+      "value": "ထွက်ပေါက်"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "ထွက်ပေါက် IP"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "အမှားရှာ"
+    },
+    {
+      "name": "term_log_info",
+      "value": "အချက်အလက်"
+    },
+    {
+      "name": "term_log_error",
+      "value": "အမှား"
+    },
+    {
+      "name": "term_appearance",
+      "value": "အသွင်အပြင်"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "အလင်း"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "အမှောင်"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "စနစ်အတိုင်း"
+    },
+    {
+      "name": "term_all",
+      "value": "အားလုံး"
+    },
+    {
+      "name": "term_none",
+      "value": "မရှိ"
+    },
+    {
+      "name": "term_on",
+      "value": "ဖွင့်"
+    },
+    {
+      "name": "term_off",
+      "value": "ပိတ်"
+    },
+    {
+      "name": "term_today",
+      "value": "ယနေ့"
+    },
+    {
+      "name": "term_undo",
+      "value": "နောက်ပြန်ရန်"
+    },
+    {
+      "name": "term_apply",
+      "value": "အသုံးချရန်"
+    },
+    {
+      "name": "term_delete",
+      "value": "ဖျက်ရန်"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "အဆက်ဖြတ်ရန်"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "ချိတ်ဆက်နေသည်"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "ချိတ်ဆက်မထားပါ"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "ချိတ်ဆက်၍ မရပါ"
+    },
+    {
+      "name": "term_no_results",
+      "value": "ရလဒ် မရှိပါ"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "မုဒ် ပြောင်းရန်"
+    },
+    {
+      "name": "term_testing",
+      "value": "စမ်းသပ်နေသည်"
+    },
+    {
+      "name": "term_test_again",
+      "value": "ပြန်စမ်းသပ်ရန်"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "အလိုအလျောက် အပ်ဒိတ်"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "စက်တွင်း ပရောက်စီ ပေါ့တ်"
+    },
+    {
+      "name": "term_require_password",
+      "value": "စကားဝှက် လိုအပ်သည်"
+    },
+    {
+      "name": "term_accent",
+      "value": "အထူးပြု အရောင်"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "ပြဿနာရှာဖွေခြင်း"
+    },
+    {
+      "name": "term_import",
+      "value": "တင်သွင်းရန်"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "သတိပေးချက်"
+    }
+  ]
+}

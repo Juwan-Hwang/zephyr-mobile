@@ -1,0 +1,212 @@
+{
+  "string": [
+    {
+      "name": "term_nodes",
+      "value": "Узлы"
+    },
+    {
+      "name": "term_node",
+      "value": "Узел"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Подписки"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Подписка"
+    },
+    {
+      "name": "term_rules",
+      "value": "Правила"
+    },
+    {
+      "name": "term_rule",
+      "value": "Правило"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Сценарии"
+    },
+    {
+      "name": "term_scene",
+      "value": "Сценарий"
+    },
+    {
+      "name": "term_latency",
+      "value": "Задержка"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Прокси"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Правило"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Глобальный"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Прямой"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Глобальный режим"
+    },
+    {
+      "name": "term_override",
+      "value": "Переопределение"
+    },
+    {
+      "name": "term_logs",
+      "value": "Журналы"
+    },
+    {
+      "name": "term_settings",
+      "value": "Настройки"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Импорт из файла"
+    },
+    {
+      "name": "term_update",
+      "value": "Обновить"
+    },
+    {
+      "name": "term_domain",
+      "value": "Домен"
+    },
+    {
+      "name": "term_exit",
+      "value": "Выход"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "IP выхода"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Отладка"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Инфо"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Ошибка"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Оформление"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Светлое"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Тёмное"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Как в системе"
+    },
+    {
+      "name": "term_all",
+      "value": "Все"
+    },
+    {
+      "name": "term_none",
+      "value": "Нет"
+    },
+    {
+      "name": "term_on",
+      "value": "Вкл."
+    },
+    {
+      "name": "term_off",
+      "value": "Выкл."
+    },
+    {
+      "name": "term_today",
+      "value": "Сегодня"
+    },
+    {
+      "name": "term_undo",
+      "value": "Отменить"
+    },
+    {
+      "name": "term_apply",
+      "value": "Применить"
+    },
+    {
+      "name": "term_delete",
+      "value": "Удалить"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Отключить"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Подключение"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Не подключено"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Не удалось подключиться"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Нет результатов"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Сменить режим"
+    },
+    {
+      "name": "term_testing",
+      "value": "Проверка"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Проверить снова"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Автообновление"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Порт локального прокси"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Требовать пароль"
+    },
+    {
+      "name": "term_accent",
+      "value": "Цвет акцента"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Диагностика"
+    },
+    {
+      "name": "term_import",
+      "value": "Импорт"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Предупреждение"
+    }
+  ]
+}
