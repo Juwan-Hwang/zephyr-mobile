@@ -18,6 +18,7 @@ import { ImportRequest } from '../entryability/DeepLink';
 import { ImportItem, ImportSource, Subscription, SubscriptionDiff, SubscriptionsSummary } from '../engine/Model';
 import { Subscription as StreamSub } from '../engine/Stream';
 import { ZTerm } from '../generated/ZTerms';
+import { ZTheme } from '../common/Theme';
 
 @ComponentV2
 export struct SubscriptionsView {
@@ -31,6 +32,7 @@ export struct SubscriptionsView {
   @Local updating: string[] = [];
   @Local updatingAll: boolean = false;
   @Local now: number = Date.now();
+  @Local theme: ZTheme = ZTheme.shared();
 
   private streamSubs: StreamSub[] = [];
 
@@ -350,7 +352,7 @@ export struct SubscriptionsView {
         if (Format.ratio(s.usedBytes, s.totalBytes) !== undefined) {
           Progress({ value: s.usedBytes ?? 0, total: s.totalBytes ?? 1, type: ProgressType.Linear })
             .width('100%')
-            .color($r('app.color.color_accent'))
+            .color(this.theme.accentColor())
             .backgroundColor($r('app.color.screen_s3'))
           Text(Format.bytesText(s.usedBytes ?? 0) + ' / ' + Format.bytesText(s.totalBytes ?? 0))
             .fontSize(12)

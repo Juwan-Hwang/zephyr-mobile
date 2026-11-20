@@ -6,11 +6,14 @@
  * 引擎：默认 MockEngine；USE_NATIVE_KEY（AppStorage）或 Want 参数 zephyr.nativeEngine = true 时用 NativeEngine，
  * 创建失败（缺 .so 等）退回 Mock 并记日志。引擎是异步建的，所以 loadContent 放在 install 之后。
  */
-import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
+import { AbilityConstant, Configuration, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 import { AppServices, USE_NATIVE_KEY } from '../app/AppServices';
 import { ImportInbox } from '../app/ImportInbox';
+import { ZTheme } from '../common/Theme';
+import { Appearance, Settings } from '../engine/Model';
+import { Subscription as StreamSub } from '../engine/Stream';
 import { PreferencesBackend } from '../app/PreferencesBackend';
 import { KeyValueBackend, MemoryBackend, SettingsStore } from '../app/SettingsStore';
 import { MockEngine } from '../engine/MockEngine';
@@ -24,6 +27,8 @@ const TAG: string = 'EntryAbility';
 
 export default class EntryAbility extends UIAbility {
   private wantsNative: boolean = false;
+  private themeSub: StreamSub | undefined = undefined;
+  private appliedAppearance: Appearance | undefined = undefined;
 
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
     const p = want.parameters;
@@ -40,6 +45,7 @@ export default class EntryAbility extends UIAbility {
     this.createEngine().then(async (engine: ZephyrEngine) => {
       const settings = new SettingsStore(engine, await this.openBackend());
       await settings.restore();
+      this.followTheme(engine);
       let vpn: VpnController | undefined = undefined;
       try {
         vpn = new VpnController(this.context);
@@ -64,8 +70,36 @@ export default class EntryAbility extends UIAbility {
     }
   }
 
+  onConfigurationUpdate(config: Configuration): void {
+    ZTheme.shared().isDark = config.colorMode === ConfigurationConstant.ColorMode.COLOR_MODE_DARK;
+  }
+
   onDestroy(): void {
+    if (this.themeSub !== undefined) {
+      this.themeSub.cancel();
+      this.themeSub = undefined;
+    }
     AppServices.get().dispose();
+  }
+
+  /** §16.c accent / appearance 立即生效：深浅色交给系统（资源色自动跟随），强调色进 ZTheme。 */
+  private followTheme(engine: ZephyrEngine): void {
+    const theme = ZTheme.shared();
+    theme.isDark = this.context.config.colorMode === ConfigurationConstant.ColorMode.COLOR_MODE_DARK;
+    this.themeSub = engine.settings().subscribe((s: Settings) => {
+      theme.accent = s.accent;
+      if (s.appearance !== this.appliedAppearance) {
+        this.appliedAppearance = s.appearance;
+        const mode = s.appearance === Appearance.DARK ? ConfigurationConstant.ColorMode.COLOR_MODE_DARK
+          : s.appearance === Appearance.LIGHT ? ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT
+          : ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET;
+        try {
+          this.context.getApplicationContext().setColorMode(mode);
+        } catch (e) {
+          hilog.error(DOMAIN, TAG, 'setColorMode failed: %{public}s', String(e));
+        }
+      }
+    });
   }
 
   private async openBackend(): Promise<KeyValueBackend> {
