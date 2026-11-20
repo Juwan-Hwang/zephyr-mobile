@@ -4,13 +4,31 @@
     "EntryAbility_desc": "Zephyr – scene-based proxy client",
     "EntryAbility_label": "Zephyr",
     "ZephyrVpnExtAbility_desc": "Runs the Zephyr VPN tunnel and the embedded proxy core",
-    "ZephyrVpnExtAbility_label": "Zephyr VPN"
+    "ZephyrVpnExtAbility_label": "Zephyr VPN",
+    "hm_time_just_now": "Just now",
+    "hm_time_minutes_ago": "%1$d min ago",
+    "hm_time_hours_ago": "%1$dh ago",
+    "hm_time_days_ago": "%1$dd ago",
+    "hm_expiry_expired": "Expired",
+    "hm_expiry_today": "Expires today",
+    "hm_expiry_in_days": "Expires in %1$d days",
+    "hm_latency_timeout": "Timeout",
+    "hm_error_generic": "Something went wrong"
   },
   "zh": {
     "module_desc": "Zephyr 应用模块",
     "EntryAbility_desc": "Zephyr：按场景分流的代理客户端",
     "EntryAbility_label": "Zephyr",
     "ZephyrVpnExtAbility_desc": "运行 Zephyr VPN 隧道与内置代理内核",
-    "ZephyrVpnExtAbility_label": "Zephyr VPN"
+    "ZephyrVpnExtAbility_label": "Zephyr VPN",
+    "hm_time_just_now": "刚刚",
+    "hm_time_minutes_ago": "%1$d 分钟前",
+    "hm_time_hours_ago": "%1$d 小时前",
+    "hm_time_days_ago": "%1$d 天前",
+    "hm_expiry_expired": "已过期",
+    "hm_expiry_today": "今天到期",
+    "hm_expiry_in_days": "%1$d 天后到期",
+    "hm_latency_timeout": "超时",
+    "hm_error_generic": "出错了"
   }
 }

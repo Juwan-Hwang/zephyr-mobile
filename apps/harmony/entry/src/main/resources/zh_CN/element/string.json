@@ -389,6 +389,42 @@
       "value": "Zephyr"
     },
     {
+      "name": "hm_error_generic",
+      "value": "出错了"
+    },
+    {
+      "name": "hm_expiry_expired",
+      "value": "已过期"
+    },
+    {
+      "name": "hm_expiry_in_days",
+      "value": "%1$d 天后到期"
+    },
+    {
+      "name": "hm_expiry_today",
+      "value": "今天到期"
+    },
+    {
+      "name": "hm_latency_timeout",
+      "value": "超时"
+    },
+    {
+      "name": "hm_time_days_ago",
+      "value": "%1$d 天前"
+    },
+    {
+      "name": "hm_time_hours_ago",
+      "value": "%1$d 小时前"
+    },
+    {
+      "name": "hm_time_just_now",
+      "value": "刚刚"
+    },
+    {
+      "name": "hm_time_minutes_ago",
+      "value": "%1$d 分钟前"
+    },
+    {
       "name": "home_action_load_nodes",
       "value": "读取节点"
     },
