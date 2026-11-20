@@ -397,6 +397,42 @@
       "value": "Zephyr"
     },
     {
+      "name": "hm_error_generic",
+      "value": "Something went wrong"
+    },
+    {
+      "name": "hm_expiry_expired",
+      "value": "Expired"
+    },
+    {
+      "name": "hm_expiry_in_days",
+      "value": "Expires in %1$d days"
+    },
+    {
+      "name": "hm_expiry_today",
+      "value": "Expires today"
+    },
+    {
+      "name": "hm_latency_timeout",
+      "value": "Timeout"
+    },
+    {
+      "name": "hm_time_days_ago",
+      "value": "%1$dd ago"
+    },
+    {
+      "name": "hm_time_hours_ago",
+      "value": "%1$dh ago"
+    },
+    {
+      "name": "hm_time_just_now",
+      "value": "Just now"
+    },
+    {
+      "name": "hm_time_minutes_ago",
+      "value": "%1$d min ago"
+    },
+    {
       "name": "home_action_load_nodes",
       "value": "load nodes"
     },
