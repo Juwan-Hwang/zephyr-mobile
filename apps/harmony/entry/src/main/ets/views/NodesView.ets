@@ -204,7 +204,7 @@ export struct NodesView {
   }
 
   @Builder
-  toolbar() {
+  statsBar() {
     Row({ space: 8 }) {
       Text($r('app.string.nodes_search_stats', Format.grouped(this.total), Format.micros(this.tookMicros)))
         .fontSize(12)
@@ -259,7 +259,7 @@ export struct NodesView {
       } else if (this.ranOnce && !this.loading && this.total === 0) {
         ZEmpty({ title: $r('app.string.nodes_no_match', this.query.trim()) })
       } else {
-        this.toolbar()
+        this.statsBar()
         List({ scroller: this.scroller }) {
           LazyForEach(this.source, (item: NodeRowItem) => {
             ListItem() {
