@@ -1,0 +1,2 @@
+# 混淆暂不开启（build-profile.json5 release.enable=false）。开启前需保留 NAPI 导出名与 JSON 字段名。
+-keep-property-name

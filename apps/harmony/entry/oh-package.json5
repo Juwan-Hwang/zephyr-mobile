@@ -1,0 +1,12 @@
+{
+  "name": "entry",
+  "version": "1.0.0",
+  "description": "Zephyr app module: UI (EntryAbility) + VPN extension (ZephyrVpnExtAbility).",
+  "main": "",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    // 只有类型声明；.so 由 A 的 core-ohos 构建脚本产出后放进 entry/libs/<abi>/（见 README）。
+    "libcore_ohos.so": "file:./src/main/cpp/types/libcore_ohos"
+  }
+}
