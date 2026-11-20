@@ -433,8 +433,44 @@
       "value": "Timeout"
     },
     {
+      "name": "hm_licenses_placeholder",
+      "value": "The full list of licenses will be included in a later build."
+    },
+    {
       "name": "hm_rules_test",
       "value": "Test"
+    },
+    {
+      "name": "hm_settings_engine",
+      "value": "Engine"
+    },
+    {
+      "name": "hm_settings_engine_mock",
+      "value": "Demo (UI only)"
+    },
+    {
+      "name": "hm_settings_engine_native",
+      "value": "Built-in core"
+    },
+    {
+      "name": "hm_settings_lan_bypass",
+      "value": "Bypass local network"
+    },
+    {
+      "name": "hm_settings_lan_bypass_footer",
+      "value": "Local network, link-local, loopback and multicast addresses never enter the tunnel in any mode, so printers, casting and your router keep working. This can't be turned off."
+    },
+    {
+      "name": "hm_settings_log_level",
+      "value": "Log level"
+    },
+    {
+      "name": "hm_settings_mode",
+      "value": "Default mode"
+    },
+    {
+      "name": "hm_settings_version",
+      "value": "Version"
     },
     {
       "name": "hm_time_days_ago",
