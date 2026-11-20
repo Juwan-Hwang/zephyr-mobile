@@ -14,6 +14,7 @@ import { LogsPage } from './LogsPage';
 import { LicensesPage } from './LicensesPage';
 import { ZTerm } from '../generated/ZTerms';
 import { ZTheme } from '../common/Theme';
+import { ZToastHost } from '../components/ZToastHost';
 
 const ROUTE_LOGS: string = 'logs';
 const ROUTE_LICENSES: string = 'licenses';
@@ -80,6 +81,16 @@ struct Index {
   }
 
   build() {
+    Stack({ alignContent: Alignment.Bottom }) {
+      this.navigation()
+      ZToastHost()
+    }
+    .width('100%')
+    .height('100%')
+  }
+
+  @Builder
+  navigation() {
     Navigation(this.pathStack) {
       Tabs({ barPosition: BarPosition.End, index: this.tab, controller: this.tabs }) {
         TabContent() {

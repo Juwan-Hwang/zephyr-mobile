@@ -52,6 +52,8 @@
     "requestPermissions": [
       { "name": "ohos.permission.INTERNET" },
       { "name": "ohos.permission.GET_NETWORK_INFO" },
+      // 触感反馈（S11），system_grant。
+      { "name": "ohos.permission.VIBRATE" },
       {
         // 受信任 Wi‑Fi 读 SSID（契约 §16.a⑤）；拿不到一律按“不受信任”处理。
         "name": "ohos.permission.GET_WIFI_INFO"
