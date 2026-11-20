@@ -425,6 +425,10 @@
       "value": "超时"
     },
     {
+      "name": "hm_rules_test",
+      "value": "测试"
+    },
+    {
       "name": "hm_time_days_ago",
       "value": "%1$d 天前"
     },
