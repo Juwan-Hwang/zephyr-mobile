@@ -17,7 +17,8 @@
     "hm_home_upload": "Upload",
     "hm_home_download": "Download",
     "hm_home_current_node": "Current node",
-    "hm_home_simulated": "UI only: simulated connection, no tunnel"
+    "hm_home_simulated": "UI only: simulated connection, no tunnel",
+    "hm_rules_test": "Test"
   },
   "zh": {
     "module_desc": "Zephyr 应用模块",
@@ -37,6 +38,7 @@
     "hm_home_upload": "上传",
     "hm_home_download": "下载",
     "hm_home_current_node": "当前节点",
-    "hm_home_simulated": "仅界面：模拟连接，未建立隧道"
+    "hm_home_simulated": "仅界面：模拟连接，未建立隧道",
+    "hm_rules_test": "测试"
   }
 }

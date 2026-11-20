@@ -2,7 +2,7 @@
  * 引擎枚举 / 格式化结构 → 字符串、颜色资源（对照 Android ui/common/Labels.kt）。返回 Resource，由 Text 在绘制时解析，
  * 应用语言切换后自动跟随。$r 的键必须是字面量（编译期解析），所以这里全是 switch，不拼接键名。
  */
-import { ConnectionStatus, ErrorCode, LogLevel, ProxyMode, Scene, SceneKind } from '../engine/Model';
+import { ConnectionStatus, ErrorCode, LayerKind, LogLevel, ProxyMode, Scene, SceneKind } from '../engine/Model';
 import { AgoParts, AgoUnit, ExpiryKind, ExpiryParts, LatencyClass } from './Format';
 
 export class Labels {
@@ -149,5 +149,20 @@ export class Labels {
       }
     }
     return s.name;
+  }
+
+  static layerKind(k: LayerKind): Resource {
+    switch (k) {
+      case LayerKind.OVERRIDE:
+        return $r('app.string.rules_kind_override');
+      case LayerKind.SUBSCRIPTION:
+        return $r('app.string.rules_kind_subscription');
+      case LayerKind.DOMAIN:
+        return $r('app.string.rules_kind_domain');
+      case LayerKind.IP:
+        return $r('app.string.rules_kind_ip');
+      default:
+        return $r('app.string.rules_kind_other');
+    }
   }
 }

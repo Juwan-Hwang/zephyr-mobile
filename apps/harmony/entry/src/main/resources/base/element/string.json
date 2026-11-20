@@ -433,6 +433,10 @@
       "value": "Timeout"
     },
     {
+      "name": "hm_rules_test",
+      "value": "Test"
+    },
+    {
       "name": "hm_time_days_ago",
       "value": "%1$dd ago"
     },
