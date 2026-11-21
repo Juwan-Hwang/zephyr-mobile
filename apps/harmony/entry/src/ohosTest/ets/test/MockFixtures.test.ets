@@ -13,7 +13,7 @@ import {
 
 /*
  * contract/fixtures 对拍（与 /workspace 外的 node 检查 ets-check/test.mjs 同一组断言）：
- * mock-v0（目录、查询、规则）、import-payload-v1、uhd-names-v1。command-parse-v1 待指令解析移植后加入。
+ * mock-v0（目录、查询、规则）、import-payload-v1、uhd-names-v1。command-parse-v1 见 CommandParse.test。
  */
 
 const KIND_ZH: Map<string, string> = new Map<string, string>([
