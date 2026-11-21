@@ -24,8 +24,9 @@ import androidx.compose.ui.unit.dp
 import com.zephyr.design.theme.ZTheme
 
 /**
- * Smoothed traffic curve with a fading area fill (home hero). Monotone cubic interpolation so the line
- * never overshoots below zero. Path is rebuilt only when [values] changes (drawWithCache).
+ * Smoothed traffic curve with a fading area fill (home hero). Samples are smoothed with a trailing mean and drawn
+ * as a Catmull-Rom spline; the fill starts at α [FILL_ALPHA] and fades out at [FILL_FADE_AT] of the height (spec §9.8,
+ * review And-2). Path is rebuilt only when [values] changes (drawWithCache).
  */
 @Composable
 fun ZSparkline(
@@ -56,28 +57,46 @@ fun ZSparkline(
                 val area = Path()
                 var head = Offset.Unspecified
                 var step = 0f
+                var fillTop = 0f
                 if (n >= 2) {
-                    val max = (values.max()).coerceAtLeast(1e-3f) * 1.15f
-                    val min = 0f
+                    // Review And-2 (spec §9.8): smooth, large swells like the prototype instead of per-second jitter.
+                    // Trailing mean over SMOOTH_WINDOW samples: each point depends only on itself and older samples, so
+                    // the already-drawn part of the curve does not wobble when a new sample arrives and pans in.
+                    val smooth = FloatArray(n)
+                    var acc = 0f
+                    for (i in 0 until n) {
+                        acc += values[i]
+                        if (i >= SMOOTH_WINDOW) acc -= values[i - SMOOTH_WINDOW]
+                        smooth[i] = acc / minOf(i + 1, SMOOTH_WINDOW)
+                    }
+                    val max = (smooth.max()).coerceAtLeast(1e-3f) * 1.15f
                     val w = size.width
                     val h = size.height
                     val dx = w / (n - 1)
-                    val pts = Array(n) { i -> Offset(i * dx, h - (values[i] - min) / (max - min) * h * 0.92f) }
-                    // monotone cubic tangents (Fritsch–Carlson)
-                    val m = FloatArray(n)
-                    val d = FloatArray(n - 1) { (pts[it + 1].y - pts[it].y) / dx }
-                    m[0] = d[0]; m[n - 1] = d[n - 2]
-                    for (i in 1 until n - 1) m[i] = if (d[i - 1] * d[i] <= 0) 0f else (d[i - 1] + d[i]) / 2
+                    val pts = Array(n) { i -> Offset(i * dx, h - smooth[i] / max * h * 0.92f) }
+                    // Uniform Catmull-Rom as cubic Béziers (end points duplicated); control points clamped to the canvas
+                    // so the curve never dips below the zero baseline or above the top.
+                    fun cy(v: Float) = v.coerceIn(0f, h)
                     line.moveTo(pts[0].x, pts[0].y)
                     for (i in 0 until n - 1) {
-                        val p0 = pts[i]; val p1 = pts[i + 1]
-                        line.cubicTo(p0.x + dx / 3, p0.y + m[i] * dx / 3, p1.x - dx / 3, p1.y - m[i + 1] * dx / 3, p1.x, p1.y)
+                        val p0 = pts[maxOf(i - 1, 0)]; val p1 = pts[i]; val p2 = pts[i + 1]; val p3 = pts[minOf(i + 2, n - 1)]
+                        line.cubicTo(
+                            p1.x + (p2.x - p0.x) / 6f, cy(p1.y + (p2.y - p0.y) / 6f),
+                            p2.x - (p3.x - p1.x) / 6f, cy(p2.y - (p3.y - p1.y) / 6f),
+                            p2.x, p2.y,
+                        )
                     }
                     head = pts[n - 1]; step = dx
+                    fillTop = pts.minOf { it.y }
                     area.addPath(line)
                     area.lineTo(w, h); area.lineTo(0f, h); area.close()
                 }
-                val brush = Brush.verticalGradient(listOf(color.copy(alpha = 0.28f), color.copy(alpha = 0f)))
+                // Fill ≈ α0.12 at the crest, fully faded by 60% of the height (spec §9.8).
+                val fadeEnd = maxOf(size.height * FILL_FADE_AT, fillTop + 1f)
+                val brush = Brush.verticalGradient(
+                    listOf(color.copy(alpha = FILL_ALPHA), color.copy(alpha = 0f)),
+                    startY = fillTop, endY = fadeEnd,
+                )
                 val stroke = Stroke(width = strokeWidth.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round)
                 val dotR = 3.5.dp.toPx()
                 onDrawBehind {
@@ -93,6 +112,10 @@ fun ZSparkline(
             },
     ) {}
 }
+
+private const val SMOOTH_WINDOW = 6
+private const val FILL_ALPHA = 0.12f
+private const val FILL_FADE_AT = 0.6f
 
 /** Convenience: keep the last [capacity] samples as floats for [ZSparkline]. */
 class SparkBuffer(private val capacity: Int = 90) {
