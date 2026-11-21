@@ -983,7 +983,14 @@ class CoreEngine(
         val c = nodes() ?: return if (mockData) fallback.nodeIndex() else NodeIndex(0, emptyList(), 0)
         val ttl = ttlMs()
         val tested = withContext(io) { runCatching { c.testedCount(clock(), ttl).toLong() }.getOrDefault(0L) }
-        return withContext(io) { wrap(ErrorMapping.Call.NODE_INDEX) { rebuildOnCorrupt(c) { c.nodeIndex() } }.let { NodeIndex(it.total.toLong(), it.sections.map(::section), tested) } }
+        val idx = withContext(io) { wrap(ErrorMapping.Call.NODE_INDEX) { rebuildOnCorrupt(c) { c.nodeIndex() } } }
+        // Contract §18.a: one extra nodeFunnel with the same freshness window; its failure only drops the sentence's
+        // reachable part (null), it never fails the index. thresholdMs does not affect `reachable`.
+        val funnel = withContext(io) { runCatching { c.nodeFunnel(clock(), ttl, REACHABLE_THRESHOLD_MS) }.getOrNull() }
+        return NodeIndex(
+            idx.total.toLong(), idx.sections.map(::section), tested,
+            reachableCount = funnel?.reachable?.toLong(), funnelTested = funnel?.tested?.toLong(),
+        )
     }
 
     private val queries = java.util.concurrent.ConcurrentHashMap<Long, String>()
@@ -1138,6 +1145,9 @@ class CoreEngine(
         if (mockData) fallback.commandSuggestions(input) else emptyList() // UI plans commands itself (CommandPlanner)
 
     companion object {
+        /** Contract §18.a: `latency.threshold-slow`; does not change `reachable`. */
+        const val REACHABLE_THRESHOLD_MS = 200
+
         /** Contract §16.c: MTU 1280–9000 (core and the iOS tunnel clamp at 1280 too). */
         val MTU_RANGE = SettingsCodec.MTU_RANGE
 
