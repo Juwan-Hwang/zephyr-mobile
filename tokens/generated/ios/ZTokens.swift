@@ -151,9 +151,9 @@ public enum ZTokens {
         public var text: Color {
             switch self {
             case .blue: return ZDynamicColor.make(dark: UIColor(red: 0.251, green: 0.6118, blue: 1.0, alpha: 1.0), light: UIColor(red: 0.0, green: 0.3569, blue: 0.749, alpha: 1.0))
-            case .green: return ZDynamicColor.make(dark: UIColor(red: 0.1882, green: 0.8196, blue: 0.3451, alpha: 1.0), light: UIColor(red: 0.1216, green: 0.4784, blue: 0.2078, alpha: 1.0))
-            case .orange: return ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.6235, blue: 0.0392, alpha: 1.0), light: UIColor(red: 0.7882, green: 0.2039, blue: 0.0, alpha: 1.0))
-            case .pink: return ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.3922, blue: 0.5098, alpha: 1.0), light: UIColor(red: 0.7686, green: 0.0, blue: 0.2902, alpha: 1.0))
+            case .green: return ZDynamicColor.make(dark: UIColor(red: 0.1882, green: 0.8196, blue: 0.3451, alpha: 1.0), light: UIColor(red: 0.1098, green: 0.4314, blue: 0.1922, alpha: 1.0))
+            case .orange: return ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.6235, blue: 0.0392, alpha: 1.0), light: UIColor(red: 0.6902, green: 0.1882, blue: 0.0, alpha: 1.0))
+            case .pink: return ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.3922, blue: 0.5098, alpha: 1.0), light: UIColor(red: 0.7333, green: 0.0, blue: 0.251, alpha: 1.0))
             }
         }
         /// 主按钮 / 选中胶囊的底，与 onFill 配对

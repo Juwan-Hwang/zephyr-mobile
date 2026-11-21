@@ -267,9 +267,9 @@ enum class ZAccent(
     val onFillDark: Color,
 ) {
     BLUE(Color(0xFF007AFF), Color(0xFF0A84FF), Color(0xFF005BBF), Color(0xFF409CFF), Color(0xFF0066D6), Color(0xFF0066D6), Color(0xFFFFFFFF), Color(0xFFFFFFFF)),
-    GREEN(Color(0xFF34C759), Color(0xFF30D158), Color(0xFF1F7A35), Color(0xFF30D158), Color(0xFF34C759), Color(0xFF30D158), Color(0xFF000000), Color(0xFF000000)),
-    ORANGE(Color(0xFFFF9500), Color(0xFFFF9F0A), Color(0xFFC93400), Color(0xFFFF9F0A), Color(0xFFFF9500), Color(0xFFFF9F0A), Color(0xFF000000), Color(0xFF000000)),
-    PINK(Color(0xFFFF2D55), Color(0xFFFF375F), Color(0xFFC4004A), Color(0xFFFF6482), Color(0xFFD1004B), Color(0xFFD1004B), Color(0xFFFFFFFF), Color(0xFFFFFFFF)),
+    GREEN(Color(0xFF34C759), Color(0xFF30D158), Color(0xFF1C6E31), Color(0xFF30D158), Color(0xFF34C759), Color(0xFF30D158), Color(0xFF000000), Color(0xFF000000)),
+    ORANGE(Color(0xFFFF9500), Color(0xFFFF9F0A), Color(0xFFB03000), Color(0xFFFF9F0A), Color(0xFFFF9500), Color(0xFFFF9F0A), Color(0xFF000000), Color(0xFF000000)),
+    PINK(Color(0xFFFF2D55), Color(0xFFFF375F), Color(0xFFBB0040), Color(0xFFFF6482), Color(0xFFD1004B), Color(0xFFD1004B), Color(0xFFFFFFFF), Color(0xFFFFFFFF)),
     ;
     val glow: Color get() = color.copy(alpha = 0.2f)
     fun base(dark: Boolean): Color = if (dark) colorDark else color

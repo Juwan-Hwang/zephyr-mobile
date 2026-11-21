@@ -39,7 +39,7 @@
 | 旧用法：`screen.amber` / `red` / `green` 直接作文字 | `screen.s1`、`s2`、`bg` | 4.5（记 debt，平台切到 `*-text` 后删除；之后原色只作圆点 / 进度条 / 图标） |
 | `color.download`、`screen.up`（速率箭头） | `screen.s1`、`s2`、`bg` | 3.0 |
 | 强调色 blue / green / orange / pink | `screen.bg`、`s1` | 3.0（默认 blue 作小字另在 `bg`、`s1`、`s4` 上按 4.5） |
-| `accent.*.text` | `screen.bg`、`s1`（blue 另加 `s4`） | 4.5 |
+| `accent.*.text` | `screen.bg`、`s1`、`s4` | 4.5 |
 | `accent.*.on-fill` | `accent.*.fill` | 4.5 |
 | `accent.*.base` 深色 | `screen.bg`、`s1` | 3.0 |
 | 旧用法：强调色单一值作前景 / 小字，`text.on-accent` 在单一值或深色 base 上 | — | 3.0 / 4.5（记 debt，平台切换后删除） |

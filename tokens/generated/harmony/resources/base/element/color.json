@@ -274,7 +274,7 @@
     },
     {
       "name": "accent_green_text",
-      "value": "#FF1F7A35"
+      "value": "#FF1C6E31"
     },
     {
       "name": "accent_green_fill",
@@ -290,7 +290,7 @@
     },
     {
       "name": "accent_orange_text",
-      "value": "#FFC93400"
+      "value": "#FFB03000"
     },
     {
       "name": "accent_orange_fill",
@@ -306,7 +306,7 @@
     },
     {
       "name": "accent_pink_text",
-      "value": "#FFC4004A"
+      "value": "#FFBB0040"
     },
     {
       "name": "accent_pink_fill",
