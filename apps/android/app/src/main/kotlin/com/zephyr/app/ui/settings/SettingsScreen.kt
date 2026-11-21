@@ -56,6 +56,16 @@ import com.zephyr.engine.Settings
 import com.zephyr.engine.StorageInfo
 import kotlinx.coroutines.launch
 
+/** "节点 0.6 GB · 规则 1.9 GB · 可用 3.1 GB": all three in the unit of the largest (review And-6, prototype / iOS). */
+@Composable
+private fun storageDetail(s: StorageInfo): String {
+    val like = maxOf(s.nodesBytes, s.rulesBytes, s.freeBytes)
+    return stringResource(
+        R.string.settings_storage_detail,
+        ZFormat.bytesTextIn(s.nodesBytes, like), ZFormat.bytesTextIn(s.rulesBytes, like), ZFormat.bytesTextIn(s.freeBytes, like),
+    )
+}
+
 @Composable
 fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onTrustedWifi: () -> Unit = {}, onLocalProxy: () -> Unit = {}, onLicenses: () -> Unit = {}, onBack: () -> Unit) {
     val engine = AppGraph.engine
@@ -98,7 +108,7 @@ fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onTrustedWifi: () -> U
                     Spacer(Modifier.height(12.dp))
                     StorageBar(storage)
                     Spacer(Modifier.height(8.dp))
-                    ZText(stringResource(R.string.settings_storage_detail, ZFormat.bytesText(storage.nodesBytes), ZFormat.bytesText(storage.rulesBytes), ZFormat.bytesText(storage.freeBytes)), style = ZTheme.type.footnote, color = c.text3)
+                    ZText(storageDetail(storage), style = ZTheme.type.footnote, color = c.text3)
                 }
             }
             ZSectionHeader(stringResource(R.string.settings_appearance), Modifier.padding(top = 12.dp))
