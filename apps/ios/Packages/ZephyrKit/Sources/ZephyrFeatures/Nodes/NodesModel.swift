@@ -26,9 +26,6 @@ final class NodesModel {
     private(set) var generation = 0
     private(set) var accent: ZTokens.Accent = .blue
     private(set) var failed = false
-    /// 节点页判断句的数（契约 §18.a）：同一次 nodeFunnel 的 reachable / tested；nil = 取不到，只写「已检测 N」。
-    private(set) var funnel: NodeFunnel?
-    @ObservationIgnored private var funnelRequested = false
 
     @ObservationIgnored private var searchTask: Task<Void, Never>?
     @ObservationIgnored private var started = false
@@ -62,17 +59,6 @@ final class NodesModel {
         }
         defer { pathTask.cancel() }
         for await settings in engine.settings() {
-            if !funnelRequested {
-                funnelRequested = true
-                let maxAge = SceneSheet.funnelMaxAgeMs(settings)
-                Task { [weak self] in
-                    guard let self else { return }
-                    // thresholdMs 不影响 reachable（契约 §18.a），传 latency.threshold-slow。
-                    let f = await self.engine.nodeFunnel(maxAgeMs: maxAge, thresholdMs: Int32(ZTokens.LatencyThreshold.slow))
-                    self.funnel = f
-                    self.updateFooterTested()
-                }
-            }
             let a = ZTokens.Accent(rawValue: settings.accent.rawValue) ?? .blue
             if a != accent { accent = a }
             testOnWifiOnly = settings.testOnWifiOnly
@@ -164,17 +150,24 @@ final class NodesModel {
     }
 
     /// 节点页判断句（规范 §9.4，契约 §18.a）：「可连通 x · 已检测 N」；reachable 为 0 时数字用 red-text，否则 t1；整行 t2。
+    /// 两个数都读 `NodeIndex.reachableCount` / `funnelTested`（引擎在 nodeIndex 里同一次 nodeFunnel 取得）；
+    /// reachableCount 为 nil（取不到）时只写「已检测 N」（testedCount）。
     var judgement: AttributedString? {
         guard showsJudgement, let index else { return nil }
-        if let f = funnel, f.tested > 0 {
-            let r = ZFormat.count(Int64(f.reachable))
-            var a = AttributedString(ZL.s("可连通 %1$@ · 已检测 %2$@", r, ZFormat.count(Int64(f.tested))))
+        return Self.judgement(index: index)
+    }
+
+    /// 纯函数，便于单测（契约 §18.a 三行表）。
+    nonisolated static func judgement(index: NodeIndex) -> AttributedString {
+        if let reachable = index.reachableCount, let tested = index.funnelTested, tested > 0 {
+            let r = ZFormat.count(reachable)
+            var a = AttributedString(ZL.s("可连通 %1$@ · 已检测 %2$@", r, ZFormat.count(tested)))
             if let range = a.range(of: r) {
-                a[range].foregroundColor = f.reachable == 0 ? ZTokens.Colors.screenRedText : ZTokens.Colors.screenT1
+                a[range].foregroundColor = reachable == 0 ? ZTokens.Colors.screenRedText : ZTokens.Colors.screenT1
             }
             return a
         }
-        if funnel == nil, index.testedCount > 0 {
+        if index.reachableCount == nil, index.testedCount > 0 {
             return AttributedString(ZL.s("已检测 %@", ZFormat.count(index.testedCount)))
         }
         return AttributedString(ZL.tr("尚未检测，停止滚动后自动测可见节点"))

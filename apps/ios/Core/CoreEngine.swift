@@ -533,6 +533,9 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
 
     // MARK: - §5 节点库
 
+    /// 契约 §18.a：`latency.threshold-slow`；不影响 `reachable`。
+    static let reachableThresholdMs: Int32 = 200
+
     public func nodeIndex() async -> ZephyrKit.NodeIndex {
         guard let c = await nodes() else {
             return mockData ? await fallback.nodeIndex() : ZephyrKit.NodeIndex(total: 0, sections: [], testedCount: 0)
@@ -540,7 +543,11 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         guard let i = try? await run(.nodeNotFound, { try c.nodeIndex() }) else { return ZephyrKit.NodeIndex(total: 0, sections: [], testedCount: 0) }
         let fresh = latencyFreshMillis
         let tested = await runQuiet { c.testedCount(nowMillis: self.clock(), maxAgeMillis: fresh) }
-        return ZephyrKit.NodeIndex(total: Int64(i.total), sections: i.sections.map(CoreEngine.section), testedCount: Int64(tested))
+        // 契约 §18.a：同一有效期再调一次 nodeFunnel；失败只让 reachableCount 为 nil（判断句退回「已检测 N」），不让索引失败。
+        // thresholdMs 不影响 reachable，传 latency.threshold-slow = 200。
+        let f = await nodeFunnel(maxAgeMs: fresh, thresholdMs: CoreEngine.reachableThresholdMs)
+        return ZephyrKit.NodeIndex(total: Int64(i.total), sections: i.sections.map(CoreEngine.section), testedCount: Int64(tested),
+                                   reachableCount: f.map { Int64($0.reachable) }, funnelTested: f.map { Int64($0.tested) })
     }
 
     /// 记录 token → 查询（过期 token 重建用）。只留最近 64 个，避免每次搜索都让两张表无限增长（REVIEW-Q2 P2）。

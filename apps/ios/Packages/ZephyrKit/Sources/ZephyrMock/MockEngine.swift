@@ -9,6 +9,8 @@ public final class MockEngine: ZephyrEngine, @unchecked Sendable {
 
     public let seed: UInt64
     public let clock: MockClock
+    /// 引擎启动时刻：fixture 缓存延迟的样本时间（契约 §18.a Mock）。
+    let startedAt: Int64
 
     struct State {
         var connection: ConnectionState
@@ -19,6 +21,8 @@ public final class MockEngine: ZephyrEngine, @unchecked Sendable {
         var settings: Settings
         var tested: [NodeId: Int32] = [:]
         var testedCount: Int64 = 0
+        /// 契约 §18.a Mock：每个实测样本的写入时刻（nodeFunnel 按 maxAgeMillis 过滤）；fixture 缓存延迟记为引擎启动时刻。
+        var testedAt: [NodeId: Int64] = [:]
         var models: [Int64: MockQueryModel] = [:]
         var modelOrder: [Int64] = []
         var nextToken: Int64 = 1
@@ -55,6 +59,7 @@ public final class MockEngine: ZephyrEngine, @unchecked Sendable {
         self.seed = seed
         self.clock = clock
         let now = clock.now()
+        self.startedAt = now
         let connected = startConnected ?? clock.isFrozen
         let conn = ConnectionState(status: connected ? .connected : .disconnected, mode: .rule,
                                    since: connected ? now - MockClock.prototypeConnectedMillis : nil,
