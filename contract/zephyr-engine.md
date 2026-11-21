@@ -216,6 +216,7 @@ v0.1 追加：`stale_token`（查询句柄已淘汰，UI 重新 queryNodes 即�
 - v0.1（2026-11-06 14:20）追加 §13：类型命名、Dns/Tun 设置、stale_token / subscription_not_found、IPv6 规则测试、连接轨迹。
 - v0.3（2026-11-14）追加 §15：导入载荷 / 桌面同步二维码格式（parseImportPayload）。
 - v0.4（2026-11-18）追加 §16：发版审计（#209）的契约补定义——网络与路由、错误码映射、设置默认值、指令语义、格式与无障碍、本地代理凭据、日志级别、订阅拉取、平台差异登记。只追加，不改名。
+- v0.5（2026-11-21）追加 §17：鸿蒙（HarmonyOS，角色 D，#241）列——§11 平台层、§16.a②④⑤、§16.f、§16.i④ 的鸿蒙行为，鸿蒙平台差异（无控制中心磁贴、无实况窗、无换图标），导航结构与内部深链的决定。只追加，不改名。
 
 ## 13. v0.1 追加（2026-11-06 14:20，只追加不改名）
 采纳 iOS NOTES-K 的命名，两端照此：
@@ -805,3 +806,74 @@ isPublicFetchAddress(ip: String) -> Bool            // 顶层函数；DNS 结果
 - 两端都不读系统 HTTP 代理设置。
 
 **⑤ 错误码**（补 §16.b①）：离线 → `network_unavailable`；DNS 失败、超时、TLS 失败、非 2xx、超大小、重定向过多 / 降级 / SSRF 拒绝 → `subscription_fetch_failed`；URL 不合法、正文不是订阅 → `subscription_invalid`。
+
+## 17. v0.5 追加（2026-11-21，鸿蒙 HarmonyOS 列，#241，只追加）
+鸿蒙端由角色 D 负责（`apps/harmony/`，见 COORDINATION.md §2）。本节给 §11、§16 中按平台分列的条目补上鸿蒙一列；§16 里两端（iOS / Android）共同的行为，鸿蒙**一律照做**，本节不再重复。标"**鸿蒙：待 D 在 M1–M5 确认**"的是目前还没有真机 / 云调试结论的项：D 确认后在本节下追加结论（只追加），确认前按本节写的保守行为实现。依据：D 在 #241 的状态帖与草稿 PR #245（M0 工具链）/ #246（应用骨架 + Mock 引擎）/ #247（core-ohos napi 薄层）。
+
+### 17.a 平台层（补 §11）
+- 鸿蒙：`VpnExtensionAbility`（`ZephyrVpnExtAbility`，type=vpn）里 `VpnConnection.create(VpnConfig)` 得到 tun fd，经 runtimeConfig 的 `file-descriptor` 交给 mihomo（`libzmihomo.so`，以库 dlopen，禁止起子进程）；fd 归系统 VPN 框架，核心与桥都不 close，由 `VpnConnection.destroy()` 回收。
+- 核心绑定走 core-ohos（napi，§14.w 中"鸿蒙 core 绑定"一条），不走 UniFFI；mihomo 出站防回环用 `zm_set_socket_hook`（§14.w 中"出站防回环"一条），dlopen 前 `setenv DISABLE_LOOPBACK_DETECTOR=1`。
+- App 与扩展分进程，经 `filesDir/vpn/` 下的意图文件 / 状态文件通信（原子写 + generation，见 #246 `StartIntent.ets`）。本 App 的 bundle 放进 `VpnConfig.blockedApplications`（App 自身不进 VPN，与 Android `addDisallowedApplication` 同义）。
+- 只读系统入口：服务卡片（桌面卡片）只读 `ConnectionState`、`TrafficSample`、当前场景摘要，与 §11 小组件同规则。
+
+### 17.b 网络与路由（补 §16.a）
+**② 计费属性（鸿蒙列）**
+- 语义与 §16.a② 相同：VPN 网络的计费属性必须跟随底层网络，平台判断"是否计费 / 是否 Wi‑Fi"看**底层网络**（`@ohos.net.connection` 的默认网络 `NetCapabilities`：`bearerTypes` 含 `BEARER_WIFI` / `BEARER_CELLULAR`，计费看 `NET_CAPABILITY_NOT_METERED`）。
+- 鸿蒙 VPN 框架是否自动沿用底层网络的计费属性、有无类似 `setUnderlyingNetworks` 的接口：**鸿蒙：待 D 在 M1–M5 确认**。确认前：本 App 自己的"仅在 Wi‑Fi 下…"判断（§16.c `testOnWifiOnly` / `updateOnWifiOnly`）一律读底层网络，读不到时按**计费**处理（宁可少测速、少后台更新）。
+
+**③ 网络切换（鸿蒙列）**：照 §16.a③（去抖 2 s → `closeAll` → 重评受信任 Wi‑Fi → 故障探测立即一轮），监听用 `connection.createNetConnection().on('netAvailable' / 'netLost' / 'netCapabilitiesChange')`。故障探测在哪个进程跑见 17.c。
+
+**④ IPv6（鸿蒙列）**
+- 目标语义不变：`TunSettings.ipv6 = false` = IPv6 被阻断、不得绕过隧道直连。
+- 现状（#246 `LanBypass.ets`）：按 Android 做法，IPv6 关闭时不给 VPN 加 v6 地址 / 路由；开启时加 `fdfe:dcba:9876::1/126` 与 v6 路由（排除 §16.a① 的 v6 局域网段）。
+- 鸿蒙在 VPN 没有 v6 地址时是否阻断该地址族（Android `VpnService.Builder` 有此保证）：**鸿蒙：待 D 在 M1–M5 确认**。若真机上 v6 会绕过隧道直连，鸿蒙改用 iOS 做法：始终把 `::/0` 路由进隧道，IPv6 关闭时由 mihomo 丢弃。两种做法都允许，泄露不允许。
+
+**⑤ 按需连接 / 受信任 Wi‑Fi（鸿蒙列）**
+- 鸿蒙没有 iOS 那样的系统级按需规则，平台自己实现，语义照 §16.a⑤ 与 Android 列：`onDemand` = 用户至少手动连接过一次之后的**自动重连**（扩展被系统停掉 / 进程重启 / 网络从无到有时，若上次状态是"已连接且非手动断开"则重连）；用户手动断开（含服务卡片、通知）= 暂停按需连接直到下次手动连接；不得在用户未操作时首次弹出 VPN 授权。
+- 开机后自动重连能否实现（开机广播 / 后台拉起 `VpnExtensionAbility` 的限制）：**鸿蒙：待 D 在 M1–M5 确认**；做不到就不做，不申请对应权限，设置页不承诺"开机自动连接"。
+- 受信任 Wi‑Fi：用 `@ohos.wifiManager` 读当前连接的 SSID。所需权限（`ohos.permission.GET_WIFI_INFO`，以及是否还需要位置权限 / 位置开关）：**鸿蒙：待 D 在 M1–M5 确认**。规则与 Android 相同：**拿不到 SSID 一律按"不受信任"处理**（保持连接），设置页该行说明原因并给授权入口；只在用户打开受信任 Wi‑Fi 页时请求权限，不在启动时请求。
+- 鸿蒙有无"始终开启的 VPN / 锁定模式"系统设置：**鸿蒙：待 D 在 M1–M5 确认**；若有且已开启，照 Android：受信任 Wi‑Fi 不自动断开。
+
+**⑥ 常开 / Kill switch（鸿蒙列）**：v1 不承诺，App 不自行实现（同 §16.a⑥）。
+
+### 17.c 平台差异登记（补 §16.f 鸿蒙列，保留，不作为缺陷）
+
+| 项 | 鸿蒙 | 说明 |
+|---|---|---|
+| Go 内存上限（E19） | 暂按 Android 48 MB | VPN 扩展进程的内存上限：**鸿蒙：待 D 在 M1–M5 确认**；若扩展有更严的硬上限，按 iOS 的方式下调并在此追加 |
+| `zm_url_test` 并发（E20） | 暂按 Android 32 | 契约上限 32；超时 5000 ms、URL `https://www.gstatic.com/generate_204` 与两端相同；扩展内存紧时下调：**鸿蒙：待 D 在 M1–M5 确认** |
+| 场景故障探测（E21） | 核心在 App（UI）进程，App 前台且已连接时 60 s 一轮 | App 退到后台后 UI 进程会被冻结；扩展进程能否常驻跑探测：**鸿蒙：待 D 在 M1–M5 确认**。确认前按 iOS 列处理（后台不自动切换） |
+| 服务健康 / 出口周期探测（E25） | 至少 `retestScene` 时 | 周期探测与否同上；遵守 testOnWifiOnly |
+| 陈旧场景自动重测（E28） | 规则与两端相同 | 触发时机：前台 + 后台任务（见下表） |
+| 订阅更新后重载（E33） | 照 §16.f 统一规则 | 任何订阅更新成功后重写配置并重载一次 |
+| 回环 mixed 端口（E12） | 同 Android：App 自身在 `blockedApplications` 里，探测与 §16.i④ 拉取需要回环 mixed 端口 | 具体做法（常开随机端口 + 鉴权，或仅连接时开）：**鸿蒙：待 D 在 M1–M5 确认**；用户启用本地代理后必须尊重 `localProxyPort` / `localProxyAuth` |
+| `ConnectionInfo.app` | 暂恒 null | 能否从连接反查应用：**鸿蒙：待 D 在 M1–M5 确认** |
+| **控制中心磁贴 / 快捷开关** | **无** | 鸿蒙没有给三方应用的控制中心磁贴 / 快捷开关 API。资料库里"小组件与控制中心（Android 为快速设置磁贴）"一行在鸿蒙只保留服务卡片说明；§16.b②、§16.a⑤ 里提到控制中心 / 快捷开关的条目在鸿蒙不适用 |
+| **实时活动 / 实况窗** | **不做** | iOS 实时活动对应的鸿蒙实况窗 v1 不做；连接中的持续状态由 VPN 扩展的常驻通知（若系统提供）与服务卡片承担 |
+| **换 App 图标** | **无** | 鸿蒙不提供运行时切换应用图标；强调色只作用于 App 内 |
+
+以上三项（磁贴、实况窗、换图标）是平台差异，**不是缺陷**，审阅时不再作为缺口提出。
+
+后台能力矩阵（鸿蒙列）：
+
+| 能力 | 鸿蒙 |
+|---|---|
+| 流量 / 今日用量记账 | 扩展进程记账（mihomo 在扩展里）；UI 进程回前台时读 |
+| 场景自动切换 | 见上表 E21（确认前：后台不跑） |
+| 订阅自动更新 | 回前台检查 + 后台延迟任务（`workScheduler`，系统决定时机，按 §16.c 约束网络）：**鸿蒙：待 D 在 M1–M5 确认**可用的最短间隔 |
+| 服务卡片刷新 | 连接状态变化时主动更新 + 定时更新；**须有零点刷新**（同 E44）；最短刷新间隔：**鸿蒙：待 D 在 M1–M5 确认** |
+| 实况窗 / 常驻通知 | 实况窗不做；常驻通知：**鸿蒙：待 D 在 M1–M5 确认** |
+
+### 17.d 订阅拉取走不走隧道（补 §16.i④ 鸿蒙列）
+- 鸿蒙 App 自身在 `blockedApplications` 里、不进 VPN（17.a），与 Android 同构，因此照 **Android 列**：隧道已连接时经回环 mixed 端口（带凭据）拉取，未连接时直连；不读系统 HTTP 代理设置。
+- §16.i② 的 User-Agent 平台段在鸿蒙写 `HarmonyOS <系统版本>`，即 `Zephyr/<App 版本> (HarmonyOS <系统版本>) clash.meta mihomo/<内置 mihomo 版本>`；其余请求参数（超时、32 MB、5 跳、SSRF 校验与 `fetchTarget` / `isPublicFetchAddress`）与两端相同。core-ohos 需转发 `fetchTarget` / `isPublicFetchAddress`（同名，§14.w"鸿蒙 core 绑定"的规则）。
+- 回环 mixed 端口的鉴权与端口选择同 17.c E12 行；实现前（M1–M5）鸿蒙只在未连接时拉取，已连接时的手动更新**提示"断开后更新"或排队到断开**，不得绕过 SSRF 校验直连。
+
+### 17.e 导航结构（决定）
+- 鸿蒙**跟随 iOS / Android 现状与原型**：**没有底部 Tab**，结构是单一首页 + 资料库 sheet + 底部指令栏（`design/notes/mobile-design-spec.md` §3，审计 U34 已废弃 4 Tab 草案）。依据：iOS `RootView` 为 `NavigationStack`（首页）+ sheet（资料库 / 场景 / 今日等）；Android `AppRoot` 为 `NavHost`（起点首页）+ 资料库浮层，均无 Tab 栏。
+- 节点、订阅、规则、设置、日志等从资料库 sheet 进入二级页（返回到资料库），与两端一致。#246 现在的底部 Tabs（首页 / 节点 / 资料库 / 设置）需改成此结构；可在 M 阶段内完成，不阻塞其他工作。
+
+### 17.f 内部深链（决定：不入契约，平台本地）
+- 契约内的外链只有 §15 导入载荷与 §16.e⑦ 的四个 scheme（`zephyr://import…`、`clash://`、`clashmeta://`、`mihomo://`），三端都必须支持且行为相同（先解析、确认面板、从不自动导入）。
+- `zephyr://connect`、`disconnect`、`toggle`、`mode/*`、`scene/<id>`、`nodes?q=` 等**内部动作链接不入契约**：目前只有 iOS 实现（`DeepLink.swift`，供小组件 / 实时活动 / 快捷指令用），Android 只注册了 `zephyr://import`，两端不一致，强行统一没有收益。各端按需自定，属平台本地。
+- 鸿蒙若为服务卡片等加内部链接，要求：① 不得占用 `zephyr://import`；② 会改变状态的链接（连接 / 断开 / 切模式）来自外部时必须先让用户确认，或只接受带本机令牌的链接（与 iOS `DeepLinkPolicy` 同思路）；③ 卡片优先用 `postCardAction` 的 router / call 事件直达 Ability，不经 URL。
