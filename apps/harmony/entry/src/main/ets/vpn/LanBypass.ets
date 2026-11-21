@@ -8,6 +8,12 @@
  * 鸿蒙 API 20+ 的 RouteInfo 有 isExcludedRoute：默认路由 + 每个排除网段一条 isExcludedRoute = true（本工程 API 23）。
  * 万一真机上排除路由不生效（待验证），可改用 complement = true：直接下发 0/0 减去排除集的补集（V4_ROUTES / V6_ROUTES，
  * 与 Android API < 33 的表相同）。回环网段两种方式都不下发（内核 local 表本来就不走 tun）。
+ *
+ * IPv6（契约 §17.b④，fail-closed）：鸿蒙在 VPN 没有 v6 地址 / 路由时是否阻断 v6，真机尚未确认（Android VpnService
+ * 有此保证，鸿蒙没有文档保证）。确认前照 iOS TunnelNetworkSettingsFactory：**无论 ipv6 开关**，始终给 tun 配 v6 地址、
+ * 把 ::/0（减 V6_EXCLUDED）路由进隧道、isIPv6Accepted = true；ipv6 关闭时由 mihomo（tun.ipv6 = false、DNS 不返回 AAAA）
+ * 丢弃这些包，应用回落 IPv4，字面 v6 地址也不会绕过隧道走物理网卡泄露真实 IP。
+ * 真机确认鸿蒙会阻断无路由的 v6 之后，才可把 V6_FAIL_CLOSED 改为 false（回到 Android 做法）并在契约 §17.b④ 追加结论。
  */
 import { vpnExtension } from '@kit.NetworkKit';
 
@@ -17,6 +23,14 @@ export const FAMILY_V6: number = 2;
 export const TUN_INTERFACE: string = 'vpn-tun';
 
 export class LanBypass {
+  /** §17.b④：IPv6 确认前 fail-closed。改为 false 前必须有真机结论（见文件头）。 */
+  static readonly V6_FAIL_CLOSED: boolean = true;
+
+  /** tun 是否要配 v6 地址 / 路由并接收 v6：fail-closed 期间恒为 true；ipv6 开关只交给 mihomo 决定丢弃与否。 */
+  static tunnelsV6(ipv6: boolean): boolean {
+    return LanBypass.V6_FAIL_CLOSED || ipv6;
+  }
+
   static readonly V4_EXCLUDED: string[] = [
     '10.0.0.0/8', '127.0.0.0/8', '169.254.0.0/16', '172.16.0.0/12', '192.168.0.0/16', '224.0.0.0/4', '255.255.255.255/32'
   ];
@@ -71,16 +85,17 @@ export class LanBypass {
   }
 
   /**
-   * 隧道路由：除 LAN 集合外的一切；IPv6 仅在 ipv6 开启时（§16.a④）。
+   * 隧道路由：除 LAN 集合外的一切。IPv6 路由由 tunnelsV6(ipv6) 决定：fail-closed 期间与 ipv6 开关无关，始终进隧道（§17.b④）。
    * gateway4 / gateway6：tun 自身地址（hasGateway = false，只为满足字段）。
    */
   static routes(ipv6: boolean, gateway4: string, gateway6: string, complement?: boolean): vpnExtension.RouteInfo[] {
     const out: vpnExtension.RouteInfo[] = [];
+    const v6: boolean = LanBypass.tunnelsV6(ipv6);
     if (complement === true) {
       for (const c of LanBypass.V4_ROUTES) {
         out.push(LanBypass.route(c, gateway4, false, false));
       }
-      if (ipv6) {
+      if (v6) {
         for (const c of LanBypass.V6_ROUTES) {
           out.push(LanBypass.route(c, gateway6, false, false));
         }
@@ -88,7 +103,7 @@ export class LanBypass {
       return out;
     }
     out.push(LanBypass.route('0.0.0.0/0', gateway4, true, false));
-    if (ipv6) {
+    if (v6) {
       out.push(LanBypass.route('::/0', gateway6, true, false));
     }
     for (const c of LanBypass.V4_EXCLUDED) {
@@ -96,7 +111,7 @@ export class LanBypass {
         out.push(LanBypass.route(c, gateway4, false, true));
       }
     }
-    if (ipv6) {
+    if (v6) {
       for (const c of LanBypass.V6_EXCLUDED) {
         out.push(LanBypass.route(c, gateway6, false, true));
       }

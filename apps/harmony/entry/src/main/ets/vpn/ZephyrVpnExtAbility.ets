@@ -17,12 +17,12 @@ import { vpnExtension, VpnExtensionAbility } from '@kit.NetworkKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { ErrorCode } from '../engine/Model';
 import { ZephyrError } from '../engine/ZephyrEngine';
-import { LanBypass } from './LanBypass';
 import { Mihomo } from './MihomoNative';
 import {
   RECREATE_DELAY_MS, StartIntent, StartIntentStore, VPN_ABILITY_NAME, VpnPhase, VpnStatusStore
 } from './StartIntent';
 import { RuntimeConfigProvider, SimulatedTunBridge, TunBridge, TunBridges } from './TunBridge';
+import { buildVpnConfig } from './VpnConfigBuilder';
 
 const DOMAIN: number = 0x5A50;
 const TAG: string = 'ZephyrVpnExt';
@@ -40,32 +40,6 @@ class Cancelled extends Error {
     super('superseded');
     this.name = 'Cancelled';
   }
-}
-
-/** 纯函数，便于对拍：198.18.0.1/30、DNS 198.18.0.2、MTU 夹到 [1280, 9000]、自身 bundle 不走隧道。 */
-export function buildVpnConfig(intent: StartIntent, selfBundle: string): vpnExtension.VpnConfig {
-  const addresses: vpnExtension.LinkAddress[] = [LanBypass.link(TunBridges.TUN_ADDRESS4 + '/' + TunBridges.TUN_PREFIX4)];
-  if (intent.ipv6) {
-    addresses.push(LanBypass.link(TunBridges.TUN_ADDRESS6 + '/' + TunBridges.TUN_PREFIX6));
-  }
-  const blocked: string[] = [selfBundle];
-  for (const b of intent.excludedApps) {
-    if (b.length > 0 && blocked.indexOf(b) < 0) {
-      blocked.push(b);
-    }
-  }
-  const cfg: vpnExtension.VpnConfig = {
-    addresses: addresses,
-    routes: LanBypass.routes(intent.ipv6, TunBridges.TUN_ADDRESS4, TunBridges.TUN_ADDRESS6),
-    dnsAddresses: [TunBridges.TUN_DNS],
-    mtu: TunBridges.clampMtu(intent.mtu),
-    isIPv4Accepted: true,
-    isIPv6Accepted: intent.ipv6,
-    isBlocking: false,
-    // UI 进程与自身其他出站保持直连（避免回环）；用户排除的应用同理。
-    blockedApplications: blocked
-  };
-  return cfg;
 }
 
 export default class ZephyrVpnExtAbility extends VpnExtensionAbility {
