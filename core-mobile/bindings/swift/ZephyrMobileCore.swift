@@ -1057,6 +1057,13 @@ public protocol MobileCoreProtocol : AnyObject {
     func sceneForHost(host: String)  -> String?
     
     /**
+     * 场景漏斗（§19.a）：只数该场景候选范围内的节点——当前节点所在地区，且遵守场景节点过滤（§15.h，视频只用 4K）。
+     * 口径与 `sceneCandidates` / `Scene.available` 的范围一致；`sourceCount` 仍是全部订阅数，`poolSize` = 该范围节点数（不看测速）。
+     * 场景尚未选节点（地区未知）时返回 poolSize = tested = 0。未知 sceneId 抛 SceneNotFound。
+     */
+    func sceneFunnel(sceneId: String, nowMillis: Int64, maxAgeMillis: Int64, thresholdMs: Int32) throws  -> NodeFunnel
+    
+    /**
      * 场景内需要探测健康的服务（按内置应用目录，有 probe 地址的）。
      */
     func sceneProbeTargets(sceneId: String) throws  -> [ProbeTarget]
@@ -1684,6 +1691,22 @@ open func sceneForHost(host: String) -> String? {
     return try!  FfiConverterOptionString.lift(try! rustCall() {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_for_host(self.uniffiClonePointer(),
         FfiConverterString.lower(host),$0
+    )
+})
+}
+    
+    /**
+     * 场景漏斗（§19.a）：只数该场景候选范围内的节点——当前节点所在地区，且遵守场景节点过滤（§15.h，视频只用 4K）。
+     * 口径与 `sceneCandidates` / `Scene.available` 的范围一致；`sourceCount` 仍是全部订阅数，`poolSize` = 该范围节点数（不看测速）。
+     * 场景尚未选节点（地区未知）时返回 poolSize = tested = 0。未知 sceneId 抛 SceneNotFound。
+     */
+open func sceneFunnel(sceneId: String, nowMillis: Int64, maxAgeMillis: Int64, thresholdMs: Int32)throws  -> NodeFunnel {
+    return try  FfiConverterTypeNodeFunnel.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_funnel(self.uniffiClonePointer(),
+        FfiConverterString.lower(sceneId),
+        FfiConverterInt64.lower(nowMillis),
+        FfiConverterInt64.lower(maxAgeMillis),
+        FfiConverterInt32.lower(thresholdMs),$0
     )
 })
 }
@@ -8631,6 +8654,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_for_host() != 35644) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_funnel() != 37880) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_probe_targets() != 46639) {

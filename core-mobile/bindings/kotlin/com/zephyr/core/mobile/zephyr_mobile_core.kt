@@ -897,6 +897,8 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -1040,6 +1042,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_exit_probe(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_for_host(`ptr`: Pointer,`host`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_funnel(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,`nowMillis`: Long,`maxAgeMillis`: Long,`thresholdMs`: Int,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_probe_targets(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
@@ -1319,6 +1323,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_for_host(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_funnel(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_probe_targets(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scenes(
@@ -1556,6 +1562,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_for_host() != 35644.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_funnel() != 37880.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_scene_probe_targets() != 46639.toShort()) {
@@ -2719,6 +2728,13 @@ public interface MobileCoreInterface {
     fun `sceneForHost`(`host`: kotlin.String): kotlin.String?
     
     /**
+     * 场景漏斗（§19.a）：只数该场景候选范围内的节点——当前节点所在地区，且遵守场景节点过滤（§15.h，视频只用 4K）。
+     * 口径与 `sceneCandidates` / `Scene.available` 的范围一致；`sourceCount` 仍是全部订阅数，`poolSize` = 该范围节点数（不看测速）。
+     * 场景尚未选节点（地区未知）时返回 poolSize = tested = 0。未知 sceneId 抛 SceneNotFound。
+     */
+    fun `sceneFunnel`(`sceneId`: kotlin.String, `nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long, `thresholdMs`: kotlin.Int): NodeFunnel
+    
+    /**
      * 场景内需要探测健康的服务（按内置应用目录，有 probe 地址的）。
      */
     fun `sceneProbeTargets`(`sceneId`: kotlin.String): List<ProbeTarget>
@@ -3541,6 +3557,24 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_for_host(
         it, FfiConverterString.lower(`host`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 场景漏斗（§19.a）：只数该场景候选范围内的节点——当前节点所在地区，且遵守场景节点过滤（§15.h，视频只用 4K）。
+     * 口径与 `sceneCandidates` / `Scene.available` 的范围一致；`sourceCount` 仍是全部订阅数，`poolSize` = 该范围节点数（不看测速）。
+     * 场景尚未选节点（地区未知）时返回 poolSize = tested = 0。未知 sceneId 抛 SceneNotFound。
+     */
+    @Throws(MobileException::class)override fun `sceneFunnel`(`sceneId`: kotlin.String, `nowMillis`: kotlin.Long, `maxAgeMillis`: kotlin.Long, `thresholdMs`: kotlin.Int): NodeFunnel {
+            return FfiConverterTypeNodeFunnel.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_funnel(
+        it, FfiConverterString.lower(`sceneId`),FfiConverterLong.lower(`nowMillis`),FfiConverterLong.lower(`maxAgeMillis`),FfiConverterInt.lower(`thresholdMs`),_status)
 }
     }
     )

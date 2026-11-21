@@ -217,6 +217,7 @@ v0.1 追加：`stale_token`（查询句柄已淘汰，UI 重新 queryNodes 即�
 - v0.3（2026-11-14）追加 §15：导入载荷 / 桌面同步二维码格式（parseImportPayload）。
 - v0.4（2026-11-18）追加 §16：发版审计（#209）的契约补定义——网络与路由、错误码映射、设置默认值、指令语义、格式与无障碍、本地代理凭据、日志级别、订阅拉取、平台差异登记。只追加，不改名。
 - v0.6（2026-11-21）追加 §18：设计评审执行——`NodeIndex.reachableCount`（可选）与节点页头部判断句、状态文字术语（状态不只靠颜色）、三端（含鸿蒙）列。只追加，不改名。
+- v0.7（2026-11-22）追加 §19：场景漏斗 `sceneFunnel`（首页场景卡迷你漏斗按场景取数，回应 #1 J-1），三端（含鸿蒙）列。只追加，不改名。
 - v0.5（2026-11-21）追加 §17：鸿蒙（HarmonyOS，角色 D，#241）列——§11 平台层、§16.a②④⑤、§16.f、§16.i④ 的鸿蒙行为，鸿蒙平台差异（无控制中心磁贴、无实况窗、无换图标），导航结构与内部深链的决定。只追加，不改名。
 
 ## 13. v0.1 追加（2026-11-06 14:20，只追加不改名）
@@ -936,4 +937,27 @@ record NodeIndex { total: Int64, sections: [RegionSection], testedCount: Int64, 
 | 头部判断句 | 节点页 header | 节点页 header | 节点页 header（同两端，§17.e 导航不变） |
 | 状态术语 | xcstrings 用 18.b 术语，补 `keys.ios` | strings.xml，补 `keys.android` | `ZTerm.*`（已生成，合并 resources 即可） |
 | 无障碍标签 | VoiceOver `accessibilityLabel` | TalkBack `contentDescription` / `stateDescription` | `accessibilityText` / `accessibilityDescription` |
+
+## 19. v0.7 追加（2026-11-22，场景漏斗，core-mobile 已实现，只追加）
+依据：看板 #1 iOS 01:16 问题 1（J-1 首页迷你漏斗用全局 `nodeFunnel`，每个场景行画出来都一样）。A 决定：**按场景取**。场景候选的过滤逻辑（当前节点所在地区 + §15.h 节点过滤）本来就在核心里，新增一个导出即可，不改 `nodeFunnel`。
+
+### 19.a `sceneFunnel`
+```
+sceneFunnel(sceneId: String, nowMillis: Int64, maxAgeMillis: Int64, thresholdMs: Int32) throws -> NodeFunnel   // 记录类型同 §15.c
+```
+- 范围 = 该场景 `sceneCandidates(sceneId, nil, …)` 的取数范围：当前节点所在地区（`Scene.scanQuery`），且遵守场景节点过滤（`nodeFilter = uhd` 时只数 4K 节点）。不受 50 个候选上限影响。
+- 字段：`sourceCount` = 全部订阅数（与 `nodeFunnel` 相同）；`poolSize` = 范围内节点数（不看测速）；`tested` / `reachable` / `underThreshold` / `thresholdMs` 口径同 §15.c，只数范围内、仍在库中的节点。保证 `underThreshold ≤ reachable ≤ tested ≤ poolSize`。
+- 场景尚未选节点（地区未知）：返回 `poolSize = tested = reachable = underThreshold = 0`，不抛错；平台照 `mobile-design-spec.md` §9.3「数据没取到」处理：迷你漏斗不画，显示原文字。
+- 未知 `sceneId` 抛 `SceneNotFound`；节点库未加载时与 `nodeFunnel` 一样抛错。
+- 新鲜度：首页传与场景候选相同的有效期（§15.e `latencyFreshMillis`），`thresholdMs` 传 `latency.threshold-slow` = 200。
+- 与 `Scene.available` 的关系：`available` 是前 50 个候选里可连通的个数（"n 个可用"文字），`sceneFunnel.reachable` 是整个范围的可连通数，二者可以不同；迷你漏斗只显示 `underThreshold` 数字（§9.3），不要把两者混用。
+- 场景 sheet 的完整漏斗：**仍用全局 `nodeFunnel`**（lede「检测自 {sourceCount} 个订阅中的 {poolSize} 个节点」讲的是整个节点库），本节不改。
+- 性能：一次地区查询（命中查询缓存）+ 一次遍历延迟缓存，与 `nodeFunnel` 同级；首页 N 个场景卡各调一次即可，可与 `scenes()` 刷新同节流。
+
+### 19.b 三端列（含鸿蒙）
+| 项 | iOS（B） | Android（C） | 鸿蒙（D） |
+|---|---|---|---|
+| 数据 | `CoreEngine` 转发 `sceneFunnel`（绑定已重新生成）；Mock 按 mock 候选（同地区 + 4K 过滤）算，不另编 | `CoreEngine` 转发 `sceneFunnel`；Mock 同左 | core-ohos 同名转发 `sceneFunnel`（§14.w 规则，`index.d.ts` 补声明）；Mock 同左 |
+| 首页场景卡 | 迷你漏斗（§9.3）每个场景行用各自的 `sceneFunnel`；接入前过渡：只在**当前场景卡**画一条全局 `nodeFunnel` 漏斗，其余行保留「n 个可用」文字 | 同左 | 同左（M 阶段跟进） |
+| 取不到 / `poolSize == 0` | 不画迷你漏斗，显示「n 个可用」 | 同左 | 同左 |
 
