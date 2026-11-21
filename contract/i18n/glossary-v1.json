@@ -1067,7 +1067,11 @@
       "sw": "Kawaida",
       "tr": "Normal",
       "vi": "Bình thường",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补"
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "keysPlanned": {
+        "ios": "App:正常",
+        "android": "state_ok"
+      }
     },
     "state.slow": {
       "en": "Slow",
@@ -1084,7 +1088,10 @@
       "sw": "Polepole",
       "tr": "Yavaş",
       "vi": "Chậm",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补"
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "keys": {
+        "ios": "App:较慢"
+      }
     },
     "state.timeout": {
       "en": "Timed out",
@@ -1101,7 +1108,10 @@
       "sw": "Muda umeisha",
       "tr": "Zaman aşımı",
       "vi": "Hết thời gian",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补"
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "keys": {
+        "ios": "App:超时"
+      }
     },
     "state.untested": {
       "en": "Untested",
@@ -1118,7 +1128,10 @@
       "sw": "Haijapimwa",
       "tr": "Test edilmedi",
       "vi": "Chưa kiểm tra",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补"
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "keys": {
+        "ios": "App:未测"
+      }
     },
     "state.expiring": {
       "en": "Expiring soon",
@@ -1135,7 +1148,10 @@
       "sw": "Inaisha hivi karibuni",
       "tr": "Yakında sona eriyor",
       "vi": "Sắp hết hạn",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补"
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "keys": {
+        "ios": "App:即将到期"
+      }
     },
     "state.expired": {
       "en": "Expired",
@@ -1152,7 +1168,11 @@
       "sw": "Imeisha muda",
       "tr": "Süresi doldu",
       "vi": "Đã hết hạn",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补"
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "keysPlanned": {
+        "ios": "App:已过期",
+        "android": "state_expired"
+      }
     },
     "state.failed": {
       "en": "Failed",
@@ -1169,7 +1189,11 @@
       "sw": "Imeshindwa",
       "tr": "Başarısız",
       "vi": "Thất bại",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补"
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "keysPlanned": {
+        "ios": "App:失败",
+        "android": "state_failed"
+      }
     },
     "reachable": {
       "en": "Reachable",
@@ -1186,7 +1210,11 @@
       "sw": "Zinafikika",
       "tr": "Erişilebilir",
       "vi": "Kết nối được",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补"
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "keys": {
+        "ios": "App:可连通 %1$@ · 已检测 %2$@",
+        "android": "scene_funnel_reachable"
+      }
     },
     "tested": {
       "en": "Tested",
@@ -1203,7 +1231,11 @@
       "sw": "Zimepimwa",
       "tr": "Test edildi",
       "vi": "Đã kiểm tra",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补"
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "keys": {
+        "ios": "App:已检测 %@",
+        "android": "nodes_tested"
+      }
     }
   }
 }

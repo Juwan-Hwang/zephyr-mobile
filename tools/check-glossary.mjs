@@ -3,6 +3,7 @@
 //  1. 每个术语映射到的 Android 字符串 / iOS 字符串，在 14 种语言里都要等于终版译名
 //     （忽略大小写；tr 按土耳其语规则折叠；ar 忽略词首定冠词 ال；tr 撇号统一为 ’）。
 //  2. 未对齐项必须列在 contract/i18n/glossary-pending.json；已对齐却仍在豁免表里的报“过期豁免”。
+//     带格式占位符的整句只要求包含术语；keysPlanned 是已定名、平台尚未接入的键，不检查。
 //  3. 土库曼语（tk）译文不得出现 ı / ğ（土耳其语字母，tk 字母表没有）。
 // 用法：node tools/check-glossary.mjs [--desktop <Zephyr 仓库路径>]
 //   --desktop：额外打印桌面端 i18n.js 中与终版不一致的同名术语（仅提示，不计入失败）。
@@ -65,6 +66,7 @@ const fold = (s, l) => {
   return t;
 };
 
+const FORMAT = /%(\d+\$)?(@|s|d|lld|ld)/;
 const platforms = { android: loadAndroid(), ios: loadIos() };
 const seen = new Set();
 for (const [term, entry] of Object.entries(glossary.terms)) {
@@ -77,7 +79,8 @@ for (const [term, entry] of Object.entries(glossary.terms)) {
         errors.push(`${id}: 找不到键 ${key}`);
         continue;
       }
-      const ok = fold(got, l) === fold(entry[l], l);
+      // 带格式占位符的整句（iOS %@ / %1$@、Android %s / %1$s / %d）：术语出现在句中即可，如「可连通 %1$@ · 已检测 %2$@」含「可连通」
+      const ok = FORMAT.test(got) ? fold(got, l).includes(fold(entry[l], l)) : fold(got, l) === fold(entry[l], l);
       if (ok && pending.has(id)) errors.push(`${id}: 已对齐，请从 glossary-pending.json 删除（过期豁免）`);
       if (!ok && !pending.has(id)) errors.push(`${id}: 「${got}」应为「${entry[l]}」`);
       seen.add(id);
