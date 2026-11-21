@@ -5,6 +5,8 @@
 //  2. 未对齐项必须列在 contract/i18n/glossary-pending.json；已对齐却仍在豁免表里的报“过期豁免”。
 //     带格式占位符的整句只要求包含术语；keysPlanned 是已定名、平台尚未接入的键，不检查。
 //  3. 土库曼语（tk）译文不得出现 ı / ğ（土耳其语字母，tk 字母表没有）。
+//  4. nativeReview（可选）：status 为 pending / done；reviewed 与 pending 是互不重叠的语言代码，合起来覆盖全部语言；
+//     status 为 done 时 pending 必须为空。只做结构校验并在结果里列出待审数量，待审本身不算失败。
 // 用法：node tools/check-glossary.mjs [--desktop <Zephyr 仓库路径>]
 //   --desktop：额外打印桌面端 i18n.js 中与终版不一致的同名术语（仅提示，不计入失败）。
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
@@ -87,6 +89,24 @@ for (const [term, entry] of Object.entries(glossary.terms)) {
     }
   }
 }
+let reviewTerms = 0;
+let reviewCells = 0;
+for (const [term, entry] of Object.entries(glossary.terms)) {
+  const r = entry.nativeReview;
+  if (r === undefined) continue;
+  const rv = r.reviewed ?? [];
+  const pd = r.pending ?? [];
+  if (!['pending', 'done'].includes(r.status)) errors.push(`术语 ${term}: nativeReview.status 只能是 pending / done`);
+  for (const l of [...rv, ...pd]) if (!LANGS.includes(l)) errors.push(`术语 ${term}: nativeReview 含未知语言 ${l}`);
+  if (rv.some((l) => pd.includes(l))) errors.push(`术语 ${term}: nativeReview.reviewed 与 pending 重叠`);
+  if (LANGS.some((l) => !rv.includes(l) && !pd.includes(l))) errors.push(`术语 ${term}: nativeReview 未覆盖全部 ${LANGS.length} 种语言`);
+  if (r.status === 'done' && pd.length) errors.push(`术语 ${term}: nativeReview.status 为 done 但 pending 非空`);
+  if (r.status === 'pending' && !pd.length) errors.push(`术语 ${term}: nativeReview.pending 为空，status 应改为 done`);
+  if (pd.length) {
+    reviewTerms++;
+    reviewCells += pd.length;
+  }
+}
 for (const id of pending) if (!seen.has(id)) errors.push(`豁免 ${id} 不对应任何术语映射`);
 
 for (const [p, data] of Object.entries(platforms))
@@ -116,4 +136,4 @@ if (errors.length) {
   console.error(`check-glossary：${errors.length} 个问题`);
   process.exit(1);
 }
-console.log(`check-glossary：${Object.keys(glossary.terms).length} 个术语 × ${LANGS.length} 种语言，豁免 ${pending.size} 项，OK`);
+console.log(`check-glossary：${Object.keys(glossary.terms).length} 个术语 × ${LANGS.length} 种语言，豁免 ${pending.size} 项，待母语审校 ${reviewTerms} 个术语 / ${reviewCells} 处译文，OK`);
