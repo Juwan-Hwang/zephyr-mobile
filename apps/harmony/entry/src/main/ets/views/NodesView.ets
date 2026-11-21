@@ -9,7 +9,6 @@ import { NodeListState, NodeRowItem, NodeRowKind, NodeRowSource } from '../app/N
 import { Format } from '../common/Format';
 import { Labels } from '../common/Labels';
 import { ZEmpty } from '../components/ZEmpty';
-import { ZTerm } from '../generated/ZTerms';
 
 const DEBOUNCE_MS: number = 80;
 const ROW_HEIGHT: number = 52;
@@ -228,16 +227,11 @@ export struct NodesView {
   }
 
   build() {
+    // 标题由外层 NavDestination 给（Index 路由 nodes）。
     Column({ space: 10 }) {
-      Text(ZTerm.nodes)
-        .fontSize(28)
-        .fontWeight(FontWeight.Bold)
-        .fontColor($r('app.color.screen_t1'))
-        .padding({ left: 16, right: 16, top: 24 })
-
       Search({ value: this.query, placeholder: $r('app.string.nodes_search_placeholder') })
         .height(40)
-        .margin({ left: 16, right: 16 })
+        .margin({ left: 16, right: 16, top: 8 })
         .backgroundColor($r('app.color.screen_s3'))
         .fontColor($r('app.color.screen_t1'))
         .onChange((v: string) => this.onQuery(v))

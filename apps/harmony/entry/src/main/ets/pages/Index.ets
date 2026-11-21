@@ -1,31 +1,46 @@
 /*
- * 根页面：Navigation（栈模式，子页面 logs / licenses）包着底部 Tabs：首页 / 节点 / 资料库（订阅 + 规则）/ 设置。
- * 外链导入请求到达（ImportInbox）时切到资料库，由订阅页出确认面板。
+ * 根页面（契约 §17.e：同 iOS RootView / Android AppRoot 与原型，没有底部 Tab）：
+ * - Navigation（栈模式）：navBar = 首页；二级页 节点 / 订阅 / 规则 / 设置 / 日志 / 开源许可 为 NavDestination，
+ *   系统返回键与侧滑返回由 Navigation 出栈，到首页后再返回则退出（交给系统）。
+ * - 资料库：首页底部资料库按钮打开 bindSheet（中 / 大两档）；点入口收起 sheet 再 push，返回时重开资料库（AppNav）。
+ * - 首页右上设置、“当前节点”卡、外链导入（ImportInbox → 订阅页确认卡）直接 push，返回首页。
+ * - 吐司：窗口级 OverlayManager 浮层（盖在 Navigation / 子页 / sheet 之上），失败时退回根 Stack 内联宿主。
+ * - 首页场景行横滑期间（GestureLock）吞掉首页上的系统返回，免得滑动贴边时被当成返回退出 App。
  * 状态管理统一用 V2（@ComponentV2 / @Local / @Param / @Event），引擎流在 aboutToAppear 订阅、aboutToDisappear 取消。
  */
 import { ImportInbox } from '../app/ImportInbox';
+import {
+  AppNav,
+  BackTo,
+  LibraryDest,
+  NavArgs,
+  ROUTE_LICENSES,
+  ROUTE_LOGS,
+  ROUTE_NODES,
+  ROUTE_RULES,
+  ROUTE_SETTINGS,
+  ROUTE_SUBSCRIPTIONS
+} from '../app/AppNav';
 import { ImportRequest } from '../entryability/DeepLink';
 import { Subscription as StreamSub } from '../engine/Stream';
 import { HomeView } from '../views/HomeView';
 import { NodesView } from '../views/NodesView';
-import { LibraryView } from '../views/LibraryView';
+import { SubscriptionsView } from '../views/SubscriptionsView';
+import { RulesView } from '../views/RulesView';
 import { SettingsView } from '../views/SettingsView';
+import { LibrarySheet } from '../views/LibrarySheet';
 import { LogsPage } from './LogsPage';
 import { LicensesPage } from './LicensesPage';
 import { ZTerm } from '../generated/ZTerms';
-import { ZTheme } from '../common/Theme';
 import { ZToastHost } from '../components/ZToastHost';
 import { GestureLock } from '../common/GestureLock';
 import { ComponentContent, window } from '@kit.ArkUI';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 
-const ROUTE_LOGS: string = 'logs';
-const ROUTE_LICENSES: string = 'licenses';
+/** 吐司离底边：首页底栏（52 + 上下 10）之上再留 12（同 Android padding(bottom = 84.dp)），另加导航条避让区。 */
+const DOCK_CLEARANCE: number = 84;
 
-const TAB_BAR_HEIGHT: number = 56;
-const TOAST_GAP: number = 16;
-
-/** 吐司浮层参数：离窗口底边的距离（tab 栏 + 底部导航条 + 间距）。 */
+/** 吐司浮层参数：离窗口底边的距离（底栏避让 + 底部导航条）。 */
 class ToastLayerArgs {
   bottom: number;
 
@@ -35,8 +50,8 @@ class ToastLayerArgs {
 }
 
 /**
- * 吐司浮层（OverlayManager，renderRootOverlay 默认 true）：挂在窗口根上，盖在 Navigation / 子页 / Tabs 之上，
- * 所以在任何页面（含 logs / licenses 子页）删除后都看得见。根节点 HitTestMode.None：自身不吃触摸，只有吐司卡片可点。
+ * 吐司浮层（OverlayManager，renderRootOverlay 默认 true）：挂在窗口根上，盖在 Navigation / 子页 / sheet 之上，
+ * 所以在任何页面删除后都看得见。根节点 HitTestMode.None：自身不吃触摸，只有吐司卡片可点。
  */
 @Builder
 function toastLayer(args: ToastLayerArgs) {
@@ -49,27 +64,24 @@ function toastLayer(args: ToastLayerArgs) {
   .hitTestBehavior(HitTestMode.None)
 }
 
-const TAB_HOME: number = 0;
-const TAB_NODES: number = 1;
-const TAB_LIBRARY: number = 2;
-const TAB_SETTINGS: number = 3;
-
 @Entry
 @ComponentV2
 struct Index {
-  @Local tab: number = TAB_HOME;
-  @Local theme: ZTheme = ZTheme.shared();
+  @Local showLibrary: boolean = false;
   private pathStack: NavPathStack = new NavPathStack();
-  private tabs: TabsController = new TabsController();
   private inboxSub: StreamSub | undefined = undefined;
   /** OverlayManager 挂载失败时退回页面内 Stack 宿主。 */
   @Local inlineToast: boolean = false;
   private toastContent: ComponentContent<ToastLayerArgs> | undefined = undefined;
 
   aboutToAppear(): void {
+    this.pathStack.setInterception({
+      didShow: (from: NavDestinationContext | NavBar, to: NavDestinationContext | NavBar, op: NavigationOperation,
+        animated: boolean) => this.didShow(from, to, op)
+    });
     this.inboxSub = ImportInbox.stream().subscribe((r: ImportRequest | undefined) => {
       if (r !== undefined) {
-        this.select(TAB_LIBRARY);
+        this.openForImport();
       }
     });
   }
@@ -78,7 +90,53 @@ struct Index {
     this.mountToastLayer();
   }
 
-  /** 底部导航条高度（vp）+ tab 栏 + 间距；取不到导航条时按 0。 */
+  /** 首页场景行横滑期间吞掉系统返回（栈空时返回会退出 App）；子页的返回照常交给 Navigation。 */
+  onBackPress(): boolean | void {
+    if (this.pathStack.size() === 0 && GestureLock.active()) {
+      hilog.warn(0x5A50, 'Index', 'back blocked during scene-row swipe');
+      return true;
+    }
+    return false;
+  }
+
+  /** 出栈回到首页、离开的页面来自资料库 → 重开资料库（返回键 / 侧滑 / 标题栏返回都走这里）。 */
+  private didShow(from: NavDestinationContext | NavBar, to: NavDestinationContext | NavBar, op: NavigationOperation): void {
+    if (op !== NavigationOperation.POP || typeof from === 'string') {
+      return;
+    }
+    const ctx = from as NavDestinationContext;
+    const back = AppNav.backOf(ctx.pathInfo.param as Object);
+    const toHome = typeof to === 'string';
+    hilog.info(0x5A50, 'Index', 'pop %{public}s back=%{public}s toHome=%{public}s', ctx.pathInfo.name,
+      String(back), String(toHome));
+    if (AppNav.reopenLibraryAfterPop(back, toHome)) {
+      this.showLibrary = true;
+    }
+  }
+
+  private push(route: string, back: BackTo): void {
+    this.pathStack.pushPathByName(route, new NavArgs(back));
+  }
+
+  private openFromLibrary(d: LibraryDest): void {
+    this.showLibrary = false;
+    const route = AppNav.routeOf(d);
+    if (route.length > 0) {
+      this.push(route, BackTo.LIBRARY);
+    }
+  }
+
+  /** 外链导入：收起资料库，订阅页不在栈顶就 push（订阅页出确认卡，从不自动导入）。 */
+  private openForImport(): void {
+    this.showLibrary = false;
+    const names = this.pathStack.getAllPathName();
+    const top = names.length > 0 ? names[names.length - 1] : '';
+    if (AppNav.shouldPushSubscriptionsForImport(top)) {
+      this.push(ROUTE_SUBSCRIPTIONS, BackTo.HOME);
+    }
+  }
+
+  /** 底部导航条高度（vp）+ 底栏避让；取不到导航条时按 0。 */
   private async toastBottom(): Promise<number> {
     let indicator = 0;
     try {
@@ -92,7 +150,7 @@ struct Index {
     } catch (e) {
       indicator = 0;
     }
-    return TAB_BAR_HEIGHT + TOAST_GAP + indicator;
+    return DOCK_CLEARANCE + indicator;
   }
 
   private mountToastLayer(): void {
@@ -130,43 +188,52 @@ struct Index {
     }
   }
 
-  private select(i: number): void {
-    this.tab = i;
-    this.tabs.changeIndex(i);
-  }
-
-  @Builder
-  tabBar(index: number, label: ResourceStr) {
-    Column() {
-      Text(label)
-        .fontSize(12)
-        .fontWeight(this.tab === index ? FontWeight.Medium : FontWeight.Normal)
-        .fontColor(this.tab === index ? $r('app.color.screen_t1') : $r('app.color.screen_t3'))
-      Divider()
-        .width(16)
-        .strokeWidth(2)
-        .color(this.tab === index ? this.theme.accentColor() : Color.Transparent)
-        .margin({ top: 4 })
-    }
-    .width('100%')
-    .height('100%')
-    .justifyContent(FlexAlign.Center)
-  }
-
   @Builder
   routes(name: string, param: Object) {
-    if (name === ROUTE_LOGS) {
+    if (name === ROUTE_NODES) {
+      NavDestination() {
+        NodesView({ onImport: () => this.push(ROUTE_SUBSCRIPTIONS, BackTo.PARENT) })
+      }
+      .title(ZTerm.nodes)
+      .backgroundColor($r('app.color.screen_bg'))
+    } else if (name === ROUTE_SUBSCRIPTIONS) {
+      NavDestination() {
+        SubscriptionsView()
+      }
+      .title(ZTerm.subscriptions)
+      .backgroundColor($r('app.color.screen_bg'))
+    } else if (name === ROUTE_RULES) {
+      NavDestination() {
+        RulesView()
+      }
+      .title(ZTerm.rules)
+      .backgroundColor($r('app.color.screen_bg'))
+    } else if (name === ROUTE_SETTINGS) {
+      NavDestination() {
+        SettingsView({
+          onOpenLogs: () => this.push(ROUTE_LOGS, BackTo.PARENT),
+          onOpenLicenses: () => this.push(ROUTE_LICENSES, BackTo.PARENT)
+        })
+      }
+      .title(ZTerm.settings)
+      .backgroundColor($r('app.color.screen_bg'))
+    } else if (name === ROUTE_LOGS) {
       LogsPage()
     } else if (name === ROUTE_LICENSES) {
       LicensesPage()
     }
   }
 
+  @Builder
+  librarySheet() {
+    LibrarySheet({ onOpen: (d: LibraryDest) => this.openFromLibrary(d) })
+  }
+
   build() {
     Stack({ alignContent: Alignment.Bottom }) {
       this.navigation()
       if (this.inlineToast) {
-        ZToastHost({ bottom: TAB_BAR_HEIGHT + TOAST_GAP })
+        ZToastHost({ bottom: DOCK_CLEARANCE })
       }
     }
     .width('100%')
@@ -176,47 +243,12 @@ struct Index {
   @Builder
   navigation() {
     Navigation(this.pathStack) {
-      Tabs({ barPosition: BarPosition.End, index: this.tab, controller: this.tabs }) {
-        TabContent() {
-          HomeView({
-            onOpenNodes: () => this.select(TAB_NODES),
-            onOpenLibrary: () => this.select(TAB_LIBRARY)
-          })
-        }
-        .tabBar(this.tabBar(TAB_HOME, $r('app.string.common_home')))
-
-        TabContent() {
-          NodesView({ onImport: () => this.select(TAB_LIBRARY) })
-        }
-        .tabBar(this.tabBar(TAB_NODES, ZTerm.nodes))
-
-        TabContent() {
-          LibraryView()
-        }
-        .tabBar(this.tabBar(TAB_LIBRARY, $r('app.string.common_library')))
-
-        TabContent() {
-          SettingsView({
-            onOpenLogs: () => this.pathStack.pushPathByName(ROUTE_LOGS, ''),
-            onOpenLicenses: () => this.pathStack.pushPathByName(ROUTE_LICENSES, '')
-          })
-        }
-        .tabBar(this.tabBar(TAB_SETTINGS, ZTerm.settings))
-      }
-      // 底部 tab 不可横滑（同 Android / iOS），首页场景行的横滑才不会被 Tabs 抢走。
-      .scrollable(false)
-      .onContentWillChange((from: number, to: number) => {
-        if (GestureLock.active()) {
-          hilog.warn(0x5A50, 'Index', 'tab change %{public}d->%{public}d blocked during row swipe', from, to);
-          return false;
-        }
-        return true;
-      })
-      .animationDuration(0)
-      .barHeight(56)
-      .barBackgroundColor($r('app.color.screen_glass'))
-      .onChange((i: number) => {
-        this.tab = i;
+      HomeView({
+        onOpenNodes: () => this.push(ROUTE_NODES, BackTo.HOME),
+        onOpenLibrary: () => {
+          this.showLibrary = true;
+        },
+        onOpenSettings: () => this.push(ROUTE_SETTINGS, BackTo.HOME)
       })
     }
     .mode(NavigationMode.Stack)
@@ -224,5 +256,15 @@ struct Index {
     .hideToolBar(true)
     .navDestination(this.routes)
     .backgroundColor($r('app.color.screen_bg'))
+    .bindSheet(this.showLibrary, this.librarySheet(), {
+      detents: [SheetSize.MEDIUM, SheetSize.LARGE],
+      title: { title: $r('app.string.common_library') },
+      showClose: true,
+      dragBar: true,
+      backgroundColor: $r('app.color.screen_bg'),
+      onDisappear: () => {
+        this.showLibrary = false;
+      }
+    })
   }
 }

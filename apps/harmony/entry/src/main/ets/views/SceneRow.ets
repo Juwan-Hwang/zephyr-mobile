@@ -154,7 +154,7 @@ export struct SceneRow {
     .width('100%')
     .accessibilityGroup(true)
     .accessibilityText(this.scene.name + ' · ' + this.scene.selected.name)
-    // 手指按在行上就加锁（不论手势竞争谁赢），抬起 / 取消后 350 ms 解锁：期间根 Tabs 拒绝切 tab。
+    // 手指按在行上就加锁（不论手势竞争谁赢），抬起 / 取消后 350 ms 解锁：期间首页吞掉系统返回（Index.onBackPress）。
     .onTouch((e: TouchEvent) => {
       if (e.type === TouchType.Down) {
         GestureLock.hold();

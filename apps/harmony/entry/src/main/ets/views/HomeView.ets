@@ -5,6 +5,7 @@
  * - 实时上下行速率（engine.traffic）与今日用量；
  * - 当前节点：全局模式 = 全局节点；直连 = 本机网络。点卡片去节点页。
  * - 规则模式：场景行（U5）：左右滑换地区 → 内联“更改出口 IP？”确认卡（previewSceneChange）→ 更改后 5 s 撤销吐司。
+ * - 顶栏：Zephyr + 右上设置；底栏（原型 .dock）：资料库按钮（契约 §17.e，无底部 Tab）。指令栏待指令解析移植后再加。
  * 场景详情 sheet / 漏斗 / 例外等暂未移植（M1-5）。
  */
 import { AppServices } from '../app/AppServices';
@@ -28,6 +29,7 @@ const MODES: ProxyMode[] = [ProxyMode.RULE, ProxyMode.GLOBAL, ProxyMode.DIRECT];
 export struct HomeView {
   @Event onOpenNodes: () => void = () => {};
   @Event onOpenLibrary: () => void = () => {};
+  @Event onOpenSettings: () => void = () => {};
 
   @Local status: ConnectionStatus = ConnectionStatus.DISCONNECTED;
   @Local mode: ProxyMode = ProxyMode.RULE;
@@ -464,13 +466,69 @@ export struct HomeView {
     .clip(true)
   }
 
+  @Builder
+  topBar() {
+    Row() {
+      Text($r('app.string.EntryAbility_label'))
+        .fontSize(28)
+        .fontWeight(FontWeight.Bold)
+        .fontColor($r('app.color.screen_t1'))
+        .accessibilityLevel('yes')
+      Blank()
+      Button({ type: ButtonType.Circle }) {
+        SymbolGlyph($r('sys.symbol.gearshape'))
+          .fontSize(22)
+          .fontColor([$r('app.color.screen_t2')])
+      }
+      .width(44)
+      .height(44)
+      .backgroundColor(Color.Transparent)
+      .accessibilityText(ZTerm.settings)
+      .onClick(() => this.onOpenSettings())
+    }
+    .width('100%')
+  }
+
+  /** 底栏（原型 .dock）：右侧资料库按钮；上方渐隐，内容滚到底栏下也看得清。 */
+  @Builder
+  dock() {
+    Column() {
+      Row() {
+        Blank()
+        Button({ type: ButtonType.Circle }) {
+          SymbolGlyph($r('sys.symbol.square_grid_2x2'))
+            .fontSize(22)
+            .fontColor([$r('app.color.screen_on_primary')])
+        }
+        .width(52)
+        .height(52)
+        .backgroundColor($r('app.color.screen_primary'))
+        .shadow({ radius: 12, color: '#33000000', offsetY: 4 })
+        .accessibilityText($r('app.string.common_library'))
+        .onClick(() => this.onOpenLibrary())
+      }
+      .width('100%')
+      .padding({ left: 12, right: 12, top: 10, bottom: 10 })
+    }
+    .width('100%')
+    .hitTestBehavior(HitTestMode.Transparent)
+  }
+
   build() {
+    Stack({ alignContent: Alignment.Bottom }) {
+      this.content()
+      this.dock()
+    }
+    .width('100%')
+    .height('100%')
+    .backgroundColor($r('app.color.screen_bg'))
+  }
+
+  @Builder
+  content() {
     Scroll() {
       Column({ space: 16 }) {
-        Text($r('app.string.EntryAbility_label'))
-          .fontSize(28)
-          .fontWeight(FontWeight.Bold)
-          .fontColor($r('app.color.screen_t1'))
+        this.topBar()
 
         this.header()
 
@@ -494,13 +552,13 @@ export struct HomeView {
         }
       }
       .width('100%')
-      .padding({ left: 16, right: 16, top: 24, bottom: 24 })
+      // 底部留出底栏（52 + 20）+ 间距，最后一张卡不被资料库按钮挡住。
+      .padding({ left: 16, right: 16, top: 16, bottom: 96 })
       .alignItems(HorizontalAlign.Start)
     }
     .width('100%')
     .height('100%')
     .align(Alignment.Top)
     .scrollBar(BarState.Off)
-    .backgroundColor($r('app.color.screen_bg'))
   }
 }
