@@ -24,7 +24,7 @@ public enum ZMetrics {
     /// 等宽：`.gr .tg` 标签 10px
     static let monoTag: CGFloat = 10
     /// 等宽：`.vr .pr` 协议 10.5px
-    static let monoMicro: CGFloat = 10.5
+    static let monoMicro: CGFloat = 11   // 规范 §9.2 最小字号 11（原型 10.5）
     /// 等宽：`.chain em` / `.fs .tm` 12px
     static let monoSmall: CGFloat = 12
     /// 等宽：`.vr .ms` / `.chain b.m` 13px

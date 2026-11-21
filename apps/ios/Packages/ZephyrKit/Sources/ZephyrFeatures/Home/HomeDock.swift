@@ -18,13 +18,20 @@ struct HomeDock: View {
     }
 }
 
-/// 底部渐隐，让滚动内容在指令栏后面淡出（原型 `.fade`）。
+/// 底部渐隐，让滚动内容在指令栏后面淡出（原型 `.fade`，tokens screen.fade）。
+/// 底部 `solidHeight` 为实色（指令栏背后与下方），其上渐变到透明。
 @MainActor
 struct HomeBottomFade: View {
+    var solidHeight: CGFloat = 0
+
     var body: some View {
-        LinearGradient(colors: [ZPage.background.opacity(0), ZPage.background], startPoint: .top, endPoint: .bottom)
-            .allowsHitTesting(false)
-            .accessibilityHidden(true)
+        VStack(spacing: 0) {
+            LinearGradient(colors: [ZTokens.Colors.screenFade.opacity(0), ZTokens.Colors.screenFade],
+                           startPoint: .top, endPoint: .bottom)
+            ZTokens.Colors.screenFade.frame(height: solidHeight)
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
     }
 }
 

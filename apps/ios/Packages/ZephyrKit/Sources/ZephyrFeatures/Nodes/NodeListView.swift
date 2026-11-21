@@ -23,7 +23,7 @@ final class NodeListView: UIView, UICollectionViewDataSource, UICollectionViewDe
     var rowMap = NodeRowMap.empty
     var scrollWindow = VirtualScrollWindow(rowCount: 0, rowHeight: ZTokens.Layout.rowHeight)
     var style: NodeListStyle
-    var accent: Color = ZTokens.Accent.blue.color
+    var accent: Color = ZTokens.Accent.blue.text
     var reduceMotion = false
     var onSelect: ((NodeSummary) -> Void)?
 
@@ -37,7 +37,7 @@ final class NodeListView: UIView, UICollectionViewDataSource, UICollectionViewDe
 
     init(store: NodeRowStore) {
         self.store = store
-        self.style = NodeListStyle.make(traits: UITraitCollection.current, accent: ZTokens.Accent.blue.color)
+        self.style = NodeListStyle.make(traits: UITraitCollection.current, accent: ZTokens.Accent.blue.text)
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         super.init(frame: .zero)
         registerForTraitChanges([UITraitPreferredContentSizeCategory.self, UITraitUserInterfaceStyle.self, UITraitDisplayScale.self]) { (self: NodeListView, _) in self.applyStyle() }
@@ -56,7 +56,8 @@ final class NodeListView: UIView, UICollectionViewDataSource, UICollectionViewDe
         addSubview(footer)
         addSubview(bubble)
         addSubview(rail)
-        layout.bottomInset = NodeListStyle.footerHeight - ZTokens.Space.n5
+        // 列表底部留出整个页脚（含渐隐）：滚到底时最后一行完整停在页脚文字上方（设计评审 iOS-1）。
+        layout.bottomInset = NodeListStyle.footerHeight + NodeListFooterView.fadeHeight
 
         store.onPageLoaded = { [weak self] page in self?.pageLoaded(page) }
         store.onLatencyChanged = { [weak self] ids in self?.latencyChanged(ids) }

@@ -19,9 +19,9 @@ enum HMetrics {
     static let rowHorizontal: CGFloat = 16
     /// 左右滑动切换地区：每 42pt 跨一个地区（原型 Math.round(dx/42)）
     static let scrubStep: CGFloat = 42
-    /// 底部指令栏 52 高、距底 28（`.dock` / `.cmd`）
+    /// 底部指令栏 52 高；贴安全区底 + 8（规范 §9.7，设计评审 iOS-2）
     static let dockHeight: CGFloat = 52
-    static let dockBottom: CGFloat = 12
+    static let dockBottom: CGFloat = 8
     /// 细进度条 2（`.bar`）
     static let barThin: CGFloat = 2
     /// 检测中进度条宽 96（原型 scan：`.bar` width 96px）

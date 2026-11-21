@@ -1,6 +1,6 @@
 // 延迟读数（原型 `.vr .ms`：等宽 13、右对齐、最小宽 52；`.ms.u` 未测 —、`···` 检测中、`.ms.w` 高延迟黄色）。
 // 颜色按 ZTokens.LatencyThreshold（tokens/mobile.json latency，按原型克制配色）：<200 ms 中性次级灰，≥200 ms 琥珀，
-// 超时（负数）红；未测与检测中用更淡的 screenT4。不再是红黄绿四档。
+// 超时（负数）红并写“超时”；未测 “—” 与检测中 “···” 用 latency.unknown（= t3，契约 §18.b / 规范 §9.1 不用 t4）。不再是红黄绿四档。
 // text = 列表里的纯文字；pill = 带 14% 底色的胶囊（详情、小组件）。
 
 import SwiftUI
@@ -53,13 +53,17 @@ public struct ZLatencyPill: View {
 
     private var spoken: String {
         if isTesting { return ZL.tr("延迟检测中") }
-        guard let ms else { return ZL.tr("延迟未检测") }
+        guard let ms else { return ZL.tr("未测") }
         if ms < 0 { return ZL.tr("延迟超时") }
-        return ZL.f("延迟 %lld 毫秒", Int64(ms))
+        let value = ZL.f("延迟 %lld 毫秒", Int64(ms))
+        return ms >= ZTokens.LatencyThreshold.slow ? value + ZL.tr("，") + ZL.tr("较慢") : value
     }
 
+    /// latency.unknown（= t3），增强对比度下与 ZColor.t3 同步加深。
+    private static let unknown = ZColor.boosted(ZTokens.Colors.latencyUnknown, by: 0.30)
+
     private var color: Color {
-        if isTesting || ms == nil { return ZTokens.Colors.screenT4 }
+        if isTesting || ms == nil { return Self.unknown }
         return ZTokens.LatencyThreshold.color(ms)
     }
 }

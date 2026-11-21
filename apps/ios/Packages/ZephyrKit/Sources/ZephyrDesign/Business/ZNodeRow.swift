@@ -96,8 +96,8 @@ public struct ZNodeRow: View {
             }
             if let protocolName, !large {
                 Text(verbatim: protocolName)
-                    .modifier(ZMonoModifier(.micro, weight: .regular, maxSize: ZMetrics.monoMicro))
-                    .tracking(ZMetrics.monoMicro * 0.02)
+                    .modifier(ZMonoModifier(.flag, weight: .regular, maxSize: ZMetrics.monoFlag))   // 协议名：§9.2 编码类例外 10.5pt
+                    .tracking(ZMetrics.monoFlag * 0.02)
                     .foregroundStyle(ZColor.t3)
                     .fixedSize()
             }
