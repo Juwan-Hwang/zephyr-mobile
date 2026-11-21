@@ -137,8 +137,8 @@ private fun LayerRow(ix: Int, name: String, note: String, kind: String?, count: 
             ZText(note, style = ZTheme.type.caption, color = c.text3, maxLines = 1)
         }
         if (kind != null) {
-            // Review L-P2-8: prototype layer tag is a 1px outline, 10px mono.
-            ZText(kind, Modifier.border(1.dp, if (accent) c.accent else c.hairlineStrong, ZTheme.shapes.control).padding(horizontal = 7.dp, vertical = 2.dp), style = ZTheme.type.monoSmall.copy(fontSize = 10.sp), color = if (accent) c.accent else c.text2)
+            // Review L-P2-8: prototype layer tag is a 1px outline in mono; L-2 (spec §9.2): 11sp minimum, not 10.
+            ZText(kind, Modifier.border(1.dp, if (accent) c.accent else c.hairlineStrong, ZTheme.shapes.control).padding(horizontal = 7.dp, vertical = 2.dp), style = ZTheme.type.monoSmall.copy(fontSize = 11.sp), color = if (accent) c.accent else c.text2)
             Spacer(Modifier.width(12.dp))
         }
         ZText(count, style = ZTheme.type.monoSmall, color = c.text2)
