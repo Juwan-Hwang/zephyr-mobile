@@ -24,6 +24,9 @@ import org.junit.runners.Parameterized
 @RunWith(Parameterized::class)
 class PagesScreenshotTest(private val dark: Boolean) {
     @get:Rule
+    val zone = FixedZoneRule()
+
+    @get:Rule
     val paparazzi = Paparazzi(
         // Baselines are the Chinese UI; English is the resource default, so pin the locale.
         deviceConfig = DeviceConfig.PIXEL_9.copy(nightMode = if (dark) NightMode.NIGHT else NightMode.NOTNIGHT, locale = "zh"),

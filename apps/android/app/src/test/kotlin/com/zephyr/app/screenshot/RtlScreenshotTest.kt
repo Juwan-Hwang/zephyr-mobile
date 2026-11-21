@@ -32,6 +32,9 @@ import org.junit.runners.Parameterized
 class RtlScreenshotTest(private val lang: String) {
 
     @get:Rule
+    val zone = FixedZoneRule()
+
+    @get:Rule
     val paparazzi = Paparazzi(
         deviceConfig = DeviceConfig.PIXEL_9.copy(
             nightMode = NightMode.NIGHT,
