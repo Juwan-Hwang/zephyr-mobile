@@ -39,6 +39,14 @@ class ByteFormatTest {
         assertEquals("1 KB/s", r(1_000))
     }
 
+    @Test fun sharedUnitForBreakdowns() {
+        assertEquals("0.6 GB", ZFormat.bytesTextIn(600_000_000, 3_100_000_000))
+        assertEquals("0.0 GB", ZFormat.bytesTextIn(4_000, 3_100_000_000))
+        assertEquals("1.9 GB", ZFormat.bytesTextIn(1_900_000_000, 3_100_000_000))
+        assertEquals("600 MB", ZFormat.bytesTextIn(600_000_000, 900_000_000)) // largest under 1 GB: own unit
+        assertEquals("0.5 TB", ZFormat.bytesTextIn(450_000_000_000, 1_200_000_000_000))
+    }
+
     @Test fun pairsForStatTiles() {
         assertEquals("2.8" to "MB", ZFormat.rate(2_800_000))
         assertEquals("195" to "KB", ZFormat.rate(195_000))
