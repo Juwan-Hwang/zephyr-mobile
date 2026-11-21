@@ -145,6 +145,9 @@ targets:
           UIApplicationSupportsMultipleScenes: false
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
+        # 只支持 iPhone 竖屏（TARGETED_DEVICE_FAMILY 1）：声明全屏，消除 Release 构建的「All interface orientations must be supported」警告；
+        # 不参与 iPad 多任务分屏。
+        UIRequiresFullScreen: true
         UIUserInterfaceStyle: Automatic
         UIStatusBarStyle: UIStatusBarStyleDefault
         # 订阅自动更新（App/SubscriptionAutoUpdater）：后台刷新任务。
