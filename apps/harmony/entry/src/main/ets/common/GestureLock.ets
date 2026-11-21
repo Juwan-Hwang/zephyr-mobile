@@ -1,6 +1,7 @@
 /*
  * 横滑手势锁：首页场景行左右滑（SceneRow PanGesture）期间及松手后一小段时间内为 true。
- * 根页面 Tabs.onContentWillChange 据此拒绝切 tab，防止横滑被外层 Tabs / 系统手势带去“节点”页（真机 AGC 云调试复现）。
+ * 根页面（Index.onBackPress）据此在首页吞掉系统返回：滑动贴着屏幕边缘时不被当成侧滑返回退出 App。
+ * （原先用于拦截底部 Tabs 切页；契约 §17.e 去掉 Tabs 后只剩这一用途。）
  */
 const RELEASE_GRACE_MS: number = 350;
 
