@@ -81,6 +81,6 @@ fun ZSettingsRow(
             Spacer(Modifier.width(12.dp))
             ZToggle(checked!!, { onCheckedChange!!(it) }, Modifier.clearAndSetSemantics {})
         }
-        if (chevron) { Spacer(Modifier.width(6.dp)); ZIcon(ZIcons.ChevronRight, tint = c.text4, size = 16.dp) }
+        if (chevron) { Spacer(Modifier.width(6.dp)); ZIcon(ZIcons.ChevronRight, tint = c.text3, size = 16.dp) }
     }
 }
