@@ -5,6 +5,7 @@
  *   由首页出“更改出口 IP？”确认卡。订阅分组来源、只有一个地区时不可滑。滑动时底部显示槽位轨道。
  * - 读屏：整行一个焦点，朗读“场景 · 节点”；滑动换地区的无障碍替代（自定义动作）待 M1-18 无障碍走查。
  */
+import { GestureLock } from '../common/GestureLock';
 import { HapticKind, Haptics } from '../app/Haptics';
 import { AppServices } from '../app/AppServices';
 import { SceneSlots } from '../app/SceneSlots';
@@ -153,9 +154,18 @@ export struct SceneRow {
     .width('100%')
     .accessibilityGroup(true)
     .accessibilityText(this.scene.name + ' · ' + this.scene.selected.name)
+    // 手指按在行上就加锁（不论手势竞争谁赢），抬起 / 取消后 350 ms 解锁：期间根 Tabs 拒绝切 tab。
+    .onTouch((e: TouchEvent) => {
+      if (e.type === TouchType.Down) {
+        GestureLock.hold();
+      } else if (e.type === TouchType.Up || e.type === TouchType.Cancel) {
+        GestureLock.release();
+      }
+    })
     .gesture(
       PanGesture({ direction: PanDirection.Horizontal, distance: 8 })
         .onActionStart(() => {
+          GestureLock.hold();
           if (!SceneSlots.swipeable(this.scene, this.slots)) {
             return;
           }
@@ -174,6 +184,7 @@ export struct SceneRow {
           }
         })
         .onActionEnd(() => {
+          GestureLock.release();
           if (!this.scrubbing) {
             return;
           }
@@ -186,6 +197,7 @@ export struct SceneRow {
           }
         })
         .onActionCancel(() => {
+          GestureLock.release();
           this.scrubbing = false;
           this.idx = SceneSlots.currentIndex(this.scene, this.slots);
         })
