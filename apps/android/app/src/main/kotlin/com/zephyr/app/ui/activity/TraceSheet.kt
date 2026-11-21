@@ -120,7 +120,7 @@ internal fun androidx.compose.foundation.layout.ColumnScope.TraceBody(host: Stri
             reload++
         }
         ZSegmented(opts, sel, { apply(it, persistent) }, Modifier.padding(horizontal = 16.dp))
-        overrideError?.let { ZText(it, Modifier.padding(horizontal = 26.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.danger) }
+        overrideError?.let { ZText(it, Modifier.padding(horizontal = 26.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.dangerText) }
         Spacer(Modifier.height(16.dp))
         ZListGroup {
             ZSettingsRow(stringResource(R.string.trace_always_apply), subtitle = stringResource(R.string.trace_always_apply_hint), checked = persistent, onCheckedChange = { v -> apply(sel, v) })

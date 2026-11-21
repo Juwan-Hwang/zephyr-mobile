@@ -100,7 +100,7 @@ fun SubscriptionsCard(subs: List<Subscription>, now: Long, onOpen: () -> Unit) {
                     s.remainingBytes?.let { ZText(ZFormat.bytesText(it), style = ZTheme.type.numeric) }
                     s.expiresAt?.let {
                         Spacer(Modifier.height(4.dp))
-                        ZText(ZFormat.expires(LocalResources.current, it, now, weekday = true), style = ZTheme.type.caption, color = if (soon) c.warning else c.text3)
+                        ZText(ZFormat.expires(LocalResources.current, it, now, weekday = true), style = ZTheme.type.caption, color = if (soon) c.warningText else c.text3)
                     }
                 }
             }

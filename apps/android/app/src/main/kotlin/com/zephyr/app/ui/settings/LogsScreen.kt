@@ -113,8 +113,8 @@ private fun LogRow(line: LogLine) {
     val tint: Color = when (line.level) {
         LogLevel.DEBUG -> c.text3
         LogLevel.INFO -> c.text2
-        LogLevel.WARNING -> c.warning
-        LogLevel.ERROR -> c.danger
+        LogLevel.WARNING -> c.warningText
+        LogLevel.ERROR -> c.dangerText
     }
     val time = LogsModel.time(line.at)
     val a11y = stringResource(R.string.logs_line_a11y, time, levelNames[line.level]?.let { stringResource(it) } ?: "", line.message)
