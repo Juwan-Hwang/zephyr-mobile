@@ -1,5 +1,8 @@
 // 指令结果区：token 卡片、主预览卡、建议列表、无结果。
 // 空输入（契约 §16.d U24）：原型 SUG 四条示例短语，点按只填入输入框；引擎的空输入建议（如连接）列在其后。
+// Raycast 式结果（规范 §9.5，设计评审 J-3）：按类型分组（指令 / 场景 / 节点 / 设置 / 规则测试，空组不显示），
+// 行右侧对齐动作标签（应用 / 切换 / 打开 / 测试），第一行另显示 ⏎（回车执行第一行，见 CommandView.submit）；
+// 每组最多 5 行，组末「显示全部 n 项」。
 
 import SwiftUI
 import ZephyrDesign
@@ -13,6 +16,7 @@ struct CommandResults: View {
     var onFill: (String) -> Void = { _ in }
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.zStaticRendering) private var still
+    @State private var expanded: Set<CommandGroup> = []
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -43,10 +47,14 @@ struct CommandResults: View {
                         .padding(.top, ZTokens.Space.n4)
                         .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 8)))
                 }
-                let rest = model.suggestions.filter { $0 != model.preview?.suggestion }
+                let rest = Self.rest(model)
                 if !rest.isEmpty {
-                    label(ZL.tr(model.preview == nil && model.parse.isEmpty ? "结果" : "更多"))
-                    suggestionList(rest)
+                    let groups = Self.groups(rest)
+                    let defaultKey = model.hasPrimary ? nil : groups.first?.items.first.map { Self.keyed([$0])[0].key }
+                    ForEach(groups, id: \.group) { g in
+                        label(g.group.title)
+                        groupList(g, defaultKey: defaultKey)
+                    }
                 } else if !model.hasContent {
                     Text("无结果")
                         .zType(.body).foregroundStyle(ZColor.t3)
@@ -63,11 +71,71 @@ struct CommandResults: View {
 
     private func label(_ s: String) -> some View {
         Text(verbatim: s)
-            .zType(.caption).foregroundStyle(ZColor.t3)
+            .zType(.footnote).foregroundStyle(ZColor.t3)
             .padding(.horizontal, HMetrics.homeInset + ZTokens.Space.n1)
             .padding(.top, ZTokens.Space.n6)
             .padding(.bottom, ZTokens.Space.n3)
             .accessibilityAddTraits(.isHeader)
+    }
+
+    /// 一组结果：最多 5 行，超出时组末「显示全部 n 项」。
+    private func groupList(_ g: GroupedSuggestions, defaultKey: String?) -> some View {
+        let showAll = expanded.contains(g.group) || g.items.count <= Self.groupLimit
+        let shown = showAll ? g.items : Array(g.items.prefix(Self.groupLimit))
+        return ZCard(padding: 0, cornerRadius: ZTokens.Radius.overlay) {
+            VStack(spacing: 0) {
+                ForEach(Self.keyed(shown), id: \.key) { item in
+                    let s = item.suggestion
+                    if item.index > 0 { ZDivider() }
+                    Button { onRun(s) } label: {
+                        SuggestionRow(s: s, isDefault: item.key == defaultKey)
+                    }
+                    .buttonStyle(ZRowButtonStyle())
+                }
+                if !showAll {
+                    ZDivider()
+                    Button { expanded.insert(g.group) } label: {
+                        HStack {
+                            Text(verbatim: ZL.s("显示全部 %@ 项", "\(g.items.count)"))
+                                .zType(.footnote).foregroundStyle(ZAccentTextStyle())
+                            Spacer(minLength: 0)
+                        }
+                        .padding(.vertical, ZTokens.Space.n4)
+                        .padding(.horizontal, ZTokens.Space.n5)
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(ZRowButtonStyle())
+                }
+            }
+        }
+        .padding(.horizontal, HMetrics.cardInset)
+    }
+
+    // MARK: 分组（纯函数，CommandView.submit 用同一顺序决定回车执行哪一行）
+
+    nonisolated static let groupLimit = 5
+
+    struct GroupedSuggestions {
+        let group: CommandGroup
+        let items: [CommandSuggestion]
+    }
+
+    /// 主预览卡之外的建议。
+    static func rest(_ model: CommandModel) -> [CommandSuggestion] {
+        model.suggestions.filter { $0 != model.preview?.suggestion }
+    }
+
+    /// 按固定组序分组，组内保持引擎给的顺序；空组不出现。
+    nonisolated static func groups(_ list: [CommandSuggestion]) -> [GroupedSuggestions] {
+        CommandGroup.allCases.compactMap { g in
+            let items = list.filter { CommandGroup(kind: $0.kind) == g }
+            return items.isEmpty ? nil : GroupedSuggestions(group: g, items: items)
+        }
+    }
+
+    /// 回车执行的第一行（分组后的第一组第一行）。
+    nonisolated static func firstRow(_ list: [CommandSuggestion]) -> CommandSuggestion? {
+        groups(list).first?.items.first
     }
 
     private func suggestionList(_ list: [CommandSuggestion]) -> some View {
@@ -153,9 +221,36 @@ private struct TokenChips: View {
     }
 }
 
+/// 指令结果的组（规范 §9.5 固定组序）。
+enum CommandGroup: Int, CaseIterable, Hashable, Sendable {
+    case command, scene, node, settings, ruleTest
+
+    init(kind: CommandKind) {
+        switch kind {
+        case .switchMode, .toggleConnection: self = .command
+        case .switchNode: self = .scene
+        case .openNodeQuery: self = .node
+        case .openPage: self = .settings
+        case .testRule: self = .ruleTest
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .command: ZL.tr("指令")
+        case .scene: ZL.tr("场景")
+        case .node: ZL.tr("节点")
+        case .settings: ZL.tr("设置")
+        case .ruleTest: ZL.tr("规则测试")
+        }
+    }
+}
+
 @MainActor
 private struct SuggestionRow: View {
     let s: CommandSuggestion
+    /// 第一行（回车执行）：动作标签旁显示 ⏎ 键帽。
+    var isDefault = false
 
     var body: some View {
         HStack(spacing: ZTokens.Space.n4) {
@@ -169,13 +264,38 @@ private struct SuggestionRow: View {
                     Text(verbatim: sub).zType(.caption).foregroundStyle(ZColor.t3)
                 }
             }
-            Spacer(minLength: 0)
-            Image(systemName: "chevron.forward").font(.caption).foregroundStyle(ZColor.t3)
+            Spacer(minLength: ZTokens.Space.n3)
+            // 动作标签：回车 / 轻点会发生什么（footnote、accent.text、无底色）。
+            Text(verbatim: action)
+                .zType(.footnote)
+                .foregroundStyle(ZAccentTextStyle())
+                .fixedSize()
+            if isDefault {
+                Image(systemName: "return")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(ZColor.t2)
+                    .padding(.horizontal, ZTokens.Space.n2)
+                    .padding(.vertical, ZTokens.Space.n1 / 2)
+                    .background(RoundedRectangle(cornerRadius: ZTokens.Space.n1, style: .continuous)
+                        .strokeBorder(ZTokens.Colors.screenHl2, lineWidth: 1))
+                    .accessibilityHidden(true)
+            }
         }
         .padding(.vertical, ZTokens.Space.n4)
         .padding(.horizontal, ZTokens.Space.n5)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
+        .accessibilityHint(isDefault ? Text("按回车执行") : Text(verbatim: ""))
+    }
+
+    /// 动作标签（规范 §9.5）：指令 = 应用，场景节点 = 切换，打开节点搜索 / 页面 = 打开，规则测试 = 测试。
+    private var action: String {
+        switch s.kind {
+        case .switchMode, .toggleConnection: ZL.tr("应用")
+        case .switchNode: ZL.tr("切换")
+        case .openNodeQuery, .openPage: ZL.tr("打开")
+        case .testRule: ZL.tr("测试")
+        }
     }
 
     private var symbol: String {

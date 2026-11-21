@@ -46388,6 +46388,498 @@
           }
         }
       }
+    },
+    "超时 %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "انتهت المهلة: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Timed out: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo agotado: %@"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مهلت تمام شد: %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タイムアウト %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시간 초과 %@"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "အချိန်ကုန်: %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тайм-аут: %@"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muda umeisha: %@"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wagt gutardy: %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaman aşımı: %@"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وقت ختم: %@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hết thời gian: %@"
+          }
+        }
+      }
+    },
+    "%1$@ 个候选，%2$@ 个低于 200 毫秒，超时 %3$@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ مرشحة، %2$@ أقل من 200 ملي ثانية، %3$@ انتهت مهلتها"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ candidates, %2$@ under 200 milliseconds, %3$@ timed out"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ candidatos, %2$@ por debajo de 200 milisegundos, %3$@ con tiempo agotado"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ نامزد، %2$@ زیر ۲۰۰ میلی‌ثانیه، %3$@ مهلت تمام شد"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "候補 %1$@ 件、200 ミリ秒未満 %2$@ 件、タイムアウト %3$@ 件"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "후보 %1$@개, 200밀리초 미만 %2$@개, 시간 초과 %3$@개"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ရွေးချယ်စရာ %1$@ ခု၊ မီလီစက္ကန့် 200 အောက် %2$@ ခု၊ အချိန်ကုန် %3$@ ခု"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Кандидатов: %1$@, быстрее 200 миллисекунд: %2$@, тайм-аут: %3$@"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wagombea %1$@, %2$@ chini ya milisekunde 200, %3$@ muda umeisha"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ dalaşgär, %2$@ sany 200 millisekuntdan az, %3$@ sany wagt gutardy"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ aday, %2$@ tanesi 200 milisaniyenin altında, %3$@ zaman aşımı"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ امیدوار، %2$@ 200 ملی سیکنڈ سے کم، %3$@ کا وقت ختم"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ ứng viên, %2$@ dưới 200 mili giây, %3$@ hết thời gian"
+          }
+        }
+      }
+    },
+    "规则测试" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختبار القواعد"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rule Test"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prueba de reglas"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "آزمایش قانون"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ルールテスト"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "규칙 테스트"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "စည်းမျဉ်း စမ်းသပ်ချက်"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проверка правил"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jaribio la kanuni"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Düzgün barlagy"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kural testi"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اصول کی جانچ"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kiểm tra quy tắc"
+          }
+        }
+      }
+    },
+    "测试" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختبار"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Probar"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "آزمایش"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "テスト"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "테스트"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "စမ်းသပ်"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проверить"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jaribu"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barla"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test et"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جانچیں"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kiểm tra"
+          }
+        }
+      }
+    },
+    "显示全部 %@ 项" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عرض الكل (%@)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show all %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar todo (%@)"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نمایش همه (%@)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべて表示（%@ 件）"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모두 보기(%@개)"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "အားလုံးပြရန် (%@)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Показать все (%@)"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Onyesha zote (%@)"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hemmesini görkez (%@)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tümünü göster (%@)"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سب دکھائیں (%@)"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiện tất cả (%@)"
+          }
+        }
+      }
+    },
+    "按回车执行" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اضغط Return للتنفيذ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Press Return to run"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulsa Retorno para ejecutar"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "برای اجرا Return را بزنید"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Return キーで実行"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Return 키를 눌러 실행"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "လုပ်ဆောင်ရန် Return ကိုနှိပ်ပါ"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нажмите Return, чтобы выполнить"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bonyeza Return ili kutekeleza"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ýerine ýetirmek üçin Return basyň"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalıştırmak için Return'e basın"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "چلانے کے لیے Return دبائیں"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhấn Return để thực hiện"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

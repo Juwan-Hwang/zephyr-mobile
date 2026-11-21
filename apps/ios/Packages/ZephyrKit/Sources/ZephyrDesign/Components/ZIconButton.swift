@@ -58,10 +58,8 @@ public struct ZIconButton: View {
     @ViewBuilder
     private var backgroundShape: some View {
         if style == .glass {
-            Circle()
-                .fill(.ultraThinMaterial)
-                .overlay { Circle().fill(ZCardFill()) }
-                .overlay { Circle().strokeBorder(ZTokens.Colors.screenHl, lineWidth: ZMetrics.hairline) }
+            // 规范 §9.7：资料库按钮与指令栏同为悬浮玻璃（iOS 26 Liquid Glass，更早回退 screen.glass + 材质）。
+            Color.clear.zFloatingGlass(Circle())
         }
     }
 }

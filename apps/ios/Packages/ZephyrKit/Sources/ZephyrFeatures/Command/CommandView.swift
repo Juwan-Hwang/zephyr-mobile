@@ -63,7 +63,7 @@ struct CommandView: View {
     private func submit() {
         guard let model else { return }
         if model.hasPrimary { apply() }
-        else if let first = model.suggestions.first { run(first) }
+        else if let first = CommandResults.firstRow(CommandResults.rest(model)) { run(first) }   // §9.5：回车执行分组后的第一行
     }
 
     private func apply() {
