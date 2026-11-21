@@ -14,6 +14,7 @@ import commandApplyTest from './CommandApply.test';
 import sceneOpenTest from './SceneOpen.test';
 import recentHostsTest from './RecentHosts.test';
 import nodesTest from './Nodes.test';
+import subscriptionsTest from './Subscriptions.test';
 
 export default function testsuite(): void {
   mockFixturesTest();
@@ -32,4 +33,5 @@ export default function testsuite(): void {
   sceneOpenTest();
   recentHostsTest();
   nodesTest();
+  subscriptionsTest();
 }
