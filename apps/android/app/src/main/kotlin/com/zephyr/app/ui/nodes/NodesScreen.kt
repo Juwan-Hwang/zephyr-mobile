@@ -217,7 +217,7 @@ private fun androidx.compose.foundation.layout.BoxScope.RegionRail(codes: List<S
     ) {
         // Review L-P2-7: the rail is a drag target only; give TalkBack one tap-to-jump action per region instead.
         val res = LocalResources.current
-        codes.forEachIndexed { i, code -> ZText(code, Modifier.semantics { contentDescription = res.getString(R.string.nodes_jump_to, code); role = androidx.compose.ui.semantics.Role.Button; onClick { onScrub((i + 0.5f) / codes.size); true } }, style = ZTheme.type.monoSmall.copy(fontSize = ZTheme.type.caption.fontSize * 0.92f), color = c.accent) }
+        codes.forEachIndexed { i, code -> ZText(code, Modifier.semantics { contentDescription = res.getString(R.string.nodes_jump_to, code); role = androidx.compose.ui.semantics.Role.Button; onClick { onScrub((i + 0.5f) / codes.size); true } }, style = ZTheme.type.monoSmall.copy(fontSize = ZTheme.type.caption.fontSize * 0.92f), color = c.accentText) }
     }
     bubble?.let { (sec, y) ->
         ZSurface(

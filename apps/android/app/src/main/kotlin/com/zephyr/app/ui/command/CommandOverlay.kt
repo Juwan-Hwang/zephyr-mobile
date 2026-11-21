@@ -125,7 +125,7 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
                 ZSearchField(input, { input = it }, stringResource(R.string.command_placeholder), Modifier.weight(1f), focusRequester = focus, onComposingChange = { composing = it },
                     onSubmit = { plan?.let(apply) }, visualTransformation = transform, large = true)
                 Spacer(Modifier.width(4.dp))
-                ZText(stringResource(R.string.common_cancel), Modifier.zPressable(onClick = onDismiss).padding(horizontal = 8.dp, vertical = 14.dp), style = ZTheme.type.body, color = c.accent)
+                ZText(stringResource(R.string.common_cancel), Modifier.zPressable(onClick = onDismiss).padding(horizontal = 8.dp, vertical = 14.dp), style = ZTheme.type.body, color = c.accentText)
             }
             if (input.isBlank()) {
                 Label(stringResource(R.string.command_section_suggestions))
@@ -144,7 +144,7 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
                     Label(stringResource(R.string.common_nodes))
                     rows.forEach { n -> NodeLine(n) { onAction(CommandAction.OpenNodes(input.trim())) } }
                     ZText(stringResource(R.string.command_see_all_nodes, ZFormat.grouped(r.total)), Modifier.fillMaxWidth().zPressable(row = true, onClick = { onAction(CommandAction.OpenNodes(input.trim())) }).padding(horizontal = 14.dp, vertical = 12.dp),
-                        style = ZTheme.type.footnote, color = c.accent)
+                        style = ZTheme.type.footnote, color = c.accentText)
                 }
             }
             if (looksLikeHost(input)) {

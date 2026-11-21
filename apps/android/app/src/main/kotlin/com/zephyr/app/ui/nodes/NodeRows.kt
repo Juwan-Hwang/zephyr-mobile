@@ -51,7 +51,7 @@ fun NodeRowView(n: NodeSummary?, highlights: List<String>, testedLatency: Int?, 
             Spacer(Modifier.weight(1f))
             return@Row
         }
-        val name = remember(n.name, highlights, c) { highlighted(n.name, highlights, c.accent, c.text3) }
+        val name = remember(n.name, highlights, c) { highlighted(n.name, highlights, c.accentText, c.text3) }
         ZText(name, Modifier.weight(1f), style = ZTheme.type.body, maxLines = 1)
         if (!xl) {
             ZText(n.protocol, style = ZTheme.type.monoSmall, color = c.text3, maxLines = 1)

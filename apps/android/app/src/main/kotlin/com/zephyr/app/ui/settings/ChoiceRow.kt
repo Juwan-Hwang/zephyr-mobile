@@ -62,7 +62,7 @@ internal fun <T> ChoiceRow(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 ZText(label, Modifier.weight(1f), style = ZTheme.type.body)
-                                if (v == selected) ZIcon(ZIcons.Check, tint = c.accent, size = 18.dp)
+                                if (v == selected) ZIcon(ZIcons.Check, tint = c.accentText, size = 18.dp)
                             }
                         }
                     }
