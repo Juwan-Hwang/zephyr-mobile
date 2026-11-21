@@ -22,6 +22,8 @@ struct CommandTextField: UIViewRepresentable {
     var tint: Color
     var placeholder: String
     var onSubmit: () -> Void
+    /// 硬件键盘移动结果高亮（J-3）：↑ = −1，↓ / Tab = +1，⇧Tab = −1。拼音组字期间不拦截（方向键给候选）。
+    var onMove: (Int) -> Void = { _ in }
     @Environment(\.colorScheme) private var colorScheme
 
     func makeCoordinator() -> Coordinator { Coordinator(self) }
@@ -29,6 +31,7 @@ struct CommandTextField: UIViewRepresentable {
     func makeUIView(context: Context) -> UITextField {
         let tf = FocusingTextField()
         tf.delegate = context.coordinator
+        tf.onMove = { [weak coordinator = context.coordinator] step in coordinator?.parent.onMove(step) }
         tf.addTarget(context.coordinator, action: #selector(Coordinator.editingChanged(_:)), for: .editingChanged)
         tf.returnKeyType = .go
         tf.autocorrectionType = .no
@@ -107,6 +110,26 @@ struct CommandTextField: UIViewRepresentable {
     /// 窗口就绪后才能成为第一响应者：onAppear 时视图可能还没挂上窗口。
     final class FocusingTextField: UITextField {
         var wantsFocus = false
+        var onMove: ((Int) -> Void)?
+
+        override var keyCommands: [UIKeyCommand]? {
+            // 输入法组字中（拼音候选）方向键 / Tab 交给系统。
+            guard markedTextRange == nil else { return super.keyCommands }
+            let moves: [(String, UIKeyModifierFlags, Int)] = [
+                (UIKeyCommand.inputDownArrow, [], 1), (UIKeyCommand.inputUpArrow, [], -1),
+                ("\t", [], 1), ("\t", .shift, -1),
+            ]
+            let cmds = moves.map { input, flags, step -> UIKeyCommand in
+                let c = UIKeyCommand(input: input, modifierFlags: flags, action: step > 0 ? #selector(moveNext) : #selector(movePrevious))
+                c.wantsPriorityOverSystemBehavior = true
+                return c
+            }
+            return (super.keyCommands ?? []) + cmds
+        }
+
+        @objc private func moveNext() { onMove?(1) }
+        @objc private func movePrevious() { onMove?(-1) }
+
         override func didMoveToWindow() {
             super.didMoveToWindow()
             if window != nil, wantsFocus, !isFirstResponder {
