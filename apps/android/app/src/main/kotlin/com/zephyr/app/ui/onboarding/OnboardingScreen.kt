@@ -104,11 +104,11 @@ fun OnboardingScreen(onDone: () -> Unit) {
                             ZText(stringResource(R.string.common_cancel), Modifier.zPressable(label = stringResource(R.string.onboarding_cancel_import_a11y)) { imp.cancel() }.padding(horizontal = 8.dp, vertical = 6.dp), style = ZTheme.type.footnote, color = c.accent)
                         }
                     }
-                    imp.error?.let { ZText(it.resolve(), Modifier.padding(horizontal = 22.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.danger) }
+                    imp.error?.let { ZText(it.resolve(), Modifier.padding(horizontal = 22.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.dangerText) }
                     imp.hint?.let { ZText(it.resolve(), Modifier.padding(horizontal = 22.dp, vertical = 4.dp), style = ZTheme.type.footnote, color = c.text2) }
                     ZText(stringResource(R.string.common_local_data_note), Modifier.padding(22.dp), style = ZTheme.type.footnote, color = c.text3)
                 } else {
-                    ZText(addedText(addedName, addedNodes).resolve(), Modifier.padding(horizontal = 22.dp, vertical = 12.dp), style = ZTheme.type.callout, color = c.connected)
+                    ZText(addedText(addedName, addedNodes).resolve(), Modifier.padding(horizontal = 22.dp, vertical = 12.dp), style = ZTheme.type.callout, color = c.connectedText)
                     ZText(stringResource(R.string.onboarding_choose_mode), Modifier.padding(horizontal = 22.dp), style = h1)
                     Spacer(Modifier.height(16.dp))
                     Choice(stringResource(R.string.onboarding_simple), stringResource(R.string.onboarding_simple_desc), mode == 0) { mode = 0 }

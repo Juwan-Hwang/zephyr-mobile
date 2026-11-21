@@ -32,6 +32,13 @@ data class ZThemeColors(
     val warning: Color,
     val warningSoft: Color,
     val danger: Color,
+    /** Status colours as TEXT (§9.1, tokens `screen.*-text`): light #B25000 / #1F7A35 / #D70015, dark = base. [connected] / [warning] / [danger] stay for dots, bars and icon fills. */
+    val connectedText: Color,
+    val warningText: Color,
+    val dangerText: Color,
+    /** Latency READING text (tokens `latency.slow` / `latency.timeout`). */
+    val latencySlow: Color,
+    val latencyTimeout: Color,
     val download: Color,
     val upload: Color,
     val glass: Color,
@@ -69,6 +76,11 @@ data class ZThemeColors(
             warning = t.screenAmber,
             warningSoft = t.screenAmberA,
             danger = t.screenRed,
+            connectedText = t.screenGreenText,
+            warningText = t.screenAmberText,
+            dangerText = t.screenRedText,
+            latencySlow = t.latencySlow,
+            latencyTimeout = t.latencyTimeout,
             download = t.colorDownload,
             upload = t.screenUp,
             glass = t.screenGlass,
@@ -91,7 +103,7 @@ fun ZAccent.darkVariant(): Color = when (this) {
 /** Latency colour per tokens: quiet below [com.zephyr.design.tokens.ZLatency.slow], amber at/above, red only on timeout. */
 fun ZThemeColors.latency(ms: Int?): Color = when {
     ms == null -> text3
-    ms < 0 -> danger
-    ms >= com.zephyr.design.tokens.ZLatency.slow -> warning
+    ms < 0 -> latencyTimeout
+    ms >= com.zephyr.design.tokens.ZLatency.slow -> latencySlow
     else -> text2
 }

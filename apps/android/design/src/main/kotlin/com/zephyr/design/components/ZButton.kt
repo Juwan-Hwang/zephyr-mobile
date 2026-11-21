@@ -39,7 +39,7 @@ fun ZButton(
         ZButtonKind.Primary -> c.primaryButton to c.onPrimaryButton
         ZButtonKind.Secondary -> c.hairline to c.text1
         ZButtonKind.Ghost -> c.bg.copy(alpha = 0f) to c.accent
-        ZButtonKind.Danger -> c.danger.copy(alpha = 0.14f) to c.danger
+        ZButtonKind.Danger -> c.danger.copy(alpha = 0.14f) to c.dangerText
         ZButtonKind.Accent -> c.accent to c.onAccent
     }
     val shape = ZTheme.shapes.pill
