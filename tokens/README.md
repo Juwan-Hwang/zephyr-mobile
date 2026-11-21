@@ -19,6 +19,10 @@
 
   `ZTokens.Accent.color` / `ZAccent.color` 保留为历史单一值（= 浅色 base），只为不让现有基线漂移；新代码不要再用它作前景文字或按钮底。Android `ZColors.kt` 的 `darkVariant()` 应改为 `ZAccent.base(dark)`（值相同，不影响快照）。
 
+## 状态色作文字（2026-11-21）
+- 浅色下 `screen.amber` / `green` / `red`（#FF9F0A / #34C759 / #FF3B30）作文字只有 1.8–3.6:1。文字一律用 `screen.amber-text`（浅 #B25000）/ `green-text`（浅 #1F7A35）/ `red-text`（浅 #D70015），深色与原色相同。原色只给圆点、进度条、图标填充，并且必须配形状或文字（契约 §18.b）。
+- `latency.slow` / `latency.timeout` 是读数文字，浅色值将改为与 `*-text` 相同（PR `agent/a/tokens-light-status`，需两端重录基线）。
+
 ## 对比度检查（WCAG AA）
 `node tools/check-token-contrast.mjs [--verbose|--json]`，CI 在 contract 作业跑（零依赖，读的是 token 源，与 `build.mjs` 同一套合并 / 引用规则）。
 
@@ -31,7 +35,8 @@
 | `screen.t1` / `t2` / `t3` | `screen.bg`、`s1`、`s2`、`s3`、`s4`、`glass` | 4.5 |
 | `screen.on-primary` | `screen.primary` | 4.5 |
 | `latency.normal` / `unknown` / `slow` / `timeout` | `screen.s1`、`s2`、`bg` | 4.5 |
-| `screen.amber` / `red` / `green`（作文字） | `screen.s1`、`s2`、`bg` | 4.5 |
+| `screen.amber-text` / `red-text` / `green-text`（状态色作文字） | `screen.s1`、`s2`、`bg` | 4.5 |
+| 旧用法：`screen.amber` / `red` / `green` 直接作文字 | `screen.s1`、`s2`、`bg` | 4.5（记 debt，平台切到 `*-text` 后删除；之后原色只作圆点 / 进度条 / 图标） |
 | `color.download`、`screen.up`（速率箭头） | `screen.s1`、`s2`、`bg` | 3.0 |
 | 强调色 blue / green / orange / pink | `screen.bg`、`s1` | 3.0（默认 blue 作小字另在 `bg`、`s1`、`s4` 上按 4.5） |
 | `accent.*.text` | `screen.bg`、`s1`（blue 另加 `s4`） | 4.5 |
