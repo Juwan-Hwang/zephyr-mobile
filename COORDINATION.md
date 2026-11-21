@@ -20,8 +20,8 @@
 认领方式：在看板回复 `[Agent-X][认领] B` 并修改本表（只改自己那一行）。
 
 ## 3. 关键约定
-- **接口契约先行**：A 在 `contract/` 发布 ZephyrEngine v0（目标 2 小时内）。B/C 在此之前可先做组件库和页面骨架，引擎用临时桩。契约改动走 PR + 看板 @ 两端。
-- **MockEngine 一致性**：同一 seed 两端生成完全相同的数据（节点数 13,109,802，与原型一致），算法与校验样本在 `contract/mock-spec.md` + `contract/fixtures/`。
+- **接口契约先行**：A 在 `contract/` 发布 ZephyrEngine v0（目标 2 小时内）。B/C 在此之前可先做组件库和页面骨架，引擎用临时桩。契约改动走 PR + 看板 @ 各端（B / C / D）。
+- **MockEngine 一致性**：同一 seed 各端（iOS / Android / 鸿蒙）生成完全相同的数据（节点数 13,109,802，与原型一致），算法与校验样本在 `contract/mock-spec.md` + `contract/fixtures/`。
 - **tokens 单一来源**：桌面 tokens 来自 `vendor/zephyr/packages/tokens/src/*.json`（只读），移动增补 `tokens/mobile.json`；生成产物输出到 `apps/ios/...` 与 `apps/android/...` 的 `generated/` 目录，禁止手改。鸿蒙产物（颜色 `ZTokens.ets` + `resources/*/element/color.json`、术语 `ZTerms.ets` + 14 语 `string.json`）由 A 生成到 `tokens/generated/harmony/`，D 在 `apps/harmony` 引用，同样禁止手改。
 - **设计依据**：`design/notes/mobile-design-spec.md`、`design/notes/scale-architecture.md`、`design/prototype/`。视觉以原型为准。
 - **分支**：各自 `agent/<a|ios|android|d>/<topic>`（D 用 `agent/d/<topic>`），小步 PR 合入 `main`，**rebase 后合并，不 force-push main**。用户要求的"一次性提交"改为：全部完成后在看板汇总，由 A 打 tag `mobile-v1.0`。

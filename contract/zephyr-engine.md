@@ -813,20 +813,20 @@ isPublicFetchAddress(ip: String) -> Bool            // 顶层函数；DNS 结果
 ### 17.a 平台层（补 §11）
 - 鸿蒙：`VpnExtensionAbility`（`ZephyrVpnExtAbility`，type=vpn）里 `VpnConnection.create(VpnConfig)` 得到 tun fd，经 runtimeConfig 的 `file-descriptor` 交给 mihomo（`libzmihomo.so`，以库 dlopen，禁止起子进程）；fd 归系统 VPN 框架，核心与桥都不 close，由 `VpnConnection.destroy()` 回收。
 - 核心绑定走 core-ohos（napi，§14.w 中"鸿蒙 core 绑定"一条），不走 UniFFI；mihomo 出站防回环用 `zm_set_socket_hook`（§14.w 中"出站防回环"一条），dlopen 前 `setenv DISABLE_LOOPBACK_DETECTOR=1`。
-- App 与扩展分进程，经 `filesDir/vpn/` 下的意图文件 / 状态文件通信（原子写 + generation，见 #246 `StartIntent.ets`）。本 App 的 bundle 放进 `VpnConfig.blockedApplications`（App 自身不进 VPN，与 Android `addDisallowedApplication` 同义）。
-- 只读系统入口：服务卡片（桌面卡片）只读 `ConnectionState`、`TrafficSample`、当前场景摘要，与 §11 小组件同规则。
+- App 与扩展分进程，经 `filesDir/vpn/` 下的意图文件 / 状态文件通信（原子写 + generation，见 #246 `StartIntent.ets`）。generation 必须单调递增，扩展只执行最新一代意图、丢弃更旧的（否则手动断开可能被一条更早的自动重连意图覆盖）。本 App 的 bundle 放进 `VpnConfig.blockedApplications`（App 自身不进 VPN，与 Android `addDisallowedApplication` 同义）。
+- 服务卡片（桌面卡片）：显示只读 `ConnectionState`、`TrafficSample`、当前场景摘要，与 §11 小组件同规则；卡片上的连接 / 断开按钮是例外，经 Ability 执行，卡片上的断开算用户手动断开（暂停按需连接，§16.a⑤）。
 
 ### 17.b 网络与路由（补 §16.a）
 **② 计费属性（鸿蒙列）**
 - 语义与 §16.a② 相同：VPN 网络的计费属性必须跟随底层网络，平台判断"是否计费 / 是否 Wi‑Fi"看**底层网络**（`@ohos.net.connection` 的默认网络 `NetCapabilities`：`bearerTypes` 含 `BEARER_WIFI` / `BEARER_CELLULAR`，计费看 `NET_CAPABILITY_NOT_METERED`）。
-- 鸿蒙 VPN 框架是否自动沿用底层网络的计费属性、有无类似 `setUnderlyingNetworks` 的接口：**鸿蒙：待 D 在 M1–M5 确认**。确认前：本 App 自己的"仅在 Wi‑Fi 下…"判断（§16.c `testOnWifiOnly` / `updateOnWifiOnly`）一律读底层网络，读不到时按**计费**处理（宁可少测速、少后台更新）。
+- 鸿蒙 VPN 框架是否自动沿用底层网络的计费属性、有无类似 `setUnderlyingNetworks` 的接口：**鸿蒙：待 D 在 M1–M5 确认**。确认前：本 App 自己的"仅在 Wi‑Fi 下…"判断（§16.c `testOnWifiOnly` / `updateOnWifiOnly`）一律读底层网络，读不到时按**计费**处理（宁可少测速、少后台更新）。若确认鸿蒙既不继承、也不能设置 VPN 的计费属性（其他应用会把 VPN 当成不计费），D 在 #241 报告，A 在本节登记为平台差异并评估是否影响发版。
 
 **③ 网络切换（鸿蒙列）**：照 §16.a③（去抖 2 s → `closeAll` → 重评受信任 Wi‑Fi → 故障探测立即一轮），监听用 `connection.createNetConnection().on('netAvailable' / 'netLost' / 'netCapabilitiesChange')`。故障探测在哪个进程跑见 17.c。
 
 **④ IPv6（鸿蒙列）**
 - 目标语义不变：`TunSettings.ipv6 = false` = IPv6 被阻断、不得绕过隧道直连。
-- 现状（#246 `LanBypass.ets`）：按 Android 做法，IPv6 关闭时不给 VPN 加 v6 地址 / 路由；开启时加 `fdfe:dcba:9876::1/126` 与 v6 路由（排除 §16.a① 的 v6 局域网段）。
-- 鸿蒙在 VPN 没有 v6 地址时是否阻断该地址族（Android `VpnService.Builder` 有此保证）：**鸿蒙：待 D 在 M1–M5 确认**。若真机上 v6 会绕过隧道直连，鸿蒙改用 iOS 做法：始终把 `::/0` 路由进隧道，IPv6 关闭时由 mihomo 丢弃。两种做法都允许，泄露不允许。
+- 鸿蒙在 VPN 没有 v6 地址 / 路由时是否阻断该地址族（Android `VpnService.Builder` 有此保证）：**鸿蒙：待 D 在 M1–M5 确认**。
+- **确认前按 iOS 做法（fail-closed）**：始终给 VPN 配 v6 地址（`fdfe:dcba:9876::1/126`）并把 `::/0`（减去 §16.a① 的 v6 局域网段）路由进隧道，IPv6 关闭时由 mihomo 丢弃。#246 `LanBypass.ets` 现在是 Android 做法（IPv6 关闭时不加 v6 地址 / 路由），需改；只有真机确认鸿蒙会阻断无路由的 v6 后，才可改回 Android 做法并在此追加结论。泄露不允许。
 
 **⑤ 按需连接 / 受信任 Wi‑Fi（鸿蒙列）**
 - 鸿蒙没有 iOS 那样的系统级按需规则，平台自己实现，语义照 §16.a⑤ 与 Android 列：`onDemand` = 用户至少手动连接过一次之后的**自动重连**（扩展被系统停掉 / 进程重启 / 网络从无到有时，若上次状态是"已连接且非手动断开"则重连）；用户手动断开（含服务卡片、通知）= 暂停按需连接直到下次手动连接；不得在用户未操作时首次弹出 VPN 授权。
@@ -844,7 +844,7 @@ isPublicFetchAddress(ip: String) -> Bool            // 顶层函数；DNS 结果
 | `zm_url_test` 并发（E20） | 暂按 Android 32 | 契约上限 32；超时 5000 ms、URL `https://www.gstatic.com/generate_204` 与两端相同；扩展内存紧时下调：**鸿蒙：待 D 在 M1–M5 确认** |
 | 场景故障探测（E21） | 核心在 App（UI）进程，App 前台且已连接时 60 s 一轮 | App 退到后台后 UI 进程会被冻结；扩展进程能否常驻跑探测：**鸿蒙：待 D 在 M1–M5 确认**。确认前按 iOS 列处理（后台不自动切换） |
 | 服务健康 / 出口周期探测（E25） | 至少 `retestScene` 时 | 周期探测与否同上；遵守 testOnWifiOnly |
-| 陈旧场景自动重测（E28） | 规则与两端相同 | 触发时机：前台 + 后台任务（见下表） |
+| 陈旧场景自动重测（E28） | 规则与两端相同；App 前台时触发 | 后台能否触发取决于下表"场景自动切换"一行（扩展常驻或后台任务）：**鸿蒙：待 D 在 M1–M5 确认**；确认前同 iOS，回前台时补测 |
 | 订阅更新后重载（E33） | 照 §16.f 统一规则 | 任何订阅更新成功后重写配置并重载一次 |
 | 回环 mixed 端口（E12） | 同 Android：App 自身在 `blockedApplications` 里，探测与 §16.i④ 拉取需要回环 mixed 端口 | 具体做法（常开随机端口 + 鉴权，或仅连接时开）：**鸿蒙：待 D 在 M1–M5 确认**；用户启用本地代理后必须尊重 `localProxyPort` / `localProxyAuth` |
 | `ConnectionInfo.app` | 暂恒 null | 能否从连接反查应用：**鸿蒙：待 D 在 M1–M5 确认** |
@@ -860,12 +860,13 @@ isPublicFetchAddress(ip: String) -> Bool            // 顶层函数；DNS 结果
 |---|---|
 | 流量 / 今日用量记账 | 扩展进程记账（mihomo 在扩展里）；UI 进程回前台时读 |
 | 场景自动切换 | 见上表 E21（确认前：后台不跑） |
+| 陈旧场景自动重测 | 同上表 E28（确认前：回前台补测） |
 | 订阅自动更新 | 回前台检查 + 后台延迟任务（`workScheduler`，系统决定时机，按 §16.c 约束网络）：**鸿蒙：待 D 在 M1–M5 确认**可用的最短间隔 |
 | 服务卡片刷新 | 连接状态变化时主动更新 + 定时更新；**须有零点刷新**（同 E44）；最短刷新间隔：**鸿蒙：待 D 在 M1–M5 确认** |
 | 实况窗 / 常驻通知 | 实况窗不做；常驻通知：**鸿蒙：待 D 在 M1–M5 确认** |
 
 ### 17.d 订阅拉取走不走隧道（补 §16.i④ 鸿蒙列）
-- 鸿蒙 App 自身在 `blockedApplications` 里、不进 VPN（17.a），与 Android 同构，因此照 **Android 列**：隧道已连接时经回环 mixed 端口（带凭据）拉取，未连接时直连；不读系统 HTTP 代理设置。
+- 鸿蒙 App 自身在 `blockedApplications` 里、不进 VPN（17.a），与 Android 同构，因此照 **Android 列**：隧道已连接时经回环 mixed 端口拉取，未连接时直连；不读系统 HTTP 代理设置。是否带凭据跟随该端口当时的实际配置（端口要鉴权就带 §16.g 凭据，用户开了本地代理且关了"需要密码"就不带）。App 自身其他出站请求（服务 / 出口探测）同样经该端口，不得直连冒充经过隧道的结果。
 - §16.i② 的 User-Agent 平台段在鸿蒙写 `HarmonyOS <系统版本>`，即 `Zephyr/<App 版本> (HarmonyOS <系统版本>) clash.meta mihomo/<内置 mihomo 版本>`；其余请求参数（超时、32 MB、5 跳、SSRF 校验与 `fetchTarget` / `isPublicFetchAddress`）与两端相同。core-ohos 需转发 `fetchTarget` / `isPublicFetchAddress`（同名，§14.w"鸿蒙 core 绑定"的规则）。
 - 回环 mixed 端口的鉴权与端口选择同 17.c E12 行；实现前（M1–M5）鸿蒙只在未连接时拉取，已连接时的手动更新**提示"断开后更新"或排队到断开**，不得绕过 SSRF 校验直连。
 
