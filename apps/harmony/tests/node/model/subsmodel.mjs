@@ -1,0 +1,30 @@
+// SubscriptionsModel（M1-11）：§16.e④ 琥珀规则、更新前预览（单个 / 全部求和）、分组与“其他 N 个”。
+const { SubscriptionWarning, SubscriptionsModel, ReviewKind, PREVIEW_CONCURRENCY } = await import('../.out/rt/app/SubscriptionsModel.ts');
+const { MockEngine } = await import('../.out/rt/engine/MockEngine.ts');
+let bad=0; const ok=(c,m)=>{ if(!c){bad++;console.log('FAIL',m);} };
+const day=86400000, now=new Date(2026,10,20,23,0).getTime();
+const W=SubscriptionWarning;
+ok(!W.expiresSoon(undefined,now)&&W.expiresSoon(now-1,now)&&W.expiresSoon(now,now),'expired');
+ok(W.expiresSoon(new Date(2026,10,27,12).getTime(),now),'7 calendar days');
+ok(!W.expiresSoon(new Date(2026,10,28,1).getTime(),now),'8 calendar days');
+ok(W.mostlyUsed(80,100)&&!W.mostlyUsed(79,100)&&!W.mostlyUsed(5,0)&&!W.mostlyUsed(5,undefined),'usage 80%');
+// 原型：Orbit 3 天 / 88% → 琥珀；Nebula 26 天 / 57% → 否
+ok(W.isWarning({id:'o',name:'Orbit',nodeCount:1,autoUpdateHours:12,expiresAt:now+3*day,usedBytes:88,totalBytes:100},now),'orbit');
+ok(!W.isWarning({id:'n',name:'Nebula',nodeCount:1,autoUpdateHours:12,expiresAt:now+26*day,usedBytes:57,totalBytes:100},now),'nebula');
+const d=(a,r,c,k,t)=>({addedNodes:a,removedNodes:r,ruleChanges:c,overridesKept:k,scenesRetested:t});
+const s=SubscriptionsModel.sum([d(1,2,3,true,false),d(10,20,30,false,true)]);
+ok(s.addedNodes===11&&s.removedNodes===22&&s.ruleChanges===33&&!s.overridesKept&&s.scenesRetested,'sum');
+const e0=SubscriptionsModel.sum([]); ok(e0.overridesKept&&!e0.scenesRetested,'sum empty');
+const e=new MockEngine({latencyScale:0}); const subs=e.subscriptions().value;
+const all=await SubscriptionsModel.previewAll(e); ok(all&&all.kind===ReviewKind.ALL&&all.count===subs.length,'preview all '+JSON.stringify(all));
+let calls=0, peak=0, cur=0; const fake={subscriptions:()=>({value:Array.from({length:14},(_,i)=>({id:'s'+i}))}),previewUpdate:async(id)=>{calls++;cur++;peak=Math.max(peak,cur);await new Promise(r=>setTimeout(r,2));cur--;if(id==='s3')throw new Error('x');return d(1,0,0,true,false);}};
+const fa=await SubscriptionsModel.previewAll(fake); ok(calls===14&&peak<=PREVIEW_CONCURRENCY&&fa.count===13&&fa.diff.addedNodes===13,'batched, skip failed '+peak);
+ok(await SubscriptionsModel.previewAll({subscriptions:()=>({value:[{id:'a'}]}),previewUpdate:async()=>{throw new Error('x')}})===undefined,'all failed');
+const one=SubscriptionsModel.one(subs[0],d(1,1,1,true,true)); ok(one.kind===ReviewKind.ONE&&one.sub.id===subs[0].id,'one');
+const m={id:'m',name:'M',nodeCount:5,autoUpdateHours:12,totalBytes:100}, u={id:'u',name:'U',nodeCount:7,autoUpdateHours:12};
+let g=SubscriptionsModel.groups([m,u],{count:2,totalNodes:12}); ok(g.metered.length===1&&g.others===1&&g.otherNodes===7,'groups '+JSON.stringify(g));
+g=SubscriptionsModel.groups([m,u],{count:4,totalNodes:30}); ok(g.others===3&&g.otherNodes===7+18,'groups summary-only '+JSON.stringify(g));
+g=SubscriptionsModel.groups([m],undefined); ok(g.others===0,'no others');
+ok(SubscriptionsModel.usedFraction({usedBytes:150,totalBytes:100})===1&&SubscriptionsModel.usedFraction({usedBytes:5})===0,'fraction');
+await e.updateSubscription(subs[1].id); ok(SubscriptionsModel.lastDiff(e.subscriptions().value)?.id!==undefined,'lastDiff');
+console.log(bad?'FAILED '+bad:'subsmodel OK'); process.exit(bad?1:0);
