@@ -48,9 +48,9 @@ fun PageScaffold(
         Row(Modifier.fillMaxWidth().height(52.dp).padding(start = 8.dp, end = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             val backLabel = stringResource(back.label)
             Row(Modifier.heightIn(min = 48.dp).zPressable(label = stringResource(R.string.common_back_to, backLabel), onClick = onBack).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                ZIcon(ZIcons.Back, tint = c.accent, size = 22.dp)
+                ZIcon(ZIcons.Back, tint = c.accentText, size = 22.dp)
                 Spacer(Modifier.width(2.dp))
-                ZText(backLabel, style = ZTheme.type.body.copy(fontSize = ZTheme.type.headline.fontSize), color = c.accent)
+                ZText(backLabel, style = ZTheme.type.body.copy(fontSize = ZTheme.type.headline.fontSize), color = c.accentText)
             }
             Spacer(Modifier.weight(1f))
             trailing?.invoke()

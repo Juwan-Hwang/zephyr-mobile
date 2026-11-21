@@ -50,7 +50,7 @@ fun ZToast(visible: Boolean, message: String, modifier: Modifier = Modifier, act
                     ZText(message, style = ZTheme.type.callout, maxLines = 1)
                     if (action != null && onAction != null) {
                         Spacer(Modifier.width(16.dp))
-                        ZText(action, Modifier.zPressable(onClick = onAction), style = ZTheme.type.button, color = ZTheme.colors.accent)
+                        ZText(action, Modifier.zPressable(onClick = onAction), style = ZTheme.type.button, color = ZTheme.colors.accentText)
                     }
                 }
                 if (action != null && onAction != null && durationMs > 0) {

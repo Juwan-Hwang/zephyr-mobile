@@ -102,7 +102,7 @@ fun LogsScreen(onBack: () -> Unit) {
 private fun ToolbarText(label: String, enabled: Boolean, onClick: () -> Unit) {
     val c = ZTheme.colors
     Box(Modifier.then(if (enabled) Modifier.zPressable(label = label, onClick = onClick) else Modifier).padding(horizontal = 8.dp, vertical = 10.dp)) {
-        ZText(label, style = ZTheme.type.body, color = if (enabled) c.accent else c.text4)
+        ZText(label, style = ZTheme.type.body, color = if (enabled) c.accentText else c.text4)
     }
 }
 

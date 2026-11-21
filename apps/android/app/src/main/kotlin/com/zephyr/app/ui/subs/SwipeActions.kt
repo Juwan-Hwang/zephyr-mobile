@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 /** [keepOpen]: the row stays open after the tap (a first "删除" tap that arms "确认删除" in place). */
-internal data class SwipeAction(val label: String, val color: Color, val keepOpen: Boolean = false, val onClick: () -> Unit)
+internal data class SwipeAction(val label: String, val color: Color, val keepOpen: Boolean = false, val onColor: Color = Color.White, val onClick: () -> Unit)
 
 /**
  * Review L-P2-9 (spec §4 “左滑更新/删除”): swipe a row toward the start edge (left in LTR, right in RTL) to reveal
@@ -62,7 +62,7 @@ internal fun SwipeActionsRow(actions: List<SwipeAction>, resetKey: Any? = null, 
                     Modifier.width(actionWidth).fillMaxHeight().background(a.color)
                         .clickable(role = Role.Button) { if (!a.keepOpen) close(); a.onClick() },
                     contentAlignment = Alignment.Center,
-                ) { ZText(a.label, style = ZTheme.type.callout, color = Color.White) }
+                ) { ZText(a.label, style = ZTheme.type.callout, color = a.onColor) }
             }
         }
         Box(

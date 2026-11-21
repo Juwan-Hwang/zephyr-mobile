@@ -38,9 +38,9 @@ fun ZButton(
     val (bg, fg) = when (kind) {
         ZButtonKind.Primary -> c.primaryButton to c.onPrimaryButton
         ZButtonKind.Secondary -> c.hairline to c.text1
-        ZButtonKind.Ghost -> c.bg.copy(alpha = 0f) to c.accent
+        ZButtonKind.Ghost -> c.bg.copy(alpha = 0f) to c.accentText
         ZButtonKind.Danger -> c.danger.copy(alpha = 0.14f) to c.danger
-        ZButtonKind.Accent -> c.accent to c.onAccent
+        ZButtonKind.Accent -> c.accentFill to c.onAccentFill
     }
     val shape = ZTheme.shapes.pill
     val large = size == ZButtonSize.Large

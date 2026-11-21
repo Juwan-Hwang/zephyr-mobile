@@ -140,7 +140,7 @@ fun importedText(r: ImportResult): UiText {
 private fun Option(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, enabled: Boolean = true, note: String? = null, onClick: () -> Unit) {
     val c = ZTheme.colors
     Row(Modifier.fillMaxWidth().then(if (enabled) Modifier.zPressable(onClick = onClick) else Modifier).padding(horizontal = 20.dp, vertical = 16.dp), verticalAlignment = Alignment.CenterVertically) {
-        ZIcon(icon, tint = if (enabled) c.accent else c.text4, size = 22.dp)
+        ZIcon(icon, tint = if (enabled) c.accentText else c.text4, size = 22.dp)
         Spacer(Modifier.width(14.dp))
         ZText(label, Modifier.weight(1f), style = ZTheme.type.body, color = if (enabled) c.text1 else c.text3)
         note?.let { ZText(it, style = ZTheme.type.footnote, color = c.text4) }
