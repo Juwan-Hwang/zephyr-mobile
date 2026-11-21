@@ -20924,7 +20924,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تم اختبار %@"
+            "value" : "مُختبرة %@"
           }
         },
         "en" : {
@@ -20942,7 +20942,7 @@
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ آزمایش شد"
+            "value" : "آزمایش‌شده %@"
           }
         },
         "ja" : {
@@ -20954,13 +20954,13 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ 테스트됨"
+            "value" : "측정됨 %@"
           }
         },
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ စမ်းသပ်ပြီး"
+            "value" : "စမ်းပြီး %@"
           }
         },
         "ru" : {
@@ -20972,7 +20972,7 @@
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ imepimwa"
+            "value" : "Zimepimwa %@"
           }
         },
         "tk" : {
@@ -20990,7 +20990,7 @@
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ ٹیسٹ شدہ"
+            "value" : "جانچے گئے %@"
           }
         },
         "vi" : {
@@ -37460,19 +37460,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Timeout"
+            "value" : "Timed out"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tiempo de espera"
+            "value" : "Tiempo agotado"
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تایم‌اوت"
+            "value" : "مهلت تمام شد"
           }
         },
         "ja" : {
@@ -37484,13 +37484,13 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "타임아웃"
+            "value" : "시간 초과"
           }
         },
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "အချိန်ကျော်"
+            "value" : "အချိန်ကုန်သွားသည်"
           }
         },
         "ru" : {
@@ -37520,13 +37520,13 @@
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ٹائم آؤٹ"
+            "value" : "وقت ختم"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hết thời gian chờ"
+            "value" : "Hết thời gian"
           }
         }
       }

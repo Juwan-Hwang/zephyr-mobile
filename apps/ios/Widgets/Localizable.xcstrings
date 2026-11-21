@@ -9288,19 +9288,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Timeout"
+            "value" : "Timed out"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tiempo de espera"
+            "value" : "Tiempo agotado"
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تایم‌اوت"
+            "value" : "مهلت تمام شد"
           }
         },
         "ja" : {
@@ -9312,13 +9312,13 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "타임아웃"
+            "value" : "시간 초과"
           }
         },
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "အချိန်ကျော်"
+            "value" : "အချိန်ကုန်သွားသည်"
           }
         },
         "ru" : {
@@ -9348,13 +9348,13 @@
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ٹائم آؤٹ"
+            "value" : "وقت ختم"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hết thời gian chờ"
+            "value" : "Hết thời gian"
           }
         }
       }
