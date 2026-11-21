@@ -45,6 +45,10 @@ public struct ZSearchBar: View {
     }
 
     public var body: some View {
+        ZGlassGroup(spacing: ZTokens.Space.n3 + ZTokens.Space.n1 / 2) { bar }
+    }
+
+    private var bar: some View {
         HStack(spacing: ZTokens.Space.n3 + ZTokens.Space.n1 / 2) {
             if let text, let isFocused {
                 field(text: text, isFocused: isFocused)
@@ -61,9 +65,10 @@ public struct ZSearchBar: View {
         }
     }
 
+    /// 玻璃上的文字用 t2（规范 §9.7：不用 t3，玻璃合成到最亮底时余量最小）。
     private var placeholderText: some View {
         Text(placeholder)
-            .foregroundStyle(ZColor.t3)
+            .foregroundStyle(ZColor.t2)
             .lineLimit(1)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -94,20 +99,34 @@ public struct ZSearchBar: View {
     private func capsuleContent<C: View>(@ViewBuilder _ content: () -> C) -> some View {
         HStack(spacing: ZTokens.Space.n3 + ZTokens.Space.n1 / 2) {
             Image(systemName: "magnifyingglass")
-                .foregroundStyle(ZColor.t3)
+                .foregroundStyle(text == nil ? ZColor.t2 : ZColor.t3)
                 .accessibilityHidden(true)
             content()
         }
         .zType(.body)
         .padding(.horizontal, ZTokens.Space.n5 + ZTokens.Space.n1 / 2)
         .frame(maxWidth: .infinity, minHeight: height)
-        .background {
-            Capsule(style: .continuous)
-                .fill(.ultraThinMaterial)
-                .overlay { Capsule(style: .continuous).fill(ZCardFill()) }
-        }
-        .overlay { Capsule(style: .continuous).strokeBorder(ZTokens.Colors.screenHl, lineWidth: ZMetrics.hairline) }
+        .modifier(ZSearchCapsuleChrome(floating: text == nil))
         .contentShape(Capsule(style: .continuous))
+    }
+}
+
+/// 按钮模式（首页悬浮指令栏）= 玻璃（规范 §9.7，iOS 26 Liquid Glass）；输入模式（指令页顶部）保持原实色胶囊。
+private struct ZSearchCapsuleChrome: ViewModifier {
+    let floating: Bool
+
+    func body(content: Content) -> some View {
+        if floating {
+            content.zFloatingGlass(Capsule(style: .continuous))
+        } else {
+            content
+                .background {
+                    Capsule(style: .continuous)
+                        .fill(.ultraThinMaterial)
+                        .overlay { Capsule(style: .continuous).fill(ZCardFill()) }
+                }
+                .overlay { Capsule(style: .continuous).strokeBorder(ZTokens.Colors.screenHl, lineWidth: ZMetrics.hairline) }
+        }
     }
 }
 

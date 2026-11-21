@@ -64,8 +64,15 @@ struct SceneSheet: View {
                         .padding(.top, ZTokens.Space.n6)
                 }
 
+                if loaded, !candidates.isEmpty {
+                    // 规范 §9.6：候选列表顶部的延迟刻度条（200 ms 阈值）。
+                    LatencyTickBar(candidates: candidates, selectedId: selecting ?? scene.selected.id)
+                        .padding(.horizontal, HMetrics.homeInset)
+                        .padding(.top, ZTokens.Space.n6)
+                }
+
                 candidateList(scene)
-                    .padding(.top, ZTokens.Space.n6)
+                    .padding(.top, loaded && !candidates.isEmpty ? ZTokens.Space.n3 : ZTokens.Space.n6)
 
                 detailList(scene)
                     .padding(.top, ZTokens.Space.n6)
