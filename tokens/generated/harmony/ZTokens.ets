@@ -252,6 +252,56 @@ export enum ZAccent {
   PINK = '#FFFF2D55',
 }
 
+/** 强调色深浅色变体（资源里也有 accent_<name>[_text|_fill|_on_fill]，随深浅色自动切换）。 */
+export interface ZAccentColors {
+  /** 开关 / 进度 / 光晕等填充与大图形 */
+  base: string;
+  /** 前景小字 / 链接 / 图标（浅色加深，过正文 4.5） */
+  text: string;
+  /** 主按钮 / 选中胶囊的底 */
+  fill: string;
+  /** fill 上的文字 */
+  onFill: string;
+}
+
+/** name：'blue' | 'green' | 'orange' | 'pink'；未知名按 blue。 */
+export function zAccentColors(name: string, isDark: boolean): ZAccentColors {
+  switch (name) {
+    case 'green': {
+      if (isDark) {
+        const d: ZAccentColors = { base: '#FF30D158', text: '#FF30D158', fill: '#FF30D158', onFill: '#FF000000' };
+        return d;
+      }
+      const l: ZAccentColors = { base: '#FF34C759', text: '#FF1F7A35', fill: '#FF34C759', onFill: '#FF000000' };
+      return l;
+    }
+    case 'orange': {
+      if (isDark) {
+        const d: ZAccentColors = { base: '#FFFF9F0A', text: '#FFFF9F0A', fill: '#FFFF9F0A', onFill: '#FF000000' };
+        return d;
+      }
+      const l: ZAccentColors = { base: '#FFFF9500', text: '#FFC93400', fill: '#FFFF9500', onFill: '#FF000000' };
+      return l;
+    }
+    case 'pink': {
+      if (isDark) {
+        const d: ZAccentColors = { base: '#FFFF375F', text: '#FFFF6482', fill: '#FFD1004B', onFill: '#FFFFFFFF' };
+        return d;
+      }
+      const l: ZAccentColors = { base: '#FFFF2D55', text: '#FFC4004A', fill: '#FFD1004B', onFill: '#FFFFFFFF' };
+      return l;
+    }
+    default: {
+      if (isDark) {
+        const d: ZAccentColors = { base: '#FF0A84FF', text: '#FF409CFF', fill: '#FF0066D6', onFill: '#FFFFFFFF' };
+        return d;
+      }
+      const l: ZAccentColors = { base: '#FF007AFF', text: '#FF005BBF', fill: '#FF0066D6', onFill: '#FFFFFFFF' };
+      return l;
+    }
+  }
+}
+
 export class ZSpace {
   static readonly n0: number = 0;
   static readonly n1: number = 4;

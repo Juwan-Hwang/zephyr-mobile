@@ -239,6 +239,70 @@
     {
       "name": "screen_pressed",
       "value": "#08000000"
+    },
+    {
+      "name": "accent_blue",
+      "value": "#FF007AFF"
+    },
+    {
+      "name": "accent_blue_text",
+      "value": "#FF005BBF"
+    },
+    {
+      "name": "accent_blue_fill",
+      "value": "#FF0066D6"
+    },
+    {
+      "name": "accent_blue_on_fill",
+      "value": "#FFFFFFFF"
+    },
+    {
+      "name": "accent_green",
+      "value": "#FF34C759"
+    },
+    {
+      "name": "accent_green_text",
+      "value": "#FF1F7A35"
+    },
+    {
+      "name": "accent_green_fill",
+      "value": "#FF34C759"
+    },
+    {
+      "name": "accent_green_on_fill",
+      "value": "#FF000000"
+    },
+    {
+      "name": "accent_orange",
+      "value": "#FFFF9500"
+    },
+    {
+      "name": "accent_orange_text",
+      "value": "#FFC93400"
+    },
+    {
+      "name": "accent_orange_fill",
+      "value": "#FFFF9500"
+    },
+    {
+      "name": "accent_orange_on_fill",
+      "value": "#FF000000"
+    },
+    {
+      "name": "accent_pink",
+      "value": "#FFFF2D55"
+    },
+    {
+      "name": "accent_pink_text",
+      "value": "#FFC4004A"
+    },
+    {
+      "name": "accent_pink_fill",
+      "value": "#FFD1004B"
+    },
+    {
+      "name": "accent_pink_on_fill",
+      "value": "#FFFFFFFF"
     }
   ]
 }

@@ -2,7 +2,7 @@
 // Token 对比度检查（零依赖）：解析 tokens 源（vendor/zephyr/packages/tokens/src/*.json + tokens/mobile.json，与 tokens/build.mjs 同一套合并/引用规则），
 // 按下方 PAIRS 逐对计算浅色 / 深色两套的 WCAG 2.x 对比度。
 // - 半透明前景（如 screen.t3 = rgba(…, 0.55)）先按 alpha 合成到背景上再算；半透明背景 screen.glass 合成到每个可能的底（bg / s1–s4）上取最差值。
-// - Android 深色强调色（ZAccent.darkVariant，只读 apps/android）存在时一并检查。
+// - 强调色读 tokens/mobile.json accent.*（含深色变体，原 Android ZColors.kt darkVariant 已提到 tokens）；ZColors.kt 若仍自带一份且不一致，只告警。
 // - 阈值：body = 4.5（AA 正文，字号 < 18pt 常规 / < 14pt 粗体）；ui = 3.0（AA 大字、图标、控件状态，WCAG 1.4.3 大字 / 1.4.11 非文本）。
 // - 不达标但有意为之的组合写进 ALLOW（必须带 reason）；ALLOW 里的组合若已经达标，也会报错，提示删掉过期条目。
 // 用法：node tools/check-token-contrast.mjs [--verbose] [--json]   失败退出 1。CI：.github/workflows/mobile.yml contract 作业。
@@ -66,31 +66,28 @@ function parseColor(s) {
   throw new Error(`无法解析颜色 ${s}`);
 }
 
-// 强调色不在 JSON 里，单一来源是 tokens/build.mjs 的 ACCENTS（两种模式同值）；从源码读，避免复制一份。
-const accentSrc = fs.readFileSync(path.join(root, 'tokens/build.mjs'), 'utf8').match(/const ACCENTS = (\{[^}]+\})/);
-if (!accentSrc) throw new Error('tokens/build.mjs 里找不到 ACCENTS');
-const ACCENTS = Function(`return ${accentSrc[1]}`)();
+// 强调色：mobile.json accent.<name>.{base,text,fill,on-fill}（value = 深色、lightValue = 浅色），tokens/build.mjs 同源。
+// `accent.<name>`（两段）= 历史单一值（浅色 base，两种模式同值）——平台目前就这样用，作为「旧用法」继续检查，直到 B/C/D 切到新变体。
+const ACCENT_NAMES = Object.keys(tree.accent || {}).filter((k) => !k.startsWith('$'));
+if (!ACCENT_NAMES.length) throw new Error('tokens/mobile.json 缺 accent 组');
+const ACCENTS = Object.fromEntries(ACCENT_NAMES.map((k) => [k, resolveLight(tree.accent[k].base)]));
 
-// Android 深色下强调色用 ZAccent.darkVariant()（apps/android/design/…/ZColors.kt，B/C 所有，只读），值与 ACCENTS 不同；
-// 读得到就按 Android 实际深色值再算一遍（token 名 accent.<name>@android），读不到（如只检出 tokens）则跳过。
+// Android 深色强调色过去只写在 apps/android/…/ZColors.kt 的 ZAccent.darkVariant()（C 所有，只读）。现在单一来源是 accent.<name>.base 的深色值；
+// 若 ZColors.kt 仍有自己的一份，与 tokens 不一致时只告警（不失败），提示 C 改为 ZAccent.base(dark) / colorDark。
 const ANDROID_DARK = (() => {
   const f = path.join(root, 'apps/android/design/src/main/kotlin/com/zephyr/design/theme/ZColors.kt');
   if (!fs.existsSync(f)) return {};
   const body = fs.readFileSync(f, 'utf8').match(/fun ZAccent\.darkVariant\(\)[^{]*\{([^}]+)\}/);
   const out = {};
-  for (const m of (body ? body[1] : '').matchAll(/ZAccent\.(\w+)\s*->\s*Color\(0x[0-9A-Fa-f]{2}([0-9A-Fa-f]{6})\)/g)) out[m[1].toLowerCase()] = `#${m[2]}`;
+  for (const m of (body ? body[1] : '').matchAll(/ZAccent\.(\w+)\s*->\s*Color\(0x[0-9A-Fa-f]{2}([0-9A-Fa-f]{6})\)/g)) out[m[1].toLowerCase()] = `#${m[2]}`.toUpperCase();
   return out;
 })();
 
 /** 'screen.t3' | 'accent.blue' → { light: [r,g,b,a], dark: [r,g,b,a] } */
 function token(name) {
-  if (name.startsWith('accent.') && name.endsWith('@android')) {
-    const k = name.slice(7, -8);
-    if (!ANDROID_DARK[k]) throw new Error(`Android 深色强调色缺 ${k}`);
-    return { light: parseColor(ACCENTS[k]), dark: parseColor(ANDROID_DARK[k]) };
-  }
-  if (name.startsWith('accent.')) {
-    const hex = ACCENTS[name.slice(7)];
+  const parts = name.split('.');
+  if (parts[0] === 'accent' && parts.length === 2) {
+    const hex = ACCENTS[parts[1]];
     if (!hex) throw new Error(`未知强调色 ${name}`);
     const c = parseColor(hex);
     return { light: c, dark: c };
@@ -126,17 +123,21 @@ const PAIRS = [
   ...['screen.amber', 'screen.red', 'screen.green'].flatMap((fg) => [...CARDS, 'screen.bg'].map((bg) => ({ fg, bg, level: 'body' }))),
   // 实时速率箭头 / 上下行图标——UI 阈值
   ...['color.download', 'screen.up'].flatMap((fg) => [...CARDS, 'screen.bg'].map((bg) => ({ fg, bg, level: 'ui' }))),
-  // 强调色：返回链接、索引条、搜索高亮、「+」按钮、开关 / 进度填充——UI 阈值（大字 / 图标 / 控件）
-  ...Object.keys(ACCENTS).flatMap((a) => ['screen.bg', 'screen.s1'].map((bg) => ({ fg: `accent.${a}`, bg, level: 'ui' }))),
-  // 默认强调色作小号文字（提示语、索引条、搜索命中高亮）——正文阈值；其余强调色作文字时同理，但用户可选色不进 CI
+  // —— 强调色新变体（单一来源 mobile.json accent.*；平台切换后这些就是实际用法）——
+  // base 深色（开关 / 进度 / 光晕 / 选中描边；原 Android darkVariant）——UI 阈值；浅色 base = 历史单一值，见下方旧用法
+  ...ACCENT_NAMES.flatMap((a) => ['screen.bg', 'screen.s1'].map((bg) => ({ fg: `accent.${a}.base`, bg, level: 'ui', modes: ['dark'] }))),
+  // text：前景小字 / 链接 / 索引条 / 搜索高亮 / 图标——正文阈值；默认 blue 另查 s4（ZSurface.elevated 上的「重试」链接）
+  ...ACCENT_NAMES.flatMap((a) => ['screen.bg', 'screen.s1', ...(a === 'blue' ? ['screen.s4'] : [])].map((bg) => ({ fg: `accent.${a}.text`, bg, level: 'body' }))),
+  // fill + on-fill：主按钮 15pt / 选中胶囊 14pt——正文阈值
+  ...ACCENT_NAMES.map((a) => ({ fg: `accent.${a}.on-fill`, bg: `accent.${a}.fill`, level: 'body' })),
+  // —— 旧用法（平台尚未切换到上面的变体；切换后删除这些 PAIRS 及 ALLOW 条目）——
+  // 强调色单一值作前景（返回链接、索引条、「+」、开关填充）——UI 阈值
+  ...ACCENT_NAMES.flatMap((a) => ['screen.bg', 'screen.s1'].map((bg) => ({ fg: `accent.${a}`, bg, level: 'ui' }))),
+  // 默认强调色单一值作小号文字——正文阈值
   ...['screen.bg', 'screen.s1', 'screen.s4'].map((bg) => ({ fg: 'accent.blue', bg, level: 'body', note: 'small-text' })),
-  // 强调色底上的白字（主按钮 15pt、选中胶囊 14pt——都不到「大字」，按正文 4.5）
-  ...Object.keys(ACCENTS).map((a) => ({ fg: 'text.on-accent', bg: `accent.${a}`, level: 'body' })),
-  // Android 深色实际强调色（darkVariant）
-  ...Object.keys(ANDROID_DARK).flatMap((a) => [
-    ...['screen.bg', 'screen.s1'].map((bg) => ({ fg: `accent.${a}@android`, bg, level: 'ui', modes: ['dark'] })),
-    { fg: 'text.on-accent', bg: `accent.${a}@android`, level: 'body', modes: ['dark'] },
-  ]),
+  // 强调色底上的白字（text.on-accent，桌面 token）：浅色底 = 单一值，深色底 = base 深色（Android 现状）
+  ...ACCENT_NAMES.map((a) => ({ fg: 'text.on-accent', bg: `accent.${a}`, level: 'body' })),
+  ...ACCENT_NAMES.map((a) => ({ fg: 'text.on-accent', bg: `accent.${a}.base`, level: 'body', modes: ['dark'] })),
   // 四级文字 t4：只用于禁用态、装饰性箭头 / 分隔符号（WCAG 1.4.3 对禁用和纯装饰豁免）——仍列出，确保有人改它时看得到
   ...['screen.bg', 'screen.s1'].map((bg) => ({ fg: 'screen.t4', bg, level: 'ui' })),
 ];
@@ -145,13 +146,13 @@ const PAIRS = [
 const ALLOW = {};
 const allow = (fgs, bgs, modes, kind, reason) => { for (const f of fgs) for (const b of bgs) for (const m of modes) ALLOW[`${f}|${b}|${m}`] = { kind, reason }; };
 allow(['screen.t4'], ['screen.bg', 'screen.s1'], ['light', 'dark'], 'debt',
-  't4 设计上只给禁用态、装饰分隔、sheet 把手（WCAG 1.4.3 豁免）；但目前还承载可读信息：iOS 规则序号（ZSettingsRow）、iOS 未测延迟「···」（ZLatencyPill）、两端可点行的 chevron。修复：这些改用 t3 / latency.unknown，之后本条可改回 intentional');
+  '旧用法：t4 设计上只给禁用态、装饰分隔、sheet 把手（WCAG 1.4.3 豁免）；但目前还承载可读信息：iOS 规则序号（ZSettingsRow）、iOS 未测延迟「···」（ZLatencyPill）、两端可点行的 chevron。修复：这些改用 t3 / latency.unknown，之后本条可改回 intentional');
 allow(['accent.green', 'accent.orange'], ['screen.bg', 'screen.s1'], ['light'], 'debt',
-  '可选强调色 green / orange（Apple 系统色）在浅色底上 2.0–2.2:1；用户选了它们时，返回链接、「+」、索引条等强调色前景也随之变色。修复：浅色下强调色前景用加深变体（如 green #248A3D、orange #C93400），填充保持系统色');
+  '旧用法：可选强调色 green / orange 单一值在浅色底上 2.0–2.2:1，被平台当作返回链接、「+」、索引条等前景。tokens 已给 accent.*.text（浅色 green #1F7A35、orange #C93400，均 ≥4.7）；平台前景改用 ZAccent.text / ZTokens.Accent.text 后，本条改为 intentional（单一值只作开关 / 进度填充，开关状态另有滑块位置表达）');
 allow(['text.on-accent'], ['accent.blue', 'accent.pink', 'accent.green', 'accent.orange'], ['light', 'dark'], 'debt',
-  '强调色底上的白字（主按钮 15pt semibold、选中胶囊）是正文字号：blue 4.02、pink 3.65、green / orange 约 2.2:1，与 iOS 系统按钮同款但不达 AA 4.5。修复：green / orange 底改黑字，blue / pink 底加深约 10%');
-allow(['text.on-accent'], ['accent.blue@android', 'accent.pink@android', 'accent.green@android', 'accent.orange@android'], ['dark'], 'debt',
-  'Android 深色 darkVariant 更亮（#0A84FF / #FF375F / #30D158 / #FF9F0A），白字 2.0–3.65:1。同上；另：深色变体应提到 tokens 作为单一来源');
+  '旧用法：强调色单一值底上的白字（主按钮 15pt semibold、选中胶囊）：blue 4.02、pink 3.65、green / orange 约 2.2:1。tokens 已给 accent.*.fill + on-fill（blue #0066D6 / pink #D1004B 白字 5.4–5.5，green / orange 黑字 ≥9.5）；平台改用 ZAccent.fill/onFill 后删除本条');
+allow(['text.on-accent'], ['accent.blue.base', 'accent.pink.base', 'accent.green.base', 'accent.orange.base'], ['dark'], 'debt',
+  '旧用法：Android 深色在 darkVariant（= accent.*.base 深色 #0A84FF / #FF375F / #30D158 / #FF9F0A）底上写白字，2.0–3.65:1。同上，改用 fill/onFill 后删除本条');
 allow(['screen.t3'], ['screen.s4'], ['light'], 'debt',
   '浅色 t3 在 s4（#DCDCE1，ZSurface.elevated / 按下态）上 4.39:1，差 0.11。修复：浅色 s4 提亮到约 #E3E3E8，或 elevated 表面上的说明文字用 t2');
 allow(['screen.amber', 'latency.slow'], ['screen.bg', 'screen.s1', 'screen.s2'], ['light'], 'debt',
@@ -163,9 +164,9 @@ allow(['screen.red', 'latency.timeout'], ['screen.bg', 'screen.s1', 'screen.s2']
 allow(['screen.up'], ['screen.bg'], ['light'], 'debt',
   '浅色上行箭头 #FF5E57 在 #F2F2F7 页面底上 2.69:1（卡片上恰 3.0）；旁边有「KB/s」与数值冗余表达。修复时与 color.upload（浅 #D13A3F，iOS 已在用）统一');
 ALLOW['accent.blue|screen.s4|light|text'] = ALLOW['accent.blue|screen.s4|dark|text'] = { kind: 'debt', reason:
-  '强调色小字在 s4（ZSurface.elevated，如 PageErrorBanner 的「重试」链接）上：浅色 2.94、深色 3.75:1。修复：elevated 表面上的链接用 t1 加下划线，或改用 s2 表面' };
+  '旧用法：强调色单一值小字在 s4（ZSurface.elevated，如 PageErrorBanner 的「重试」链接）上：浅色 2.94、深色 3.75:1。改用 accent.blue.text（浅色 4.73、深色 5.32）后删除本条' };
 for (const b of ['screen.bg', 'screen.s1']) ALLOW[`accent.blue|${b}|light|text`] = { kind: 'debt', reason:
-  '默认强调色 #007AFF 作小号文字（首页场景卡「左右滑动以切换地区」、节点页索引条 10pt、搜索高亮）在浅色下 3.6–4.0:1，达 UI 阈值不达正文。修复：小字改用 t2 或加 accent 文字专用浅色变体（如 #0062CC）' };
+  '旧用法：默认强调色单一值 #007AFF 作小号文字（首页场景卡「左右滑动以切换地区」、节点页索引条、搜索高亮）在浅色下 3.6–4.0:1。改用 accent.blue.text（浅色 #005BBF，5.8–6.5）后删除本条' };
 
 // ---------- 运行 ----------
 const args = new Set(process.argv.slice(2));
@@ -183,6 +184,8 @@ for (const p of PAIRS) {
   }
 }
 const fails = rows.filter((r) => !r.pass && !r.allow);
+const warns = Object.entries(ANDROID_DARK).filter(([k, v]) => { const t = tree.accent[k]; return !t || hex(parseColor(resolve(t.base.value))) !== v; })
+  .map(([k, v]) => `WARN apps/android ZColors.kt darkVariant ${k} = ${v}，与 tokens accent.${k}.base 深色不一致（请改用 ZAccent.base(dark)）`);
 const stale = Object.keys(ALLOW).filter((k) => { const r = rows.find((x) => x.key === k); return !r || r.pass; });
 
 if (args.has('--json')) {
@@ -191,8 +194,9 @@ if (args.has('--json')) {
   const line = (r) => `${r.mode.padEnd(5)} ${r.fg.padEnd(16)} on ${r.bg.padEnd(14)} ${r.fgHex} / ${r.bgHex}  ${r.ratio.toFixed(2).padStart(5)}:1  (≥${r.need} ${r.level})`;
   if (args.has('--verbose')) for (const r of rows) console.log(`${r.pass ? 'ok  ' : r.allow ? (r.allow.kind === 'debt' ? 'DEBT' : 'allow') : 'FAIL'} ${line(r)}`);
   const allowed = rows.filter((r) => !r.pass && r.allow);
-  console.log(`对比度：${rows.length} 组（${PAIRS.length} 对 × 浅/深），达标 ${rows.filter((r) => r.pass).length}，允许清单 ${allowed.length}（其中已知欠账 ${allowed.filter((r) => r.allow.kind === 'debt').length}），失败 ${fails.length}`);
+  console.log(`对比度：${rows.length} 组（${PAIRS.length} 对 × 浅/深），达标 ${rows.filter((r) => r.pass).length}，允许清单 ${allowed.length}（其中已知欠账 ${allowed.filter((r) => r.allow.kind === 'debt').length}，含待平台切换的旧用法 ${allowed.filter((r) => r.allow.kind === 'debt' && r.allow.reason.startsWith('旧用法')).length}），失败 ${fails.length}`);
   for (const r of fails) console.log(`FAIL ${line(r)}`);
+  for (const w of warns) console.log(w);
   for (const k of stale) console.log(`STALE 允许清单条目已达标或不存在，请删除：${k}`);
 }
 process.exit(fails.length || stale.length ? 1 : 0);
