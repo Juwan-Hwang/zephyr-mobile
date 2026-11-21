@@ -38,6 +38,8 @@ class WidgetScreenshotTest(private val dark: Boolean) {
     val paparazzi = Paparazzi(
         deviceConfig = DeviceConfig.PIXEL_9.copy(nightMode = if (dark) NightMode.NIGHT else NightMode.NOTNIGHT, locale = "zh"),
         maxPercentDifference = 0.1,
+        // Image = the widget cell (plus a 12dp launcher margin), not a whole phone screen.
+        renderingMode = com.android.ide.common.rendering.api.SessionParams.RenderingMode.SHRINK,
     )
 
     private lateinit var engine: MockEngine
@@ -58,6 +60,8 @@ class WidgetScreenshotTest(private val dark: Boolean) {
         }
         val d = ctx.resources.displayMetrics.density
         host.addView(v, FrameLayout.LayoutParams((size.width.value * d).toInt(), (size.height.value * d).toInt()))
+        host.setPadding((12 * d).toInt(), (12 * d).toInt(), (12 * d).toInt(), (12 * d).toInt())
+        host.layoutParams = android.view.ViewGroup.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT)
         return host
     }
 
