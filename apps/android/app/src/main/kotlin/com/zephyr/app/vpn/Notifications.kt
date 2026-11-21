@@ -12,7 +12,6 @@ import com.zephyr.app.MainActivity
 import com.zephyr.app.R
 import com.zephyr.design.format.ZFormat
 import androidx.compose.ui.graphics.toArgb
-import com.zephyr.design.theme.darkVariant
 import com.zephyr.engine.ConnectionState
 import com.zephyr.engine.ProxyMode
 import com.zephyr.engine.Scene
@@ -60,7 +59,7 @@ object Notifications {
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .setContentIntent(open)
             // Follows the App's accent (review W-P2-4).
-            .setColor(com.zephyr.design.tokens.ZAccent.valueOf(accent.name).darkVariant().toArgb())
+            .setColor(com.zephyr.design.tokens.ZAccent.valueOf(accent.name).colorDark.toArgb())
         if (connecting || c == null) {
             return b.setContentTitle(ctx.getString(R.string.app_name)).setContentText(ctx.getString(R.string.common_status_connecting_ellipsis)).build()
         }
@@ -99,7 +98,7 @@ object Notifications {
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .setContentIntent(open)
-            .setColor(com.zephyr.design.tokens.ZAccent.valueOf(accent.name).darkVariant().toArgb())
+            .setColor(com.zephyr.design.tokens.ZAccent.valueOf(accent.name).colorDark.toArgb())
             .setContentTitle(ctx.getString(R.string.app_name))
             .setContentText(ctx.getString(R.string.notif_paused_trusted, ssid ?: ""))
             .addAction(0, ctx.getString(R.string.common_connect), action(ctx, ZephyrVpnService.ACTION_CONNECT))

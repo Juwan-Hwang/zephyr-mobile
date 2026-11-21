@@ -40,7 +40,7 @@ data class ZThemeColors(
     val primaryButton: Color,
 ) {
     fun withAccent(accent: ZAccent): ZThemeColors {
-        val c = if (isDark) accent.darkVariant() else accent.color
+        val c = accent.base(isDark)
         return copy(accent = c, accentSoft = c.copy(alpha = 0.16f))
     }
 
@@ -62,8 +62,8 @@ data class ZThemeColors(
             text2 = t.screenT2,
             text3 = t.screenT3,
             text4 = t.screenT4,
-            accent = if (t.isDark) ZAccent.BLUE.darkVariant() else ZAccent.BLUE.color,
-            accentSoft = (if (t.isDark) ZAccent.BLUE.darkVariant() else ZAccent.BLUE.color).copy(alpha = 0.16f),
+            accent = ZAccent.BLUE.base(t.isDark),
+            accentSoft = ZAccent.BLUE.base(t.isDark).copy(alpha = 0.16f),
             onAccent = Color.White,
             connected = t.screenGreen,
             warning = t.screenAmber,
@@ -78,14 +78,6 @@ data class ZThemeColors(
             primaryButton = t.screenPrimary,
         )
     }
-}
-
-/** Prototype dark mode uses the iOS dark-variant system colours for accents. */
-fun ZAccent.darkVariant(): Color = when (this) {
-    ZAccent.BLUE -> Color(0xFF0A84FF)
-    ZAccent.GREEN -> Color(0xFF30D158)
-    ZAccent.ORANGE -> Color(0xFFFF9F0A)
-    ZAccent.PINK -> Color(0xFFFF375F)
 }
 
 /** Latency colour per tokens: quiet below [com.zephyr.design.tokens.ZLatency.slow], amber at/above, red only on timeout. */
