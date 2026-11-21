@@ -12,14 +12,16 @@ pub(crate) const DEFAULT_LATENCY_TTL_MS: i64 = 24 * 3_600_000;
 /// 组内热备数：切到这些节点不需要重载 mihomo。
 const STANDBY: usize = 8;
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct SceneExceptionView {
     pub app_id: String,
     pub app: String,
     pub node: Option<NodeRow>,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct Scene {
     pub id: String,
     pub kind: SceneKind,
@@ -46,7 +48,8 @@ pub struct Scene {
 }
 
 /// §15.h previewSceneNodeFilter 的结果。
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct NodeFilterPreview {
     /// 候选中满足过滤的个数
     pub matching: u32,
@@ -62,7 +65,8 @@ pub struct NodeFilterPreview {
     pub change: Option<ExitChange>,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ServiceHealth {
     pub app_id: String,
     pub name: String,
@@ -71,14 +75,16 @@ pub struct ServiceHealth {
 }
 
 /// 平台对场景内服务做健康探测的目标：经 VPN 访问 url，规则会把它路由到该服务实际使用的出口（含应用例外）。
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ProbeTarget {
     pub app_id: String,
     pub name: String,
     pub url: String,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ExitChange {
     pub scene_id: Option<String>,
     pub from_region: Option<String>,
@@ -91,7 +97,8 @@ pub struct ExitChange {
 }
 
 /// applySceneChange 的结果：平台据此决定热切换还是重载。
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct SceneApply {
     /// true：新节点不在当前组里，需 runtimeConfig + zm_reload
     pub needs_reload: bool,
@@ -102,7 +109,8 @@ pub struct SceneApply {
     pub previous: Option<u64>,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct StorageInfo {
     pub nodes_bytes: i64,
     pub rules_bytes: i64,
@@ -304,7 +312,7 @@ impl MobileCore {
     }
 }
 
-#[uniffi::export]
+#[cfg_attr(feature = "uniffi", uniffi::export)]
 impl MobileCore {
     /// 用户设置"测速结果有效期"（latencyTtlHours）。影响场景候选、自动选点、热备与 Scene.available；
     /// 进程内有效，平台启动时与设置变更时调用。0 = 恢复默认 24 h。（§15.e）

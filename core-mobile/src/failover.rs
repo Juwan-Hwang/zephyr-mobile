@@ -11,7 +11,8 @@ use rustc_hash::FxHashMap;
 use std::path::{Path, PathBuf};
 use zephyr_core::failover::{validate_failover_policy, FailoverPolicyConfig};
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct FailoverPolicy {
     pub enabled: bool,
     /// 连续失败多少次切换（默认 3）
@@ -20,7 +21,8 @@ pub struct FailoverPolicy {
     pub cooldown_secs: u64,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct SceneFailover {
     pub failed: NodeRow,
     pub failure_count: u32,
@@ -52,7 +54,7 @@ impl FailoverState {
     }
 }
 
-#[uniffi::export]
+#[cfg_attr(feature = "uniffi", uniffi::export)]
 impl MobileCore {
     pub fn failover_policy(&self) -> FailoverPolicy {
         let p = &self.failover.lock().policy;

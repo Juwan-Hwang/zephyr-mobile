@@ -9,14 +9,16 @@ use crate::error::MobileError;
 use serde_yaml::{Mapping, Value};
 use zephyr_core::config::merge::{merge_yaml, restore_security_settings, SecuritySettings};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, uniffi::Enum)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum TunStackKind {
     System,
     Gvisor,
     Mixed,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct DnsConfig {
     pub fake_ip: bool,
     pub nameservers: Vec<String>,
@@ -24,7 +26,8 @@ pub struct DnsConfig {
     pub ipv6: bool,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct TunConfig {
     pub stack: TunStackKind,
     pub mtu: i32,
@@ -34,14 +37,16 @@ pub struct TunConfig {
     pub file_descriptor: Option<i32>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, uniffi::Enum)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum ProxyMode {
     Rule,
     Global,
     Direct,
 }
 
-#[derive(Debug, Clone, uniffi::Record)]
+#[derive(Debug, Clone)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct RuntimeOptions {
     pub dns: DnsConfig,
     pub tun: TunConfig,
@@ -53,11 +58,12 @@ pub struct RuntimeOptions {
     /// mihomo `log-level`：debug / info / warning / error / silent（不区分大小写）；其他值按 info（契约 §16.h）
     pub log_level: String,
     /// 本地代理（设置 → 本地代理端口）：只监听 127.0.0.1 的 mixed 端口；None = 关（默认）。
-    #[uniffi(default = None)]
+    #[cfg_attr(feature = "uniffi", uniffi(default = None))]
     pub local_proxy: Option<LocalProxy>,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct LocalProxy {
     pub port: u16,
     /// "user:pass"；None = 不鉴权（仍只绑回环地址）

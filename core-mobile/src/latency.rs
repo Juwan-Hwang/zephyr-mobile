@@ -15,7 +15,8 @@ const MAGIC: &[u8; 8] = b"ZLAT\x00\x00\x00\x02";
 pub const MAX_ENTRIES: usize = 65_536;
 pub const HISTORY: usize = 8;
 
-#[derive(Debug, Clone, Copy, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, Copy, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct LatencySample {
     pub id: u64,
     /// 毫秒；-1 = 超时

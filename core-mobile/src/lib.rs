@@ -10,6 +10,7 @@
 //! - `fetch_policy`：订阅拉取的 SSRF 判定（contract §16.i）
 
 #![allow(clippy::type_complexity)] // 索引/缓存元组类型集中在少数内部函数，拆别名反而难读
+#[cfg(feature = "uniffi")]
 uniffi::setup_scaffolding!("zephyr_mobile_core");
 
 pub mod diff;

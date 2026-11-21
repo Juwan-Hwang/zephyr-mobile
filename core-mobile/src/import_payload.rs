@@ -16,7 +16,8 @@ use crate::error::MobileError;
 pub const MAX_ITEMS: usize = 20;
 pub const MAX_PAYLOAD_BYTES: usize = 4096;
 
-#[derive(Debug, Clone, PartialEq, Eq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ImportItem {
     /// 订阅名；载荷未给则 None（平台层用脱敏 URL 兜底，与 importSubscription 一致）
     pub name: Option<String>,
@@ -26,7 +27,8 @@ pub struct ImportItem {
     pub auto_update_hours: Option<i32>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, uniffi::Enum)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum ImportPayloadKind {
     /// zephyr://import（桌面同步）
     Zephyr,
@@ -36,7 +38,8 @@ pub enum ImportPayloadKind {
     Url,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ImportPayload {
     pub kind: ImportPayloadKind,
     pub items: Vec<ImportItem>,
@@ -56,7 +59,7 @@ struct BatchSub {
 }
 
 /// contract §15：`parseImportPayload(payload) -> ImportPayload`。无法识别 / 校验失败 → `Invalid` / `SubscriptionInvalid`。
-#[uniffi::export]
+#[cfg_attr(feature = "uniffi", uniffi::export)]
 pub fn parse_import_payload(payload: String) -> Result<ImportPayload, MobileError> {
     let p = payload.trim();
     if p.is_empty() {

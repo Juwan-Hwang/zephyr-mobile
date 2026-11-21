@@ -15,12 +15,14 @@ use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
 /// §15.h 场景节点过滤；以后加 streaming 等再追加。
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, uniffi::Enum)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum SceneNodeFilter {
     Uhd,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, uniffi::Enum)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum SceneKind {
     Ai,
     Video,
@@ -28,14 +30,16 @@ pub enum SceneKind {
     Custom,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, uniffi::Enum)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum SceneSource {
     Auto,
     Manual,
     SubscriptionGroup,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, uniffi::Enum)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum TraceTarget {
     Unchanged,
     Direct,
@@ -136,7 +140,8 @@ pub struct ServiceRec {
     pub checked_at: i64,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct HostOverride {
     pub host: String,
     pub target: TraceTarget,

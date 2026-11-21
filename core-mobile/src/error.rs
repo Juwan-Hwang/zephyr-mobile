@@ -1,6 +1,7 @@
 //! 错误类型，与 contract §10 ErrorCode 对齐。
 
-#[derive(Debug, thiserror::Error, uniffi::Error)]
+#[derive(Debug, thiserror::Error)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Error))]
 pub enum MobileError {
     #[error("io: {0}")]
     Io(String),

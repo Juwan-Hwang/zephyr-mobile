@@ -66,7 +66,8 @@ pub fn fingerprint(server: &str, port: u16, protocol: &str) -> u64 {
 }
 
 /// 一行查询结果。
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct NodeRow {
     pub id: u64,
     pub name: String,
@@ -81,7 +82,8 @@ pub struct NodeRow {
     pub uhd: bool,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct RegionSection {
     pub region: String,
     pub count: u64,
@@ -89,7 +91,8 @@ pub struct RegionSection {
     pub row_offset: u64,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct NodeQueryResult {
     pub query: String,
     pub total: u64,
@@ -125,7 +128,8 @@ enum IndexKind {
 /// 流式建库：push 时立即压成 24 B 记录 + 名称字节，不保留 NodeInput。
 /// 1310 万节点峰值内存 ≈ 记录 315 MB + 名称 ~330 MB + 去重临时 210 MB（原实现 2.7 GB 会被 OOM 杀掉）。
 /// 建库阶段（进度回调用）。
-#[derive(Debug, Clone, Copy, PartialEq, Eq, uniffi::Enum)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum BuildPhase {
     /// 解析订阅 / 生成节点；total = 0 表示总数未知
     Parse,
