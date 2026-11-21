@@ -34,9 +34,10 @@ import com.zephyr.engine.RegionSection
 private fun isXl(): Boolean = LocalDensity.current.fontScale >= 1.3f
 
 /**
- * Fixed-height node row: name (query terms highlighted, ×1.5 dimmed) · protocol · latency.
- * Review L-P2-3: 52 dp normally; in large-text mode the prototype (`.device.xl .vr`, 550) grows the row to 66,
- * hides the protocol column and widens latency to 66 — the name gets the room instead of being clipped.
+ * Fixed-height node row: name (query terms highlighted, ×1.5 dimmed) and latency. No protocol column (spec §9.8,
+ * review And-7: iOS and the prototype don't show it; the protocol is in [NodeDetailSheet]).
+ * Review L-P2-3: 52 dp normally; in large-text mode the prototype (`.device.xl .vr`, 550) grows the row to 66 and
+ * widens latency to 66 — the name gets the room instead of being clipped.
  */
 @Composable
 fun NodeRowView(n: NodeSummary?, highlights: List<String>, testedLatency: Int?, testing: Boolean, onClick: (() -> Unit)? = null) {
@@ -53,10 +54,7 @@ fun NodeRowView(n: NodeSummary?, highlights: List<String>, testedLatency: Int?, 
         }
         val name = remember(n.name, highlights, c) { highlighted(n.name, highlights, c.accent, c.text3) }
         ZText(name, Modifier.weight(1f), style = ZTheme.type.body, maxLines = 1)
-        if (!xl) {
-            ZText(n.protocol, style = ZTheme.type.monoSmall, color = c.text3, maxLines = 1)
-            Spacer(Modifier.width(14.dp))
-        }
+        Spacer(Modifier.width(14.dp))
         ZLatency(testedLatency ?: n.latencyMs, testing, Modifier.width(if (xl) 66.dp else 64.dp), style = ZTheme.type.mono.copy(textAlign = androidx.compose.ui.text.style.TextAlign.End))
     }
     Box(Modifier.fillMaxWidth().padding(start = 22.dp).height(1.dp).background(c.hairline))
