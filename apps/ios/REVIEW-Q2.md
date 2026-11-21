@@ -94,3 +94,4 @@
 - 2026-11-16 VoiceOver 退出全屏覆盖 [已修 本 PR]：今日卡片与扫码导入是 fullScreenCover，无下拉关闭；补 `.accessibilityAction(.escape)`，双指 Z 形擦除即关闭（与指令层一致）。引导页仍不可退出（有意）。
 - 2026-11-16 RulesModel 单测 [已补 #179]：去抖只落最后输入、清空取消挂起、DIRECT / REJECT / 场景 / 未命中命中链与命中行，7 个。
 - 2026-11-16 AppIconModel 单测 [已补 本 PR]：可选项随资源 / 系统支持变化、切换、同项与不可用项空操作、失败回滚 + 兜底文案、取消静默，7 个（假 AppIconSwitching）。
+- 2026-11-22 构建警告清零（续）[已修 #281]：`LatencyTickBar` 的 alignmentGuide 闭包改用局部值（Sendable 闭包读 MainActor 隔离的 `Self.longTick`，Swift 6 下为错误）；Info.plist 加 `UIRequiresFullScreen`（只支持 iPhone 竖屏，消除 Release iphoneos 构建「All interface orientations must be supported」警告）。Release/iphoneos 已在每次 ios CI 构建（R P0-3），日志无编译器警告。
