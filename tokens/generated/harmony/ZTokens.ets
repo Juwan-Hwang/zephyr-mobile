@@ -284,7 +284,7 @@ export function zAccentColors(name: string, isDark: boolean): ZAccentColors {
         const d: ZAccentColors = { base: '#FF30D158', text: '#FF30D158', fill: '#FF30D158', onFill: '#FF000000' };
         return d;
       }
-      const l: ZAccentColors = { base: '#FF34C759', text: '#FF1F7A35', fill: '#FF34C759', onFill: '#FF000000' };
+      const l: ZAccentColors = { base: '#FF34C759', text: '#FF1C6E31', fill: '#FF34C759', onFill: '#FF000000' };
       return l;
     }
     case 'orange': {
@@ -292,7 +292,7 @@ export function zAccentColors(name: string, isDark: boolean): ZAccentColors {
         const d: ZAccentColors = { base: '#FFFF9F0A', text: '#FFFF9F0A', fill: '#FFFF9F0A', onFill: '#FF000000' };
         return d;
       }
-      const l: ZAccentColors = { base: '#FFFF9500', text: '#FFC93400', fill: '#FFFF9500', onFill: '#FF000000' };
+      const l: ZAccentColors = { base: '#FFFF9500', text: '#FFB03000', fill: '#FFFF9500', onFill: '#FF000000' };
       return l;
     }
     case 'pink': {
@@ -300,7 +300,7 @@ export function zAccentColors(name: string, isDark: boolean): ZAccentColors {
         const d: ZAccentColors = { base: '#FFFF375F', text: '#FFFF6482', fill: '#FFD1004B', onFill: '#FFFFFFFF' };
         return d;
       }
-      const l: ZAccentColors = { base: '#FFFF2D55', text: '#FFC4004A', fill: '#FFD1004B', onFill: '#FFFFFFFF' };
+      const l: ZAccentColors = { base: '#FFFF2D55', text: '#FFBB0040', fill: '#FFD1004B', onFill: '#FFFFFFFF' };
       return l;
     }
     default: {

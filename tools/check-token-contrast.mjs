@@ -128,8 +128,8 @@ const PAIRS = [
   // —— 强调色新变体（单一来源 mobile.json accent.*；平台切换后这些就是实际用法）——
   // base 深色（开关 / 进度 / 光晕 / 选中描边；原 Android darkVariant）——UI 阈值；浅色 base = 历史单一值，见下方旧用法
   ...ACCENT_NAMES.flatMap((a) => ['screen.bg', 'screen.s1'].map((bg) => ({ fg: `accent.${a}.base`, bg, level: 'ui', modes: ['dark'] }))),
-  // text：前景小字 / 链接 / 索引条 / 搜索高亮 / 图标——正文阈值；默认 blue 另查 s4（ZSurface.elevated 上的「重试」链接）
-  ...ACCENT_NAMES.flatMap((a) => ['screen.bg', 'screen.s1', ...(a === 'blue' ? ['screen.s4'] : [])].map((bg) => ({ fg: `accent.${a}.text`, bg, level: 'body' }))),
+  // text：前景小字 / 链接 / 索引条 / 搜索高亮 / 图标——正文阈值；含 s4（ZSurface.elevated 上的「重试」链接，用户选哪个强调色都会出现）
+  ...ACCENT_NAMES.flatMap((a) => ['screen.bg', 'screen.s1', 'screen.s4'].map((bg) => ({ fg: `accent.${a}.text`, bg, level: 'body' }))),
   // fill + on-fill：主按钮 15pt / 选中胶囊 14pt——正文阈值
   ...ACCENT_NAMES.map((a) => ({ fg: `accent.${a}.on-fill`, bg: `accent.${a}.fill`, level: 'body' })),
   // —— 旧用法（平台尚未切换到上面的变体；切换后删除这些 PAIRS 及 ALLOW 条目）——
@@ -195,7 +195,7 @@ const warns = Object.entries(ANDROID_DARK).filter(([k, v]) => { const t = tree.a
 const stale = Object.keys(ALLOW).filter((k) => { const r = rows.find((x) => x.key === k); return !r || r.pass; });
 
 if (args.has('--json')) {
-  console.log(JSON.stringify({ rows, fails: fails.map((r) => r.key), stale }, null, 2));
+  console.log(JSON.stringify({ rows, fails: fails.map((r) => r.key), stale, warns }, null, 2));
 } else {
   const line = (r) => `${r.mode.padEnd(5)} ${r.fg.padEnd(16)} on ${r.bg.padEnd(14)} ${r.fgHex} / ${r.bgHex}  ${r.ratio.toFixed(2).padStart(5)}:1  (≥${r.need} ${r.level})`;
   if (args.has('--verbose')) for (const r of rows) console.log(`${r.pass ? 'ok  ' : r.allow ? (r.allow.kind === 'debt' ? 'DEBT' : 'allow') : 'FAIL'} ${line(r)}`);

@@ -78,19 +78,19 @@
     },
     "green":  {
       "base":    { "value": "#30D158", "lightValue": "#34C759" },
-      "text":    { "value": "#30D158", "lightValue": "#1F7A35", "comment": "浅色 #F2F2F7 4.83、白 5.39" },
+      "text":    { "value": "#30D158", "lightValue": "#1C6E31", "comment": "浅色 #F2F2F7 5.66、白 6.32、s4 4.62" },
       "fill":    { "value": "#30D158", "lightValue": "#34C759" },
       "on-fill": { "value": "#000000", "lightValue": "#000000", "comment": "黑字 9.5–10.4（白字仅 2.0–2.2）" }
     },
     "orange": {
       "base":    { "value": "#FF9F0A", "lightValue": "#FF9500" },
-      "text":    { "value": "#FF9F0A", "lightValue": "#C93400", "comment": "浅色 #F2F2F7 4.73、白 5.28" },
+      "text":    { "value": "#FF9F0A", "lightValue": "#B03000", "comment": "浅色 #F2F2F7 5.76、白 6.42、s4 4.70" },
       "fill":    { "value": "#FF9F0A", "lightValue": "#FF9500" },
       "on-fill": { "value": "#000000", "lightValue": "#000000", "comment": "黑字 9.6–10.2" }
     },
     "pink":   {
       "base":    { "value": "#FF375F", "lightValue": "#FF2D55" },
-      "text":    { "value": "#FF6482", "lightValue": "#C4004A", "comment": "浅色 #F2F2F7 5.46、白 6.09；深色黑底 7.40、s4 5.30" },
+      "text":    { "value": "#FF6482", "lightValue": "#BB0040", "comment": "浅色 #F2F2F7 5.91、白 6.59、s4 4.82；深色黑底 7.40、s4 5.30" },
       "fill":    { "value": "#D1004B", "lightValue": "#D1004B", "comment": "白字 5.51" },
       "on-fill": { "value": "#FFFFFF", "lightValue": "#FFFFFF" }
     }
