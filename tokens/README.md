@@ -21,7 +21,7 @@
 
 ## 状态色作文字（2026-11-21）
 - 浅色下 `screen.amber` / `green` / `red`（#FF9F0A / #34C759 / #FF3B30）作文字只有 1.8–3.6:1。文字一律用 `screen.amber-text`（浅 #B25000）/ `green-text`（浅 #1F7A35）/ `red-text`（浅 #D70015），深色与原色相同。原色只给圆点、进度条、图标填充，并且必须配形状或文字（契约 §18.b）。
-- `latency.slow` / `latency.timeout` 是读数文字，浅色值将改为与 `*-text` 相同（PR `agent/a/tokens-light-status`，需两端重录基线）。
+- `latency.slow` / `latency.timeout` 是读数文字，浅色值已改为与 `*-text` 相同。
 
 ## 对比度检查（WCAG AA）
 `node tools/check-token-contrast.mjs [--verbose|--json]`，CI 在 contract 作业跑（零依赖，读的是 token 源，与 `build.mjs` 同一套合并 / 引用规则）。
@@ -47,4 +47,4 @@
 
 - 不达标的组合必须进脚本里的 `ALLOW`，并写 `reason`：`intentional` 是有意为之且确认无可读用途，`debt` 是已知欠账；reason 以「旧用法」开头的是 tokens 已给出达标变体、只等平台切换的条目（输出里单独计数）。已达标的 ALLOW 条目会报 STALE，修好后记得删。
 - `apps/android/…/ZColors.kt` 若仍自带 `darkVariant()` 且与 `accent.*.base` 深色不一致，脚本打印 WARN（不失败）。
-- 历史：浅色 `screen.t3` / `latency.unknown` 0.4→0.55、深色 `t3` 0.4→0.5，都是为了过这道线；改这些值之前先跑一遍脚本。
+- 历史：浅色 `screen.t3` / `latency.unknown` 0.4→0.55→0.56（2026-11-21，过 s4）、深色 `t3` 0.4→0.5；浅色 `latency.slow` #FF9F0A→#B25000、`latency.timeout` #FF3B30→#D70015、`screen.up` #FF5E57→#D13A3F（2026-11-21，与 `color.upload` 统一）。都是为了过这道线；改这些值之前先跑一遍脚本。
