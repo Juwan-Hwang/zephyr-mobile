@@ -38,8 +38,8 @@ private struct ZCardSample: View {
                     Text(verbatim: "2 小时前").zMono(.small).foregroundStyle(ZColor.t3)
                 }
                 HStack(spacing: ZTokens.Space.n5) {
-                    ZBigNumber("+1,204", size: .compact, caption: "节点", tone: ZTokens.Colors.screenGreen)
-                    ZBigNumber("−318", size: .compact, caption: "节点", tone: ZTokens.Colors.screenRed)
+                    ZBigNumber("+1,204", size: .compact, caption: "节点", tone: ZTokens.Colors.screenGreenText)
+                    ZBigNumber("−318", size: .compact, caption: "节点", tone: ZTokens.Colors.screenRedText)
                     ZBigNumber("0", size: .compact, caption: "规则变更")
                 }
             }

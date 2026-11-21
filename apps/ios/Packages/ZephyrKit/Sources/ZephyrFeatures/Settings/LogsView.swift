@@ -165,8 +165,8 @@ struct LogsView: View {
         switch level {
         case .debug: ZColor.t3
         case .info: ZColor.t2
-        case .warning: ZTokens.Colors.screenAmber
-        case .error: ZTokens.Colors.screenRed
+        case .warning: ZTokens.Colors.screenAmberText
+        case .error: ZTokens.Colors.screenRedText
         }
     }
 }

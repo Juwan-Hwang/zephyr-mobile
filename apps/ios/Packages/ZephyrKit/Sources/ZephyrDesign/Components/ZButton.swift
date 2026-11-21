@@ -83,7 +83,7 @@ public struct ZButton: View {
         switch kind {
         case .primary: return AnyShapeStyle(ZTokens.Colors.screenOnPrimary)
         case .ghost: return AnyShapeStyle(ZTokens.Colors.screenT1)
-        case .danger: return AnyShapeStyle(ZTokens.Colors.screenRed)
+        case .danger: return AnyShapeStyle(ZTokens.Colors.screenRedText)
         case .accent: return AnyShapeStyle(ZTokens.Colors.textOnAccent)
         }
     }
