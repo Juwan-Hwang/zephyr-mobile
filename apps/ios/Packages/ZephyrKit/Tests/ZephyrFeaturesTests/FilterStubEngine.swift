@@ -90,6 +90,9 @@ final class FilterStubEngine: ZephyrEngine, @unchecked Sendable {
     func nodeFunnel(maxAgeMs: Int64, thresholdMs: Int32) async -> NodeFunnel? {
         await base.nodeFunnel(maxAgeMs: maxAgeMs, thresholdMs: thresholdMs)
     }
+    func sceneFunnel(sceneId: String, maxAgeMs: Int64, thresholdMs: Int32) async -> NodeFunnel? {
+        await base.sceneFunnel(sceneId: sceneId, maxAgeMs: maxAgeMs, thresholdMs: thresholdMs)
+    }
     func previewSceneChange(sceneId: String, nodeId: NodeId) async throws -> ExitChange {
         try await base.previewSceneChange(sceneId: sceneId, nodeId: nodeId)
     }

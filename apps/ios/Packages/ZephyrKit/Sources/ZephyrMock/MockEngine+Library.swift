@@ -56,6 +56,28 @@ extension MockEngine {
                           tested: tested, reachable: reachable, underThreshold: under, thresholdMs: Int(threshold))
     }
 
+    /// Mock 场景漏斗（契约 v0.7 §19.a / 19.b）：按 mock 候选池算——同当前节点地区 + 场景节点过滤（4K），不另编；
+    /// 延迟取已测值优先、否则池里的缓存值；新鲜度同 nodeFunnel（样本时间 = 写入时刻，池缓存值记为引擎启动时刻）。
+    public func sceneFunnel(sceneId: String, maxAgeMs: Int64, thresholdMs: Int32) async -> NodeFunnel? {
+        let threshold = thresholdMs > 0 ? thresholdMs : 300
+        guard let scene = withState({ s in s.scenes.first { $0.id == sceneId } }), let pool = pool(sceneId) else { return nil }
+        let (measured, measuredAt) = withState { ($0.tested, $0.testedAt) }
+        let now = clock.now()
+        let region = scene.selected.region.uppercased()
+        let scope = pool.filter { $0.region == region && Self.matches($0, scene.nodeFilter) }
+        var tested = 0, reachable = 0, under = 0
+        for n in scope {
+            let live = measured[n.id]
+            guard let ms = live ?? n.latencyMs else { continue }
+            let at = live != nil ? (measuredAt[n.id] ?? startedAt) : startedAt
+            if maxAgeMs > 0, now - at > maxAgeMs { continue }
+            tested += 1
+            if ms >= 0 { reachable += 1; if ms < threshold { under += 1 } }
+        }
+        return NodeFunnel(sourceCount: MockFixtures.funnelSourceCount, poolSize: scope.count,
+                          tested: tested, reachable: reachable, underThreshold: under, thresholdMs: Int(threshold))
+    }
+
     public func sceneCandidates(sceneId: String, region: String?) async throws -> [NodeSummary] {
         let filter = withState { s in s.scenes.first { $0.id == sceneId }?.nodeFilter }
         return try await sceneCandidates(sceneId: sceneId, region: region, filter: filter)

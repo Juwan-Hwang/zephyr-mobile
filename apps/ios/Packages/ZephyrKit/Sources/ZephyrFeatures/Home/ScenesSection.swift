@@ -11,6 +11,8 @@ import ZephyrKit
 struct ScenesSection: View {
     @Environment(\.zStaticRendering) private var still
     @Environment(AppModel.self) private var model
+    /// 首页迷你漏斗（规范 §9.3，J-1）：每个场景行用各自的 sceneFunnel（契约 v0.7 §19.a）；缺项 = 没取到，行写「n 个可用」。
+    @State private var funnels: [String: NodeFunnel] = [:]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -43,7 +45,8 @@ struct ScenesSection: View {
                              scrubbable: Self.isScrubbable(scene),
                              showsCoach: coach,
                              isProbing: model.retesting.contains(scene.id),
-                             pendingTarget: pending?.to)
+                             pendingTarget: pending?.to,
+                             funnel: funnels[scene.id])
                         // 提示气泡画在行下沿之外；抬高层级，盖住下一行之前的分隔线（原型 `.coach` 用 --s1 底，REVIEW H-P2-4）。
                         .zIndex(coach ? 1 : 0)
                     if let pending {
@@ -56,6 +59,30 @@ struct ScenesSection: View {
         }
         .opacity(model.isOn ? 1 : 0.55)
         .padding(.horizontal, HMetrics.cardInset)
+        // 场景重测 / 换节点（地区变了）/ 改节点过滤 / 改「延迟结果保留」都重取；新鲜度同场景候选（latencyTtlHours），
+        // 阈值 200 ms（latency.threshold-slow，契约 §19.a）。
+        .task(id: funnelKey) { await loadFunnels() }
+    }
+
+    private var funnelKey: String {
+        let scenes = model.scenes.map { "\($0.id):\($0.selected.region):\($0.testedAt ?? 0):\($0.nodeFilter?.rawValue ?? "")" }
+        return scenes.joined(separator: ",") + "|\(SceneSheet.latencyTtlHours(model.settings))"
+    }
+
+    private func loadFunnels() async {
+        let engine = model.engine
+        let maxAge = SceneSheet.funnelMaxAgeMs(model.settings)
+        let threshold = Int32(ZTokens.LatencyThreshold.slow)
+        let ids = model.scenes.filter(Self.isScrubbable).map(\.id)
+        var out: [String: NodeFunnel] = [:]
+        await withTaskGroup(of: (String, NodeFunnel?).self) { group in
+            for id in ids {
+                group.addTask { (id, await engine.sceneFunnel(sceneId: id, maxAgeMs: maxAge, thresholdMs: threshold)) }
+            }
+            for await (id, f) in group { if let f { out[id] = f } }
+        }
+        guard !Task.isCancelled else { return }
+        funnels = out
     }
 
     /// 订阅分组场景不参与 Zephyr 优选，不能左右滑动换地区。

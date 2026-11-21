@@ -30,6 +30,9 @@ public protocol ZephyrEngine: AnyObject, Sendable {
     func sceneCandidates(sceneId: String, region: String?) async throws -> [NodeSummary]
     /// 漏斗计数（契约 §15.c）。`maxAgeMs ≤ 0` 不限新鲜度，`thresholdMs ≤ 0` 按 300；节点库未就绪等情况返回 nil（界面隐藏，不编造）。
     func nodeFunnel(maxAgeMs: Int64, thresholdMs: Int32) async -> NodeFunnel?
+    /// 场景漏斗（契约 v0.7 §19.a）：只数该场景候选范围（当前节点所在地区 + §15.h 节点过滤）。场景未选节点时 poolSize = 0；
+    /// 未知场景、节点库未就绪等返回 nil（首页迷你漏斗不画，退回「n 个可用」）。
+    func sceneFunnel(sceneId: String, maxAgeMs: Int64, thresholdMs: Int32) async -> NodeFunnel?
     func previewSceneChange(sceneId: String, nodeId: NodeId) async throws -> ExitChange
     /// UI 支持"撤销"：再 apply 旧节点。
     func applySceneChange(sceneId: String, nodeId: NodeId) async throws
@@ -146,6 +149,8 @@ public extension Array where Element == RegionSection {
 // MARK: - 契约 §13 / §14.z 新增方法的默认实现（Mock 未实现前不影响编译；CoreEngine 有真实实现）
 
 public extension ZephyrEngine {
+    /// 没有实现即取不到（首页迷你漏斗退回文字，不编造）。
+    func sceneFunnel(sceneId: String, maxAgeMs: Int64, thresholdMs: Int32) async -> NodeFunnel? { nil }
     /// 只读事件流：没有实现即没有事件（Mock / 预览不探测）。
     func sceneFailovers() -> AsyncStream<SceneFailoverNotice> { AsyncStream { $0.finish() } }
     // 默认抛“不支持”，不再静默成功（UI 会提示失败而不是假装生效，REVIEW-Q2 P2）。

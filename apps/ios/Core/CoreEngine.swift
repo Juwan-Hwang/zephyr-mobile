@@ -370,6 +370,19 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         }
     }
 
+    /// 契约 v0.7 §19.a。场景未知 / 节点库未就绪 / 核心报错时返回 nil（首页迷你漏斗退回文字）。
+    public func sceneFunnel(sceneId: String, maxAgeMs: Int64, thresholdMs: Int32) async -> ZephyrKit.NodeFunnel? {
+        guard let c = await nodes() else {
+            return mockData ? await fallback.sceneFunnel(sceneId: sceneId, maxAgeMs: maxAgeMs, thresholdMs: thresholdMs) : nil
+        }
+        let now = clock()
+        return await runQuiet { () -> ZephyrKit.NodeFunnel? in
+            guard let f = try? c.sceneFunnel(sceneId: sceneId, nowMillis: now, maxAgeMillis: maxAgeMs, thresholdMs: thresholdMs) else { return nil }
+            return ZephyrKit.NodeFunnel(sourceCount: Int(f.sourceCount), poolSize: Int(f.poolSize), tested: Int(f.tested),
+                                        reachable: Int(f.reachable), underThreshold: Int(f.underThreshold), thresholdMs: Int(f.thresholdMs))
+        }
+    }
+
     public func previewSceneChange(sceneId: String, nodeId: NodeId) async throws -> ZephyrKit.ExitChange {
         guard let c = await nodes() else { return try await demo(.sceneNotFound) { try await fallback.previewSceneChange(sceneId: sceneId, nodeId: nodeId) } }
         let x = try await run(.sceneNotFound) { try c.previewSceneChange(sceneId: sceneId, nodeId: nodeId) }
