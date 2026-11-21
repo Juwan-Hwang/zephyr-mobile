@@ -129,10 +129,16 @@ struct TraceView: View {
 
     private var lede: String {
         if let l = live {
-            return ZL.f("%1$@ · %2$lld 个连接 · %3$@", ZFormat.relative(l.lastSeenAt, now: model.now()) as NSString, Int64(l.connections), ZFormat.bytes(l.totalBytes) as NSString)
+            return Self.lede(lastSeen: l.lastSeenAt, connections: Int64(l.connections), bytes: l.totalBytes, now: model.now())
         }
         guard let r = recent else { return ZL.tr("暂无活动连接") }
-        return ZL.f("%1$@ · %2$lld 个连接 · %3$@", ZFormat.relative(r.lastSeenAt, now: model.now()) as NSString, Int64(r.connections), ZFormat.bytes(r.totalBytes) as NSString)
+        return Self.lede(lastSeen: r.lastSeenAt, connections: Int64(r.connections), bytes: r.totalBytes, now: model.now())
+    }
+
+    /// “3 秒前”换行“17 个连接 · 2.1 MB”（规范 §9.2：本页唯一一处中点）。
+    static func lede(lastSeen: Int64, connections: Int64, bytes: Int64, now: Int64) -> String {
+        ZFormat.relative(lastSeen, now: now) + "\n"
+            + ZL.f("%lld 个连接 · %@", connections, ZFormat.bytes(bytes) as NSString)
     }
 
     /// 当前命中的场景 id：实测优先（组名映射回场景；实测直连 = "DIRECT"），否则预测。

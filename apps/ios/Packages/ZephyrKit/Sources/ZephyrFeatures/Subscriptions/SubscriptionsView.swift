@@ -59,7 +59,7 @@ public struct SubscriptionsView: View {
 
     @ViewBuilder private var header: some View {
         PageHeader(title: "订阅", number: model.loaded ? ZFormat.count(Int64(model.subscriptions.count)) : nil,
-                   unit: model.headerUnit, horizontalInset: ZTokens.Space.n2)
+                   unit: model.headerUnit, subtitle: model.headerSubtitle, horizontalInset: ZTokens.Space.n2)
             .padding(.bottom, ZTokens.Space.n4)
             .clearListRow()
         if let sub = model.latestUpdate, let diff = sub.lastDiff {

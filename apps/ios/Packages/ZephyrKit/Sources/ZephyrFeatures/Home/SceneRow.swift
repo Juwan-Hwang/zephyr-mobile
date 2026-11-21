@@ -92,7 +92,8 @@ struct SceneRow: View {
     private var meta: some View {
         if isProbing {
             VStack(alignment: .leading, spacing: ZTokens.Space.n2) {
-                Text(verbatim: scene.available > 0 ? ZL.f("%d 个可用 · 检测中", scene.available) : ZL.tr("检测中"))
+                // 规范 §9.2：不再「9 个可用 · 检测中」串联；下面的进度条就是「检测中」的形状，VoiceOver 标签仍读「检测中」。
+                Text(verbatim: scene.available > 0 ? ZL.f("%d 个可用", scene.available) : ZL.tr("检测中"))
                     .zType(.footnote).foregroundStyle(ZColor.t3)
                 ProbeBar(fraction: model.scan?.fraction).frame(width: HMetrics.probeBarWidth)
             }

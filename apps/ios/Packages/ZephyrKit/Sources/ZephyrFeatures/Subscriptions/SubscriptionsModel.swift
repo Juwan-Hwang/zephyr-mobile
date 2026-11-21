@@ -83,9 +83,13 @@ final class SubscriptionsModel {
     }
 
     /// “个 · 每 12 小时更新”
-    var headerUnit: String {
-        guard let h = settings.settings?.autoUpdateHours else { return ZL.tr("个") }
-        return ZL.f("个 · 每 %lld 小时更新", Int64(h))
+    /// 页头大数字单位“个”；更新间隔放到下面一行（规范 §9.2：本页的中点留给订阅行“N 个节点 · 到期”）。
+    var headerUnit: String { ZL.tr("个") }
+
+    /// “每 12 小时更新”；设置未载入时不显示。
+    var headerSubtitle: String? {
+        guard let h = settings.settings?.autoUpdateHours else { return nil }
+        return ZL.f("每 %lld 小时更新", Int64(h))
     }
 
     func usage(_ s: Subscription) -> Double? {

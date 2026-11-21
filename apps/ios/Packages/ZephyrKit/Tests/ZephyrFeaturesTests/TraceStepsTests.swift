@@ -43,7 +43,7 @@ final class TraceStepsTests: XCTestCase {
         XCTAssertEqual(s[1].detail, "Zephyr 优选")
         XCTAssertEqual(s[2].value, "US-Fixed-01")
         XCTAssertEqual(s[2].regionCode, "US")
-        XCTAssertEqual(s[2].detail, "Claude 例外 · 固定")
+        XCTAssertEqual(s[2].detail, "Claude 例外（固定）")
         // 例外节点的出口 IP 不是场景出口：不冒用 198.51.100.7
         XCTAssertEqual(s[3].value, "未检测")
         XCTAssertFalse(s[3].monospaced)
@@ -54,10 +54,10 @@ final class TraceStepsTests: XCTestCase {
     func testSceneLookupByPolicyAndSelectedNode() {
         let s = TraceSteps.build(trace: trace("ai"), layers: layers, scenes: [ai], latest: nil, now: now)
         XCTAssertEqual(s[2].value, "新加坡 02")
-        XCTAssertEqual(s[2].detail, "74 ms · Hy2")
+        XCTAssertEqual(s[2].detail, "74 ms\nHy2")
         XCTAssertEqual(s[3].value, "198.51.100.7")
         XCTAssertTrue(s[3].monospaced)
-        XCTAssertEqual(s[3].detail, "\(HRegionName.name("SG")) · 2 小时前检测")
+        XCTAssertEqual(s[3].detail, "\(HRegionName.name("SG"))\n2 小时前检测")
     }
 
     func testDirectRejectAndMatch() {
@@ -104,14 +104,14 @@ final class TraceStepsTests: XCTestCase {
                                  live: live(chain: ["Zephyr·AI·Claude", "US-Fixed-01"], scene: "Zephyr·AI·Claude", node: "US-Fixed-01"))
         XCTAssertEqual(s[1].value, "AI", "例外组映射回所属场景")
         XCTAssertEqual(s[2].value, "US-Fixed-01")
-        XCTAssertEqual(s[2].detail, "Claude 例外 · 固定")
+        XCTAssertEqual(s[2].detail, "Claude 例外（固定）")
     }
 
     func testLiveNodeOutsideSceneIsNotLabelledException() {
         let s = TraceSteps.build(trace: trace("ai", scene: ai, exitIp: "198.51.100.7"), layers: layers, scenes: [ai], latest: nil, now: now,
                                  live: live(chain: ["Zephyr·AI", "东京 03"], scene: "Zephyr·AI", node: "东京 03"))
         XCTAssertEqual(s[2].value, "东京 03", "显示实测节点，而不是场景当前节点")
-        XCTAssertNotEqual(s[2].detail, "Claude 例外 · 固定")
+        XCTAssertNotEqual(s[2].detail, "Claude 例外（固定）")
         XCTAssertEqual(s[3].value, "未检测", "实测节点不是场景当前节点：不冒用场景出口 IP")
     }
 

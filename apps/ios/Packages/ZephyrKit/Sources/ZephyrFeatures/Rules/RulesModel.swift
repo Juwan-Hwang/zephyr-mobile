@@ -18,6 +18,8 @@ final class RulesModel {
         var label: String
         var value: Value
         var trailing: String?
+        /// 值下方说明（规范 §9.2 L-1：原「第 3 层 · OpenAI」「场景 · AI」拆成标签 + 值下一行，不再用中点串联）。
+        var detail: String? = nil
     }
 
     @ObservationIgnored let engine: any ZephyrEngine
@@ -69,10 +71,11 @@ final class RulesModel {
 
     // MARK: 派生
 
-    /// “7 层 · 已编译 · 磁盘占用 1.9 GB”
+    /// “7 层 · 已编译”换行“磁盘占用 1.9 GB”（规范 §9.2：每屏一处中点，本页就是这一处）。
     var subtitle: String? {
         guard let s = stats else { return nil }
-        return ZL.f("%lld 层 · %@ · 磁盘占用 %@", Int64(s.layers.count), ZL.tr(s.compiled ? "已编译" : "编译中") as NSString, ZFormat.bytes(s.diskBytes) as NSString)
+        return ZL.f("%lld 层 · %@", Int64(s.layers.count), ZL.tr(s.compiled ? "已编译" : "编译中") as NSString)
+            + "\n" + ZL.s("磁盘占用 %@", ZFormat.bytes(s.diskBytes))
     }
 
     /// 命中的匹配顺序行（0 基层下标；layers.count = 第 8 行“其余流量”）；无测试时 nil。
@@ -87,11 +90,11 @@ final class RulesModel {
         guard let t = trace else { return [] }
         var out: [Step] = [Step(id: 0, label: ZL.tr("请求"), value: .mono(t.input))]
         if let li = t.layerIndex, let layer = stats?.layers.first(where: { $0.index == li }) {
-            out.append(Step(id: 1, label: ZL.f("第 %lld 层 · %@", Int64(li + 1), layer.name as NSString), value: .mono(t.rule),
-                            trailing: t.ruleNo.map { "#\(ZFormat.count($0))" }))
+            out.append(Step(id: 1, label: ZL.f("第 %lld 层", Int64(li + 1)), value: .mono(t.rule),
+                            trailing: t.ruleNo.map { "#\(ZFormat.count($0))" }, detail: layer.name))
         } else {
             let n = (stats?.layers.count ?? 7) + 1
-            out.append(Step(id: 1, label: ZL.f("第 %lld 层 · 其余流量", Int64(n)), value: .mono(t.rule)))
+            out.append(Step(id: 1, label: ZL.f("第 %lld 层", Int64(n)), value: .mono(t.rule), detail: ZL.tr("其余流量")))
         }
         switch t.policy {
         case "DIRECT":
@@ -100,8 +103,8 @@ final class RulesModel {
             out.append(Step(id: 2, label: ZL.tr("结果"), value: .text(ZL.tr("已拦截"))))
         default:
             if let scene = t.scene {
-                out.append(Step(id: 2, label: ZL.s("场景 · %@", scene.displayName),
-                                value: .region(code: scene.selected.region, name: scene.selected.name)))
+                out.append(Step(id: 2, label: ZL.tr("场景"),
+                                value: .region(code: scene.selected.region, name: scene.selected.name), detail: scene.displayName))
             } else {
                 out.append(Step(id: 2, label: ZL.tr("场景"), value: .text(t.policy)))
             }
