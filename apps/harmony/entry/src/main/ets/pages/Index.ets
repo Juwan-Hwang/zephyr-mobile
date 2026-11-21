@@ -192,7 +192,10 @@ struct Index {
   routes(name: string, param: Object) {
     if (name === ROUTE_NODES) {
       NavDestination() {
-        NodesView({ onImport: () => this.push(ROUTE_SUBSCRIPTIONS, BackTo.PARENT) })
+        NodesView({
+          initialQuery: AppNav.queryOf(param),
+          onImport: () => this.push(ROUTE_SUBSCRIPTIONS, BackTo.PARENT)
+        })
       }
       .title(ZTerm.nodes)
       .backgroundColor($r('app.color.screen_bg'))
@@ -248,7 +251,9 @@ struct Index {
         onOpenLibrary: () => {
           this.showLibrary = true;
         },
-        onOpenSettings: () => this.push(ROUTE_SETTINGS, BackTo.HOME)
+        onOpenSettings: () => this.push(ROUTE_SETTINGS, BackTo.HOME),
+        onOpenNodesQuery: (q: string) => this.pathStack.pushPathByName(ROUTE_NODES, new NavArgs(BackTo.HOME, q)),
+        onOpenRules: () => this.push(ROUTE_RULES, BackTo.HOME)
       })
     }
     .mode(NavigationMode.Stack)

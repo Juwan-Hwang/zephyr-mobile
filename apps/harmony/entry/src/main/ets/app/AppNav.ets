@@ -34,9 +34,12 @@ export enum LibraryDest {
 /** NavPathStack 的 param。 */
 export class NavArgs {
   back: BackTo;
+  /** 节点页的初始查询（指令面板“查看全部”，§16.d：查询 = 地区代码）。 */
+  query: string;
 
-  constructor(back: BackTo) {
+  constructor(back: BackTo, query?: string) {
     this.back = back;
+    this.query = query ?? '';
   }
 }
 
@@ -72,6 +75,14 @@ export class AppNav {
   }
 
   /** 从 NavPathInfo.param 取 back（param 可能是 NavArgs、旧的字符串或 undefined）。 */
+  /** 节点页初始查询（无则 ''）。 */
+  static queryOf(param: Object | undefined | null): string {
+    if (param instanceof NavArgs) {
+      return param.query;
+    }
+    return '';
+  }
+
   static backOf(param: Object | undefined | null): BackTo | undefined {
     if (param instanceof NavArgs) {
       return param.back;

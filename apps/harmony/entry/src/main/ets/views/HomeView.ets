@@ -5,9 +5,10 @@
  * - 实时上下行速率（engine.traffic）与今日用量；
  * - 当前节点：全局模式 = 全局节点；直连 = 本机网络。点卡片去节点页。
  * - 规则模式：场景行（U5）：左右滑换地区 → 内联“更改出口 IP？”确认卡（previewSceneChange）→ 更改后 5 s 撤销吐司。
- * - 顶栏：Zephyr + 右上设置；底栏（原型 .dock）：资料库按钮（契约 §17.e，无底部 Tab）。指令栏待指令解析移植后再加。
+ * - 顶栏：Zephyr + 右上设置；底栏（原型 .dock）：左侧指令栏“搜索或输入指令”（点开 CommandSheet，M1-7b）+ 右侧资料库按钮（契约 §17.e，无底部 Tab）。
  * 场景详情 sheet / 漏斗 / 例外等暂未移植（M1-5）。
  */
+import { CommandSheet } from './CommandSheet';
 import { AppServices } from '../app/AppServices';
 import { Format } from '../common/Format';
 import { Labels } from '../common/Labels';
@@ -30,6 +31,10 @@ export struct HomeView {
   @Event onOpenNodes: () => void = () => {};
   @Event onOpenLibrary: () => void = () => {};
   @Event onOpenSettings: () => void = () => {};
+  /** 指令面板“查看全部” / 节点行：节点页，带查询。 */
+  @Event onOpenNodesQuery: (query: string) => void = (query: string) => {};
+  @Event onOpenRules: () => void = () => {};
+  @Local showCommand: boolean = false;
 
   @Local status: ConnectionStatus = ConnectionStatus.DISCONNECTED;
   @Local mode: ProxyMode = ProxyMode.RULE;
@@ -489,12 +494,61 @@ export struct HomeView {
     .width('100%')
   }
 
-  /** 底栏（原型 .dock）：右侧资料库按钮；上方渐隐，内容滚到底栏下也看得清。 */
+  @Builder
+  commandSheet() {
+    CommandSheet({
+      onOpenNodes: (q: string) => {
+        this.showCommand = false;
+        this.onOpenNodesQuery(q);
+      },
+      onOpenRules: () => {
+        this.showCommand = false;
+        this.onOpenRules();
+      },
+      onDone: () => {
+        this.showCommand = false;
+      }
+    })
+  }
+
+  /** 底栏（原型 .dock）：左侧指令栏 + 右侧资料库按钮。 */
   @Builder
   dock() {
     Column() {
-      Row() {
-        Blank()
+      Row({ space: 10 }) {
+        // 指令栏（原型 .cmd）：整条可点，打开指令面板；读屏读作按钮“搜索或输入指令”。
+        Row({ space: 8 }) {
+          SymbolGlyph($r('sys.symbol.magnifyingglass'))
+            .fontSize(18)
+            .fontColor([$r('app.color.screen_t3')])
+          Text($r('app.string.command_placeholder'))
+            .fontSize(15)
+            .fontColor($r('app.color.screen_t3'))
+            .maxLines(1)
+            .textOverflow({ overflow: TextOverflow.Ellipsis })
+            .layoutWeight(1)
+        }
+        .layoutWeight(1)
+        .height(52)
+        .padding({ left: 16, right: 16 })
+        .borderRadius(26)
+        .backgroundColor($r('app.color.screen_cmd_bg'))
+        .shadow({ radius: 12, color: '#22000000', offsetY: 4 })
+        .accessibilityGroup(true)
+        .accessibilityRole(AccessibilityRoleType.BUTTON)
+        .accessibilityText($r('app.string.command_placeholder'))
+        .onClick(() => {
+          this.showCommand = true;
+        })
+        .bindSheet(this.showCommand, this.commandSheet(), {
+          detents: [SheetSize.LARGE, SheetSize.MEDIUM],
+          showClose: true,
+          dragBar: true,
+          backgroundColor: $r('app.color.screen_bg'),
+          onDisappear: () => {
+            this.showCommand = false;
+          }
+        })
         Button({ type: ButtonType.Circle }) {
           SymbolGlyph($r('sys.symbol.square_grid_2x2'))
             .fontSize(22)
