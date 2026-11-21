@@ -84,7 +84,7 @@ fun BoxScope.ActivitySheet(
                     }
                     ZText(ZFormat.bytesText(x.downBytes + x.upBytes), style = ZTheme.type.mono, color = c.text2)
                     Spacer(Modifier.width(10.dp))
-                    ZIcon(ZIcons.ChevronRight, tint = c.text4, size = 16.dp)
+                    ZIcon(ZIcons.ChevronRight, tint = c.text3, size = 16.dp)
                 }
             }
         }
