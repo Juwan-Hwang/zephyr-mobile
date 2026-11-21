@@ -67,7 +67,7 @@ struct GlobalModeCard: View {
             Button {
                 model.push(.nodes(query: ""))
             } label: {
-                Text("浏览全部节点").zType(.footnote).foregroundStyle(ZAccentStyle())
+                Text("浏览全部节点").zType(.footnote).foregroundStyle(ZAccentTextStyle())
                     .frame(minHeight: ZTokens.Layout.touchMinIos)
             }
             .buttonStyle(ZPressStyle(haptic: .none))

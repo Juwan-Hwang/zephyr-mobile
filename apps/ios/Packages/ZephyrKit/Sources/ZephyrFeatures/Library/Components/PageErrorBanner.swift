@@ -29,7 +29,7 @@ struct PageErrorBanner: View {
                     Text(verbatim: title)
                         .zType(.footnote)
                         .fontWeight(.medium)
-                        .foregroundStyle(accent.color)
+                        .foregroundStyle(accent.text)
                         .frame(minHeight: ZTokens.Layout.touchMinIos / 2)
                         .contentShape(Rectangle())
                 }

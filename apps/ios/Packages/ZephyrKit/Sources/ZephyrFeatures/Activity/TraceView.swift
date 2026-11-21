@@ -77,7 +77,7 @@ struct TraceView: View {
                 Text("刚才")
             }
             .zType(.body)
-            .foregroundStyle(ZAccentStyle())
+            .foregroundStyle(ZAccentTextStyle())
             .frame(minHeight: ZTokens.Layout.touchMinIos)
             .contentShape(Rectangle())
         }

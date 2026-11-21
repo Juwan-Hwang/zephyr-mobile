@@ -21,9 +21,9 @@ struct SubscriptionsSection: View {
                     if featured.isEmpty {
                         Button { model.push(.subscriptions) } label: {
                             HStack {
-                                Text("添加订阅").zType(.body).foregroundStyle(ZAccentStyle())
+                                Text("添加订阅").zType(.body).foregroundStyle(ZAccentTextStyle())
                                 Spacer()
-                                Image(systemName: "plus").foregroundStyle(ZAccentStyle())
+                                Image(systemName: "plus").foregroundStyle(ZAccentTextStyle())
                             }
                             .padding(.vertical, HMetrics.rowVertical)
                             .padding(.horizontal, HMetrics.rowHorizontal)
@@ -61,6 +61,9 @@ private struct SubscriptionRow: View {
         return e - now < Self.weekMillis
     }
 
+    /// 已过期：红圆点 + 红字（契约 §18.b state.expired）；即将到期：琥珀圆点 + 琥珀字（state.expiring）。
+    private var expired: Bool { sub.expiresAt.map { $0 <= now } ?? false }
+
     private var used: Double? {
         guard let u = sub.usedBytes, let t = sub.totalBytes, t > 0 else { return nil }
         return min(1, max(0, Double(u) / Double(t)))
@@ -84,12 +87,15 @@ private struct SubscriptionRow: View {
                         .foregroundStyle(ZTokens.Colors.screenT1)
                 }
                 if let e = sub.expiresAt {
-                    // 规范 §9.1：将到期 = 琥珀圆点 + 日期（文字用 amber-text），不只靠颜色。
+                    // 规范 §9.1：将到期 = 琥珀圆点 + 日期（文字用 amber-text），已过期 = 红圆点 + red-text；不只靠颜色。
                     HStack(spacing: ZTokens.Space.n2) {
-                        if warn { ZStatusDot(isOn: true, color: ZTokens.Colors.screenAmber) }
+                        if warn {
+                            ZStatusDot(isOn: true, color: expired ? ZTokens.Colors.screenRed : ZTokens.Colors.screenAmber)
+                        }
                         Text(verbatim: HFormat.homeExpiry(e, now: now))
                             .zType(.footnote)
-                            .foregroundStyle(warn ? ZTokens.Colors.screenAmberText : ZColor.t3)
+                            .foregroundStyle(expired ? ZTokens.Colors.screenRedText
+                                             : warn ? ZTokens.Colors.screenAmberText : ZColor.t3)
                     }
                 }
             }
@@ -105,8 +111,11 @@ private struct SubscriptionRow: View {
         var parts = [sub.name]
         if let r = sub.remainingBytes { parts.append(ZL.s("剩余 %@", ZFormat.bytes(r))) }
         if let used { parts.append(ZL.f("已用 %lld%%", Int64((used * 100).rounded()))) }
-        if let e = sub.expiresAt { parts.append(HFormat.homeExpiry(e, now: now)) }
-        return parts.joined(separator: "，")
+        if let e = sub.expiresAt {
+            if warn && !expired { parts.append(ZL.tr("即将到期")) }
+            parts.append(HFormat.homeExpiry(e, now: now))
+        }
+        return parts.joined(separator: ZL.tr("，"))
     }
 }
 

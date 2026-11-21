@@ -51,7 +51,7 @@ struct CoachHint: View {
     var body: some View {
         Text(verbatim: text)
             .zType(.caption)
-            .foregroundStyle(ZAccentStyle())
+            .foregroundStyle(ZAccentTextStyle())
             .padding(.horizontal, ZTokens.Space.n3)
             .background(Capsule().fill(ZCardFill()).background(Capsule().fill(ZPage.background)))
             .offset(x: nudge ? ZTokens.Space.n1 : -ZTokens.Space.n1)
