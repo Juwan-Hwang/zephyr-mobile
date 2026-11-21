@@ -54,7 +54,7 @@ fun BoxScope.ImportSheet(visible: Boolean, onDismiss: () -> Unit, deepLink: Stri
         if (imp.pending == null) {
             Column(Modifier.padding(horizontal = 16.dp)) {
                 ZSearchField(url, { url = it; imp.error = null }, stringResource(R.string.subs_paste_placeholder), onSubmit = { imp.submit(ImportSource.URL, url) })
-                imp.error?.let { ZText(it.resolve(), Modifier.padding(start = 6.dp, top = 6.dp), style = ZTheme.type.footnote, color = c.danger) }
+                imp.error?.let { ZText(it.resolve(), Modifier.padding(start = 6.dp, top = 6.dp), style = ZTheme.type.footnote, color = c.dangerText) }
                 Spacer(Modifier.height(12.dp))
                 ZButton(stringResource(if (imp.busy) R.string.common_adding else R.string.common_add), { imp.submit(ImportSource.URL, url) }, Modifier.fillMaxWidth(), enabled = url.isNotBlank() && !imp.busy)
             }
@@ -108,11 +108,11 @@ private fun PendingImportPanel(p: PendingImport, onConfirm: () -> Unit, onCancel
                 else p.payload.items.map { hostOf(it.url) }.distinct().joinToString(", ")
             Spacer(Modifier.height(10.dp))
             ZText(stringResource(R.string.subs_import_source, source), Modifier.padding(horizontal = 6.dp), style = ZTheme.type.footnote, color = c.text2)
-            if (p.insecure) ZText(stringResource(R.string.subs_import_insecure), Modifier.padding(horizontal = 6.dp, vertical = 4.dp), style = ZTheme.type.footnote, color = c.warning)
+            if (p.insecure) ZText(stringResource(R.string.subs_import_insecure), Modifier.padding(horizontal = 6.dp, vertical = 4.dp), style = ZTheme.type.footnote, color = c.warningText)
             ZText(stringResource(R.string.subs_import_trust), Modifier.padding(horizontal = 6.dp), style = ZTheme.type.footnote, color = c.text3)
         } else if (p.insecure) {
             Spacer(Modifier.height(10.dp))
-            ZText(stringResource(R.string.subs_import_insecure), Modifier.padding(horizontal = 6.dp), style = ZTheme.type.footnote, color = c.warning)
+            ZText(stringResource(R.string.subs_import_insecure), Modifier.padding(horizontal = 6.dp), style = ZTheme.type.footnote, color = c.warningText)
         }
         Spacer(Modifier.height(16.dp))
         ZButton(stringResource(R.string.common_add), onConfirm, Modifier.fillMaxWidth())

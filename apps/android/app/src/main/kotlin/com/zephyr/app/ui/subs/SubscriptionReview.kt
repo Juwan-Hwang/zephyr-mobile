@@ -76,8 +76,8 @@ internal fun SubscriptionReviewCard(review: UpdateReview, onConfirm: () -> Unit,
         ZText(title, Modifier.semantics { heading() }, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight))
         Spacer(Modifier.height(12.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(28.dp)) {
-            ReviewDelta("+" + ZFormat.grouped(d.addedNodes), stringResource(R.string.common_nodes), c.connected)
-            ReviewDelta("−" + ZFormat.grouped(d.removedNodes), stringResource(R.string.common_nodes), c.danger)
+            ReviewDelta("+" + ZFormat.grouped(d.addedNodes), stringResource(R.string.common_nodes), c.connectedText)
+            ReviewDelta("−" + ZFormat.grouped(d.removedNodes), stringResource(R.string.common_nodes), c.dangerText)
             ReviewDelta(ZFormat.grouped(d.ruleChanges), stringResource(R.string.subs_rule_changes), c.text1)
         }
         Spacer(Modifier.height(12.dp))

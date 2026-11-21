@@ -291,7 +291,7 @@ fun LocalProxyScreen(back: BackTo, onBack: () -> Unit) {
                     ZDivider()
                     ZText(
                         stringResource(R.string.local_proxy_port_invalid, VALID_PORTS.first, VALID_PORTS.last),
-                        Modifier.padding(horizontal = 20.dp, vertical = 12.dp), style = ZTheme.type.footnote, color = ZTheme.colors.warning,
+                        Modifier.padding(horizontal = 20.dp, vertical = 12.dp), style = ZTheme.type.footnote, color = ZTheme.colors.warningText,
                     )
                 }
             }

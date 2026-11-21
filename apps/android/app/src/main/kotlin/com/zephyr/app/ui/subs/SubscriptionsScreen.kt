@@ -142,8 +142,8 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
                     }
                     Spacer(Modifier.height(12.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(28.dp)) {
-                        Delta("+" + ZFormat.grouped(d.addedNodes), stringResource(R.string.common_nodes), c.connected)
-                        Delta("−" + ZFormat.grouped(d.removedNodes), stringResource(R.string.common_nodes), c.danger)
+                        Delta("+" + ZFormat.grouped(d.addedNodes), stringResource(R.string.common_nodes), c.connectedText)
+                        Delta("−" + ZFormat.grouped(d.removedNodes), stringResource(R.string.common_nodes), c.dangerText)
                         Delta(ZFormat.grouped(d.ruleChanges), stringResource(R.string.subs_rule_changes), c.text1)
                     }
                     Spacer(Modifier.height(14.dp)); ZDivider(inset = false); Spacer(Modifier.height(14.dp))
@@ -183,7 +183,15 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
                     Row(Modifier.fillMaxWidth().padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
                             ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight))
-                            ZText(pluralStringResource(R.plurals.common_node_count, s.nodeCount.toPluralCount(), ZFormat.grouped(s.nodeCount)) + (s.expiresAt?.let { " · " + ZFormat.expires(res, it, now) } ?: ""), style = ZTheme.type.footnote, color = if (soon) c.warning else c.text3)
+                            // §9.1: the line stays t3; only the expiry date is amber-text, led by an amber dot (shape + colour).
+                            val countText = pluralStringResource(R.plurals.common_node_count, s.nodeCount.toPluralCount(), ZFormat.grouped(s.nodeCount))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                ZText(countText + (if (s.expiresAt != null) " · " else ""), style = ZTheme.type.footnote, color = c.text3, maxLines = 1)
+                                s.expiresAt?.let { at ->
+                                    if (soon) { Box(Modifier.size(6.dp).background(c.warning, CircleShape)); Spacer(Modifier.width(5.dp)) }
+                                    ZText(ZFormat.expires(res, at, now), style = ZTheme.type.footnote, color = if (soon) c.warningText else c.text3, maxLines = 1)
+                                }
+                            }
                             Spacer(Modifier.height(10.dp))
                             val u = s.usedBytes; val t = s.totalBytes
                             ZProgressBar(if (u != null && t != null && t > 0) u.toFloat() / t else 0f, color = if (soon) c.warning else c.text3)
@@ -211,7 +219,7 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
             }
             error?.let { e ->
                 LaunchedEffect(e) { kotlinx.coroutines.delay(4_000); error = null }
-                ZText(e, Modifier.padding(horizontal = 22.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.danger)
+                ZText(e, Modifier.padding(horizontal = 22.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.dangerText)
             }
             Spacer(Modifier.height(18.dp))
             ZSectionHeader(stringResource(R.string.subs_section_update))
