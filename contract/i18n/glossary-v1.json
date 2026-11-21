@@ -1067,12 +1067,33 @@
       "sw": "Kawaida",
       "tr": "Normal",
       "vi": "Bình thường",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
       "keysPlanned": {
         "android": "state_ok"
       },
       "keys": {
         "ios": "App:正常"
+      },
+      "nativeReview": {
+        "status": "pending",
+        "reviewed": [
+          "en",
+          "zh"
+        ],
+        "pending": [
+          "ja",
+          "ko",
+          "ru",
+          "es",
+          "fa",
+          "tk",
+          "my",
+          "ar",
+          "ur",
+          "sw",
+          "tr",
+          "vi"
+        ]
       }
     },
     "state.slow": {
@@ -1090,9 +1111,30 @@
       "sw": "Polepole",
       "tr": "Yavaş",
       "vi": "Chậm",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
       "keys": {
         "ios": "App:较慢"
+      },
+      "nativeReview": {
+        "status": "pending",
+        "reviewed": [
+          "en",
+          "zh"
+        ],
+        "pending": [
+          "ja",
+          "ko",
+          "ru",
+          "es",
+          "fa",
+          "tk",
+          "my",
+          "ar",
+          "ur",
+          "sw",
+          "tr",
+          "vi"
+        ]
       }
     },
     "state.timeout": {
@@ -1110,9 +1152,30 @@
       "sw": "Muda umeisha",
       "tr": "Zaman aşımı",
       "vi": "Hết thời gian",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
       "keys": {
         "ios": "App:超时"
+      },
+      "nativeReview": {
+        "status": "pending",
+        "reviewed": [
+          "en",
+          "zh"
+        ],
+        "pending": [
+          "ja",
+          "ko",
+          "ru",
+          "es",
+          "fa",
+          "tk",
+          "my",
+          "ar",
+          "ur",
+          "sw",
+          "tr",
+          "vi"
+        ]
       }
     },
     "state.untested": {
@@ -1130,9 +1193,30 @@
       "sw": "Haijapimwa",
       "tr": "Test edilmedi",
       "vi": "Chưa kiểm tra",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
       "keys": {
         "ios": "App:未测"
+      },
+      "nativeReview": {
+        "status": "pending",
+        "reviewed": [
+          "en",
+          "zh"
+        ],
+        "pending": [
+          "ja",
+          "ko",
+          "ru",
+          "es",
+          "fa",
+          "tk",
+          "my",
+          "ar",
+          "ur",
+          "sw",
+          "tr",
+          "vi"
+        ]
       }
     },
     "state.expiring": {
@@ -1150,9 +1234,30 @@
       "sw": "Inaisha hivi karibuni",
       "tr": "Yakında sona eriyor",
       "vi": "Sắp hết hạn",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
       "keys": {
         "ios": "App:即将到期"
+      },
+      "nativeReview": {
+        "status": "pending",
+        "reviewed": [
+          "en",
+          "zh"
+        ],
+        "pending": [
+          "ja",
+          "ko",
+          "ru",
+          "es",
+          "fa",
+          "tk",
+          "my",
+          "ar",
+          "ur",
+          "sw",
+          "tr",
+          "vi"
+        ]
       }
     },
     "state.expired": {
@@ -1170,12 +1275,33 @@
       "sw": "Imeisha muda",
       "tr": "Süresi doldu",
       "vi": "Đã hết hạn",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
       "keysPlanned": {
         "android": "state_expired"
       },
       "keys": {
         "ios": "App:已过期"
+      },
+      "nativeReview": {
+        "status": "pending",
+        "reviewed": [
+          "en",
+          "zh"
+        ],
+        "pending": [
+          "ja",
+          "ko",
+          "ru",
+          "es",
+          "fa",
+          "tk",
+          "my",
+          "ar",
+          "ur",
+          "sw",
+          "tr",
+          "vi"
+        ]
       }
     },
     "state.failed": {
@@ -1193,12 +1319,33 @@
       "sw": "Imeshindwa",
       "tr": "Başarısız",
       "vi": "Thất bại",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
       "keysPlanned": {
         "android": "state_failed"
       },
       "keys": {
         "ios": "App:失败"
+      },
+      "nativeReview": {
+        "status": "pending",
+        "reviewed": [
+          "en",
+          "zh"
+        ],
+        "pending": [
+          "ja",
+          "ko",
+          "ru",
+          "es",
+          "fa",
+          "tk",
+          "my",
+          "ar",
+          "ur",
+          "sw",
+          "tr",
+          "vi"
+        ]
       }
     },
     "reachable": {
@@ -1216,10 +1363,31 @@
       "sw": "Zinafikika",
       "tr": "Erişilebilir",
       "vi": "Kết nối được",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
       "keys": {
         "ios": "App:可连通 %1$@ · 已检测 %2$@",
         "android": "scene_funnel_reachable"
+      },
+      "nativeReview": {
+        "status": "pending",
+        "reviewed": [
+          "en",
+          "zh"
+        ],
+        "pending": [
+          "ja",
+          "ko",
+          "ru",
+          "es",
+          "fa",
+          "tk",
+          "my",
+          "ar",
+          "ur",
+          "sw",
+          "tr",
+          "vi"
+        ]
       }
     },
     "tested": {
@@ -1237,10 +1405,31 @@
       "sw": "Zimepimwa",
       "tr": "Test edildi",
       "vi": "Đã kiểm tra",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草、待母语审校；keys 待各端接入后补",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
       "keys": {
         "ios": "App:已检测 %@",
         "android": "nodes_tested"
+      },
+      "nativeReview": {
+        "status": "pending",
+        "reviewed": [
+          "en",
+          "zh"
+        ],
+        "pending": [
+          "ja",
+          "ko",
+          "ru",
+          "es",
+          "fa",
+          "tk",
+          "my",
+          "ar",
+          "ur",
+          "sw",
+          "tr",
+          "vi"
+        ]
       }
     }
   }
