@@ -89,7 +89,7 @@ struct NodeListStyle {
             bubbleTitleFont: .systemFont(ofSize: ZTokens.TypeStyle.title.size, weight: .medium),
             bubbleSubFont: mono(ZTokens.FontSize.xs - 1),
             // 规范 §9.2：索引条按 11pt（不再 n2xs − 0.5）；颜色为 accent.text（由 NodesView 传入）。
-            railFont: mono(ZTokens.TypeStyle.caption.size, .semibold),
+            railFont: mono(ZTokens.TypeStyle.caption.size - 1, .semibold),   // 11pt
             textPrimary: primary,
             textSecondary: r(ZColor.t2),
             textTertiary: tertiary,
