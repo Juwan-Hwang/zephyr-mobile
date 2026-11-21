@@ -67,7 +67,7 @@ function parseColor(s) {
 }
 
 // 强调色：mobile.json accent.<name>.{base,text,fill,on-fill}（value = 深色、lightValue = 浅色），tokens/build.mjs 同源。
-// `accent.<name>`（两段）= 历史单一值（浅色 base，两种模式同值）——平台目前就这样用，作为「旧用法」继续检查，直到 B/C/D 切到新变体。
+// `accent.<name>`（两段）= 历史单一值（浅色 base，两种模式同值）——两端现在只拿它作开关 / 进度填充（UI 阈值）。
 const ACCENT_NAMES = Object.keys(tree.accent || {}).filter((k) => !k.startsWith('$'));
 if (!ACCENT_NAMES.length) throw new Error('tokens/mobile.json 缺 accent 组');
 const ACCENTS = Object.fromEntries(ACCENT_NAMES.map((k) => [k, resolveLight(tree.accent[k].base)]));
@@ -114,20 +114,14 @@ const PAIRS = [
   // 实时速率箭头 / 上下行图标——UI 阈值
   ...['color.download', 'screen.up'].flatMap((fg) => [...CARDS, 'screen.bg'].map((bg) => ({ fg, bg, level: 'ui' }))),
   // —— 强调色新变体（单一来源 mobile.json accent.*；平台切换后这些就是实际用法）——
-  // base 深色（开关 / 进度 / 光晕 / 选中描边；原 Android darkVariant）——UI 阈值；浅色 base = 历史单一值，见下方旧用法
+  // base 深色（开关 / 进度 / 光晕 / 选中描边；原 Android darkVariant）——UI 阈值；浅色 base = 历史单一值，见下方
   ...ACCENT_NAMES.flatMap((a) => ['screen.bg', 'screen.s1'].map((bg) => ({ fg: `accent.${a}.base`, bg, level: 'ui', modes: ['dark'] }))),
   // text：前景小字 / 链接 / 索引条 / 搜索高亮 / 图标——正文阈值；含 s4（ZSurface.elevated 上的「重试」链接，用户选哪个强调色都会出现）
   ...ACCENT_NAMES.flatMap((a) => ['screen.bg', 'screen.s1', 'screen.s4'].map((bg) => ({ fg: `accent.${a}.text`, bg, level: 'body' }))),
   // fill + on-fill：主按钮 15pt / 选中胶囊 14pt——正文阈值
   ...ACCENT_NAMES.map((a) => ({ fg: `accent.${a}.on-fill`, bg: `accent.${a}.fill`, level: 'body' })),
-  // —— 旧用法（平台尚未切换到上面的变体；切换后删除这些 PAIRS 及 ALLOW 条目）——
-  // 强调色单一值作前景（返回链接、索引条、「+」、开关填充）——UI 阈值
+  // 强调色浅色 base（= 历史单一值）：两端已不作文字 / 白字底（iOS #264 / #272、Android #259），只作开关 / 进度填充——UI 阈值
   ...ACCENT_NAMES.flatMap((a) => ['screen.bg', 'screen.s1'].map((bg) => ({ fg: `accent.${a}`, bg, level: 'ui' }))),
-  // 默认强调色单一值作小号文字——正文阈值
-  ...['screen.bg', 'screen.s1', 'screen.s4'].map((bg) => ({ fg: 'accent.blue', bg, level: 'body', note: 'small-text' })),
-  // 强调色底上的白字（text.on-accent，桌面 token）：浅色底 = 单一值，深色底 = base 深色（Android 现状）
-  ...ACCENT_NAMES.map((a) => ({ fg: 'text.on-accent', bg: `accent.${a}`, level: 'body' })),
-  ...ACCENT_NAMES.map((a) => ({ fg: 'text.on-accent', bg: `accent.${a}.base`, level: 'body', modes: ['dark'] })),
   // 四级文字 t4：只用于禁用态、装饰性箭头 / 分隔符号（WCAG 1.4.3 对禁用和纯装饰豁免）——仍列出，确保有人改它时看得到
   ...['screen.bg', 'screen.s1'].map((bg) => ({ fg: 'screen.t4', bg, level: 'ui' })),
 ];
@@ -137,16 +131,8 @@ const ALLOW = {};
 const allow = (fgs, bgs, modes, kind, reason) => { for (const f of fgs) for (const b of bgs) for (const m of modes) ALLOW[`${f}|${b}|${m}`] = { kind, reason }; };
 allow(['screen.t4'], ['screen.bg', 'screen.s1'], ['light', 'dark'], 'intentional',
   't4 只给禁用态、装饰分隔 / 箭头、sheet 把手、未选中描边（WCAG 1.4.3 对禁用和纯装饰豁免）；序号、未测延迟、可点行 chevron 已改 t3 / latency.unknown（iOS #263、Android #257）。2026-11-22 仍有两处可读信息用 t4，已请平台改 t3：iOS SubscriptionImportOptions 可点行 chevron、Android 设置页底部版本号（SettingsScreen 版本行）');
-allow(['accent.green', 'accent.orange'], ['screen.bg', 'screen.s1'], ['light'], 'debt',
-  '旧用法（iOS 已切换 #264；剩 Android X-1 #259）：可选强调色 green / orange 单一值在浅色底上 2.0–2.2:1，被平台当作返回链接、「+」、索引条等前景。tokens 已给 accent.*.text（浅色 green #1F7A35、orange #C93400，均 ≥4.7）；平台前景改用 ZAccent.text / ZTokens.Accent.text 后，本条改为 intentional（单一值只作开关 / 进度填充，开关状态另有滑块位置表达）');
-allow(['text.on-accent'], ['accent.blue', 'accent.pink', 'accent.green', 'accent.orange'], ['light', 'dark'], 'debt',
-  '旧用法（iOS 已切换 #264 / #272；剩 Android X-2 #259）：强调色单一值底上的白字（主按钮 15pt semibold、选中胶囊）：blue 4.02、pink 3.65、green / orange 约 2.2:1。tokens 已给 accent.*.fill + on-fill（blue #0066D6 / pink #D1004B 白字 5.4–5.5，green / orange 黑字 ≥9.5）；平台改用 ZAccent.fill/onFill 后删除本条');
-allow(['text.on-accent'], ['accent.blue.base', 'accent.pink.base', 'accent.green.base', 'accent.orange.base'], ['dark'], 'debt',
-  '旧用法（仅 Android，X-2 #259 合入后删除）：Android 深色在 accent base（= accent.*.base 深色 #0A84FF / #FF375F / #30D158 / #FF9F0A）底上写白字，2.0–3.65:1。同上，改用 fill/onFill 后删除本条');
-ALLOW['accent.blue|screen.s4|light|text'] = ALLOW['accent.blue|screen.s4|dark|text'] = { kind: 'debt', reason:
-  '旧用法（iOS 已切换 #264；剩 Android X-1 #259）：强调色单一值小字在 s4（ZSurface.elevated，如 PageErrorBanner 的「重试」链接）上：浅色 2.94、深色 3.75:1。改用 accent.blue.text（浅色 4.73、深色 5.32）后删除本条' };
-for (const b of ['screen.bg', 'screen.s1']) ALLOW[`accent.blue|${b}|light|text`] = { kind: 'debt', reason:
-  '旧用法（iOS 已切换 #264；剩 Android X-1 #259）：默认强调色单一值 #007AFF 作小号文字（首页场景卡「左右滑动以切换地区」、节点页索引条、搜索高亮）在浅色下 3.6–4.0:1。改用 accent.blue.text（浅色 #005BBF，5.8–6.5）后删除本条' };
+allow(['accent.green', 'accent.orange'], ['screen.bg', 'screen.s1'], ['light'], 'intentional',
+  '可选强调色 green / orange 浅色 base（历史单一值）只作开关 / 进度填充，开关状态另有滑块位置表达（WCAG 1.4.11 以位置区分即可）；前景小字、链接、图标已改 accent.*.text（iOS #264、Android #259）');
 
 // ---------- 运行 ----------
 const args = new Set(process.argv.slice(2));
