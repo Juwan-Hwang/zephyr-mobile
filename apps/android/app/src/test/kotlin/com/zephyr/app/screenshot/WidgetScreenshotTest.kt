@@ -47,7 +47,7 @@ class WidgetScreenshotTest(private val dark: Boolean) {
     }
 
     private fun render(size: DpSize, content: @androidx.compose.runtime.Composable () -> Unit): View {
-        val ctx = paparazzi.context
+        val ctx = PlainInflaterContext(paparazzi.context)
         val rv = runBlocking { GlanceRemoteViews().compose(ctx, size) { GlanceTheme { content() } }.remoteViews }
         val host = FrameLayout(ctx)
         val v = try { rv.apply(ctx, host) } catch (e: RemoteViews.ActionException) {
@@ -114,6 +114,26 @@ class WidgetScreenshotTest(private val dark: Boolean) {
 
     private fun diag(what: String, e: Throwable) {
         val sw = java.io.StringWriter(); e.printStackTrace(java.io.PrintWriter(sw)); diagText("$what\n$sw")
+    }
+
+    /**
+     * layoutlib's BridgeInflater swaps framework widgets for AppCompat ones (ImageView → AppCompatImageView), and
+     * RemoteViews refuses those ("can't use method with RemoteViews: setImageResource"). A launcher inflates plain
+     * framework views, so inflate RemoteViews with a plain LayoutInflater instead.
+     */
+    private class PlainInflaterContext(base: android.content.Context) : android.content.ContextWrapper(base) {
+        private val inflater by lazy { PlainInflater(this) }
+        override fun getSystemService(name: String): Any? = if (name == LAYOUT_INFLATER_SERVICE) inflater else super.getSystemService(name)
+    }
+
+    private class PlainInflater(ctx: android.content.Context) : android.view.LayoutInflater(ctx) {
+        override fun cloneInContext(newContext: android.content.Context): android.view.LayoutInflater = PlainInflater(newContext)
+        override fun onCreateView(name: String, attrs: android.util.AttributeSet): View {
+            for (prefix in arrayOf("android.widget.", "android.webkit.", "android.app.")) {
+                try { createView(name, prefix, attrs)?.let { return it } } catch (_: ClassNotFoundException) {}
+            }
+            return super.onCreateView(name, attrs)
+        }
     }
 
     private fun status(on: Boolean): Triple<String, String, Long> = runBlocking {
