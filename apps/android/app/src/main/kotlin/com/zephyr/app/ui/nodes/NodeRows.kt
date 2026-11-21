@@ -52,7 +52,7 @@ fun NodeRowView(n: NodeSummary?, highlights: List<String>, testedLatency: Int?, 
             Spacer(Modifier.weight(1f))
             return@Row
         }
-        val name = remember(n.name, highlights, c) { highlighted(n.name, highlights, c.accent, c.text3) }
+        val name = remember(n.name, highlights, c) { highlighted(n.name, highlights, c.accentText, c.text3) }
         ZText(name, Modifier.weight(1f), style = ZTheme.type.body, maxLines = 1)
         Spacer(Modifier.width(14.dp))
         ZLatency(testedLatency ?: n.latencyMs, testing, Modifier.width(if (xl) 66.dp else 64.dp), style = ZTheme.type.mono.copy(textAlign = androidx.compose.ui.text.style.TextAlign.End))

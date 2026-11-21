@@ -107,7 +107,7 @@ fun BoxScope.SceneSheet(
                         n.name,
                         value = listOfNotNull(fixed?.let { stringResource(R.string.scene_pinned_for, it.app) }, n.latencyMs?.let { "$it ms" }).joinToString("  ").ifEmpty { null },
                         onClick = if (n.id == s.selected.id) null else ({ onPick(s, n) }),
-                        trailing = if (n.id == s.selected.id) ({ ZText(stringResource(R.string.common_current), style = ZTheme.type.footnote, color = c.accent) }) else null,
+                        trailing = if (n.id == s.selected.id) ({ ZText(stringResource(R.string.common_current), style = ZTheme.type.footnote, color = c.accentText) }) else null,
                     )
                 }
             }

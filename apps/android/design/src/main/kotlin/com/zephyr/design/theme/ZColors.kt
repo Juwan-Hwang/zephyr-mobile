@@ -28,6 +28,11 @@ data class ZThemeColors(
     val accent: Color,
     val accentSoft: Color,
     val onAccent: Color,
+    /** §9.1 accent roles (tokens `accent.*.text` / `fill` / `on-fill`): [accent] = base (toggles, progress, glow, selection strokes);
+     *  [accentText] = foreground small text, links, index rail, search highlight, icons; [accentFill] + [onAccentFill] = accent buttons / pills. */
+    val accentText: Color,
+    val accentFill: Color,
+    val onAccentFill: Color,
     val connected: Color,
     val warning: Color,
     val warningSoft: Color,
@@ -48,7 +53,10 @@ data class ZThemeColors(
 ) {
     fun withAccent(accent: ZAccent): ZThemeColors {
         val c = accent.base(isDark)
-        return copy(accent = c, accentSoft = c.copy(alpha = 0.16f))
+        return copy(
+            accent = c, accentSoft = c.copy(alpha = 0.16f),
+            accentText = accent.text(isDark), accentFill = accent.fill(isDark), onAccentFill = accent.onFill(isDark),
+        )
     }
 
     companion object {
@@ -72,6 +80,9 @@ data class ZThemeColors(
             accent = ZAccent.BLUE.base(t.isDark),
             accentSoft = ZAccent.BLUE.base(t.isDark).copy(alpha = 0.16f),
             onAccent = Color.White,
+            accentText = ZAccent.BLUE.text(t.isDark),
+            accentFill = ZAccent.BLUE.fill(t.isDark),
+            onAccentFill = ZAccent.BLUE.onFill(t.isDark),
             connected = t.screenGreen,
             warning = t.screenAmber,
             warningSoft = t.screenAmberA,

@@ -335,6 +335,6 @@ private fun ScrubCoach() {
             .background(ZTheme.colors.surface2)
             .padding(horizontal = 8.dp),
         style = ZTheme.type.footnote.copy(fontSize = androidx.compose.ui.unit.TextUnit(11f, androidx.compose.ui.unit.TextUnitType.Sp)),
-        color = ZTheme.colors.accent,
+        color = ZTheme.colors.accentText,
     )
 }
