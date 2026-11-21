@@ -39,7 +39,7 @@ struct LocalProxyView: View {
                         ZDivider()
                         Text(verbatim: invalid)
                             .zType(.footnote)
-                            .foregroundStyle(ZTokens.Colors.screenAmber)
+                            .foregroundStyle(ZTokens.Colors.screenAmberText)
                             .padding(.horizontal, ZTokens.Space.n5)
                             .padding(.vertical, ZTokens.Space.n3)
                     }

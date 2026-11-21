@@ -90,7 +90,7 @@ struct TraceView: View {
         if let failure {
             Text(verbatim: failure.userMessage)
                 .zType(.footnote)
-                .foregroundStyle(ZTokens.Colors.screenRed)
+                .foregroundStyle(ZTokens.Colors.screenRedText)
         } else if steps.isEmpty {
             placeholder
         } else {

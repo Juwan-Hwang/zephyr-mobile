@@ -60,7 +60,7 @@ struct RuleAddSheet: View {
                 if let errorText {
                     Text(verbatim: errorText)
                         .zType(.footnote)
-                        .foregroundStyle(ZTokens.Colors.screenRed)
+                        .foregroundStyle(ZTokens.Colors.screenRedText)
                         .padding(.horizontal, ZTokens.Space.n2)
                         .padding(.top, ZTokens.Space.n3)
                         .accessibilityLabel(Text(verbatim: errorText))

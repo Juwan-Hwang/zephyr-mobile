@@ -70,7 +70,7 @@ public struct ZProfileCard: View {
                             if let remainingCaption {
                                 Text(verbatim: remainingCaption)
                                     .zType(.caption)
-                                    .foregroundStyle(isWarning ? ZTokens.Colors.screenAmber : ZColor.t3)
+                                    .foregroundStyle(isWarning ? ZTokens.Colors.screenAmberText : ZColor.t3)
                             }
                         }
                     }

@@ -185,8 +185,8 @@ public struct ZGroupCard: View {
     private var subtitleColor: Color {
         switch subtitleTone {
         case .normal: return ZColor.t3
-        case .warning: return ZTokens.Colors.screenAmber
-        case .danger: return ZTokens.Colors.screenRed
+        case .warning: return ZTokens.Colors.screenAmberText
+        case .danger: return ZTokens.Colors.screenRedText
         }
     }
 }
