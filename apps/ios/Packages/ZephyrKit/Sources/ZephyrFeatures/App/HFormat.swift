@@ -5,7 +5,7 @@ import ZephyrKit
 
 enum HFormat {
     /// 首页订阅行的到期（原型 global.png："周一到期"）：1–6 天内用星期，其余与 `ZFormat.expiry` 一致
-    /// （"已到期" / "今天到期" / "26 天后到期"）。订阅页仍用 `ZFormat.expiry` 的"11月9日到期"（subs.png）。
+    /// （"已过期" / "今天到期" / "26 天后到期"）。订阅页仍用 `ZFormat.expiry` 的"11月9日到期"（subs.png）。
     static func homeExpiry(_ at: Int64, now: Int64, timeZone: TimeZone = .current) -> String {
         guard at > now else { return ZFormat.expiry(at, now: now, timeZone: timeZone) }
         var cal = Calendar(identifier: .gregorian)
