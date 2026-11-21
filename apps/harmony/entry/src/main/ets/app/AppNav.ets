@@ -44,7 +44,7 @@ export class NavArgs {
 }
 
 export class AppNav {
-  /** 资料库入口 → 路由名；场景没有独立页（场景在首页逐行显示，场景 sheet 待 M1-5），返回 ''：只收起资料库。 */
+  /** 资料库入口 → 路由名；场景没有独立页（收起资料库后由首页开场景 sheet，M1-5），返回 ''。 */
   static routeOf(d: LibraryDest): string {
     switch (d) {
       case LibraryDest.NODES:

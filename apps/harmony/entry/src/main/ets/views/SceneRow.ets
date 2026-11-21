@@ -3,6 +3,7 @@
  * - 左：场景名 + “N 个可用” / 服务不可用 / 订阅分组；右：地区徽标 + 当前节点名，下方例外（钉住）行。
  * - 左右滑（PanGesture 水平）：每 42vp 跨一个地区槽，徽标与节点实时变，跨槽轻触感；松手停在别的槽 → onPick，
  *   由首页出“更改出口 IP？”确认卡。订阅分组来源、只有一个地区时不可滑。滑动时底部显示槽位轨道。
+ * - 点按（未在滑动）：打开场景 sheet（M1-5，同 Android onScene）。
  * - 读屏：整行一个焦点，朗读“场景 · 节点”；滑动换地区的无障碍替代（自定义动作）待 M1-18 无障碍走查。
  */
 import { GestureLock } from '../common/GestureLock';
@@ -21,6 +22,8 @@ export struct SceneRow {
   @Param divider: boolean = true;
   @Event onPick: (node: NodeSummary) => void = (node: NodeSummary) => {};
   @Event onScrubStart: () => void = () => {};
+  /** 点按：打开场景 sheet（M1-5）。 */
+  @Event onOpen: () => void = () => {};
 
   @Local slots: NodeSummary[] = [];
   @Local scrubbing: boolean = false;
@@ -154,6 +157,13 @@ export struct SceneRow {
     .width('100%')
     .accessibilityGroup(true)
     .accessibilityText(this.scene.name + ' · ' + this.scene.selected.name)
+    .accessibilityRole(AccessibilityRoleType.BUTTON)
+    .accessibilityDescription($r('app.string.home_scene_details_a11y', this.scene.name))
+    .onClick(() => {
+      if (!this.scrubbing) {
+        this.onOpen();
+      }
+    })
     // 手指按在行上就加锁（不论手势竞争谁赢），抬起 / 取消后 350 ms 解锁：期间首页吞掉系统返回（Index.onBackPress）。
     .onTouch((e: TouchEvent) => {
       if (e.type === TouchType.Down) {
