@@ -6,6 +6,7 @@
  * - 点按（未在滑动）：打开场景 sheet（M1-5，同 Android onScene）。
  * - 读屏：整行一个焦点，朗读“场景 · 节点”；滑动换地区的无障碍替代（自定义动作）待 M1-18 无障碍走查。
  */
+import { hilog } from '@kit.PerformanceAnalysisKit';
 import { GestureLock } from '../common/GestureLock';
 import { HapticKind, Haptics } from '../app/Haptics';
 import { AppServices } from '../app/AppServices';
@@ -13,6 +14,11 @@ import { SceneSlots } from '../app/SceneSlots';
 import { Labels } from '../common/Labels';
 import { ZTheme } from '../common/Theme';
 import { NodeSummary, Scene, SceneSource, ServiceHealth } from '../engine/Model';
+
+/** 场景行组件 id（UiTest 按 id 点行）。 */
+export function sceneRowId(sceneId: string): string {
+  return 'zephyr.scene.' + sceneId;
+}
 
 @ComponentV2
 export struct SceneRow {
@@ -159,7 +165,9 @@ export struct SceneRow {
     .accessibilityText(this.scene.name + ' · ' + this.scene.selected.name)
     .accessibilityRole(AccessibilityRoleType.BUTTON)
     .accessibilityDescription($r('app.string.home_scene_details_a11y', this.scene.name))
+    .id(sceneRowId(this.scene.id))
     .onClick(() => {
+      hilog.info(0x5A50, 'SceneRow', 'tap %{public}s scrubbing=%{public}s', this.scene.id, String(this.scrubbing));
       if (!this.scrubbing) {
         this.onOpen();
       }

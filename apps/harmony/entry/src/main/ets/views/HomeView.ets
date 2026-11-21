@@ -116,8 +116,17 @@ export struct HomeView {
       hilog.info(0x5A50, 'HomeView', 'scene tap ignored right after command sheet closed: %{public}s', s.id);
       return;
     }
-    hilog.info(0x5A50, 'HomeView', 'open scene sheet %{public}s', s.id);
+    hilog.info(0x5A50, 'HomeView', 'open scene sheet %{public}s (was showing=%{public}s)', s.id, String(this.showScene));
     this.sheetSceneId = s.id;
+    if (this.showScene) {
+      // 能点到场景行说明 sheet 实际已不在（有 sheet 时遮罩挡住首页），showScene 是残留的 true：
+      // 再赋 true 不会触发 bindSheet，表现为“点了没反应”。先复位，下一帧再打开。
+      this.showScene = false;
+      setTimeout(() => {
+        this.showScene = true;
+      }, 32);
+      return;
+    }
     this.showScene = true;
   }
 

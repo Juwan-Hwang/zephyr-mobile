@@ -11,6 +11,7 @@ import todayTest from './Today.test';
 import vpnTest from './Vpn.test';
 import undoDeleteTest from './UndoDelete.test';
 import commandApplyTest from './CommandApply.test';
+import sceneOpenTest from './SceneOpen.test';
 
 export default function testsuite(): void {
   mockFixturesTest();
@@ -26,4 +27,5 @@ export default function testsuite(): void {
   vpnTest();
   undoDeleteTest();
   commandApplyTest();
+  sceneOpenTest();
 }
