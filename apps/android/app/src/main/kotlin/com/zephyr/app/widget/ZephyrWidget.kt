@@ -86,7 +86,7 @@ class ZephyrWidget : GlanceAppWidget() {
     }
 
     @Composable
-    private fun Content(on: Boolean, title: String, detail: String, today: Long, scenes: List<Scene>) {
+    internal fun Content(on: Boolean, title: String, detail: String, today: Long, scenes: List<Scene>) {
         val ctx = LocalContext.current
         val bg = ColorProvider(day = Color(0xFFFFFFFF), night = Color(0xFF141417))
         val t1 = ColorProvider(day = Color(0xE6000000), night = Color(0xF2FFFFFF))
