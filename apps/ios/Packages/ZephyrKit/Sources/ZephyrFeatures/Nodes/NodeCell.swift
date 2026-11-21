@@ -68,7 +68,7 @@ final class NodeCell: UICollectionViewCell {
         let markup = NodeNameMarkup(name: node.name, highlights: highlights)
         nameLabel.attributedText = Self.attributed(markup, style: style)
         protocolLabel.font = style.protocolFont
-        protocolLabel.textColor = style.textTertiary
+        protocolLabel.textColor = style.textSecondary   // §9.2：10.5pt 协议名例外须 t2 或更深
         protocolLabel.text = node.protocol
         accessibilityParts = (markup.base, node.protocol, "", markup.multiplier)
         setLatency(latency, style: style)

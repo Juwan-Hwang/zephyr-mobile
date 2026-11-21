@@ -55,7 +55,7 @@ public struct ZBadge: View {
     /// 文字用 *-text 变体（浅色 ≥4.5:1，规范 §9.1）；边框 / 底色仍用原色 tint。
     private var foreground: Color {
         switch tone {
-        case .neutral: return ZColor.t3
+        case .neutral: return ZColor.t2   // 规范 §9.2：10pt 编码类徽章（地区码 / 协议）须 t2 或更深
         case .accent: return accent.text
         case .success: return ZTokens.Colors.screenGreenText
         case .warning: return ZTokens.Colors.screenAmberText

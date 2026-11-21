@@ -98,7 +98,7 @@ public struct ZNodeRow: View {
                 Text(verbatim: protocolName)
                     .modifier(ZMonoModifier(.flag, weight: .regular, maxSize: ZMetrics.monoFlag))   // 协议名：§9.2 编码类例外 10.5pt
                     .tracking(ZMetrics.monoFlag * 0.02)
-                    .foregroundStyle(ZColor.t3)
+                    .foregroundStyle(ZColor.t2)   // §9.2：10.5pt 例外须 t2 或更深
                     .fixedSize()
             }
             ZLatencyPill(ms: latency, isTesting: isTesting,

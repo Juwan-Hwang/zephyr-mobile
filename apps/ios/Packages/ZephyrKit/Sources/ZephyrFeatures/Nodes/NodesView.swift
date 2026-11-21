@@ -26,7 +26,8 @@ public struct NodesView: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            PageHeader(title: "节点", number: model.index.map { ZFormat.count($0.total) }, unit: "个", subtitle: model.subtitle)
+            PageHeader(title: "节点", number: model.index.map { ZFormat.count($0.total) }, unit: "个",
+                       subtitle: model.subtitle, judgement: model.judgement)
             ZTextField("地区、城市或线路", text: $model.query, trailing: model.query.isEmpty ? nil : model.queryInfo)
                 .padding(.horizontal, PageMetrics.margin)
                 .padding(.top, ZTokens.Space.n5)

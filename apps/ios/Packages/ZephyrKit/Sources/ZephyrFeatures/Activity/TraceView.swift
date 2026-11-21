@@ -74,7 +74,7 @@ struct TraceView: View {
         } label: {
             HStack(spacing: ZTokens.Space.n1) {
                 Image(systemName: "chevron.backward").font(.footnote.weight(.semibold))
-                Text("刚才")
+                Text("最近连接")
             }
             .zType(.body)
             .foregroundStyle(ZAccentTextStyle())

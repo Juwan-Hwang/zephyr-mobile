@@ -26,6 +26,9 @@ final class NodesModel {
     private(set) var generation = 0
     private(set) var accent: ZTokens.Accent = .blue
     private(set) var failed = false
+    /// 节点页判断句的数（契约 §18.a）：同一次 nodeFunnel 的 reachable / tested；nil = 取不到，只写「已检测 N」。
+    private(set) var funnel: NodeFunnel?
+    @ObservationIgnored private var funnelRequested = false
 
     @ObservationIgnored private var searchTask: Task<Void, Never>?
     @ObservationIgnored private var started = false
@@ -49,6 +52,7 @@ final class NodesModel {
         subscriptionCount = s.count
         store.setTestedBase(i.testedCount)
         listView?.footer.set(tested: store.testedCount)
+        updateFooterTested()
         let pathTask = Task { @MainActor [weak self] in
             for await path in NWPathMonitor() {
                 guard let self else { return }
@@ -58,6 +62,17 @@ final class NodesModel {
         }
         defer { pathTask.cancel() }
         for await settings in engine.settings() {
+            if !funnelRequested {
+                funnelRequested = true
+                let maxAge = SceneSheet.funnelMaxAgeMs(settings)
+                Task { [weak self] in
+                    guard let self else { return }
+                    // thresholdMs 不影响 reachable（契约 §18.a），传 latency.threshold-slow。
+                    let f = await self.engine.nodeFunnel(maxAgeMs: maxAge, thresholdMs: Int32(ZTokens.LatencyThreshold.slow))
+                    self.funnel = f
+                    self.updateFooterTested()
+                }
+            }
             let a = ZTokens.Accent(rawValue: settings.accent.rawValue) ?? .blue
             if a != accent { accent = a }
             testOnWifiOnly = settings.testOnWifiOnly
@@ -113,6 +128,7 @@ final class NodesModel {
         rowMap = NodeRowMap(sections: r.sections.map { ($0.region, $0.name, $0.count) })
         store.reset(token: r.token, total: r.total, highlights: r.highlights)
         generation &+= 1
+        updateFooterTested()
     }
 
     func select(chip region: String) {
@@ -129,11 +145,39 @@ final class NodesModel {
 
     // MARK: 派生文案
 
-    /// “来自 214 个订阅 · 15 个地区”
+    /// “来自 214 个订阅　15 个地区”：两项用宽空格分开，不用中点（规范 §9.2：每屏只一处中点，留给判断句）。
     var subtitle: String? {
         guard let index else { return nil }
-        let subs = subscriptionCount.map { ZL.f("来自 %lld 个订阅 · ", Int64($0)) } ?? ""
-        return subs + ZL.f("%lld 个地区", Int64(index.sections.count))
+        let regions = ZL.f("%lld 个地区", Int64(index.sections.count))
+        guard let n = subscriptionCount else { return regions }
+        return ZL.f("来自 %lld 个订阅", Int64(n)) + "\u{2003}" + regions
+    }
+
+    /// 是否显示判断句：只在全部节点（非搜索）且索引载入成功、库非空时（契约 §18.a）。
+    private var showsJudgement: Bool {
+        guard let index, index.total > 0 else { return false }
+        return query.trimmingCharacters(in: .whitespaces).isEmpty
+    }
+
+    private func updateFooterTested() {
+        listView?.footer.showsTested = !showsJudgement
+    }
+
+    /// 节点页判断句（规范 §9.4，契约 §18.a）：「可连通 x · 已检测 N」；reachable 为 0 时数字用 red-text，否则 t1；整行 t2。
+    var judgement: AttributedString? {
+        guard showsJudgement, let index else { return nil }
+        if let f = funnel, f.tested > 0 {
+            let r = ZFormat.count(Int64(f.reachable))
+            var a = AttributedString(ZL.s("可连通 %1$@ · 已检测 %2$@", r, ZFormat.count(Int64(f.tested))))
+            if let range = a.range(of: r) {
+                a[range].foregroundColor = f.reachable == 0 ? ZTokens.Colors.screenRedText : ZTokens.Colors.screenT1
+            }
+            return a
+        }
+        if funnel == nil, index.testedCount > 0 {
+            return AttributedString(ZL.s("已检测 %@", ZFormat.count(index.testedCount)))
+        }
+        return AttributedString(ZL.tr("尚未检测，停止滚动后自动测可见节点"))
     }
 
     /// 搜索框右侧：“220,412 个 · 0.70 ms”（原型：< 1ms 两位小数，否则一位）。
