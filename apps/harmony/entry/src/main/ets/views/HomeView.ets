@@ -31,6 +31,8 @@ import { ZTerm } from '../generated/ZTerms';
 
 /** 首页速率区组件 id（UiTest）。 */
 export const HOME_TRAFFIC_ID: string = 'zephyr.home.traffic';
+/** 资料库按钮（界面测试用）。 */
+export const HOME_LIBRARY_ID: string = 'zephyr.home.library';
 
 const MODES: ProxyMode[] = [ProxyMode.RULE, ProxyMode.GLOBAL, ProxyMode.DIRECT];
 
@@ -640,6 +642,7 @@ export struct HomeView {
         .backgroundColor($r('app.color.screen_primary'))
         .shadow({ radius: 12, color: '#33000000', offsetY: 4 })
         .accessibilityText($r('app.string.common_library'))
+        .id(HOME_LIBRARY_ID)
         .onClick(() => this.onOpenLibrary())
       }
       .width('100%')

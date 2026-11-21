@@ -349,6 +349,10 @@
       "value": "The full list of licenses will be included in a later build."
     },
     {
+      "name": "hm_number_myriad",
+      "value": "false"
+    },
+    {
       "name": "hm_rules_test",
       "value": "Test"
     },
@@ -399,6 +403,10 @@
     {
       "name": "hm_time_minutes_ago",
       "value": "%1$d min ago"
+    },
+    {
+      "name": "hm_unit_wan",
+      "value": "万"
     },
     {
       "name": "home_action_load_nodes",

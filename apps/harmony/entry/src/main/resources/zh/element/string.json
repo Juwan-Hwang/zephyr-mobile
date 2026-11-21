@@ -345,6 +345,10 @@
       "value": "完整的许可列表将在后续版本中提供。"
     },
     {
+      "name": "hm_number_myriad",
+      "value": "true"
+    },
+    {
       "name": "hm_rules_test",
       "value": "测试"
     },
@@ -395,6 +399,10 @@
     {
       "name": "hm_time_minutes_ago",
       "value": "%1$d 分钟前"
+    },
+    {
+      "name": "hm_unit_wan",
+      "value": "万"
     },
     {
       "name": "home_action_load_nodes",

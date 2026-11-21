@@ -13,6 +13,7 @@ import undoDeleteTest from './UndoDelete.test';
 import commandApplyTest from './CommandApply.test';
 import sceneOpenTest from './SceneOpen.test';
 import recentHostsTest from './RecentHosts.test';
+import nodesTest from './Nodes.test';
 
 export default function testsuite(): void {
   mockFixturesTest();
@@ -30,4 +31,5 @@ export default function testsuite(): void {
   commandApplyTest();
   sceneOpenTest();
   recentHostsTest();
+  nodesTest();
 }

@@ -151,6 +151,29 @@ export class Format {
     return neg ? '-' + out : out;
   }
 
+  /**
+   * 地区 chip 的节点数（同 Android ZFormat.chip）：用“万”的语言（hm_number_myriad = true，同 Android common_number_myriad）
+   * 读 “12 万”；其余为短紧凑写法 1.2K / 12K / 3.4M（CompactDecimalFormat SHORT，两位有效数字、整数位不截）。
+   */
+  static chip(n: number, myriad: boolean, wan: string): string {
+    if (myriad) {
+      return String(Math.round(n / 1e4)) + ' ' + wan;
+    }
+    const units: string[] = ['', 'K', 'M', 'B', 'T'];
+    let u = 0;
+    let v = Math.abs(n);
+    while (v >= 1000 && u < units.length - 1) {
+      v = v / 1000;
+      u++;
+    }
+    let r = v < 10 && u > 0 ? Math.round(v * 10) / 10 : Math.round(v);
+    if (r >= 1000 && u < units.length - 1) {
+      r = 1;
+      u++;
+    }
+    return (n < 0 ? '-' : '') + String(r) + units[u];
+  }
+
   /** 8047000 → "2:14:07"；不足一小时 "0:04:07"。 */
   static duration(ms: number): string {
     const s = Math.max(0, Math.floor(ms / 1000));
