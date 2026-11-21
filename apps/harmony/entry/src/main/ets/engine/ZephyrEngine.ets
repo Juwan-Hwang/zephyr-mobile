@@ -1,7 +1,7 @@
 import {
   CommandSuggestion, ConnectionInfo, ConnectionState, ConnectionTrace, ErrorCode, ExitChange, ImportItem,
   ImportPayload, ImportSource, LatencyUpdate, LogLevel, LogLine, NodeDetail, NodeFunnel, NodeId, NodeIndex, NodePage,
-  NodeQueryResult, NodeSummary, PolicyGroup, ProxyMode, RuleStats, RuleTrace, ScanProgress, Scene, SceneSource,
+  NodeFilterPreview, NodeQueryResult, NodeSummary, PolicyGroup, ProxyMode, RuleStats, RuleTrace, ScanProgress, Scene, SceneSource,
   Settings, StorageInfo, Subscription, SubscriptionDiff, SubscriptionsSummary, TraceTarget, TrafficSample,
   UsageSummary, ZephyrErrorInfo
 } from './Model';
@@ -73,6 +73,10 @@ export interface ZephyrEngine {
   nodeFunnel(maxAgeMs: number, thresholdMs: number): Promise<NodeFunnel | undefined>;
   setSceneSource(sceneId: string, source: SceneSource): Promise<NodeSummary | undefined>;
   setSceneException(sceneId: string, appId: string, nodeId?: NodeId): Promise<void>;
+  /** §15.h：预览“只用 4K 节点”；平台据此出确认卡（poolMatching == 0 时禁用）。 */
+  previewSceneNodeFilter(sceneId: string, filter: string): Promise<NodeFilterPreview>;
+  /** §15.h：持久化过滤（undefined 清除）；从不主动切走当前节点。poolMatching == 0 时抛 rule_input_invalid。 */
+  setSceneNodeFilter(sceneId: string, filter: string | undefined): Promise<void>;
 
   // 4. 策略组（v1 UI 不展示，由场景取代；接口保留，见设计规范 §3）
   policyGroups(): StateStream<PolicyGroup[]>;

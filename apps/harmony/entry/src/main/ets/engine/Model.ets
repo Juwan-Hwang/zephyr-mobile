@@ -150,6 +150,25 @@ export interface ExitChange {
   unchangedApps: string[];
 }
 
+/** §15.h 场景节点过滤：允许值只有 'uhd'（只用 4K 节点）；undefined = 不过滤。 */
+export const SCENE_NODE_FILTER_UHD: string = 'uhd';
+
+/** §15.h previewSceneNodeFilter 的结果。 */
+export interface NodeFilterPreview {
+  /** 候选中满足过滤的个数（“14 个支持 4K”）。 */
+  matching: number;
+  /** 不加过滤时的候选个数（“22 个中”），与 Scene.available 同口径。 */
+  total: number;
+  /** 当前地区节点库中满足过滤的个数（不看测速）；0 = 根本没有 4K 节点。 */
+  poolMatching: number;
+  /** 当前节点满足过滤，或场景尚未选节点。 */
+  currentKept: boolean;
+  /** currentKept=false 时满足过滤的最快候选；没有已测候选时 undefined。 */
+  suggested?: NodeSummary;
+  /** = previewSceneChange(sceneId, suggested.id)。 */
+  change?: ExitChange;
+}
+
 /** §15.d 平台本地扫描进度。 */
 export interface ScanProgress {
   done: number;

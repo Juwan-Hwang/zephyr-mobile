@@ -1,7 +1,7 @@
 import {
   CommandSuggestion, ConnectionInfo, ConnectionState, ConnectionStatus, ConnectionTrace, defaultSettings, ErrorCode,
   ExitChange, ImportItem, ImportPayload, ImportSource, LATENCY_TIMEOUT, LatencyUpdate, LogLevel, LogLine, NetworkKind,
-  NodeDetail, NodeFunnel, NodeId, NodeIndex, NodePage, NodeQueryResult, NodeSummary, PolicyGroup, ProxyMode, RuleStats,
+  NodeDetail, NodeFilterPreview, NodeFunnel, NodeId, NodeIndex, NodePage, NodeQueryResult, NodeSummary, PolicyGroup, ProxyMode, RuleStats,
   RuleTrace, ScanProgress, Scene, SceneException, SceneKind, SceneSource, Settings, StorageInfo, Subscription,
   SubscriptionDiff, SubscriptionsSummary, TraceOverride, TraceTarget, TrafficSample, UsageSummary, copySettings
 } from './Model';
@@ -437,6 +437,41 @@ export class MockEngine implements ZephyrEngine {
         kept.push(e);
       }
       s.exceptions = kept;
+    });
+  }
+
+  /** §15.h Mock（同 Android）：4K 按名字判定；候选 = 当前地区未过滤的 mock 池。 */
+  async previewSceneNodeFilter(sceneId: string, filter: string): Promise<NodeFilterPreview> {
+    const scene = this.requireScene(sceneId);
+    const region = scene.selected.id >= 0 ? scene.selected.region : undefined;
+    const all = MockScenes.pool(region).map((n: NodeSummary) => withLatency(n, this.latencyOf(n.id)));
+    const keep = all.filter((n: NodeSummary) => isUhdName(n.name));
+    const kept = scene.selected.id < 0 || isUhdName(scene.selected.name);
+    let suggested: NodeSummary | undefined = undefined;
+    if (!kept) {
+      for (const n of keep) {
+        if (n.latencyMs !== undefined && (suggested === undefined || n.latencyMs < (suggested.latencyMs ?? 0))) {
+          suggested = n;
+        }
+      }
+    }
+    const p: NodeFilterPreview = {
+      matching: keep.length, total: all.length, poolMatching: keep.length, currentKept: kept, suggested: suggested,
+      change: suggested !== undefined ? await this.previewSceneChange(sceneId, suggested.id) : undefined
+    };
+    return p;
+  }
+
+  async setSceneNodeFilter(sceneId: string, filter: string | undefined): Promise<void> {
+    const scene = this.requireScene(sceneId);
+    if (filter !== undefined) {
+      const region = scene.selected.id >= 0 ? scene.selected.region : undefined;
+      if (!MockScenes.pool(region).some((n: NodeSummary) => isUhdName(n.name))) {
+        throw new ZephyrError(ErrorCode.RULE_INPUT_INVALID, 'no 4K node in region'); // = core MobileError.Invalid
+      }
+    }
+    this.patchScene(sceneId, (s: Scene) => {
+      s.nodeFilter = filter;
     });
   }
 

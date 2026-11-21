@@ -5,17 +5,22 @@
  * - 场景词（视频）+ 地区：整个场景 applySceneChange；撤销回到原节点。
  * - “其他”服务 + 直连：overrideHost(host, direct, 持久)；撤销 overrideHost(host, unchanged)。
  * - AI / 视频服务 + 直连、其他服务 + 地区：不出预览卡（§16.d 有意收窄）。
- * - 4K（§15.h）暂未移植：只出解析卡片。
+ * - 4K（§15.h，“视频只用 4K 节点”）：只对视频场景出卡。已过滤 → “使用全部节点”（clear）；否则 previewSceneNodeFilter：
+ *   poolMatching == 0 → “没有支持 4K 的节点”禁用；当前节点不是 4K 时出口 IP 行 = preview.change，应用时与过滤一起换到
+ *   preview.suggested；撤销恢复原过滤（与原节点）。过滤本身从不切走当前节点。
  * 纯逻辑（只依赖 ZephyrEngine），node / ohosTest 可测。
  */
 import { CommandAct, CommandParser, ParsedCommand } from '../engine/CommandParser';
-import { ExitChange, NodeId, NodeSummary, Scene, SceneException, SceneKind, TraceTarget } from '../engine/Model';
+import {
+  ExitChange, NodeFilterPreview, NodeId, NodeSummary, Scene, SCENE_NODE_FILTER_UHD, SceneException, SceneKind, TraceTarget
+} from '../engine/Model';
 import { ZephyrEngine } from '../engine/ZephyrEngine';
 
 export enum CommandPlanKind {
   EXIT = 'exit',
   NO_NODES = 'no_nodes',
-  DIRECT = 'direct'
+  DIRECT = 'direct',
+  UHD = 'uhd'
 }
 
 export class CommandPlan {
@@ -36,6 +41,10 @@ export class CommandPlan {
   /** 整场景切换前的节点。 */
   previousSelected: NodeId | undefined;
   host: string | undefined;
+  /** UHD：previewSceneNodeFilter 结果（clear 时 undefined）。 */
+  preview: NodeFilterPreview | undefined;
+  /** UHD：场景已只用 4K，这张卡是“恢复全部节点”。 */
+  clear: boolean;
 
   constructor(kind: CommandPlanKind) {
     this.kind = kind;
@@ -51,11 +60,25 @@ export class CommandPlan {
     this.previousPin = undefined;
     this.previousSelected = undefined;
     this.host = undefined;
+    this.preview = undefined;
+    this.clear = false;
+  }
+
+  /** UHD：“没有支持 4K 的节点”，过滤设不上。 */
+  get unavailable(): boolean {
+    return this.kind === CommandPlanKind.UHD && !this.clear &&
+      (this.preview === undefined || this.preview.poolMatching === 0);
+  }
+
+  /** UHD：应用时一并切到的 4K 节点（当前节点不是 4K 且有已测候选）。 */
+  get uhdTarget(): NodeSummary | undefined {
+    const p = this.preview;
+    return this.kind === CommandPlanKind.UHD && !this.clear && p !== undefined && !p.currentKept ? p.suggested : undefined;
   }
 
   /** 能点“应用”。 */
   get applicable(): boolean {
-    return this.kind !== CommandPlanKind.NO_NODES;
+    return this.kind !== CommandPlanKind.NO_NODES && !this.unavailable;
   }
 }
 
@@ -108,8 +131,29 @@ export class CommandPlanner {
       d.scene = scene ?? scenes.find((s: Scene) => s.kind === SceneKind.OTHER);
       return d;
     }
+    if (p.act === CommandAct.UHD) {
+      if (scene === undefined || scene.kind !== SceneKind.VIDEO) {
+        return undefined;
+      }
+      const u = new CommandPlan(CommandPlanKind.UHD);
+      u.serviceName = svc.name;
+      u.isSceneWord = svc.isSceneWord;
+      u.scene = scene;
+      u.previousSelected = scene.selected.id;
+      if (scene.nodeFilter === SCENE_NODE_FILTER_UHD) {
+        u.clear = true;
+        return u;
+      }
+      try {
+        u.preview = await this.engine.previewSceneNodeFilter(scene.id, SCENE_NODE_FILTER_UHD);
+      } catch (e) {
+        u.preview = undefined;
+      }
+      u.change = u.uhdTarget !== undefined && u.preview !== undefined ? u.preview.change : undefined;
+      return u;
+    }
     if (p.act !== undefined) {
-      return undefined; // 4K：§15.h 待移植
+      return undefined;
     }
     const rg = p.region;
     if (rg === undefined || scene === undefined || svc.kind === SceneKind.OTHER) {
@@ -174,6 +218,28 @@ export class CommandPlanner {
       await engine.overrideHost(host, TraceTarget.DIRECT, undefined, true);
       return async () => {
         await engine.overrideHost(host, TraceTarget.UNCHANGED, undefined, true);
+      };
+    }
+    if (plan.kind === CommandPlanKind.UHD && plan.scene !== undefined && !plan.unavailable) {
+      const sid = plan.scene.id;
+      const was = plan.scene.nodeFilter;
+      if (plan.clear) {
+        await engine.setSceneNodeFilter(sid, undefined);
+        return async () => {
+          await engine.setSceneNodeFilter(sid, was);
+        };
+      }
+      await engine.setSceneNodeFilter(sid, SCENE_NODE_FILTER_UHD);
+      const to = plan.uhdTarget;
+      const prev = plan.previousSelected;
+      if (to !== undefined) {
+        await engine.applySceneChange(sid, to.id);
+      }
+      return async () => {
+        await engine.setSceneNodeFilter(sid, was);
+        if (to !== undefined && prev !== undefined && prev >= 0) {
+          await engine.applySceneChange(sid, prev);
+        }
       };
     }
     const scene = plan.scene;

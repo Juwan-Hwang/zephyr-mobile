@@ -1,6 +1,6 @@
 import {
   CommandSuggestion, ConnectionInfo, ConnectionState, ConnectionStatus, ConnectionTrace, ErrorCode, ExitChange,
-  ImportItem, ImportPayload, ImportSource, LatencyUpdate, LogLevel, LogLine, NodeDetail, NodeFunnel, NodeId, NodeIndex,
+  ImportItem, ImportPayload, ImportSource, LatencyUpdate, LogLevel, LogLine, NodeDetail, NodeFilterPreview, NodeFunnel, NodeId, NodeIndex,
   NodePage, NodeQueryResult, NodeSummary, PolicyGroup, ProxyMode, RuleStats, RuleTrace, ScanProgress, Scene,
   SceneSource, Settings, StorageInfo, Subscription, SubscriptionDiff, SubscriptionsSummary, TraceTarget,
   TrafficSample, UsageSummary, defaultSettings
@@ -161,6 +161,14 @@ export class NativeEngine implements ZephyrEngine {
 
   setSceneException(sceneId: string, appId: string, nodeId?: NodeId): Promise<void> {
     return NativeEngine.ni<void>('setSceneException');
+  }
+
+  previewSceneNodeFilter(sceneId: string, filter: string): Promise<NodeFilterPreview> {
+    return NativeEngine.ni<NodeFilterPreview>('previewSceneNodeFilter');
+  }
+
+  setSceneNodeFilter(sceneId: string, filter: string | undefined): Promise<void> {
+    return NativeEngine.ni<void>('setSceneNodeFilter');
   }
 
   // ── 4. 策略组 ────────────────────────────────────────────────────────────

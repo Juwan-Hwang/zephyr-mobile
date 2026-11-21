@@ -4,7 +4,11 @@
  * - 空输入：“建议”示例短语，点按只填入输入框并重新解析，不直接执行（U24）。
  * - 有输入：token 下划线预览（服务蓝 / 地区绿 / 操作琥珀）、解析卡片（服务 / 范围 / 地区 / 操作）、
  *   一张预览卡（含出口 IP 行），点“应用”（或回车）才执行，执行后出撤销吐司（§16.e⑥）。
- * - 只有地区或普通文本：节点结果（最快前 5 个 + 查看全部）；像域名 / IP：测试规则。
+ *   “视频只用 4K 节点”出 4K 卡（§15.h，同 Android CommandPlan.Uhd）：N 个中 M 个支持 4K / 当前节点保持 / 将使用 X /
+ *   尚未测速 / 没有支持 4K 的节点（按钮禁用）/ 已过滤时“使用全部节点”。
+ * - 只有地区或普通文本：节点结果（最快前 5 个 + 查看全部）；像域名 / IP：“X 走哪里？”→ 面板内原地显示连接轨迹
+ *   （TraceBody，规则 → 场景 → 节点 → 出口 + 覆写；没有连接记录时退回规则测试）。Android / iOS 此行去规则页测试，
+ *   鸿蒙按 #241 指派改为轨迹（规则页仍在资料库）。
  */
 import { AppServices } from '../app/AppServices';
 import { CommandPlan, CommandPlanKind, CommandPlanner } from '../app/CommandPlanner';
@@ -15,6 +19,7 @@ import { ZTheme } from '../common/Theme';
 import { CommandAct, CommandParser, CommandSpan, CommandTok, ParsedCommand } from '../engine/CommandParser';
 import { NodeQueryResult, NodeSummary } from '../engine/Model';
 import { ZTerm } from '../generated/ZTerms';
+import { TraceBody } from './TraceBody';
 
 /** 预览里的一段文字（token 或普通文本）。 */
 class Piece {
@@ -76,6 +81,8 @@ export struct CommandSheet {
   @Local nodes: NodeSummary[] = [];
   @Local nodeTotal: number = 0;
   @Local applying: boolean = false;
+  /** “X 走哪里？”点开后在面板内原地显示的连接轨迹（M1-8 最小版）；'' = 不显示。 */
+  @Local traceHost: string = '';
   @Local theme: ZTheme = ZTheme.shared();
 
   private planner: CommandPlanner = new CommandPlanner(AppServices.get().engine);
@@ -237,8 +244,7 @@ export struct CommandSheet {
     }
     this.applying = true;
     const who = this.who(p);
-    const toastText = p.kind === CommandPlanKind.DIRECT ? this.str($r('app.string.home_now_direct'), who) :
-      this.str($r('app.string.home_now_uses'), who, p.node !== undefined ? p.node.name : '');
+    const toastText = this.toastText(p, who);
     this.planner.apply(p).then((undo: () => Promise<void>) => {
       Haptics.play(HapticKind.SUCCESS);
       AppServices.get().toasts.show(toastText, {
@@ -248,13 +254,87 @@ export struct CommandSheet {
       });
       this.onDone();
     }).catch((e: Object) => {
-      AppServices.get().toasts.show(this.str($r('app.string.home_apply_failed'), String(e)));
+      AppServices.get().toasts.show(this.str($r('app.string.home_apply_failed'), who));
     }).finally(() => {
       this.applying = false;
     });
   }
 
+  private toastText(p: CommandPlan, who: string): string {
+    if (p.kind === CommandPlanKind.DIRECT) {
+      return this.str($r('app.string.home_now_direct'), who);
+    }
+    if (p.kind === CommandPlanKind.UHD) {
+      if (p.clear) {
+        return this.str($r('app.string.home_now_all_nodes'), who);
+      }
+      const to = p.uhdTarget;
+      return to !== undefined ? this.str($r('app.string.home_now_uses_uhd'), who, to.name) :
+        this.str($r('app.string.home_now_uhd_only'), who);
+    }
+    return this.str($r('app.string.home_now_uses'), who, p.node !== undefined ? p.node.name : '');
+  }
+
+  /** 4K 卡的说明行（同 Android CommandOverlay CommandPlan.Uhd 的 when 分支）。 */
+  private uhdNote(p: CommandPlan): ResourceStr {
+    const pv = p.preview;
+    if (p.clear) {
+      return $r('app.string.command_uhd_clear_note', p.scene !== undefined ? this.str(Labels.sceneName(p.scene)) : '');
+    }
+    if (pv === undefined || pv.poolMatching === 0) {
+      return $r('app.string.command_uhd_none');
+    }
+    if (pv.matching === 0) {
+      return $r('app.plural.command_uhd_untested', pv.poolMatching, pv.poolMatching);
+    }
+    if (pv.currentKept) {
+      return $r('app.plural.command_uhd_matching_keep', pv.matching, pv.total, pv.matching);
+    }
+    return $r('app.plural.command_uhd_matching_switch', pv.matching, pv.total, pv.matching,
+      pv.suggested !== undefined ? pv.suggested.name : this.str($r('app.string.command_uhd_fastest')));
+  }
+
   build() {
+    if (this.traceHost.length > 0) {
+      this.traceStep()
+    } else {
+      this.commandStep()
+    }
+  }
+
+  /** 轨迹（原地一步，同 Android 最近连接里原地显示轨迹，H-P2-9）：左上“返回指令”回到输入。 */
+  @Builder
+  traceStep() {
+    Scroll() {
+      Column({ space: 12 }) {
+        Row({ space: 4 }) {
+          Text('‹')
+            .fontSize(22)
+            .fontColor(this.theme.accentColor())
+            .accessibilityLevel('no')
+          Text($r('app.string.common_back_to', this.str($r('app.string.command_section_command'))))
+            .fontSize(15)
+            .fontColor(this.theme.accentColor())
+        }
+        .padding({ left: 16, right: 16, top: 4, bottom: 4 })
+        .accessibilityGroup(true)
+        .accessibilityRole(AccessibilityRoleType.BUTTON)
+        .onClick(() => {
+          this.traceHost = '';
+        })
+        TraceBody({ host: this.traceHost })
+      }
+      .width('100%')
+      .padding({ top: 8, bottom: 24 })
+      .alignItems(HorizontalAlign.Start)
+    }
+    .width('100%')
+    .align(Alignment.Top)
+    .scrollBar(BarState.Off)
+  }
+
+  @Builder
+  commandStep() {
     Scroll() {
       Column({ space: 14 }) {
         TextInput({ text: this.input, placeholder: $r('app.string.command_placeholder') })
@@ -367,6 +447,22 @@ export struct CommandSheet {
           .fontColor($r('app.color.screen_t1'))
         Text($r('app.string.command_direct_note', p.serviceName)).fontSize(14).fontColor($r('app.color.screen_t2'))
         Text($r('app.string.command_zephyr_only')).fontSize(12).fontColor($r('app.color.screen_t3'))
+      } else if (p.kind === CommandPlanKind.UHD) {
+        Text(p.clear ? $r('app.string.command_uhd_title_all', this.who(p)) : $r('app.string.command_uhd_title_only', this.who(p)))
+          .fontSize(17)
+          .fontWeight(FontWeight.Medium)
+          .fontColor($r('app.color.screen_t1'))
+        Text(this.uhdNote(p)).fontSize(14).fontColor($r('app.color.screen_t2'))
+        if (p.change !== undefined) {
+          Text((p.change.fromRegion + ' ' + (p.change.fromIp ?? '')).trim() + '  →  ' +
+            (p.change.toRegion + ' ' + (p.change.toIp ?? '')).trim())
+            .fontSize(13)
+            .fontColor($r('app.color.screen_t2'))
+            .fontFamily('monospace')
+        }
+        if (!p.clear && !p.unavailable) {
+          Text($r('app.string.command_uhd_auto_note')).fontSize(12).fontColor($r('app.color.screen_t3'))
+        }
       } else if (p.kind === CommandPlanKind.NO_NODES) {
         Text($r('app.string.command_plan_no_nodes', p.scene !== undefined ? this.str(Labels.sceneName(p.scene)) : '',
           this.str(commandRegionName(p.regionCode))))
@@ -419,7 +515,9 @@ export struct CommandSheet {
       .width('100%')
       .padding({ top: 12, bottom: 12 })
       .accessibilityRole(AccessibilityRoleType.BUTTON)
-      .onClick(() => this.onOpenRules())
+      .onClick(() => {
+        this.traceHost = this.input.trim();
+      })
   }
 
   @Builder
