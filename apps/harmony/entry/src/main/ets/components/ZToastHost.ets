@@ -106,7 +106,7 @@ export struct ZToastHost {
     }
     .width('100%')
     .padding({ left: 16, right: 16, bottom: this.toast !== undefined ? this.bottom : 0 })
-    // 自身不吃触摸（没有吐司时不挡 tab 栏）；吐司卡片本身照常可点，且不会把点按漏给下面的页面。
+    // 自身不吃触摸（没有吐司时不挡首页底栏 / 页面）；吐司卡片本身照常可点，且不会把点按漏给下面的页面。
     .hitTestBehavior(HitTestMode.None)
   }
 }
