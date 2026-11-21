@@ -69,6 +69,12 @@ export interface ZColors {
   screenAmber: string;
   screenAmberA: string;
   screenRed: string;
+  /** 状态色作文字（订阅剩余 / 到期日期、延迟较慢读数、失败副标题）。浅色 #F2F2F7 4.66、白 5.20；深色同 amber。原 amber / green / red 只给圆点、进度条、图标填充（2026-11-21 设计评审） */
+  screenAmberText: string;
+  /** 如更新 diff「+1,204」。浅色 #F2F2F7 4.83、白 5.39（#248A3D 在页面底只有 3.94，不用） */
+  screenGreenText: string;
+  /** 如「−318」、超时、已过期。浅色 #F2F2F7 4.83、白 5.38 */
+  screenRedText: string;
   /** 上行速率 */
   screenUp: string;
   /** 浮层/底栏玻璃底色（叠系统模糊） */
@@ -138,6 +144,9 @@ export const ZColorsDark: ZColors = {
   screenAmber: '#FFFFD60A',
   screenAmberA: '#1FFFD60A',
   screenRed: '#FFFF453A',
+  screenAmberText: '#FFFFD60A',
+  screenGreenText: '#FF30D158',
+  screenRedText: '#FFFF453A',
   screenUp: '#FFFF6B6B',
   screenGlass: '#D11C1C20',
   screenCmdBg: '#B8000000',
@@ -201,6 +210,9 @@ export const ZColorsLight: ZColors = {
   screenAmber: '#FFFF9F0A',
   screenAmberA: '#1FFF9F0A',
   screenRed: '#FFFF3B30',
+  screenAmberText: '#FFB25000',
+  screenGreenText: '#FF1F7A35',
+  screenRedText: '#FFD70015',
   screenUp: '#FFFF5E57',
   screenGlass: '#D1FFFFFF',
   screenCmdBg: '#CCF2F2F7',

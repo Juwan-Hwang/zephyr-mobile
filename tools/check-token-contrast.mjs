@@ -120,6 +120,8 @@ const PAIRS = [
   // 延迟读数（节点行 / 场景候选 / 小组件，12–15pt 等宽）——正文阈值
   ...['latency.normal', 'latency.unknown', 'latency.slow', 'latency.timeout'].flatMap((fg) => [...CARDS, 'screen.bg'].map((bg) => ({ fg, bg, level: 'body' }))),
   // 状态色作文字（订阅「剩余 / 到期」警示、更新 diff +/−、连接失败、已连接）——正文阈值
+  ...['screen.amber-text', 'screen.red-text', 'screen.green-text'].flatMap((fg) => [...CARDS, 'screen.bg'].map((bg) => ({ fg, bg, level: 'body' }))),
+  // 旧用法：原状态色直接作文字（平台切到 *-text 后删除这组 PAIRS 与对应 ALLOW；之后 amber / green / red 只作圆点 / 进度条 / 图标，且必配形状或文字）
   ...['screen.amber', 'screen.red', 'screen.green'].flatMap((fg) => [...CARDS, 'screen.bg'].map((bg) => ({ fg, bg, level: 'body' }))),
   // 实时速率箭头 / 上下行图标——UI 阈值
   ...['color.download', 'screen.up'].flatMap((fg) => [...CARDS, 'screen.bg'].map((bg) => ({ fg, bg, level: 'ui' }))),
@@ -155,12 +157,16 @@ allow(['text.on-accent'], ['accent.blue.base', 'accent.pink.base', 'accent.green
   '旧用法：Android 深色在 darkVariant（= accent.*.base 深色 #0A84FF / #FF375F / #30D158 / #FF9F0A）底上写白字，2.0–3.65:1。同上，改用 fill/onFill 后删除本条');
 allow(['screen.t3'], ['screen.s4'], ['light'], 'debt',
   '浅色 t3 在 s4（#DCDCE1，ZSurface.elevated / 按下态）上 4.39:1，差 0.11。修复：浅色 s4 提亮到约 #E3E3E8，或 elevated 表面上的说明文字用 t2');
-allow(['screen.amber', 'latency.slow'], ['screen.bg', 'screen.s1', 'screen.s2'], ['light'], 'debt',
-  '浅色 amber #FF9F0A 作文字约 2.0–2.2:1（订阅「剩余 / 到期」、延迟 ≥200ms、小组件「连接失败」副标题）。修复：加浅色专用文字色（如 #B25000）并重录基线；见 design-review 2026-11-21');
+allow(['screen.amber'], ['screen.bg', 'screen.s1', 'screen.s2'], ['light'], 'debt',
+  '旧用法：浅色 amber #FF9F0A 作文字约 1.8–2.1:1（订阅「剩余 / 到期」、小组件「连接失败」副标题）。tokens 已给 screen.amber-text（浅色 #B25000，4.66–5.20）；平台改用后删除本条');
 allow(['screen.green'], ['screen.bg', 'screen.s1', 'screen.s2'], ['light'], 'debt',
-  '浅色 green #34C759 作文字约 2.2:1（订阅更新 diff「+1,204」）。修复同上（如 #248A3D）');
-allow(['screen.red', 'latency.timeout'], ['screen.bg', 'screen.s1', 'screen.s2'], ['light'], 'debt',
-  '浅色 red #FF3B30 作文字约 3.4–3.6:1，达 UI 阈值但不达正文 4.5（「−318」、超时）。修复同上（如 #D70015）');
+  '旧用法：浅色 green #34C759 作文字约 2.0–2.2:1（订阅更新 diff「+1,204」）。改用 screen.green-text（#1F7A35，4.83–5.39）后删除本条');
+allow(['screen.red'], ['screen.bg', 'screen.s1', 'screen.s2'], ['light'], 'debt',
+  '旧用法：浅色 red #FF3B30 作文字约 3.2–3.6:1（「−318」）。改用 screen.red-text（#D70015，4.83–5.38）后删除本条');
+allow(['latency.slow'], ['screen.bg', 'screen.s1', 'screen.s2'], ['light'], 'debt',
+  '浅色 latency.slow = #FF9F0A 作延迟读数约 1.8–2.1:1。修复：lightValue 改为同 screen.amber-text（#B25000），会改两端节点页 / 场景候选快照，需重录基线（PR agent/a/tokens-light-status）');
+allow(['latency.timeout'], ['screen.bg', 'screen.s1', 'screen.s2'], ['light'], 'debt',
+  '浅色 latency.timeout = #FF3B30 作文字约 3.2–3.6:1。修复：lightValue 改为同 screen.red-text（#D70015），同上需重录基线');
 allow(['screen.up'], ['screen.bg'], ['light'], 'debt',
   '浅色上行箭头 #FF5E57 在 #F2F2F7 页面底上 2.69:1（卡片上恰 3.0）；旁边有「KB/s」与数值冗余表达。修复时与 color.upload（浅 #D13A3F，iOS 已在用）统一');
 ALLOW['accent.blue|screen.s4|light|text'] = ALLOW['accent.blue|screen.s4|dark|text'] = { kind: 'debt', reason:

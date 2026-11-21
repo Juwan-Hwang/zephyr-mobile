@@ -71,6 +71,12 @@ public enum ZTokens {
         public static let screenAmber = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.8392, blue: 0.0392, alpha: 1.0), light: UIColor(red: 1.0, green: 0.6235, blue: 0.0392, alpha: 1.0))
         public static let screenAmberA = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.8392, blue: 0.0392, alpha: 0.12), light: UIColor(red: 1.0, green: 0.6235, blue: 0.0392, alpha: 0.12))
         public static let screenRed = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.2706, blue: 0.2275, alpha: 1.0), light: UIColor(red: 1.0, green: 0.2314, blue: 0.1882, alpha: 1.0))
+        /// 状态色作文字（订阅剩余 / 到期日期、延迟较慢读数、失败副标题）。浅色 #F2F2F7 4.66、白 5.20；深色同 amber。原 amber / green / red 只给圆点、进度条、图标填充（2026-11-21 设计评审）
+        public static let screenAmberText = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.8392, blue: 0.0392, alpha: 1.0), light: UIColor(red: 0.698, green: 0.3137, blue: 0.0, alpha: 1.0))
+        /// 如更新 diff「+1,204」。浅色 #F2F2F7 4.83、白 5.39（#248A3D 在页面底只有 3.94，不用）
+        public static let screenGreenText = ZDynamicColor.make(dark: UIColor(red: 0.1882, green: 0.8196, blue: 0.3451, alpha: 1.0), light: UIColor(red: 0.1216, green: 0.4784, blue: 0.2078, alpha: 1.0))
+        /// 如「−318」、超时、已过期。浅色 #F2F2F7 4.83、白 5.38
+        public static let screenRedText = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.2706, blue: 0.2275, alpha: 1.0), light: UIColor(red: 0.8431, green: 0.0, blue: 0.0824, alpha: 1.0))
         /// 上行速率
         public static let screenUp = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.4196, blue: 0.4196, alpha: 1.0), light: UIColor(red: 1.0, green: 0.3686, blue: 0.3412, alpha: 1.0))
         /// 浮层/底栏玻璃底色（叠系统模糊）

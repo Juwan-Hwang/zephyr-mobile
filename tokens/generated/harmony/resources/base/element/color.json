@@ -213,6 +213,18 @@
       "value": "#FFFF3B30"
     },
     {
+      "name": "screen_amber_text",
+      "value": "#FFB25000"
+    },
+    {
+      "name": "screen_green_text",
+      "value": "#FF1F7A35"
+    },
+    {
+      "name": "screen_red_text",
+      "value": "#FFD70015"
+    },
+    {
       "name": "screen_up",
       "value": "#FFFF5E57"
     },
