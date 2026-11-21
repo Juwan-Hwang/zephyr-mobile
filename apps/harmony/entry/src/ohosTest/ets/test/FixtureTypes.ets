@@ -103,3 +103,29 @@ export interface FxUhdCase {
 export interface UhdNamesV1 {
   cases: FxUhdCase[];
 }
+
+export interface FxCmdRegion {
+  name: string;
+  code: string;
+}
+
+export interface FxCmdToken {
+  start: number;
+  len: number;
+  kind: string;
+  text: string;
+}
+
+export interface FxCmdCase {
+  input: string;
+  service: string | null;
+  scope: string | null;
+  region: FxCmdRegion | null;
+  action: string | null;
+  tokens: FxCmdToken[];
+}
+
+export interface CommandParseV1 {
+  version: number;
+  cases: FxCmdCase[];
+}

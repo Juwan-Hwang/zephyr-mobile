@@ -4,6 +4,7 @@ import settingsTest from './Settings.test';
 import toastTest from './Toast.test';
 import sceneSlotsTest from './SceneSlots.test';
 import navTest from './Nav.test';
+import commandParseTest from './CommandParse.test';
 
 export default function testsuite(): void {
   mockFixturesTest();
@@ -12,4 +13,5 @@ export default function testsuite(): void {
   toastTest();
   sceneSlotsTest();
   navTest();
+  commandParseTest();
 }
