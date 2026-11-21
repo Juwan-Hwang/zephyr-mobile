@@ -207,6 +207,42 @@
     {
       "name": "term_log_warning",
       "value": "Aviso"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Normal"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Lento"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Tiempo agotado"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Sin probar"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Vence pronto"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Vencido"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Error"
+    },
+    {
+      "name": "term_reachable",
+      "value": "Accesibles"
+    },
+    {
+      "name": "term_tested",
+      "value": "Probados"
     }
   ]
 }

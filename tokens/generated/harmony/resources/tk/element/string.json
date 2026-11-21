@@ -207,6 +207,42 @@
     {
       "name": "term_log_warning",
       "value": "Duýduryş"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Kadaly"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Haýal"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Wagt gutardy"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Barlanmadyk"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Möhleti golaýar"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Möhleti geçdi"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Şowsuz"
+    },
+    {
+      "name": "term_reachable",
+      "value": "Elýeterli"
+    },
+    {
+      "name": "term_tested",
+      "value": "Barlandy"
     }
   ]
 }

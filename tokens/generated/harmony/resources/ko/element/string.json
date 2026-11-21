@@ -207,6 +207,42 @@
     {
       "name": "term_log_warning",
       "value": "경고"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "정상"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "느림"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "시간 초과"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "미측정"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "곧 만료"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "만료됨"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "실패"
+    },
+    {
+      "name": "term_reachable",
+      "value": "연결 가능"
+    },
+    {
+      "name": "term_tested",
+      "value": "측정됨"
     }
   ]
 }

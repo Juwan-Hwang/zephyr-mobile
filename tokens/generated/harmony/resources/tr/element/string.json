@@ -207,6 +207,42 @@
     {
       "name": "term_log_warning",
       "value": "Uyarı"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Normal"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Yavaş"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Zaman aşımı"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Test edilmedi"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Yakında sona eriyor"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Süresi doldu"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Başarısız"
+    },
+    {
+      "name": "term_reachable",
+      "value": "Erişilebilir"
+    },
+    {
+      "name": "term_tested",
+      "value": "Test edildi"
     }
   ]
 }

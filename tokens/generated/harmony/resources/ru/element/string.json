@@ -207,6 +207,42 @@
     {
       "name": "term_log_warning",
       "value": "Предупреждение"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Норма"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Медленно"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Тайм-аут"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Не проверен"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Скоро истекает"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Истёк"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Ошибка"
+    },
+    {
+      "name": "term_reachable",
+      "value": "Доступны"
+    },
+    {
+      "name": "term_tested",
+      "value": "Проверено"
     }
   ]
 }

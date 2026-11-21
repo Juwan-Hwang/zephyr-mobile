@@ -207,6 +207,42 @@
     {
       "name": "term_log_warning",
       "value": "Cảnh báo"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Bình thường"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Chậm"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Hết thời gian"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Chưa kiểm tra"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Sắp hết hạn"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Đã hết hạn"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Thất bại"
+    },
+    {
+      "name": "term_reachable",
+      "value": "Kết nối được"
+    },
+    {
+      "name": "term_tested",
+      "value": "Đã kiểm tra"
     }
   ]
 }

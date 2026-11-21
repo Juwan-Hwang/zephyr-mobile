@@ -207,6 +207,42 @@
     {
       "name": "term_log_warning",
       "value": "Onyo"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Kawaida"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Polepole"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Muda umeisha"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Haijapimwa"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Inaisha hivi karibuni"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Imeisha muda"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Imeshindwa"
+    },
+    {
+      "name": "term_reachable",
+      "value": "Zinafikika"
+    },
+    {
+      "name": "term_tested",
+      "value": "Zimepimwa"
     }
   ]
 }

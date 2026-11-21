@@ -207,6 +207,42 @@
     {
       "name": "term_log_warning",
       "value": "警告"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "正常"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "遅い"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "タイムアウト"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "未テスト"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "まもなく期限切れ"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "期限切れ"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "失敗"
+    },
+    {
+      "name": "term_reachable",
+      "value": "接続可能"
+    },
+    {
+      "name": "term_tested",
+      "value": "テスト済み"
     }
   ]
 }
