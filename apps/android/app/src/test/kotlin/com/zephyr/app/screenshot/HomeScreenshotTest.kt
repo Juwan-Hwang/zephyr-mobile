@@ -24,6 +24,9 @@ import org.junit.runners.Parameterized
 class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent, private val fontScale: Float) {
 
     @get:Rule
+    val zone = FixedZoneRule()
+
+    @get:Rule
     val paparazzi = Paparazzi(
         deviceConfig = DeviceConfig.PIXEL_9.copy(
             nightMode = if (dark) NightMode.NIGHT else NightMode.NOTNIGHT,

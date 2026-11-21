@@ -27,6 +27,9 @@ import org.junit.runners.Parameterized
 class LocaleScreenshotTest(private val locale: String) {
 
     @get:Rule
+    val zone = FixedZoneRule()
+
+    @get:Rule
     val paparazzi = Paparazzi(
         deviceConfig = DeviceConfig.PIXEL_9.copy(nightMode = NightMode.NIGHT, fontScale = 1f, locale = locale),
         maxPercentDifference = 0.1,
