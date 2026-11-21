@@ -1,7 +1,7 @@
 /*
  * 吐司宿主：由根页面挂进 OverlayManager 浮层（窗口根，盖在 Navigation / 子页之上；失败时退回根 Stack），显示 AppServices.toasts 的当前吐司（§16.e⑥）。
  * - 出现时朗读文案（有撤销时连同“撤销”）；吐司获得读屏焦点期间不消失（ToastCenter.setFocused）。
- * - 撤销按钮用强调色；点吐司本身关闭（提交）。
+ * - 撤销按钮用强调色，只执行撤销（ToastCenter.undoCurrent）；点文案关闭（提交）。整行不挂点按，以免抢走撤销。
  */
 import { accessibility } from '@kit.AccessibilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
@@ -62,12 +62,20 @@ export struct ZToastHost {
     Column() {
       if (this.toast !== undefined) {
         Row({ space: 12 }) {
+          // 点文案关闭（提交）；不再挂在整行上，免得行级点按抢在“撤销”之前把吐司提交掉（真机：点撤销只关闭不撤销）。
           Text(this.toast.message)
             .fontSize(15)
             .fontColor($r('app.color.screen_on_primary'))
             .layoutWeight(1)
             .maxLines(2)
             .textOverflow({ overflow: TextOverflow.Ellipsis })
+            .constraintSize({ minHeight: 48 })
+            .onClick(() => {
+              const t = this.toast;
+              if (t !== undefined) {
+                AppServices.get().toasts.dismiss(t.serial);
+              }
+            })
           if (this.toast.undoable) {
             Text(ZTerm.undo)
               .fontSize(15)
@@ -75,11 +83,11 @@ export struct ZToastHost {
               .fontColor(this.theme.accentColor())
               .padding({ left: 8, right: 8, top: 10, bottom: 10 })
               .accessibilityRole(AccessibilityRoleType.BUTTON)
+              .hitTestBehavior(HitTestMode.Block)
               .onClick(() => {
-                const t = this.toast;
-                if (t !== undefined) {
-                  AppServices.get().toasts.undo(t.serial);
-                }
+                // 撤销“当前”吐司：不用本组件缓存的 serial（浮层里的 @Local 可能滞后于 ToastCenter）。
+                const done = AppServices.get().toasts.undoCurrent();
+                hilog.info(0x5A50, 'ZToastHost', 'undo tapped, ran=%{public}s', String(done));
               })
           }
         }
@@ -89,16 +97,12 @@ export struct ZToastHost {
         .borderRadius(14)
         .backgroundColor($r('app.color.screen_primary'))
         .shadow({ radius: 12, color: '#33000000', offsetY: 4 })
+        // 卡片本身挡住下面的页面（点内边距不漏给底下），但不挂点按手势。
+        .hitTestBehavior(HitTestMode.Block)
         .onAccessibilityFocus((focused: boolean) => {
           const t = this.toast;
           if (t !== undefined) {
             AppServices.get().toasts.setFocused(t.serial, focused);
-          }
-        })
-        .onClick(() => {
-          const t = this.toast;
-          if (t !== undefined) {
-            AppServices.get().toasts.dismiss(t.serial);
           }
         })
         .transition(TransitionEffect.OPACITY.combine(TransitionEffect.translate({ y: 16 })).animation({ duration: 200 }))
