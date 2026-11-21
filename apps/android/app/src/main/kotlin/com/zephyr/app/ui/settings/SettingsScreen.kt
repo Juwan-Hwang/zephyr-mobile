@@ -49,7 +49,6 @@ import com.zephyr.design.components.ZToggle
 import com.zephyr.design.components.zPressable
 import com.zephyr.design.format.ZFormat
 import com.zephyr.design.theme.ZTheme
-import com.zephyr.design.theme.darkVariant
 import com.zephyr.design.tokens.ZAccent
 import com.zephyr.engine.Accent
 import com.zephyr.engine.Appearance
@@ -122,7 +121,7 @@ fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onTrustedWifi: () -> U
                         Accent.entries.forEach { a ->
                             val name = stringResource(accentName(a))
                             val z = ZAccent.valueOf(a.name)
-                            val col = if (c.isDark) z.darkVariant() else z.color
+                            val col = z.base(c.isDark)
                             Box(
                                 Modifier.size(44.dp)
                                     .selectable(selected = s.accent == a, role = Role.RadioButton) { set { it.copy(accent = a) } }
