@@ -15,6 +15,7 @@ import { LicensesPage } from './LicensesPage';
 import { ZTerm } from '../generated/ZTerms';
 import { ZTheme } from '../common/Theme';
 import { ZToastHost } from '../components/ZToastHost';
+import { GestureLock } from '../common/GestureLock';
 import { ComponentContent, window } from '@kit.ArkUI';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 
@@ -202,7 +203,15 @@ struct Index {
         }
         .tabBar(this.tabBar(TAB_SETTINGS, ZTerm.settings))
       }
+      // 底部 tab 不可横滑（同 Android / iOS），首页场景行的横滑才不会被 Tabs 抢走。
       .scrollable(false)
+      .onContentWillChange((from: number, to: number) => {
+        if (GestureLock.active()) {
+          hilog.warn(0x5A50, 'Index', 'tab change %{public}d->%{public}d blocked during row swipe', from, to);
+          return false;
+        }
+        return true;
+      })
       .animationDuration(0)
       .barHeight(56)
       .barBackgroundColor($r('app.color.screen_glass'))
