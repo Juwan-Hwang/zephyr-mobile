@@ -10,6 +10,8 @@
  *   （同 Android AppRoot LibraryDest.Scenes）。sheet 里点候选 → 收起 sheet，首页出同一张“更改出口 IP？”确认卡。
  */
 import { CommandSheet } from './CommandSheet';
+import { hilog } from '@kit.PerformanceAnalysisKit';
+import { CommandApplier } from '../app/CommandApplier';
 import { AppServices } from '../app/AppServices';
 import { Format } from '../common/Format';
 import { Labels } from '../common/Labels';
@@ -63,6 +65,8 @@ export struct HomeView {
   @Local applying: boolean = false;
 
   private services: AppServices = AppServices.get();
+  /** 指令面板最近一次关闭的时间（CommandApplier.suppressesTap）。 */
+  private commandClosedAt: number = 0;
   private subs: StreamSub[] = [];
   private ticker: number = -1;
   private globalId: NodeId | undefined = undefined;
@@ -107,8 +111,19 @@ export struct HomeView {
   }
 
   private openScene(s: Scene): void {
+    if (CommandApplier.suppressesTap(this.commandClosedAt, Date.now())) {
+      // 指令面板刚关：这一下多半是落空到首页的“幽灵点按”（真机：再点“应用”打开了 AI 场景 sheet）。
+      hilog.info(0x5A50, 'HomeView', 'scene tap ignored right after command sheet closed: %{public}s', s.id);
+      return;
+    }
+    hilog.info(0x5A50, 'HomeView', 'open scene sheet %{public}s', s.id);
     this.sheetSceneId = s.id;
     this.showScene = true;
+  }
+
+  private closeCommand(): void {
+    this.showCommand = false;
+    this.commandClosedAt = Date.now();
   }
 
   private onConnection(c: ConnectionState): void {
@@ -536,7 +551,7 @@ export struct HomeView {
         this.onOpenRules();
       },
       onDone: () => {
-        this.showCommand = false;
+        this.closeCommand();
       }
     })
   }
@@ -576,7 +591,7 @@ export struct HomeView {
           dragBar: true,
           backgroundColor: $r('app.color.screen_bg'),
           onDisappear: () => {
-            this.showCommand = false;
+            this.closeCommand();
           }
         })
         Button({ type: ButtonType.Circle }) {
