@@ -144,6 +144,6 @@ private fun Option(icon: androidx.compose.ui.graphics.vector.ImageVector, label:
         Spacer(Modifier.width(14.dp))
         ZText(label, Modifier.weight(1f), style = ZTheme.type.body, color = if (enabled) c.text1 else c.text3)
         note?.let { ZText(it, style = ZTheme.type.footnote, color = c.text4) }
-        ZIcon(ZIcons.ChevronRight, tint = ZTheme.colors.text4, size = 16.dp)
+        ZIcon(ZIcons.ChevronRight, tint = ZTheme.colors.text3, size = 16.dp)
     }
 }
