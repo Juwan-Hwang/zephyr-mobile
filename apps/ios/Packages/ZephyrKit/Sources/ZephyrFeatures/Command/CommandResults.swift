@@ -3,6 +3,8 @@
 // Raycast 式结果（规范 §9.5，设计评审 J-3）：按类型分组（指令 / 场景 / 节点 / 设置 / 规则测试，空组不显示），
 // 行右侧对齐动作标签（应用 / 切换 / 打开 / 测试），第一行另显示 ⏎（回车执行第一行，见 CommandView.submit）；
 // 每组最多 5 行，组末「显示全部 n 项」。
+// 硬件键盘（J-3）：↑ / ↓ / Tab / ⇧Tab 在可见行间移动高亮（CommandTextField 的 UIKeyCommand），回车执行高亮行；
+// 高亮行有底色并带 ⏎；没有高亮时回车照旧执行主预览或第一行。
 
 import SwiftUI
 import ZephyrDesign
@@ -14,9 +16,12 @@ struct CommandResults: View {
     let onRun: (CommandSuggestion) -> Void
     let onApply: () -> Void
     var onFill: (String) -> Void = { _ in }
+    /// 展开了「显示全部」的组（放在 CommandView，键盘移动要知道哪些行可见）。
+    @Binding var expanded: Set<CommandGroup>
+    /// 键盘高亮行的 key（`keyed` 的 key）；nil = 无高亮。
+    var highlighted: String? = nil
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.zStaticRendering) private var still
-    @State private var expanded: Set<CommandGroup> = []
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -50,7 +55,7 @@ struct CommandResults: View {
                 let rest = Self.rest(model)
                 if !rest.isEmpty {
                     let groups = Self.groups(rest)
-                    let defaultKey = model.hasPrimary ? nil : groups.first?.items.first.map { Self.keyed([$0])[0].key }
+                    let defaultKey = highlighted ?? (model.hasPrimary ? nil : groups.first?.items.first.map { Self.keyed([$0])[0].key })
                     ForEach(groups, id: \.group) { g in
                         label(g.group.title)
                         groupList(g, defaultKey: defaultKey)
@@ -88,9 +93,10 @@ struct CommandResults: View {
                     let s = item.suggestion
                     if item.index > 0 { ZDivider() }
                     Button { onRun(s) } label: {
-                        SuggestionRow(s: s, isDefault: item.key == defaultKey)
+                        SuggestionRow(s: s, isDefault: item.key == defaultKey, isHighlighted: item.key == highlighted)
                     }
                     .buttonStyle(ZRowButtonStyle())
+                    .id(item.key)
                 }
                 if !showAll {
                     ZDivider()
@@ -136,6 +142,25 @@ struct CommandResults: View {
     /// 回车执行的第一行（分组后的第一组第一行）。
     nonisolated static func firstRow(_ list: [CommandSuggestion]) -> CommandSuggestion? {
         groups(list).first?.items.first
+    }
+
+    /// 当前可见的结果行（组序 + 每组 5 行 / 已展开全部），key 与渲染一致。键盘移动按这个顺序。
+    nonisolated static func visibleRows(_ list: [CommandSuggestion], expanded: Set<CommandGroup>) -> [KeyedSuggestion] {
+        groups(list).flatMap { g -> [KeyedSuggestion] in
+            let showAll = expanded.contains(g.group) || g.items.count <= groupLimit
+            return keyed(showAll ? g.items : Array(g.items.prefix(groupLimit)))
+        }
+    }
+
+    /// 键盘移动一步（↑ = −1，↓ / Tab = +1）后的高亮 key。不循环，停在两端。
+    /// - 没有高亮时：有主预览卡（hasPrimary，回车默认应用预览）→ ↓ 到第一行；否则第一行已是默认 → ↓ 到第二行。
+    /// - 有主预览卡时，从第一行再 ↑ 回到「无高亮」（回车 = 应用预览）。
+    nonisolated static func moveHighlight(from current: String?, rows: [String], by step: Int, hasPrimary: Bool) -> String? {
+        guard !rows.isEmpty, step != 0 else { return current }
+        let floor = hasPrimary ? -1 : 0
+        let at: Int = current.flatMap { rows.firstIndex(of: $0) } ?? floor
+        let next = min(rows.count - 1, max(floor, at + (step > 0 ? 1 : -1)))
+        return next < 0 ? nil : rows[next]
     }
 
     private func suggestionList(_ list: [CommandSuggestion]) -> some View {
@@ -249,8 +274,10 @@ enum CommandGroup: Int, CaseIterable, Hashable, Sendable {
 @MainActor
 private struct SuggestionRow: View {
     let s: CommandSuggestion
-    /// 第一行（回车执行）：动作标签旁显示 ⏎ 键帽。
+    /// 第一行 / 键盘高亮行（回车执行）：动作标签旁显示 ⏎ 键帽。
     var isDefault = false
+    /// 硬件键盘高亮（J-3）：整行 screen.pressed 底色。
+    var isHighlighted = false
 
     var body: some View {
         HStack(spacing: ZTokens.Space.n4) {
@@ -283,8 +310,10 @@ private struct SuggestionRow: View {
         }
         .padding(.vertical, ZTokens.Space.n4)
         .padding(.horizontal, ZTokens.Space.n5)
+        .background(isHighlighted ? ZTokens.Colors.screenPressed : Color.clear)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(isHighlighted ? .isSelected : [])
         .accessibilityHint(isDefault ? Text("按回车执行") : Text(verbatim: ""))
     }
 

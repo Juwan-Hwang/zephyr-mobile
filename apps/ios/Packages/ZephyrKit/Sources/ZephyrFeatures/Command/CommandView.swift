@@ -4,6 +4,7 @@
 //   预览卡：Gemini 使用日本节点 / 3 个可用，将使用东京 03。/ 出口 IP 将更改 SG … → JP … / [应用]
 //   其余建议（引擎 commandSuggestions，≤ 8 条）
 // 空输入时显示"建议"（§16.d U24 示例短语，点按只填入）。回车 = 应用主预览（没有则执行第一条建议）。
+// 硬件键盘（规范 §9.5，J-3）：↑ / ↓ / Tab / ⇧Tab 在结果行间移动高亮，回车执行高亮行；输入变化后清除高亮。
 
 import SwiftUI
 import ZephyrDesign
@@ -17,6 +18,8 @@ struct CommandView: View {
     @State private var focused = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var appeared = false
+    @State private var expanded: Set<CommandGroup> = []
+    @State private var highlighted: String?
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -27,14 +30,23 @@ struct CommandView: View {
                 .accessibilityHidden(true)
             if let model {
                 VStack(spacing: 0) {
-                    CommandField(model: model, focused: $focused, onSubmit: submit, onCancel: close)
+                    CommandField(model: model, focused: $focused, onSubmit: submit, onCancel: close, onMove: move)
                         .offset(y: appeared || reduceMotion ? 0 : ZTokens.Space.n4)
-                    ScrollView {
-                        CommandResults(model: model, onRun: run, onApply: apply, onFill: { model.fill($0) })
-                            .padding(.bottom, ZTokens.Space.n8)
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            CommandResults(model: model, onRun: run, onApply: apply, onFill: { model.fill($0) },
+                                           expanded: $expanded, highlighted: highlighted)
+                                .padding(.bottom, ZTokens.Space.n8)
+                        }
+                        .scrollDismissesKeyboard(.interactively)
+                        .scrollIndicators(.hidden)
+                        .onChange(of: highlighted) { _, key in
+                            guard let key else { return }
+                            withAnimation(reduceMotion ? nil : ZMotion.standard) { proxy.scrollTo(key, anchor: nil) }
+                        }
                     }
-                    .scrollDismissesKeyboard(.interactively)
-                    .scrollIndicators(.hidden)
+                    .onChange(of: model.suggestions) { _, _ in highlighted = nil }
+                    .onChange(of: model.input) { _, _ in highlighted = nil; expanded = [] }
                 }
                 .padding(.top, ZTokens.Space.n3)
             }
@@ -62,8 +74,18 @@ struct CommandView: View {
 
     private func submit() {
         guard let model else { return }
-        if model.hasPrimary { apply() }
+        if let key = highlighted,
+           let row = CommandResults.visibleRows(CommandResults.rest(model), expanded: expanded).first(where: { $0.key == key }) {
+            run(row.suggestion)
+        } else if model.hasPrimary { apply() }
         else if let first = CommandResults.firstRow(CommandResults.rest(model)) { run(first) }   // §9.5：回车执行分组后的第一行
+    }
+
+    /// ↑ = −1，↓ / Tab = +1。空输入（示例短语）不参与。
+    private func move(_ step: Int) {
+        guard let model, !model.input.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        let rows = CommandResults.visibleRows(CommandResults.rest(model), expanded: expanded).map(\.key)
+        highlighted = CommandResults.moveHighlight(from: highlighted, rows: rows, by: step, hasPrimary: model.hasPrimary)
     }
 
     private func apply() {
@@ -90,6 +112,7 @@ private struct CommandField: View {
     @Binding var focused: Bool
     let onSubmit: () -> Void
     let onCancel: () -> Void
+    let onMove: (Int) -> Void
     @Environment(\.zAccent) private var accent
     @ScaledMetric(relativeTo: .body) private var height = HMetrics.commandFieldHeight
 
@@ -99,7 +122,7 @@ private struct CommandField: View {
                 .foregroundStyle(ZColor.t3)
                 .accessibilityHidden(true)
             CommandTextField(text: $model.input, isFocused: $focused, marks: marks, tint: accent.color,
-                             placeholder: ZL.tr("搜索或输入指令"), onSubmit: onSubmit)
+                             placeholder: ZL.tr("搜索或输入指令"), onSubmit: onSubmit, onMove: onMove)
                 .frame(maxWidth: .infinity)
                 .frame(height: height)
             Button(action: onCancel) {
