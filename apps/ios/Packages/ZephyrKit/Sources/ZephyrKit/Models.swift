@@ -328,10 +328,21 @@ public struct NodeIndex: Sendable, Hashable, Codable {
     public var total: Int64
     public var sections: [RegionSection]
     public var testedCount: Int64
-    public init(total: Int64, sections: [RegionSection], testedCount: Int64) {
+    /// 契约 §18.a（v0.6 追加，可选）：`nodeFunnel(now, latencyFreshMillis, 200).reachable`；取不到为 nil，不代填。
+    public var reachableCount: Int64?
+    /// 与 `reachableCount` **同一次** `nodeFunnel` 的 `tested`（iOS 本地字段，不在契约 record 里）。
+    /// 节点页判断句「可连通 x · 已检测 N」两个数都取这一次调用，保证 reachable ≤ tested；与 `reachableCount` 同为 nil。
+    /// `testedCount` 原定义不变（扫描进度、页脚等照旧用它）。
+    public var funnelTested: Int64?
+    public init(total: Int64, sections: [RegionSection], testedCount: Int64,
+                reachableCount: Int64? = nil, funnelTested: Int64? = nil) {
         self.total = total; self.sections = sections; self.testedCount = testedCount
+        self.reachableCount = reachableCount; self.funnelTested = reachableCount == nil ? nil : funnelTested
     }
-    enum CodingKeys: String, CodingKey { case total, sections; case testedCount = "tested_count" }
+    enum CodingKeys: String, CodingKey {
+        case total, sections; case testedCount = "tested_count"
+        case reachableCount = "reachable_count"; case funnelTested = "funnel_tested"
+    }
 }
 
 public struct NodeQueryResult: Sendable, Hashable, Codable {

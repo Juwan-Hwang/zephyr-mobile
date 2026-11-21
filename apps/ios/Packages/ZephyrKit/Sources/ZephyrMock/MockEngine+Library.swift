@@ -33,15 +33,22 @@ extension MockEngine {
     }
 
     /// Mock 漏斗（契约 §15.c）：sourceCount / poolSize 取原型 lede（2 / 512），池为各地区轮流取的前 512 个节点，
-    /// 其余按 mock 延迟（已测值优先，否则缓存值）计算，不另编数字。新鲜度在 Mock 中不区分。
+    /// 其余按 mock 延迟（已测值优先，否则缓存值）计算，不另编数字。
+    /// 新鲜度（契约 §18.a Mock）：样本时间 = 写入时刻（fixture 缓存值记为引擎启动时刻），超过 maxAgeMs 的不计入
+    /// tested / reachable；maxAgeMs ≤ 0 = 不过期。
     public func nodeFunnel(maxAgeMs: Int64, thresholdMs: Int32) async -> NodeFunnel? {
         let threshold = thresholdMs > 0 ? thresholdMs : 300
-        let measured = withState { $0.tested }
+        let (measured, measuredAt) = withState { ($0.tested, $0.testedAt) }
+        let now = clock.now()
         var tested = 0, reachable = 0, under = 0
         for i in 0..<MockFixtures.funnelPoolSize {
             let r = i % MockNodes.regions.count
             let j = Int64(i / MockNodes.regions.count)
-            guard let ms = measured[MockNodes.id(r, j)] ?? MockNodes.cachedLatency(r, j) else { continue }
+            let id = MockNodes.id(r, j)
+            let live = measured[id]
+            guard let ms = live ?? MockNodes.cachedLatency(r, j) else { continue }
+            let at = live != nil ? (measuredAt[id] ?? startedAt) : startedAt
+            if maxAgeMs > 0, now - at > maxAgeMs { continue }
             tested += 1
             if ms >= 0 { reachable += 1; if ms < threshold { under += 1 } }
         }
@@ -206,9 +213,16 @@ extension MockEngine {
 
     // MARK: §5 节点库
 
+    /// 契约 §18.a：`latency.threshold-slow`；不影响 `reachable`。
+    static let reachableThresholdMs: Int32 = 200
+
     public func nodeIndex() async -> NodeIndex {
-        let tested = withState { $0.testedCount }
-        return NodeIndex(total: MockNodes.total, sections: Self.fullModel.sections, testedCount: MockNodes.testedBase + tested)
+        let (tested, ttlHours) = withState { ($0.testedCount, $0.settings.latencyTtlHours) }
+        // 契约 §18.a Mock：reachable / tested 取同一次 nodeFunnel（mock 延迟表、与核心同一有效期：设置 latencyTtlHours，0 = 24 h）。
+        let maxAge = Int64(ttlHours > 0 ? ttlHours : 24) * 3_600_000
+        let f = await nodeFunnel(maxAgeMs: maxAge, thresholdMs: Self.reachableThresholdMs)
+        return NodeIndex(total: MockNodes.total, sections: Self.fullModel.sections, testedCount: MockNodes.testedBase + tested,
+                         reachableCount: f.map { Int64($0.reachable) }, funnelTested: f.map { Int64($0.tested) })
     }
 
     public func queryNodes(query: String) async throws -> NodeQueryResult {
@@ -329,6 +343,7 @@ extension MockEngine {
             for u in updates {
                 if MockFixtures.pinnedById[u.id] != nil { continue }
                 if s.tested.updateValue(u.latencyMs, forKey: u.id) == nil { s.testedCount += 1 }
+                s.testedAt[u.id] = u.at
             }
         }
     }
