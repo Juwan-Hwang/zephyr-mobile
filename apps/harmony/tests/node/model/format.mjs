@@ -12,6 +12,7 @@ eq(Format.duration(8047000),'2:14:07');eq(Format.duration(247000),'0:04:07');
 eq(Format.micros(420),'0.42 ms');eq(Format.micros(12345),'12.3 ms');
 eq(Format.latencyClass(undefined),'unknown');eq(Format.latencyClass(-1),'timeout');eq(Format.latencyClass(38),'normal');eq(Format.latencyClass(200),'slow');
 eq(Format.ago(0,30000).unit,'now');eq(Format.ago(0,300000).count,5);eq(Format.ago(0,7200000).unit,'hours');eq(Format.ago(0,3*86400000).count,3);
+const c=Format.chip;eq(c(999,false,'万'),'999');eq(c(1234,false,'万'),'1.2K');eq(c(1000,false,'万'),'1K');eq(c(12345,false,'万'),'12K');eq(c(999999,false,'万'),'1M');eq(c(2204117,false,'万'),'2.2M');eq(c(123456,false,'万'),'123K');eq(c(2204117,true,'万'),'220 万');
 const now=new Date(2026,10,20,23,0).getTime();
 eq(Format.expiry(now-1,now).kind,'expired');eq(Format.expiry(now+30*60000,now).kind,'today');
 const e=Format.expiry(new Date(2026,10,21,1,0).getTime(),now);eq(e.kind,'days');eq(e.days,1);

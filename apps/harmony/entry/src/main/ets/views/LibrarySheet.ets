@@ -12,6 +12,11 @@ import { Scene, Subscription } from '../engine/Model';
 import { Subscription as StreamSub } from '../engine/Stream';
 import { ZTerm } from '../generated/ZTerms';
 
+/** 资料库磁贴组件 id（界面测试用）。 */
+export function libraryTileId(d: LibraryDest): string {
+  return 'zephyr.library.' + d;
+}
+
 @ComponentV2
 export struct LibrarySheet {
   @Event onOpen: (d: LibraryDest) => void = (d: LibraryDest) => {};
@@ -79,6 +84,7 @@ export struct LibrarySheet {
     .backgroundColor($r('app.color.screen_s1'))
     .accessibilityGroup(true)
     .accessibilityRole(AccessibilityRoleType.BUTTON)
+    .id(libraryTileId(d))
     .onClick(() => this.onOpen(d))
   }
 

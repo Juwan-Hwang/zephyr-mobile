@@ -5,6 +5,9 @@
  * - 查询串行：新查询让旧结果作废（runId）；nodeRows 报 stale_token（§16.b①）时用原查询重查一次并回到顶部。
  * - 延迟：latencyUpdates 合并进本地表；只通知可见范围内受影响的行。
  * NodeRowSource 是给 LazyForEach 的 IDataSource，键里带 token / 节点 id / 延迟，数据一变就重建该行。
+ * M1-10（U14/U15）：页眉统计与地区 chips（nodeIndex 最大 8 个分区）、置顶分区头 sectionAt、底栏位置 position、
+ * 停滚自动测速 autoTestIds/autoTest（仅 Wi‑Fi 测速 + 按流量计费网络时不测，同 Android testVisible / NetworkMonitor.autoTestAllowed）、
+ * 详情单测 testOne、名称高亮 NodeNameParts（同 Android NodeRows.highlighted）。
  */
 import { ErrorCode, LatencyUpdate, NodeId, NodeIndex, NodePage, NodeQueryResult, NodeSummary, RegionSection } from '../engine/Model';
 import { Subscription as StreamSub } from '../engine/Stream';
@@ -33,8 +36,23 @@ export interface NodeRowItem {
   key: string;
 }
 
+/** 地区 chip：nodeIndex 里节点最多的分区（前 CHIP_COUNT 个），同 Android NodesUi.chips（L-P1-4）。 */
+export interface RegionChip {
+  region: string;
+  count: number;
+}
+
+export const CHIP_COUNT: number = 8;
+/** 停滚后多久自动测速（tokens motion.settle-delay，Android ZMotion.settleDelay）。 */
+export const SETTLE_DELAY_MS: number = 400;
+
 export interface NodeListState {
   query: string;
+  /** 节点库总数 / 地区数 / 订阅数（页眉，取自 nodeIndex，不随查询变）。 */
+  indexTotal: number;
+  regionCount: number;
+  subscriptionCount: number;
+  chips: RegionChip[];
   total: number;
   sections: number;
   highlights: string[];
@@ -68,6 +86,10 @@ export class NodeListModel {
   private failed: boolean = false;
   private loading: boolean = false;
   private currentQuery: string = '';
+  private indexTotal: number = 0;
+  private regionCount: number = 0;
+  private subscriptionCount: number = 0;
+  private chips: RegionChip[] = [];
 
   /** 行数变化 / 查询换了：整表重载。 */
   onReset: () => void = () => {};
@@ -85,6 +107,10 @@ export class NodeListModel {
     }
     this.engine.nodeIndex().then((idx: NodeIndex) => {
       this.testedCount = idx.testedCount;
+      this.indexTotal = idx.total;
+      this.regionCount = idx.sections.length;
+      this.chips = NodeListModel.chipsOf(idx.sections);
+      this.subscriptionCount = this.engine.subscriptions().value.length;
       this.publish();
     }).catch(() => {});
   }
@@ -101,6 +127,10 @@ export class NodeListModel {
     const r = this.result;
     const s: NodeListState = {
       query: this.currentQuery,
+      indexTotal: this.indexTotal,
+      regionCount: this.regionCount,
+      subscriptionCount: this.subscriptionCount,
+      chips: this.chips,
       total: r !== undefined ? r.total : 0,
       sections: r !== undefined ? r.sections.length : 0,
       highlights: r !== undefined ? r.highlights : [],
@@ -376,9 +406,167 @@ export class NodeListModel {
     return this.latency.get(id);
   }
 
+  isTesting(id: NodeId): boolean {
+    return this.testing.has(id);
+  }
+
+  /** 节点数非零的分区按数量降序取前 CHIP_COUNT 个。 */
+  static chipsOf(sections: RegionSection[]): RegionChip[] {
+    const out: RegionChip[] = [];
+    for (const s of sections) {
+      if (s.count > 0) {
+        const c: RegionChip = { region: s.region, count: s.count };
+        out.push(c);
+      }
+    }
+    out.sort((a: RegionChip, b: RegionChip) => b.count - a.count);
+    return out.slice(0, CHIP_COUNT);
+  }
+
+  /** 当前结果的分区（索引条）。 */
+  sections(): RegionSection[] {
+    return this.result !== undefined && !this.failed ? this.result.sections : [];
+  }
+
+  /** 行所在分区（置顶分区头、索引条气泡）。 */
+  sectionAt(row: number): RegionSection | undefined {
+    const p = this.pos(row);
+    return p !== undefined ? p.section : undefined;
+  }
+
+  /** 底栏 “n / 总数”：可见范围里第一个节点行的序号 + 1；没有节点行时 0。 */
+  position(): number {
+    for (let row = this.visibleFrom; row <= this.visibleTo; row++) {
+      const p = this.pos(row);
+      if (p !== undefined && p.ordinal >= 0) {
+        return p.ordinal + 1;
+      }
+    }
+    return 0;
+  }
+
+  /** 停滚自动测速的候选：可见、已加载、还没有延迟读数、不在测（≤ MAX_TEST_BATCH）。 */
+  autoTestIds(): NodeId[] {
+    const out: NodeId[] = [];
+    for (let row = this.visibleFrom; row <= this.visibleTo && out.length < MAX_TEST_BATCH; row++) {
+      const p = this.pos(row);
+      if (p !== undefined && p.ordinal >= 0) {
+        const n = this.nodeAt(p.ordinal);
+        if (n !== undefined && n.latencyMs === undefined && !this.latency.has(n.id) && !this.testing.has(n.id)) {
+          out.push(n.id);
+        }
+      }
+    }
+    return out;
+  }
+
+  /** 自动测速是否允许：仅 Wi‑Fi 测速开着且当前网络按流量计费时不测（Android NetworkMonitor.autoTestAllowed）。 */
+  static autoTestAllowed(wifiOnly: boolean, metered: boolean): boolean {
+    return !(wifiOnly && metered);
+  }
+
+  /** 停滚 SETTLE_DELAY_MS 后调用。返回实际送测的个数。 */
+  autoTest(metered: boolean): number {
+    const ids = this.autoTestIds();
+    if (ids.length === 0 || !NodeListModel.autoTestAllowed(this.engine.settings().value.testOnWifiOnly, metered)) {
+      return 0;
+    }
+    this.test(ids);
+    return ids.length;
+  }
+
+  /** 详情 sheet 的“测速”：单个节点，已有读数也重测。 */
+  testOne(id: NodeId): void {
+    if (this.testing.has(id)) {
+      return;
+    }
+    this.testing.add(id);
+    this.notifyIds([id]);
+    this.publish();
+    this.engine.testLatency([id]).catch(() => {
+      this.testing.delete(id);
+      this.notifyIds([id]);
+      this.publish();
+    });
+  }
+
   /** 测试辅助：行号 → 序号映射正确性。 */
   ordinalToRow(ordinal: number): number {
     return this.rowOf(ordinal);
+  }
+}
+
+export enum NamePartKind {
+  PLAIN = 'plain',
+  HIT = 'hit',
+  /** 名称末尾的倍率 “×1.5”（灰显）。 */
+  MULT = 'mult'
+}
+
+export interface NamePart {
+  text: string;
+  kind: NamePartKind;
+}
+
+/** 节点名高亮（同 Android NodeRows.highlighted）：查询词不区分大小写、各取第一次出现、不重叠；末尾 “ ×n” 单独灰显。 */
+export class NodeNameParts {
+  static split(name: string, terms: string[]): NamePart[] {
+    const out: NamePart[] = [];
+    let base = name;
+    let mult = '';
+    const sp = name.lastIndexOf(' ×');
+    if (sp >= 0 && NodeNameParts.isMult(name.substring(sp + 2))) {
+      base = name.substring(0, sp);
+      mult = name.substring(sp + 1);
+    }
+    const lower = base.toLowerCase();
+    const hits: number[][] = [];
+    for (const t of terms) {
+      if (t.length === 0) {
+        continue;
+      }
+      const k = lower.indexOf(t.toLowerCase());
+      if (k >= 0) {
+        hits.push([k, k + t.length]);
+      }
+    }
+    hits.sort((a: number[], b: number[]) => a[0] - b[0]);
+    let i = 0;
+    for (const h of hits) {
+      if (h[0] < i) {
+        continue;
+      }
+      if (h[0] > i) {
+        out.push(NodeNameParts.part(base.substring(i, h[0]), NamePartKind.PLAIN));
+      }
+      out.push(NodeNameParts.part(base.substring(h[0], h[1]), NamePartKind.HIT));
+      i = h[1];
+    }
+    if (i < base.length || out.length === 0) {
+      out.push(NodeNameParts.part(base.substring(i), NamePartKind.PLAIN));
+    }
+    if (mult.length > 0) {
+      out.push(NodeNameParts.part(' ' + mult, NamePartKind.MULT));
+    }
+    return out;
+  }
+
+  private static isMult(s: string): boolean {
+    if (s.length === 0) {
+      return false;
+    }
+    for (let i = 0; i < s.length; i++) {
+      const c = s.charAt(i);
+      if (!(c === '.' || (c >= '0' && c <= '9'))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static part(text: string, kind: NamePartKind): NamePart {
+    const p: NamePart = { text: text, kind: kind };
+    return p;
   }
 }
 
