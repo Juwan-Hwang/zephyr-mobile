@@ -889,16 +889,19 @@ record NodeIndex { total: Int64, sections: [RegionSection], testedCount: Int64, 
 ```
 - 定义：`reachableCount` = 与 `testedCount` **同一有效期**（§15.e `latencyFreshMillis`，默认 24 h）内、最近一次样本 ms ≥ 0 的节点数，只数仍在库中的节点。取值 = `nodeFunnel(nowMillis, latencyFreshMillis, thresholdMs).reachable`（§15.c；`thresholdMs` 不影响 `reachable`，传 `latency.threshold-slow` = 200 即可）。
 - **核心不新增导出**：`NodeIndex` 由平台组装（iOS `CoreEngine.nodeIndex()`、Android `CoreEngine.nodeIndex()`、鸿蒙 core-ohos 同名转发），组装时多调一次 `nodeFunnel`；可与场景 sheet 的漏斗共用节流（同一 `nowMillis` 窗口内复用结果）。
-- `null` = 取不到（`nodeFunnel` 抛错、旧 Mock 未实现）。此时只显示"已检测 N"，**不得**用 `testedCount` 或别的数顶替。`testedCount` 会把已删除订阅的旧样本算进去而 `reachable` 不会，所以理论上 `reachableCount ≤ testedCount` 但两者不是同一集合的严格子集；界面不做"x / N"分数或百分比。
-- Mock（mock-spec）：`reachableCount` = mock 延迟表中有效期内 ms ≥ 0 的个数，按 mock 数据算，不另编。
+- `null` = 取不到（`nodeFunnel` 抛错、旧 Mock 未实现）。此时只显示"已检测 N"（N = `testedCount`），**不得**用别的数顶替 `reachable`。
+- **同一快照**：有 `reachableCount` 时，判断句里的"已检测 N"取**同一次** `nodeFunnel` 返回的 `tested`，不取另外读的 `testedCount`。两次分开读缓存，中间若有测速回写，可能出现 reachable > tested；而且 `testedCount` 会把已删除订阅的旧样本算进去，`nodeFunnel` 不会。同一次调用能保证 `reachable ≤ tested`。`NodeIndex.testedCount` 的原定义不变，其他地方（扫描进度等）照旧用它。界面不做"x / N"分数或百分比。
+- **索引加载失败不等于未检测**：`nodeIndex` 失败或核心不可用时（各端现在会返回全 0 的 `NodeIndex`），平台必须走页面错误态（§16.b 的 PageErrorBanner / 空状态），**不显示**判断句，尤其不能显示"尚未检测…"那一行。判断依据是加载结果本身（失败或成功），不是数字恰好为 0。
+- Mock（mock-spec）：`reachableCount` = mock 延迟表中有效期内 ms ≥ 0 的个数，按 mock 数据算，不另编。Mock 的 `nodeFunnel` 也要按 `maxAgeMillis` 过滤：样本时间戳记为写入时刻，过期样本不计入 `tested` / `reachable`。
 
 头部文案（大数字仍是 `total`，判断句放在大数字下方一行，取代原来单独的"已检测 N"）：
 
 | 条件 | zh | en |
 |---|---|---|
-| `reachableCount != null` 且 `testedCount > 0` | 可连通 {reachable} · 已检测 {tested} | {reachable} reachable · {tested} tested |
+| `reachableCount != null` 且 funnel `tested > 0` | 可连通 {reachable} · 已检测 {tested}（两个数来自同一次 `nodeFunnel`） | {reachable} reachable · {tested} tested |
 | `reachableCount == null` 且 `testedCount > 0` | 已检测 {tested} | {tested} tested |
-| `testedCount == 0` | 尚未检测，停止滚动后自动测可见节点 | Not tested yet — visible nodes are tested when you stop scrolling |
+| 索引加载成功且 `testedCount == 0` | 尚未检测，停止滚动后自动测可见节点 | Not tested yet — visible nodes are tested when you stop scrolling |
+| 索引加载失败 / 核心不可用 | 不显示判断句，走页面错误态 | 同左 |
 | 搜索结果页（`queryNodes` 非空） | 不显示判断句，保持现有"{total} 个结果 · 用时 x ms" | 同左 |
 
 - "可连通 / 已检测"用 18.b 的术语 `reachable` / `tested`；数字格式按 §16.e（千分位、大数缩写规则同大数字）。其余 12 种语言由各端按术语与 CLDR 复数自行翻译，句式不得改成分数。
@@ -921,7 +924,7 @@ record NodeIndex { total: Int64, sections: [RegionSection], testedCount: Int64, 
 | `tested` | 已检测 | Tested | 18.a 节点页判断句 |
 
 规则：
-1. 每个状态至少有 **形状或文字之一** 与颜色同时出现：圆点（●）、✕、进度条位置、或上表文字。色盲 / 灰度下仍能分辨。
+1. 每个**非正常**状态（较慢、超时、未测、即将到期、已过期、失败）至少有 **形状或文字之一** 与颜色同时出现：圆点（●）、✕、进度条位置，或上表文字。**正常是缺省状态**：不加任何标记，数值本身就是信息。于是去掉颜色以后，有标记就是异常，没有标记就是正常，色盲或灰度下仍能分辨。较慢（≥ 200 ms）属于例外：它的读数本身带数值，界面上不另加字，但无障碍标签必须追加「较慢」，场景 sheet 的刻度条用位置（200 ms 长刻右侧）表达。
 2. 浅色模式下状态色作**文字**一律用 v0.6 的文字色（`screen.amber-text` / `green-text` / `red-text`，或已改值的 `latency.slow` / `latency.timeout`）；原 `screen.amber` / `green` / `red` 只给圆点、进度条、图标填充。
 3. 小组件、锁屏、灵动岛 / 服务卡片同规则（例："连接失败 · 轻点查看原因"副标题用 t2，失败状态由红圆点 + "连接失败"表达）。
 
