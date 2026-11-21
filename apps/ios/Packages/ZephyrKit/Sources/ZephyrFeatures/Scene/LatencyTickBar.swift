@@ -43,7 +43,7 @@ struct LatencyTickBar: View {
                         .foregroundStyle(ZColor.t3)
                         .fixedSize()
                         .alignmentGuide(.leading) { d in d.width / 2 - x200 }
-                        .alignmentGuide(.bottom) { d in d.height + Self.longTick + ZTokens.Space.n1 }
+                        .alignmentGuide(.bottom) { d in d.height + long + ZTokens.Space.n1 }   // 用上面取出的局部值：闭包是 Sendable，不能读 MainActor 隔离的 Self.longTick
                     Canvas { ctx, size in
                         let h = size.height
                         // 200 ms 长刻
