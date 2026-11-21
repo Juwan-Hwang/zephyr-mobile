@@ -28,7 +28,9 @@ fun ZRegionBadge(code: String, modifier: Modifier = Modifier, large: Boolean = f
             .padding(horizontal = if (large) 6.dp else 5.dp, vertical = if (large) 5.dp else 0.dp),
         contentAlignment = Alignment.Center,
     ) {
-        ZText(code.uppercase(), style = if (large) ZTheme.type.mono else BadgeText, color = if (active) c.accentText else c.text2, maxLines = 1)
+        // Spec §9.2 / review L-2: 10.5sp is allowed only for 2–5 char codes and only in t2 or stronger — never accent
+        // or t3/t4. The active (scrubbing) state is carried by the accent outline; the code itself goes to t1.
+        ZText(code.uppercase(), style = if (large) ZTheme.type.mono else BadgeText, color = if (active) c.text1 else c.text2, maxLines = 1)
     }
 }
 
