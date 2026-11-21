@@ -49,7 +49,7 @@ class ZephyrUsageWidget : GlanceAppWidget() {
     }
 
     @Composable
-    private fun Content(today: Long, hourly: List<Long>) {
+    internal fun Content(today: Long, hourly: List<Long>) {
         val bg = ColorProvider(day = Color(0xFFFFFFFF), night = Color(0xFF141417))
         val t1 = ColorProvider(day = Color(0xE6000000), night = Color(0xF2FFFFFF))
         val t3 = ColorProvider(day = Color(0x8C000000), night = Color(0x80FFFFFF)) // tokens screen.t3 (#37)
