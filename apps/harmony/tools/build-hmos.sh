@@ -59,7 +59,7 @@ sh "$TOOLS/wrap-x86.sh" $SDK/openharmony/toolchains $SDK/openharmony/ets $SDK/op
 mkdir -p "$PROJ"
 find "$PROJ" -mindepth 1 -maxdepth 1 ! -name entry ! -name .hvigor -exec rm -rf {} +
 [ -d "$PROJ/entry" ] && find "$PROJ/entry" -mindepth 1 -maxdepth 1 ! -name build -exec rm -rf {} +
-(cd "$APP" && tar cf - --exclude=./native --exclude=./tools --exclude=./docs --exclude=node_modules --exclude=oh_modules \
+(cd "$APP" && tar cf - --exclude=./native --exclude=./tools --exclude=./docs --exclude=./tests --exclude=node_modules --exclude=oh_modules \
    --exclude=build --exclude=.hvigor --exclude=local.properties .) | (cd "$PROJ" && tar xf -)
 
 # 3. ohpm install 的效果：唯一依赖是本地 file: 类型声明包（libcore_ohos.so）。
