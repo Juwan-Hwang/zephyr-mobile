@@ -28,7 +28,7 @@ fun ZRegionBadge(code: String, modifier: Modifier = Modifier, large: Boolean = f
             .padding(horizontal = if (large) 6.dp else 5.dp, vertical = if (large) 5.dp else 0.dp),
         contentAlignment = Alignment.Center,
     ) {
-        ZText(code.uppercase(), style = if (large) ZTheme.type.mono else BadgeText, color = if (active) c.accent else c.text2, maxLines = 1)
+        ZText(code.uppercase(), style = if (large) ZTheme.type.mono else BadgeText, color = if (active) c.accentText else c.text2, maxLines = 1)
     }
 }
 

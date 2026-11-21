@@ -77,7 +77,7 @@ fun RulesScreen(initial: String, back: BackTo = BackTo.LIBRARY, onBack: () -> Un
         com.zephyr.design.components.ZIconButton(com.zephyr.design.components.ZIcons.Plus, stringResource(R.string.rules_add_override_a11y), {
             val h = q.trim()
             if (h.isEmpty()) runCatching { focus.requestFocus() } else overrideHost = h
-        }, tint = c.accent)
+        }, tint = c.accentText)
     }) {
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
             Row(Modifier.padding(horizontal = 22.dp), verticalAlignment = Alignment.Bottom) {
@@ -135,14 +135,14 @@ private fun LayerRow(ix: Int, name: String, note: String, kind: String?, count: 
     val c = ZTheme.colors
     val bg by animateColorAsState(if (hit) c.accent.copy(alpha = 0.09f) else c.bg.copy(alpha = 0f), ZAnim.standard(), label = "hit")
     Row(Modifier.fillMaxWidth().background(bg).padding(horizontal = 18.dp, vertical = 14.dp), verticalAlignment = Alignment.CenterVertically) {
-        ZText("$ix", Modifier.width(24.dp), style = ZTheme.type.mono, color = if (hit) c.accent else c.text3)
+        ZText("$ix", Modifier.width(24.dp), style = ZTheme.type.mono, color = if (hit) c.accentText else c.text3)
         Column(Modifier.weight(1f)) {
             ZText(name, style = ZTheme.type.body, maxLines = 1)
             ZText(note, style = ZTheme.type.caption, color = c.text3, maxLines = 1)
         }
         if (kind != null) {
             // Review L-P2-8: prototype layer tag is a 1px outline, 10px mono.
-            ZText(kind, Modifier.border(1.dp, if (accent) c.accent else c.hairlineStrong, ZTheme.shapes.control).padding(horizontal = 7.dp, vertical = 2.dp), style = ZTheme.type.monoSmall.copy(fontSize = 10.sp), color = if (accent) c.accent else c.text2)
+            ZText(kind, Modifier.border(1.dp, if (accent) c.accent else c.hairlineStrong, ZTheme.shapes.control).padding(horizontal = 7.dp, vertical = 2.dp), style = ZTheme.type.monoSmall.copy(fontSize = 10.sp), color = if (accent) c.accentText else c.text2)
             Spacer(Modifier.width(12.dp))
         }
         ZText(count, style = ZTheme.type.monoSmall, color = c.text2)

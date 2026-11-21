@@ -156,7 +156,7 @@ private fun ModePicker(mode: ProxyMode, onMode: (ProxyMode) -> Unit) {
                                     ZText(stringResource(m.labelRes), style = ZTheme.type.body)
                                     ZText(stringResource(m.hintRes), style = ZTheme.type.caption, color = c.text3)
                                 }
-                                if (m == mode) ZIcon(ZIcons.Check, tint = c.accent, size = 18.dp)
+                                if (m == mode) ZIcon(ZIcons.Check, tint = c.accentText, size = 18.dp)
                             }
                         }
                     }

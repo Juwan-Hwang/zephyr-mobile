@@ -115,7 +115,7 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
     }
 
     Box(Modifier.fillMaxSize()) {
-    PageScaffold(back, stringResource(R.string.common_subscriptions), onBack, trailing = { ZIconButton(ZIcons.Plus, stringResource(R.string.subs_add), onImport, tint = c.accent) }) {
+    PageScaffold(back, stringResource(R.string.common_subscriptions), onBack, trailing = { ZIconButton(ZIcons.Plus, stringResource(R.string.subs_add), onImport, tint = c.accentText) }) {
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
             Row(Modifier.padding(horizontal = 22.dp), verticalAlignment = Alignment.Bottom) {
                 ZText("${summary.count}", style = ZTheme.type.hero.copy(fontSize = ZTheme.type.hero.fontSize * 0.86f))
@@ -164,7 +164,7 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
                     val armed = pendingDelete == s.id
                     SwipeActionsRow(
                         listOf(
-                            SwipeAction(stringResource(if (busyId == s.id) R.string.subs_swipe_updating else R.string.subs_swipe_update), c.accent) { requestUpdate(s) },
+                            SwipeAction(stringResource(if (busyId == s.id) R.string.subs_swipe_updating else R.string.subs_swipe_update), c.accentFill, onColor = c.onAccentFill) { requestUpdate(s) },
                             // Destructive: first tap arms and keeps the row open on "确认删除", second tap deletes
                             // (audit U15: arming used to close the row, hiding the confirmation). No engine undo.
                             SwipeAction(stringResource(if (armed) R.string.subs_swipe_confirm_delete else R.string.subs_swipe_delete), c.danger, keepOpen = !armed) {

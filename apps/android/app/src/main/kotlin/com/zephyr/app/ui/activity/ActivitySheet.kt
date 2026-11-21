@@ -54,7 +54,7 @@ fun BoxScope.ActivitySheet(
             ZText(
                 stringResource(R.string.activity_back),
                 Modifier.padding(start = 10.dp).zPressable(label = stringResource(R.string.common_back_to, title)) { onHost(null) }.padding(horizontal = 12.dp, vertical = 8.dp),
-                style = ZTheme.type.body, color = c.accent,
+                style = ZTheme.type.body, color = c.accentText,
             )
             TraceBody(trace, onApplied = onUndoable)
             return@ZSheet

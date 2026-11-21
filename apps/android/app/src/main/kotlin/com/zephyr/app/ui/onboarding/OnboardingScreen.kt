@@ -101,7 +101,7 @@ fun OnboardingScreen(onDone: () -> Unit) {
                         androidx.compose.foundation.layout.Row(Modifier.padding(horizontal = 22.dp, vertical = 8.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
                             if (!showField) ZText(stringResource(R.string.common_adding), style = ZTheme.type.footnote, color = c.text2)
                             Spacer(Modifier.weight(1f))
-                            ZText(stringResource(R.string.common_cancel), Modifier.zPressable(label = stringResource(R.string.onboarding_cancel_import_a11y)) { imp.cancel() }.padding(horizontal = 8.dp, vertical = 6.dp), style = ZTheme.type.footnote, color = c.accent)
+                            ZText(stringResource(R.string.common_cancel), Modifier.zPressable(label = stringResource(R.string.onboarding_cancel_import_a11y)) { imp.cancel() }.padding(horizontal = 8.dp, vertical = 6.dp), style = ZTheme.type.footnote, color = c.accentText)
                         }
                     }
                     imp.error?.let { ZText(it.resolve(), Modifier.padding(horizontal = 22.dp, vertical = 8.dp), style = ZTheme.type.footnote, color = c.dangerText) }
