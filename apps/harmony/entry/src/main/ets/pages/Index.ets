@@ -68,6 +68,9 @@ function toastLayer(args: ToastLayerArgs) {
 @ComponentV2
 struct Index {
   @Local showLibrary: boolean = false;
+  /** 资料库“场景”入口：资料库收起后递增，首页打开第一个场景的 sheet（M1-5）。 */
+  @Local sceneRequest: number = 0;
+  private sceneAfterLibrary: boolean = false;
   private pathStack: NavPathStack = new NavPathStack();
   private inboxSub: StreamSub | undefined = undefined;
   /** OverlayManager 挂载失败时退回页面内 Stack 宿主。 */
@@ -120,6 +123,11 @@ struct Index {
 
   private openFromLibrary(d: LibraryDest): void {
     this.showLibrary = false;
+    if (d === LibraryDest.SCENES) {
+      // 两个 sheet 不叠：等资料库 sheet 消失（onDisappear）再开场景 sheet。
+      this.sceneAfterLibrary = true;
+      return;
+    }
     const route = AppNav.routeOf(d);
     if (route.length > 0) {
       this.push(route, BackTo.LIBRARY);
@@ -253,7 +261,8 @@ struct Index {
         },
         onOpenSettings: () => this.push(ROUTE_SETTINGS, BackTo.HOME),
         onOpenNodesQuery: (q: string) => this.pathStack.pushPathByName(ROUTE_NODES, new NavArgs(BackTo.HOME, q)),
-        onOpenRules: () => this.push(ROUTE_RULES, BackTo.HOME)
+        onOpenRules: () => this.push(ROUTE_RULES, BackTo.HOME),
+        sceneRequest: this.sceneRequest
       })
     }
     .mode(NavigationMode.Stack)
@@ -269,6 +278,10 @@ struct Index {
       backgroundColor: $r('app.color.screen_bg'),
       onDisappear: () => {
         this.showLibrary = false;
+        if (this.sceneAfterLibrary) {
+          this.sceneAfterLibrary = false;
+          this.sceneRequest++;
+        }
       }
     })
   }

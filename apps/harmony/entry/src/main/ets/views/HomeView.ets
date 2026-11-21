@@ -6,7 +6,8 @@
  * - 当前节点：全局模式 = 全局节点；直连 = 本机网络。点卡片去节点页。
  * - 规则模式：场景行（U5）：左右滑换地区 → 内联“更改出口 IP？”确认卡（previewSceneChange）→ 更改后 5 s 撤销吐司。
  * - 顶栏：Zephyr + 右上设置；底栏（原型 .dock）：左侧指令栏“搜索或输入指令”（点开 CommandSheet，M1-7b）+ 右侧资料库按钮（契约 §17.e，无底部 Tab）。
- * 场景详情 sheet / 漏斗 / 例外等暂未移植（M1-5）。
+ * - 场景详情 sheet（M1-5，SceneSheet）：点场景行打开；资料库“场景”入口经 Index 递增 sceneRequest 打开第一个场景
+ *   （同 Android AppRoot LibraryDest.Scenes）。sheet 里点候选 → 收起 sheet，首页出同一张“更改出口 IP？”确认卡。
  */
 import { CommandSheet } from './CommandSheet';
 import { AppServices } from '../app/AppServices';
@@ -15,6 +16,7 @@ import { Labels } from '../common/Labels';
 import { ZCard } from '../components/ZCard';
 import { ZSegmented } from '../components/ZSegmented';
 import { SceneRow } from './SceneRow';
+import { SceneSheet } from './SceneSheet';
 import { HapticKind, Haptics } from '../app/Haptics';
 import {
   ConnectionState, ConnectionStatus, ErrorCode, ExitChange, NodeDetail, NodeId, NodeSummary, ProxyMode, Scene, ServiceHealth,
@@ -35,6 +37,10 @@ export struct HomeView {
   @Event onOpenNodesQuery: (query: string) => void = (query: string) => {};
   @Event onOpenRules: () => void = () => {};
   @Local showCommand: boolean = false;
+  /** 资料库“场景”入口：每次递增 = 打开第一个场景的 sheet。 */
+  @Param sceneRequest: number = 0;
+  @Local showScene: boolean = false;
+  @Local sheetSceneId: string = '';
 
   @Local status: ConnectionStatus = ConnectionStatus.DISCONNECTED;
   @Local mode: ProxyMode = ProxyMode.RULE;
@@ -89,6 +95,18 @@ export struct HomeView {
     }
     this.subs = [];
     this.stopTicker();
+  }
+
+  @Monitor('sceneRequest')
+  onSceneRequest(): void {
+    if (this.sceneRequest > 0 && this.scenes.length > 0) {
+      this.openScene(this.scenes[0]);
+    }
+  }
+
+  private openScene(s: Scene): void {
+    this.sheetSceneId = s.id;
+    this.showScene = true;
   }
 
   private onConnection(c: ConnectionState): void {
@@ -450,6 +468,7 @@ export struct HomeView {
           pendingNode: this.pendingSceneId === s.id ? this.pendingNode : undefined,
           divider: i < this.scenes.length - 1 && this.pendingSceneId !== s.id,
           onPick: (n: NodeSummary) => this.pick(s, n),
+          onOpen: () => this.openScene(s),
           onScrubStart: () => {
             if (this.pendingSceneId !== '') {
               this.cancelPending();
@@ -568,6 +587,25 @@ export struct HomeView {
     .hitTestBehavior(HitTestMode.Transparent)
   }
 
+  @Builder
+  sceneSheet() {
+    SceneSheet({
+      sceneId: this.sheetSceneId,
+      onPick: (s: Scene, n: NodeSummary) => {
+        this.showScene = false;
+        this.pick(s, n);
+      },
+      onClose: () => {
+        this.showScene = false;
+      }
+    })
+  }
+
+  private sceneTitle(): ResourceStr {
+    const s = this.scenes.find((x: Scene) => x.id === this.sheetSceneId);
+    return s !== undefined ? Labels.sceneName(s) : '';
+  }
+
   build() {
     Stack({ alignContent: Alignment.Bottom }) {
       this.content()
@@ -576,6 +614,16 @@ export struct HomeView {
     .width('100%')
     .height('100%')
     .backgroundColor($r('app.color.screen_bg'))
+    .bindSheet(this.showScene, this.sceneSheet(), {
+      detents: [SheetSize.MEDIUM, SheetSize.LARGE],
+      title: { title: this.sceneTitle() },
+      showClose: true,
+      dragBar: true,
+      backgroundColor: $r('app.color.screen_bg'),
+      onDisappear: () => {
+        this.showScene = false;
+      }
+    })
   }
 
   @Builder
