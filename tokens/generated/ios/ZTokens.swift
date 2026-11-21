@@ -132,6 +132,42 @@ public enum ZTokens {
             }
         }
         public var glow: Color { color.opacity(0.2) }
+        /// 跟随深浅色的强调色（深色用更亮的系统深色变体）：开关、进度、光晕、选中描边等填充与大图形
+        public var adaptive: Color {
+            switch self {
+            case .blue: return ZDynamicColor.make(dark: UIColor(red: 0.0392, green: 0.5176, blue: 1.0, alpha: 1.0), light: UIColor(red: 0.0, green: 0.4784, blue: 1.0, alpha: 1.0))
+            case .green: return ZDynamicColor.make(dark: UIColor(red: 0.1882, green: 0.8196, blue: 0.3451, alpha: 1.0), light: UIColor(red: 0.2039, green: 0.7804, blue: 0.349, alpha: 1.0))
+            case .orange: return ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.6235, blue: 0.0392, alpha: 1.0), light: UIColor(red: 1.0, green: 0.5843, blue: 0.0, alpha: 1.0))
+            case .pink: return ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.2157, blue: 0.3725, alpha: 1.0), light: UIColor(red: 1.0, green: 0.1765, blue: 0.3333, alpha: 1.0))
+            }
+        }
+        /// 前景小字 / 链接 / 索引条 / 搜索高亮 / 图标（浅色加深，过 WCAG 正文 4.5）
+        public var text: Color {
+            switch self {
+            case .blue: return ZDynamicColor.make(dark: UIColor(red: 0.251, green: 0.6118, blue: 1.0, alpha: 1.0), light: UIColor(red: 0.0, green: 0.3569, blue: 0.749, alpha: 1.0))
+            case .green: return ZDynamicColor.make(dark: UIColor(red: 0.1882, green: 0.8196, blue: 0.3451, alpha: 1.0), light: UIColor(red: 0.1216, green: 0.4784, blue: 0.2078, alpha: 1.0))
+            case .orange: return ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.6235, blue: 0.0392, alpha: 1.0), light: UIColor(red: 0.7882, green: 0.2039, blue: 0.0, alpha: 1.0))
+            case .pink: return ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.3922, blue: 0.5098, alpha: 1.0), light: UIColor(red: 0.7686, green: 0.0, blue: 0.2902, alpha: 1.0))
+            }
+        }
+        /// 主按钮 / 选中胶囊的底，与 onFill 配对
+        public var fill: Color {
+            switch self {
+            case .blue: return ZDynamicColor.make(dark: UIColor(red: 0.0, green: 0.4, blue: 0.8392, alpha: 1.0), light: UIColor(red: 0.0, green: 0.4, blue: 0.8392, alpha: 1.0))
+            case .green: return ZDynamicColor.make(dark: UIColor(red: 0.1882, green: 0.8196, blue: 0.3451, alpha: 1.0), light: UIColor(red: 0.2039, green: 0.7804, blue: 0.349, alpha: 1.0))
+            case .orange: return ZDynamicColor.make(dark: UIColor(red: 1.0, green: 0.6235, blue: 0.0392, alpha: 1.0), light: UIColor(red: 1.0, green: 0.5843, blue: 0.0, alpha: 1.0))
+            case .pink: return ZDynamicColor.make(dark: UIColor(red: 0.8196, green: 0.0, blue: 0.2941, alpha: 1.0), light: UIColor(red: 0.8196, green: 0.0, blue: 0.2941, alpha: 1.0))
+            }
+        }
+        /// fill 上的文字（green / orange 为黑字）
+        public var onFill: Color {
+            switch self {
+            case .blue: return ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), light: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0))
+            case .green: return ZDynamicColor.make(dark: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0))
+            case .orange: return ZDynamicColor.make(dark: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0))
+            case .pink: return ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), light: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0))
+            }
+        }
     }
 
     public enum Space {

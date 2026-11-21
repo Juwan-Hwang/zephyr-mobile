@@ -65,6 +65,33 @@
     "on-primary": { "value": "#000000", "lightValue": "#FFFFFF" },
     "pressed":    { "value": "rgba(255, 255, 255, 0.03)", "lightValue": "rgba(0, 0, 0, 0.03)", "comment": "行按下" }
   },
+  "accent": {
+    "$comment": "用户可选强调色（blue 默认）。value = 深色，lightValue = 浅色。base：开关 / 进度 / 光晕 / 选中描边等填充与大图形；text：前景小字、链接、索引条、搜索高亮、「+」等图标（浅色加深以过正文 4.5）；fill + on-fill：主按钮、选中胶囊的底与字（过正文 4.5）。深色 base 即原 Android ZColors.kt 的 darkVariant。2026-11-21 设计评审。",
+    "blue":   {
+      "base":    { "value": "#0A84FF", "lightValue": "#007AFF" },
+      "text":    { "value": "#409CFF", "lightValue": "#005BBF", "comment": "浅色 #F2F2F7 5.79、白 6.46、s4 4.73；深色黑底 7.42、s4 5.32" },
+      "fill":    { "value": "#0066D6", "lightValue": "#0066D6", "comment": "白字 5.42" },
+      "on-fill": { "value": "#FFFFFF", "lightValue": "#FFFFFF" }
+    },
+    "green":  {
+      "base":    { "value": "#30D158", "lightValue": "#34C759" },
+      "text":    { "value": "#30D158", "lightValue": "#1F7A35", "comment": "浅色 #F2F2F7 4.83、白 5.39" },
+      "fill":    { "value": "#30D158", "lightValue": "#34C759" },
+      "on-fill": { "value": "#000000", "lightValue": "#000000", "comment": "黑字 9.5–10.4（白字仅 2.0–2.2）" }
+    },
+    "orange": {
+      "base":    { "value": "#FF9F0A", "lightValue": "#FF9500" },
+      "text":    { "value": "#FF9F0A", "lightValue": "#C93400", "comment": "浅色 #F2F2F7 4.73、白 5.28" },
+      "fill":    { "value": "#FF9F0A", "lightValue": "#FF9500" },
+      "on-fill": { "value": "#000000", "lightValue": "#000000", "comment": "黑字 9.6–10.2" }
+    },
+    "pink":   {
+      "base":    { "value": "#FF375F", "lightValue": "#FF2D55" },
+      "text":    { "value": "#FF6482", "lightValue": "#C4004A", "comment": "浅色 #F2F2F7 5.46、白 6.09；深色黑底 7.40、s4 5.30" },
+      "fill":    { "value": "#D1004B", "lightValue": "#D1004B", "comment": "白字 5.51" },
+      "on-fill": { "value": "#FFFFFF", "lightValue": "#FFFFFF" }
+    }
+  },
   "glow": {
     "connect": { "value": "28px", "comment": "已连接时强调色光晕半径" },
     "alpha":   { "value": "0.35" }

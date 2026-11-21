@@ -9,7 +9,15 @@
 - Android（Gradle `:design`）：`kotlin.sourceSets["main"].kotlin.srcDir("$rootDir/../../tokens/generated/android")`（按 apps/android 实际层级调整）。用法：`CompositionLocalProvider(LocalZColors provides if (dark) ZColors.Dark else ZColors.Light)`，组件内 `LocalZColors.current.textPrimary`、`ZType.metric`、`ZLatency.color(ms, colors)`。包名 `com.zephyr.design.tokens`。
 - 鸿蒙（ArkTS，D）：构建前把 `tokens/generated/harmony/resources/*/element/color.json` 合并进模块的 `resources/{base,dark}/element/`（或由 hvigor 脚本拷贝），组件用 `$r('app.color.text_primary')` 自动跟随深浅色；常量从 `ZTokens.ets` 导入：`ZSpace.md`、`ZType.metric`、`curves.cubicBezierCurve(...ZEasing.standard)`、`ZLatency.color(ms, zColors(isDark))`。颜色值为 `#AARRGGBB`，尺寸 vp、字号 fp、时间 ms。
 - 鸿蒙术语（i18n）：`node tools/gen-harmony-i18n.mjs` 由 `contract/i18n/glossary-v1.json` 生成 `generated/harmony/resources/{base,zh,ja,…}/element/string.json`（名称 `term_<key>`，`.` 换成 `_`；base 为英文）和 `generated/harmony/ZTerms.ets`（`ZTerm.nodes`、`ZTerm.modeRule` …）。与 color.json 一样合并进模块 resources；CI 用 `--check` 校验。界面其余文案由鸿蒙端自管，术语一律用 `ZTerm`，保证三端同名。
-- 强调色：`ZTokens.Accent` / `ZAccent`（blue 默认，green / orange / pink）。紫色已废弃。
+- 强调色：`ZTokens.Accent` / `ZAccent`（blue 默认，green / orange / pink）。紫色已废弃。单一来源 `mobile.json` 的 `accent.<name>.{base,text,fill,on-fill}`（value = 深色、lightValue = 浅色）：
+
+| 角色 | 用途 | iOS | Android | 鸿蒙 |
+|---|---|---|---|---|
+| base | 开关 / 进度 / 光晕 / 选中描边等填充与大图形；深色即原 Android `ZColors.kt` 的 `darkVariant()` | `Accent.adaptive` | `ZAccent.base(dark)` / `colorDark` | `$r('app.color.accent_blue')` / `zAccentColors(name, isDark).base` |
+| text | 前景小字、链接、索引条、搜索高亮、「+」等图标（浅色加深，过正文 4.5） | `Accent.text` | `ZAccent.text(dark)` | `accent_<name>_text` / `.text` |
+| fill + on-fill | 主按钮、选中胶囊的底与字（green / orange 为黑字） | `Accent.fill` / `.onFill` | `ZAccent.fill(dark)` / `onFill(dark)` | `accent_<name>_fill` / `_on_fill` |
+
+  `ZTokens.Accent.color` / `ZAccent.color` 保留为历史单一值（= 浅色 base），只为不让现有基线漂移；新代码不要再用它作前景文字或按钮底。Android `ZColors.kt` 的 `darkVariant()` 应改为 `ZAccent.base(dark)`（值相同，不影响快照）。
 
 ## 对比度检查（WCAG AA）
 `node tools/check-token-contrast.mjs [--verbose|--json]`，CI 在 contract 作业跑（零依赖，读的是 token 源，与 `build.mjs` 同一套合并 / 引用规则）。
@@ -26,9 +34,12 @@
 | `screen.amber` / `red` / `green`（作文字） | `screen.s1`、`s2`、`bg` | 4.5 |
 | `color.download`、`screen.up`（速率箭头） | `screen.s1`、`s2`、`bg` | 3.0 |
 | 强调色 blue / green / orange / pink | `screen.bg`、`s1` | 3.0（默认 blue 作小字另在 `bg`、`s1`、`s4` 上按 4.5） |
-| `text.on-accent`（按钮 15pt、胶囊 14pt） | 各强调色 | 4.5 |
-| Android 深色强调色 `ZAccent.darkVariant()`（读 `apps/android/.../ZColors.kt`，存在才查） | `screen.bg`、`s1`；白字在其上 | 3.0 / 4.5 |
+| `accent.*.text` | `screen.bg`、`s1`（blue 另加 `s4`） | 4.5 |
+| `accent.*.on-fill` | `accent.*.fill` | 4.5 |
+| `accent.*.base` 深色 | `screen.bg`、`s1` | 3.0 |
+| 旧用法：强调色单一值作前景 / 小字，`text.on-accent` 在单一值或深色 base 上 | — | 3.0 / 4.5（记 debt，平台切换后删除） |
 | `screen.t4` | `screen.bg`、`s1` | 3.0 |
 
-- 不达标的组合必须进脚本里的 `ALLOW`，并写 `reason`：`intentional` 是有意为之且确认无可读用途，`debt` 是已知欠账。目前 41 条全部是 debt：浅色 amber / green / red 作文字、强调色小字与强调色底白字、t4 仍被用于序号 / 未测延迟 / chevron、浅色 t3 在 s4 上。修复要加浅色文字专用色或调整用法，并重录两端快照基线。已达标的 ALLOW 条目会报 STALE，修好后记得删。
+- 不达标的组合必须进脚本里的 `ALLOW`，并写 `reason`：`intentional` 是有意为之且确认无可读用途，`debt` 是已知欠账；reason 以「旧用法」开头的是 tokens 已给出达标变体、只等平台切换的条目（输出里单独计数）。已达标的 ALLOW 条目会报 STALE，修好后记得删。
+- `apps/android/…/ZColors.kt` 若仍自带 `darkVariant()` 且与 `accent.*.base` 深色不一致，脚本打印 WARN（不失败）。
 - 历史：浅色 `screen.t3` / `latency.unknown` 0.4→0.55、深色 `t3` 0.4→0.5，都是为了过这道线；改这些值之前先跑一遍脚本。

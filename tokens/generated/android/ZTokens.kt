@@ -242,13 +242,31 @@ object ZPalette {
     val zinc600 = Color(0xFF52525B)
 }
 
-enum class ZAccent(val color: Color) {
-    BLUE(Color(0xFF007AFF)),
-    GREEN(Color(0xFF34C759)),
-    ORANGE(Color(0xFFFF9500)),
-    PINK(Color(0xFFFF2D55)),
+/**
+ * 用户可选强调色。[color] = 浅色 base（历史单一值，保持不变）；深浅色变体：
+ * [base] 开关 / 进度 / 光晕等填充（深色即原 ZColors.kt 的 darkVariant），[text] 前景小字 / 链接 / 图标（浅色加深过 4.5），
+ * [fill] + [onFill] 主按钮 / 选中胶囊（green / orange 为黑字）。传 ZColors.isDark。
+ */
+enum class ZAccent(
+    val color: Color,
+    val colorDark: Color,
+    val textLight: Color,
+    val textDark: Color,
+    val fillLight: Color,
+    val fillDark: Color,
+    val onFillLight: Color,
+    val onFillDark: Color,
+) {
+    BLUE(Color(0xFF007AFF), Color(0xFF0A84FF), Color(0xFF005BBF), Color(0xFF409CFF), Color(0xFF0066D6), Color(0xFF0066D6), Color(0xFFFFFFFF), Color(0xFFFFFFFF)),
+    GREEN(Color(0xFF34C759), Color(0xFF30D158), Color(0xFF1F7A35), Color(0xFF30D158), Color(0xFF34C759), Color(0xFF30D158), Color(0xFF000000), Color(0xFF000000)),
+    ORANGE(Color(0xFFFF9500), Color(0xFFFF9F0A), Color(0xFFC93400), Color(0xFFFF9F0A), Color(0xFFFF9500), Color(0xFFFF9F0A), Color(0xFF000000), Color(0xFF000000)),
+    PINK(Color(0xFFFF2D55), Color(0xFFFF375F), Color(0xFFC4004A), Color(0xFFFF6482), Color(0xFFD1004B), Color(0xFFD1004B), Color(0xFFFFFFFF), Color(0xFFFFFFFF)),
     ;
     val glow: Color get() = color.copy(alpha = 0.2f)
+    fun base(dark: Boolean): Color = if (dark) colorDark else color
+    fun text(dark: Boolean): Color = if (dark) textDark else textLight
+    fun fill(dark: Boolean): Color = if (dark) fillDark else fillLight
+    fun onFill(dark: Boolean): Color = if (dark) onFillDark else onFillLight
 }
 
 object ZSpace {
