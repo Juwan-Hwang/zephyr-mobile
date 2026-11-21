@@ -3,7 +3,7 @@
  * 首页底栏指令栏点开（bindSheet）。
  * - 空输入：“建议”示例短语，点按只填入输入框并重新解析，不直接执行（U24）。
  * - 有输入：token 下划线预览（服务蓝 / 地区绿 / 操作琥珀）、解析卡片（服务 / 范围 / 地区 / 操作）、
- *   一张预览卡（含出口 IP 行），点“应用”（或回车）才执行，执行后出撤销吐司（§16.e⑥）。
+ *   一张预览卡（含出口 IP 行），点“应用”（或回车）才执行：先关面板再执行（同 Android），首页出撤销吐司（§16.e⑥）。
  *   “视频只用 4K 节点”出 4K 卡（§15.h，同 Android CommandPlan.Uhd）：N 个中 M 个支持 4K / 当前节点保持 / 将使用 X /
  *   尚未测速 / 没有支持 4K 的节点（按钮禁用）/ 已过滤时“使用全部节点”。
  * - 只有地区或普通文本：节点结果（最快前 5 个 + 查看全部）；像域名 / IP：“X 走哪里？”→ 面板内原地显示连接轨迹
@@ -11,6 +11,7 @@
  *   鸿蒙按 #241 指派改为轨迹（规则页仍在资料库）。
  */
 import { AppServices } from '../app/AppServices';
+import { CommandApplier, CommandApplyTexts } from '../app/CommandApplier';
 import { CommandPlan, CommandPlanKind, CommandPlanner } from '../app/CommandPlanner';
 import { Haptics, HapticKind } from '../app/Haptics';
 import { Format } from '../common/Format';
@@ -237,6 +238,7 @@ export struct CommandSheet {
     return out;
   }
 
+  /** 同 Android：先关面板再执行（app/CommandApplier），结果吐司出在首页上。 */
   private apply(): void {
     const p = this.plan;
     if (p === undefined || !p.applicable || this.applying) {
@@ -244,17 +246,12 @@ export struct CommandSheet {
     }
     this.applying = true;
     const who = this.who(p);
-    const toastText = this.toastText(p, who);
-    this.planner.apply(p).then((undo: () => Promise<void>) => {
+    const texts: CommandApplyTexts = {
+      success: this.toastText(p, who),
+      failed: this.str($r('app.string.home_apply_failed'), who)
+    };
+    CommandApplier.run(this.planner, p, AppServices.get().toasts, texts, () => this.onDone(), () => {
       Haptics.play(HapticKind.SUCCESS);
-      AppServices.get().toasts.show(toastText, {
-        onUndo: () => {
-          undo().catch(() => {});
-        }
-      });
-      this.onDone();
-    }).catch((e: Object) => {
-      AppServices.get().toasts.show(this.str($r('app.string.home_apply_failed'), who));
     }).finally(() => {
       this.applying = false;
     });

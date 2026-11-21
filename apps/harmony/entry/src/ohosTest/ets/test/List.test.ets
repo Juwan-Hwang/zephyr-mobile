@@ -10,6 +10,7 @@ import traceTest from './Trace.test';
 import todayTest from './Today.test';
 import vpnTest from './Vpn.test';
 import undoDeleteTest from './UndoDelete.test';
+import commandApplyTest from './CommandApply.test';
 
 export default function testsuite(): void {
   mockFixturesTest();
@@ -24,4 +25,5 @@ export default function testsuite(): void {
   todayTest();
   vpnTest();
   undoDeleteTest();
+  commandApplyTest();
 }
