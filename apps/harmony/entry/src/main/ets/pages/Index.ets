@@ -19,7 +19,8 @@ import {
   ROUTE_NODES,
   ROUTE_RULES,
   ROUTE_SETTINGS,
-  ROUTE_SUBSCRIPTIONS
+  ROUTE_SUBSCRIPTIONS,
+  ROUTE_TODAY
 } from '../app/AppNav';
 import { ImportRequest } from '../entryability/DeepLink';
 import { Subscription as StreamSub } from '../engine/Stream';
@@ -31,6 +32,7 @@ import { SettingsView } from '../views/SettingsView';
 import { LibrarySheet } from '../views/LibrarySheet';
 import { LogsPage } from './LogsPage';
 import { LicensesPage } from './LicensesPage';
+import { TodayPage } from './TodayPage';
 import { ZTerm } from '../generated/ZTerms';
 import { ZToastHost } from '../components/ZToastHost';
 import { GestureLock } from '../common/GestureLock';
@@ -232,6 +234,8 @@ struct Index {
       LogsPage()
     } else if (name === ROUTE_LICENSES) {
       LicensesPage()
+    } else if (name === ROUTE_TODAY) {
+      TodayPage()
     }
   }
 
@@ -262,6 +266,7 @@ struct Index {
         onOpenSettings: () => this.push(ROUTE_SETTINGS, BackTo.HOME),
         onOpenNodesQuery: (q: string) => this.pathStack.pushPathByName(ROUTE_NODES, new NavArgs(BackTo.HOME, q)),
         onOpenRules: () => this.push(ROUTE_RULES, BackTo.HOME),
+        onOpenToday: () => this.push(ROUTE_TODAY, BackTo.HOME),
         sceneRequest: this.sceneRequest
       })
     }
