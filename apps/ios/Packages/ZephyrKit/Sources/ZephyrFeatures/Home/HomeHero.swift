@@ -76,7 +76,7 @@ struct HomeHero: View {
     }
 
     private var failureTone: Color {
-        model.connection.status == .failed ? ZTokens.Colors.screenRed : ZColor.t3
+        model.connection.status == .failed ? ZTokens.Colors.screenRedText : ZColor.t3
     }
 }
 

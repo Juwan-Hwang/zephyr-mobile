@@ -55,10 +55,16 @@ struct RateBlock: View {
                     .foregroundStyle(ZTokens.Colors.screenT1)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
-                Text(state.connection.status == .failed ? LocalizedStringKey("轻点查看原因") : LocalizedStringKey("轻点电源连接"))
-                    .zType(.footnote)
-                    .foregroundStyle(state.connection.status == .failed ? ZTokens.Colors.screenAmber : ZColor.t2)
-                    .lineLimit(1)
+                // 规范 §9.1：失败 = 红圆点 + t2 文字（不把整句染色）。
+                HStack(spacing: ZTokens.Space.n2) {
+                    if state.connection.status == .failed {
+                        ZStatusDot(isOn: true, color: ZTokens.Colors.screenRed)
+                    }
+                    Text(state.connection.status == .failed ? LocalizedStringKey("轻点查看原因") : LocalizedStringKey("轻点电源连接"))
+                        .zType(.footnote)
+                        .foregroundStyle(ZColor.t2)
+                        .lineLimit(1)
+                }
             }
         }
         .accessibilityElement(children: .combine)

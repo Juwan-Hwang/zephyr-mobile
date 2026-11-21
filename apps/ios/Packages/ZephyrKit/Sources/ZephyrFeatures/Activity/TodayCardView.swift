@@ -47,7 +47,7 @@ struct TodayCardView: View {
                     .padding(.top, ZTokens.Space.n6)
                 Text(verbatim: footnote)
                     .zType(.caption)
-                    .foregroundStyle(saveState == .failed ? ZTokens.Colors.screenRed : ZColor.t3)
+                    .foregroundStyle(saveState == .failed ? ZTokens.Colors.screenRedText : ZColor.t3)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, HMetrics.homeInset)
                     .padding(.top, ZTokens.Space.n4)

@@ -87,7 +87,7 @@ struct LatencyText: View {
         } else {
             Text(ms == nil ? LocalizedStringKey("—") : LocalizedStringKey("超时"))
                 .zType(.footnote)
-                .foregroundStyle(ms == nil ? ZColor.t3 : ZTokens.Colors.screenAmber)
+                .foregroundStyle(ms == nil ? ZColor.t3 : ZTokens.Colors.screenAmberText)
         }
     }
 }

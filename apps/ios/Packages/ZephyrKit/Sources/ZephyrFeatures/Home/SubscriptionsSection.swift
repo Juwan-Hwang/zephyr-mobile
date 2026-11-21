@@ -84,9 +84,13 @@ private struct SubscriptionRow: View {
                         .foregroundStyle(ZTokens.Colors.screenT1)
                 }
                 if let e = sub.expiresAt {
-                    Text(verbatim: HFormat.homeExpiry(e, now: now))
-                        .zType(.footnote)
-                        .foregroundStyle(warn ? ZTokens.Colors.screenAmber : ZColor.t3)
+                    // 规范 §9.1：将到期 = 琥珀圆点 + 日期（文字用 amber-text），不只靠颜色。
+                    HStack(spacing: ZTokens.Space.n2) {
+                        if warn { ZStatusDot(isOn: true, color: ZTokens.Colors.screenAmber) }
+                        Text(verbatim: HFormat.homeExpiry(e, now: now))
+                            .zType(.footnote)
+                            .foregroundStyle(warn ? ZTokens.Colors.screenAmberText : ZColor.t3)
+                    }
                 }
             }
         }

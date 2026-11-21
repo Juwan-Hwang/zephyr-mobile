@@ -96,8 +96,8 @@ private struct ZBigNumberSample: View {
         ZBigNumber("103,606,731", unit: "条", size: .title)
         ZBigNumber("2.8", unit: "MB/s", size: .large)
         HStack(spacing: ZTokens.Space.n5) {
-            ZBigNumber("+1,204", size: .compact, caption: "节点", tone: ZTokens.Colors.screenGreen)
-            ZBigNumber("−318", size: .compact, caption: "节点", tone: ZTokens.Colors.screenRed)
+            ZBigNumber("+1,204", size: .compact, caption: "节点", tone: ZTokens.Colors.screenGreenText)
+            ZBigNumber("−318", size: .compact, caption: "节点", tone: ZTokens.Colors.screenRedText)
             ZBigNumber("0", size: .compact, caption: "规则变更")
         }
     }

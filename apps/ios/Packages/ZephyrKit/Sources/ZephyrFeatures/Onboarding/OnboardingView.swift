@@ -122,7 +122,7 @@ public struct OnboardingView: View {
         } else if method == nil, let err = importer.errorMessage {
             Label { Text(verbatim: err) } icon: { Image(systemName: "exclamationmark.triangle.fill") }
                 .zType(.footnote)
-                .foregroundStyle(ZTokens.Colors.screenAmber)
+                .foregroundStyle(ZTokens.Colors.screenAmberText)
                 .padding(.top, ZTokens.Space.n4)
         }
     }

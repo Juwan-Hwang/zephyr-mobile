@@ -95,11 +95,11 @@ struct SceneRow: View {
                 ProbeBar(fraction: model.scan?.fraction).frame(width: HMetrics.probeBarWidth)
             }
         } else if let down = services.unavailableText {
-            Text(verbatim: down).zType(.footnote).foregroundStyle(ZTokens.Colors.screenRed)
+            Text(verbatim: down).zType(.footnote).foregroundStyle(ZTokens.Colors.screenRedText)
         } else if scene.source == .subscriptionGroup {
             Text("订阅分组").zType(.footnote).foregroundStyle(ZColor.t3)
         } else if scene.available <= 0 {
-            Text("暂无可用节点").zType(.footnote).foregroundStyle(ZTokens.Colors.screenRed)
+            Text("暂无可用节点").zType(.footnote).foregroundStyle(ZTokens.Colors.screenRedText)
         } else {
             Text("\(scene.available) 个可用").zType(.footnote).foregroundStyle(ZColor.t3)
         }
