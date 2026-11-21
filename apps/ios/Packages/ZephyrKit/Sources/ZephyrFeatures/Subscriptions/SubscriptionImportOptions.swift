@@ -31,7 +31,7 @@ struct SubscriptionImportOptions: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             Image(systemName: "chevron.forward")
                 .font(.footnote.weight(.semibold))
-                .foregroundStyle(ZQuaternaryText())
+                .foregroundStyle(ZColor.t3)   // 可点行 chevron t3（设计评审 iOS-5 / #278）
                 .accessibilityHidden(true)
         }
         .padding(.horizontal, ZTokens.Space.n5 + ZTokens.Space.n1)
