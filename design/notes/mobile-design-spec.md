@@ -95,7 +95,8 @@
 - 漏斗（全部 → 已测速 → 可连通 → 低于 200 ms，契约 §15.c `nodeFunnel`）是 Zephyr 独有的形状，作为**唯一签名物件**，在三个地方以同一种画法出现：场景 sheet（完整版）、首页场景卡（迷你版，替换「9 个可用」文字）、小组件 scenes-medium（可选，迷你版）。
 - **迷你漏斗规格**：4 段水平细条，从左到右依次缩短，宽度按 `log10(count + 1)` 归一到卡片内容宽度（10⁷ 和 9 都要看得出差别）；条高 3pt、段间距 2pt、圆角 1.5pt；前三段 t3（深色 t4 也可，但整组必须配下方数字），最后一段（低于 200 ms 的可用数）用 `accent.*.base`。最后一段下方写数字 `{underThreshold}`，字号 caption、t1、等宽数字；不写其他三段的数字（完整数字在 sheet 里）。无障碍标签：「可连通 {reachable}，低于 200 毫秒 {underThreshold}」。
 - **完整漏斗**（场景 sheet）：沿用原型 4 级，lede「检测自 {sourceCount} 个订阅中的 {poolSize} 个节点」；不显示「可访问 GPT」等按服务的级别（契约 §15.c）。
-- 数据没取到时（`nodeFunnel` 抛错）：迷你漏斗不画，显示原文字「{n} 个可用」；不得画假比例。
+- 迷你漏斗的数据按场景取：契约 §19 `sceneFunnel(sceneId, …)`（该场景地区 + 4K 过滤范围内的漏斗），每张场景卡各不相同；完整漏斗（场景 sheet）仍用全局 `nodeFunnel`。
+- 数据没取到时（`sceneFunnel` / `nodeFunnel` 抛错，或场景未选节点 `poolSize == 0`）：迷你漏斗不画，显示原文字「{n} 个可用」；不得画假比例。
 
 ### 9.4 节点页头部：先说人话再给数
 - 大数字仍是总量（`total`），下方一行判断句：「可连通 {reachable} · 已检测 {tested}」（契约 §18.a，`reachableCount` 可选；为 null 时只写「已检测 {tested}」）。整行 t2，`reachable` 数字 t1；可连通为 0 时数字用 `red-text`。

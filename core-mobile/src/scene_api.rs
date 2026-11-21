@@ -675,6 +675,11 @@ pub(crate) mod tests {
         assert_eq!((v.node_filter, v.selected.map(|r| r.id), v.available), (Some(SceneNodeFilter::Uhd), Some(by("美国 01").id), 2));
         let c = core.scene_candidates("video".into(), None, now).unwrap();
         assert!(c.len() == 2 && c.iter().all(|r| r.row.uhd));
+        // 场景漏斗（§19.a）与候选同口径：美国 4 个里 2 个 4K，全测过、全可连通
+        let f = core.scene_funnel("video".into(), now, 0, 50).unwrap();
+        assert_eq!((f.pool_size, f.tested, f.reachable, f.under_threshold), (2, 2, 2, 0));
+        let g = core.node_funnel(now, 0, 50).unwrap();
+        assert_eq!((g.pool_size, g.tested), (5, 5));
         // 换到 4K 节点后热备也只有 4K
         core.apply_scene_change("video".into(), by("美国 4K 02").id, now).unwrap();
         let p = core.preview_scene_node_filter("video".into(), SceneNodeFilter::Uhd, now).unwrap();

@@ -81,6 +81,41 @@ struct UrlTestItem {
 type DefsById = (FxHashMap<u64, NodeRow>, FxHashMap<u64, Value>);
 
 impl MobileCore {
+    /// 漏斗计数的公共实现；scope = None 为全库，Some(bm) 只数位置在 bm 内的节点（poolSize = bm 大小）。
+    pub(crate) fn funnel_in(
+        &self,
+        scope: Option<&roaring::RoaringBitmap>,
+        now_millis: i64,
+        max_age_millis: i64,
+        threshold_ms: i32,
+    ) -> Result<NodeFunnel, MobileError> {
+        let threshold_ms = if threshold_ms <= 0 { 300 } else { threshold_ms };
+        let source_count = self.subs.lock().entries.len() as u32;
+        let st = self.store()?;
+        let fresh: Vec<(u64, i32)> = {
+            let c = self.latency.lock();
+            c.map
+                .iter()
+                .filter_map(|(&id, v)| v.last().filter(|&&(_, at)| max_age_millis <= 0 || now_millis - at <= max_age_millis).map(|&(ms, _)| (id, ms)))
+                .collect()
+        };
+        // 订阅删除后缓存里可能还有旧指纹：只数仍在库中的（且在 scope 内）
+        let ids: Vec<u64> = fresh.iter().map(|x| x.0).collect();
+        let live: FxHashSet<u64> = self.positions(&st, &ids).into_iter().filter(|(_, p)| scope.is_none_or(|bm| bm.contains(*p))).map(|(id, _)| id).collect();
+        let pool_size = scope.map_or(st.total(), |bm| bm.len());
+        let mut f = NodeFunnel { source_count, pool_size, tested: 0, reachable: 0, under_threshold: 0, threshold_ms };
+        for (_, ms) in fresh.into_iter().filter(|x| live.contains(&x.0)) {
+            f.tested += 1;
+            if ms >= 0 {
+                f.reachable += 1;
+                if ms < threshold_ms {
+                    f.under_threshold += 1;
+                }
+            }
+        }
+        Ok(f)
+    }
+
     /// id → 代理定义（按订阅分组，每个正文只解析一次）。
     fn proxy_defs_by_id(&self, ids: &[u64]) -> Result<DefsById, MobileError> {
         let rows = self.rows_by_id_pub(ids)?;
@@ -210,30 +245,34 @@ impl MobileCore {
 
     /// 漏斗计数（§15.c）。只看每个节点最近一次样本；max_age ≤ 0 不限新鲜度；threshold_ms ≤ 0 按 300。
     pub fn node_funnel(&self, now_millis: i64, max_age_millis: i64, threshold_ms: i32) -> Result<NodeFunnel, MobileError> {
-        let threshold_ms = if threshold_ms <= 0 { 300 } else { threshold_ms };
-        let source_count = self.subs.lock().entries.len() as u32;
-        let st = self.store()?;
-        let fresh: Vec<(u64, i32)> = {
-            let c = self.latency.lock();
-            c.map
-                .iter()
-                .filter_map(|(&id, v)| v.last().filter(|&&(_, at)| max_age_millis <= 0 || now_millis - at <= max_age_millis).map(|&(ms, _)| (id, ms)))
-                .collect()
+        self.funnel_in(None, now_millis, max_age_millis, threshold_ms)
+    }
+
+    /// 场景漏斗（§19.a）：只数该场景候选范围内的节点——当前节点所在地区，且遵守场景节点过滤（§15.h，视频只用 4K）。
+    /// 口径与 `sceneCandidates` / `Scene.available` 的范围一致；`sourceCount` 仍是全部订阅数，`poolSize` = 该范围节点数（不看测速）。
+    /// 场景尚未选节点（地区未知）时返回 poolSize = tested = 0。未知 sceneId 抛 SceneNotFound。
+    pub fn scene_funnel(&self, scene_id: String, now_millis: i64, max_age_millis: i64, threshold_ms: i32) -> Result<NodeFunnel, MobileError> {
+        let (selected, filter) = {
+            let sc = self.scenes.lock();
+            let s = sc.get(&scene_id)?;
+            (s.selected, s.node_filter)
         };
-        // 订阅删除后缓存里可能还有旧指纹：只数仍在库中的
-        let ids: Vec<u64> = fresh.iter().map(|x| x.0).collect();
-        let live: FxHashSet<u64> = self.positions(&st, &ids).into_keys().collect();
-        let mut f = NodeFunnel { source_count, pool_size: st.total(), tested: 0, reachable: 0, under_threshold: 0, threshold_ms };
-        for (_, ms) in fresh.into_iter().filter(|x| live.contains(&x.0)) {
-            f.tested += 1;
-            if ms >= 0 {
-                f.reachable += 1;
-                if ms < threshold_ms {
-                    f.under_threshold += 1;
-                }
-            }
+        let region = match selected {
+            Some(id) => self.rows_by_id_pub(&[id])?.remove(&id).map(|r| r.region),
+            None => None,
+        };
+        let Some(region) = region else {
+            let threshold_ms = if threshold_ms <= 0 { 300 } else { threshold_ms };
+            let source_count = self.subs.lock().entries.len() as u32;
+            return Ok(NodeFunnel { source_count, pool_size: 0, tested: 0, reachable: 0, under_threshold: 0, threshold_ms });
+        };
+        let st = self.store()?;
+        let (mut bm, _) = st.timed_query(&region);
+        if filter == Some(crate::scenes::SceneNodeFilter::Uhd) {
+            bm &= st.uhd_bitmap();
         }
-        Ok(f)
+        drop(st);
+        self.funnel_in(Some(&bm), now_millis, max_age_millis, threshold_ms)
     }
 
     /// 扫描目标（§15.d）：查询结果里该测的节点 id，先未测、再按上次测速时间从旧到新；
@@ -310,6 +349,31 @@ mod tests {
         // 新鲜度：只看 1.5 s 内的 → 只剩刚记的那条超时
         let f = core.node_funnel(3000, 1500, 300).unwrap();
         assert_eq!((f.tested, f.reachable), (1, 0));
+    }
+
+    #[test]
+    fn scene_funnel_scoped() {
+        let (_d, core, _sub, rows) = crate::scene_api::tests::setup();
+        // 场景尚未选节点：范围为空
+        let f = core.scene_funnel("ai".into(), 2000, 0, 75).unwrap();
+        assert_eq!((f.source_count, f.pool_size, f.tested, f.reachable, f.under_threshold, f.threshold_ms), (2, 0, 0, 0, 0, 75));
+        assert!(core.scene_funnel("no-such".into(), 2000, 0, 75).is_err());
+        // 选美国节点后只数美国（4 个，全库 5 个含日本 01；日本 01 未测）
+        let us = rows.iter().find(|r| r.region == rows[0].region).unwrap().id;
+        core.apply_scene_change("ai".into(), us, 2000).unwrap();
+        let g = core.node_funnel(2000, 0, 75).unwrap();
+        let f = core.scene_funnel("ai".into(), 2000, 0, 75).unwrap();
+        let n_region = rows.iter().filter(|r| r.region == rows[0].region).count() as u64;
+        assert_eq!(f.pool_size, n_region);
+        assert!(f.pool_size < g.pool_size);
+        assert!(f.tested <= n_region && f.tested <= g.tested && f.reachable <= f.tested && f.under_threshold <= f.reachable);
+        // 日本节点测速不影响美国场景漏斗，但计入全局
+        let jp = core.query_nodes("日本".into()).unwrap();
+        let jp = core.node_rows(jp.token, 0, 1).unwrap().rows[0].id;
+        core.record_latencies(vec![LatencySample { id: jp, ms: 10, at: 2000 }]).unwrap();
+        let f2 = core.scene_funnel("ai".into(), 2000, 0, 75).unwrap();
+        assert_eq!((f2.tested, f2.reachable), (f.tested, f.reachable));
+        assert_eq!(core.node_funnel(2000, 0, 75).unwrap().tested, g.tested + 1);
     }
 
     #[test]
