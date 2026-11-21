@@ -151,12 +151,8 @@ export struct SettingsView {
 
   build() {
     Scroll() {
+      // 标题由外层 NavDestination 给（Index 路由 settings）。
       Column({ space: 20 }) {
-        Text(ZTerm.settings)
-          .fontSize(28)
-          .fontWeight(FontWeight.Bold)
-          .fontColor($r('app.color.screen_t1'))
-
         ZSection({ header: $r('app.string.settings_section_connection'), footer: $r('app.string.hm_settings_lan_bypass_footer') }) {
           Column({ space: 6 }) {
             Text($r('app.string.hm_settings_mode'))
@@ -275,7 +271,7 @@ export struct SettingsView {
         }
       }
       .width('100%')
-      .padding({ left: 16, right: 16, top: 24, bottom: 32 })
+      .padding({ left: 16, right: 16, top: 8, bottom: 32 })
       .alignItems(HorizontalAlign.Start)
     }
     .width('100%')
