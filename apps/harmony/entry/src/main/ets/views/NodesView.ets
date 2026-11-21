@@ -150,6 +150,8 @@ struct SectionHeaderView {
 @ComponentV2
 export struct NodesView {
   @Event onImport: () => void = () => {};
+  /** 初始查询（指令面板“查看全部”）。 */
+  @Param initialQuery: string = '';
 
   @Local query: string = '';
   @Local total: number = 0;
@@ -171,7 +173,8 @@ export struct NodesView {
     this.source.model.onRowChanged = (row: number) => this.source.changed(row);
     this.source.model.onState = (s: NodeListState) => this.apply(s);
     this.source.model.start();
-    this.source.model.query('').then(() => {
+    this.query = this.initialQuery;
+    this.source.model.query(this.initialQuery.trim()).then(() => {
       this.ranOnce = true;
     });
   }
