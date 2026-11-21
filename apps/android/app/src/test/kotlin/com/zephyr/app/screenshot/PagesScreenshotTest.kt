@@ -42,7 +42,7 @@ class PagesScreenshotTest(private val dark: Boolean) {
 
     @Test fun nodes() = paparazzi.snapshot { ZephyrTheme(dark = dark) { androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) { NodesScreen(NodesViewModel(engine), "", onBack = {}) } } }
     @Test fun nodesSearch() = paparazzi.snapshot { ZephyrTheme(dark = dark) { androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) { NodesScreen(NodesViewModel(engine), "日本 NTT", onBack = {}) } } }
-    @Test fun rules() = paparazzi.snapshot { ZephyrTheme(dark = dark) { androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) { RulesScreen("chat.openai.com", onBack = {}) } } }
+    @Test fun rules() = paparazzi.snapshot { ZephyrTheme(dark = dark) { androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) { androidx.compose.runtime.CompositionLocalProvider(androidx.compose.ui.platform.LocalInspectionMode provides true) { RulesScreen("chat.openai.com", onBack = {}) } } } }
     @Test fun subscriptions() = paparazzi.snapshot { ZephyrTheme(dark = dark) { androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) { SubscriptionsScreen(onBack = {}, onImport = {}) } } }
     @Test fun settings() = paparazzi.snapshot { ZephyrTheme(dark = dark) { androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) { SettingsScreen(com.zephyr.app.ui.common.BackTo.LIBRARY, onBack = {}) } } }
 

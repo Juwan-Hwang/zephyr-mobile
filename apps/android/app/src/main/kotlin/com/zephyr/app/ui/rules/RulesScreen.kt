@@ -91,10 +91,14 @@ fun RulesScreen(initial: String, back: BackTo = BackTo.LIBRARY, onBack: () -> Un
             ZSearchField(q, { q = it }, stringResource(R.string.rules_test_placeholder), Modifier.padding(horizontal = 16.dp).focusRequester(focus))
             Spacer(Modifier.height(12.dp))
             ZCard(Modifier.padding(horizontal = 16.dp), padding = 18.dp) {
-                AnimatedContent(trace, transitionSpec = { fadeIn(ZAnim.standard()) togetherWith fadeOut(ZAnim.micro()) }, label = "trace") { t ->
+                // And-1 (#208): the trace arrives a frame after first composition, so a screenshot caught AnimatedContent
+                // still fading from the hint. Previews / Paparazzi render the final state directly.
+                val traceBody: @Composable (RuleTrace?) -> Unit = { t ->
                     if (t == null) ZText(stringResource(R.string.rules_test_hint), style = ZTheme.type.footnote, color = c.text3)
                     else Chain(t, stats)
                 }
+                if (androidx.compose.ui.platform.LocalInspectionMode.current) traceBody(trace)
+                else AnimatedContent(trace, transitionSpec = { fadeIn(ZAnim.standard()) togetherWith fadeOut(ZAnim.micro()) }, label = "trace") { t -> traceBody(t) }
             }
             Spacer(Modifier.height(20.dp))
             ZSectionHeader(stringResource(R.string.rules_match_order), trailing = stringResource(R.string.rules_top_to_bottom))
