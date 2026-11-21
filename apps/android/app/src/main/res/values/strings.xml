@@ -321,6 +321,8 @@
     <string name="nodes_empty_action">Import subscription</string>
     <string name="nodes_no_match">No nodes match “%1$s”</string>
     <string name="nodes_tested">%1$s tested</string>
+    <string name="nodes_judgement">%1$s reachable · %2$s tested</string>
+    <string name="nodes_untested_hint">Not tested yet — visible nodes are tested when you stop scrolling</string>
     <!-- Accessibility: region index entry, %1$s is a region code -->
     <string name="nodes_jump_to">Jump to %1$s</string>
     <string name="nodes_detail_protocol">Protocol</string>

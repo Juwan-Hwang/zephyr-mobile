@@ -284,6 +284,8 @@
     <string name="nodes_empty_action">سبسکرپشن امپورٹ کریں</string>
     <string name="nodes_no_match">“\u2068%1$s\u2069” سے کوئی نوڈ میل نہیں کھاتا</string>
     <string name="nodes_tested">\u2068%1$s\u2069 ٹیسٹ کیے گئے</string>
+    <string name="nodes_judgement">\u2068%1$s\u2069 قابلِ رسائی · \u2068%2$s\u2069 ٹیسٹ کیے گئے</string>
+    <string name="nodes_untested_hint">ابھی ٹیسٹ نہیں ہوا — اسکرول روکنے پر نظر آنے والے نوڈز ٹیسٹ ہوتے ہیں</string>
     <string name="nodes_jump_to">\u2068%1$s\u2069 پر جائیں</string>
     <string name="nodes_detail_protocol">پروٹوکول</string>
     <string name="nodes_detail_latency">تاخیر</string>

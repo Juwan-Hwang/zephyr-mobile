@@ -268,6 +268,8 @@
     <string name="nodes_empty_action">Abuna import et</string>
     <string name="nodes_no_match">“%1$s” bilen gabat gelýän düwün ýok</string>
     <string name="nodes_tested">%1$s barlandy</string>
+    <string name="nodes_judgement">%1$s birikip bolýan · %2$s barlandy</string>
+    <string name="nodes_untested_hint">Entek barlanmady — aýlamagy bes edeniňizde görünýän düwünler barlanýar</string>
     <string name="nodes_jump_to">%1$s bölümine geç</string>
     <string name="nodes_detail_protocol">Protokol</string>
     <string name="nodes_detail_latency">Gijikme</string>

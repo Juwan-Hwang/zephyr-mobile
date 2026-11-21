@@ -287,6 +287,8 @@
     <string name="nodes_empty_action">Importar suscripción</string>
     <string name="nodes_no_match">Ningún nodo coincide con «%1$s»</string>
     <string name="nodes_tested">%1$s probados</string>
+    <string name="nodes_judgement">%1$s accesibles · %2$s probados</string>
+    <string name="nodes_untested_hint">Sin probar aún: los nodos visibles se prueban al dejar de desplazarte</string>
     <string name="nodes_jump_to">Ir a %1$s</string>
     <string name="nodes_detail_protocol">Protocolo</string>
     <string name="nodes_detail_latency">Latencia</string>

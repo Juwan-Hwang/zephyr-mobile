@@ -266,6 +266,8 @@
     <string name="nodes_empty_action">导入订阅</string>
     <string name="nodes_no_match">没有与“%1$s”匹配的节点</string>
     <string name="nodes_tested">已检测 %1$s</string>
+    <string name="nodes_judgement">可连通 %1$s · 已检测 %2$s</string>
+    <string name="nodes_untested_hint">尚未检测，停止滚动后自动测可见节点</string>
     <string name="nodes_jump_to">跳到 %1$s</string>
     <string name="nodes_detail_protocol">协议</string>
     <string name="nodes_detail_latency">延迟</string>

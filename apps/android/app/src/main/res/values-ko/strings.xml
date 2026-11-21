@@ -249,6 +249,8 @@
     <string name="nodes_empty_action">구독 가져오기</string>
     <string name="nodes_no_match">‘%1$s’와(과) 일치하는 노드 없음</string>
     <string name="nodes_tested">%1$s 테스트됨</string>
+    <string name="nodes_judgement">%1$s 연결 가능 · %2$s 테스트됨</string>
+    <string name="nodes_untested_hint">아직 테스트하지 않음 — 스크롤을 멈추면 보이는 노드를 자동으로 테스트합니다</string>
     <string name="nodes_jump_to">%1$s(으)로 이동</string>
     <string name="nodes_detail_protocol">프로토콜</string>
     <string name="nodes_detail_latency">지연 시간</string>
