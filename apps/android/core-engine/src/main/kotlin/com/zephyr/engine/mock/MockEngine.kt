@@ -58,6 +58,9 @@ class MockEngine(
     private val latencyBus = MutableSharedFlow<List<LatencyUpdate>>(extraBufferCapacity = 64)
     private val tested = ConcurrentHashMap<Long, Int>()
     private val testedCount = AtomicLong(BASE_TESTED)
+    /** Contract §18.a mock: write time of each `tested` sample; fixture (cached) latencies count as written at start. */
+    private val testedAt = ConcurrentHashMap<Long, Long>()
+    private val startedAt = clock()
     private val queries = object : LinkedHashMap<Long, NodeQuery>(16, 0.75f, true) {
         override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Long, NodeQuery>?) = size > 16
     }
@@ -244,7 +247,10 @@ class MockEngine(
     // ── 5. Node library ──────────────────────────────────────────────────────
     override suspend fun nodeIndex(): NodeIndex {
         val q = NodeQuery.build("")
-        return NodeIndex(q.total, q.sections(), testedCount.get())
+        // Contract §18.a mock: reachable / tested from one nodeFunnel over the mock latency table, same window as core.
+        val ttl = settingsState.value.latencyTtlHours.coerceAtLeast(1) * 3_600_000L
+        val f = nodeFunnel(ttl, 200)
+        return NodeIndex(q.total, q.sections(), testedCount.get(), reachableCount = f.reachable, funnelTested = f.tested)
     }
 
     override suspend fun queryNodes(query: String): NodeQueryResult = withContext(compute) {
@@ -303,6 +309,7 @@ class MockEngine(
                 val updates = buckets.getValue(bucket).map { id ->
                     val ms = testedLatencyOf(id)
                     if (tested.put(id, ms) == null) testedCount.incrementAndGet()
+                    testedAt[id] = now
                     LatencyUpdate(id, ms, now)
                 }
                 latencyBus.emit(updates)
@@ -319,10 +326,16 @@ class MockEngine(
     override suspend fun nodeFunnel(maxAgeMs: Long, thresholdMs: Int): NodeFunnel {
         val threshold = if (thresholdMs > 0) thresholdMs else 300
         var t = 0L; var ok = 0L; var under = 0L
+        val now = clock()
         val n = MockCatalog.REGIONS.size
         for (i in 0 until FUNNEL_POOL) {
             val r = i % n; val j = i / n
-            val ms = tested[MockCatalog.idOf(r, j)] ?: MockCatalog.cachedLatency(r, j) ?: continue
+            val id = MockCatalog.idOf(r, j)
+            val live = tested[id]
+            val ms = live ?: MockCatalog.cachedLatency(r, j) ?: continue
+            // Contract §18.a: expired samples count neither as tested nor reachable (maxAgeMs ≤ 0 = no expiry).
+            val at = if (live != null) testedAt[id] ?: startedAt else startedAt
+            if (maxAgeMs > 0 && now - at > maxAgeMs) continue
             t++
             if (ms >= 0) { ok++; if (ms < threshold) under++ }
         }
