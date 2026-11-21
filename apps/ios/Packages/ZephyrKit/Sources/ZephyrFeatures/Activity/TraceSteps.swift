@@ -62,12 +62,12 @@ enum TraceSteps {
         let (node, exception) = resolveNode(scene: scene, actualNode: actual)
         var nodeDetail: String?
         if let exception {
-            nodeDetail = ZL.s("%@ 例外 · 固定", exception.app)
+            nodeDetail = ZL.s("%@ 例外（固定）", exception.app)
         } else if let via = live?.via {
             nodeDetail = ZL.s("经由 %@", via)
         } else if let node {
             nodeDetail = [node.latencyMs.map { ZFormat.latency($0) }, node.tag, node.protocol.isEmpty ? nil : node.protocol]
-                .compactMap { $0 }.joined(separator: " · ")
+                .compactMap { $0 }.joined(separator: "\n")   // 规范 §9.2：分行，不用中点串联
         }
         let nodeName = node?.name ?? actual ?? scene.selected.name
         steps.append(TraceStep(label: ZL.tr("节点"), value: nodeName, detail: nodeDetail?.isEmpty == true ? nil : nodeDetail,
@@ -79,7 +79,7 @@ enum TraceSteps {
         var exitDetail: [String] = []
         if let r = node?.region { exitDetail.append(HRegionName.name(r)) }
         if exception == nil, let t = scene.testedAt { exitDetail.append(ZL.s("%@检测", ZFormat.relative(t, now: now))) }
-        steps.append(TraceStep(label: ZL.tr("出口"), value: ip ?? ZL.tr("未检测"), detail: exitDetail.isEmpty ? nil : exitDetail.joined(separator: " · "),
+        steps.append(TraceStep(label: ZL.tr("出口"), value: ip ?? ZL.tr("未检测"), detail: exitDetail.isEmpty ? nil : exitDetail.joined(separator: "\n"),
                                monospaced: ip != nil, marker: .success))
         return steps
     }

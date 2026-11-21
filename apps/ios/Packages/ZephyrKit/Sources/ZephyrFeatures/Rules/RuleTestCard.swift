@@ -46,11 +46,11 @@ struct RuleTestCard: View {
     private func chainStep(_ step: RulesModel.Step, position: ZChainPosition) -> ZChainStep {
         switch step.value {
         case .text(let s):
-            ZChainStep(label: step.label, value: s, trailing: step.trailing, position: position)
+            ZChainStep(label: step.label, value: s, detail: step.detail, trailing: step.trailing, position: position)
         case .mono(let s):
-            ZChainStep(label: step.label, value: s, trailing: step.trailing, monospacedValue: true, position: position)
+            ZChainStep(label: step.label, value: s, detail: step.detail, trailing: step.trailing, monospacedValue: true, position: position)
         case .region(let code, let name):
-            ZChainStep(label: step.label, value: name, trailing: step.trailing, regionCode: code, position: position)
+            ZChainStep(label: step.label, value: name, detail: step.detail, trailing: step.trailing, regionCode: code, position: position)
         }
     }
 
