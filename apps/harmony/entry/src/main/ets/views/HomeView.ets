@@ -2,13 +2,14 @@
  * 首页（对照 Android ui/home HomeScreen / HomeHeader / HomeCards，简化版）：
  * - 状态 + 时长 + 连接开关（经 ConnectionCoordinator：先起 VPN 扩展再 engine.connect）、失败原因；
  * - 模式选择 规则 / 全局 / 直连（engine.setMode）；
- * - 实时上下行速率（engine.traffic）与今日用量；
+ * - 实时上下行速率（engine.traffic）与今日用量；已连接时点速率区打开最近连接（ActivitySheet，M1-8）；
  * - 当前节点：全局模式 = 全局节点；直连 = 本机网络。点卡片去节点页。
  * - 规则模式：场景行（U5）：左右滑换地区 → 内联“更改出口 IP？”确认卡（previewSceneChange）→ 更改后 5 s 撤销吐司。
  * - 顶栏：Zephyr + 右上设置；底栏（原型 .dock）：左侧指令栏“搜索或输入指令”（点开 CommandSheet，M1-7b）+ 右侧资料库按钮（契约 §17.e，无底部 Tab）。
  * - 场景详情 sheet（M1-5，SceneSheet）：点场景行打开；资料库“场景”入口经 Index 递增 sceneRequest 打开第一个场景
  *   （同 Android AppRoot LibraryDest.Scenes）。sheet 里点候选 → 收起 sheet，首页出同一张“更改出口 IP？”确认卡。
  */
+import { ActivitySheet } from './ActivitySheet';
 import { CommandSheet } from './CommandSheet';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { CommandApplier } from '../app/CommandApplier';
@@ -28,6 +29,9 @@ import { Subscription as StreamSub } from '../engine/Stream';
 import { VpnState } from '../vpn/VpnController';
 import { ZTerm } from '../generated/ZTerms';
 
+/** 首页速率区组件 id（UiTest）。 */
+export const HOME_TRAFFIC_ID: string = 'zephyr.home.traffic';
+
 const MODES: ProxyMode[] = [ProxyMode.RULE, ProxyMode.GLOBAL, ProxyMode.DIRECT];
 
 @ComponentV2
@@ -41,6 +45,8 @@ export struct HomeView {
   /** 流量卡“今日 X”：今日卡（M1-9，同 Android onToday）。 */
   @Event onOpenToday: () => void = () => {};
   @Local showCommand: boolean = false;
+  /** 最近连接 sheet（M1-8）。 */
+  @Local showActivity: boolean = false;
   /** 资料库“场景”入口：每次递增 = 打开第一个场景的 sheet。 */
   @Param sceneRequest: number = 0;
   @Local showScene: boolean = false;
@@ -350,11 +356,32 @@ export struct HomeView {
   traffic() {
     ZCard() {
       Column({ space: 10 }) {
+        // 已连接时速率区打开“最近连接”（M1-8，同 Android 风区 onActivity / H-P2-3）。
         Row({ space: 12 }) {
           this.rateTile($r('app.string.hm_home_download'), this.downBps, $r('app.color.color_download'))
           this.rateTile($r('app.string.hm_home_upload'), this.upBps, $r('app.color.screen_up'))
         }
         .width('100%')
+        .id(HOME_TRAFFIC_ID)
+        .accessibilityGroup(this.status === ConnectionStatus.CONNECTED)
+        .accessibilityRole(this.status === ConnectionStatus.CONNECTED ? AccessibilityRoleType.BUTTON :
+          AccessibilityRoleType.TEXT)
+        .accessibilityDescription(this.status === ConnectionStatus.CONNECTED ? this.text($r('app.string.activity_title'), '') : '')
+        .onClick(() => {
+          if (this.status === ConnectionStatus.CONNECTED) {
+            hilog.info(0x5A50, 'HomeView', 'open recent connections');
+            this.showActivity = true;
+          }
+        })
+        .bindSheet(this.showActivity, this.activitySheet(), {
+          detents: [SheetSize.MEDIUM, SheetSize.LARGE],
+          showClose: true,
+          dragBar: true,
+          backgroundColor: $r('app.color.screen_bg'),
+          onDisappear: () => {
+            this.showActivity = false;
+          }
+        })
 
         if (this.todayBytes >= 0) {
           Row({ space: 2 }) {
@@ -620,6 +647,11 @@ export struct HomeView {
     }
     .width('100%')
     .hitTestBehavior(HitTestMode.Transparent)
+  }
+
+  @Builder
+  activitySheet() {
+    ActivitySheet()
   }
 
   @Builder

@@ -3,8 +3,8 @@
  * 域名（细体大字）+ “刚刚 · N 个连接 · 字节”，四步 规则 → 场景 → 节点 → 出口（竖线 + 圆点，末步实心绿，逐步淡入），
  * 下面“本次连接”覆写分段（不变 · 直连 · 其他场景，overrideHost），失败显示我们自己的文案；成功出撤销吐司（审计 U27）；
  * “始终应用”开关 = persistent。
- * 目前由指令面板“X 走哪里？”打开（在面板内原地显示）。还没有连接记录的输入退回规则测试（TraceModel.fromRuleTrace），
- * 只读、不给覆写。最近连接列表（U11）未做。
+ * 由指令面板“X 走哪里？”与最近连接（ActivitySheet，M1-8）打开（在各自 sheet 内原地显示）。还没有连接记录的输入退回规则测试（TraceModel.fromRuleTrace），
+ * 只读、不给覆写。
  */
 import { AppServices } from '../app/AppServices';
 import { HapticKind, Haptics } from '../app/Haptics';
