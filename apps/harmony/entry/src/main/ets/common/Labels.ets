@@ -138,18 +138,21 @@ export class Labels {
 
   /** 内置场景名随应用语言（核心用中文命名内置场景，Android Labels.builtInSceneNameRes）；自定义场景保留原名。 */
   static sceneName(s: Scene): ResourceStr {
-    if (s.kind !== SceneKind.CUSTOM) {
-      if (s.name === 'AI') {
-        return $r('app.string.common_scene_ai');
-      }
-      if (s.name === '视频') {
-        return $r('app.string.common_scene_video');
-      }
-      if (s.name === '其他') {
-        return $r('app.string.common_scene_other');
-      }
+    return s.kind !== SceneKind.CUSTOM ? Labels.sceneNameRaw(s.name) : s.name;
+  }
+
+  /** 只知道场景名（连接记录、故障切换）时：同 Android sceneNameText(raw)。 */
+  static sceneNameRaw(raw: string): ResourceStr {
+    if (raw === 'AI') {
+      return $r('app.string.common_scene_ai');
     }
-    return s.name;
+    if (raw === '视频') {
+      return $r('app.string.common_scene_video');
+    }
+    if (raw === '其他') {
+      return $r('app.string.common_scene_other');
+    }
+    return raw;
   }
 
   static layerKind(k: LayerKind): Resource {
