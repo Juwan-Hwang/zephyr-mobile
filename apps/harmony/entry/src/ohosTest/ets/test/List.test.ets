@@ -9,6 +9,7 @@ import sceneSheetTest from './SceneSheet.test';
 import traceTest from './Trace.test';
 import todayTest from './Today.test';
 import vpnTest from './Vpn.test';
+import undoDeleteTest from './UndoDelete.test';
 
 export default function testsuite(): void {
   mockFixturesTest();
@@ -22,4 +23,5 @@ export default function testsuite(): void {
   traceTest();
   todayTest();
   vpnTest();
+  undoDeleteTest();
 }

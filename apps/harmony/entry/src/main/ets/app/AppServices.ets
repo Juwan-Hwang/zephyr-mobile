@@ -12,7 +12,8 @@ import { VpnController } from '../vpn/VpnController';
 import { ConnectionCoordinator } from './ConnectionCoordinator';
 import { LogsModel } from './LogsModel';
 import { MemoryBackend, SettingsStore } from './SettingsStore';
-import { ToastCenter } from './ToastCenter';
+import { hilog } from '@kit.PerformanceAnalysisKit';
+import { ToastCenter, ToastEvent } from './ToastCenter';
 import { screenReaderOn } from '../common/A11y';
 
 export const ENGINE_KEY: string = 'zephyr.engine';
@@ -33,6 +34,10 @@ export class AppServices {
   private static instance: AppServices | undefined = undefined;
 
   private constructor(engine: ZephyrEngine, vpn: VpnController | undefined, settings: SettingsStore) {
+    // 真机排查撤销：show / undo / commit(timeout|replaced|dismiss) / undo_missed 都进 hilog（tag ToastCenter）。
+    this.toasts.onEvent = (ev: ToastEvent, serial: number, detail: string) => {
+      hilog.info(0x5A50, 'ToastCenter', '%{public}s #%{public}d %{public}s', ev, serial, detail);
+    };
     this.engine = engine;
     this.settings = settings;
     this.vpn = vpn;
