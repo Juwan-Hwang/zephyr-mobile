@@ -161,7 +161,7 @@
     <string name="scene_pinned_value">%1$s (закреплён)</string>
     <string name="scene_retest">Проверить снова</string>
     <string name="scene_funnel_tested">Проверено</string>
-    <string name="scene_funnel_reachable">Доступно</string>
+    <string name="scene_funnel_reachable">Доступны</string>
     <string name="scene_funnel_under">Менее %1$d мс</string>
     <string name="home_mini_funnel_a11y">Доступны: %1$s, быстрее 200 миллисекунд: %2$s</string>
     <string name="scene_note">Результаты выбора сохраняются только в Zephyr. Конфигурация подписки не меняется.</string>
@@ -306,7 +306,7 @@
     <string name="nodes_empty_action">Импортировать подписку</string>
     <string name="nodes_no_match">Нет узлов по запросу «%1$s»</string>
     <string name="nodes_tested">Проверено: %1$s</string>
-    <string name="nodes_judgement">Доступно: %1$s · Проверено: %2$s</string>
+    <string name="nodes_judgement">Доступны: %1$s · Проверено: %2$s</string>
     <string name="nodes_untested_hint">Ещё не проверено — видимые узлы проверяются, когда вы перестаёте прокручивать</string>
     <string name="nodes_jump_to">Перейти к %1$s</string>
     <string name="nodes_detail_protocol">Протокол</string>
