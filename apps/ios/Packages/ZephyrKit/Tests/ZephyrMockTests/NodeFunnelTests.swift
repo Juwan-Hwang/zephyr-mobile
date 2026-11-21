@@ -79,4 +79,38 @@ final class NodeFunnelTests: XCTestCase {
         let noExpiry0 = await e.nodeFunnel(maxAgeMs: 0, thresholdMs: 200)
         XCTAssertEqual(try XCTUnwrap(noExpiry0).tested, before.tested)
     }
+
+    // MARK: 契约 v0.7 §19.a：sceneFunnel
+
+    func testSceneFunnelIsScopedAndMonotonic() async throws {
+        let e = MockEngine(seed: 0, clock: .frozen941)
+        let global0 = await e.nodeFunnel(maxAgeMs: 86_400_000, thresholdMs: 200)
+        let global = try XCTUnwrap(global0)
+        for id in ["ai", "video", "other"] {
+            let f0 = await e.sceneFunnel(sceneId: id, maxAgeMs: 86_400_000, thresholdMs: 200)
+            let f = try XCTUnwrap(f0, id)
+            XCTAssertEqual(f.sourceCount, global.sourceCount)
+            XCTAssertEqual(f.thresholdMs, 200)
+            XCTAssertLessThanOrEqual(f.underThreshold, f.reachable, id)
+            XCTAssertLessThanOrEqual(f.reachable, f.tested, id)
+            XCTAssertLessThanOrEqual(f.tested, f.poolSize, id)
+        }
+        let ai0 = await e.sceneFunnel(sceneId: "ai", maxAgeMs: 86_400_000, thresholdMs: 200)
+        XCTAssertGreaterThan(try XCTUnwrap(ai0).poolSize, 0)
+    }
+
+    func testSceneFunnelFollowsNodeFilter() async throws {
+        let e = MockEngine(seed: 0, clock: .frozen941)
+        let all0 = await e.sceneFunnel(sceneId: "video", maxAgeMs: 0, thresholdMs: 200)
+        let all = try XCTUnwrap(all0)
+        try? await e.setSceneNodeFilter(sceneId: "video", filter: .uhd)
+        let uhd0 = await e.sceneFunnel(sceneId: "video", maxAgeMs: 0, thresholdMs: 200)
+        XCTAssertLessThanOrEqual(try XCTUnwrap(uhd0).poolSize, all.poolSize)
+    }
+
+    func testSceneFunnelUnknownSceneIsNil() async {
+        let e = MockEngine(seed: 0, clock: .frozen941)
+        let f = await e.sceneFunnel(sceneId: "nope", maxAgeMs: 0, thresholdMs: 200)
+        XCTAssertNil(f)
+    }
 }

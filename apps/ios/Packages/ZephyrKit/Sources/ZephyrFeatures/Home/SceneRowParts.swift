@@ -75,3 +75,49 @@ struct CoachHint: View {
     .zPageBackground()
 }
 #endif
+
+/// 首页迷你漏斗（规范 §9.3，设计评审 J-1）：全部 → 已测速 → 可连通 → 低于 200 ms 四段水平细条，
+/// 宽度按 log10(count + 1) 归一到 `HMetrics.miniFunnelWidth`，从左到右依次缩短；前三段 t3，最后一段 accent base，
+/// 最后一段下方写 `underThreshold`（caption、t1、等宽数字）。数据取不到时调用方不画它，退回「N 个可用」。
+@MainActor
+struct MiniFunnel: View {
+    let funnel: NodeFunnel
+
+    var body: some View {
+        let w = Self.widths(funnel)
+        let lastX = w.dropLast().reduce(0, +) + CGFloat(w.count - 1) * HMetrics.miniFunnelGap
+        VStack(alignment: .leading, spacing: ZTokens.Space.n1) {
+            HStack(spacing: HMetrics.miniFunnelGap) {
+                ForEach(w.indices, id: \.self) { i in
+                    RoundedRectangle(cornerRadius: HMetrics.miniFunnelBar / 2)
+                        .fill(i == w.count - 1 ? AnyShapeStyle(ZAccentStyle()) : AnyShapeStyle(ZColor.t3))
+                        .frame(width: w[i], height: HMetrics.miniFunnelBar)
+                }
+            }
+            Text(verbatim: ZFormat.count(Int64(funnel.underThreshold)))
+                .zType(.caption).monospacedDigit()
+                .foregroundStyle(ZTokens.Colors.screenT1)
+                .fixedSize()
+                .padding(.leading, lastX)
+        }
+        .frame(width: HMetrics.miniFunnelWidth, alignment: .leading)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(verbatim: Self.spoken(funnel)))
+    }
+
+    /// 「可连通 {reachable}，低于 200 毫秒 {underThreshold}」。
+    static func spoken(_ f: NodeFunnel) -> String {
+        ZL.s("可连通 %1$@，低于 200 毫秒 %2$@", ZFormat.count(Int64(f.reachable)), ZFormat.count(Int64(f.underThreshold)))
+    }
+
+    /// 四段宽度：log10(count + 1) 按总和归一到总宽（扣掉段间距），每段至少 2pt 以便 0 也看得到位置。纯函数，便于单测。
+    nonisolated static func widths(_ f: NodeFunnel, total: CGFloat = HMetrics.miniFunnelWidth,
+                                   gap: CGFloat = HMetrics.miniFunnelGap, minimum: CGFloat = 2) -> [CGFloat] {
+        let counts = [f.poolSize, f.tested, f.reachable, f.underThreshold]
+        let logs = counts.map { log10(Double(max($0, 0)) + 1) }
+        let sum = logs.reduce(0, +)
+        let room = total - gap * CGFloat(counts.count - 1) - minimum * CGFloat(counts.count)
+        guard sum > 0, room > 0 else { return Array(repeating: minimum, count: counts.count) }
+        return logs.map { minimum + room * CGFloat($0 / sum) }
+    }
+}

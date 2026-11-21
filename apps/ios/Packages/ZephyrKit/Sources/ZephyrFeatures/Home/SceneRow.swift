@@ -18,6 +18,8 @@ struct SceneRow: View {
     let isProbing: Bool
     /// 待确认切换的目标（确认卡展开期间右侧显示目标节点）。
     let pendingTarget: NodeSummary?
+    /// 迷你漏斗（规范 §9.3，J-1）：该场景的 sceneFunnel（契约 v0.7 §19.a）；nil / poolSize == 0 = 写「N 个可用」。
+    var funnel: NodeFunnel? = nil
 
     @Environment(AppModel.self) private var model
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -100,6 +102,8 @@ struct SceneRow: View {
             Text("订阅分组").zType(.footnote).foregroundStyle(ZColor.t3)
         } else if scene.available <= 0 {
             Text("暂无可用节点").zType(.footnote).foregroundStyle(ZTokens.Colors.screenRedText)
+        } else if let f = shownFunnel {
+            MiniFunnel(funnel: f).padding(.top, ZTokens.Space.n1)
         } else {
             Text("\(scene.available) 个可用").zType(.footnote).foregroundStyle(ZColor.t3)
         }
@@ -205,11 +209,18 @@ struct SceneRow: View {
 
     private func openDetail() { model.present(.scene(id: scene.id)) }
 
+    /// 有数据才画（poolSize > 0）；没取到不画假比例（规范 §9.3）。
+    private var shownFunnel: NodeFunnel? {
+        guard let f = funnel, f.poolSize > 0 else { return nil }
+        return f
+    }
+
     private var a11yLabel: String {
         var parts = [scene.displayName]
         if isProbing { parts.append(ZL.tr("检测中")) }
         else if services.replacesRowStatus { parts.append(services.spoken ?? "") }
         else if scene.source == .subscriptionGroup { parts.append(ZL.tr("订阅分组")) }
+        else if scene.available > 0, let f = shownFunnel { parts.append(MiniFunnel.spoken(f)) }
         else { parts.append(scene.available > 0 ? ZL.f("%d 个可用", scene.available) : ZL.tr("暂无可用节点")) }
         parts.append("\(HRegionName.name(shown.region)) \(shown.name)")
         if let ex = scene.exceptions.first { parts.append(ZL.s("%@ 固定使用 %@", ex.app, ex.node.name)) }

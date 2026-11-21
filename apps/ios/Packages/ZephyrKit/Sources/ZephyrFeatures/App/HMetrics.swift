@@ -32,6 +32,10 @@ enum HMetrics {
     static let traceDot: CGFloat = 11
     /// 漏斗条 6 高（`.fr .bar2`）
     static let funnelBar: CGFloat = 6
+    /// 首页迷你漏斗（规范 §9.3）：条高 3、段间距 2、总宽 120（左栏「N 个可用」文字的宽度量级）
+    static let miniFunnelBar: CGFloat = 3
+    static let miniFunnelGap: CGFloat = 2
+    static let miniFunnelWidth: CGFloat = 120
     /// 今日卡片圆角 32（`.tdy .card`）
     static let todayCardRadius: CGFloat = 32
     /// 今日卡片尺寸（原型 346×500）：页面内按宽高比缩放，导出图片按原尺寸 ×3

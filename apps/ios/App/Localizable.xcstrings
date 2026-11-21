@@ -47044,6 +47044,88 @@
           }
         }
       }
+    },
+    "可连通 %1$@，低于 200 毫秒 %2$@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "متاحة %1$@، أقل من 200 ملي ثانية %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ reachable, %2$@ under 200 milliseconds"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accesibles: %1$@, por debajo de 200 milisegundos: %2$@"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "در دسترس %1$@، کمتر از ۲۰۰ میلی‌ثانیه %2$@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "接続可能 %1$@、200 ミリ秒未満 %2$@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "연결 가능 %1$@, 200밀리초 미만 %2$@"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ချိတ်ဆက်နိုင် %1$@၊ မီလီစက္ကန့် 200 အောက် %2$@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Доступны: %1$@, быстрее 200 миллисекунд: %2$@"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zinafikika %1$@, chini ya milisekunde 200 %2$@"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elýeterli %1$@, 200 millisekuntdan az %2$@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erişilebilir %1$@, 200 milisaniyenin altında %2$@"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قابلِ رسائی %1$@، 200 ملی سیکنڈ سے کم %2$@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kết nối được %1$@, dưới 200 mili giây %2$@"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
