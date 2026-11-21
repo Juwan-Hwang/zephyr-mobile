@@ -4,6 +4,7 @@
 // 大字体（isXL）时隐藏协议列，与原型 .device.xl 一致。
 
 import UIKit
+import ZephyrDesign
 import ZephyrKit
 
 final class NodeCell: UICollectionViewCell {
