@@ -1,0 +1,582 @@
+{
+  "plural": [
+    {
+      "name": "common_node_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$s nodo"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$s nodos"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$s nodos"
+        }
+      ]
+    },
+    {
+      "name": "common_available_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d disponible"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d disponibles"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d disponibles"
+        }
+      ]
+    },
+    {
+      "name": "common_region_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d región"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d regiones"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d regiones"
+        }
+      ]
+    },
+    {
+      "name": "home_subs_more",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d suscripción más"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d suscripciones más"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d suscripciones más"
+        }
+      ]
+    },
+    {
+      "name": "home_scene_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d escenario"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d escenarios"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d escenarios"
+        }
+      ]
+    },
+    {
+      "name": "scene_available_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "nodo disponible"
+        },
+        {
+          "quantity": "many",
+          "value": "nodos disponibles"
+        },
+        {
+          "quantity": "other",
+          "value": "nodos disponibles"
+        }
+      ]
+    },
+    {
+      "name": "scene_tested_from",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Probado desde %1$d suscripción"
+        },
+        {
+          "quantity": "many",
+          "value": "Probado desde %1$d suscripciones"
+        },
+        {
+          "quantity": "other",
+          "value": "Probado desde %1$d suscripciones"
+        }
+      ]
+    },
+    {
+      "name": "scene_test_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Cada hora"
+        },
+        {
+          "quantity": "many",
+          "value": "Cada %1$d horas"
+        },
+        {
+          "quantity": "other",
+          "value": "Cada %1$d horas"
+        }
+      ]
+    },
+    {
+      "name": "command_plan_exit_available",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d disponible. Se usará %2$s."
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d disponibles. Se usará %2$s."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d disponibles. Se usará %2$s."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_untested",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d nodo 4K aún no se ha probado. Vuelve a probar el escenario después de aplicar."
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d nodos 4K aún no se han probado. Vuelve a probar el escenario después de aplicar."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d nodos 4K aún no se han probado. Vuelve a probar el escenario después de aplicar."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_keep",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%2$d de %1$d admite 4K; el nodo actual se mantiene."
+        },
+        {
+          "quantity": "many",
+          "value": "%2$d de %1$d admiten 4K; el nodo actual se mantiene."
+        },
+        {
+          "quantity": "other",
+          "value": "%2$d de %1$d admiten 4K; el nodo actual se mantiene."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_switch",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%2$d de %1$d admite 4K; se usará %3$s."
+        },
+        {
+          "quantity": "many",
+          "value": "%2$d de %1$d admiten 4K; se usará %3$s."
+        },
+        {
+          "quantity": "other",
+          "value": "%2$d de %1$d admiten 4K; se usará %3$s."
+        }
+      ]
+    },
+    {
+      "name": "activity_closed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d conexión cerrada"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d conexiones cerradas"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d conexiones cerradas"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "No se ha podido cerrar la conexión"
+        },
+        {
+          "quantity": "many",
+          "value": "No se han podido cerrar las conexiones"
+        },
+        {
+          "quantity": "other",
+          "value": "No se han podido cerrar las conexiones"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_partial",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "No se ha podido cerrar %1$d conexión"
+        },
+        {
+          "quantity": "many",
+          "value": "No se han podido cerrar %1$d conexiones"
+        },
+        {
+          "quantity": "other",
+          "value": "No se han podido cerrar %1$d conexiones"
+        }
+      ]
+    },
+    {
+      "name": "trace_connections",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d conexión"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d conexiones"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d conexiones"
+        }
+      ]
+    },
+    {
+      "name": "trace_exit_stable",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Sin cambios desde hace %1$d día"
+        },
+        {
+          "quantity": "many",
+          "value": "Sin cambios desde hace %1$d días"
+        },
+        {
+          "quantity": "other",
+          "value": "Sin cambios desde hace %1$d días"
+        }
+      ]
+    },
+    {
+      "name": "nodes_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "nodo"
+        },
+        {
+          "quantity": "many",
+          "value": "nodos"
+        },
+        {
+          "quantity": "other",
+          "value": "nodos"
+        }
+      ]
+    },
+    {
+      "name": "nodes_from_subs",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "De %1$d suscripción"
+        },
+        {
+          "quantity": "many",
+          "value": "De %1$d suscripciones"
+        },
+        {
+          "quantity": "other",
+          "value": "De %1$d suscripciones"
+        }
+      ]
+    },
+    {
+      "name": "rules_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "regla"
+        },
+        {
+          "quantity": "many",
+          "value": "reglas"
+        },
+        {
+          "quantity": "other",
+          "value": "reglas"
+        }
+      ]
+    },
+    {
+      "name": "rules_summary",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d capa · compilada · %2$s en disco"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d capas · compiladas · %2$s en disco"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d capas · compiladas · %2$s en disco"
+        }
+      ]
+    },
+    {
+      "name": "subs_added",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$s añadida (%2$s nodo)"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$s añadida (%2$s nodos)"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$s añadida (%2$s nodos)"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_confirm_title",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "¿Importar %1$d suscripción?"
+        },
+        {
+          "quantity": "many",
+          "value": "¿Importar %1$d suscripciones?"
+        },
+        {
+          "quantity": "other",
+          "value": "¿Importar %1$d suscripciones?"
+        }
+      ]
+    },
+    {
+      "name": "subs_added_many",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d suscripción añadida"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d suscripciones añadidas"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d suscripciones añadidas"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_some_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "No se ha podido añadir %1$d"
+        },
+        {
+          "quantity": "many",
+          "value": "No se han podido añadir %1$d"
+        },
+        {
+          "quantity": "other",
+          "value": "No se han podido añadir %1$d"
+        }
+      ]
+    },
+    {
+      "name": "subs_review_all",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Se actualizará %1$s suscripción"
+        },
+        {
+          "quantity": "many",
+          "value": "Se actualizarán las %1$s suscripciones"
+        },
+        {
+          "quantity": "other",
+          "value": "Se actualizarán las %1$s suscripciones"
+        }
+      ]
+    },
+    {
+      "name": "subs_updated_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d suscripción actualizada"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d suscripciones actualizadas"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d suscripciones actualizadas"
+        }
+      ]
+    },
+    {
+      "name": "subs_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "suscripción"
+        },
+        {
+          "quantity": "many",
+          "value": "suscripciones"
+        },
+        {
+          "quantity": "other",
+          "value": "suscripciones"
+        }
+      ]
+    },
+    {
+      "name": "subs_update_every",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "actualización cada %1$d hora"
+        },
+        {
+          "quantity": "many",
+          "value": "se actualizan cada %1$d horas"
+        },
+        {
+          "quantity": "other",
+          "value": "actualización cada %1$d horas"
+        }
+      ]
+    },
+    {
+      "name": "subs_others",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d más"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d más"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d más"
+        }
+      ]
+    },
+    {
+      "name": "subs_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Cada %1$d h"
+        },
+        {
+          "quantity": "many",
+          "value": "Cada %1$d h"
+        },
+        {
+          "quantity": "other",
+          "value": "Cada %1$d h"
+        }
+      ]
+    },
+    {
+      "name": "settings_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d hora"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d horas"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d horas"
+        }
+      ]
+    },
+    {
+      "name": "today_regions",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "región"
+        },
+        {
+          "quantity": "many",
+          "value": "regiones"
+        },
+        {
+          "quantity": "other",
+          "value": "regiones"
+        }
+      ]
+    },
+    {
+      "name": "today_hours_online",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "hora en línea"
+        },
+        {
+          "quantity": "many",
+          "value": "horas en línea"
+        },
+        {
+          "quantity": "other",
+          "value": "horas en línea"
+        }
+      ]
+    }
+  ]
+}

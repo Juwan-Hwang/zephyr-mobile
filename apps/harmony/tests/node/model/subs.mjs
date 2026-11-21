@@ -1,0 +1,13 @@
+const { MockEngine } = await import('../.out/rt/engine/MockEngine.ts');
+const { SubscriptionImport } = await import('../.out/rt/app/SubscriptionImport.ts');
+let bad=0; const ok=(c,m)=>{ if(!c){bad++;console.log('FAIL',m);} };
+const e=new MockEngine({latencyScale:0}); const n0=e.subscriptions().value.length;
+let r=await SubscriptionImport.importText(e,'url','https://example.com/sub?token=x'); ok(r.added===1&&r.first,'url import '+JSON.stringify(r));
+ok(e.subscriptions().value.length===n0+1,'list grew');
+r=await SubscriptionImport.importText(e,'url','not a link'); ok(r.failed===1&&r.error==='subscription_invalid','invalid '+JSON.stringify(r));
+r=await SubscriptionImport.importText(e,'url','  '); ok(r.error==='subscription_invalid','empty');
+r=await SubscriptionImport.importItems(e,'url',[{url:'https://a.example/s',name:'A'},{url:'https://b.example/s'}]); ok(r.added===2,'items '+JSON.stringify(r));
+ok(SubscriptionImport.isInsecure('HTTP://x')&&!SubscriptionImport.isInsecure('https://x'),'insecure');
+ok(SubscriptionImport.displayName({url:'https://sub.example.com/a?b'})==='sub.example.com','host');
+ok(SubscriptionImport.displayName({url:'x',name:' N '})==='N','name');
+console.log(bad?'FAILED '+bad:'subs OK'); process.exit(bad?1:0);

@@ -1,0 +1,23 @@
+// TodayArt（M1-9）：配色、透明度、流场确定性 / 振幅随流量、统计、点数；ROUTE_TODAY 是路由。
+const { TodayArt, TodayStyle, TODAY_STYLES, TODAY_STRANDS } = await import('../.out/rt/app/TodayArt.ts');
+const { AppNav, ROUTE_TODAY } = await import('../.out/rt/app/AppNav.ts');
+const { MockEngine } = await import('../.out/rt/engine/MockEngine.ts');
+let bad=0; const ok=(c,m)=>{ if(!c){bad++;console.log('FAIL',m);} };
+ok(TODAY_STYLES.length===3&&TodayArt.palette(TodayStyle.NIGHT).bg==='#02040A'&&TodayArt.palette(TodayStyle.DAWN).line==='#E07A4F'&&TodayArt.palette(TodayStyle.MIST).fg==='#1B1B1F','palette');
+ok(TodayArt.withAlpha('#3BA4FF',1)==='#FF3BA4FF'&&TodayArt.withAlpha('#3BA4FF',0)==='#003BA4FF'&&TodayArt.withAlpha('#FFFFFF',0.6)==='#99FFFFFF','alpha hex');
+ok(Math.abs(TodayArt.alpha(Math.round(0.45*TODAY_STRANDS))-0.4)<0.01&&Math.abs(TodayArt.alpha(TODAY_STRANDS)-0.05)<1e-9,'strand alpha');
+const flat=new Array(24).fill(0), busy=flat.map(()=>100);
+const a=TodayArt.strand(busy,300,440,70,0), b=TodayArt.strand(busy,300,440,70,0);
+ok(JSON.stringify(a)===JSON.stringify(b),'deterministic');
+ok(a.length===2*(Math.floor(300/6)+1)&&a[0]===0,'points');
+const y0=TodayArt.y(flat,1,300,440,70,150,0), y1=TodayArt.y(busy,100,300,440,70,150,0);
+const base=440*(0.12+0.55*70/TODAY_STRANDS)+70/TODAY_STRANDS*150*0.12;
+ok(Math.abs(y1-base)>Math.abs(y0-base),'amp follows traffic');
+ok(TodayArt.maxHourly([])===1&&TodayArt.maxHourly([3,9,2])===9,'max');
+const s0=TodayArt.stats(undefined); ok(s0.regions===0&&s0.hours===0&&s0.fastest==='—','stats none');
+const u=await new MockEngine({latencyScale:0}).usageToday(); const s=TodayArt.stats(u);
+ok(s.hours===Math.floor(u.onlineMillisToday/3600000)&&s.regions===u.regionsToday&&u.hourly.length===24,'stats mock');
+ok(TodayArt.stats({...u,fastestLatencyMs:undefined}).fastest==='—'&&TodayArt.stats({...u,fastestLatencyMs:42}).fastest==='42','fastest');
+ok(TodayArt.fileName(5)==='Zephyr-5.png','file');
+ok(AppNav.isRoute(ROUTE_TODAY),'route');
+console.log(bad?`today FAIL ${bad}`:'today OK'); process.exit(bad?1:0);

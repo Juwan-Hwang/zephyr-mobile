@@ -1,0 +1,1464 @@
+{
+  "string": [
+    {
+      "name": "activity_back",
+      "value": "‹ 최근 연결"
+    },
+    {
+      "name": "activity_close_host_a11y",
+      "value": "%1$s 연결 닫기"
+    },
+    {
+      "name": "activity_close_none",
+      "value": "활성 연결 없음"
+    },
+    {
+      "name": "activity_empty",
+      "value": "연결하면 최근 방문한 도메인이 여기에 표시됩니다."
+    },
+    {
+      "name": "activity_host_a11y",
+      "value": "%1$s 연결 세부 정보"
+    },
+    {
+      "name": "activity_no_app_note",
+      "value": "연결한 앱을 아직 알 수 없어 도메인만 표시합니다."
+    },
+    {
+      "name": "activity_title",
+      "value": "최근 연결"
+    },
+    {
+      "name": "command_chip_action",
+      "value": "동작"
+    },
+    {
+      "name": "command_chip_region",
+      "value": "지역"
+    },
+    {
+      "name": "command_chip_scene",
+      "value": "시나리오"
+    },
+    {
+      "name": "command_chip_scope",
+      "value": "범위"
+    },
+    {
+      "name": "command_chip_service",
+      "value": "서비스"
+    },
+    {
+      "name": "command_direct_note",
+      "value": "%1$s 트래픽은 프록시를 거치지 않습니다."
+    },
+    {
+      "name": "command_direct_title",
+      "value": "%1$s 다이렉트 연결"
+    },
+    {
+      "name": "command_no_nodes_available",
+      "value": "사용 가능한 노드 없음"
+    },
+    {
+      "name": "command_placeholder",
+      "value": "검색 또는 명령 입력"
+    },
+    {
+      "name": "command_plan_exit_title",
+      "value": "%1$s: %2$s 노드 사용"
+    },
+    {
+      "name": "command_plan_fallback_pause",
+      "value": "사용 가능한 %1$s 노드가 없으면 %2$s이(가) 일시 정지됩니다."
+    },
+    {
+      "name": "command_plan_fallback_scene",
+      "value": "사용 가능한 %1$s 노드가 없으면 시나리오의 다른 노드를 사용합니다."
+    },
+    {
+      "name": "command_plan_no_nodes",
+      "value": "%1$s에 %2$s 노드가 없습니다."
+    },
+    {
+      "name": "command_plan_releases_pin",
+      "value": "%1$s은(는) 고정 출구 %2$s을(를) 더 이상 사용하지 않습니다."
+    },
+    {
+      "name": "command_region_de",
+      "value": "독일"
+    },
+    {
+      "name": "command_region_gb",
+      "value": "영국"
+    },
+    {
+      "name": "command_region_hk",
+      "value": "홍콩"
+    },
+    {
+      "name": "command_region_jp",
+      "value": "일본"
+    },
+    {
+      "name": "command_region_kr",
+      "value": "한국"
+    },
+    {
+      "name": "command_region_sg",
+      "value": "싱가포르"
+    },
+    {
+      "name": "command_region_tw",
+      "value": "대만"
+    },
+    {
+      "name": "command_region_us",
+      "value": "미국"
+    },
+    {
+      "name": "command_scene_ai",
+      "value": "AI 시나리오"
+    },
+    {
+      "name": "command_scene_named",
+      "value": "%1$s 시나리오"
+    },
+    {
+      "name": "command_section_command",
+      "value": "명령"
+    },
+    {
+      "name": "command_section_suggestions",
+      "value": "제안"
+    },
+    {
+      "name": "command_see_all_nodes",
+      "value": "노드 보관함에서 %1$s개 모두 보기"
+    },
+    {
+      "name": "command_test_rule",
+      "value": "%1$s은(는) 어디로 가나요?"
+    },
+    {
+      "name": "command_uhd_auto_note",
+      "value": "이제부터 자동 전환은 4K 노드 중에서만 선택합니다."
+    },
+    {
+      "name": "command_uhd_clear_note",
+      "value": "%1$s 시나리오는 현재 4K 노드만 사용합니다. 다시 모든 노드를 사용하며, 현재 노드는 유지됩니다."
+    },
+    {
+      "name": "command_uhd_fastest",
+      "value": "가장 빠른 4K 노드"
+    },
+    {
+      "name": "command_uhd_none",
+      "value": "4K를 지원하는 노드가 없습니다."
+    },
+    {
+      "name": "command_uhd_title_all",
+      "value": "%1$s: 모든 노드"
+    },
+    {
+      "name": "command_uhd_title_only",
+      "value": "%1$s: 4K 노드만"
+    },
+    {
+      "name": "command_zephyr_only",
+      "value": "Zephyr에서만 적용됩니다. 구독 구성은 변경되지 않습니다."
+    },
+    {
+      "name": "common_add",
+      "value": "추가"
+    },
+    {
+      "name": "common_adding",
+      "value": "추가 중…"
+    },
+    {
+      "name": "common_back_to",
+      "value": "%1$s(으)로 돌아가기"
+    },
+    {
+      "name": "common_cancel",
+      "value": "취소"
+    },
+    {
+      "name": "common_change",
+      "value": "변경"
+    },
+    {
+      "name": "common_connect",
+      "value": "연결"
+    },
+    {
+      "name": "common_current",
+      "value": "현재"
+    },
+    {
+      "name": "common_direct",
+      "value": "다이렉트"
+    },
+    {
+      "name": "common_exit_ip_changes",
+      "value": "출구 IP가 변경됨"
+    },
+    {
+      "name": "common_home",
+      "value": "홈"
+    },
+    {
+      "name": "common_library",
+      "value": "보관함"
+    },
+    {
+      "name": "common_list_separator",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "common_local_data_note",
+      "value": "구독 및 트래픽 데이터는 이 기기에만 저장됩니다."
+    },
+    {
+      "name": "common_local_network",
+      "value": "이 기기의 네트워크"
+    },
+    {
+      "name": "common_mode_direct_hint",
+      "value": "프록시 우회"
+    },
+    {
+      "name": "common_mode_global_hint",
+      "value": "모든 트래픽을 한 노드로"
+    },
+    {
+      "name": "common_mode_rule_hint",
+      "value": "시나리오별로 라우팅"
+    },
+    {
+      "name": "common_open_settings",
+      "value": "설정 열기"
+    },
+    {
+      "name": "common_pair_and",
+      "value": "%1$s 및 %2$s"
+    },
+    {
+      "name": "common_retesting",
+      "value": "테스트 중…"
+    },
+    {
+      "name": "common_scene_ai",
+      "value": "AI"
+    },
+    {
+      "name": "common_scene_other",
+      "value": "기타"
+    },
+    {
+      "name": "common_scene_video",
+      "value": "비디오"
+    },
+    {
+      "name": "common_share",
+      "value": "공유"
+    },
+    {
+      "name": "common_source_auto",
+      "value": "Zephyr 추천"
+    },
+    {
+      "name": "common_source_group",
+      "value": "구독 그룹"
+    },
+    {
+      "name": "common_status_connected",
+      "value": "연결됨"
+    },
+    {
+      "name": "common_status_connecting_ellipsis",
+      "value": "연결 중…"
+    },
+    {
+      "name": "common_status_disconnecting",
+      "value": "연결 해제 중"
+    },
+    {
+      "name": "common_try_again",
+      "value": "다시 시도"
+    },
+    {
+      "name": "common_updating",
+      "value": "업데이트 중…"
+    },
+    {
+      "name": "connect_no_subscription",
+      "value": "아직 구독이 없습니다"
+    },
+    {
+      "name": "home_action_load_nodes",
+      "value": "노드 불러오기"
+    },
+    {
+      "name": "home_action_preview_exit",
+      "value": "출구 미리 보기"
+    },
+    {
+      "name": "home_action_retest",
+      "value": "다시 테스트"
+    },
+    {
+      "name": "home_action_switch_exit",
+      "value": "출구 전환"
+    },
+    {
+      "name": "home_action_switch_mode",
+      "value": "모드 전환"
+    },
+    {
+      "name": "home_action_switch_node",
+      "value": "노드 전환"
+    },
+    {
+      "name": "home_action_switch_source",
+      "value": "소스 전환"
+    },
+    {
+      "name": "home_action_undo",
+      "value": "실행 취소"
+    },
+    {
+      "name": "home_apply_failed",
+      "value": "적용할 수 없음: %1$s"
+    },
+    {
+      "name": "home_confirm_apps",
+      "value": "%1$s의 출구 IP를 변경할까요?"
+    },
+    {
+      "name": "home_confirm_scene",
+      "value": "%1$s 시나리오의 출구 IP를 변경할까요?"
+    },
+    {
+      "name": "home_confirm_unchanged",
+      "value": "%1$s은(는) 그대로 유지됩니다."
+    },
+    {
+      "name": "home_error_failed",
+      "value": "%1$s 실패"
+    },
+    {
+      "name": "home_error_node_gone",
+      "value": "%1$s 실패: 노드가 더 이상 없습니다"
+    },
+    {
+      "name": "home_error_not_connected",
+      "value": "%1$s: 먼저 연결하세요"
+    },
+    {
+      "name": "home_failover_none",
+      "value": "%1$s 출구가 응답하지 않습니다. 출구 IP는 자동으로 바뀌지 않습니다."
+    },
+    {
+      "name": "home_failover_switched",
+      "value": "%1$s 출구가 %2$s(으)로 자동 전환됨"
+    },
+    {
+      "name": "home_failure_core",
+      "value": "코어를 시작할 수 없음"
+    },
+    {
+      "name": "home_failure_network",
+      "value": "네트워크를 사용할 수 없음"
+    },
+    {
+      "name": "home_failure_no_subscription",
+      "value": "먼저 구독을 추가하세요"
+    },
+    {
+      "name": "home_failure_vpn_permission",
+      "value": "VPN 권한 필요"
+    },
+    {
+      "name": "home_global_body",
+      "value": "모든 트래픽이 %1$s을(를) 거칩니다. 시나리오는 일시 정지되었습니다."
+    },
+    {
+      "name": "home_global_body_any",
+      "value": "모든 트래픽이 한 노드를 거칩니다. 시나리오는 일시 정지되었습니다."
+    },
+    {
+      "name": "home_global_change_node",
+      "value": "노드 변경"
+    },
+    {
+      "name": "home_global_change_note",
+      "value": "모든 앱의 출구가 %1$s(으)로 바뀝니다."
+    },
+    {
+      "name": "home_global_change_to",
+      "value": "%1$s(으)로 변경"
+    },
+    {
+      "name": "home_global_use_rule",
+      "value": "규칙 모드 사용"
+    },
+    {
+      "name": "home_now_all_nodes",
+      "value": "%1$s: 다시 모든 노드 사용"
+    },
+    {
+      "name": "home_now_direct",
+      "value": "%1$s이(가) 이제 다이렉트로 연결"
+    },
+    {
+      "name": "home_now_uhd_only",
+      "value": "%1$s이(가) 이제 4K 노드만 사용"
+    },
+    {
+      "name": "home_now_uses",
+      "value": "%1$s이(가) 이제 %2$s 사용"
+    },
+    {
+      "name": "home_now_uses_uhd",
+      "value": "%1$s이(가) 이제 %2$s 사용(4K만)"
+    },
+    {
+      "name": "home_pin_line",
+      "value": "%1$s: %2$s"
+    },
+    {
+      "name": "home_scan_progress",
+      "value": "테스트 중 %1$d/%2$d"
+    },
+    {
+      "name": "home_scan_running",
+      "value": "테스트 중…"
+    },
+    {
+      "name": "home_scene_details_a11y",
+      "value": "%1$s 시나리오 세부 정보"
+    },
+    {
+      "name": "home_scene_next_region",
+      "value": "다음 지역: %1$s"
+    },
+    {
+      "name": "home_scene_prev_region",
+      "value": "이전 지역: %1$s"
+    },
+    {
+      "name": "home_scene_services_down",
+      "value": "%1$s 사용 불가"
+    },
+    {
+      "name": "home_scene_services_ok",
+      "value": "%1$s 정상"
+    },
+    {
+      "name": "home_scenes_tested",
+      "value": "%1$s 테스트함"
+    },
+    {
+      "name": "home_scrub_hint",
+      "value": "좌우로 쓸어넘겨 지역 변경"
+    },
+    {
+      "name": "home_spark_a11y",
+      "value": "다운로드 속도, 최근 90초"
+    },
+    {
+      "name": "home_switched_to",
+      "value": "%1$s(으)로 전환됨"
+    },
+    {
+      "name": "home_today_usage",
+      "value": "오늘 %1$s"
+    },
+    {
+      "name": "library_widgets",
+      "value": "위젯 및 빠른 설정"
+    },
+    {
+      "name": "licenses_intro",
+      "value": "Zephyr 자체 코드는 MIT 라이선스입니다. 이 앱은 mihomo(GPL-3.0)를 포함하므로 앱 전체가 GPL-3.0으로 배포됩니다. 해당 소스: %1$s, 태그 %2$s."
+    },
+    {
+      "name": "licenses_section_app",
+      "value": "Zephyr 라이선스"
+    },
+    {
+      "name": "licenses_section_notices",
+      "value": "타사 고지"
+    },
+    {
+      "name": "licenses_section_texts",
+      "value": "라이선스 전문"
+    },
+    {
+      "name": "licenses_unavailable",
+      "value": "이 빌드에 라이선스 파일이 없습니다."
+    },
+    {
+      "name": "local_proxy_apply_failed",
+      "value": "변경 사항을 적용할 수 없음"
+    },
+    {
+      "name": "local_proxy_auth_footer",
+      "value": "켜면 로컬 포트에 연결할 때 사용자 이름과 암호가 필요하므로 다른 앱이 허가 없이 프록시를 사용하는 것을 막을 수 있습니다."
+    },
+    {
+      "name": "local_proxy_conceal",
+      "value": "암호 숨기기"
+    },
+    {
+      "name": "local_proxy_concealed",
+      "value": "암호 숨겨짐"
+    },
+    {
+      "name": "local_proxy_copied",
+      "value": "복사됨"
+    },
+    {
+      "name": "local_proxy_copy_http",
+      "value": "HTTP 프록시 URL 복사"
+    },
+    {
+      "name": "local_proxy_copy_socks",
+      "value": "SOCKS5 프록시 URL 복사"
+    },
+    {
+      "name": "local_proxy_credential_row",
+      "value": "암호"
+    },
+    {
+      "name": "local_proxy_credentials",
+      "value": "연결 정보"
+    },
+    {
+      "name": "local_proxy_footer",
+      "value": "켜면 Zephyr가 127.0.0.1에서만 수신하므로 네트워크의 다른 기기는 연결할 수 없습니다."
+    },
+    {
+      "name": "local_proxy_port",
+      "value": "포트"
+    },
+    {
+      "name": "local_proxy_port_footer",
+      "value": "다른 앱은 127.0.0.1의 이 포트를 통해 Zephyr의 규칙과 시나리오를 사용할 수 있습니다."
+    },
+    {
+      "name": "local_proxy_port_invalid",
+      "value": "%1$d~%2$d 사이의 포트를 입력하세요"
+    },
+    {
+      "name": "local_proxy_regenerate",
+      "value": "암호 다시 생성"
+    },
+    {
+      "name": "local_proxy_regenerate_footer",
+      "value": "다시 생성하면 이전 암호는 즉시 사용할 수 없으며, 설정한 앱에 새 암호를 입력해야 합니다."
+    },
+    {
+      "name": "local_proxy_regenerated",
+      "value": "새 암호를 생성했습니다"
+    },
+    {
+      "name": "local_proxy_reveal",
+      "value": "암호 표시"
+    },
+    {
+      "name": "local_proxy_security",
+      "value": "보안"
+    },
+    {
+      "name": "local_proxy_user_row",
+      "value": "사용자 이름"
+    },
+    {
+      "name": "logs_clear",
+      "value": "지우기"
+    },
+    {
+      "name": "logs_empty",
+      "value": "아직 로그 없음"
+    },
+    {
+      "name": "logs_line_a11y",
+      "value": "%1$s %2$s %3$s"
+    },
+    {
+      "name": "logs_pause",
+      "value": "일시 정지"
+    },
+    {
+      "name": "logs_resume",
+      "value": "재개"
+    },
+    {
+      "name": "nodes_detail_latency",
+      "value": "지연 시간"
+    },
+    {
+      "name": "nodes_detail_protocol",
+      "value": "프로토콜"
+    },
+    {
+      "name": "nodes_detail_route",
+      "value": "회선"
+    },
+    {
+      "name": "nodes_detail_server",
+      "value": "서버"
+    },
+    {
+      "name": "nodes_detail_test",
+      "value": "속도 테스트"
+    },
+    {
+      "name": "nodes_empty_action",
+      "value": "구독 가져오기"
+    },
+    {
+      "name": "nodes_empty_message",
+      "value": "구독을 가져오면 노드가 여기에 표시됩니다"
+    },
+    {
+      "name": "nodes_empty_title",
+      "value": "아직 노드 없음"
+    },
+    {
+      "name": "nodes_error_title",
+      "value": "노드를 불러오지 못했습니다"
+    },
+    {
+      "name": "nodes_jump_to",
+      "value": "%1$s(으)로 이동"
+    },
+    {
+      "name": "nodes_no_match",
+      "value": "‘%1$s’와(과) 일치하는 노드 없음"
+    },
+    {
+      "name": "nodes_search_placeholder",
+      "value": "지역, 도시 또는 경로"
+    },
+    {
+      "name": "nodes_search_stats",
+      "value": "%1$s개 · %2$s"
+    },
+    {
+      "name": "nodes_tested",
+      "value": "%1$s 테스트됨"
+    },
+    {
+      "name": "notif_action_global",
+      "value": "글로벌 모드"
+    },
+    {
+      "name": "notif_action_rule",
+      "value": "규칙 모드"
+    },
+    {
+      "name": "notif_channel_alerts",
+      "value": "구독 알림"
+    },
+    {
+      "name": "notif_channel_alerts_desc",
+      "value": "구독 만료 및 데이터 부족"
+    },
+    {
+      "name": "notif_channel_vpn",
+      "value": "연결 상태"
+    },
+    {
+      "name": "notif_channel_vpn_desc",
+      "value": "연결되어 있는 동안 속도와 시나리오 표시"
+    },
+    {
+      "name": "notif_expiry_text",
+      "value": "%1$s 남음"
+    },
+    {
+      "name": "notif_expiry_title",
+      "value": "%1$s이(가) %2$s에 만료됨"
+    },
+    {
+      "name": "notif_paused_trusted",
+      "value": "신뢰하는 Wi‑Fi ‘%1$s’에서 연결을 끊었습니다. 벗어나면 자동으로 다시 연결합니다."
+    },
+    {
+      "name": "notif_route_global",
+      "value": "글로벌 · %1$s"
+    },
+    {
+      "name": "notif_route_global_any",
+      "value": "모든 트래픽을 한 노드로"
+    },
+    {
+      "name": "onboarding_cancel_import_a11y",
+      "value": "가져오기 취소"
+    },
+    {
+      "name": "onboarding_change_later",
+      "value": "설정에서 언제든지 변경할 수 있습니다."
+    },
+    {
+      "name": "onboarding_choose_mode",
+      "value": "사용 방식 선택"
+    },
+    {
+      "name": "onboarding_continue",
+      "value": "계속"
+    },
+    {
+      "name": "onboarding_optimized",
+      "value": "추천"
+    },
+    {
+      "name": "onboarding_optimized_desc",
+      "value": "매일 Wi‑Fi에서 노드를 테스트합니다. AI 및 비디오는 테스트를 통과한 노드만 사용합니다. 1회당 약 3 MB."
+    },
+    {
+      "name": "onboarding_simple",
+      "value": "간편"
+    },
+    {
+      "name": "onboarding_simple_desc",
+      "value": "구독에서 제공하는 그룹을 사용합니다. 사용할 수 없는 노드는 자동으로 처리됩니다."
+    },
+    {
+      "name": "rules_add_override_a11y",
+      "value": "도메인 오버라이드 추가"
+    },
+    {
+      "name": "rules_blocked",
+      "value": "차단됨"
+    },
+    {
+      "name": "rules_kind_ip",
+      "value": "IP"
+    },
+    {
+      "name": "rules_kind_other",
+      "value": "기타"
+    },
+    {
+      "name": "rules_match_order",
+      "value": "일치 순서"
+    },
+    {
+      "name": "rules_note",
+      "value": "규칙 세트는 기기에서 읽기 전용 색인으로 컴파일되며 필요할 때 디스크에서 읽어 옵니다. 구독을 업데이트해도 오버라이드는 그대로 유지됩니다."
+    },
+    {
+      "name": "rules_other_traffic",
+      "value": "기타 모든 트래픽"
+    },
+    {
+      "name": "rules_step_layer",
+      "value": "레이어 %1$d · %2$s"
+    },
+    {
+      "name": "rules_step_request",
+      "value": "요청"
+    },
+    {
+      "name": "rules_step_result",
+      "value": "결과"
+    },
+    {
+      "name": "rules_step_scene",
+      "value": "시나리오 · %1$s"
+    },
+    {
+      "name": "rules_test_hint",
+      "value": "도메인 또는 IP 주소를 입력하면 일치하는 규칙과 출구를 볼 수 있습니다."
+    },
+    {
+      "name": "rules_test_placeholder",
+      "value": "도메인 또는 IP 테스트"
+    },
+    {
+      "name": "rules_took",
+      "value": "소요 시간 %1$s"
+    },
+    {
+      "name": "rules_top_to_bottom",
+      "value": "위에서 아래로"
+    },
+    {
+      "name": "scene_ask",
+      "value": "묻기"
+    },
+    {
+      "name": "scene_auto_switch",
+      "value": "자동 전환"
+    },
+    {
+      "name": "scene_funnel_reachable",
+      "value": "연결 가능"
+    },
+    {
+      "name": "scene_funnel_tested",
+      "value": "측정됨"
+    },
+    {
+      "name": "scene_funnel_under",
+      "value": "%1$d ms 미만"
+    },
+    {
+      "name": "scene_node_scope",
+      "value": "노드 범위"
+    },
+    {
+      "name": "scene_note",
+      "value": "추천 결과는 Zephyr에만 저장됩니다. 구독 구성은 변경되지 않습니다."
+    },
+    {
+      "name": "scene_note_tested",
+      "value": "%1$s 마지막 테스트: %2$s."
+    },
+    {
+      "name": "scene_pinned_for",
+      "value": "%1$s 고정"
+    },
+    {
+      "name": "scene_pinned_value",
+      "value": "%1$s(고정)"
+    },
+    {
+      "name": "scene_test_daily",
+      "value": "매일"
+    },
+    {
+      "name": "scene_test_frequency",
+      "value": "테스트 빈도"
+    },
+    {
+      "name": "scene_test_wifi_only",
+      "value": "%1$s(Wi‑Fi 전용)"
+    },
+    {
+      "name": "scene_tested_from_pool",
+      "value": "구독 %1$d개에서 노드 %2$s개 테스트함"
+    },
+    {
+      "name": "scene_uhd_only",
+      "value": "4K 노드만"
+    },
+    {
+      "name": "scene_when_unavailable",
+      "value": "노드를 사용할 수 없을 때"
+    },
+    {
+      "name": "settings_accent_blue",
+      "value": "파란색"
+    },
+    {
+      "name": "settings_accent_green",
+      "value": "초록색"
+    },
+    {
+      "name": "settings_accent_orange",
+      "value": "주황색"
+    },
+    {
+      "name": "settings_accent_pink",
+      "value": "분홍색"
+    },
+    {
+      "name": "settings_keep_results",
+      "value": "결과 유지"
+    },
+    {
+      "name": "settings_licenses",
+      "value": "오픈소스 라이선스"
+    },
+    {
+      "name": "settings_local_data_note",
+      "value": "구독, 노드 및 트래픽 데이터는 이 기기에만 저장됩니다."
+    },
+    {
+      "name": "settings_on_demand",
+      "value": "요청 시 연결"
+    },
+    {
+      "name": "settings_save_failed",
+      "value": "설정을 저장하지 못했습니다"
+    },
+    {
+      "name": "settings_section_about",
+      "value": "정보"
+    },
+    {
+      "name": "settings_section_connection",
+      "value": "연결"
+    },
+    {
+      "name": "settings_section_privacy",
+      "value": "개인정보 보호"
+    },
+    {
+      "name": "settings_section_storage",
+      "value": "저장 공간"
+    },
+    {
+      "name": "settings_section_testing",
+      "value": "테스트"
+    },
+    {
+      "name": "settings_share_diagnostics",
+      "value": "진단 데이터 공유"
+    },
+    {
+      "name": "settings_source_code",
+      "value": "소스 코드"
+    },
+    {
+      "name": "settings_storage_detail",
+      "value": "노드 %1$s · 규칙 %2$s · 여유 %3$s"
+    },
+    {
+      "name": "settings_storage_title",
+      "value": "노드 및 규칙"
+    },
+    {
+      "name": "settings_test_wifi_only",
+      "value": "Wi‑Fi에서만 속도 테스트"
+    },
+    {
+      "name": "settings_trusted_wifi",
+      "value": "신뢰하는 Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi_always_on",
+      "value": "시스템의 ‘상시 VPN’에서 관리됨"
+    },
+    {
+      "name": "settings_trusted_wifi_hint",
+      "value": "연결되면 자동으로 해제"
+    },
+    {
+      "name": "settings_trusted_wifi_location",
+      "value": "Wi‑Fi 이름을 확인하려면 위치 접근 허용"
+    },
+    {
+      "name": "settings_trusted_wifi_location_off",
+      "value": "Wi‑Fi 이름을 확인하려면 시스템 위치를 켜세요"
+    },
+    {
+      "name": "subs_add",
+      "value": "구독 추가"
+    },
+    {
+      "name": "subs_all_title",
+      "value": "전체 구독"
+    },
+    {
+      "name": "subs_deleted",
+      "value": "%1$s 삭제됨"
+    },
+    {
+      "name": "subs_diff_updated",
+      "value": "%1$s 업데이트됨"
+    },
+    {
+      "name": "subs_diff_updating",
+      "value": "%1$s 업데이트 중…"
+    },
+    {
+      "name": "subs_error_clipboard_empty",
+      "value": "클립보드가 비어 있습니다"
+    },
+    {
+      "name": "subs_error_delete",
+      "value": "%1$s을(를) 삭제할 수 없음"
+    },
+    {
+      "name": "subs_error_fetch",
+      "value": "이 구독을 다운로드할 수 없습니다. 링크나 네트워크를 확인하세요."
+    },
+    {
+      "name": "subs_error_import_version",
+      "value": "이 가져오기 코드에는 최신 버전의 Zephyr가 필요합니다"
+    },
+    {
+      "name": "subs_error_invalid_file",
+      "value": "유효한 구성 파일이 아닙니다"
+    },
+    {
+      "name": "subs_error_invalid_link",
+      "value": "유효한 구독 링크가 아닙니다"
+    },
+    {
+      "name": "subs_error_read_file",
+      "value": "이 파일을 읽을 수 없음"
+    },
+    {
+      "name": "subs_error_update",
+      "value": "%1$s을(를) 업데이트할 수 없음"
+    },
+    {
+      "name": "subs_error_update_all",
+      "value": "구독을 업데이트할 수 없음"
+    },
+    {
+      "name": "subs_hint_desktop",
+      "value": "컴퓨터의 Zephyr에서 설정 › 휴대폰으로 동기화를 열면 QR 코드가 표시됩니다"
+    },
+    {
+      "name": "subs_import_desktop",
+      "value": "컴퓨터의 Zephyr에서 가져오기"
+    },
+    {
+      "name": "subs_import_desktop_source",
+      "value": "Zephyr 데스크톱"
+    },
+    {
+      "name": "subs_import_insecure",
+      "value": "이 링크는 암호화되지 않았으므로(http) 내용이 도청되거나 변조될 수 있습니다."
+    },
+    {
+      "name": "subs_import_source",
+      "value": "출처: %1$s"
+    },
+    {
+      "name": "subs_import_trust",
+      "value": "신뢰하는 제공업체인 경우에만 계속하세요."
+    },
+    {
+      "name": "subs_overrides_kept",
+      "value": "오버라이드 유지됨"
+    },
+    {
+      "name": "subs_paste_clipboard",
+      "value": "클립보드에서 붙여넣기"
+    },
+    {
+      "name": "subs_paste_link",
+      "value": "링크 붙여넣기"
+    },
+    {
+      "name": "subs_paste_placeholder",
+      "value": "구독 링크 붙여넣기"
+    },
+    {
+      "name": "subs_remaining",
+      "value": "남음"
+    },
+    {
+      "name": "subs_review_note",
+      "value": "업데이트하면 구독의 노드와 규칙이 대체됩니다. Zephyr의 오버라이드와 시나리오 선택은 그대로 유지됩니다."
+    },
+    {
+      "name": "subs_review_one",
+      "value": "%1$s 업데이트 예정"
+    },
+    {
+      "name": "subs_rule_changes",
+      "value": "규칙 변경 사항"
+    },
+    {
+      "name": "subs_scan_camera_needed",
+      "value": "스캔하려면 카메라 접근 권한이 필요합니다"
+    },
+    {
+      "name": "subs_scan_no_camera",
+      "value": "이 기기에서 사용할 수 있는 카메라가 없음"
+    },
+    {
+      "name": "subs_scan_prompt",
+      "value": "구독 QR 코드를 프레임 안에 맞추면 자동으로 인식됩니다."
+    },
+    {
+      "name": "subs_scan_qr",
+      "value": "QR 코드 스캔"
+    },
+    {
+      "name": "subs_scenes_retested",
+      "value": "시나리오 풀을 다시 테스트함"
+    },
+    {
+      "name": "subs_section_data",
+      "value": "데이터"
+    },
+    {
+      "name": "subs_section_update",
+      "value": "업데이트"
+    },
+    {
+      "name": "subs_show_changes",
+      "value": "업데이트 전 변경 사항 보기"
+    },
+    {
+      "name": "subs_swipe_confirm_delete",
+      "value": "삭제 확인"
+    },
+    {
+      "name": "subs_swipe_updating",
+      "value": "업데이트 중"
+    },
+    {
+      "name": "subs_this_month",
+      "value": "이번 달"
+    },
+    {
+      "name": "subs_update_all",
+      "value": "지금 모두 업데이트"
+    },
+    {
+      "name": "subs_update_wifi_only",
+      "value": "Wi‑Fi에서만 업데이트"
+    },
+    {
+      "name": "term_accent",
+      "value": "강조 색상"
+    },
+    {
+      "name": "term_all",
+      "value": "전체"
+    },
+    {
+      "name": "term_appearance",
+      "value": "모양"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "다크"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "라이트"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "시스템"
+    },
+    {
+      "name": "term_apply",
+      "value": "적용"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "자동 업데이트"
+    },
+    {
+      "name": "term_delete",
+      "value": "삭제"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "진단"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "연결 해제"
+    },
+    {
+      "name": "term_domain",
+      "value": "도메인"
+    },
+    {
+      "name": "term_exit",
+      "value": "출구"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "출구 IP"
+    },
+    {
+      "name": "term_import",
+      "value": "가져오기"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "파일에서 가져오기"
+    },
+    {
+      "name": "term_latency",
+      "value": "지연 시간"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "로컬 프록시 포트"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "디버그"
+    },
+    {
+      "name": "term_log_error",
+      "value": "오류"
+    },
+    {
+      "name": "term_log_info",
+      "value": "정보"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "경고"
+    },
+    {
+      "name": "term_logs",
+      "value": "로그"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "다이렉트"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "글로벌"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "글로벌 모드"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "규칙"
+    },
+    {
+      "name": "term_no_results",
+      "value": "결과 없음"
+    },
+    {
+      "name": "term_node",
+      "value": "노드"
+    },
+    {
+      "name": "term_nodes",
+      "value": "노드"
+    },
+    {
+      "name": "term_none",
+      "value": "없음"
+    },
+    {
+      "name": "term_off",
+      "value": "끔"
+    },
+    {
+      "name": "term_on",
+      "value": "켬"
+    },
+    {
+      "name": "term_override",
+      "value": "오버라이드"
+    },
+    {
+      "name": "term_proxy",
+      "value": "프록시"
+    },
+    {
+      "name": "term_require_password",
+      "value": "암호 요구"
+    },
+    {
+      "name": "term_rule",
+      "value": "규칙"
+    },
+    {
+      "name": "term_rules",
+      "value": "규칙"
+    },
+    {
+      "name": "term_scene",
+      "value": "시나리오"
+    },
+    {
+      "name": "term_scenes",
+      "value": "시나리오"
+    },
+    {
+      "name": "term_settings",
+      "value": "설정"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "연결 중"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "연결 안 됨"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "연결 실패"
+    },
+    {
+      "name": "term_subscription",
+      "value": "구독"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "구독"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "모드 전환"
+    },
+    {
+      "name": "term_test_again",
+      "value": "다시 테스트"
+    },
+    {
+      "name": "term_testing",
+      "value": "테스트 중"
+    },
+    {
+      "name": "term_today",
+      "value": "오늘"
+    },
+    {
+      "name": "term_undo",
+      "value": "실행 취소"
+    },
+    {
+      "name": "term_update",
+      "value": "업데이트"
+    },
+    {
+      "name": "tile_a11y",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "today_date_pattern",
+      "value": "M월 d일 EEEE"
+    },
+    {
+      "name": "today_fastest",
+      "value": "ms 가장 빠름"
+    },
+    {
+      "name": "today_pattern_note",
+      "value": "패턴은 오늘의 트래픽으로 생성되며 노드 이름과 IP 주소는 포함되지 않습니다."
+    },
+    {
+      "name": "today_save_failed",
+      "value": "이미지를 저장할 수 없음"
+    },
+    {
+      "name": "today_save_image",
+      "value": "이미지 저장"
+    },
+    {
+      "name": "today_saved",
+      "value": "갤러리에 저장됨"
+    },
+    {
+      "name": "today_storage_permission",
+      "value": "이미지를 저장하려면 저장 공간 권한이 필요합니다"
+    },
+    {
+      "name": "today_style_dawn",
+      "value": "새벽"
+    },
+    {
+      "name": "today_style_mist",
+      "value": "안개"
+    },
+    {
+      "name": "today_style_night",
+      "value": "밤"
+    },
+    {
+      "name": "trace_always_apply",
+      "value": "항상 적용"
+    },
+    {
+      "name": "trace_always_apply_hint",
+      "value": "끄면 이 연결만 변경됩니다"
+    },
+    {
+      "name": "trace_from",
+      "value": "%1$s에서"
+    },
+    {
+      "name": "trace_option_unchanged",
+      "value": "변경 없음"
+    },
+    {
+      "name": "trace_override_cleared",
+      "value": "%1$s의 경로 오버라이드를 지움"
+    },
+    {
+      "name": "trace_override_direct",
+      "value": "%1$s 다이렉트로 변경됨"
+    },
+    {
+      "name": "trace_override_error",
+      "value": "경로를 변경할 수 없습니다. 다시 시도하세요."
+    },
+    {
+      "name": "trace_override_scene",
+      "value": "%1$s 경로가 %2$s(으)로 변경됨"
+    },
+    {
+      "name": "trace_step_rule",
+      "value": "규칙"
+    },
+    {
+      "name": "trace_this_connection",
+      "value": "이 연결"
+    },
+    {
+      "name": "trace_via",
+      "value": "%1$s 경유"
+    },
+    {
+      "name": "trusted_wifi_add_hint",
+      "value": "Wi‑Fi 이름 추가"
+    },
+    {
+      "name": "trusted_wifi_disconnect",
+      "value": "이 Wi‑Fi 네트워크에서 연결 해제"
+    },
+    {
+      "name": "trusted_wifi_footer",
+      "value": "집이나 직장처럼 신뢰하는 네트워크에서는 Zephyr가 자동으로 연결을 해제하고, 벗어나면 필요에 따라 다시 연결합니다."
+    },
+    {
+      "name": "trusted_wifi_networks",
+      "value": "네트워크"
+    },
+    {
+      "name": "widget_description",
+      "value": "연결 상태, 속도 및 시나리오"
+    },
+    {
+      "name": "widget_label",
+      "value": "Zephyr 상태"
+    },
+    {
+      "name": "widget_today",
+      "value": "오늘 %1$s %2$s"
+    },
+    {
+      "name": "widget_usage_description",
+      "value": "오늘의 트래픽과 24시간 분포"
+    },
+    {
+      "name": "widget_usage_label",
+      "value": "Zephyr 오늘 사용량"
+    },
+    {
+      "name": "widgets_home_steps",
+      "value": "홈 화면의 빈 곳을 길게 누르고 › 위젯 › Zephyr를 찾아 홈 화면으로 끌어 놓으세요."
+    },
+    {
+      "name": "widgets_home_title",
+      "value": "홈 화면 위젯"
+    },
+    {
+      "name": "widgets_tile_steps",
+      "value": "화면 상단에서 아래로 두 번 스와이프 › 편집 › Zephyr를 빠른 설정으로 끌어 놓으세요. 탭하면 연결하거나 연결을 해제합니다."
+    },
+    {
+      "name": "widgets_tile_title",
+      "value": "빠른 설정 타일"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "apiType": "stageMode",
+  "buildOption": {
+    // 原生库是预编译的（core-ohos：libcore_ohos.so；mihomo-mobile：libzmihomo.so），放 entry/libs/<abi>/，
+    // 本模块不编 C/C++，所以没有 externalNativeOptions。
+    "nativeLib": {
+      "filter": {
+        // libs/ 下可能同时有 arm64-v8a（真机）与 x86_64（模拟器）；两者都打包。
+        "excludes": []
+      }
+    },
+    "resOptions": {
+      "copyCodeResource": { "enable": false }
+    }
+  },
+  "buildOptionSet": [
+    {
+      "name": "release",
+      "arkOptions": {
+        "obfuscation": {
+          "ruleOptions": {
+            "enable": false,
+            "files": ["./obfuscation-rules.txt"]
+          }
+        }
+      }
+    }
+  ],
+  "targets": [
+    { "name": "default" },
+    { "name": "ohosTest" }
+  ]
+}

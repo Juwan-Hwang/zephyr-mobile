@@ -1,0 +1,6 @@
+{
+  "name": "libcore_ohos.so",
+  "types": "./index.d.ts",
+  "version": "0.1.0",
+  "description": "core-ohos NAPI (zephyr-core). Types only; the .so is prebuilt into entry/libs/<abi>/."
+}

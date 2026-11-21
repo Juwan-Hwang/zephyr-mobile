@@ -1,0 +1,1464 @@
+{
+  "string": [
+    {
+      "name": "activity_back",
+      "value": "‹ Son bağlantılar"
+    },
+    {
+      "name": "activity_close_host_a11y",
+      "value": "%1$s bağlantılarını kapat"
+    },
+    {
+      "name": "activity_close_none",
+      "value": "Etkin bağlantı yok"
+    },
+    {
+      "name": "activity_empty",
+      "value": "Bağlandığınızda son ziyaret edilen alan adları burada görünür."
+    },
+    {
+      "name": "activity_host_a11y",
+      "value": "%1$s bağlantı ayrıntıları"
+    },
+    {
+      "name": "activity_no_app_note",
+      "value": "Bağlantıyı hangi uygulamanın açtığı henüz bilinmiyor; yalnızca alan adları gösteriliyor."
+    },
+    {
+      "name": "activity_title",
+      "value": "Son bağlantılar"
+    },
+    {
+      "name": "command_chip_action",
+      "value": "İşlem"
+    },
+    {
+      "name": "command_chip_region",
+      "value": "Bölge"
+    },
+    {
+      "name": "command_chip_scene",
+      "value": "Senaryo"
+    },
+    {
+      "name": "command_chip_scope",
+      "value": "Kapsam"
+    },
+    {
+      "name": "command_chip_service",
+      "value": "Hizmet"
+    },
+    {
+      "name": "command_direct_note",
+      "value": "%1$s trafiği proxy’yi kullanmayacak."
+    },
+    {
+      "name": "command_direct_title",
+      "value": "%1$s için doğrudan bağlantı"
+    },
+    {
+      "name": "command_no_nodes_available",
+      "value": "Kullanılabilir düğüm yok"
+    },
+    {
+      "name": "command_placeholder",
+      "value": "Arayın veya komut girin"
+    },
+    {
+      "name": "command_plan_exit_title",
+      "value": "%1$s, %2$s düğümlerini kullanır"
+    },
+    {
+      "name": "command_plan_fallback_pause",
+      "value": "Kullanılabilir %1$s düğümü yoksa %2$s duraklatılır."
+    },
+    {
+      "name": "command_plan_fallback_scene",
+      "value": "Kullanılabilir %1$s düğümü yoksa senaryodaki diğer düğümler kullanılır."
+    },
+    {
+      "name": "command_plan_no_nodes",
+      "value": "%1$s içinde %2$s düğümü yok."
+    },
+    {
+      "name": "command_plan_releases_pin",
+      "value": "%1$s artık %2$s sabit çıkışını kullanmayacak."
+    },
+    {
+      "name": "command_region_de",
+      "value": "Almanya"
+    },
+    {
+      "name": "command_region_gb",
+      "value": "Birleşik Krallık"
+    },
+    {
+      "name": "command_region_hk",
+      "value": "Hong Kong"
+    },
+    {
+      "name": "command_region_jp",
+      "value": "Japonya"
+    },
+    {
+      "name": "command_region_kr",
+      "value": "Kore"
+    },
+    {
+      "name": "command_region_sg",
+      "value": "Singapur"
+    },
+    {
+      "name": "command_region_tw",
+      "value": "Tayvan"
+    },
+    {
+      "name": "command_region_us",
+      "value": "ABD"
+    },
+    {
+      "name": "command_scene_ai",
+      "value": "AI senaryosu"
+    },
+    {
+      "name": "command_scene_named",
+      "value": "%1$s senaryosu"
+    },
+    {
+      "name": "command_section_command",
+      "value": "Komutlar"
+    },
+    {
+      "name": "command_section_suggestions",
+      "value": "Öneriler"
+    },
+    {
+      "name": "command_see_all_nodes",
+      "value": "Düğüm kütüphanesinde %1$s düğümün tümünü gör"
+    },
+    {
+      "name": "command_test_rule",
+      "value": "%1$s nereden geçiyor?"
+    },
+    {
+      "name": "command_uhd_auto_note",
+      "value": "Bundan sonra otomatik geçiş yalnızca 4K düğümler arasından seçer."
+    },
+    {
+      "name": "command_uhd_clear_note",
+      "value": "%1$s senaryosu yalnızca 4K düğümleri kullanıyor. Yeniden tüm düğümler kullanılacak; mevcut düğüm aynı kalır."
+    },
+    {
+      "name": "command_uhd_fastest",
+      "value": "en hızlı 4K düğüm"
+    },
+    {
+      "name": "command_uhd_none",
+      "value": "4K destekleyen düğüm yok."
+    },
+    {
+      "name": "command_uhd_title_all",
+      "value": "%1$s: tüm düğümler"
+    },
+    {
+      "name": "command_uhd_title_only",
+      "value": "%1$s: yalnızca 4K düğümler"
+    },
+    {
+      "name": "command_zephyr_only",
+      "value": "Yalnızca Zephyr’de geçerlidir. Abonelik yapılandırmanız değişmez."
+    },
+    {
+      "name": "common_add",
+      "value": "Ekle"
+    },
+    {
+      "name": "common_adding",
+      "value": "Ekleniyor…"
+    },
+    {
+      "name": "common_back_to",
+      "value": "%1$s sayfasına dön"
+    },
+    {
+      "name": "common_cancel",
+      "value": "İptal"
+    },
+    {
+      "name": "common_change",
+      "value": "Değiştir"
+    },
+    {
+      "name": "common_connect",
+      "value": "Bağlan"
+    },
+    {
+      "name": "common_current",
+      "value": "Mevcut"
+    },
+    {
+      "name": "common_direct",
+      "value": "Doğrudan"
+    },
+    {
+      "name": "common_exit_ip_changes",
+      "value": "Çıkış IP’si değişecek"
+    },
+    {
+      "name": "common_home",
+      "value": "Ana sayfa"
+    },
+    {
+      "name": "common_library",
+      "value": "Kütüphane"
+    },
+    {
+      "name": "common_list_separator",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "common_local_data_note",
+      "value": "Abonelikler ve trafik verileri yalnızca bu cihazda saklanır."
+    },
+    {
+      "name": "common_local_network",
+      "value": "Bu cihazın ağı"
+    },
+    {
+      "name": "common_mode_direct_hint",
+      "value": "Proxy kullanılmaz"
+    },
+    {
+      "name": "common_mode_global_hint",
+      "value": "Tüm trafik tek düğümden"
+    },
+    {
+      "name": "common_mode_rule_hint",
+      "value": "Senaryoya göre yönlendir"
+    },
+    {
+      "name": "common_open_settings",
+      "value": "Ayarları aç"
+    },
+    {
+      "name": "common_pair_and",
+      "value": "%1$s ve %2$s"
+    },
+    {
+      "name": "common_retesting",
+      "value": "Test ediliyor…"
+    },
+    {
+      "name": "common_scene_ai",
+      "value": "AI"
+    },
+    {
+      "name": "common_scene_other",
+      "value": "Diğer"
+    },
+    {
+      "name": "common_scene_video",
+      "value": "Video"
+    },
+    {
+      "name": "common_share",
+      "value": "Paylaş"
+    },
+    {
+      "name": "common_source_auto",
+      "value": "Zephyr Seçimleri"
+    },
+    {
+      "name": "common_source_group",
+      "value": "Abonelik grubu"
+    },
+    {
+      "name": "common_status_connected",
+      "value": "Bağlı"
+    },
+    {
+      "name": "common_status_connecting_ellipsis",
+      "value": "Bağlanıyor…"
+    },
+    {
+      "name": "common_status_disconnecting",
+      "value": "Bağlantı kesiliyor"
+    },
+    {
+      "name": "common_try_again",
+      "value": "Tekrar dene"
+    },
+    {
+      "name": "common_updating",
+      "value": "Güncelleniyor…"
+    },
+    {
+      "name": "connect_no_subscription",
+      "value": "Henüz abonelik yok"
+    },
+    {
+      "name": "home_action_load_nodes",
+      "value": "Düğüm yükleme"
+    },
+    {
+      "name": "home_action_preview_exit",
+      "value": "Çıkış önizlemesi"
+    },
+    {
+      "name": "home_action_retest",
+      "value": "Yeniden test"
+    },
+    {
+      "name": "home_action_switch_exit",
+      "value": "Çıkış değiştirme"
+    },
+    {
+      "name": "home_action_switch_mode",
+      "value": "Mod değiştirme"
+    },
+    {
+      "name": "home_action_switch_node",
+      "value": "Düğüm değiştirme"
+    },
+    {
+      "name": "home_action_switch_source",
+      "value": "Kaynak değiştirme"
+    },
+    {
+      "name": "home_action_undo",
+      "value": "Geri alma"
+    },
+    {
+      "name": "home_apply_failed",
+      "value": "Uygulanamadı: %1$s"
+    },
+    {
+      "name": "home_confirm_apps",
+      "value": "%1$s için çıkış IP’si değiştirilsin mi?"
+    },
+    {
+      "name": "home_confirm_scene",
+      "value": "%1$s senaryosunun çıkış IP’si değiştirilsin mi?"
+    },
+    {
+      "name": "home_confirm_unchanged",
+      "value": "%1$s aynı kalacak."
+    },
+    {
+      "name": "home_error_failed",
+      "value": "%1$s başarısız oldu"
+    },
+    {
+      "name": "home_error_node_gone",
+      "value": "%1$s başarısız oldu: düğüm artık yok"
+    },
+    {
+      "name": "home_error_not_connected",
+      "value": "%1$s için önce bağlanın"
+    },
+    {
+      "name": "home_failover_none",
+      "value": "%1$s çıkışı yanıt vermiyor. Çıkış IP’si otomatik olarak değişmeyecek."
+    },
+    {
+      "name": "home_failover_switched",
+      "value": "%1$s çıkışı otomatik olarak %2$s düğümüne geçti"
+    },
+    {
+      "name": "home_failure_core",
+      "value": "Çekirdek başlatılamadı"
+    },
+    {
+      "name": "home_failure_network",
+      "value": "Ağ kullanılamıyor"
+    },
+    {
+      "name": "home_failure_no_subscription",
+      "value": "Önce bir abonelik ekleyin"
+    },
+    {
+      "name": "home_failure_vpn_permission",
+      "value": "VPN izni gerekli"
+    },
+    {
+      "name": "home_global_body",
+      "value": "Tüm trafik %1$s üzerinden geçiyor. Senaryolar duraklatıldı."
+    },
+    {
+      "name": "home_global_body_any",
+      "value": "Tüm trafik tek bir düğümden geçiyor. Senaryolar duraklatıldı."
+    },
+    {
+      "name": "home_global_change_node",
+      "value": "Düğümü değiştir"
+    },
+    {
+      "name": "home_global_change_note",
+      "value": "Tüm uygulamalar %1$s üzerinden çıkacak."
+    },
+    {
+      "name": "home_global_change_to",
+      "value": "%1$s ile değiştir"
+    },
+    {
+      "name": "home_global_use_rule",
+      "value": "Kural modunu kullan"
+    },
+    {
+      "name": "home_now_all_nodes",
+      "value": "%1$s: yeniden tüm düğümler"
+    },
+    {
+      "name": "home_now_direct",
+      "value": "%1$s artık doğrudan bağlanıyor"
+    },
+    {
+      "name": "home_now_uhd_only",
+      "value": "%1$s artık yalnızca 4K düğümleri kullanıyor"
+    },
+    {
+      "name": "home_now_uses",
+      "value": "%1$s artık %2$s kullanıyor"
+    },
+    {
+      "name": "home_now_uses_uhd",
+      "value": "%1$s artık %2$s kullanıyor (yalnızca 4K)"
+    },
+    {
+      "name": "home_pin_line",
+      "value": "%1$s: %2$s"
+    },
+    {
+      "name": "home_scan_progress",
+      "value": "Test ediliyor %1$d/%2$d"
+    },
+    {
+      "name": "home_scan_running",
+      "value": "Test ediliyor…"
+    },
+    {
+      "name": "home_scene_details_a11y",
+      "value": "%1$s senaryosu ayrıntıları"
+    },
+    {
+      "name": "home_scene_next_region",
+      "value": "Sonraki bölge: %1$s"
+    },
+    {
+      "name": "home_scene_prev_region",
+      "value": "Önceki bölge: %1$s"
+    },
+    {
+      "name": "home_scene_services_down",
+      "value": "%1$s kullanılamıyor"
+    },
+    {
+      "name": "home_scene_services_ok",
+      "value": "%1$s sorunsuz"
+    },
+    {
+      "name": "home_scenes_tested",
+      "value": "Son test: %1$s"
+    },
+    {
+      "name": "home_scrub_hint",
+      "value": "Bölge değiştirmek için sola veya sağa kaydırın"
+    },
+    {
+      "name": "home_spark_a11y",
+      "value": "İndirme hızı, son 90 saniye"
+    },
+    {
+      "name": "home_switched_to",
+      "value": "%1$s düğümüne geçildi"
+    },
+    {
+      "name": "home_today_usage",
+      "value": "Bugün %1$s"
+    },
+    {
+      "name": "library_widgets",
+      "value": "Widget’lar ve Hızlı Ayarlar"
+    },
+    {
+      "name": "licenses_intro",
+      "value": "Zephyr'ın kendi kodu MIT lisanslıdır. Uygulama mihomo (GPL-3.0) içerdiğinden uygulamanın tamamı GPL-3.0 kapsamında dağıtılır. İlgili kaynak kodu: %1$s, etiket %2$s."
+    },
+    {
+      "name": "licenses_section_app",
+      "value": "Zephyr lisansı"
+    },
+    {
+      "name": "licenses_section_notices",
+      "value": "Üçüncü taraf bildirimleri"
+    },
+    {
+      "name": "licenses_section_texts",
+      "value": "Lisans metinleri"
+    },
+    {
+      "name": "licenses_unavailable",
+      "value": "Bu derlemede lisans dosyaları eksik."
+    },
+    {
+      "name": "local_proxy_apply_failed",
+      "value": "Değişiklik uygulanamadı"
+    },
+    {
+      "name": "local_proxy_auth_footer",
+      "value": "Açık olduğunda yerel porta bağlanmak için kullanıcı adı ve parola gerekir; böylece diğer uygulamalar proxy’yi izinsiz kullanamaz."
+    },
+    {
+      "name": "local_proxy_conceal",
+      "value": "Parolayı gizle"
+    },
+    {
+      "name": "local_proxy_concealed",
+      "value": "Parola gizli"
+    },
+    {
+      "name": "local_proxy_copied",
+      "value": "Kopyalandı"
+    },
+    {
+      "name": "local_proxy_copy_http",
+      "value": "HTTP proxy URL’sini kopyala"
+    },
+    {
+      "name": "local_proxy_copy_socks",
+      "value": "SOCKS5 proxy URL’sini kopyala"
+    },
+    {
+      "name": "local_proxy_credential_row",
+      "value": "Parola"
+    },
+    {
+      "name": "local_proxy_credentials",
+      "value": "Bağlantı bilgileri"
+    },
+    {
+      "name": "local_proxy_footer",
+      "value": "Açık olduğunda Zephyr yalnızca 127.0.0.1 adresini dinler; böylece ağınızdaki diğer cihazlar bağlanamaz."
+    },
+    {
+      "name": "local_proxy_port",
+      "value": "Port"
+    },
+    {
+      "name": "local_proxy_port_footer",
+      "value": "Diğer uygulamalar, 127.0.0.1 üzerindeki bu port aracılığıyla Zephyr’in kurallarını ve senaryolarını kullanabilir."
+    },
+    {
+      "name": "local_proxy_port_invalid",
+      "value": "%1$d ile %2$d arasında bir port girin"
+    },
+    {
+      "name": "local_proxy_regenerate",
+      "value": "Parolayı yeniden oluştur"
+    },
+    {
+      "name": "local_proxy_regenerate_footer",
+      "value": "Yeniden oluşturunca eski parola hemen çalışmaz olur; ayarladığınız uygulamalara yenisini girmeniz gerekir."
+    },
+    {
+      "name": "local_proxy_regenerated",
+      "value": "Yeni parola oluşturuldu"
+    },
+    {
+      "name": "local_proxy_reveal",
+      "value": "Parolayı göster"
+    },
+    {
+      "name": "local_proxy_security",
+      "value": "Güvenlik"
+    },
+    {
+      "name": "local_proxy_user_row",
+      "value": "Kullanıcı adı"
+    },
+    {
+      "name": "logs_clear",
+      "value": "Temizle"
+    },
+    {
+      "name": "logs_empty",
+      "value": "Henüz günlük yok"
+    },
+    {
+      "name": "logs_line_a11y",
+      "value": "%1$s %2$s %3$s"
+    },
+    {
+      "name": "logs_pause",
+      "value": "Duraklat"
+    },
+    {
+      "name": "logs_resume",
+      "value": "Sürdür"
+    },
+    {
+      "name": "nodes_detail_latency",
+      "value": "Gecikme"
+    },
+    {
+      "name": "nodes_detail_protocol",
+      "value": "Protokol"
+    },
+    {
+      "name": "nodes_detail_route",
+      "value": "Hat"
+    },
+    {
+      "name": "nodes_detail_server",
+      "value": "Sunucu"
+    },
+    {
+      "name": "nodes_detail_test",
+      "value": "Gecikmeyi test et"
+    },
+    {
+      "name": "nodes_empty_action",
+      "value": "Abonelik içe aktar"
+    },
+    {
+      "name": "nodes_empty_message",
+      "value": "Bir abonelik içe aktarın, düğümleri burada görünsün"
+    },
+    {
+      "name": "nodes_empty_title",
+      "value": "Henüz düğüm yok"
+    },
+    {
+      "name": "nodes_error_title",
+      "value": "Düğümler yüklenemedi"
+    },
+    {
+      "name": "nodes_jump_to",
+      "value": "%1$s bölümüne git"
+    },
+    {
+      "name": "nodes_no_match",
+      "value": "“%1$s” ile eşleşen düğüm yok"
+    },
+    {
+      "name": "nodes_search_placeholder",
+      "value": "Bölge, şehir veya rota"
+    },
+    {
+      "name": "nodes_search_stats",
+      "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_tested",
+      "value": "%1$s test edildi"
+    },
+    {
+      "name": "notif_action_global",
+      "value": "Küresel mod"
+    },
+    {
+      "name": "notif_action_rule",
+      "value": "Kural modu"
+    },
+    {
+      "name": "notif_channel_alerts",
+      "value": "Abonelik uyarıları"
+    },
+    {
+      "name": "notif_channel_alerts_desc",
+      "value": "Abonelik süresinin bitmesi ve azalan veri"
+    },
+    {
+      "name": "notif_channel_vpn",
+      "value": "Bağlantı durumu"
+    },
+    {
+      "name": "notif_channel_vpn_desc",
+      "value": "Bağlıyken hızı ve senaryoları gösterir"
+    },
+    {
+      "name": "notif_expiry_text",
+      "value": "%1$s kaldı"
+    },
+    {
+      "name": "notif_expiry_title",
+      "value": "%1$s aboneliği %2$s tarihinde bitiyor"
+    },
+    {
+      "name": "notif_paused_trusted",
+      "value": "Güvenilen Wi‑Fi «%1$s» ağında bağlantı kesildi. Ayrıldığınızda otomatik olarak yeniden bağlanır."
+    },
+    {
+      "name": "notif_route_global",
+      "value": "Küresel · %1$s"
+    },
+    {
+      "name": "notif_route_global_any",
+      "value": "Tüm trafik tek düğümden"
+    },
+    {
+      "name": "onboarding_cancel_import_a11y",
+      "value": "İçe aktarmayı iptal et"
+    },
+    {
+      "name": "onboarding_change_later",
+      "value": "Bunu istediğiniz zaman Ayarlar’dan değiştirebilirsiniz."
+    },
+    {
+      "name": "onboarding_choose_mode",
+      "value": "Bir mod seçin"
+    },
+    {
+      "name": "onboarding_continue",
+      "value": "Devam"
+    },
+    {
+      "name": "onboarding_optimized",
+      "value": "Optimize"
+    },
+    {
+      "name": "onboarding_optimized_desc",
+      "value": "Düğümleri her gün Wi‑Fi üzerinden test eder. AI ve Video yalnızca testi geçen düğümleri kullanır. Her seferinde yaklaşık 3 MB."
+    },
+    {
+      "name": "onboarding_simple",
+      "value": "Basit"
+    },
+    {
+      "name": "onboarding_simple_desc",
+      "value": "Aboneliğinizdeki grupları kullanır. Kullanılamayan düğümler otomatik olarak yönetilir."
+    },
+    {
+      "name": "rules_add_override_a11y",
+      "value": "Alan adı için üzerine yazma ekle"
+    },
+    {
+      "name": "rules_blocked",
+      "value": "Engellendi"
+    },
+    {
+      "name": "rules_kind_ip",
+      "value": "IP"
+    },
+    {
+      "name": "rules_kind_other",
+      "value": "Diğer"
+    },
+    {
+      "name": "rules_match_order",
+      "value": "Eşleşme sırası"
+    },
+    {
+      "name": "rules_note",
+      "value": "Kural setleri cihazda salt okunur bir dizine derlenir ve gerektiğinde diskten okunur. Abonelikler güncellendiğinde üzerine yazmalar korunur."
+    },
+    {
+      "name": "rules_other_traffic",
+      "value": "Diğer tüm trafik"
+    },
+    {
+      "name": "rules_step_layer",
+      "value": "Katman %1$d · %2$s"
+    },
+    {
+      "name": "rules_step_request",
+      "value": "İstek"
+    },
+    {
+      "name": "rules_step_result",
+      "value": "Sonuç"
+    },
+    {
+      "name": "rules_step_scene",
+      "value": "Senaryo · %1$s"
+    },
+    {
+      "name": "rules_test_hint",
+      "value": "Eşleşen kuralı ve çıkışı görmek için bir alan adı veya IP adresi girin."
+    },
+    {
+      "name": "rules_test_placeholder",
+      "value": "Alan adı veya IP test et"
+    },
+    {
+      "name": "rules_took",
+      "value": "Süre: %1$s"
+    },
+    {
+      "name": "rules_top_to_bottom",
+      "value": "Yukarıdan aşağıya"
+    },
+    {
+      "name": "scene_ask",
+      "value": "Sor"
+    },
+    {
+      "name": "scene_auto_switch",
+      "value": "Otomatik değiştir"
+    },
+    {
+      "name": "scene_funnel_reachable",
+      "value": "Erişilebilir"
+    },
+    {
+      "name": "scene_funnel_tested",
+      "value": "Test edilen"
+    },
+    {
+      "name": "scene_funnel_under",
+      "value": "%1$d ms altı"
+    },
+    {
+      "name": "scene_node_scope",
+      "value": "Düğüm kapsamı"
+    },
+    {
+      "name": "scene_note",
+      "value": "Seçimler yalnızca Zephyr’de saklanır. Abonelik yapılandırmanız değişmez."
+    },
+    {
+      "name": "scene_note_tested",
+      "value": "%1$s Son test: %2$s."
+    },
+    {
+      "name": "scene_pinned_for",
+      "value": "%1$s için sabitlendi"
+    },
+    {
+      "name": "scene_pinned_value",
+      "value": "%1$s (sabit)"
+    },
+    {
+      "name": "scene_test_daily",
+      "value": "Her gün"
+    },
+    {
+      "name": "scene_test_frequency",
+      "value": "Test sıklığı"
+    },
+    {
+      "name": "scene_test_wifi_only",
+      "value": "%1$s (yalnızca Wi‑Fi)"
+    },
+    {
+      "name": "scene_tested_from_pool",
+      "value": "%1$d abonelikten %2$s düğüm test edildi"
+    },
+    {
+      "name": "scene_uhd_only",
+      "value": "Yalnızca 4K düğümler"
+    },
+    {
+      "name": "scene_when_unavailable",
+      "value": "Düğüm kullanılamadığında"
+    },
+    {
+      "name": "settings_accent_blue",
+      "value": "Mavi"
+    },
+    {
+      "name": "settings_accent_green",
+      "value": "Yeşil"
+    },
+    {
+      "name": "settings_accent_orange",
+      "value": "Turuncu"
+    },
+    {
+      "name": "settings_accent_pink",
+      "value": "Pembe"
+    },
+    {
+      "name": "settings_keep_results",
+      "value": "Sonuçları sakla"
+    },
+    {
+      "name": "settings_licenses",
+      "value": "Açık kaynak lisansları"
+    },
+    {
+      "name": "settings_local_data_note",
+      "value": "Abonelikler, düğümler ve trafik verileri yalnızca bu cihazda saklanır."
+    },
+    {
+      "name": "settings_on_demand",
+      "value": "İsteğe bağlı bağlan"
+    },
+    {
+      "name": "settings_save_failed",
+      "value": "Ayar kaydedilemedi"
+    },
+    {
+      "name": "settings_section_about",
+      "value": "Hakkında"
+    },
+    {
+      "name": "settings_section_connection",
+      "value": "Bağlantı"
+    },
+    {
+      "name": "settings_section_privacy",
+      "value": "Gizlilik"
+    },
+    {
+      "name": "settings_section_storage",
+      "value": "Depolama"
+    },
+    {
+      "name": "settings_section_testing",
+      "value": "Test"
+    },
+    {
+      "name": "settings_share_diagnostics",
+      "value": "Tanılama verilerini paylaş"
+    },
+    {
+      "name": "settings_source_code",
+      "value": "Kaynak kodu"
+    },
+    {
+      "name": "settings_storage_detail",
+      "value": "Düğümler %1$s · Kurallar %2$s · Boş %3$s"
+    },
+    {
+      "name": "settings_storage_title",
+      "value": "Düğümler ve kurallar"
+    },
+    {
+      "name": "settings_test_wifi_only",
+      "value": "Hız testini yalnızca Wi‑Fi’da yap"
+    },
+    {
+      "name": "settings_trusted_wifi",
+      "value": "Güvenilir Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi_always_on",
+      "value": "Sistemin «Her zaman açık VPN» ayarı tarafından yönetiliyor"
+    },
+    {
+      "name": "settings_trusted_wifi_hint",
+      "value": "Bu ağlarda bağlantıyı otomatik olarak kes"
+    },
+    {
+      "name": "settings_trusted_wifi_location",
+      "value": "Wi‑Fi adlarını tanımak için konum erişimine izin verin"
+    },
+    {
+      "name": "settings_trusted_wifi_location_off",
+      "value": "Wi‑Fi adlarını tanımak için sistem konumunu açın"
+    },
+    {
+      "name": "subs_add",
+      "value": "Abonelik ekle"
+    },
+    {
+      "name": "subs_all_title",
+      "value": "Tüm abonelikler"
+    },
+    {
+      "name": "subs_deleted",
+      "value": "Silindi: %1$s"
+    },
+    {
+      "name": "subs_diff_updated",
+      "value": "%1$s güncellendi"
+    },
+    {
+      "name": "subs_diff_updating",
+      "value": "%1$s güncelleniyor…"
+    },
+    {
+      "name": "subs_error_clipboard_empty",
+      "value": "Pano boş"
+    },
+    {
+      "name": "subs_error_delete",
+      "value": "%1$s silinemedi"
+    },
+    {
+      "name": "subs_error_fetch",
+      "value": "Abonelik indirilemedi. Bağlantıyı veya ağınızı kontrol edin."
+    },
+    {
+      "name": "subs_error_import_version",
+      "value": "Bu içe aktarma kodu için Zephyr’in daha yeni bir sürümü gerekiyor"
+    },
+    {
+      "name": "subs_error_invalid_file",
+      "value": "Bu geçerli bir yapılandırma dosyası değil"
+    },
+    {
+      "name": "subs_error_invalid_link",
+      "value": "Bu geçerli bir abonelik bağlantısı değil"
+    },
+    {
+      "name": "subs_error_read_file",
+      "value": "Bu dosya okunamadı"
+    },
+    {
+      "name": "subs_error_update",
+      "value": "%1$s güncellenemedi"
+    },
+    {
+      "name": "subs_error_update_all",
+      "value": "Abonelikler güncellenemedi"
+    },
+    {
+      "name": "subs_hint_desktop",
+      "value": "QR kodu görmek için bilgisayarınızda Zephyr’de Ayarlar › Telefona eşzamanla’yı açın"
+    },
+    {
+      "name": "subs_import_desktop",
+      "value": "Bilgisayardaki Zephyr’den içe aktar"
+    },
+    {
+      "name": "subs_import_desktop_source",
+      "value": "Zephyr Masaüstü"
+    },
+    {
+      "name": "subs_import_insecure",
+      "value": "Bu bağlantı şifrelenmemiş (http); içeriği okunabilir veya değiştirilebilir."
+    },
+    {
+      "name": "subs_import_source",
+      "value": "Kaynak: %1$s"
+    },
+    {
+      "name": "subs_import_trust",
+      "value": "Yalnızca bu sağlayıcıya güveniyorsanız devam edin."
+    },
+    {
+      "name": "subs_overrides_kept",
+      "value": "Üzerine yazmalar korundu"
+    },
+    {
+      "name": "subs_paste_clipboard",
+      "value": "Panodan yapıştır"
+    },
+    {
+      "name": "subs_paste_link",
+      "value": "Bağlantıyı yapıştır"
+    },
+    {
+      "name": "subs_paste_placeholder",
+      "value": "Abonelik bağlantısını yapıştırın"
+    },
+    {
+      "name": "subs_remaining",
+      "value": "Kalan"
+    },
+    {
+      "name": "subs_review_note",
+      "value": "Güncelleme, abonelikteki düğümleri ve kuralları değiştirir. Zephyr’deki üzerine yazmalar ve senaryo seçimleri aynı kalır."
+    },
+    {
+      "name": "subs_review_one",
+      "value": "%1$s güncellenecek"
+    },
+    {
+      "name": "subs_rule_changes",
+      "value": "Kural değişiklikleri"
+    },
+    {
+      "name": "subs_scan_camera_needed",
+      "value": "Taramak için kamera erişimi gerekir"
+    },
+    {
+      "name": "subs_scan_no_camera",
+      "value": "Bu cihazda kullanılabilir kamera yok"
+    },
+    {
+      "name": "subs_scan_prompt",
+      "value": "Otomatik olarak taramak için abonelik QR kodunu çerçeveye yerleştirin."
+    },
+    {
+      "name": "subs_scan_qr",
+      "value": "QR kodu tara"
+    },
+    {
+      "name": "subs_scenes_retested",
+      "value": "Senaryo havuzları yeniden test edildi"
+    },
+    {
+      "name": "subs_section_data",
+      "value": "Veri"
+    },
+    {
+      "name": "subs_section_update",
+      "value": "Güncellemeler"
+    },
+    {
+      "name": "subs_show_changes",
+      "value": "Önce değişiklikleri göster"
+    },
+    {
+      "name": "subs_swipe_confirm_delete",
+      "value": "Silmeyi onayla"
+    },
+    {
+      "name": "subs_swipe_updating",
+      "value": "Güncelleniyor"
+    },
+    {
+      "name": "subs_this_month",
+      "value": "Bu ay"
+    },
+    {
+      "name": "subs_update_all",
+      "value": "Tümünü şimdi güncelle"
+    },
+    {
+      "name": "subs_update_wifi_only",
+      "value": "Yalnızca Wi‑Fi’da güncelle"
+    },
+    {
+      "name": "term_accent",
+      "value": "Vurgu rengi"
+    },
+    {
+      "name": "term_all",
+      "value": "Tümü"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Görünüm"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Koyu"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Açık"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Sistem"
+    },
+    {
+      "name": "term_apply",
+      "value": "Uygula"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Otomatik güncelleme"
+    },
+    {
+      "name": "term_delete",
+      "value": "Sil"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Tanılama"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Bağlantıyı kes"
+    },
+    {
+      "name": "term_domain",
+      "value": "Alan adı"
+    },
+    {
+      "name": "term_exit",
+      "value": "Çıkış"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "Çıkış IP’si"
+    },
+    {
+      "name": "term_import",
+      "value": "İçe Aktar"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Dosyadan içe aktar"
+    },
+    {
+      "name": "term_latency",
+      "value": "Gecikme"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Yerel proxy portu"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Hata ayıklama"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Hata"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Bilgi"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Uyarı"
+    },
+    {
+      "name": "term_logs",
+      "value": "Günlükler"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Doğrudan"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Küresel"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Küresel mod"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Kural"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Sonuç yok"
+    },
+    {
+      "name": "term_node",
+      "value": "Düğüm"
+    },
+    {
+      "name": "term_nodes",
+      "value": "Düğümler"
+    },
+    {
+      "name": "term_none",
+      "value": "Yok"
+    },
+    {
+      "name": "term_off",
+      "value": "Kapalı"
+    },
+    {
+      "name": "term_on",
+      "value": "Açık"
+    },
+    {
+      "name": "term_override",
+      "value": "Üzerine yazma"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proxy"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Parola gerektir"
+    },
+    {
+      "name": "term_rule",
+      "value": "Kural"
+    },
+    {
+      "name": "term_rules",
+      "value": "Kurallar"
+    },
+    {
+      "name": "term_scene",
+      "value": "Senaryo"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Senaryolar"
+    },
+    {
+      "name": "term_settings",
+      "value": "Ayarlar"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Bağlanıyor"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Bağlı değil"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Bağlantı başarısız"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Abonelik"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Abonelikler"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Modu değiştir"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Yeniden test et"
+    },
+    {
+      "name": "term_testing",
+      "value": "Test ediliyor"
+    },
+    {
+      "name": "term_today",
+      "value": "Bugün"
+    },
+    {
+      "name": "term_undo",
+      "value": "Geri al"
+    },
+    {
+      "name": "term_update",
+      "value": "Güncelle"
+    },
+    {
+      "name": "tile_a11y",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "today_date_pattern",
+      "value": "d MMMM EEEE"
+    },
+    {
+      "name": "today_fastest",
+      "value": "ms en hızlı"
+    },
+    {
+      "name": "today_pattern_note",
+      "value": "Desen bugünkü trafikten oluşturulur; düğüm adı veya IP adresi içermez."
+    },
+    {
+      "name": "today_save_failed",
+      "value": "Görsel kaydedilemedi"
+    },
+    {
+      "name": "today_save_image",
+      "value": "Görseli kaydet"
+    },
+    {
+      "name": "today_saved",
+      "value": "Galeriye kaydedildi"
+    },
+    {
+      "name": "today_storage_permission",
+      "value": "Görseli kaydetmek için depolama izni gerekli"
+    },
+    {
+      "name": "today_style_dawn",
+      "value": "Şafak"
+    },
+    {
+      "name": "today_style_mist",
+      "value": "Sis"
+    },
+    {
+      "name": "today_style_night",
+      "value": "Gece"
+    },
+    {
+      "name": "trace_always_apply",
+      "value": "Her zaman uygula"
+    },
+    {
+      "name": "trace_always_apply_hint",
+      "value": "Kapalıyken yalnızca bu bağlantı değişir"
+    },
+    {
+      "name": "trace_from",
+      "value": "Kaynak: %1$s"
+    },
+    {
+      "name": "trace_option_unchanged",
+      "value": "Değişiklik yok"
+    },
+    {
+      "name": "trace_override_cleared",
+      "value": "%1$s için rota üzerine yazma temizlendi"
+    },
+    {
+      "name": "trace_override_direct",
+      "value": "%1$s artık doğrudan bağlanıyor"
+    },
+    {
+      "name": "trace_override_error",
+      "value": "Rota değiştirilemedi. Yeniden deneyin."
+    },
+    {
+      "name": "trace_override_scene",
+      "value": "%1$s artık %2$s üzerinden"
+    },
+    {
+      "name": "trace_step_rule",
+      "value": "Kural"
+    },
+    {
+      "name": "trace_this_connection",
+      "value": "Bu bağlantı"
+    },
+    {
+      "name": "trace_via",
+      "value": "%1$s üzerinden"
+    },
+    {
+      "name": "trusted_wifi_add_hint",
+      "value": "Wi‑Fi adı ekle"
+    },
+    {
+      "name": "trusted_wifi_disconnect",
+      "value": "Bu Wi‑Fi ağlarında bağlantıyı kes"
+    },
+    {
+      "name": "trusted_wifi_footer",
+      "value": "Ev veya iş gibi güvenilir ağlarda Zephyr bağlantıyı otomatik olarak keser; ayrıldığınızda gerektiğinde yeniden bağlanır."
+    },
+    {
+      "name": "trusted_wifi_networks",
+      "value": "Ağlar"
+    },
+    {
+      "name": "widget_description",
+      "value": "Bağlantı durumu, hız ve senaryolar"
+    },
+    {
+      "name": "widget_label",
+      "value": "Zephyr durumu"
+    },
+    {
+      "name": "widget_today",
+      "value": "Bugün %1$s %2$s"
+    },
+    {
+      "name": "widget_usage_description",
+      "value": "Bugünkü trafik ve 24 saatlik dağılım"
+    },
+    {
+      "name": "widget_usage_label",
+      "value": "Zephyr: bugünkü kullanım"
+    },
+    {
+      "name": "widgets_home_steps",
+      "value": "Ana ekranda boş bir yere dokunup basılı tutun › Widget’lar › Zephyr, ardından birini ana ekrana sürükleyin."
+    },
+    {
+      "name": "widgets_home_title",
+      "value": "Ana ekran widget’ları"
+    },
+    {
+      "name": "widgets_tile_steps",
+      "value": "Ekranın üstünden iki kez aşağı kaydırın › Düzenle › Zephyr’i Hızlı Ayarlar’a sürükleyin. Bağlanmak veya bağlantıyı kesmek için dokunun."
+    },
+    {
+      "name": "widgets_tile_title",
+      "value": "Hızlı Ayarlar kutucuğu"
+    }
+  ]
+}

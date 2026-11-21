@@ -1,0 +1,1588 @@
+{
+  "string": [
+    {
+      "name": "activity_back",
+      "value": "‹ Recent connections"
+    },
+    {
+      "name": "activity_close_host_a11y",
+      "value": "Close connections to %1$s"
+    },
+    {
+      "name": "activity_close_none",
+      "value": "No active connections"
+    },
+    {
+      "name": "activity_empty",
+      "value": "Once connected, recently visited domains appear here."
+    },
+    {
+      "name": "activity_host_a11y",
+      "value": "%1$s connection details"
+    },
+    {
+      "name": "activity_no_app_note",
+      "value": "The app that made each connection isn’t known yet, so only domains are shown."
+    },
+    {
+      "name": "activity_title",
+      "value": "Recent connections"
+    },
+    {
+      "name": "command_chip_action",
+      "value": "Action"
+    },
+    {
+      "name": "command_chip_region",
+      "value": "Region"
+    },
+    {
+      "name": "command_chip_scene",
+      "value": "Scene"
+    },
+    {
+      "name": "command_chip_scope",
+      "value": "Scope"
+    },
+    {
+      "name": "command_chip_service",
+      "value": "Service"
+    },
+    {
+      "name": "command_direct_note",
+      "value": "%1$s traffic will bypass the proxy."
+    },
+    {
+      "name": "command_direct_title",
+      "value": "Connect %1$s directly"
+    },
+    {
+      "name": "command_no_nodes_available",
+      "value": "No nodes available"
+    },
+    {
+      "name": "command_placeholder",
+      "value": "Search or enter a command"
+    },
+    {
+      "name": "command_plan_exit_title",
+      "value": "%1$s uses %2$s nodes"
+    },
+    {
+      "name": "command_plan_fallback_pause",
+      "value": "If no %1$s node is available, %2$s will pause."
+    },
+    {
+      "name": "command_plan_fallback_scene",
+      "value": "If no %1$s node is available, other nodes in the scene will be used."
+    },
+    {
+      "name": "command_plan_no_nodes",
+      "value": "No %2$s nodes in %1$s."
+    },
+    {
+      "name": "command_plan_releases_pin",
+      "value": "%1$s will stop using its fixed exit %2$s."
+    },
+    {
+      "name": "command_region_de",
+      "value": "Germany"
+    },
+    {
+      "name": "command_region_gb",
+      "value": "UK"
+    },
+    {
+      "name": "command_region_hk",
+      "value": "Hong Kong"
+    },
+    {
+      "name": "command_region_jp",
+      "value": "Japan"
+    },
+    {
+      "name": "command_region_kr",
+      "value": "Korea"
+    },
+    {
+      "name": "command_region_sg",
+      "value": "Singapore"
+    },
+    {
+      "name": "command_region_tw",
+      "value": "Taiwan"
+    },
+    {
+      "name": "command_region_us",
+      "value": "US"
+    },
+    {
+      "name": "command_scene_ai",
+      "value": "the AI scene"
+    },
+    {
+      "name": "command_scene_named",
+      "value": "the %1$s scene"
+    },
+    {
+      "name": "command_section_command",
+      "value": "Commands"
+    },
+    {
+      "name": "command_section_suggestions",
+      "value": "Suggestions"
+    },
+    {
+      "name": "command_see_all_nodes",
+      "value": "See all %1$s in the node library"
+    },
+    {
+      "name": "command_test_rule",
+      "value": "Where does %1$s go?"
+    },
+    {
+      "name": "command_uhd_auto_note",
+      "value": "From now on, auto-switching picks only from 4K nodes."
+    },
+    {
+      "name": "command_uhd_clear_note",
+      "value": "The %1$s scene uses only 4K nodes. All nodes will be used again; the current node stays."
+    },
+    {
+      "name": "command_uhd_fastest",
+      "value": "the fastest 4K node"
+    },
+    {
+      "name": "command_uhd_none",
+      "value": "No nodes support 4K."
+    },
+    {
+      "name": "command_uhd_title_all",
+      "value": "%1$s: all nodes"
+    },
+    {
+      "name": "command_uhd_title_only",
+      "value": "%1$s: 4K nodes only"
+    },
+    {
+      "name": "command_zephyr_only",
+      "value": "Applies only in Zephyr. Your subscription configuration isn’t changed."
+    },
+    {
+      "name": "common_add",
+      "value": "Add"
+    },
+    {
+      "name": "common_adding",
+      "value": "Adding…"
+    },
+    {
+      "name": "common_back_to",
+      "value": "Back to %1$s"
+    },
+    {
+      "name": "common_cancel",
+      "value": "Cancel"
+    },
+    {
+      "name": "common_change",
+      "value": "Change"
+    },
+    {
+      "name": "common_connect",
+      "value": "Connect"
+    },
+    {
+      "name": "common_current",
+      "value": "Current"
+    },
+    {
+      "name": "common_direct",
+      "value": "Direct"
+    },
+    {
+      "name": "common_exit_ip_changes",
+      "value": "Exit IP will change"
+    },
+    {
+      "name": "common_home",
+      "value": "Home"
+    },
+    {
+      "name": "common_joined_dot",
+      "value": "%1$s · %2$s"
+    },
+    {
+      "name": "common_library",
+      "value": "Library"
+    },
+    {
+      "name": "common_list_separator",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "common_local_data_note",
+      "value": "Subscriptions and traffic data are stored only on this device."
+    },
+    {
+      "name": "common_local_network",
+      "value": "This device’s network"
+    },
+    {
+      "name": "common_mode_direct_hint",
+      "value": "Bypass the proxy"
+    },
+    {
+      "name": "common_mode_global_hint",
+      "value": "All traffic through one node"
+    },
+    {
+      "name": "common_mode_rule_hint",
+      "value": "Route by scene"
+    },
+    {
+      "name": "common_open_settings",
+      "value": "Open settings"
+    },
+    {
+      "name": "common_pair_and",
+      "value": "%1$s and %2$s"
+    },
+    {
+      "name": "common_retesting",
+      "value": "Testing…"
+    },
+    {
+      "name": "common_scene_ai",
+      "value": "AI"
+    },
+    {
+      "name": "common_scene_other",
+      "value": "Other"
+    },
+    {
+      "name": "common_scene_video",
+      "value": "Video"
+    },
+    {
+      "name": "common_share",
+      "value": "Share"
+    },
+    {
+      "name": "common_source_auto",
+      "value": "Zephyr Picks"
+    },
+    {
+      "name": "common_source_group",
+      "value": "Subscription group"
+    },
+    {
+      "name": "common_status_connected",
+      "value": "Connected"
+    },
+    {
+      "name": "common_status_connecting_ellipsis",
+      "value": "Connecting…"
+    },
+    {
+      "name": "common_status_disconnecting",
+      "value": "Disconnecting"
+    },
+    {
+      "name": "common_try_again",
+      "value": "Try again"
+    },
+    {
+      "name": "common_updating",
+      "value": "Updating…"
+    },
+    {
+      "name": "connect_no_subscription",
+      "value": "No subscription yet"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "Zephyr – scene-based proxy client"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "Zephyr"
+    },
+    {
+      "name": "hm_error_generic",
+      "value": "Something went wrong"
+    },
+    {
+      "name": "hm_expiry_expired",
+      "value": "Expired"
+    },
+    {
+      "name": "hm_expiry_in_days",
+      "value": "Expires in %1$d days"
+    },
+    {
+      "name": "hm_expiry_today",
+      "value": "Expires today"
+    },
+    {
+      "name": "hm_home_current_node",
+      "value": "Current node"
+    },
+    {
+      "name": "hm_home_download",
+      "value": "Download"
+    },
+    {
+      "name": "hm_home_simulated",
+      "value": "UI only: simulated connection, no tunnel"
+    },
+    {
+      "name": "hm_home_upload",
+      "value": "Upload"
+    },
+    {
+      "name": "hm_latency_timeout",
+      "value": "Timeout"
+    },
+    {
+      "name": "hm_licenses_placeholder",
+      "value": "The full list of licenses will be included in a later build."
+    },
+    {
+      "name": "hm_number_myriad",
+      "value": "false"
+    },
+    {
+      "name": "hm_rules_test",
+      "value": "Test"
+    },
+    {
+      "name": "hm_settings_engine",
+      "value": "Engine"
+    },
+    {
+      "name": "hm_settings_engine_mock",
+      "value": "Demo (UI only)"
+    },
+    {
+      "name": "hm_settings_engine_native",
+      "value": "Built-in core"
+    },
+    {
+      "name": "hm_settings_lan_bypass",
+      "value": "Bypass local network"
+    },
+    {
+      "name": "hm_settings_lan_bypass_footer",
+      "value": "Local network, link-local, loopback and multicast addresses never enter the tunnel in any mode, so printers, casting and your router keep working. This can't be turned off."
+    },
+    {
+      "name": "hm_settings_log_level",
+      "value": "Log level"
+    },
+    {
+      "name": "hm_settings_mode",
+      "value": "Default mode"
+    },
+    {
+      "name": "hm_settings_version",
+      "value": "Version"
+    },
+    {
+      "name": "hm_time_days_ago",
+      "value": "%1$dd ago"
+    },
+    {
+      "name": "hm_time_hours_ago",
+      "value": "%1$dh ago"
+    },
+    {
+      "name": "hm_time_just_now",
+      "value": "Just now"
+    },
+    {
+      "name": "hm_time_minutes_ago",
+      "value": "%1$d min ago"
+    },
+    {
+      "name": "hm_unit_wan",
+      "value": "万"
+    },
+    {
+      "name": "home_action_load_nodes",
+      "value": "load nodes"
+    },
+    {
+      "name": "home_action_preview_exit",
+      "value": "preview the exit"
+    },
+    {
+      "name": "home_action_retest",
+      "value": "retest"
+    },
+    {
+      "name": "home_action_switch_exit",
+      "value": "switch the exit"
+    },
+    {
+      "name": "home_action_switch_mode",
+      "value": "switch mode"
+    },
+    {
+      "name": "home_action_switch_node",
+      "value": "switch node"
+    },
+    {
+      "name": "home_action_switch_source",
+      "value": "switch source"
+    },
+    {
+      "name": "home_action_undo",
+      "value": "undo"
+    },
+    {
+      "name": "home_apply_failed",
+      "value": "Couldn’t apply: %1$s"
+    },
+    {
+      "name": "home_confirm_apps",
+      "value": "Change the exit IP for %1$s?"
+    },
+    {
+      "name": "home_confirm_scene",
+      "value": "Change the exit IP for the %1$s scene?"
+    },
+    {
+      "name": "home_confirm_unchanged",
+      "value": "%1$s will stay the same."
+    },
+    {
+      "name": "home_error_failed",
+      "value": "Couldn’t %1$s"
+    },
+    {
+      "name": "home_error_node_gone",
+      "value": "Couldn’t %1$s: the node no longer exists"
+    },
+    {
+      "name": "home_error_not_connected",
+      "value": "Connect first to %1$s"
+    },
+    {
+      "name": "home_failover_none",
+      "value": "%1$s exit isn’t responding. The exit IP won’t change automatically."
+    },
+    {
+      "name": "home_failover_switched",
+      "value": "%1$s exit switched to %2$s automatically"
+    },
+    {
+      "name": "home_failure_core",
+      "value": "The core couldn’t start"
+    },
+    {
+      "name": "home_failure_network",
+      "value": "Network unavailable"
+    },
+    {
+      "name": "home_failure_no_subscription",
+      "value": "Add a subscription first"
+    },
+    {
+      "name": "home_failure_vpn_permission",
+      "value": "VPN permission needed"
+    },
+    {
+      "name": "home_global_body",
+      "value": "All traffic goes through %1$s. Scenes are paused."
+    },
+    {
+      "name": "home_global_body_any",
+      "value": "All traffic goes through one node. Scenes are paused."
+    },
+    {
+      "name": "home_global_change_node",
+      "value": "Change node"
+    },
+    {
+      "name": "home_global_change_note",
+      "value": "All apps will exit through %1$s."
+    },
+    {
+      "name": "home_global_change_to",
+      "value": "Change to %1$s"
+    },
+    {
+      "name": "home_global_use_rule",
+      "value": "Use rule mode"
+    },
+    {
+      "name": "home_now_all_nodes",
+      "value": "%1$s now uses all nodes"
+    },
+    {
+      "name": "home_now_direct",
+      "value": "%1$s now connects directly"
+    },
+    {
+      "name": "home_now_uhd_only",
+      "value": "%1$s now uses only 4K nodes"
+    },
+    {
+      "name": "home_now_uses",
+      "value": "%1$s now uses %2$s"
+    },
+    {
+      "name": "home_now_uses_uhd",
+      "value": "%1$s now uses %2$s (4K only)"
+    },
+    {
+      "name": "home_pin_line",
+      "value": "%1$s: %2$s"
+    },
+    {
+      "name": "home_scan_progress",
+      "value": "Testing %1$d/%2$d"
+    },
+    {
+      "name": "home_scan_running",
+      "value": "Testing…"
+    },
+    {
+      "name": "home_scene_details_a11y",
+      "value": "%1$s scene details"
+    },
+    {
+      "name": "home_scene_next_region",
+      "value": "Next region: %1$s"
+    },
+    {
+      "name": "home_scene_prev_region",
+      "value": "Previous region: %1$s"
+    },
+    {
+      "name": "home_scene_services_down",
+      "value": "%1$s unavailable"
+    },
+    {
+      "name": "home_scene_services_ok",
+      "value": "%1$s OK"
+    },
+    {
+      "name": "home_scenes_tested",
+      "value": "Tested %1$s"
+    },
+    {
+      "name": "home_scrub_hint",
+      "value": "Swipe left or right to change region"
+    },
+    {
+      "name": "home_spark_a11y",
+      "value": "Download speed, last 90 seconds"
+    },
+    {
+      "name": "home_switched_to",
+      "value": "Switched to %1$s"
+    },
+    {
+      "name": "home_today_usage",
+      "value": "Today %1$s"
+    },
+    {
+      "name": "library_widgets",
+      "value": "Widgets & Quick Settings"
+    },
+    {
+      "name": "licenses_intro",
+      "value": "Zephyr's own code is MIT-licensed. The app includes mihomo (GPL-3.0), so the app as a whole is distributed under GPL-3.0. Corresponding source: %1$s, tag %2$s."
+    },
+    {
+      "name": "licenses_section_app",
+      "value": "Zephyr license"
+    },
+    {
+      "name": "licenses_section_notices",
+      "value": "Third-party notices"
+    },
+    {
+      "name": "licenses_section_texts",
+      "value": "License texts"
+    },
+    {
+      "name": "licenses_unavailable",
+      "value": "License files are missing from this build."
+    },
+    {
+      "name": "local_proxy_apply_failed",
+      "value": "Couldn’t apply the change"
+    },
+    {
+      "name": "local_proxy_auth_footer",
+      "value": "When on, connecting to the local port requires a user name and password, preventing other apps from using the proxy without permission."
+    },
+    {
+      "name": "local_proxy_conceal",
+      "value": "Hide password"
+    },
+    {
+      "name": "local_proxy_concealed",
+      "value": "Password hidden"
+    },
+    {
+      "name": "local_proxy_copied",
+      "value": "Copied"
+    },
+    {
+      "name": "local_proxy_copy_http",
+      "value": "Copy HTTP proxy URL"
+    },
+    {
+      "name": "local_proxy_copy_socks",
+      "value": "Copy SOCKS5 proxy URL"
+    },
+    {
+      "name": "local_proxy_credential_row",
+      "value": "Password"
+    },
+    {
+      "name": "local_proxy_credentials",
+      "value": "Credentials"
+    },
+    {
+      "name": "local_proxy_footer",
+      "value": "When on, Zephyr listens only on 127.0.0.1, so other devices on your network can’t connect."
+    },
+    {
+      "name": "local_proxy_port",
+      "value": "Port"
+    },
+    {
+      "name": "local_proxy_port_footer",
+      "value": "Other apps can use Zephyr’s rules and scenes through this port on 127.0.0.1."
+    },
+    {
+      "name": "local_proxy_port_invalid",
+      "value": "Enter a port from %1$d to %2$d"
+    },
+    {
+      "name": "local_proxy_regenerate",
+      "value": "Regenerate password"
+    },
+    {
+      "name": "local_proxy_regenerate_footer",
+      "value": "After regenerating, the old password stops working right away; apps you set up need the new one."
+    },
+    {
+      "name": "local_proxy_regenerated",
+      "value": "New password generated"
+    },
+    {
+      "name": "local_proxy_reveal",
+      "value": "Show password"
+    },
+    {
+      "name": "local_proxy_security",
+      "value": "Security"
+    },
+    {
+      "name": "local_proxy_user_row",
+      "value": "User name"
+    },
+    {
+      "name": "logs_clear",
+      "value": "Clear"
+    },
+    {
+      "name": "logs_empty",
+      "value": "No logs yet"
+    },
+    {
+      "name": "logs_line_a11y",
+      "value": "%1$s %2$s %3$s"
+    },
+    {
+      "name": "logs_pause",
+      "value": "Pause"
+    },
+    {
+      "name": "logs_resume",
+      "value": "Resume"
+    },
+    {
+      "name": "module_desc",
+      "value": "Zephyr app module"
+    },
+    {
+      "name": "nodes_detail_latency",
+      "value": "Latency"
+    },
+    {
+      "name": "nodes_detail_protocol",
+      "value": "Protocol"
+    },
+    {
+      "name": "nodes_detail_route",
+      "value": "Route"
+    },
+    {
+      "name": "nodes_detail_server",
+      "value": "Server"
+    },
+    {
+      "name": "nodes_detail_test",
+      "value": "Test latency"
+    },
+    {
+      "name": "nodes_empty_action",
+      "value": "Import subscription"
+    },
+    {
+      "name": "nodes_empty_message",
+      "value": "Import a subscription and its nodes will appear here"
+    },
+    {
+      "name": "nodes_empty_title",
+      "value": "No nodes yet"
+    },
+    {
+      "name": "nodes_error_title",
+      "value": "Couldn’t load nodes"
+    },
+    {
+      "name": "nodes_jump_to",
+      "value": "Jump to %1$s"
+    },
+    {
+      "name": "nodes_no_match",
+      "value": "No nodes match “%1$s”"
+    },
+    {
+      "name": "nodes_search_placeholder",
+      "value": "Region, city, or route"
+    },
+    {
+      "name": "nodes_search_stats",
+      "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_tested",
+      "value": "%1$s tested"
+    },
+    {
+      "name": "notif_action_global",
+      "value": "Global mode"
+    },
+    {
+      "name": "notif_action_rule",
+      "value": "Rule mode"
+    },
+    {
+      "name": "notif_channel_alerts",
+      "value": "Subscription alerts"
+    },
+    {
+      "name": "notif_channel_alerts_desc",
+      "value": "Subscription expiry and low data"
+    },
+    {
+      "name": "notif_channel_vpn",
+      "value": "Connection status"
+    },
+    {
+      "name": "notif_channel_vpn_desc",
+      "value": "Shows speed and scenes while connected"
+    },
+    {
+      "name": "notif_expiry_text",
+      "value": "%1$s left"
+    },
+    {
+      "name": "notif_expiry_title",
+      "value": "%1$s expires on %2$s"
+    },
+    {
+      "name": "notif_paused_trusted",
+      "value": "Disconnected on trusted Wi‑Fi “%1$s”. Reconnects automatically when you leave."
+    },
+    {
+      "name": "notif_route_global",
+      "value": "Global · %1$s"
+    },
+    {
+      "name": "notif_route_global_any",
+      "value": "All traffic through one node"
+    },
+    {
+      "name": "onboarding_cancel_import_a11y",
+      "value": "Cancel import"
+    },
+    {
+      "name": "onboarding_change_later",
+      "value": "You can change this anytime in Settings."
+    },
+    {
+      "name": "onboarding_choose_mode",
+      "value": "Choose a mode"
+    },
+    {
+      "name": "onboarding_continue",
+      "value": "Continue"
+    },
+    {
+      "name": "onboarding_optimized",
+      "value": "Optimized"
+    },
+    {
+      "name": "onboarding_optimized_desc",
+      "value": "Tests nodes daily over Wi‑Fi. AI and Video use only nodes that pass. About 3 MB each time."
+    },
+    {
+      "name": "onboarding_simple",
+      "value": "Simple"
+    },
+    {
+      "name": "onboarding_simple_desc",
+      "value": "Uses the groups from your subscription. Unavailable nodes are handled automatically."
+    },
+    {
+      "name": "rules_add_override_a11y",
+      "value": "Add override for a domain"
+    },
+    {
+      "name": "rules_blocked",
+      "value": "Blocked"
+    },
+    {
+      "name": "rules_kind_ip",
+      "value": "IP"
+    },
+    {
+      "name": "rules_kind_other",
+      "value": "Other"
+    },
+    {
+      "name": "rules_match_order",
+      "value": "Match order"
+    },
+    {
+      "name": "rules_note",
+      "value": "Rule sets are compiled on device into a read-only index and read from disk as needed. Overrides stay in place when subscriptions update."
+    },
+    {
+      "name": "rules_other_traffic",
+      "value": "All other traffic"
+    },
+    {
+      "name": "rules_step_layer",
+      "value": "Layer %1$d · %2$s"
+    },
+    {
+      "name": "rules_step_request",
+      "value": "Request"
+    },
+    {
+      "name": "rules_step_result",
+      "value": "Result"
+    },
+    {
+      "name": "rules_step_scene",
+      "value": "Scene · %1$s"
+    },
+    {
+      "name": "rules_test_hint",
+      "value": "Enter a domain or IP address to see the matching rule and exit."
+    },
+    {
+      "name": "rules_test_placeholder",
+      "value": "Test a domain or IP"
+    },
+    {
+      "name": "rules_took",
+      "value": "Took %1$s"
+    },
+    {
+      "name": "rules_top_to_bottom",
+      "value": "Top to bottom"
+    },
+    {
+      "name": "scene_ask",
+      "value": "Ask"
+    },
+    {
+      "name": "scene_auto_switch",
+      "value": "Switch automatically"
+    },
+    {
+      "name": "scene_funnel_reachable",
+      "value": "Reachable"
+    },
+    {
+      "name": "scene_funnel_tested",
+      "value": "Tested"
+    },
+    {
+      "name": "scene_funnel_under",
+      "value": "Under %1$d ms"
+    },
+    {
+      "name": "scene_node_scope",
+      "value": "Node scope"
+    },
+    {
+      "name": "scene_note",
+      "value": "Picks are saved only in Zephyr. Your subscription configuration isn’t changed."
+    },
+    {
+      "name": "scene_note_tested",
+      "value": "%1$s Last tested %2$s."
+    },
+    {
+      "name": "scene_pinned_for",
+      "value": "Pinned for %1$s"
+    },
+    {
+      "name": "scene_pinned_value",
+      "value": "%1$s (pinned)"
+    },
+    {
+      "name": "scene_test_daily",
+      "value": "Daily"
+    },
+    {
+      "name": "scene_test_frequency",
+      "value": "Test frequency"
+    },
+    {
+      "name": "scene_test_wifi_only",
+      "value": "%1$s (Wi‑Fi only)"
+    },
+    {
+      "name": "scene_tested_from_pool",
+      "value": "Tested %2$s nodes from %1$d subscriptions"
+    },
+    {
+      "name": "scene_uhd_only",
+      "value": "4K nodes only"
+    },
+    {
+      "name": "scene_when_unavailable",
+      "value": "When a node is unavailable"
+    },
+    {
+      "name": "settings_accent_blue",
+      "value": "Blue"
+    },
+    {
+      "name": "settings_accent_green",
+      "value": "Green"
+    },
+    {
+      "name": "settings_accent_orange",
+      "value": "Orange"
+    },
+    {
+      "name": "settings_accent_pink",
+      "value": "Pink"
+    },
+    {
+      "name": "settings_keep_results",
+      "value": "Keep results"
+    },
+    {
+      "name": "settings_licenses",
+      "value": "Open-source licenses"
+    },
+    {
+      "name": "settings_local_data_note",
+      "value": "Subscriptions, nodes, and traffic data are stored only on this device."
+    },
+    {
+      "name": "settings_on_demand",
+      "value": "Connect on demand"
+    },
+    {
+      "name": "settings_save_failed",
+      "value": "Couldn’t save the setting"
+    },
+    {
+      "name": "settings_section_about",
+      "value": "About"
+    },
+    {
+      "name": "settings_section_connection",
+      "value": "Connection"
+    },
+    {
+      "name": "settings_section_privacy",
+      "value": "Privacy"
+    },
+    {
+      "name": "settings_section_storage",
+      "value": "Storage"
+    },
+    {
+      "name": "settings_section_testing",
+      "value": "Testing"
+    },
+    {
+      "name": "settings_share_diagnostics",
+      "value": "Share diagnostic data"
+    },
+    {
+      "name": "settings_source_code",
+      "value": "Source code"
+    },
+    {
+      "name": "settings_storage_detail",
+      "value": "Nodes %1$s · Rules %2$s · Available %3$s"
+    },
+    {
+      "name": "settings_storage_title",
+      "value": "Nodes & rules"
+    },
+    {
+      "name": "settings_test_wifi_only",
+      "value": "Test speed on Wi‑Fi only"
+    },
+    {
+      "name": "settings_trusted_wifi",
+      "value": "Trusted Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi_always_on",
+      "value": "Managed by the system’s Always‑on VPN"
+    },
+    {
+      "name": "settings_trusted_wifi_hint",
+      "value": "Disconnect automatically when joined"
+    },
+    {
+      "name": "settings_trusted_wifi_location",
+      "value": "Allow location access to recognize Wi‑Fi names"
+    },
+    {
+      "name": "settings_trusted_wifi_location_off",
+      "value": "Turn on system location to recognize Wi‑Fi names"
+    },
+    {
+      "name": "subs_add",
+      "value": "Add subscription"
+    },
+    {
+      "name": "subs_all_title",
+      "value": "All subscriptions"
+    },
+    {
+      "name": "subs_deleted",
+      "value": "Deleted %1$s"
+    },
+    {
+      "name": "subs_diff_updated",
+      "value": "%1$s updated"
+    },
+    {
+      "name": "subs_diff_updating",
+      "value": "Updating %1$s…"
+    },
+    {
+      "name": "subs_error_clipboard_empty",
+      "value": "The clipboard is empty"
+    },
+    {
+      "name": "subs_error_delete",
+      "value": "Couldn’t delete %1$s"
+    },
+    {
+      "name": "subs_error_fetch",
+      "value": "Couldn’t download this subscription. Check the link or your network."
+    },
+    {
+      "name": "subs_error_import_version",
+      "value": "This import code needs a newer version of Zephyr"
+    },
+    {
+      "name": "subs_error_invalid_file",
+      "value": "This isn’t a valid config file"
+    },
+    {
+      "name": "subs_error_invalid_link",
+      "value": "This isn’t a valid subscription link"
+    },
+    {
+      "name": "subs_error_read_file",
+      "value": "Couldn’t read this file"
+    },
+    {
+      "name": "subs_error_update",
+      "value": "Couldn’t update %1$s"
+    },
+    {
+      "name": "subs_error_update_all",
+      "value": "Couldn’t update subscriptions"
+    },
+    {
+      "name": "subs_hint_desktop",
+      "value": "On your computer, open Settings › Sync to phone in Zephyr to show the QR code"
+    },
+    {
+      "name": "subs_import_desktop",
+      "value": "Import from Zephyr on your computer"
+    },
+    {
+      "name": "subs_import_desktop_source",
+      "value": "Zephyr Desktop"
+    },
+    {
+      "name": "subs_import_insecure",
+      "value": "This link isn’t encrypted (http); its contents could be read or altered."
+    },
+    {
+      "name": "subs_import_source",
+      "value": "Source: %1$s"
+    },
+    {
+      "name": "subs_import_trust",
+      "value": "Only continue if you trust this provider."
+    },
+    {
+      "name": "subs_overrides_kept",
+      "value": "Overrides kept"
+    },
+    {
+      "name": "subs_paste_clipboard",
+      "value": "Paste from clipboard"
+    },
+    {
+      "name": "subs_paste_link",
+      "value": "Paste link"
+    },
+    {
+      "name": "subs_paste_placeholder",
+      "value": "Paste a subscription link"
+    },
+    {
+      "name": "subs_remaining",
+      "value": "Remaining"
+    },
+    {
+      "name": "subs_review_note",
+      "value": "Updating replaces the subscription’s nodes and rules. Zephyr’s overrides and scene choices stay the same."
+    },
+    {
+      "name": "subs_review_one",
+      "value": "%1$s will be updated"
+    },
+    {
+      "name": "subs_rule_changes",
+      "value": "Rule changes"
+    },
+    {
+      "name": "subs_scan_camera_needed",
+      "value": "Camera access is required to scan"
+    },
+    {
+      "name": "subs_scan_no_camera",
+      "value": "No camera is available on this device"
+    },
+    {
+      "name": "subs_scan_prompt",
+      "value": "Position the subscription QR code in the frame to scan it automatically."
+    },
+    {
+      "name": "subs_scan_qr",
+      "value": "Scan QR code"
+    },
+    {
+      "name": "subs_scenes_retested",
+      "value": "Scene pools retested"
+    },
+    {
+      "name": "subs_section_data",
+      "value": "Data"
+    },
+    {
+      "name": "subs_section_update",
+      "value": "Updates"
+    },
+    {
+      "name": "subs_show_changes",
+      "value": "Show changes before updating"
+    },
+    {
+      "name": "subs_swipe_confirm_delete",
+      "value": "Confirm delete"
+    },
+    {
+      "name": "subs_swipe_updating",
+      "value": "Updating"
+    },
+    {
+      "name": "subs_this_month",
+      "value": "This month"
+    },
+    {
+      "name": "subs_update_all",
+      "value": "Update all now"
+    },
+    {
+      "name": "subs_update_wifi_only",
+      "value": "Update on Wi‑Fi only"
+    },
+    {
+      "name": "term_accent",
+      "value": "Accent color"
+    },
+    {
+      "name": "term_all",
+      "value": "All"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Appearance"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Dark"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Light"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "System"
+    },
+    {
+      "name": "term_apply",
+      "value": "Apply"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Automatic updates"
+    },
+    {
+      "name": "term_delete",
+      "value": "Delete"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Diagnostics"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Disconnect"
+    },
+    {
+      "name": "term_domain",
+      "value": "Domain"
+    },
+    {
+      "name": "term_exit",
+      "value": "Exit"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "Exit IP"
+    },
+    {
+      "name": "term_import",
+      "value": "Import"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Import from file"
+    },
+    {
+      "name": "term_latency",
+      "value": "Latency"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Local proxy port"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Debug"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Error"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Info"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Warning"
+    },
+    {
+      "name": "term_logs",
+      "value": "Logs"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Direct"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Global"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Global mode"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Rule"
+    },
+    {
+      "name": "term_no_results",
+      "value": "No results"
+    },
+    {
+      "name": "term_node",
+      "value": "Node"
+    },
+    {
+      "name": "term_nodes",
+      "value": "Nodes"
+    },
+    {
+      "name": "term_none",
+      "value": "None"
+    },
+    {
+      "name": "term_off",
+      "value": "Off"
+    },
+    {
+      "name": "term_on",
+      "value": "On"
+    },
+    {
+      "name": "term_override",
+      "value": "Override"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proxy"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Require password"
+    },
+    {
+      "name": "term_rule",
+      "value": "Rule"
+    },
+    {
+      "name": "term_rules",
+      "value": "Rules"
+    },
+    {
+      "name": "term_scene",
+      "value": "Scene"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Scenes"
+    },
+    {
+      "name": "term_settings",
+      "value": "Settings"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Connecting"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Not connected"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Connection failed"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Subscription"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Subscriptions"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Switch mode"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Test again"
+    },
+    {
+      "name": "term_testing",
+      "value": "Testing"
+    },
+    {
+      "name": "term_today",
+      "value": "Today"
+    },
+    {
+      "name": "term_undo",
+      "value": "Undo"
+    },
+    {
+      "name": "term_update",
+      "value": "Update"
+    },
+    {
+      "name": "tile_a11y",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "today_date_pattern",
+      "value": "EEEE, MMMM d"
+    },
+    {
+      "name": "today_fastest",
+      "value": "ms fastest"
+    },
+    {
+      "name": "today_pattern_note",
+      "value": "The pattern is generated from today’s traffic and contains no node names or IP addresses."
+    },
+    {
+      "name": "today_save_failed",
+      "value": "Couldn’t save the image"
+    },
+    {
+      "name": "today_save_image",
+      "value": "Save image"
+    },
+    {
+      "name": "today_saved",
+      "value": "Saved to gallery"
+    },
+    {
+      "name": "today_storage_permission",
+      "value": "Storage permission is needed to save the image"
+    },
+    {
+      "name": "today_style_dawn",
+      "value": "Dawn"
+    },
+    {
+      "name": "today_style_mist",
+      "value": "Mist"
+    },
+    {
+      "name": "today_style_night",
+      "value": "Night"
+    },
+    {
+      "name": "trace_always_apply",
+      "value": "Always apply"
+    },
+    {
+      "name": "trace_always_apply_hint",
+      "value": "When off, only this connection changes"
+    },
+    {
+      "name": "trace_from",
+      "value": "From %1$s"
+    },
+    {
+      "name": "trace_option_unchanged",
+      "value": "No change"
+    },
+    {
+      "name": "trace_override_cleared",
+      "value": "Cleared route override for %1$s"
+    },
+    {
+      "name": "trace_override_direct",
+      "value": "%1$s now connects directly"
+    },
+    {
+      "name": "trace_override_error",
+      "value": "Couldn’t change the route. Try again."
+    },
+    {
+      "name": "trace_override_scene",
+      "value": "%1$s now uses %2$s"
+    },
+    {
+      "name": "trace_step_rule",
+      "value": "Rule"
+    },
+    {
+      "name": "trace_this_connection",
+      "value": "This connection"
+    },
+    {
+      "name": "trace_via",
+      "value": "Via %1$s"
+    },
+    {
+      "name": "trusted_wifi_add_hint",
+      "value": "Add Wi‑Fi name"
+    },
+    {
+      "name": "trusted_wifi_disconnect",
+      "value": "Disconnect on these Wi‑Fi networks"
+    },
+    {
+      "name": "trusted_wifi_footer",
+      "value": "On trusted networks like home or work, Zephyr disconnects automatically and reconnects on demand when you leave."
+    },
+    {
+      "name": "trusted_wifi_networks",
+      "value": "Networks"
+    },
+    {
+      "name": "widget_description",
+      "value": "Connection status, speed, and scenes"
+    },
+    {
+      "name": "widget_label",
+      "value": "Zephyr status"
+    },
+    {
+      "name": "widget_today",
+      "value": "Today %1$s %2$s"
+    },
+    {
+      "name": "widget_usage_description",
+      "value": "Today’s traffic and 24-hour breakdown"
+    },
+    {
+      "name": "widget_usage_label",
+      "value": "Zephyr usage today"
+    },
+    {
+      "name": "widgets_home_steps",
+      "value": "Touch and hold an empty spot on the home screen › Widgets › Zephyr, then drag one onto the home screen."
+    },
+    {
+      "name": "widgets_home_title",
+      "value": "Home screen widgets"
+    },
+    {
+      "name": "widgets_tile_steps",
+      "value": "Swipe down twice from the top of the screen › Edit › drag Zephyr into Quick Settings. Tap it to connect or disconnect."
+    },
+    {
+      "name": "widgets_tile_title",
+      "value": "Quick Settings tile"
+    },
+    {
+      "name": "ZephyrVpnExtAbility_desc",
+      "value": "Runs the Zephyr VPN tunnel and the embedded proxy core"
+    },
+    {
+      "name": "ZephyrVpnExtAbility_label",
+      "value": "Zephyr VPN"
+    }
+  ]
+}

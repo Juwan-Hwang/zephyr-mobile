@@ -1,0 +1,1464 @@
+{
+  "string": [
+    {
+      "name": "activity_back",
+      "value": "‹ الاتصالات الأخيرة"
+    },
+    {
+      "name": "activity_close_host_a11y",
+      "value": "إغلاق الاتصالات مع \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "activity_close_none",
+      "value": "لا توجد اتصالات نشطة"
+    },
+    {
+      "name": "activity_empty",
+      "value": "بعد الاتصال، تظهر هنا النطاقات التي زرتها مؤخرًا."
+    },
+    {
+      "name": "activity_host_a11y",
+      "value": "تفاصيل اتصال \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "activity_no_app_note",
+      "value": "لا يُعرف بعد التطبيق الذي أنشأ كل اتصال، لذا تُعرض النطاقات فقط."
+    },
+    {
+      "name": "activity_title",
+      "value": "الاتصالات الأخيرة"
+    },
+    {
+      "name": "command_chip_action",
+      "value": "الإجراء"
+    },
+    {
+      "name": "command_chip_region",
+      "value": "المنطقة"
+    },
+    {
+      "name": "command_chip_scene",
+      "value": "المشهد"
+    },
+    {
+      "name": "command_chip_scope",
+      "value": "النطاق"
+    },
+    {
+      "name": "command_chip_service",
+      "value": "الخدمة"
+    },
+    {
+      "name": "command_direct_note",
+      "value": "ستتجاوز حركة مرور \\u2068%1$s\\u2069 الوكيل."
+    },
+    {
+      "name": "command_direct_title",
+      "value": "اتصال \\u2068%1$s\\u2069 مباشرةً"
+    },
+    {
+      "name": "command_no_nodes_available",
+      "value": "لا توجد عقد متاحة"
+    },
+    {
+      "name": "command_placeholder",
+      "value": "البحث أو إدخال أمر"
+    },
+    {
+      "name": "command_plan_exit_title",
+      "value": "يستخدم \\u2068%1$s\\u2069 عقد \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "command_plan_fallback_pause",
+      "value": "إذا لم تتوفر أي عقدة في \\u2068%1$s\\u2069، فسيتوقف \\u2068%2$s\\u2069 مؤقتًا."
+    },
+    {
+      "name": "command_plan_fallback_scene",
+      "value": "إذا لم تتوفر أي عقدة في \\u2068%1$s\\u2069، فستُستخدم عقد أخرى من المشهد."
+    },
+    {
+      "name": "command_plan_no_nodes",
+      "value": "لا توجد عقد في \\u2068%2$s\\u2069 ضمن \\u2068%1$s\\u2069."
+    },
+    {
+      "name": "command_plan_releases_pin",
+      "value": "سيتوقف \\u2068%1$s\\u2069 عن استخدام مخرجه الثابت \\u2068%2$s\\u2069."
+    },
+    {
+      "name": "command_region_de",
+      "value": "ألمانيا"
+    },
+    {
+      "name": "command_region_gb",
+      "value": "المملكة المتحدة"
+    },
+    {
+      "name": "command_region_hk",
+      "value": "هونغ كونغ"
+    },
+    {
+      "name": "command_region_jp",
+      "value": "اليابان"
+    },
+    {
+      "name": "command_region_kr",
+      "value": "كوريا"
+    },
+    {
+      "name": "command_region_sg",
+      "value": "سنغافورة"
+    },
+    {
+      "name": "command_region_tw",
+      "value": "تايوان"
+    },
+    {
+      "name": "command_region_us",
+      "value": "الولايات المتحدة"
+    },
+    {
+      "name": "command_scene_ai",
+      "value": "مشهد الذكاء الاصطناعي"
+    },
+    {
+      "name": "command_scene_named",
+      "value": "مشهد \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "command_section_command",
+      "value": "الأوامر"
+    },
+    {
+      "name": "command_section_suggestions",
+      "value": "اقتراحات"
+    },
+    {
+      "name": "command_see_all_nodes",
+      "value": "عرض كل العقد (\\u2068%1$s\\u2069) في مكتبة العقد"
+    },
+    {
+      "name": "command_test_rule",
+      "value": "إلى أين يذهب \\u2068%1$s\\u2069؟"
+    },
+    {
+      "name": "command_uhd_auto_note",
+      "value": "من الآن فصاعدًا، سيختار التبديل التلقائي من عقد 4K فقط."
+    },
+    {
+      "name": "command_uhd_clear_note",
+      "value": "يستخدم مشهد \\u2068%1$s\\u2069 عقد 4K فقط. ستُستخدم كل العقد مجددًا، وتبقى العقدة الحالية."
+    },
+    {
+      "name": "command_uhd_fastest",
+      "value": "أسرع عقدة 4K"
+    },
+    {
+      "name": "command_uhd_none",
+      "value": "لا توجد عقدة تدعم 4K."
+    },
+    {
+      "name": "command_uhd_title_all",
+      "value": "\\u2068%1$s\\u2069: كل العقد"
+    },
+    {
+      "name": "command_uhd_title_only",
+      "value": "\\u2068%1$s\\u2069: عقد 4K فقط"
+    },
+    {
+      "name": "command_zephyr_only",
+      "value": "يسري في Zephyr فقط، ولا يتغيّر إعداد اشتراكك."
+    },
+    {
+      "name": "common_add",
+      "value": "إضافة"
+    },
+    {
+      "name": "common_adding",
+      "value": "جارٍ الإضافة…"
+    },
+    {
+      "name": "common_back_to",
+      "value": "رجوع إلى \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "common_cancel",
+      "value": "إلغاء"
+    },
+    {
+      "name": "common_change",
+      "value": "تغيير"
+    },
+    {
+      "name": "common_connect",
+      "value": "اتصال"
+    },
+    {
+      "name": "common_current",
+      "value": "الحالية"
+    },
+    {
+      "name": "common_direct",
+      "value": "مباشر"
+    },
+    {
+      "name": "common_exit_ip_changes",
+      "value": "سيتغيّر عنوان IP للخروج"
+    },
+    {
+      "name": "common_home",
+      "value": "الرئيسية"
+    },
+    {
+      "name": "common_library",
+      "value": "المكتبة"
+    },
+    {
+      "name": "common_list_separator",
+      "value": "\\u2068%1$s\\u2069، \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "common_local_data_note",
+      "value": "تُحفظ الاشتراكات وبيانات حركة المرور على هذا الجهاز فقط."
+    },
+    {
+      "name": "common_local_network",
+      "value": "شبكة هذا الجهاز"
+    },
+    {
+      "name": "common_mode_direct_hint",
+      "value": "تجاوز الوكيل"
+    },
+    {
+      "name": "common_mode_global_hint",
+      "value": "كل حركة المرور عبر عقدة واحدة"
+    },
+    {
+      "name": "common_mode_rule_hint",
+      "value": "توجيه حسب المشهد"
+    },
+    {
+      "name": "common_open_settings",
+      "value": "فتح الإعدادات"
+    },
+    {
+      "name": "common_pair_and",
+      "value": "\\u2068%1$s\\u2069 و\\u2068%2$s\\u2069"
+    },
+    {
+      "name": "common_retesting",
+      "value": "جارٍ الاختبار…"
+    },
+    {
+      "name": "common_scene_ai",
+      "value": "الذكاء الاصطناعي"
+    },
+    {
+      "name": "common_scene_other",
+      "value": "أخرى"
+    },
+    {
+      "name": "common_scene_video",
+      "value": "الفيديو"
+    },
+    {
+      "name": "common_share",
+      "value": "مشاركة"
+    },
+    {
+      "name": "common_source_auto",
+      "value": "اختيارات Zephyr"
+    },
+    {
+      "name": "common_source_group",
+      "value": "مجموعة الاشتراك"
+    },
+    {
+      "name": "common_status_connected",
+      "value": "متصل"
+    },
+    {
+      "name": "common_status_connecting_ellipsis",
+      "value": "جارٍ الاتصال…"
+    },
+    {
+      "name": "common_status_disconnecting",
+      "value": "جارٍ قطع الاتصال"
+    },
+    {
+      "name": "common_try_again",
+      "value": "حاول مرة أخرى"
+    },
+    {
+      "name": "common_updating",
+      "value": "جارٍ التحديث…"
+    },
+    {
+      "name": "connect_no_subscription",
+      "value": "لا يوجد اشتراك بعد"
+    },
+    {
+      "name": "home_action_load_nodes",
+      "value": "تحميل العقد"
+    },
+    {
+      "name": "home_action_preview_exit",
+      "value": "معاينة المخرج"
+    },
+    {
+      "name": "home_action_retest",
+      "value": "إعادة الاختبار"
+    },
+    {
+      "name": "home_action_switch_exit",
+      "value": "تبديل المخرج"
+    },
+    {
+      "name": "home_action_switch_mode",
+      "value": "تبديل الوضع"
+    },
+    {
+      "name": "home_action_switch_node",
+      "value": "تبديل العقدة"
+    },
+    {
+      "name": "home_action_switch_source",
+      "value": "تبديل المصدر"
+    },
+    {
+      "name": "home_action_undo",
+      "value": "التراجع"
+    },
+    {
+      "name": "home_apply_failed",
+      "value": "تعذّر التطبيق: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_confirm_apps",
+      "value": "تغيير عنوان IP للخروج في \\u2068%1$s\\u2069؟"
+    },
+    {
+      "name": "home_confirm_scene",
+      "value": "تغيير عنوان IP للخروج في مشهد \\u2068%1$s\\u2069؟"
+    },
+    {
+      "name": "home_confirm_unchanged",
+      "value": "سيبقى \\u2068%1$s\\u2069 كما هو."
+    },
+    {
+      "name": "home_error_failed",
+      "value": "تعذّر \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_error_node_gone",
+      "value": "تعذّر \\u2068%1$s\\u2069: لم تعد العقدة موجودة"
+    },
+    {
+      "name": "home_error_not_connected",
+      "value": "اتصل أولًا من أجل \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_failover_none",
+      "value": "مخرج \\u2068%1$s\\u2069 لا يستجيب. لن يتغيّر عنوان IP للخروج تلقائيًا."
+    },
+    {
+      "name": "home_failover_switched",
+      "value": "تم تبديل مخرج \\u2068%1$s\\u2069 تلقائيًا إلى \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "home_failure_core",
+      "value": "تعذّر تشغيل النواة"
+    },
+    {
+      "name": "home_failure_network",
+      "value": "الشبكة غير متاحة"
+    },
+    {
+      "name": "home_failure_no_subscription",
+      "value": "أضف اشتراكًا أولًا"
+    },
+    {
+      "name": "home_failure_vpn_permission",
+      "value": "يلزم إذن VPN"
+    },
+    {
+      "name": "home_global_body",
+      "value": "تمر كل حركة المرور عبر \\u2068%1$s\\u2069. المشاهد متوقفة مؤقتًا."
+    },
+    {
+      "name": "home_global_body_any",
+      "value": "تمر كل حركة المرور عبر عقدة واحدة. المشاهد متوقفة مؤقتًا."
+    },
+    {
+      "name": "home_global_change_node",
+      "value": "تغيير العقدة"
+    },
+    {
+      "name": "home_global_change_note",
+      "value": "ستخرج كل التطبيقات عبر \\u2068%1$s\\u2069."
+    },
+    {
+      "name": "home_global_change_to",
+      "value": "التغيير إلى \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_global_use_rule",
+      "value": "استخدام وضع القاعدة"
+    },
+    {
+      "name": "home_now_all_nodes",
+      "value": "\\u2068%1$s\\u2069: كل العقد مجددًا"
+    },
+    {
+      "name": "home_now_direct",
+      "value": "يتصل \\u2068%1$s\\u2069 الآن مباشرةً"
+    },
+    {
+      "name": "home_now_uhd_only",
+      "value": "يستخدم \\u2068%1$s\\u2069 الآن عقد 4K فقط"
+    },
+    {
+      "name": "home_now_uses",
+      "value": "يستخدم \\u2068%1$s\\u2069 الآن \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "home_now_uses_uhd",
+      "value": "يستخدم \\u2068%1$s\\u2069 الآن \\u2068%2$s\\u2069 (4K فقط)"
+    },
+    {
+      "name": "home_pin_line",
+      "value": "%1$s: %2$s"
+    },
+    {
+      "name": "home_scan_progress",
+      "value": "جارٍ الاختبار \\u2066%1$d/%2$d\\u2069"
+    },
+    {
+      "name": "home_scan_running",
+      "value": "جارٍ الاختبار…"
+    },
+    {
+      "name": "home_scene_details_a11y",
+      "value": "تفاصيل مشهد \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_scene_next_region",
+      "value": "المنطقة التالية: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_scene_prev_region",
+      "value": "المنطقة السابقة: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_scene_services_down",
+      "value": "\\u2068%1$s\\u2069 غير متاح"
+    },
+    {
+      "name": "home_scene_services_ok",
+      "value": "\\u2068%1$s\\u2069 متاح"
+    },
+    {
+      "name": "home_scenes_tested",
+      "value": "اختُبرت \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_scrub_hint",
+      "value": "اسحب يمينًا أو يسارًا لتغيير المنطقة"
+    },
+    {
+      "name": "home_spark_a11y",
+      "value": "سرعة التنزيل خلال آخر 90 ثانية"
+    },
+    {
+      "name": "home_switched_to",
+      "value": "تم التبديل إلى \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_today_usage",
+      "value": "اليوم \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "library_widgets",
+      "value": "الأدوات والإعدادات السريعة"
+    },
+    {
+      "name": "licenses_intro",
+      "value": "الشيفرة الخاصة بـ Zephyr مرخّصة بموجب MIT. يتضمن التطبيق mihomo ‏(GPL-3.0)، لذا يُوزَّع التطبيق ككل بموجب GPL-3.0. الشيفرة المصدرية المقابلة: %1$s، الوسم %2$s."
+    },
+    {
+      "name": "licenses_section_app",
+      "value": "ترخيص Zephyr"
+    },
+    {
+      "name": "licenses_section_notices",
+      "value": "إشعارات الجهات الخارجية"
+    },
+    {
+      "name": "licenses_section_texts",
+      "value": "نصوص التراخيص"
+    },
+    {
+      "name": "licenses_unavailable",
+      "value": "ملفات التراخيص غير موجودة في هذا الإصدار."
+    },
+    {
+      "name": "local_proxy_apply_failed",
+      "value": "تعذّر تطبيق التغيير"
+    },
+    {
+      "name": "local_proxy_auth_footer",
+      "value": "عند التشغيل، يتطلب الاتصال بالمنفذ المحلي اسم مستخدم وكلمة سر، مما يمنع التطبيقات الأخرى من استخدام الوكيل دون إذن."
+    },
+    {
+      "name": "local_proxy_conceal",
+      "value": "إخفاء كلمة المرور"
+    },
+    {
+      "name": "local_proxy_concealed",
+      "value": "كلمة المرور مخفية"
+    },
+    {
+      "name": "local_proxy_copied",
+      "value": "تم النسخ"
+    },
+    {
+      "name": "local_proxy_copy_http",
+      "value": "نسخ عنوان وكيل HTTP"
+    },
+    {
+      "name": "local_proxy_copy_socks",
+      "value": "نسخ عنوان وكيل SOCKS5"
+    },
+    {
+      "name": "local_proxy_credential_row",
+      "value": "كلمة المرور"
+    },
+    {
+      "name": "local_proxy_credentials",
+      "value": "بيانات الاتصال"
+    },
+    {
+      "name": "local_proxy_footer",
+      "value": "عند التشغيل، يستمع Zephyr على 127.0.0.1 فقط، فلا يمكن للأجهزة الأخرى على شبكتك الاتصال به."
+    },
+    {
+      "name": "local_proxy_port",
+      "value": "المنفذ"
+    },
+    {
+      "name": "local_proxy_port_footer",
+      "value": "يمكن للتطبيقات الأخرى استخدام قواعد Zephyr ومشاهده عبر هذا المنفذ على 127.0.0.1."
+    },
+    {
+      "name": "local_proxy_port_invalid",
+      "value": "أدخل منفذًا من %1$d إلى %2$d"
+    },
+    {
+      "name": "local_proxy_regenerate",
+      "value": "إنشاء كلمة مرور جديدة"
+    },
+    {
+      "name": "local_proxy_regenerate_footer",
+      "value": "بعد الإنشاء تتوقف كلمة المرور القديمة عن العمل فورًا، وتحتاج التطبيقات التي أعددتها إلى الجديدة."
+    },
+    {
+      "name": "local_proxy_regenerated",
+      "value": "تم إنشاء كلمة مرور جديدة"
+    },
+    {
+      "name": "local_proxy_reveal",
+      "value": "إظهار كلمة المرور"
+    },
+    {
+      "name": "local_proxy_security",
+      "value": "الأمان"
+    },
+    {
+      "name": "local_proxy_user_row",
+      "value": "اسم المستخدم"
+    },
+    {
+      "name": "logs_clear",
+      "value": "مسح"
+    },
+    {
+      "name": "logs_empty",
+      "value": "لا توجد سجلات بعد"
+    },
+    {
+      "name": "logs_line_a11y",
+      "value": "%1$s %2$s %3$s"
+    },
+    {
+      "name": "logs_pause",
+      "value": "إيقاف مؤقت"
+    },
+    {
+      "name": "logs_resume",
+      "value": "استئناف"
+    },
+    {
+      "name": "nodes_detail_latency",
+      "value": "التأخير"
+    },
+    {
+      "name": "nodes_detail_protocol",
+      "value": "البروتوكول"
+    },
+    {
+      "name": "nodes_detail_route",
+      "value": "المسار"
+    },
+    {
+      "name": "nodes_detail_server",
+      "value": "الخادم"
+    },
+    {
+      "name": "nodes_detail_test",
+      "value": "اختبار التأخير"
+    },
+    {
+      "name": "nodes_empty_action",
+      "value": "استيراد اشتراك"
+    },
+    {
+      "name": "nodes_empty_message",
+      "value": "استورد اشتراكًا وستظهر عقده هنا"
+    },
+    {
+      "name": "nodes_empty_title",
+      "value": "لا توجد عقد بعد"
+    },
+    {
+      "name": "nodes_error_title",
+      "value": "تعذّر تحميل العقد"
+    },
+    {
+      "name": "nodes_jump_to",
+      "value": "الانتقال إلى \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "nodes_no_match",
+      "value": "لا توجد عقد تطابق «\\u2068%1$s\\u2069»"
+    },
+    {
+      "name": "nodes_search_placeholder",
+      "value": "منطقة أو مدينة أو مسار"
+    },
+    {
+      "name": "nodes_search_stats",
+      "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_tested",
+      "value": "تم اختبار \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "notif_action_global",
+      "value": "الوضع الشامل"
+    },
+    {
+      "name": "notif_action_rule",
+      "value": "وضع القاعدة"
+    },
+    {
+      "name": "notif_channel_alerts",
+      "value": "تنبيهات الاشتراك"
+    },
+    {
+      "name": "notif_channel_alerts_desc",
+      "value": "انتهاء الاشتراك وانخفاض البيانات المتبقية"
+    },
+    {
+      "name": "notif_channel_vpn",
+      "value": "حالة الاتصال"
+    },
+    {
+      "name": "notif_channel_vpn_desc",
+      "value": "يعرض السرعة والمشاهد أثناء الاتصال"
+    },
+    {
+      "name": "notif_expiry_text",
+      "value": "المتبقي \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "notif_expiry_title",
+      "value": "ينتهي \\u2068%1$s\\u2069 في \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "notif_paused_trusted",
+      "value": "تم قطع الاتصال على شبكة Wi‑Fi الموثوقة «%1$s». ستتم إعادة الاتصال تلقائيًا عند مغادرتها."
+    },
+    {
+      "name": "notif_route_global",
+      "value": "شامل · \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "notif_route_global_any",
+      "value": "كل حركة المرور عبر عقدة واحدة"
+    },
+    {
+      "name": "onboarding_cancel_import_a11y",
+      "value": "إلغاء الاستيراد"
+    },
+    {
+      "name": "onboarding_change_later",
+      "value": "يمكنك تغيير ذلك في أي وقت من الإعدادات."
+    },
+    {
+      "name": "onboarding_choose_mode",
+      "value": "اختر وضعًا"
+    },
+    {
+      "name": "onboarding_continue",
+      "value": "متابعة"
+    },
+    {
+      "name": "onboarding_optimized",
+      "value": "مُحسَّن"
+    },
+    {
+      "name": "onboarding_optimized_desc",
+      "value": "يختبر العقد يوميًا عبر Wi‑Fi، ولا يستخدم مشهدا الذكاء الاصطناعي والفيديو إلا العقد التي تجتاز الاختبار. نحو 3 MB في كل مرة."
+    },
+    {
+      "name": "onboarding_simple",
+      "value": "بسيط"
+    },
+    {
+      "name": "onboarding_simple_desc",
+      "value": "يستخدم المجموعات الموجودة في اشتراكك، ويتعامل تلقائيًا مع العقد غير المتاحة."
+    },
+    {
+      "name": "rules_add_override_a11y",
+      "value": "إضافة تجاوز لنطاق"
+    },
+    {
+      "name": "rules_blocked",
+      "value": "محظور"
+    },
+    {
+      "name": "rules_kind_ip",
+      "value": "IP"
+    },
+    {
+      "name": "rules_kind_other",
+      "value": "أخرى"
+    },
+    {
+      "name": "rules_match_order",
+      "value": "ترتيب المطابقة"
+    },
+    {
+      "name": "rules_note",
+      "value": "تُجمَّع مجموعات القواعد على الجهاز في فهرس للقراءة فقط، وتُقرأ من القرص عند الحاجة. تبقى التجاوزات كما هي عند تحديث الاشتراكات."
+    },
+    {
+      "name": "rules_other_traffic",
+      "value": "كل حركة المرور الأخرى"
+    },
+    {
+      "name": "rules_step_layer",
+      "value": "الطبقة %1$d · \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "rules_step_request",
+      "value": "الطلب"
+    },
+    {
+      "name": "rules_step_result",
+      "value": "النتيجة"
+    },
+    {
+      "name": "rules_step_scene",
+      "value": "المشهد · \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "rules_test_hint",
+      "value": "أدخل نطاقًا أو عنوان IP لمعرفة القاعدة المطابقة والمخرج."
+    },
+    {
+      "name": "rules_test_placeholder",
+      "value": "اختبار نطاق أو IP"
+    },
+    {
+      "name": "rules_took",
+      "value": "استغرق \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "rules_top_to_bottom",
+      "value": "من الأعلى إلى الأسفل"
+    },
+    {
+      "name": "scene_ask",
+      "value": "اسألني"
+    },
+    {
+      "name": "scene_auto_switch",
+      "value": "التبديل تلقائيًا"
+    },
+    {
+      "name": "scene_funnel_reachable",
+      "value": "قابلة للاتصال"
+    },
+    {
+      "name": "scene_funnel_tested",
+      "value": "مختبرة"
+    },
+    {
+      "name": "scene_funnel_under",
+      "value": "أقل من %1$d ms"
+    },
+    {
+      "name": "scene_node_scope",
+      "value": "نطاق العقد"
+    },
+    {
+      "name": "scene_note",
+      "value": "تُحفظ الاختيارات في Zephyr فقط، ولا يتغيّر إعداد اشتراكك."
+    },
+    {
+      "name": "scene_note_tested",
+      "value": "\\u2068%1$s\\u2069 آخر اختبار: \\u2068%2$s\\u2069."
+    },
+    {
+      "name": "scene_pinned_for",
+      "value": "مثبّتة لتطبيق \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "scene_pinned_value",
+      "value": "\\u2068%1$s\\u2069 (مثبّتة)"
+    },
+    {
+      "name": "scene_test_daily",
+      "value": "يوميًا"
+    },
+    {
+      "name": "scene_test_frequency",
+      "value": "تكرار الاختبار"
+    },
+    {
+      "name": "scene_test_wifi_only",
+      "value": "%1$s (Wi‑Fi فقط)"
+    },
+    {
+      "name": "scene_tested_from_pool",
+      "value": "تم اختبار %2$s عقدة من %1$d اشتراك"
+    },
+    {
+      "name": "scene_uhd_only",
+      "value": "عقد 4K فقط"
+    },
+    {
+      "name": "scene_when_unavailable",
+      "value": "عند تعذّر الوصول إلى عقدة"
+    },
+    {
+      "name": "settings_accent_blue",
+      "value": "أزرق"
+    },
+    {
+      "name": "settings_accent_green",
+      "value": "أخضر"
+    },
+    {
+      "name": "settings_accent_orange",
+      "value": "برتقالي"
+    },
+    {
+      "name": "settings_accent_pink",
+      "value": "وردي"
+    },
+    {
+      "name": "settings_keep_results",
+      "value": "الاحتفاظ بالنتائج"
+    },
+    {
+      "name": "settings_licenses",
+      "value": "تراخيص المصادر المفتوحة"
+    },
+    {
+      "name": "settings_local_data_note",
+      "value": "تُحفظ الاشتراكات والعقد وبيانات حركة المرور على هذا الجهاز فقط."
+    },
+    {
+      "name": "settings_on_demand",
+      "value": "الاتصال عند الطلب"
+    },
+    {
+      "name": "settings_save_failed",
+      "value": "تعذّر حفظ الإعداد"
+    },
+    {
+      "name": "settings_section_about",
+      "value": "حول"
+    },
+    {
+      "name": "settings_section_connection",
+      "value": "الاتصال"
+    },
+    {
+      "name": "settings_section_privacy",
+      "value": "الخصوصية"
+    },
+    {
+      "name": "settings_section_storage",
+      "value": "التخزين"
+    },
+    {
+      "name": "settings_section_testing",
+      "value": "الاختبار"
+    },
+    {
+      "name": "settings_share_diagnostics",
+      "value": "مشاركة بيانات التشخيص"
+    },
+    {
+      "name": "settings_source_code",
+      "value": "الشيفرة المصدرية"
+    },
+    {
+      "name": "settings_storage_detail",
+      "value": "العقد \\u2068%1$s\\u2069 · القواعد \\u2068%2$s\\u2069 · المتاح \\u2068%3$s\\u2069"
+    },
+    {
+      "name": "settings_storage_title",
+      "value": "العقد والقواعد"
+    },
+    {
+      "name": "settings_test_wifi_only",
+      "value": "اختبار السرعة عبر Wi‑Fi فقط"
+    },
+    {
+      "name": "settings_trusted_wifi",
+      "value": "شبكات Wi‑Fi الموثوقة"
+    },
+    {
+      "name": "settings_trusted_wifi_always_on",
+      "value": "تتم إدارته بواسطة «VPN الدائم التشغيل» في النظام"
+    },
+    {
+      "name": "settings_trusted_wifi_hint",
+      "value": "قطع الاتصال تلقائيًا عند الانضمام إليها"
+    },
+    {
+      "name": "settings_trusted_wifi_location",
+      "value": "اسمح بالوصول إلى الموقع للتعرّف على أسماء شبكات Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi_location_off",
+      "value": "شغّل خدمة الموقع في النظام للتعرّف على أسماء شبكات Wi‑Fi"
+    },
+    {
+      "name": "subs_add",
+      "value": "إضافة اشتراك"
+    },
+    {
+      "name": "subs_all_title",
+      "value": "كل الاشتراكات"
+    },
+    {
+      "name": "subs_deleted",
+      "value": "تم حذف \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "subs_diff_updated",
+      "value": "تم تحديث \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "subs_diff_updating",
+      "value": "جارٍ تحديث \\u2068%1$s\\u2069…"
+    },
+    {
+      "name": "subs_error_clipboard_empty",
+      "value": "الحافظة فارغة"
+    },
+    {
+      "name": "subs_error_delete",
+      "value": "تعذّر حذف \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "subs_error_fetch",
+      "value": "تعذّر تنزيل هذا الاشتراك. تحقّق من الرابط أو من اتصالك بالشبكة."
+    },
+    {
+      "name": "subs_error_import_version",
+      "value": "يتطلب رمز الاستيراد هذا إصدارًا أحدث من Zephyr"
+    },
+    {
+      "name": "subs_error_invalid_file",
+      "value": "هذا ليس ملف إعداد صالحًا"
+    },
+    {
+      "name": "subs_error_invalid_link",
+      "value": "هذا ليس رابط اشتراك صالحًا"
+    },
+    {
+      "name": "subs_error_read_file",
+      "value": "تعذّرت قراءة هذا الملف"
+    },
+    {
+      "name": "subs_error_update",
+      "value": "تعذّر تحديث \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "subs_error_update_all",
+      "value": "تعذّر تحديث الاشتراكات"
+    },
+    {
+      "name": "subs_hint_desktop",
+      "value": "على حاسوبك، افتح الإعدادات › المزامنة مع الهاتف في Zephyr لعرض رمز QR"
+    },
+    {
+      "name": "subs_import_desktop",
+      "value": "استيراد من Zephyr على حاسوبك"
+    },
+    {
+      "name": "subs_import_desktop_source",
+      "value": "Zephyr لسطح المكتب"
+    },
+    {
+      "name": "subs_import_insecure",
+      "value": "هذا الرابط غير مشفّر (http)؛ قد تُقرأ محتوياته أو تُعدَّل."
+    },
+    {
+      "name": "subs_import_source",
+      "value": "المصدر: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "subs_import_trust",
+      "value": "تابع فقط إذا كنت تثق بهذا المزوّد."
+    },
+    {
+      "name": "subs_overrides_kept",
+      "value": "تم الاحتفاظ بالتجاوزات"
+    },
+    {
+      "name": "subs_paste_clipboard",
+      "value": "لصق من الحافظة"
+    },
+    {
+      "name": "subs_paste_link",
+      "value": "لصق الرابط"
+    },
+    {
+      "name": "subs_paste_placeholder",
+      "value": "لصق رابط اشتراك"
+    },
+    {
+      "name": "subs_remaining",
+      "value": "المتبقي"
+    },
+    {
+      "name": "subs_review_note",
+      "value": "يستبدل التحديث عقد الاشتراك وقواعده. تبقى تجاوزات Zephyr واختيارات المشاهد كما هي."
+    },
+    {
+      "name": "subs_review_one",
+      "value": "سيتم تحديث \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "subs_rule_changes",
+      "value": "تغييرات القواعد"
+    },
+    {
+      "name": "subs_scan_camera_needed",
+      "value": "يلزم الوصول إلى الكاميرا للمسح"
+    },
+    {
+      "name": "subs_scan_no_camera",
+      "value": "لا تتوفر كاميرا على هذا الجهاز"
+    },
+    {
+      "name": "subs_scan_prompt",
+      "value": "ضع رمز QR للاشتراك داخل الإطار لمسحه تلقائيًا."
+    },
+    {
+      "name": "subs_scan_qr",
+      "value": "مسح رمز QR"
+    },
+    {
+      "name": "subs_scenes_retested",
+      "value": "أُعيد اختبار مجموعات المشاهد"
+    },
+    {
+      "name": "subs_section_data",
+      "value": "البيانات"
+    },
+    {
+      "name": "subs_section_update",
+      "value": "التحديثات"
+    },
+    {
+      "name": "subs_show_changes",
+      "value": "عرض التغييرات قبل التحديث"
+    },
+    {
+      "name": "subs_swipe_confirm_delete",
+      "value": "تأكيد الحذف"
+    },
+    {
+      "name": "subs_swipe_updating",
+      "value": "جارٍ التحديث…"
+    },
+    {
+      "name": "subs_this_month",
+      "value": "هذا الشهر"
+    },
+    {
+      "name": "subs_update_all",
+      "value": "تحديث الكل الآن"
+    },
+    {
+      "name": "subs_update_wifi_only",
+      "value": "التحديث عبر Wi‑Fi فقط"
+    },
+    {
+      "name": "term_accent",
+      "value": "لون التمييز"
+    },
+    {
+      "name": "term_all",
+      "value": "الكل"
+    },
+    {
+      "name": "term_appearance",
+      "value": "المظهر"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "داكن"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "فاتح"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "النظام"
+    },
+    {
+      "name": "term_apply",
+      "value": "تطبيق"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "التحديث التلقائي"
+    },
+    {
+      "name": "term_delete",
+      "value": "حذف"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "التشخيص"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "قطع الاتصال"
+    },
+    {
+      "name": "term_domain",
+      "value": "نطاق"
+    },
+    {
+      "name": "term_exit",
+      "value": "المخرج"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "عنوان IP للخروج"
+    },
+    {
+      "name": "term_import",
+      "value": "استيراد"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "استيراد من ملف"
+    },
+    {
+      "name": "term_latency",
+      "value": "التأخير"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "منفذ الوكيل المحلي"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "تصحيح"
+    },
+    {
+      "name": "term_log_error",
+      "value": "خطأ"
+    },
+    {
+      "name": "term_log_info",
+      "value": "معلومات"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "تحذير"
+    },
+    {
+      "name": "term_logs",
+      "value": "السجلات"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "مباشر"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "شامل"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "الوضع الشامل"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "القاعدة"
+    },
+    {
+      "name": "term_no_results",
+      "value": "لا توجد نتائج"
+    },
+    {
+      "name": "term_node",
+      "value": "العقدة"
+    },
+    {
+      "name": "term_nodes",
+      "value": "العقد"
+    },
+    {
+      "name": "term_none",
+      "value": "بلا"
+    },
+    {
+      "name": "term_off",
+      "value": "معطّل"
+    },
+    {
+      "name": "term_on",
+      "value": "مفعّل"
+    },
+    {
+      "name": "term_override",
+      "value": "تجاوز"
+    },
+    {
+      "name": "term_proxy",
+      "value": "الوكيل"
+    },
+    {
+      "name": "term_require_password",
+      "value": "طلب كلمة المرور"
+    },
+    {
+      "name": "term_rule",
+      "value": "القاعدة"
+    },
+    {
+      "name": "term_rules",
+      "value": "القواعد"
+    },
+    {
+      "name": "term_scene",
+      "value": "المشهد"
+    },
+    {
+      "name": "term_scenes",
+      "value": "المشاهد"
+    },
+    {
+      "name": "term_settings",
+      "value": "الإعدادات"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "جارٍ الاتصال"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "غير متصل"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "فشل الاتصال"
+    },
+    {
+      "name": "term_subscription",
+      "value": "اشتراك"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "الاشتراكات"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "تبديل الوضع"
+    },
+    {
+      "name": "term_test_again",
+      "value": "إعادة الاختبار"
+    },
+    {
+      "name": "term_testing",
+      "value": "جارٍ الاختبار"
+    },
+    {
+      "name": "term_today",
+      "value": "اليوم"
+    },
+    {
+      "name": "term_undo",
+      "value": "تراجع"
+    },
+    {
+      "name": "term_update",
+      "value": "تحديث"
+    },
+    {
+      "name": "tile_a11y",
+      "value": "\\u2068%1$s\\u2069، \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "today_date_pattern",
+      "value": "EEEE، d MMMM"
+    },
+    {
+      "name": "today_fastest",
+      "value": "أسرع زمن (ms)"
+    },
+    {
+      "name": "today_pattern_note",
+      "value": "يُولَّد النمط من حركة مرور اليوم، ولا يتضمن أسماء عقد أو عناوين IP."
+    },
+    {
+      "name": "today_save_failed",
+      "value": "تعذّر حفظ الصورة"
+    },
+    {
+      "name": "today_save_image",
+      "value": "حفظ الصورة"
+    },
+    {
+      "name": "today_saved",
+      "value": "تم الحفظ في المعرض"
+    },
+    {
+      "name": "today_storage_permission",
+      "value": "يلزم إذن التخزين لحفظ الصورة"
+    },
+    {
+      "name": "today_style_dawn",
+      "value": "فجر"
+    },
+    {
+      "name": "today_style_mist",
+      "value": "ضباب"
+    },
+    {
+      "name": "today_style_night",
+      "value": "ليل"
+    },
+    {
+      "name": "trace_always_apply",
+      "value": "التطبيق دائمًا"
+    },
+    {
+      "name": "trace_always_apply_hint",
+      "value": "عند إيقافه، يتغيّر هذا الاتصال فقط"
+    },
+    {
+      "name": "trace_from",
+      "value": "من \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "trace_option_unchanged",
+      "value": "بلا تغيير"
+    },
+    {
+      "name": "trace_override_cleared",
+      "value": "تم مسح تجاوز المسار لـ \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "trace_override_direct",
+      "value": "يتصل \\u2068%1$s\\u2069 الآن مباشرة"
+    },
+    {
+      "name": "trace_override_error",
+      "value": "تعذّر تغيير المسار. حاول مرة أخرى."
+    },
+    {
+      "name": "trace_override_scene",
+      "value": "يستخدم \\u2068%1$s\\u2069 الآن \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "trace_step_rule",
+      "value": "القاعدة"
+    },
+    {
+      "name": "trace_this_connection",
+      "value": "هذا الاتصال"
+    },
+    {
+      "name": "trace_via",
+      "value": "عبر \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "trusted_wifi_add_hint",
+      "value": "إضافة اسم Wi‑Fi"
+    },
+    {
+      "name": "trusted_wifi_disconnect",
+      "value": "قطع الاتصال على شبكات Wi‑Fi هذه"
+    },
+    {
+      "name": "trusted_wifi_footer",
+      "value": "على الشبكات الموثوقة مثل المنزل أو العمل، يقطع Zephyr الاتصال تلقائيًا، ثم يعيد الاتصال عند الحاجة بعد مغادرتها."
+    },
+    {
+      "name": "trusted_wifi_networks",
+      "value": "الشبكات"
+    },
+    {
+      "name": "widget_description",
+      "value": "حالة الاتصال والسرعة والمشاهد"
+    },
+    {
+      "name": "widget_label",
+      "value": "حالة Zephyr"
+    },
+    {
+      "name": "widget_today",
+      "value": "اليوم \\u2066%1$s %2$s\\u2069"
+    },
+    {
+      "name": "widget_usage_description",
+      "value": "حركة مرور اليوم وتوزيعها على 24 ساعة"
+    },
+    {
+      "name": "widget_usage_label",
+      "value": "استخدام Zephyr اليوم"
+    },
+    {
+      "name": "widgets_home_steps",
+      "value": "المس مكانًا فارغًا في الشاشة الرئيسية مع الاستمرار › الأدوات › Zephyr، ثم اسحب أداة إلى الشاشة الرئيسية."
+    },
+    {
+      "name": "widgets_home_title",
+      "value": "أدوات الشاشة الرئيسية"
+    },
+    {
+      "name": "widgets_tile_steps",
+      "value": "اسحب لأسفل مرتين من أعلى الشاشة › تعديل › اسحب Zephyr إلى الإعدادات السريعة. انقر عليه للاتصال أو قطع الاتصال."
+    },
+    {
+      "name": "widgets_tile_title",
+      "value": "مربع الإعدادات السريعة"
+    }
+  ]
+}

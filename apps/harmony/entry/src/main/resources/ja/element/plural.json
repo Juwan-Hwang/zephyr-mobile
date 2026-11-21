@@ -1,0 +1,310 @@
+{
+  "plural": [
+    {
+      "name": "common_node_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$s個のノード"
+        }
+      ]
+    },
+    {
+      "name": "common_available_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d個が利用可能"
+        }
+      ]
+    },
+    {
+      "name": "common_region_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d地域"
+        }
+      ]
+    },
+    {
+      "name": "home_subs_more",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "ほか%1$d件のサブスクリプション"
+        }
+      ]
+    },
+    {
+      "name": "home_scene_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$dシーン"
+        }
+      ]
+    },
+    {
+      "name": "scene_available_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "個のノードが利用可能"
+        }
+      ]
+    },
+    {
+      "name": "scene_tested_from",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d件のサブスクリプションからテスト"
+        }
+      ]
+    },
+    {
+      "name": "scene_test_every_hours",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d時間ごと"
+        }
+      ]
+    },
+    {
+      "name": "command_plan_exit_available",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d個が利用可能。%2$sを使用します。"
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_untested",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d個の 4K ノードがまだテストされていません。適用後にシーンを再テストしてください。"
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_keep",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d個中%2$d個が 4K に対応。現在のノードはそのままです。"
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_switch",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d個中%2$d個が 4K に対応。%3$sを使用します。"
+        }
+      ]
+    },
+    {
+      "name": "activity_closed",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d件の接続を閉じました"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_failed",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "接続を閉じられませんでした"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_partial",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d件の接続を閉じられませんでした"
+        }
+      ]
+    },
+    {
+      "name": "trace_connections",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d件の接続"
+        }
+      ]
+    },
+    {
+      "name": "trace_exit_stable",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d日間変化なし"
+        }
+      ]
+    },
+    {
+      "name": "nodes_total_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "個"
+        }
+      ]
+    },
+    {
+      "name": "nodes_from_subs",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d件のサブスクリプションから"
+        }
+      ]
+    },
+    {
+      "name": "rules_total_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "件"
+        }
+      ]
+    },
+    {
+      "name": "rules_summary",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$dレイヤー · コンパイル済み · ディスク使用量 %2$s"
+        }
+      ]
+    },
+    {
+      "name": "subs_added",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$sを追加しました（%2$s個のノード）"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_confirm_title",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d件のサブスクリプションをインポートしますか？"
+        }
+      ]
+    },
+    {
+      "name": "subs_added_many",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d件のサブスクリプションを追加しました"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_some_failed",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d件を追加できませんでした"
+        }
+      ]
+    },
+    {
+      "name": "subs_review_all",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$s件のサブスクリプションをすべて更新します"
+        }
+      ]
+    },
+    {
+      "name": "subs_updated_count",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d件のサブスクリプションを更新しました"
+        }
+      ]
+    },
+    {
+      "name": "subs_total_unit",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "件"
+        }
+      ]
+    },
+    {
+      "name": "subs_update_every",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d時間ごとに更新"
+        }
+      ]
+    },
+    {
+      "name": "subs_others",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "ほか%1$d件"
+        }
+      ]
+    },
+    {
+      "name": "subs_every_hours",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d時間ごと"
+        }
+      ]
+    },
+    {
+      "name": "settings_hours",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "%1$d時間"
+        }
+      ]
+    },
+    {
+      "name": "today_regions",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "地域"
+        }
+      ]
+    },
+    {
+      "name": "today_hours_online",
+      "value": [
+        {
+          "quantity": "other",
+          "value": "時間オンライン"
+        }
+      ]
+    }
+  ]
+}
