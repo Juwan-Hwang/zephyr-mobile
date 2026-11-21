@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.zephyr.app.R
+import com.zephyr.app.ui.common.LockupStyle
 import com.zephyr.app.ui.common.ZephyrLockup
 import com.zephyr.app.ui.common.hintRes
 import com.zephyr.app.ui.common.labelRes
@@ -69,7 +70,7 @@ fun HomeTopBar(status: ConnectionStatus, onSettings: () -> Unit) {
             },
         )
         Spacer(Modifier.width(6.dp))
-        ZephyrLockup()
+        ZephyrLockup(style = LockupStyle.Home)
         Spacer(Modifier.weight(1f))
         ZIconButton(ZIcons.Settings, stringResource(R.string.common_settings), onSettings, tint = c.text2)
     }
