@@ -50,6 +50,18 @@ object ZFormat {
 
     fun bytesText(b: Long): String = bytes(b).let { "${it.first} ${it.second}" }
 
+    /**
+     * [b] in the unit [like] would use, when that unit is GB or TB (one decimal, half-up); otherwise [bytesText].
+     * For a breakdown read side by side (设置 › 存储 "节点 0.6 GB · 规则 1.9 GB · 可用 3.1 GB", prototype / iOS; review
+     * And-6) so a small part isn't the only one in MB.
+     */
+    fun bytesTextIn(b: Long, like: Long): String {
+        val unit = BYTE_UNITS.indexOf(bytes(like).second)
+        if (unit < 3) return bytesText(b)
+        val v = java.math.BigDecimal(abs(b)).movePointLeft(3 * unit).setScale(1, java.math.RoundingMode.HALF_UP)
+        return "${v.toPlainString()} ${BYTE_UNITS[unit]}"
+    }
+
     /** "195 KB/s", "2.8 MB/s". */
     fun rateText(bps: Long): String = rate(bps).let { "${it.first} ${it.second}/s" }
 

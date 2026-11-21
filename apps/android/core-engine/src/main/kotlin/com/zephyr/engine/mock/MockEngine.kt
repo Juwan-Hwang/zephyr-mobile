@@ -33,7 +33,7 @@ import kotlin.math.sin
 class MockEngine(
     private val clock: () -> Long = System::currentTimeMillis,
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
-    demo: Boolean = false,
+    private val demo: Boolean = false,
     private val latencyScale: Double = 1.0,
     /** Where CPU-bound queries run. Tests pass Dispatchers.Unconfined so results land in the same frame. */
     private val compute: kotlinx.coroutines.CoroutineDispatcher = Dispatchers.Default,
@@ -53,7 +53,10 @@ class MockEngine(
     private val sceneState = MutableStateFlow(MockScenes.initial(clock()))
     private val subscriptionState = MutableStateFlow(MockSubscriptions.initial(clock()))
     // Demo keeps the prototype's trusted network; a real first install starts empty (audit #208 U7).
-    private val settingsState = MutableStateFlow(if (demo) Settings(trustedWifi = listOf("家"), disconnectOnTrusted = true) else Settings())
+    // Review And-6: demo settings match the prototype / iOS fixture (本地代理端口 7890, 无需密码).
+    private val settingsState = MutableStateFlow(
+        if (demo) Settings(trustedWifi = listOf("家"), disconnectOnTrusted = true, localProxyAuth = false) else Settings(),
+    )
     private val groupState = MutableStateFlow(MockGroups.initial(clock()))
     private val latencyBus = MutableSharedFlow<List<LatencyUpdate>>(extraBufferCapacity = 64)
     private val tested = ConcurrentHashMap<Long, Int>()
@@ -120,7 +123,10 @@ class MockEngine(
     override suspend fun recentTraffic(seconds: Int): List<TrafficSample> {
         val n = seconds.coerceIn(0, 300)
         val now = clock()
-        return List(n) { i -> sampleAt(now - (n - 1 - i) * 1_000L) }
+        val out = List(n) { i -> sampleAt(now - (n - 1 - i) * 1_000L) }
+        // Review And-6: in demo the newest reading is the prototype's home "2.8 MB/s ↓ · 194 KB/s ↑" (iOS
+        // MockFixtures.prototypeSample), so the two platforms' home screenshots compare value for value.
+        return if (demo && out.isNotEmpty()) out.dropLast(1) + TrafficSample(out.last().at, PROTOTYPE_UP_BPS, PROTOTYPE_DOWN_BPS) else out
     }
 
     override suspend fun usageToday(): UsageSummary {
@@ -519,6 +525,8 @@ class MockEngine(
         const val CONNECT_DELAY_MS = 600L
         const val DISCONNECT_DELAY_MS = 250L
         const val TODAY_BYTES = 1_800_000_000L
+        const val PROTOTYPE_DOWN_BPS = 2_800_000L
+        const val PROTOTYPE_UP_BPS = 194_000L
         const val BASE_TESTED = 41_280L
         const val FUNNEL_SOURCES = 2
         const val FUNNEL_POOL = 512

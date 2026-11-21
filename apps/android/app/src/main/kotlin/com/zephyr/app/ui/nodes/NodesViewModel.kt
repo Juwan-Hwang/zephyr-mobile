@@ -68,7 +68,8 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
         viewModelScope.launch {
             val idx = runCatching { engine.nodeIndex() }.getOrNull() ?: return@launch
             val chips = idx.sections.filter { it.count > 0 }.sortedByDescending { it.count }.take(8).map { it.region to it.count }
-            val subs = runCatching { engine.subscriptions().first().size }.getOrDefault(0)
+            // Review And-6: "来自 214 个订阅" counts every subscription (subscriptionsSummary), not just the loaded detail list.
+            val subs = runCatching { engine.subscriptionsSummary().count }.getOrDefault(0)
             _ui.value = _ui.value.copy(total = idx.total, regionCount = idx.sections.size, testedCount = idx.testedCount, chips = chips, subscriptionCount = subs)
         }
         viewModelScope.launch {
