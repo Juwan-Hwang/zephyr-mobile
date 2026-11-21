@@ -8,6 +8,7 @@ import commandParseTest from './CommandParse.test';
 import sceneSheetTest from './SceneSheet.test';
 import traceTest from './Trace.test';
 import todayTest from './Today.test';
+import vpnTest from './Vpn.test';
 
 export default function testsuite(): void {
   mockFixturesTest();
@@ -20,4 +21,5 @@ export default function testsuite(): void {
   sceneSheetTest();
   traceTest();
   todayTest();
+  vpnTest();
 }
