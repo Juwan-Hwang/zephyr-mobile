@@ -1,6 +1,7 @@
 package com.zephyr.app.screenshot
 
 import android.view.View
+import android.widget.RemoteViews
 import android.widget.FrameLayout
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -49,10 +50,70 @@ class WidgetScreenshotTest(private val dark: Boolean) {
         val ctx = paparazzi.context
         val rv = runBlocking { GlanceRemoteViews().compose(ctx, size) { GlanceTheme { content() } }.remoteViews }
         val host = FrameLayout(ctx)
-        val v = rv.apply(ctx, host)
+        val v = try { rv.apply(ctx, host) } catch (e: RemoteViews.ActionException) {
+            // layoutlib cannot run click wiring (PendingIntent responses); clicks draw nothing, so drop them and retry.
+            diag("first apply failed", e)
+            stripActions(rv) { it.javaClass.name.contains("Click", ignoreCase = true) || it.javaClass.name.contains("Response") || it.javaClass.name.contains("PendingIntent") }
+            try { rv.apply(ctx, host) } catch (e2: Exception) { diag("apply without click actions failed", e2); throw e2 }
+        }
         val d = ctx.resources.displayMetrics.density
         host.addView(v, FrameLayout.LayoutParams((size.width.value * d).toInt(), (size.height.value * d).toInt()))
         return host
+    }
+
+    /** Test-only: removes matching actions from [rv] and every RemoteViews nested in it (reflection; layoutlib has no hidden-API checks). */
+    private fun stripActions(rv: RemoteViews, drop: (Any) -> Boolean) {
+        val seen = java.util.IdentityHashMap<Any, Unit>()
+        fun walk(o: Any?) {
+            if (o == null || seen.put(o, Unit) != null) return
+            when (o) {
+                is RemoteViews -> {
+                    var c: Class<*>? = o.javaClass
+                    while (c != null && c != Any::class.java) {
+                        for (f in c.declaredFields) {
+                            if (java.lang.reflect.Modifier.isStatic(f.modifiers)) continue
+                            f.isAccessible = true
+                            val v = runCatching { f.get(o) }.getOrNull()
+                            if (f.name == "mActions" && v is MutableList<*>) {
+                                @Suppress("UNCHECKED_CAST") val l = v as MutableList<Any?>
+                                val removed = l.filter { it != null && drop(it) }
+                                if (removed.isNotEmpty()) diagText("dropped: " + removed.joinToString { it!!.javaClass.name })
+                                l.removeAll { it != null && drop(it) }
+                                l.forEach { walkAction(it, ::walk) }
+                            } else if (v is RemoteViews) walk(v)
+                            else if (v is Iterable<*>) v.forEach { if (it is RemoteViews) walk(it) }
+                            else if (v is Map<*, *>) v.values.forEach { if (it is RemoteViews) walk(it) }
+                        }
+                        c = c.superclass
+                    }
+                }
+            }
+        }
+        walk(rv)
+    }
+
+    private fun walkAction(a: Any?, walk: (Any?) -> Unit) {
+        if (a == null) return
+        var c: Class<*>? = a.javaClass
+        while (c != null && c != Any::class.java) {
+            for (f in c.declaredFields) {
+                if (java.lang.reflect.Modifier.isStatic(f.modifiers)) continue
+                f.isAccessible = true
+                val v = runCatching { f.get(a) }.getOrNull()
+                if (v is RemoteViews) walk(v) else if (v is Iterable<*>) v.forEach { if (it is RemoteViews) walk(it) }
+            }
+            c = c.superclass
+        }
+    }
+
+    /** Diagnostics land next to Paparazzi's failure images, which CI uploads as the paparazzi-failures artifact. */
+    private fun diagText(s: String) {
+        val d = java.io.File("build/paparazzi/failures").apply { mkdirs() }
+        java.io.File(d, "widget-diag.txt").appendText("[dark=$dark] $s\n")
+    }
+
+    private fun diag(what: String, e: Throwable) {
+        val sw = java.io.StringWriter(); e.printStackTrace(java.io.PrintWriter(sw)); diagText("$what\n$sw")
     }
 
     private fun status(on: Boolean): Triple<String, String, Long> = runBlocking {
