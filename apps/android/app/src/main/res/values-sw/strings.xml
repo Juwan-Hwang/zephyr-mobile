@@ -145,7 +145,7 @@
     <string name="scene_pinned_value">%1$s (imebanwa)</string>
     <string name="scene_retest">Pima tena</string>
     <string name="scene_funnel_tested">Zilizopimwa</string>
-    <string name="scene_funnel_reachable">Zinazofikika</string>
+    <string name="scene_funnel_reachable">Zinafikika</string>
     <string name="scene_funnel_under">Chini ya %1$d ms</string>
     <string name="home_mini_funnel_a11y">Zinafikika %1$s, chini ya milisekunde 200 %2$s</string>
     <string name="scene_note">Chaguo huhifadhiwa ndani ya Zephyr pekee. Usanidi wa usajili wako haubadilishwi.</string>
@@ -268,7 +268,7 @@
     <string name="nodes_empty_action">Leta usajili</string>
     <string name="nodes_no_match">Hakuna nodi zinazolingana na “%1$s”</string>
     <string name="nodes_tested">%1$s zimepimwa</string>
-    <string name="nodes_judgement">%1$s zinazofikika · %2$s zimepimwa</string>
+    <string name="nodes_judgement">%1$s zinafikika · %2$s zimepimwa</string>
     <string name="nodes_untested_hint">Bado hazijapimwa — nodi zinazoonekana hupimwa unapoacha kusogeza</string>
     <string name="nodes_jump_to">Nenda kwenye %1$s</string>
     <string name="nodes_detail_protocol">Itifaki</string>

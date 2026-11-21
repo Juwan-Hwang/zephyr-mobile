@@ -145,7 +145,7 @@
     <string name="scene_pinned_value">%1$s (berkidilen)</string>
     <string name="scene_retest">Gaýtadan barla</string>
     <string name="scene_funnel_tested">Barlanan</string>
-    <string name="scene_funnel_reachable">Birikip bolýan</string>
+    <string name="scene_funnel_reachable">Elýeterli</string>
     <string name="scene_funnel_under">%1$d ms-den az</string>
     <string name="home_mini_funnel_a11y">Elýeterli %1$s, 200 millisekuntdan az %2$s</string>
     <string name="scene_note">Saýlananlar diňe Zephyr-de saklanýar. Abunaňyzyň konfigurasiýasy üýtgemeýär.</string>
@@ -268,7 +268,7 @@
     <string name="nodes_empty_action">Abuna import et</string>
     <string name="nodes_no_match">“%1$s” bilen gabat gelýän düwün ýok</string>
     <string name="nodes_tested">%1$s barlandy</string>
-    <string name="nodes_judgement">%1$s birikip bolýan · %2$s barlandy</string>
+    <string name="nodes_judgement">%1$s elýeterli · %2$s barlandy</string>
     <string name="nodes_untested_hint">Entek barlanmady — aýlamagy bes edeniňizde görünýän düwünler barlanýar</string>
     <string name="nodes_jump_to">%1$s bölümine geç</string>
     <string name="nodes_detail_protocol">Protokol</string>

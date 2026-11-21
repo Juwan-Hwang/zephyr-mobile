@@ -151,7 +151,7 @@
     <string name="scene_pinned_value">\u2068%1$s\u2069 (ثابت)</string>
     <string name="scene_retest">آزمایش دوباره</string>
     <string name="scene_funnel_tested">آزمایش‌شده</string>
-    <string name="scene_funnel_reachable">قابل اتصال</string>
+    <string name="scene_funnel_reachable">در دسترس</string>
     <string name="scene_funnel_under">کمتر از %1$d ms</string>
     <string name="home_mini_funnel_a11y">در دسترس %1$s، کمتر از ۲۰۰ میلی‌ثانیه %2$s</string>
     <string name="scene_note">منتخب‌ها فقط در Zephyr ذخیره می‌شوند. پیکربندی اشتراک شما تغییر نمی‌کند.</string>
@@ -284,7 +284,7 @@
     <string name="nodes_empty_action">وارد کردن اشتراک</string>
     <string name="nodes_no_match">هیچ نودی با «\u2068%1$s\u2069» مطابقت ندارد</string>
     <string name="nodes_tested">\u2068%1$s\u2069 آزمایش‌شده</string>
-    <string name="nodes_judgement">\u2068%1$s\u2069 قابل اتصال · \u2068%2$s\u2069 آزمایش‌شده</string>
+    <string name="nodes_judgement">\u2068%1$s\u2069 در دسترس · \u2068%2$s\u2069 آزمایش‌شده</string>
     <string name="nodes_untested_hint">هنوز آزمایش نشده — نودهای قابل مشاهده پس از توقف پیمایش آزمایش می‌شوند</string>
     <string name="nodes_jump_to">رفتن به \u2068%1$s\u2069</string>
     <string name="nodes_detail_protocol">پروتکل</string>
