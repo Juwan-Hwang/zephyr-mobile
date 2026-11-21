@@ -52,7 +52,7 @@ public struct ZToast: View {
                 } label: {
                     Text(verbatim: title)
                         .zType(.zControl)
-                        .foregroundStyle(ZAccentStyle())
+                        .foregroundStyle(ZAccentTextStyle())
                         .padding(.horizontal, ZTokens.Space.n4)
                         .frame(minHeight: ZTokens.Layout.touchMinIos)
                         .contentShape(Rectangle())

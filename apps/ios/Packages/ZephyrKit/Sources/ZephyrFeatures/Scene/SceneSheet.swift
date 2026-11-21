@@ -144,7 +144,7 @@ struct SceneSheet: View {
                 } label: {
                     HStack {
                         Text(verbatim: ZL.tr(model.retesting.contains(scene.id) ? "检测中…" : "重新检测"))
-                            .zType(.body).foregroundStyle(ZAccentStyle())
+                            .zType(.body).foregroundStyle(ZAccentTextStyle())
                         Spacer()
                         if model.retesting.contains(scene.id) { ProgressView() }
                     }

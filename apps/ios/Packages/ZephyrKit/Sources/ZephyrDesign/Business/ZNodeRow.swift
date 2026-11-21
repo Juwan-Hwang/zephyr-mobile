@@ -92,7 +92,7 @@ public struct ZNodeRow: View {
             if isSelected {
                 Image(systemName: "checkmark")
                     .font(.footnote.weight(.semibold))
-                    .foregroundStyle(accent.color)
+                    .foregroundStyle(accent.text)
             }
             if let protocolName, !large {
                 Text(verbatim: protocolName)
@@ -124,7 +124,7 @@ public struct ZNodeRow: View {
             var searchStart = s.startIndex
             while searchStart < s.endIndex,
                   let range = s[searchStart...].range(of: term, options: .caseInsensitive) {
-                s[range].foregroundColor = accent.color
+                s[range].foregroundColor = accent.text
                 searchStart = range.upperBound
             }
         }

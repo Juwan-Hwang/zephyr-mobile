@@ -30,7 +30,7 @@ struct SceneCandidateRow: View {
                 .frame(minWidth: ZTokens.Space.n8, alignment: .trailing)
             Image(systemName: "checkmark")
                 .font(.footnote.weight(.semibold))
-                .foregroundStyle(ZAccentStyle())
+                .foregroundStyle(ZAccentTextStyle())
                 .opacity(isSelected ? 1 : 0)
         }
         .padding(.vertical, Self.verticalPadding)
