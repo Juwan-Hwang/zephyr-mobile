@@ -7,7 +7,8 @@
 use crate::error::MobileError;
 use zephyr_core::config::subscription::{is_private_ip, validate_subscription_url_basic};
 
-#[derive(Debug, Clone, PartialEq, Eq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct FetchTarget {
     /// 小写主机名或 IP 字面量（IPv6 不带方括号）
     pub host: String,
@@ -19,7 +20,7 @@ pub struct FetchTarget {
 }
 
 /// 联网前校验订阅 URL（scheme 仅 http/https、必须有 host、无控制字符）；不合法 → `SubscriptionInvalid`。
-#[uniffi::export]
+#[cfg_attr(feature = "uniffi", uniffi::export)]
 pub fn fetch_target(url: String) -> Result<FetchTarget, MobileError> {
     let (host, port, user_entered_private) = validate_subscription_url_basic(&url).map_err(MobileError::SubscriptionInvalid)?;
     let https = url.trim().get(..6).is_some_and(|p| p.eq_ignore_ascii_case("https:"));
@@ -28,7 +29,7 @@ pub fn fetch_target(url: String) -> Result<FetchTarget, MobileError> {
 }
 
 /// DNS 解析出的地址是否可以直连拉取订阅。无法解析的字符串 → false。
-#[uniffi::export]
+#[cfg_attr(feature = "uniffi", uniffi::export)]
 pub fn is_public_fetch_address(ip: String) -> bool {
     let s = ip.trim().trim_start_matches('[').trim_end_matches(']');
     s.parse::<std::net::IpAddr>().is_ok_and(|a| !is_private_ip(a))

@@ -15,7 +15,8 @@ use std::path::Path;
 
 pub const FIRST_PROVIDER_LAYER: u32 = 2;
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct RuleProvider {
     pub name: String,
     /// 完整地址（只在本机用于拉取，不进日志、不上传）
@@ -125,7 +126,7 @@ impl MobileCore {
     }
 }
 
-#[uniffi::export]
+#[cfg_attr(feature = "uniffi", uniffi::export)]
 impl MobileCore {
     pub fn rule_providers(&self, now_millis: i64) -> Vec<RuleProvider> {
         let Some(body) = self.active_subscription_body() else { return vec![] };

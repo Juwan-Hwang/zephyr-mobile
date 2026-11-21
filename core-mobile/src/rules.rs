@@ -29,7 +29,8 @@ pub enum DomainKind {
     Suffix = 2,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Enum)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum LayerKind {
     Override,
     Subscription,
@@ -37,7 +38,8 @@ pub enum LayerKind {
     Ip,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct RuleLayerInfo {
     pub index: u32,
     pub kind: LayerKind,
@@ -47,7 +49,8 @@ pub struct RuleLayerInfo {
     pub disk_bytes: u64,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct RuleTrace {
     pub input: String,
     pub is_ip: bool,

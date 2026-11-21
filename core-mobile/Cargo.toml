@@ -10,9 +10,10 @@ crate-type = ["lib", "cdylib", "staticlib"]
 name = "zephyr_mobile_core"
 
 [dependencies]
-zephyr-core = { path = "../vendor/zephyr/crates/core", features = ["uniffi"] }
+zephyr-core = { path = "../vendor/zephyr/crates/core" }
 clash-prism-core = "0.1.5"
-uniffi = { version = "0.28", features = ["cli"] }
+# 可选：默认开启（iOS / Android 的 UniFFI 绑定照旧）；鸿蒙 core-ohos 用 default-features = false，不导出 UniFFI 符号
+uniffi = { version = "0.28", features = ["cli"], optional = true }
 thiserror = "1"
 roaring = "0.10"
 aho-corasick = "1"
@@ -29,7 +30,8 @@ base64 = "0.22"
 tempfile = "3"
 
 [features]
-default = []
+default = ["uniffi"]
+uniffi = ["dep:uniffi", "zephyr-core/uniffi"]
 
 [profile.release]
 lto = "fat"
@@ -41,4 +43,4 @@ strip = "debuginfo"
 [[bin]]
 name = "uniffi-bindgen"
 path = "uniffi-bindgen.rs"
-required-features = []
+required-features = ["uniffi"]

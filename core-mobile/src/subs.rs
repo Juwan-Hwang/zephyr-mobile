@@ -16,7 +16,8 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct SubscriptionDiff {
     pub added_nodes: i64,
     pub removed_nodes: i64,
@@ -27,7 +28,8 @@ pub struct SubscriptionDiff {
     pub scenes_retested: bool,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct Subscription {
     pub id: String,
     pub name: String,
@@ -43,7 +45,8 @@ pub struct Subscription {
     pub last_diff: Option<SubscriptionDiff>,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct SubscriptionsSummary {
     pub count: i32,
     pub total_nodes: i64,
@@ -53,7 +56,8 @@ pub struct SubscriptionsSummary {
 pub const MAX_AUTO_UPDATE_HOURS: i32 = 720;
 
 /// 平台拉取结果。
-#[derive(Debug, Clone, uniffi::Record)]
+#[derive(Debug, Clone)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct FetchedSubscription {
     pub body: String,
     /// 原样的 `subscription-userinfo` 响应头（可为空）

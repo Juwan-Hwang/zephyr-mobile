@@ -9,7 +9,8 @@ use std::collections::HashMap;
 use std::io::{Read, Write};
 use std::time::Duration;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, uniffi::Enum)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum GroupType {
     Select,
     UrlTest,
@@ -18,7 +19,8 @@ pub enum GroupType {
     Relay,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct PolicyGroup {
     pub name: String,
     pub group_type: GroupType,
@@ -28,7 +30,8 @@ pub struct PolicyGroup {
     pub tested_at: Option<i64>,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct GroupMember {
     pub name: String,
     pub proxy_type: String,
@@ -36,7 +39,8 @@ pub struct GroupMember {
     pub latency_ms: Option<i32>,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct ConnectionInfo {
     pub id: String,
     pub host: String,
@@ -52,7 +56,8 @@ pub struct ConnectionInfo {
     pub rule: String,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct HostActivity {
     pub host: String,
     pub scene: Option<String>,
@@ -62,7 +67,8 @@ pub struct HostActivity {
     pub last_seen_at: i64,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct HostTrace {
     pub host: String,
     pub last_seen_at: i64,
@@ -257,15 +263,15 @@ fn conn_from(v: &Value) -> Option<ConnectionInfo> {
     })
 }
 
-#[derive(uniffi::Object)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Object))]
 pub struct MihomoClient {
     http: Http,
 }
 
-#[uniffi::export]
+#[cfg_attr(feature = "uniffi", uniffi::export)]
 impl MihomoClient {
     /// socket：zm_start 时传入的 external-controller-unix 路径。
-    #[uniffi::constructor]
+    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
     pub fn new(socket_path: String) -> std::sync::Arc<Self> {
         std::sync::Arc::new(Self { http: Http::new(&socket_path) })
     }

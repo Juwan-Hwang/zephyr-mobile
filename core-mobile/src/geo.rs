@@ -13,13 +13,15 @@ use serde_yaml::Value;
 
 const WEEK_MS: i64 = 7 * 24 * 3_600_000;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, uniffi::Enum)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
 pub enum GeoKind {
     Geosite,
     Geoip,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct GeoSource {
     pub kind: GeoKind,
     pub url: String,
@@ -234,7 +236,7 @@ impl MobileCore {
     }
 }
 
-#[uniffi::export]
+#[cfg_attr(feature = "uniffi", uniffi::export)]
 impl MobileCore {
     pub fn geo_sources(&self, now_millis: i64) -> Vec<GeoSource> {
         let Some(body) = self.active_subscription_body() else { return vec![] };

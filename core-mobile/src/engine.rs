@@ -14,20 +14,23 @@ use std::collections::VecDeque;
 use std::path::PathBuf;
 use std::sync::Arc;
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct NodeIndex {
     pub total: u64,
     pub sections: Vec<RegionSection>,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct NodePage {
     pub rows: Vec<NodeRow>,
     pub offset: u64,
     pub total: u64,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct SubscriptionSource {
     pub id: u16,
     /// Clash/mihomo YAML 全文
@@ -35,7 +38,8 @@ pub struct SubscriptionSource {
 }
 
 /// 节点 + 延迟（场景候选 / 最快节点）。
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct RankedNode {
     pub row: NodeRow,
     /// 最近一次延迟；-1 = 超时
@@ -45,7 +49,8 @@ pub struct RankedNode {
     pub score: f64,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct BuildReport {
     pub total: u64,
     pub skipped: u64,
@@ -53,7 +58,8 @@ pub struct BuildReport {
     pub took_millis: u64,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct RuleStats {
     pub total: u64,
     pub layers: Vec<RuleLayerInfo>,
@@ -62,7 +68,7 @@ pub struct RuleStats {
 
 const QUERY_CACHE: usize = 8;
 
-#[derive(uniffi::Object)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Object))]
 pub struct MobileCore {
     pub(crate) dir: PathBuf,
     pub(crate) store: RwLock<Option<Arc<NodeStore>>>,
@@ -180,15 +186,15 @@ fn load_positions(dir: &std::path::Path, gen: u64) -> (u64, FxHashMap<u64, u32>)
 }
 
 /// 建库进度回调（平台实现）。返回 false = 取消。会在后台线程调用。
-#[uniffi::export(callback_interface)]
+#[cfg_attr(feature = "uniffi", uniffi::export(callback_interface))]
 pub trait BuildProgress: Send + Sync {
     fn on_progress(&self, phase: BuildPhase, done: u64, total: u64) -> bool;
 }
 
-#[uniffi::export]
+#[cfg_attr(feature = "uniffi", uniffi::export)]
 impl MobileCore {
     /// data_dir：App Group 容器下的目录（iOS 扩展与 App 共享）/ Android filesDir。
-    #[uniffi::constructor]
+    #[cfg_attr(feature = "uniffi", uniffi::constructor)]
     pub fn new(data_dir: String) -> Result<Arc<Self>, MobileError> {
         let dir = PathBuf::from(data_dir);
         std::fs::create_dir_all(dir.join("rules"))?;
@@ -353,7 +359,7 @@ impl MobileCore {
     }
 }
 
-#[uniffi::export]
+#[cfg_attr(feature = "uniffi", uniffi::export)]
 impl MobileCore {
     // ---------- 订阅（contract §7）：平台拉取正文，核心存储/差异/重建 ----------
 
@@ -578,7 +584,7 @@ impl MobileCore {
 }
 
 /// zephyr-core（桌面共用核心）版本探针，确认链接正常。
-#[uniffi::export]
+#[cfg_attr(feature = "uniffi", uniffi::export)]
 pub fn core_greeting() -> String {
     zephyr_core::greet("mobile".into())
 }

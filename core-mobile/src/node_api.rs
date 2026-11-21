@@ -15,7 +15,8 @@ use std::collections::HashMap;
 /// 单批上限，与 mihomo-mobile `maxURLTestBatch` 一致。
 pub const URL_TEST_BATCH: usize = 512;
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct NodeDetail {
     pub row: NodeRow,
     /// 已脱敏（"a1***.example.com" / "198.51.*.*"）
@@ -101,7 +102,8 @@ impl MobileCore {
 
 /// 场景 sheet 漏斗（原型"检测自 2 个订阅中的 512 个节点 → 延迟低于 300 ms → …"），契约 §15.c。
 /// 只给核心真实知道的级；"可访问 GPT"等按服务的级需要逐节点探测，核心没有，平台不显示。
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct NodeFunnel {
     /// 订阅数
     pub source_count: u32,
@@ -116,14 +118,15 @@ pub struct NodeFunnel {
     pub threshold_ms: i32,
 }
 
-#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct TcpTarget {
     pub id: u64,
     pub host: String,
     pub port: u16,
 }
 
-#[uniffi::export]
+#[cfg_attr(feature = "uniffi", uniffi::export)]
 impl MobileCore {
     pub fn node_detail(&self, id: u64) -> Result<NodeDetail, MobileError> {
         let (mut rows, mut defs) = self.proxy_defs_by_id(&[id])?;

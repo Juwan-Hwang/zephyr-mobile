@@ -10,11 +10,14 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const srcDir = join(root, 'core-mobile/src');
 const contract = readFileSync(join(root, 'contract/zephyr-engine.md'), 'utf8');
 const camel = (s) => s.replace(/_([a-z0-9])/g, (_, c) => c.toUpperCase());
+// 导出属性两种写法都认：`#[uniffi::export…]`，或 uniffi 为可选 feature 后的 `#[cfg_attr(feature = "uniffi", uniffi::export…)]`
+const EXP = String.raw`#\[(?:cfg_attr\(\s*feature\s*=\s*"uniffi"\s*,\s*)?uniffi::export`;
+const EXP_END = String.raw`\)?\]`;
 
 const exported = new Map(); // name -> file
 for (const f of readdirSync(srcDir).filter((f) => f.endsWith('.rs'))) {
   const src = readFileSync(join(srcDir, f), 'utf8');
-  const implRe = /#\[uniffi::export\]\s*impl\s+\w+\s*\{/g;
+  const implRe = new RegExp(`${EXP}${EXP_END}\\s*impl\\s+\\w+\\s*\\{`, 'g');
   let m;
   while ((m = implRe.exec(src))) {
     let i = m.index + m[0].length, depth = 1;
@@ -26,7 +29,7 @@ for (const f of readdirSync(srcDir).filter((f) => f.endsWith('.rs'))) {
     }
     for (const fm of src.slice(start, i).matchAll(/\n {4}pub fn (\w+)/g)) exported.set(fm[1], f);
   }
-  for (const fm of src.matchAll(/#\[uniffi::export\]\s*pub fn (\w+)/g)) exported.set(fm[1], f);
+  for (const fm of src.matchAll(new RegExp(`${EXP}${EXP_END}\\s*pub fn (\\w+)`, 'g'))) exported.set(fm[1], f);
 }
 
 // 类型：Record / Enum / Object / Error 与回调接口
@@ -34,7 +37,7 @@ const types = new Map();
 for (const f of readdirSync(srcDir).filter((f) => f.endsWith('.rs'))) {
   const src = readFileSync(join(srcDir, f), 'utf8');
   for (const tm of src.matchAll(/uniffi::(?:Record|Enum|Object|Error)\b[^\n]*\n(?:\s*(?:#\[[^\n]*|\/\/\/[^\n]*)\n)*\s*pub (?:struct|enum) (\w+)/g)) types.set(tm[1], f);
-  for (const tm of src.matchAll(/#\[uniffi::export\(callback_interface\)\]\s*pub trait (\w+)/g)) types.set(tm[1], f);
+  for (const tm of src.matchAll(new RegExp(`${EXP}\\(callback_interface\\)${EXP_END}\\s*pub trait (\\w+)`, 'g'))) types.set(tm[1], f);
 }
 const missingTypes = [...types].filter(([n]) => !new RegExp(`\\b${n}\\b`).test(contract));
 
@@ -65,6 +68,8 @@ if (existsSync(join(ohosDir, 'src'))) {
     }
   }
 }
+// 防正则失效静默通过（例如导出属性写法再变）：一个导出都没认出来就算失败
+if (exported.size === 0) napiErrors.push('一个 UniFFI 导出都没识别到：检查 core-mobile/src 的导出属性写法与本脚本的 EXP 正则');
 if (napiErrors.length) {
   console.error(`鸿蒙 napi 导出检查失败 ${napiErrors.length} 项：`);
   for (const e of napiErrors) console.error(`  ${e}`);

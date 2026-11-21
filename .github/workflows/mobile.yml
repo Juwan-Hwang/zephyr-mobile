@@ -87,6 +87,9 @@ jobs:
       - name: clippy 零警告
         working-directory: core-mobile
         run: cargo clippy --lib --tests -- -D warnings
+      - name: clippy 零警告（--no-default-features，即不带 uniffi；鸿蒙 core-ohos 的依赖方式）
+        working-directory: core-mobile
+        run: cargo clippy --lib --tests --no-default-features -- -D warnings
       - name: rustdoc 零警告
         working-directory: core-mobile
         env: { RUSTDOCFLAGS: '-D warnings' }

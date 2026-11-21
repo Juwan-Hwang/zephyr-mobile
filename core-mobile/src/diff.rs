@@ -1,6 +1,7 @@
 //! 订阅更新差异：新旧指纹集合的有序归并，O(n)。
 
-#[derive(Debug, Clone, PartialEq, Eq, uniffi::Record)]
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct NodeDiff {
     pub added: u64,
     pub removed: u64,
