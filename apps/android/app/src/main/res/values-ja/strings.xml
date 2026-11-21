@@ -249,6 +249,8 @@
     <string name="nodes_empty_action">サブスクリプションをインポート</string>
     <string name="nodes_no_match">「%1$s」に一致するノードはありません</string>
     <string name="nodes_tested">%1$s テスト済み</string>
+    <string name="nodes_judgement">%1$s 接続可能 · %2$s テスト済み</string>
+    <string name="nodes_untested_hint">未テスト — スクロールを止めると表示中のノードを自動でテストします</string>
     <string name="nodes_jump_to">%1$sへ移動</string>
     <string name="nodes_detail_protocol">プロトコル</string>
     <string name="nodes_detail_latency">レイテンシ</string>

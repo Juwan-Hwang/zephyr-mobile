@@ -249,6 +249,8 @@
     <string name="nodes_empty_action">Nhập gói đăng ký</string>
     <string name="nodes_no_match">Không có nút nào khớp với “%1$s”</string>
     <string name="nodes_tested">Đã kiểm tra %1$s</string>
+    <string name="nodes_judgement">Kết nối được %1$s · Đã kiểm tra %2$s</string>
+    <string name="nodes_untested_hint">Chưa kiểm tra — các nút đang hiển thị sẽ được kiểm tra khi bạn ngừng cuộn</string>
     <string name="nodes_jump_to">Đến %1$s</string>
     <string name="nodes_detail_protocol">Giao thức</string>
     <string name="nodes_detail_latency">Độ trễ</string>

@@ -306,6 +306,8 @@
     <string name="nodes_empty_action">Импортировать подписку</string>
     <string name="nodes_no_match">Нет узлов по запросу «%1$s»</string>
     <string name="nodes_tested">Проверено: %1$s</string>
+    <string name="nodes_judgement">Доступно: %1$s · Проверено: %2$s</string>
+    <string name="nodes_untested_hint">Ещё не проверено — видимые узлы проверяются, когда вы перестаёте прокручивать</string>
     <string name="nodes_jump_to">Перейти к %1$s</string>
     <string name="nodes_detail_protocol">Протокол</string>
     <string name="nodes_detail_latency">Задержка</string>

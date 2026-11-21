@@ -268,6 +268,8 @@
     <string name="nodes_empty_action">Abonelik içe aktar</string>
     <string name="nodes_no_match">“%1$s” ile eşleşen düğüm yok</string>
     <string name="nodes_tested">%1$s test edildi</string>
+    <string name="nodes_judgement">%1$s erişilebilir · %2$s test edildi</string>
+    <string name="nodes_untested_hint">Henüz test edilmedi — kaydırmayı bıraktığınızda görünen düğümler test edilir</string>
     <string name="nodes_jump_to">%1$s bölümüne git</string>
     <string name="nodes_detail_protocol">Protokol</string>
     <string name="nodes_detail_latency">Gecikme</string>

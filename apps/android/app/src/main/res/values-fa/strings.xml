@@ -284,6 +284,8 @@
     <string name="nodes_empty_action">وارد کردن اشتراک</string>
     <string name="nodes_no_match">هیچ نودی با «\u2068%1$s\u2069» مطابقت ندارد</string>
     <string name="nodes_tested">\u2068%1$s\u2069 آزمایش‌شده</string>
+    <string name="nodes_judgement">\u2068%1$s\u2069 قابل اتصال · \u2068%2$s\u2069 آزمایش‌شده</string>
+    <string name="nodes_untested_hint">هنوز آزمایش نشده — نودهای قابل مشاهده پس از توقف پیمایش آزمایش می‌شوند</string>
     <string name="nodes_jump_to">رفتن به \u2068%1$s\u2069</string>
     <string name="nodes_detail_protocol">پروتکل</string>
     <string name="nodes_detail_latency">تأخیر</string>

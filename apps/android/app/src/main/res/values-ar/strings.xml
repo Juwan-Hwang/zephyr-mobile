@@ -360,6 +360,8 @@
     <string name="nodes_empty_action">استيراد اشتراك</string>
     <string name="nodes_no_match">لا توجد عقد تطابق «\u2068%1$s\u2069»</string>
     <string name="nodes_tested">تم اختبار \u2068%1$s\u2069</string>
+    <string name="nodes_judgement">قابلة للاتصال \u2068%1$s\u2069 · تم اختبار \u2068%2$s\u2069</string>
+    <string name="nodes_untested_hint">لم تُختبر بعد — تُختبر العقد الظاهرة عند التوقف عن التمرير</string>
     <string name="nodes_jump_to">الانتقال إلى \u2068%1$s\u2069</string>
     <string name="nodes_detail_protocol">البروتوكول</string>
     <string name="nodes_detail_latency">التأخير</string>
