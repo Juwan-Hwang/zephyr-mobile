@@ -49,7 +49,6 @@ import com.zephyr.design.components.ZSectionHeader
 import com.zephyr.design.components.ZSettingsRow
 import com.zephyr.design.components.ZSheet
 import com.zephyr.design.components.ZText
-import androidx.compose.ui.text.withStyle
 import com.zephyr.design.components.ZToggle
 import com.zephyr.design.format.ZFormat
 import com.zephyr.design.theme.ZTheme
@@ -184,20 +183,15 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
                     Row(Modifier.fillMaxWidth().padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
                             ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight))
-                            // §9.1: the line stays t3; only the expiry (with a leading ● when it needs attention) is amber-text.
+                            // §9.1: the line stays t3; only the expiry date is amber-text, led by an amber dot (shape + colour).
                             val countText = pluralStringResource(R.plurals.common_node_count, s.nodeCount.toPluralCount(), ZFormat.grouped(s.nodeCount))
-                            ZText(
-                                androidx.compose.ui.text.buildAnnotatedString {
-                                    append(countText)
-                                    s.expiresAt?.let { at ->
-                                        append(" · ")
-                                        if (soon) {
-                                            withStyle(androidx.compose.ui.text.SpanStyle(color = c.warningText)) { append("● " + ZFormat.expires(res, at, now)) }
-                                        } else append(ZFormat.expires(res, at, now))
-                                    }
-                                },
-                                style = ZTheme.type.footnote, color = c.text3,
-                            )
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                ZText(countText + (if (s.expiresAt != null) " · " else ""), style = ZTheme.type.footnote, color = c.text3, maxLines = 1)
+                                s.expiresAt?.let { at ->
+                                    if (soon) { Box(Modifier.size(6.dp).background(c.warning, CircleShape)); Spacer(Modifier.width(5.dp)) }
+                                    ZText(ZFormat.expires(res, at, now), style = ZTheme.type.footnote, color = if (soon) c.warningText else c.text3, maxLines = 1)
+                                }
+                            }
                             Spacer(Modifier.height(10.dp))
                             val u = s.usedBytes; val t = s.totalBytes
                             ZProgressBar(if (u != null && t != null && t > 0) u.toFloat() / t else 0f, color = if (soon) c.warning else c.text3)
