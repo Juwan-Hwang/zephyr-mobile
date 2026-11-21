@@ -167,7 +167,7 @@ public struct ZGroupCard: View {
             HStack(spacing: ZMetrics.scrubGap) {
                 ForEach(0..<scrubCount, id: \.self) { i in
                     RoundedRectangle(cornerRadius: ZMetrics.scrubRadius, style: .continuous)
-                        .fill(i == scrubIndex ? AnyShapeStyle(accent.color) : AnyShapeStyle(ZTokens.Colors.screenHl2))
+                        .fill(i == scrubIndex ? AnyShapeStyle(accent.adaptive) : AnyShapeStyle(ZTokens.Colors.screenHl2))
                         .frame(height: ZMetrics.scrubHeight)
                 }
             }
@@ -178,7 +178,7 @@ public struct ZGroupCard: View {
     }
 
     private var rowBackground: Color {
-        if scrubIndex != nil { return accent.color.opacity(ZMetrics.scrubTint) }
+        if scrubIndex != nil { return accent.adaptive.opacity(ZMetrics.scrubTint) }
         return isPressed ? ZTokens.Colors.screenPressed : Color.clear
     }
 

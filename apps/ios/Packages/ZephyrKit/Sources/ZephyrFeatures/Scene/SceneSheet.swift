@@ -185,7 +185,7 @@ struct SceneSheet: View {
             parts.append(ZL.f("检测自 %lld 个候选节点", Int64(candidates.count)))
         }
         if let t = scene.testedAt { parts.append(ZL.s("%@检测", ZFormat.relative(t, now: model.now()))) }
-        return parts.isEmpty ? " " : parts.joined(separator: " · ")
+        return parts.isEmpty ? " " : parts.joined(separator: "\n")   // 规范 §9.2（L-1）：分行，不用中点串联
     }
 
     /// 漏斗新鲜度与场景候选一致：跟随设置 latencyTtlHours（契约 §15.e：nodeFunnel 由调用方传同一个设置值）。

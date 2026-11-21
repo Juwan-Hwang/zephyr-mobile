@@ -24,7 +24,7 @@ public struct ZToggle<Label: View>: View {
 
     public var body: some View {
         Toggle(isOn: $isOn) { label }
-            .tint(tint == .success ? ZSwitchColor.on : accent.color)
+            .tint(tint == .success ? ZSwitchColor.on : accent.adaptive)
             .sensoryFeedback(.selection, trigger: isOn)
     }
 }

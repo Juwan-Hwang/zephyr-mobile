@@ -123,7 +123,7 @@ public struct ZChainStep: View {
     private var markerColor: Color? {
         switch marker {
         case .hollow: return nil
-        case .accent: return accent.color
+        case .accent: return accent.adaptive
         case .success: return ZSwitchColor.on
         case .warning: return ZTokens.Colors.screenAmber
         case .danger: return ZTokens.Colors.screenRed

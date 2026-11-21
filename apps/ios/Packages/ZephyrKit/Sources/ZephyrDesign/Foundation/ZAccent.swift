@@ -32,7 +32,7 @@ public struct ZAccentStyle: ShapeStyle, Sendable {
     public var opacity: Double
     public init(opacity: Double = 1) { self.opacity = opacity }
     public func resolve(in environment: EnvironmentValues) -> Color {
-        environment.zAccent.color.opacity(opacity)
+        environment.zAccent.adaptive.opacity(opacity)   // accent.*.base：深色自动换系统深色变体（X-2）
     }
 }
 

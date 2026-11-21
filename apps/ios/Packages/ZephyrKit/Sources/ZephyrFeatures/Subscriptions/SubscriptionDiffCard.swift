@@ -67,7 +67,7 @@ struct SubscriptionDiffCard: View {
             parts.append(ZL.tr(diff.overridesKept ? "覆写已保留" : "部分覆写已失效"))
             if diff.scenesRetested { parts.append(ZL.tr("场景池已重新检测")) }
         }
-        return parts.joined(separator: " · ")
+        return parts.joined(separator: "\n")   // 规范 §9.2（L-1）：分行，不用中点串联
     }
 }
 

@@ -35,7 +35,7 @@ struct LatencyTickBar: View {
                 let w = geo.size.width
                 let x200 = Self.x(for: ZTokens.LatencyThreshold.slow, width: w)
                 let pts = measured, sel = selectedId, slow = ZTokens.LatencyThreshold.slow
-                let t2 = ZColor.t2, t3 = ZColor.t3, amber = ZTokens.Colors.screenAmber, accentColor = accent.color
+                let t2 = ZColor.t2, t3 = ZColor.t3, amber = ZTokens.Colors.screenAmber, accentColor = accent.adaptive
                 let short = Self.shortTick, tall = Self.selectedTick, long = Self.longTick
                 ZStack(alignment: .bottomLeading) {
                     Text(verbatim: "\(ZTokens.LatencyThreshold.slow) ms")
