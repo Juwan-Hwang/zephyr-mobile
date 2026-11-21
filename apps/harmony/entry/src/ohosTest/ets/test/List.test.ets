@@ -6,6 +6,7 @@ import sceneSlotsTest from './SceneSlots.test';
 import navTest from './Nav.test';
 import commandParseTest from './CommandParse.test';
 import sceneSheetTest from './SceneSheet.test';
+import traceTest from './Trace.test';
 
 export default function testsuite(): void {
   mockFixturesTest();
@@ -16,4 +17,5 @@ export default function testsuite(): void {
   navTest();
   commandParseTest();
   sceneSheetTest();
+  traceTest();
 }
