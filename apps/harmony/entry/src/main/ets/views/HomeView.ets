@@ -36,6 +36,8 @@ export struct HomeView {
   /** 指令面板“查看全部” / 节点行：节点页，带查询。 */
   @Event onOpenNodesQuery: (query: string) => void = (query: string) => {};
   @Event onOpenRules: () => void = () => {};
+  /** 流量卡“今日 X”：今日卡（M1-9，同 Android onToday）。 */
+  @Event onOpenToday: () => void = () => {};
   @Local showCommand: boolean = false;
   /** 资料库“场景”入口：每次递增 = 打开第一个场景的 sheet。 */
   @Param sceneRequest: number = 0;
@@ -331,9 +333,18 @@ export struct HomeView {
         .width('100%')
 
         if (this.todayBytes >= 0) {
-          Text($r('app.string.home_today_usage', Format.bytesText(this.todayBytes)))
-            .fontSize(13)
-            .fontColor($r('app.color.screen_t3'))
+          Row({ space: 2 }) {
+            Text($r('app.string.home_today_usage', Format.bytesText(this.todayBytes)))
+              .fontSize(13)
+              .fontColor($r('app.color.screen_t3'))
+            Text('›')
+              .fontSize(15)
+              .fontColor($r('app.color.screen_t4'))
+              .accessibilityLevel('no')
+          }
+          .accessibilityGroup(true)
+          .accessibilityRole(AccessibilityRoleType.BUTTON)
+          .onClick(() => this.onOpenToday())
         }
       }
       .width('100%')

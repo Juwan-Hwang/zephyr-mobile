@@ -7,6 +7,7 @@ import navTest from './Nav.test';
 import commandParseTest from './CommandParse.test';
 import sceneSheetTest from './SceneSheet.test';
 import traceTest from './Trace.test';
+import todayTest from './Today.test';
 
 export default function testsuite(): void {
   mockFixturesTest();
@@ -18,4 +19,5 @@ export default function testsuite(): void {
   commandParseTest();
   sceneSheetTest();
   traceTest();
+  todayTest();
 }

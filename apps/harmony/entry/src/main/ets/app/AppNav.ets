@@ -13,6 +13,8 @@ export const ROUTE_RULES: string = 'rules';
 export const ROUTE_SETTINGS: string = 'settings';
 export const ROUTE_LOGS: string = 'logs';
 export const ROUTE_LICENSES: string = 'licenses';
+/** 今日卡（M1-9），首页流量卡“今日 X”进入。 */
+export const ROUTE_TODAY: string = 'today';
 
 /** 二级页返回到哪里（Android `BackTo`）。 */
 export enum BackTo {
@@ -63,7 +65,7 @@ export class AppNav {
   /** 已知的二级页路由。 */
   static isRoute(name: string): boolean {
     return name === ROUTE_NODES || name === ROUTE_SUBSCRIPTIONS || name === ROUTE_RULES || name === ROUTE_SETTINGS ||
-      name === ROUTE_LOGS || name === ROUTE_LICENSES;
+      name === ROUTE_LOGS || name === ROUTE_LICENSES || name === ROUTE_TODAY;
   }
 
   /**
