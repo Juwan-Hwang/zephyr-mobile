@@ -106,6 +106,24 @@ export class ToastCenter {
     }
   }
 
+  /**
+   * 撤销当前吐司（宿主“撤销”按钮用）：不依赖界面里缓存的 serial（浮层 ComponentContent 里的状态可能滞后），
+   * 只要还有可撤销的吐司就执行其 onUndo 并取消提交计时。返回是否执行了撤销。
+   */
+  undoCurrent(): boolean {
+    const p = this.pending;
+    if (p === undefined || p.onUndo === undefined) {
+      return false;
+    }
+    this.undo(p.state.serial);
+    return true;
+  }
+
+  /** 是否有尚未结束的吐司（单测 / 宿主判断用）。 */
+  hasPending(): boolean {
+    return this.pending !== undefined;
+  }
+
   /** 关闭（提交）指定吐司。 */
   dismiss(serial: number): void {
     if (this.pending !== undefined && this.pending.state.serial === serial) {
