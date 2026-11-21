@@ -84,7 +84,7 @@ private struct ZConnectSwitch: View {
         let knobH = ZMetrics.connectKnob * k
         let knobW = (isPressed ? ZMetrics.connectKnobPressed : ZMetrics.connectKnob) * k
         let travel = width - inset * 2 - knobW
-        let onColor = tint == .success ? ZSwitchColor.on : accent.color
+        let onColor = tint == .success ? ZSwitchColor.on : accent.adaptive
         let glowing = flash && phase == .on && colorScheme == .dark && !reduceMotion && !still
 
         ZStack(alignment: .leading) {

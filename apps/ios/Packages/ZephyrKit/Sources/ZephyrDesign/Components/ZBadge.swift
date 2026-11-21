@@ -45,7 +45,7 @@ public struct ZBadge: View {
     private var tint: Color {
         switch tone {
         case .neutral: return ZColor.t3
-        case .accent: return accent.color
+        case .accent: return accent.adaptive
         case .success: return ZTokens.Colors.screenGreen
         case .warning: return ZTokens.Colors.screenAmber
         case .danger: return ZTokens.Colors.screenRed
