@@ -33,7 +33,7 @@ fun ZLatency(ms: Int?, testing: Boolean = false, modifier: Modifier = Modifier, 
         when {
             v == Int.MIN_VALUE -> ZText("···", style = style, color = c.text3)
             v == null -> ZText("—", style = style, color = c.text3)
-            v < 0 -> ZText(stringResource(R.string.common_latency_timeout), style = style, color = c.danger)
+            v < 0 -> ZText(stringResource(R.string.common_latency_timeout), style = style, color = c.latencyTimeout)
             else -> ZText("$v ms", style = style, color = c.latency(v))
         }
     }

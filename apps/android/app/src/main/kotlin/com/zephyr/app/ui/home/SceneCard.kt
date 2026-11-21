@@ -200,7 +200,7 @@ private fun SceneRow(
                     s.source == SceneSource.SUBSCRIPTION_GROUP -> stringResource(R.string.common_source_group)
                     else -> pluralStringResource(R.plurals.common_available_count, s.available, s.available)
                 },
-                style = ZTheme.type.callout.copy(fontSize = 13.sp), color = if (down.isNotEmpty()) c.danger else c.text3, maxLines = lines,
+                style = ZTheme.type.callout.copy(fontSize = 13.sp), color = if (down.isNotEmpty()) c.dangerText else c.text3, maxLines = lines,
             )
         }
         }
