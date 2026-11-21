@@ -24,6 +24,18 @@ export interface ToastState {
   durationMs: number;
 }
 
+/** 吐司生命周期事件（真机排查用：AppServices 接到 hilog）。 */
+export enum ToastEvent {
+  SHOW = 'show',
+  UNDO = 'undo',
+  /** 提交原因见 detail：timeout / replaced / dismiss。 */
+  COMMIT = 'commit',
+  /** 宿主点了撤销，但已没有可撤销的吐司（窗口已过 / 已提交）。 */
+  UNDO_MISSED = 'undo_missed'
+}
+
+export type ToastListener = (event: ToastEvent, serial: number, detail: string) => void;
+
 export interface ToastOptions {
   onUndo?: () => void;
   onCommit?: () => void;
@@ -60,6 +72,8 @@ export class ToastCenter {
   private screenReader: () => boolean;
   private pending: Pending | undefined = undefined;
   private serial: number = 0;
+  /** 生命周期事件（日志）；不影响行为。 */
+  onEvent: ToastListener | undefined = undefined;
 
   constructor(screenReader: () => boolean, timers?: ToastTimers) {
     this.screenReader = screenReader;
@@ -78,7 +92,7 @@ export class ToastCenter {
 
   /** 显示一条吐司；返回 serial。带 onUndo 才有“撤销”按钮。 */
   show(message: string, opts?: ToastOptions): number {
-    this.finish(true);
+    this.finish(true, 'replaced');
     this.serial++;
     const state: ToastState = {
       serial: this.serial,
@@ -90,6 +104,7 @@ export class ToastCenter {
     this.pending = p;
     this.arm(p);
     this.current.value = state;
+    this.emitEvent(ToastEvent.SHOW, state.serial, state.undoable ? 'undoable' : '');
     return state.serial;
   }
 
@@ -101,6 +116,7 @@ export class ToastCenter {
     this.timers.clear(p.timer);
     this.pending = undefined;
     this.current.value = undefined;
+    this.emitEvent(ToastEvent.UNDO, serial, p.onUndo !== undefined ? '' : 'no handler');
     if (p.onUndo !== undefined) {
       p.onUndo();
     }
@@ -113,6 +129,8 @@ export class ToastCenter {
   undoCurrent(): boolean {
     const p = this.pending;
     if (p === undefined || p.onUndo === undefined) {
+      this.emitEvent(ToastEvent.UNDO_MISSED, p !== undefined ? p.state.serial : this.serial,
+        p === undefined ? 'no pending toast' : 'not undoable');
       return false;
     }
     this.undo(p.state.serial);
@@ -127,7 +145,7 @@ export class ToastCenter {
   /** 关闭（提交）指定吐司。 */
   dismiss(serial: number): void {
     if (this.pending !== undefined && this.pending.state.serial === serial) {
-      this.finish(true);
+      this.finish(true, 'dismiss');
     }
   }
 
@@ -147,12 +165,23 @@ export class ToastCenter {
   private arm(p: Pending): void {
     p.timer = this.timers.set(() => {
       if (this.pending === p) {
-        this.finish(true);
+        this.finish(true, 'timeout');
       }
     }, p.state.durationMs);
   }
 
-  private finish(commit: boolean): void {
+  private emitEvent(event: ToastEvent, serial: number, detail: string): void {
+    const l = this.onEvent;
+    if (l !== undefined) {
+      try {
+        l(event, serial, detail);
+      } catch (e) {
+        // 日志失败不影响吐司。
+      }
+    }
+  }
+
+  private finish(commit: boolean, reason: string): void {
     const p = this.pending;
     if (p === undefined) {
       return;
@@ -160,6 +189,9 @@ export class ToastCenter {
     this.timers.clear(p.timer);
     this.pending = undefined;
     this.current.value = undefined;
+    if (commit) {
+      this.emitEvent(ToastEvent.COMMIT, p.state.serial, reason);
+    }
     if (commit && p.onCommit !== undefined) {
       p.onCommit();
     }

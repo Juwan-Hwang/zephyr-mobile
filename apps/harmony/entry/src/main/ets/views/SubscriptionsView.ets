@@ -20,6 +20,8 @@ import { Subscription as StreamSub } from '../engine/Stream';
 import { ZTerm } from '../generated/ZTerms';
 import { ZTheme } from '../common/Theme';
 import { HapticKind, Haptics } from '../app/Haptics';
+import { UndoableDelete } from '../app/UndoableDelete';
+import { hilog } from '@kit.PerformanceAnalysisKit';
 
 @ComponentV2
 export struct SubscriptionsView {
@@ -197,21 +199,25 @@ export struct SubscriptionsView {
     });
   }
 
-  /** 确认后先隐藏，出撤销吐司（§16.e⑥）；窗口结束（或被下一条吐司顶替）才调 deleteSubscription。 */
+  /** 确认后先隐藏，出撤销吐司（§16.e⑥）；窗口结束（或被下一条吐司顶替）才调 deleteSubscription（app/UndoableDelete）。 */
   private delete(s: Subscription): void {
     Haptics.play(HapticKind.WARNING);
-    this.pendingDeletes = this.pendingDeletes.concat([s.id]);
-    const unhide = () => {
-      this.pendingDeletes = this.pendingDeletes.filter((id: string) => id !== s.id);
-    };
     const svc = AppServices.get();
-    svc.toasts.show(this.text($r('app.string.subs_deleted'), s.name), {
-      onUndo: unhide,
-      onCommit: () => {
-        svc.engine.deleteSubscription(s.id).then(unhide).catch((e: Object) => {
-          unhide();
-          this.toast($r('app.string.subs_error_delete', s.name));
-        });
+    const id = s.id;
+    UndoableDelete.run(svc.toasts, {
+      message: this.text($r('app.string.subs_deleted'), s.name),
+      hide: () => {
+        this.pendingDeletes = this.pendingDeletes.concat([id]);
+      },
+      unhide: () => {
+        this.pendingDeletes = this.pendingDeletes.filter((x: string) => x !== id);
+      },
+      commit: () => svc.engine.deleteSubscription(id),
+      onError: (e: Object) => {
+        this.toast($r('app.string.subs_error_delete', s.name));
+      },
+      log: (m: string) => {
+        hilog.info(0x5A50, 'SubscriptionsView', 'delete %{public}s: %{public}s', id, m);
       }
     });
   }

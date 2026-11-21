@@ -2,6 +2,7 @@
  * 吐司宿主：由根页面挂进 OverlayManager 浮层（窗口根，盖在 Navigation / 子页之上；失败时退回根 Stack），显示 AppServices.toasts 的当前吐司（§16.e⑥）。
  * - 出现时朗读文案（有撤销时连同“撤销”）；吐司获得读屏焦点期间不消失（ToastCenter.setFocused）。
  * - 撤销按钮用强调色，只执行撤销（ToastCenter.undoCurrent）；点文案关闭（提交）。整行不挂点按，以免抢走撤销。
+ * - 卡片 hitTestBehavior 必须是 Default（Block 会屏蔽子节点：撤销点不到）。点按 / 撤销 / 提交都打 hilog（ZToastHost、ToastCenter）。
  */
 import { accessibility } from '@kit.AccessibilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
@@ -10,6 +11,10 @@ import { ToastState } from '../app/ToastCenter';
 import { ZTheme } from '../common/Theme';
 import { Subscription as StreamSub } from '../engine/Stream';
 import { ZTerm } from '../generated/ZTerms';
+
+/** UiTest 用的组件 id（ohosTest ToastUi.test 按 id 找“撤销”）。 */
+export const TOAST_UNDO_ID: string = 'zephyr.toast.undo';
+export const TOAST_MESSAGE_ID: string = 'zephyr.toast.message';
 
 @ComponentV2
 export struct ZToastHost {
@@ -70,8 +75,10 @@ export struct ZToastHost {
             .maxLines(2)
             .textOverflow({ overflow: TextOverflow.Ellipsis })
             .constraintSize({ minHeight: 48 })
+            .id(TOAST_MESSAGE_ID)
             .onClick(() => {
               const t = this.toast;
+              hilog.info(0x5A50, 'ZToastHost', 'message tapped -> dismiss');
               if (t !== undefined) {
                 AppServices.get().toasts.dismiss(t.serial);
               }
@@ -83,11 +90,12 @@ export struct ZToastHost {
               .fontColor(this.theme.accentColor())
               .padding({ left: 8, right: 8, top: 10, bottom: 10 })
               .accessibilityRole(AccessibilityRoleType.BUTTON)
-              .hitTestBehavior(HitTestMode.Block)
+              .id(TOAST_UNDO_ID)
               .onClick(() => {
                 // 撤销“当前”吐司：不用本组件缓存的 serial（浮层里的 @Local 可能滞后于 ToastCenter）。
+                hilog.info(0x5A50, 'ZToastHost', 'undo tapped');
                 const done = AppServices.get().toasts.undoCurrent();
-                hilog.info(0x5A50, 'ZToastHost', 'undo tapped, ran=%{public}s', String(done));
+                hilog.info(0x5A50, 'ZToastHost', 'undo ran=%{public}s', String(done));
               })
           }
         }
@@ -97,8 +105,10 @@ export struct ZToastHost {
         .borderRadius(14)
         .backgroundColor($r('app.color.screen_primary'))
         .shadow({ radius: 12, color: '#33000000', offsetY: 4 })
-        // 卡片本身挡住下面的页面（点内边距不漏给底下），但不挂点按手势。
-        .hitTestBehavior(HitTestMode.Block)
+        // 卡片挡住下面的页面（点内边距不漏给底下），但不挂点按手势。必须是 Default：HitTestMode.Block 会连子节点一起屏蔽
+        // （SDK：“Self respond … but block hit test of children”），“撤销”和文案都收不到点按，窗口到期照常删除——
+        // 这正是真机上“点撤销没恢复”的原因（scene-ready.hap，Mate 90）。
+        .hitTestBehavior(HitTestMode.Default)
         .onAccessibilityFocus((focused: boolean) => {
           const t = this.toast;
           if (t !== undefined) {
