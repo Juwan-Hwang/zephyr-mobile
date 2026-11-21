@@ -45,12 +45,16 @@ struct NodeListStyle {
     var textSecondary: UIColor
     var textTertiary: UIColor
     var textQuaternary: UIColor
+    /// 未测 / 测速中延迟（latency.unknown = t3；规范 §9.1 t4 不承载可读信息）
+    var latencyUnknown: UIColor
     var separator: UIColor
     var badgeBorder: UIColor
     var accent: UIColor
     var warning: UIColor
     var danger: UIColor
     var background: UIColor
+    /// 列表上下渐隐终点（screen.fade）
+    var fade: UIColor
     var bubbleBackground: UIColor
     var skeleton: UIColor
 
@@ -84,27 +88,31 @@ struct NodeListStyle {
             footerFont: cap1.scaledFont(for: mono(ZTokens.TypeStyle.caption.size - 0.5), maximumPointSize: 15, compatibleWith: traits),
             bubbleTitleFont: .systemFont(ofSize: ZTokens.TypeStyle.title.size, weight: .medium),
             bubbleSubFont: mono(ZTokens.FontSize.xs - 1),
-            railFont: mono(ZTokens.FontSize.n2xs - 0.5, .semibold),
+            // 规范 §9.2：索引条按 11pt（不再 n2xs − 0.5）；颜色为 accent.text（由 NodesView 传入）。
+            railFont: mono(ZTokens.TypeStyle.caption.size, .semibold),
             textPrimary: primary,
             textSecondary: r(ZColor.t2),
             textTertiary: tertiary,
             textQuaternary: tertiary.withAlphaComponent(tertiary.cgColor.alpha * 0.5),
+            latencyUnknown: r(ZColor.boosted(ZTokens.Colors.latencyUnknown, by: 0.30)),
             separator: r(ZTokens.Colors.screenHl),
             badgeBorder: r(ZTokens.Colors.screenHl2),
             accent: r(accent),
             warning: r(ZTokens.Colors.latencySlow),
             danger: r(ZTokens.Colors.latencyTimeout),
             background: .systemGroupedBackground.resolvedColor(with: traits),
+            fade: r(ZTokens.Colors.screenFade),
             bubbleBackground: r(ZTokens.Colors.screenS1),
             skeleton: r(ZTokens.Colors.screenS3)
         )
     }
 
-    /// 原型：> 200ms 琥珀色，未测 “—” 最淡，测试中 “···”。超时显示“超时”（危险色）。
+    /// ≥ 200ms 琥珀色（latency.slow），超时写“超时”（latency.timeout），未测 “—” 与测速中 “···” 用 latency.unknown（= t3，
+    /// 契约 §18.b：不用 t4）。
     func latencyAppearance(_ state: NodeRowStore.LatencyState?) -> (String, UIColor) {
         switch state {
-        case .none: return ("—", textQuaternary)
-        case .testing: return ("···", textQuaternary)
+        case .none: return ("—", latencyUnknown)
+        case .testing: return ("···", latencyUnknown)
         case .value(let ms) where ms < 0: return (ZL.tr("超时"), danger)
         case .value(let ms): return ("\(ms) ms", ms >= ZTokens.LatencyThreshold.slow ? warning : textSecondary)
         }

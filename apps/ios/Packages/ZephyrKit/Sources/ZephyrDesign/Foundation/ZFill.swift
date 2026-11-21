@@ -29,7 +29,7 @@ public struct ZKnobFill: ShapeStyle, Sendable {
     public func resolve(in environment: EnvironmentValues) -> Color { ZTokens.Colors.screenS4 }
 }
 
-/// 第四级文字（原型 --t4：箭头、序号、未测延迟）。
+/// 第四级（screen.t4）：只给禁用态、装饰分隔、sheet 把手（规范 §9.1：序号、未测延迟、可点行 chevron 用 t3）。
 public struct ZQuaternaryText: ShapeStyle, Sendable {
     public init() {}
     public func resolve(in environment: EnvironmentValues) -> Color { ZTokens.Colors.screenT4 }

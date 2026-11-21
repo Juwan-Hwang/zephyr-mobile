@@ -1,9 +1,12 @@
 // NodeListFooterView — 底部“1 / 13,109,802”与“已检测 41,288”（原型 .vfoot：70pt，向背景渐隐）。
+// 渐隐向上伸出 fadeHeight（screen.fade），文字所在区域已是实色：最后一行不会与页脚文字叠在一起（设计评审 iOS-1）。
 
 import UIKit
 import ZephyrKit
 
 final class NodeListFooterView: UIView {
+    /// 页脚上沿之上的渐隐高度（文字区为实色底，行在此区域淡出）。
+    static let fadeHeight: CGFloat = 24
     private let gradient = CAGradientLayer()
     private let positionLabel = UILabel()
     private let testedLabel = UILabel()
@@ -15,7 +18,8 @@ final class NodeListFooterView: UIView {
         super.init(frame: frame)
         isUserInteractionEnabled = false
         layer.addSublayer(gradient)
-        gradient.locations = [0, 0.4]
+        let fade = Self.fadeHeight / (Self.fadeHeight + NodeListStyle.footerHeight)
+        gradient.locations = [0, NSNumber(value: Double(fade))]
         testedLabel.textAlignment = .right
         addSubview(positionLabel)
         addSubview(testedLabel)
@@ -28,7 +32,7 @@ final class NodeListFooterView: UIView {
     @available(*, unavailable) required init?(coder: NSCoder) { fatalError() }
 
     func apply(style: NodeListStyle) {
-        gradient.colors = [style.background.withAlphaComponent(0).cgColor, style.background.cgColor]
+        gradient.colors = [style.fade.withAlphaComponent(0).cgColor, style.fade.cgColor]
         for l in [positionLabel, testedLabel] {
             l.font = style.footerFont
             l.textColor = style.textTertiary
@@ -63,7 +67,7 @@ final class NodeListFooterView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         CATransaction.begin(); CATransaction.setDisableActions(true)
-        gradient.frame = bounds
+        gradient.frame = CGRect(x: 0, y: -Self.fadeHeight, width: bounds.width, height: bounds.height + Self.fadeHeight)
         CATransaction.commit()
         let lead = NodeListStyle.leading
         let h = ceil(positionLabel.font?.lineHeight ?? 14)

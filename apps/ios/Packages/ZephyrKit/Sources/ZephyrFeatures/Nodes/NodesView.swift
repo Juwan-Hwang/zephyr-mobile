@@ -33,7 +33,7 @@ public struct NodesView: View {
             RegionChips(sections: model.chips, selected: model.selectedChip) { model.select(chip: $0) }
                 .padding(.top, ZTokens.Space.n3)
             NodeListRepresentable(model: model, rowMap: model.rowMap, generation: model.generation,
-                                  accent: model.accent.color) { selected = $0 }
+                                  accent: model.accent.text) { selected = $0 }
                 .overlay {
                     if model.failed {
                         NodesErrorState { model.runQuery() }

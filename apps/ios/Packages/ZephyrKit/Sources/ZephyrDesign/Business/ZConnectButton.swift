@@ -1,5 +1,6 @@
 // 首页右上的大号连接开关（原型 `.sw`：66×40 胶囊，白色旋钮 34，开 = 绿色；按下旋钮加宽到 40）。
-// 状态切换：旋钮 spring（ZTokens.Motion.spring），开启时外发光（glowRadius 28 / glowAlpha 0.35）。
+// 状态切换：旋钮 spring（ZTokens.Motion.spring）。不常驻彩色外发光（规范 §9.1，浅色下发脏）：只在深色、切到“已连接”
+// 的瞬间闪一下（alpha ≤ glowAlpha），随后淡出；浅色、Reduce Motion、静态渲染（快照）都不加。
 // 连接中/断开中：旋钮里转圈。Reduce Motion：无光晕、无弹簧（200ms 缓动）。
 // 触感：按下 medium；连上 success。VoiceOver：开关语义（.isToggle），值为 已连接 / 未连接 / 正在连接…
 
@@ -66,6 +67,9 @@ private struct ZConnectSwitch: View {
     let isPressed: Bool
     @Environment(\.zAccent) private var accent
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
+    /// 切换瞬间的光晕（只在深色、变为 .on 时短暂为 true）。
+    @State private var flash = false
     /// 快照：根上的 `transaction { animation = nil }` 盖不住下面显式的 `.animation(_:value:)`，
     /// 模型在截图前从 connecting 变到 on 时，旋钮与光晕会停在弹簧中途（home-connected-dark 偶发 1 次，#133）。
     @Environment(\.zStaticRendering) private var still
@@ -81,8 +85,7 @@ private struct ZConnectSwitch: View {
         let knobW = (isPressed ? ZMetrics.connectKnobPressed : ZMetrics.connectKnob) * k
         let travel = width - inset * 2 - knobW
         let onColor = tint == .success ? ZSwitchColor.on : accent.color
-        let lit = phase == .on
-        let glowing = lit && !reduceMotion
+        let glowing = flash && phase == .on && colorScheme == .dark && !reduceMotion && !still
 
         ZStack(alignment: .leading) {
             Capsule(style: .continuous)
@@ -108,6 +111,11 @@ private struct ZConnectSwitch: View {
         .contentShape(Capsule(style: .continuous))
         .animation(still ? nil : ZMotion.gentle(ZMotion.spring, reduceMotion: reduceMotion), value: phase)
         .animation(still ? nil : ZMotion.micro, value: isPressed)
+        .onChange(of: phase) { _, new in
+            guard new == .on, colorScheme == .dark, !reduceMotion, !still else { flash = false; return }
+            flash = true
+            withAnimation(.easeOut(duration: 0.6).delay(0.35)) { flash = false }
+        }
         .sensoryFeedback(.impact(weight: .medium), trigger: isPressed) { _, new in new }
     }
 }

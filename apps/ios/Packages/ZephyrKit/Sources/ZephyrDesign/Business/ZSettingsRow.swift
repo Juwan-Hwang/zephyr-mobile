@@ -95,9 +95,10 @@ public struct ZSettingsRow<Trailing: View>: View {
     private var titleBlock: some View {
         HStack(alignment: .firstTextBaseline, spacing: ZTokens.Space.n4) {
             if let index {
+                // 规范 §9.1 / §9.2：序号是可读信息，用 t3、11pt（不用 t4 10.5pt）。
                 Text(verbatim: "\(index)")
                     .zMono(.micro)
-                    .foregroundStyle(ZQuaternaryText())
+                    .foregroundStyle(ZColor.t3)
                     .frame(minWidth: ZTokens.Space.n5, alignment: .leading)
                     .accessibilityHidden(true)
             }
@@ -145,7 +146,7 @@ public struct ZSettingsAccessoryView: View {
     private var chevron: some View {
         Image(systemName: "chevron.forward")
             .font(.footnote.weight(.semibold))
-            .foregroundStyle(ZQuaternaryText())
+            .foregroundStyle(ZColor.t3)
             .accessibilityHidden(true)
     }
 }

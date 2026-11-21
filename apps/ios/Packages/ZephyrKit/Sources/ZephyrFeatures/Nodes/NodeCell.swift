@@ -81,9 +81,12 @@ final class NodeCell: UICollectionViewCell {
         latencyLabel.text = text
         let spoken: String
         switch state {
-        case .none: spoken = ZL.tr("未测速")
+        // 契约 §18.b：未测读“未测”；≥ 200 ms 追加“较慢”（读数本身不加字）。
+        case .none: spoken = ZL.tr("未测")
         case .testing: spoken = ZL.tr("正在测速")
         case .value(let ms) where ms < 0: spoken = ZL.tr("超时")
+        case .value(let ms) where ms >= ZTokens.LatencyThreshold.slow:
+            spoken = ZL.f("%lld 毫秒", Int64(ms)) + ZL.tr("，") + ZL.tr("较慢")
         case .value(let ms): spoken = ZL.f("%lld 毫秒", Int64(ms))
         }
         accessibilityParts.latency = spoken

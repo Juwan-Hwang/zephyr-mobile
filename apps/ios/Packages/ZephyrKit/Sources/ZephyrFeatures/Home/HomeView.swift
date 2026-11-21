@@ -11,6 +11,8 @@ import ZephyrKit
 public struct HomeView: View {
     @Environment(AppModel.self) private var model
     @ScaledMetric(relativeTo: .body) private var dockClearance = HMetrics.dockHeight + ZTokens.Space.n8
+    /// 渐隐层底部的实色段：指令栏本身 + 距安全区底的间距（不含安全区，安全区在运行时加上）。
+    @ScaledMetric(relativeTo: .body) private var dockSolid = HMetrics.dockHeight + HMetrics.dockBottom
     @ScaledMetric(relativeTo: .body) private var toastInset = HMetrics.dockHeight + HMetrics.dockBottom + ZTokens.Space.n3
 
     public init() {}
@@ -32,11 +34,21 @@ public struct HomeView: View {
             }
             .scrollIndicators(.hidden)
         }
+        // 规范 §9.7：指令栏下方不得露出滚动内容。渐隐层铺到屏幕最底（含 home indicator 区），
+        // 只在指令栏上沿以上 n8 内由透明过渡到 screen.fade，指令栏背后与下方为实色。
+        .overlay(alignment: .bottom) {
+            GeometryReader { geo in
+                VStack(spacing: 0) {
+                    Spacer(minLength: 0)
+                    HomeBottomFade(solidHeight: dockSolid + geo.safeAreaInsets.bottom)
+                        .frame(height: dockClearance + geo.safeAreaInsets.bottom)
+                }
+            }
+            .ignoresSafeArea(edges: .bottom)
+            .allowsHitTesting(false)
+        }
         .overlay(alignment: .bottom) {
             HomeDock()
-                .background(alignment: .bottom) {
-                    HomeBottomFade().frame(height: dockClearance).ignoresSafeArea(edges: .bottom)
-                }
         }
         // D 的吐司：停留 undoWindow（5s）、底部进度条耗尽、VoiceOver 播报；位于指令栏上方。
         .zToast(model.sheet == nil ? $model.toast : .constant(nil), bottomInset: toastInset)
