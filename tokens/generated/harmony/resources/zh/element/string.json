@@ -207,6 +207,42 @@
     {
       "name": "term_log_warning",
       "value": "警告"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "正常"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "较慢"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "超时"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "未测"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "即将到期"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "已过期"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "失败"
+    },
+    {
+      "name": "term_reachable",
+      "value": "可连通"
+    },
+    {
+      "name": "term_tested",
+      "value": "已检测"
     }
   ]
 }

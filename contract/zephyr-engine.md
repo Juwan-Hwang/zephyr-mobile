@@ -216,6 +216,7 @@ v0.1 追加：`stale_token`（查询句柄已淘汰，UI 重新 queryNodes 即�
 - v0.1（2026-11-06 14:20）追加 §13：类型命名、Dns/Tun 设置、stale_token / subscription_not_found、IPv6 规则测试、连接轨迹。
 - v0.3（2026-11-14）追加 §15：导入载荷 / 桌面同步二维码格式（parseImportPayload）。
 - v0.4（2026-11-18）追加 §16：发版审计（#209）的契约补定义——网络与路由、错误码映射、设置默认值、指令语义、格式与无障碍、本地代理凭据、日志级别、订阅拉取、平台差异登记。只追加，不改名。
+- v0.6（2026-11-21）追加 §18：设计评审执行——`NodeIndex.reachableCount`（可选）与节点页头部判断句、状态文字术语（状态不只靠颜色）、三端（含鸿蒙）列。只追加，不改名。
 - v0.5（2026-11-21）追加 §17：鸿蒙（HarmonyOS，角色 D，#241）列——§11 平台层、§16.a②④⑤、§16.f、§16.i④ 的鸿蒙行为，鸿蒙平台差异（无控制中心磁贴、无实况窗、无换图标），导航结构与内部深链的决定。只追加，不改名。
 
 ## 13. v0.1 追加（2026-11-06 14:20，只追加不改名）
@@ -878,3 +879,57 @@ isPublicFetchAddress(ip: String) -> Bool            // 顶层函数；DNS 结果
 - 契约内的外链只有 §15 导入载荷与 §16.e⑦ 的四个 scheme（`zephyr://import…`、`clash://`、`clashmeta://`、`mihomo://`），三端都必须支持且行为相同（先解析、确认面板、从不自动导入）。
 - `zephyr://connect`、`disconnect`、`toggle`、`mode/*`、`scene/<id>`、`nodes?q=` 等**内部动作链接不入契约**：目前只有 iOS 实现（`DeepLink.swift`，供小组件 / 实时活动 / 快捷指令用），Android 只注册了 `zephyr://import`，两端不一致，强行统一没有收益。各端按需自定，属平台本地。
 - 鸿蒙若为服务卡片等加内部链接，要求：① 不得占用 `zephyr://import`；② 会改变状态的链接（连接 / 断开 / 切模式）来自外部时必须先让用户确认，或只接受带本机令牌的链接（与 iOS `DeepLinkPolicy` 同思路）；③ 卡片优先用 `postCardAction` 的 router / call 事件直达 Ability，不经 URL。
+
+## 18. v0.6 追加（2026-11-21，设计评审执行，只追加）
+依据：2026-11-21 设计评审（看板 #1）中"先说人话再给数"与"状态除了颜色再给一个形状或一个字"两条借鉴。本节只追加字段与文案，不改任何已有名称；三端（iOS / Android / 鸿蒙）同规则，差异见 18.c。
+
+### 18.a 节点页头部判断句：`NodeIndex.reachableCount`（可选）
+```
+record NodeIndex { total: Int64, sections: [RegionSection], testedCount: Int64, reachableCount: Int64? }   // reachableCount 为 v0.6 追加，可选
+```
+- 定义：`reachableCount` = 与 `testedCount` **同一有效期**（§15.e `latencyFreshMillis`，默认 24 h）内、最近一次样本 ms ≥ 0 的节点数，只数仍在库中的节点。取值 = `nodeFunnel(nowMillis, latencyFreshMillis, thresholdMs).reachable`（§15.c；`thresholdMs` 不影响 `reachable`，传 `latency.threshold-slow` = 200 即可）。
+- **核心不新增导出**：`NodeIndex` 由平台组装（iOS `CoreEngine.nodeIndex()`、Android `CoreEngine.nodeIndex()`、鸿蒙 core-ohos 同名转发），组装时多调一次 `nodeFunnel`；可与场景 sheet 的漏斗共用节流（同一 `nowMillis` 窗口内复用结果）。
+- `null` = 取不到（`nodeFunnel` 抛错、旧 Mock 未实现）。此时只显示"已检测 N"，**不得**用 `testedCount` 或别的数顶替。`testedCount` 会把已删除订阅的旧样本算进去而 `reachable` 不会，所以理论上 `reachableCount ≤ testedCount` 但两者不是同一集合的严格子集；界面不做"x / N"分数或百分比。
+- Mock（mock-spec）：`reachableCount` = mock 延迟表中有效期内 ms ≥ 0 的个数，按 mock 数据算，不另编。
+
+头部文案（大数字仍是 `total`，判断句放在大数字下方一行，取代原来单独的"已检测 N"）：
+
+| 条件 | zh | en |
+|---|---|---|
+| `reachableCount != null` 且 `testedCount > 0` | 可连通 {reachable} · 已检测 {tested} | {reachable} reachable · {tested} tested |
+| `reachableCount == null` 且 `testedCount > 0` | 已检测 {tested} | {tested} tested |
+| `testedCount == 0` | 尚未检测，停止滚动后自动测可见节点 | Not tested yet — visible nodes are tested when you stop scrolling |
+| 搜索结果页（`queryNodes` 非空） | 不显示判断句，保持现有"{total} 个结果 · 用时 x ms" | 同左 |
+
+- "可连通 / 已检测"用 18.b 的术语 `reachable` / `tested`；数字格式按 §16.e（千分位、大数缩写规则同大数字）。其余 12 种语言由各端按术语与 CLDR 复数自行翻译，句式不得改成分数。
+- 颜色：判断句整行 `screen.t2`；`reachable` 数字可用 `screen.t1` 强调。`reachableCount == 0 && testedCount > 0` 时数字用 `screen.red-text`（v0.6 tokens，浅色 #D70015 / 深色同 `screen.red`）并照样写"可连通 0"，不换成图标。
+- 这一行**不是** "A · B · C" 中点串联的豁免：每屏只此一处中点（见 `design/notes/mobile-design-spec.md` 分隔符规则）。
+
+### 18.b 状态文字术语（状态不只靠颜色）
+`contract/i18n/glossary-v1.json` 追加 9 条术语（en / zh 定稿，其余 12 种语言为 A 起草、待母语审校，`keys` 待各端接入后补；鸿蒙由 `tools/gen-harmony-i18n.mjs` 生成为 `ZTerm.stateOk` 等）：
+
+| 术语 key | zh | en | 用在哪里（形状 + 文字，颜色只做加强） |
+|---|---|---|---|
+| `state.ok` | 正常 | Normal | 无障碍标签 / 小组件、服务健康行"正常"；界面上一般不写，靠缺省 |
+| `state.slow` | 较慢 | Slow | 延迟 ≥ 200 ms：数值照常显示（`latency.slow`），无障碍标签追加"较慢"；场景候选列表的刻度条图例 |
+| `state.timeout` | 超时 | Timed out | 延迟 = −1：**写"超时"两个字**，不再只显示红色"—"或"×"；节点行宽度不够时可写"超时"缩略为图标 ✕ + 无障碍标签 |
+| `state.untested` | 未测 | Untested | 未测延迟显示 "—"（`latency.unknown` = t3），无障碍标签"未测"；不得用 t4 或"···" |
+| `state.expiring` | 即将到期 | Expiring soon | 订阅剩余 ≤ 3 天（§16.e 到期规则）：琥珀**圆点** + 到期日期；只给日期或圆点上色，不整行染色 |
+| `state.expired` | 已过期 | Expired | 订阅已过期：红圆点 + "已过期" |
+| `state.failed` | 失败 | Failed | 订阅更新失败、场景重测失败、导入失败的行内状态（连接失败仍用 `status.failed`"连接失败"） |
+| `reachable` | 可连通 | Reachable | 18.a 节点页判断句、场景漏斗第三级 |
+| `tested` | 已检测 | Tested | 18.a 节点页判断句 |
+
+规则：
+1. 每个状态至少有 **形状或文字之一** 与颜色同时出现：圆点（●）、✕、进度条位置、或上表文字。色盲 / 灰度下仍能分辨。
+2. 浅色模式下状态色作**文字**一律用 v0.6 的文字色（`screen.amber-text` / `green-text` / `red-text`，或已改值的 `latency.slow` / `latency.timeout`）；原 `screen.amber` / `green` / `red` 只给圆点、进度条、图标填充。
+3. 小组件、锁屏、灵动岛 / 服务卡片同规则（例："连接失败 · 轻点查看原因"副标题用 t2，失败状态由红圆点 + "连接失败"表达）。
+
+### 18.c 三端列（含鸿蒙）
+| 项 | iOS（B） | Android（C） | 鸿蒙（D） |
+|---|---|---|---|
+| `reachableCount` | `CoreEngine.nodeIndex()` 加一次 `nodeFunnel`；`ZephyrKit.NodeIndex` 加可选字段 | `CoreEngine.nodeIndex()` 同上；`Model.kt` `NodeIndex` 加 `reachableCount: Long?` | core-ohos 已需转发 `nodeFunnel`（§14.w 规则）；Mock 引擎按 18.a 算 |
+| 头部判断句 | 节点页 header | 节点页 header | 节点页 header（同两端，§17.e 导航不变） |
+| 状态术语 | xcstrings 用 18.b 术语，补 `keys.ios` | strings.xml，补 `keys.android` | `ZTerm.*`（已生成，合并 resources 即可） |
+| 无障碍标签 | VoiceOver `accessibilityLabel` | TalkBack `contentDescription` / `stateDescription` | `accessibilityText` / `accessibilityDescription` |
+

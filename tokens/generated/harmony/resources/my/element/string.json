@@ -207,6 +207,42 @@
     {
       "name": "term_log_warning",
       "value": "သတိပေးချက်"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "ပုံမှန်"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "နှေးသည်"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "အချိန်ကုန်သွားသည်"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "မစမ်းရသေး"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "မကြာမီ သက်တမ်းကုန်မည်"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "သက်တမ်းကုန်ပြီ"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "မအောင်မြင်ပါ"
+    },
+    {
+      "name": "term_reachable",
+      "value": "ချိတ်ဆက်နိုင်"
+    },
+    {
+      "name": "term_tested",
+      "value": "စမ်းပြီး"
     }
   ]
 }

@@ -207,6 +207,42 @@
     {
       "name": "term_log_warning",
       "value": "هشدار"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "عادی"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "کند"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "مهلت تمام شد"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "آزمایش‌نشده"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "به‌زودی منقضی می‌شود"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "منقضی‌شده"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "ناموفق"
+    },
+    {
+      "name": "term_reachable",
+      "value": "در دسترس"
+    },
+    {
+      "name": "term_tested",
+      "value": "آزمایش‌شده"
     }
   ]
 }

@@ -207,6 +207,42 @@
     {
       "name": "term_log_warning",
       "value": "تحذير"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "طبيعي"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "بطيء"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "انتهت المهلة"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "لم يُختبر"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "ينتهي قريبًا"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "منتهي"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "فشل"
+    },
+    {
+      "name": "term_reachable",
+      "value": "متاحة"
+    },
+    {
+      "name": "term_tested",
+      "value": "مُختبرة"
     }
   ]
 }

@@ -207,6 +207,42 @@
     {
       "name": "term_log_warning",
       "value": "انتباہ"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "معمول کے مطابق"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "سست"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "وقت ختم"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "غیر جانچا"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "جلد ختم ہو رہا ہے"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "ختم شدہ"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "ناکام"
+    },
+    {
+      "name": "term_reachable",
+      "value": "قابلِ رسائی"
+    },
+    {
+      "name": "term_tested",
+      "value": "جانچے گئے"
     }
   ]
 }

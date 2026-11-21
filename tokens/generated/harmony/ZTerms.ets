@@ -54,4 +54,13 @@ export class ZTerm {
   static readonly diagnostics: Resource = $r('app.string.term_diagnostics');
   static readonly import: Resource = $r('app.string.term_import');
   static readonly logWarning: Resource = $r('app.string.term_log_warning');
+  static readonly stateOk: Resource = $r('app.string.term_state_ok');
+  static readonly stateSlow: Resource = $r('app.string.term_state_slow');
+  static readonly stateTimeout: Resource = $r('app.string.term_state_timeout');
+  static readonly stateUntested: Resource = $r('app.string.term_state_untested');
+  static readonly stateExpiring: Resource = $r('app.string.term_state_expiring');
+  static readonly stateExpired: Resource = $r('app.string.term_state_expired');
+  static readonly stateFailed: Resource = $r('app.string.term_state_failed');
+  static readonly reachable: Resource = $r('app.string.term_reachable');
+  static readonly tested: Resource = $r('app.string.term_tested');
 }
