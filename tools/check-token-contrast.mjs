@@ -155,20 +155,12 @@ allow(['text.on-accent'], ['accent.blue', 'accent.pink', 'accent.green', 'accent
   '旧用法：强调色单一值底上的白字（主按钮 15pt semibold、选中胶囊）：blue 4.02、pink 3.65、green / orange 约 2.2:1。tokens 已给 accent.*.fill + on-fill（blue #0066D6 / pink #D1004B 白字 5.4–5.5，green / orange 黑字 ≥9.5）；平台改用 ZAccent.fill/onFill 后删除本条');
 allow(['text.on-accent'], ['accent.blue.base', 'accent.pink.base', 'accent.green.base', 'accent.orange.base'], ['dark'], 'debt',
   '旧用法：Android 深色在 darkVariant（= accent.*.base 深色 #0A84FF / #FF375F / #30D158 / #FF9F0A）底上写白字，2.0–3.65:1。同上，改用 fill/onFill 后删除本条');
-allow(['screen.t3'], ['screen.s4'], ['light'], 'debt',
-  '浅色 t3 在 s4（#DCDCE1，ZSurface.elevated / 按下态）上 4.39:1，差 0.11。修复：浅色 s4 提亮到约 #E3E3E8，或 elevated 表面上的说明文字用 t2');
 allow(['screen.amber'], ['screen.bg', 'screen.s1', 'screen.s2'], ['light'], 'debt',
   '旧用法：浅色 amber #FF9F0A 作文字约 1.8–2.1:1（订阅「剩余 / 到期」、小组件「连接失败」副标题）。tokens 已给 screen.amber-text（浅色 #B25000，4.66–5.20）；平台改用后删除本条');
 allow(['screen.green'], ['screen.bg', 'screen.s1', 'screen.s2'], ['light'], 'debt',
   '旧用法：浅色 green #34C759 作文字约 2.0–2.2:1（订阅更新 diff「+1,204」）。改用 screen.green-text（#1F7A35，4.83–5.39）后删除本条');
 allow(['screen.red'], ['screen.bg', 'screen.s1', 'screen.s2'], ['light'], 'debt',
   '旧用法：浅色 red #FF3B30 作文字约 3.2–3.6:1（「−318」）。改用 screen.red-text（#D70015，4.83–5.38）后删除本条');
-allow(['latency.slow'], ['screen.bg', 'screen.s1', 'screen.s2'], ['light'], 'debt',
-  '浅色 latency.slow = #FF9F0A 作延迟读数约 1.8–2.1:1。修复：lightValue 改为同 screen.amber-text（#B25000），会改两端节点页 / 场景候选快照，需重录基线（PR agent/a/tokens-light-status）');
-allow(['latency.timeout'], ['screen.bg', 'screen.s1', 'screen.s2'], ['light'], 'debt',
-  '浅色 latency.timeout = #FF3B30 作文字约 3.2–3.6:1。修复：lightValue 改为同 screen.red-text（#D70015），同上需重录基线');
-allow(['screen.up'], ['screen.bg'], ['light'], 'debt',
-  '浅色上行箭头 #FF5E57 在 #F2F2F7 页面底上 2.69:1（卡片上恰 3.0）；旁边有「KB/s」与数值冗余表达。修复时与 color.upload（浅 #D13A3F，iOS 已在用）统一');
 ALLOW['accent.blue|screen.s4|light|text'] = ALLOW['accent.blue|screen.s4|dark|text'] = { kind: 'debt', reason:
   '旧用法：强调色单一值小字在 s4（ZSurface.elevated，如 PageErrorBanner 的「重试」链接）上：浅色 2.94、深色 3.75:1。改用 accent.blue.text（浅色 4.73、深色 5.32）后删除本条' };
 for (const b of ['screen.bg', 'screen.s1']) ALLOW[`accent.blue|${b}|light|text`] = { kind: 'debt', reason:

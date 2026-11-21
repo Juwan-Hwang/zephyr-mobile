@@ -41,9 +41,9 @@ export interface ZColors {
   colorUpload: string;
   /** < 200ms（= screen.t2） */
   latencyNormal: string;
-  /** >= 200ms（= screen.amber） */
+  /** >= 200ms（读数文字：深色 = screen.amber，浅色 = screen.amber-text #B25000，2026-11-21 由 #FF9F0A 改） */
   latencySlow: string;
-  /** 超时 -1（= screen.red） */
+  /** 超时 -1（深色 = screen.red，浅色 = screen.red-text #D70015，2026-11-21 由 #FF3B30 改） */
   latencyTimeout: string;
   /** 未测（= screen.t3） */
   latencyUnknown: string;
@@ -62,7 +62,7 @@ export interface ZColors {
   screenHl2: string;
   screenT1: string;
   screenT2: string;
-  /** 浅色 0.55：白底 4.74:1、#F2F2F7 底 4.63:1；深色 0.5：黑底 5.28:1、#1C1C1E 5.16:1、#2C2C2E 4.69:1；均满足 WCAG AA */
+  /** 浅色 0.56（2026-11-21 由 0.55 上调，为过 s4 #DCDCE1 4.52:1）：白底 ≥4.8:1；深色 0.5：黑底 5.28:1、#1C1C1E 5.16:1、#2C2C2E 4.69:1；均满足 WCAG AA */
   screenT3: string;
   screenT4: string;
   screenGreen: string;
@@ -75,7 +75,7 @@ export interface ZColors {
   screenGreenText: string;
   /** 如「−318」、超时、已过期。浅色 #F2F2F7 4.83、白 5.38 */
   screenRedText: string;
-  /** 上行速率 */
+  /** 上行速率。浅色 2026-11-21 由 #FF5E57 改为与 color.upload 浅色相同的 #D13A3F（#F2F2F7 底 4.29:1），消除 iOS / Android 漂移 */
   screenUp: string;
   /** 浮层/底栏玻璃底色（叠系统模糊） */
   screenGlass: string;
@@ -192,9 +192,9 @@ export const ZColorsLight: ZColors = {
   colorDownload: '#FF007AFF',
   colorUpload: '#FFD13A3F',
   latencyNormal: '#94000000',
-  latencySlow: '#FFFF9F0A',
-  latencyTimeout: '#FFFF3B30',
-  latencyUnknown: '#8C000000',
+  latencySlow: '#FFB25000',
+  latencyTimeout: '#FFD70015',
+  latencyUnknown: '#8F000000',
   screenBg: '#FFF2F2F7',
   screenS1: '#FFFFFFFF',
   screenS2: '#FFFFFFFF',
@@ -204,7 +204,7 @@ export const ZColorsLight: ZColors = {
   screenHl2: '#1F000000',
   screenT1: '#E6000000',
   screenT2: '#94000000',
-  screenT3: '#8C000000',
+  screenT3: '#8F000000',
   screenT4: '#2E000000',
   screenGreen: '#FF34C759',
   screenAmber: '#FFFF9F0A',
@@ -213,7 +213,7 @@ export const ZColorsLight: ZColors = {
   screenAmberText: '#FFB25000',
   screenGreenText: '#FF1F7A35',
   screenRedText: '#FFD70015',
-  screenUp: '#FFFF5E57',
+  screenUp: '#FFD13A3F',
   screenGlass: '#D1FFFFFF',
   screenCmdBg: '#CCF2F2F7',
   screenFade: '#FFF2F2F7',

@@ -35,9 +35,9 @@
   "latency": {
     "$comment": "按原型（克制）：< 200ms 中性次级灰，>= 200ms 琥珀，超时红，未测更淡。不再用红黄绿四档。",
     "normal":  { "value": "rgba(255, 255, 255, 0.6)", "lightValue": "rgba(0, 0, 0, 0.58)", "comment": "< 200ms（= screen.t2）" },
-    "slow":    { "value": "#FFD60A", "lightValue": "#FF9F0A", "comment": ">= 200ms（= screen.amber）" },
-    "timeout": { "value": "#FF453A", "lightValue": "#FF3B30", "comment": "超时 -1（= screen.red）" },
-    "unknown": { "value": "rgba(255, 255, 255, 0.5)", "lightValue": "rgba(0, 0, 0, 0.55)", "comment": "未测（= screen.t3）" },
+    "slow":    { "value": "#FFD60A", "lightValue": "#B25000", "comment": ">= 200ms（读数文字：深色 = screen.amber，浅色 = screen.amber-text #B25000，2026-11-21 由 #FF9F0A 改）" },
+    "timeout": { "value": "#FF453A", "lightValue": "#D70015", "comment": "超时 -1（深色 = screen.red，浅色 = screen.red-text #D70015，2026-11-21 由 #FF3B30 改）" },
+    "unknown": { "value": "rgba(255, 255, 255, 0.5)", "lightValue": "rgba(0, 0, 0, 0.56)", "comment": "未测（= screen.t3）" },
     "threshold-slow": { "value": "200" }
   },
   "screen": {
@@ -51,7 +51,7 @@
     "hl2":    { "value": "rgba(255, 255, 255, 0.13)", "lightValue": "rgba(0, 0, 0, 0.12)", "comment": "描边" },
     "t1":     { "value": "rgba(255, 255, 255, 0.95)", "lightValue": "rgba(0, 0, 0, 0.9)" },
     "t2":     { "value": "rgba(255, 255, 255, 0.6)", "lightValue": "rgba(0, 0, 0, 0.58)" },
-    "t3":     { "value": "rgba(255, 255, 255, 0.5)", "lightValue": "rgba(0, 0, 0, 0.55)", "comment": "浅色 0.55：白底 4.74:1、#F2F2F7 底 4.63:1；深色 0.5：黑底 5.28:1、#1C1C1E 5.16:1、#2C2C2E 4.69:1；均满足 WCAG AA" },
+    "t3":     { "value": "rgba(255, 255, 255, 0.5)", "lightValue": "rgba(0, 0, 0, 0.56)", "comment": "浅色 0.56（2026-11-21 由 0.55 上调，为过 s4 #DCDCE1 4.52:1）：白底 ≥4.8:1；深色 0.5：黑底 5.28:1、#1C1C1E 5.16:1、#2C2C2E 4.69:1；均满足 WCAG AA" },
     "t4":     { "value": "rgba(255, 255, 255, 0.2)", "lightValue": "rgba(0, 0, 0, 0.18)" },
     "green":  { "value": "#30D158", "lightValue": "#34C759" },
     "amber":  { "value": "#FFD60A", "lightValue": "#FF9F0A" },
@@ -60,7 +60,7 @@
     "amber-text": { "value": "#FFD60A", "lightValue": "#B25000", "comment": "状态色作文字（订阅剩余 / 到期日期、延迟较慢读数、失败副标题）。浅色 #F2F2F7 4.66、白 5.20；深色同 amber。原 amber / green / red 只给圆点、进度条、图标填充（2026-11-21 设计评审）" },
     "green-text": { "value": "#30D158", "lightValue": "#1F7A35", "comment": "如更新 diff「+1,204」。浅色 #F2F2F7 4.83、白 5.39（#248A3D 在页面底只有 3.94，不用）" },
     "red-text":   { "value": "#FF453A", "lightValue": "#D70015", "comment": "如「−318」、超时、已过期。浅色 #F2F2F7 4.83、白 5.38" },
-    "up":     { "value": "#FF6B6B", "lightValue": "#FF5E57", "comment": "上行速率" },
+    "up":     { "value": "#FF6B6B", "lightValue": "#D13A3F", "comment": "上行速率。浅色 2026-11-21 由 #FF5E57 改为与 color.upload 浅色相同的 #D13A3F（#F2F2F7 底 4.29:1），消除 iOS / Android 漂移" },
     "glass":  { "value": "rgba(28, 28, 32, 0.82)", "lightValue": "rgba(255, 255, 255, 0.82)", "comment": "浮层/底栏玻璃底色（叠系统模糊）" },
     "cmd-bg": { "value": "rgba(0, 0, 0, 0.72)", "lightValue": "rgba(242, 242, 247, 0.8)", "comment": "指令栏" },
     "fade":   { "value": "#000000", "lightValue": "#F2F2F7", "comment": "列表上下渐隐终点" },
