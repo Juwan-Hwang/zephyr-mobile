@@ -1,9 +1,10 @@
 /*
- * 吐司宿主：放在根页面底部，显示 AppServices.toasts 的当前吐司（§16.e⑥）。
+ * 吐司宿主：由根页面挂进 OverlayManager 浮层（窗口根，盖在 Navigation / 子页之上；失败时退回根 Stack），显示 AppServices.toasts 的当前吐司（§16.e⑥）。
  * - 出现时朗读文案（有撤销时连同“撤销”）；吐司获得读屏焦点期间不消失（ToastCenter.setFocused）。
  * - 撤销按钮用强调色；点吐司本身关闭（提交）。
  */
 import { accessibility } from '@kit.AccessibilityKit';
+import { hilog } from '@kit.PerformanceAnalysisKit';
 import { AppServices } from '../app/AppServices';
 import { ToastState } from '../app/ToastCenter';
 import { ZTheme } from '../common/Theme';
@@ -12,6 +13,8 @@ import { ZTerm } from '../generated/ZTerms';
 
 @ComponentV2
 export struct ZToastHost {
+  /** 吐司离宿主底边的距离（vp）。 */
+  @Param bottom: number = 72;
   @Local toast: ToastState | undefined = undefined;
   @Local theme: ZTheme = ZTheme.shared();
   private sub: StreamSub | undefined = undefined;
@@ -20,6 +23,7 @@ export struct ZToastHost {
     this.sub = AppServices.get().toasts.current.subscribe((t: ToastState | undefined) => {
       this.toast = t;
       if (t !== undefined) {
+        hilog.info(0x5A50, 'ZToastHost', 'show #%{public}d undoable=%{public}s', t.serial, String(t.undoable));
         this.announce(t);
       }
     });
@@ -101,7 +105,8 @@ export struct ZToastHost {
       }
     }
     .width('100%')
-    .padding({ left: 16, right: 16, bottom: 72 })
-    .hitTestBehavior(HitTestMode.Transparent)
+    .padding({ left: 16, right: 16, bottom: this.toast !== undefined ? this.bottom : 0 })
+    // 自身不吃触摸（没有吐司时不挡 tab 栏）；吐司卡片本身照常可点，且不会把点按漏给下面的页面。
+    .hitTestBehavior(HitTestMode.None)
   }
 }

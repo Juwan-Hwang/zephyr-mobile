@@ -15,9 +15,38 @@ import { LicensesPage } from './LicensesPage';
 import { ZTerm } from '../generated/ZTerms';
 import { ZTheme } from '../common/Theme';
 import { ZToastHost } from '../components/ZToastHost';
+import { ComponentContent, window } from '@kit.ArkUI';
+import { hilog } from '@kit.PerformanceAnalysisKit';
 
 const ROUTE_LOGS: string = 'logs';
 const ROUTE_LICENSES: string = 'licenses';
+
+const TAB_BAR_HEIGHT: number = 56;
+const TOAST_GAP: number = 16;
+
+/** 吐司浮层参数：离窗口底边的距离（tab 栏 + 底部导航条 + 间距）。 */
+class ToastLayerArgs {
+  bottom: number;
+
+  constructor(bottom: number) {
+    this.bottom = bottom;
+  }
+}
+
+/**
+ * 吐司浮层（OverlayManager，renderRootOverlay 默认 true）：挂在窗口根上，盖在 Navigation / 子页 / Tabs 之上，
+ * 所以在任何页面（含 logs / licenses 子页）删除后都看得见。根节点 HitTestMode.None：自身不吃触摸，只有吐司卡片可点。
+ */
+@Builder
+function toastLayer(args: ToastLayerArgs) {
+  Column() {
+    ZToastHost({ bottom: args.bottom })
+  }
+  .width('100%')
+  .height('100%')
+  .justifyContent(FlexAlign.End)
+  .hitTestBehavior(HitTestMode.None)
+}
 
 const TAB_HOME: number = 0;
 const TAB_NODES: number = 1;
@@ -32,6 +61,9 @@ struct Index {
   private pathStack: NavPathStack = new NavPathStack();
   private tabs: TabsController = new TabsController();
   private inboxSub: StreamSub | undefined = undefined;
+  /** OverlayManager 挂载失败时退回页面内 Stack 宿主。 */
+  @Local inlineToast: boolean = false;
+  private toastContent: ComponentContent<ToastLayerArgs> | undefined = undefined;
 
   aboutToAppear(): void {
     this.inboxSub = ImportInbox.stream().subscribe((r: ImportRequest | undefined) => {
@@ -41,7 +73,56 @@ struct Index {
     });
   }
 
+  onDidBuild(): void {
+    this.mountToastLayer();
+  }
+
+  /** 底部导航条高度（vp）+ tab 栏 + 间距；取不到导航条时按 0。 */
+  private async toastBottom(): Promise<number> {
+    let indicator = 0;
+    try {
+      const ui = this.getUIContext();
+      const ctx = ui.getHostContext();
+      if (ctx !== undefined) {
+        const win = await window.getLastWindow(ctx);
+        const area = win.getWindowAvoidArea(window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR);
+        indicator = ui.px2vp(area.bottomRect.height);
+      }
+    } catch (e) {
+      indicator = 0;
+    }
+    return TAB_BAR_HEIGHT + TOAST_GAP + indicator;
+  }
+
+  private mountToastLayer(): void {
+    if (this.toastContent !== undefined || this.inlineToast) {
+      return;
+    }
+    const ui = this.getUIContext();
+    this.toastBottom().then((bottom: number) => {
+      try {
+        const content = new ComponentContent<ToastLayerArgs>(ui, wrapBuilder<[ToastLayerArgs]>(toastLayer),
+          new ToastLayerArgs(bottom));
+        ui.getOverlayManager().addComponentContent(content);
+        this.toastContent = content;
+        hilog.info(0x5A50, 'Index', 'toast overlay mounted bottom=%{public}d', Math.round(bottom));
+      } catch (e) {
+        hilog.error(0x5A50, 'Index', 'toast overlay failed, inline host: %{public}s', String(e));
+        this.inlineToast = true;
+      }
+    });
+  }
+
   aboutToDisappear(): void {
+    if (this.toastContent !== undefined) {
+      try {
+        this.getUIContext().getOverlayManager().removeComponentContent(this.toastContent);
+        this.toastContent.dispose();
+      } catch (e) {
+        // 窗口已销毁。
+      }
+      this.toastContent = undefined;
+    }
     if (this.inboxSub !== undefined) {
       this.inboxSub.cancel();
       this.inboxSub = undefined;
@@ -83,7 +164,9 @@ struct Index {
   build() {
     Stack({ alignContent: Alignment.Bottom }) {
       this.navigation()
-      ZToastHost()
+      if (this.inlineToast) {
+        ZToastHost({ bottom: TAB_BAR_HEIGHT + TOAST_GAP })
+      }
     }
     .width('100%')
     .height('100%')
