@@ -1,0 +1,6 @@
+{
+  "name": "zephyr-harmony-node-tests",
+  "private": true,
+  "description": "Node-side checks for apps/harmony pure-logic .ets (tsc --noEmit + runtime tests). See README.md.",
+  "devDependencies": { "typescript": "5.9.3" }
+}

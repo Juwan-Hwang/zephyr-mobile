@@ -1,0 +1,15 @@
+const { DeepLinks } = await import('../.out/rt/entryability/DeepLink.ts');
+let bad = 0; const ok = (c, m) => { if (!c) { bad++; console.log('FAIL', m); } };
+const a = DeepLinks.parse('clash://install-config?url=https%3A%2F%2Fexample.com%2Fsub&name=X', 1);
+ok(a && a.scheme === 'clash' && a.payload && a.payload.items.length === 1, 'clash ' + JSON.stringify(a));
+const b = DeepLinks.parse('ClashMeta://install-config?url=https%3A%2F%2Fa.b%2Fc', 2);
+ok(b && b.scheme === 'clashmeta' && b.payload, 'clashmeta');
+ok(DeepLinks.parse('https://example.com', 3) === undefined, 'http rejected');
+ok(DeepLinks.parse(undefined, 3) === undefined, 'undef');
+ok(DeepLinks.parse('clash://install-configx?url=1', 3) === undefined, 'prefix boundary');
+const c = DeepLinks.parse('mihomo://install-config', 4);
+ok(c && c.payload === undefined && c.errorCode === 'subscription_invalid', 'invalid kept ' + JSON.stringify(c));
+const d = DeepLinks.parse('zephyr://import?v=1&d=xx', 5);
+ok(d && d.scheme === 'zephyr' && d.id > c.id, 'zephyr ' + JSON.stringify(d));
+console.log(bad ? 'FAILED ' + bad : 'deeplink OK');
+process.exit(bad ? 1 : 0);
