@@ -196,7 +196,20 @@ data class NodeSummary(
 data class RegionSection(val region: String, val name: String, val count: Long, val rowOffset: Long)
 
 @Serializable
-data class NodeIndex(val total: Long, val sections: List<RegionSection>, val testedCount: Long)
+/**
+ * Contract §18.a (v0.6): [reachableCount] = `nodeFunnel(now, latencyFreshMillis, 200).reachable`, null when the funnel
+ * could not be read (never substituted). [funnelTested] is the `tested` of that **same** call — the header sentence
+ * 「可连通 {reachable} · 已检测 {tested}」 takes both numbers from one funnel so reachable ≤ tested always holds; it is
+ * Android-local (not in the contract record) and null exactly when [reachableCount] is. [testedCount] keeps its
+ * original meaning (scan progress etc.).
+ */
+data class NodeIndex(
+    val total: Long,
+    val sections: List<RegionSection>,
+    val testedCount: Long,
+    val reachableCount: Long? = null,
+    val funnelTested: Long? = null,
+)
 
 @Serializable
 data class NodeQueryResult(
