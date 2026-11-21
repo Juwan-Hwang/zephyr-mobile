@@ -32,4 +32,15 @@ final class SubscriptionsErrorTests: XCTestCase {
         model.report(Boom())
         XCTAssertEqual(model.error?.message, ZL.tr("操作失败"))
     }
+
+    /// 契约 §18.b state.failed：手动更新失败后行内写「失败」（替代到期），原因仍走横幅。
+    func testFailedUpdateShowsInlineFailedTerm() async {
+        let model = makeModel()
+        let ghost = Subscription(id: "no-such-sub", name: "Ghost", nodeCount: 12, expiresAt: 86_400_000, autoUpdateHours: 12)
+        await model.update(ghost)
+        XCTAssertTrue(model.failedUpdates.contains(ghost.id))
+        XCTAssertNotNil(model.error)
+        XCTAssertTrue(model.detail(ghost).contains(ZL.tr("失败")), model.detail(ghost))
+        XCTAssertFalse(model.detail(ghost).contains(ZFormat.expiry(86_400_000, now: 0)))
+    }
 }

@@ -80,9 +80,9 @@ public enum ZFormat {
         return ZL.f(past ? "%lld 天前" : "%lld 天后", a / 86_400_000)
     }
 
-    /// 到期文案：≥ 7 天 → "26 天后到期"；1–6 天 → "11月9日到期"；当天 → "今天到期"；已过 → "已到期"。
+    /// 到期文案：≥ 7 天 → "26 天后到期"；1–6 天 → "11月9日到期"；当天 → "今天到期"；已过 → "已过期"（术语 state.expired，契约 §18.b）。
     public static func expiry(_ at: Int64, now: Int64 = nowMillis(), timeZone: TimeZone = .current) -> String {
-        if at <= now { return ZL.tr("已到期") }
+        if at <= now { return ZL.tr("已过期") }
         let days = dayIndex(at, timeZone) - dayIndex(now, timeZone)
         if days <= 0 { return ZL.tr("今天到期") }
         if days < 7 { return ZL.s("%@到期", monthDay(at, timeZone: timeZone)) }

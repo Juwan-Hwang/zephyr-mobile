@@ -60,7 +60,7 @@ final class FormatTests: XCTestCase {
         XCTAssertEqual(ZFormat.expiry(now + 26 * 86_400_000 + 3 * 3_600_000, now: now, timeZone: sh), "26 天后到期")
         XCTAssertEqual(ZFormat.expiry(now + 3 * 86_400_000 + 4 * 3_600_000, now: now, timeZone: sh), "11月9日到期")
         XCTAssertEqual(ZFormat.expiry(now + 3_600_000, now: now, timeZone: sh), "今天到期")
-        XCTAssertEqual(ZFormat.expiry(now - 1, now: now, timeZone: sh), "已到期")
+        XCTAssertEqual(ZFormat.expiry(now - 1, now: now, timeZone: sh), "已过期")
         XCTAssertEqual(ZFormat.dayTitle(now, timeZone: sh), "11月6日 · 星期五")
         XCTAssertEqual(ZFormat.clock(now, timeZone: sh), "9:41")
     }

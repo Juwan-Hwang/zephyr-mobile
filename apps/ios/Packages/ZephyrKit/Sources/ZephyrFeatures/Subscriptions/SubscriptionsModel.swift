@@ -32,6 +32,8 @@ final class SubscriptionsModel {
     private(set) var loaded = false
     /// 正在更新（或预览）的订阅 id。
     private(set) var updating: Set<String> = []
+    /// 上次手动更新失败的订阅（契约 §18.b state.failed：行内写「失败」，原因仍走横幅）；下次更新成功后清掉。
+    private(set) var failedUpdates: Set<String> = []
     private(set) var isUpdatingAll = false
     var review: Review?
     /// 左滑“删除”后待确认的订阅。
@@ -97,11 +99,12 @@ final class SubscriptionsModel {
         return (usage(s) ?? 0) >= Self.warnUsage
     }
 
-    /// “8,204 个节点 · 26 天后到期”；更新中为“正在更新…”。
+    /// “8,204 个节点 · 26 天后到期”；更新中为“正在更新…”；上次更新失败为“8,204 个节点 · 失败”（术语 state.failed）。
     func detail(_ s: Subscription) -> String {
         if updating.contains(s.id) || isUpdatingAll { return ZL.tr("正在更新…") }
         var parts = [ZL.s("%@ 个节点", ZFormat.count(s.nodeCount))]
-        if let e = s.expiresAt { parts.append(ZFormat.expiry(e, now: now())) }
+        if failedUpdates.contains(s.id) { parts.append(ZL.tr("失败")) }
+        else if let e = s.expiresAt { parts.append(ZFormat.expiry(e, now: now())) }
         else if let u = s.updatedAt { parts.append(ZL.s("%@更新", ZFormat.relative(u, now: now()))) }
         return parts.joined(separator: " · ")
     }
@@ -148,8 +151,12 @@ final class SubscriptionsModel {
         defer { updating.remove(sub.id) }
         do {
             let d = try await engine.updateSubscription(id: sub.id)
+            failedUpdates.remove(sub.id)
             toast = ZToastItem(ZL.s("已更新 %@：%@ / %@ 节点", sub.name, Self.signed(d.addedNodes, plus: true), Self.signed(d.removedNodes, plus: false)))
-        } catch { report(error) }
+        } catch {
+            if (error as? ZephyrError)?.code != .cancelled { failedUpdates.insert(sub.id) }
+            report(error)
+        }
     }
 
     private func performAll() async {
@@ -157,6 +164,7 @@ final class SubscriptionsModel {
         defer { isUpdatingAll = false }
         do {
             let diffs = try await engine.updateAll()
+            failedUpdates.removeAll()
             toast = ZToastItem(ZL.f("已更新 %lld 个订阅", Int64(diffs.count)))
         } catch { report(error) }
     }

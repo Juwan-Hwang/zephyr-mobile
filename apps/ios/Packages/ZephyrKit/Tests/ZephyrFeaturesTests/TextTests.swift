@@ -18,7 +18,7 @@ final class TextTests: XCTestCase {
 
     func testHomeExpiryFallsBackToFormatOutsideAWeek() {
         XCTAssertEqual(HFormat.homeExpiry(now + 26 * day, now: now, timeZone: sh), "26 天后到期")
-        XCTAssertEqual(HFormat.homeExpiry(now - 1, now: now, timeZone: sh), "已到期")
+        XCTAssertEqual(HFormat.homeExpiry(now - 1, now: now, timeZone: sh), "已过期")
     }
 
     func testServiceSummarySpokenText() {
