@@ -55,6 +55,15 @@ class SubscriptionFetcherTest {
         val nas = SubscriptionFetcher.kotlinTarget("http://nas.local/s")
         SubscriptionFetcher.redirect(kotlinPolicy, nas, "http://nas.local/s", nas, "http://nas.local/t", 0)
         assertEquals(ErrorCode.SUBSCRIPTION_FETCH_FAILED, code { SubscriptionFetcher.redirect(kotlinPolicy, nas, "http://nas.local/s", nas, "http://evil.example/t", 0) })
+        assertTrue(SubscriptionFetcher.redirect(kotlinPolicy, nas, "http://nas.local/s", nas, "http://nas.local/t", 0).second.userEnteredPrivate)
+        // SSRF: a public first hop redirecting to a private host must not be treated as user-typed
+        for (loc in listOf("http://192.168.1.1/admin", "http://10.0.0.1/", "http://nas.local/s", "http://[fd00::1]/", "http://169.254.169.254/latest")) {
+            val (_, rt) = SubscriptionFetcher.redirect(kotlinPolicy, pub, "http://a.example/s", pub.copy(https = false), loc, 0)
+            assertFalse(loc, rt.userEnteredPrivate)
+            val gate = Policy(SubscriptionFetcher::kotlinTarget, SubscriptionFetcher::kotlinIsPublic) { h -> listOf(h.trim('[', ']').let { if (it == "nas.local") "192.168.1.5" else it }) }
+            assertEquals(loc, ErrorCode.SUBSCRIPTION_FETCH_FAILED, code { SubscriptionFetcher.addresses(gate, rt, viaProxy = false) })
+            assertEquals(loc, ErrorCode.SUBSCRIPTION_FETCH_FAILED, code { SubscriptionFetcher.addresses(gate, rt, viaProxy = true) })
+        }
     }
 
     @Test fun ssrfGate() {

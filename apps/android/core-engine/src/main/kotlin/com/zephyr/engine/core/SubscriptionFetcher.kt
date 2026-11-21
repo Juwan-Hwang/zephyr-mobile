@@ -31,7 +31,8 @@ import javax.net.ssl.SSLSocketFactory
  * - only 2xx; body must be UTF‑8 (BOM allowed) else `subscription_invalid`;
  * - SSRF: unless the user typed a private host (`userEnteredPrivate`), every DNS answer must pass
  *   `isPublicFetchAddress`, and the connection goes to the address that was checked (no second lookup);
- *   a user-typed private host may only redirect to itself;
+ *   a user-typed private host may only redirect to itself; a redirect from a public first hop never inherits the
+ *   exemption, so a public URL that redirects to a private address (192.168.x, 10.x, nas.local…) is refused;
  * - while the tunnel runs, requests go through mihomo's loopback mixed port with its credential (the app itself is
  *   excluded from the VPN), so a blocked subscription host updates once connected — same as iOS;
  * - the system HTTP proxy is never read.
@@ -92,7 +93,9 @@ object SubscriptionFetcher {
         val t = try { policy.target(next) } catch (e: ZephyrException) { throw failed("redirect target invalid") }
         if (from.https && !t.https) throw failed("https → http redirect refused")
         if (first.userEnteredPrivate && t.host != first.host) throw failed("private host may only redirect to itself")
-        return next to t
+        // Only the URL the user typed can be exempt. A redirect from a public first hop to a private host / literal
+        // (e.g. 192.168.x) was not typed by the user, so it loses the exemption and must pass the SSRF gate.
+        return next to if (first.userEnteredPrivate) t else t.copy(userEnteredPrivate = false)
     }
 
     /**
