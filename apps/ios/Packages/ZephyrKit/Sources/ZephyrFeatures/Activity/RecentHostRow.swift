@@ -1,4 +1,4 @@
-// "刚才"列表行（原型 `.act .li`）：域名 + "AI，US-Fixed-01" / "直连"，右侧等宽流量 + ›。
+// "最近连接"列表行（原型 `.act .li`）：域名 + "AI · US-Fixed-01" / "直连"，右侧等宽流量 + ›。
 
 import SwiftUI
 import ZephyrDesign
@@ -12,7 +12,7 @@ struct RecentHostRow: View {
 
     private var subtitle: String {
         guard !item.isDirect, let sceneName else { return ZL.tr("直连") }
-        return ZL.s("%@，%@", sceneName, item.node)
+        return ZL.s("%@ · %@", sceneName, item.node)   // 规范 §9.2：分隔用「 · 」，不用「，」
     }
 
     var body: some View {

@@ -1,8 +1,8 @@
 // 活动（原型 08 最近连接 / 09 连接轨迹，截图 act.png / trace.png）。
 //
-//   刚才                                  完成
+//   最近连接                                完成
 //   ┌ claude.ai          2.1 MB › ┐  ← activeConnections 按域名聚合（RecentHost）
-//   │ AI，US-Fixed-01               │
+//   │ AI · US-Fixed-01              │
 //   └ …                             ┘
 //   iPhone 看不到是哪个 App 发起的，只能显示域名。
 // 轻点一行 → 同一 sheet 内切到连接轨迹（TraceView）；深链 zephyr://connections/<host> 直接打开轨迹。
@@ -27,13 +27,13 @@ struct ActivitySheet: View {
     /// 关闭连接后的结果提示（REVIEW H-P2-14）。
     @State private var toast: ZToastItem?
 
-    /// 标题：列表页"刚才"，轨迹页留空（轨迹自带域名大标题）。
+    /// 标题：列表页用术语"最近连接"（规范 §9.8，设计评审 iOS-8），轨迹页留空（轨迹自带域名大标题）。
     private var title: LocalizedStringKey {
-        if host == nil { return "刚才" }
+        if host == nil { return "最近连接" }
         return ""
     }
 
-    /// 从列表进入轨迹时提供"‹ 刚才"返回；深链直达时为 nil。
+    /// 从列表进入轨迹时提供"‹ 最近连接"返回；深链直达时为 nil。
     private var backAction: (@MainActor () -> Void)? {
         guard initialHost == nil else { return nil }
         return { backToList() }

@@ -1,4 +1,4 @@
-// RuleTestCard — 规则测试卡（原型 .rt）：顶部等宽输入框（ZTextField .plain），下方命中链（ZChainStep）与用时；
+// RuleTestCard — 规则测试卡（原型 .rt）：顶部输入框（ZTextField .plain，正文字体；规范 §9.8 只有命中链里的值用等宽），下方命中链（ZChainStep）与用时；
 // 空输入 / 无法识别时给提示。
 
 import SwiftUI
@@ -15,7 +15,7 @@ struct RuleTestCard: View {
     var body: some View {
         ZCard(padding: 0, cornerRadius: ZTokens.Radius.md + ZTokens.Space.n1 / 2) {
             VStack(alignment: .leading, spacing: 0) {
-                ZTextField("测试域名或 IP", text: $input, style: .plain, monospaced: true)
+                ZTextField("测试域名或 IP", text: $input, style: .plain)
                 ZDivider()
                 VStack(alignment: .leading, spacing: 0) {
                     if input.trimmingCharacters(in: .whitespaces).isEmpty {

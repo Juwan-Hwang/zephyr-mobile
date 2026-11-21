@@ -41,6 +41,15 @@ final class NodeListFooterView: UIView {
         setNeedsLayout()
     }
 
+    /// 页头已显示判断句「可连通 x · 已检测 N」时隐藏这里的「已检测」（规范 §9.4：判断句取代单独的已检测数）。
+    var showsTested = true {
+        didSet {
+            guard showsTested != oldValue else { return }
+            testedLabel.isHidden = !showsTested
+            updateAccessibility()
+        }
+    }
+
     /// 每帧可调用：数值不变时不做任何事。
     func set(ordinal: Int64, total: Int64) {
         guard ordinal != lastOrdinal || total != lastTotal else { return }
@@ -53,7 +62,7 @@ final class NodeListFooterView: UIView {
     private func updateAccessibility() {
         var parts: [String] = []
         if lastTotal > 0 { parts.append(ZL.s("第 %1$@ 个，共 %2$@ 个", CompactCount.grouped(lastOrdinal), CompactCount.grouped(lastTotal))) }
-        if lastTested >= 0 { parts.append(ZL.s("已检测 %@ 个", CompactCount.grouped(lastTested))) }
+        if showsTested, lastTested >= 0 { parts.append(ZL.s("已检测 %@ 个", CompactCount.grouped(lastTested))) }
         accessibilityLabel = parts.joined(separator: ZL.tr("，"))
     }
 

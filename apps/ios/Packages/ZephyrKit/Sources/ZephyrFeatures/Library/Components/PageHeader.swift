@@ -16,6 +16,8 @@ struct PageHeader: View {
     var number: String?
     var unit: String?
     var subtitle: String?
+    /// 大数字下方的判断句（节点页「可连通 x · 已检测 N」，规范 §9.4）：整行 t2，可带局部颜色。
+    var judgement: AttributedString? = nil
     var showsNumber = true
     /// 左右内边距；放在 List 行里（已有列表边距）时传 ZTokens.Space.n2。
     var horizontalInset: CGFloat = PageMetrics.titleInset
@@ -31,6 +33,12 @@ struct PageHeader: View {
                     .foregroundStyle(ZTokens.Colors.screenT1)
                     .redacted(reason: number == nil ? .placeholder : [])
                     .padding(.top, ZTokens.Space.n4)
+            }
+            if let judgement {
+                Text(judgement)
+                    .zType(.footnote, monospacedDigits: true)
+                    .foregroundStyle(ZColor.t2)
+                    .padding(.top, ZTokens.Space.n1)
             }
             if let subtitle {
                 Text(verbatim: subtitle)
