@@ -42,6 +42,30 @@ pub struct BuildReport {
 }
 
 /// 包装 core-mobile 的 `MobileCore`。
+/// §15.c 节点漏斗（`nodeFunnel` / §19.a `sceneFunnel` 共用）。
+#[napi(object)]
+pub struct NodeFunnel {
+    pub source_count: u32,
+    pub pool_size: i64,
+    pub tested: i64,
+    pub reachable: i64,
+    pub under_threshold: i64,
+    pub threshold_ms: i32,
+}
+
+impl From<zephyr_mobile_core::node_api::NodeFunnel> for NodeFunnel {
+    fn from(f: zephyr_mobile_core::node_api::NodeFunnel) -> Self {
+        Self {
+            source_count: f.source_count,
+            pool_size: f.pool_size as i64,
+            tested: f.tested as i64,
+            reachable: f.reachable as i64,
+            under_threshold: f.under_threshold as i64,
+            threshold_ms: f.threshold_ms,
+        }
+    }
+}
+
 #[napi(js_name = "MobileCore")]
 pub struct JsMobileCore {
     inner: Arc<Core>,
@@ -78,5 +102,17 @@ impl JsMobileCore {
             kept: r.diff.kept as i64,
             took_millis: r.took_millis as i64,
         })
+    }
+
+    /// 同步：§15.c 全局节点漏斗（场景 sheet lede、§18.a 节点页判断句）。
+    #[napi]
+    pub fn node_funnel(&self, now_millis: i64, max_age_millis: i64, threshold_ms: i32) -> Result<NodeFunnel> {
+        self.inner.node_funnel(now_millis, max_age_millis, threshold_ms).map(NodeFunnel::from).map_err(to_napi)
+    }
+
+    /// 同步：§19.a 场景漏斗（首页场景卡迷你漏斗）；未知 sceneId 抛错（SceneNotFound）。
+    #[napi]
+    pub fn scene_funnel(&self, scene_id: String, now_millis: i64, max_age_millis: i64, threshold_ms: i32) -> Result<NodeFunnel> {
+        self.inner.scene_funnel(scene_id, now_millis, max_age_millis, threshold_ms).map(NodeFunnel::from).map_err(to_napi)
     }
 }

@@ -35,7 +35,8 @@ fi
 
 cd "$HERE"
 cargo build --release --target aarch64-unknown-linux-ohos
-SO=$HERE/target/aarch64-unknown-linux-ohos/release/libcore_ohos.so
+# 尊重 CARGO_TARGET_DIR（沙箱里放 /tmp：/workspace 是 juicefs，lld 链接主机 build script 时偶发 SIGBUS）。
+SO=${CARGO_TARGET_DIR:-$HERE/target}/aarch64-unknown-linux-ohos/release/libcore_ohos.so
 mkdir -p "$NATIVE/out/arm64-v8a"
 cp "$SO" "$NATIVE/out/arm64-v8a/libcore_ohos.so"
 "$NATIVE/scripts/check-ohos-so.sh" --arch arm64 "$NATIVE/out/arm64-v8a/libcore_ohos.so"
