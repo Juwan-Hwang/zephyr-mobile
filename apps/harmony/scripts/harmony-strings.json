@@ -40,7 +40,10 @@
     "hm_command_action_open": "Open",
     "hm_command_action_test": "Test",
     "hm_command_show_all": "Show all %1$s",
-    "hm_command_enter_hint": "Press Enter to run"
+    "hm_command_enter_hint": "Press Enter to run",
+    "hm_card_title": "Service widgets",
+    "hm_card_steps": "Touch and hold the Zephyr icon on the home screen › Service widgets › choose a size › Add to home screen. Tap the power button on the card to connect or disconnect.",
+    "hm_card_ok": "OK"
   },
   "zh": {
     "module_desc": "Zephyr 应用模块",
@@ -83,6 +86,9 @@
     "hm_command_action_open": "打开",
     "hm_command_action_test": "测试",
     "hm_command_show_all": "显示全部 %1$s 项",
-    "hm_command_enter_hint": "按回车执行"
+    "hm_command_enter_hint": "按回车执行",
+    "hm_card_title": "服务卡片",
+    "hm_card_steps": "在桌面长按 Zephyr 图标 › 服务卡片 › 选择尺寸 › 添加到桌面。点卡片上的电源按钮即可连接或断开。",
+    "hm_card_ok": "好"
   }
 }

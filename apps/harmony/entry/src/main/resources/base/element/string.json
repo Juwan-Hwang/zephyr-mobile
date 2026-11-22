@@ -309,6 +309,18 @@
       "value": "Zephyr"
     },
     {
+      "name": "hm_card_ok",
+      "value": "OK"
+    },
+    {
+      "name": "hm_card_steps",
+      "value": "Touch and hold the Zephyr icon on the home screen › Service widgets › choose a size › Add to home screen. Tap the power button on the card to connect or disconnect."
+    },
+    {
+      "name": "hm_card_title",
+      "value": "Service widgets"
+    },
+    {
       "name": "hm_command_action_open",
       "value": "Open"
     },

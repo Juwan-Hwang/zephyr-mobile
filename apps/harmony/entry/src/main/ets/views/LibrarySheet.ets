@@ -3,7 +3,7 @@
  * 2×2 统计入口（节点、订阅、规则、场景）+ 下方列表（设置）。由 Index 用 bindSheet 呈现。
  * 计数在 sheet 出现时读一次，订阅列表变化（导入 / 更新 / 删除）时重读（Android L-P2-2）。
  * 下方列表：受信任 Wi‑Fi（值 = 第一个网络或“无”）、本地代理端口（开 / 关）、设置（同 Android）。
- * 鸿蒙暂无的行（契约 §17.c）：小组件与控制中心（鸿蒙只有服务卡片，卡片未做）。
+ * 「小组件与控制中心」在鸿蒙只保留服务卡片说明（契约 §17.c：没有三方控制中心磁贴）：点开弹出添加步骤。
  */
 import { AppServices } from '../app/AppServices';
 import { LibraryDest } from '../app/AppNav';
@@ -67,6 +67,15 @@ export struct LibrarySheet {
     return n < 0 ? '–' : Format.grouped(n);
   }
 
+  private showCardSteps(): void {
+    this.getUIContext().showAlertDialog({
+      title: $r('app.string.hm_card_title'),
+      message: $r('app.string.hm_card_steps'),
+      autoCancel: true,
+      confirm: { value: $r('app.string.hm_card_ok'), action: () => {} }
+    });
+  }
+
   @Builder
   tile(value: string, label: ResourceStr, d: LibraryDest) {
     Column({ space: 4 }) {
@@ -110,6 +119,10 @@ export struct LibrarySheet {
         .width('100%')
 
         Column() {
+          ZNavRow({
+            title: $r('app.string.hm_card_title'),
+            onTap: () => this.showCardSteps()
+          })
           ZNavRow({
             title: $r('app.string.settings_trusted_wifi'),
             value: this.firstWifi.length > 0 ? this.firstWifi : ZTerm.none,

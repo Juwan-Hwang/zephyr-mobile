@@ -2,7 +2,8 @@ export interface Want { bundleName?: string; abilityName?: string; uri?: string;
 export namespace AbilityConstant { interface LaunchParam { launchReason?: number } }
 export namespace common {
   interface ApplicationInfo { name: string }
-  interface Context { filesDir: string; applicationInfo: ApplicationInfo }
+  interface ResourceManager { getStringSync(id: number, ...args: (string | number)[]): string }
+  interface Context { filesDir: string; applicationInfo: ApplicationInfo; resourceManager: ResourceManager }
   interface ApplicationContext { setColorMode(mode: ConfigurationConstant.ColorMode): void }
   interface UIAbilityContext extends Context { config: Configuration; getApplicationContext(): ApplicationContext }
 }

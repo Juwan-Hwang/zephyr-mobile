@@ -47,6 +47,17 @@
         "icon": "$media:app_icon",
         "type": "vpn",
         "exported": false
+      },
+      {
+        // 服务卡片（契约 §17.c）：只读快照，不加载内核；电源按钮经 router 回到 EntryAbility 执行。
+        "name": "ZephyrFormAbility",
+        "srcEntry": "./ets/widget/ZephyrFormAbility.ets",
+        "description": "$string:widget_description",
+        "label": "$string:widget_label",
+        "type": "form",
+        "metadata": [
+          { "name": "ohos.extension.form", "resource": "$profile:form_config" }
+        ]
       }
     ],
     "requestPermissions": [

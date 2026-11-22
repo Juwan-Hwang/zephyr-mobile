@@ -305,6 +305,18 @@
       "value": "Zephyr"
     },
     {
+      "name": "hm_card_ok",
+      "value": "好"
+    },
+    {
+      "name": "hm_card_steps",
+      "value": "在桌面长按 Zephyr 图标 › 服务卡片 › 选择尺寸 › 添加到桌面。点卡片上的电源按钮即可连接或断开。"
+    },
+    {
+      "name": "hm_card_title",
+      "value": "服务卡片"
+    },
+    {
       "name": "hm_command_action_open",
       "value": "打开"
     },

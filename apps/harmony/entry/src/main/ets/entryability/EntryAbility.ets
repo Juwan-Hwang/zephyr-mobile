@@ -21,12 +21,19 @@ import { NativeEngine } from '../engine/native/NativeEngine';
 import { ZephyrEngine } from '../engine/ZephyrEngine';
 import { VpnController } from '../vpn/VpnController';
 import { DeepLinks } from './DeepLink';
+import { CARD_ACTION_PARAM } from '../widget/CardSnapshot';
+import { CardSync } from '../widget/CardSync';
 
 const DOMAIN: number = 0x5A50;
 const TAG: string = 'EntryAbility';
 
 export default class EntryAbility extends UIAbility {
   private wantsNative: boolean = false;
+  /** 服务卡片快照发布（§17.c）。 */
+  private cardSync: CardSync | undefined = undefined;
+  /** 冷启动时卡片电源按钮的请求：页面加载完（Index 已订阅导入事件）再执行。 */
+  private pendingCardToggle: boolean = false;
+  private contentReady: boolean = false;
   private themeSub: StreamSub | undefined = undefined;
   private appliedAppearance: Appearance | undefined = undefined;
 
@@ -53,10 +60,19 @@ export default class EntryAbility extends UIAbility {
         hilog.error(DOMAIN, TAG, 'VpnController init failed: %{public}s', String(e));
       }
       AppServices.install(engine, vpn, settings);
+      this.cardSync = new CardSync(this.context, engine);
+      this.cardSync.start();
       hilog.info(DOMAIN, TAG, 'engine=%{public}s vpn=%{public}s', engine.kind, String(vpn !== undefined));
       windowStage.loadContent('pages/Index', (err) => {
         if (err && err.code) {
           hilog.error(DOMAIN, TAG, 'loadContent failed: %{public}d %{public}s', err.code, err.message);
+          return;
+        }
+        this.contentReady = true;
+        if (this.pendingCardToggle) {
+          this.pendingCardToggle = false;
+          // 等 Index 的 aboutToAppear 订阅好 importRequests（没有订阅时开关改为打开导入，§16.b②）。
+          setTimeout(() => this.cardToggle(), 300);
         }
       });
     });
@@ -75,6 +91,10 @@ export default class EntryAbility extends UIAbility {
   }
 
   onDestroy(): void {
+    if (this.cardSync !== undefined) {
+      this.cardSync.dispose();
+      this.cardSync = undefined;
+    }
     if (this.themeSub !== undefined) {
       this.themeSub.cancel();
       this.themeSub = undefined;
@@ -123,7 +143,25 @@ export default class EntryAbility extends UIAbility {
     return new MockEngine();
   }
 
+  /** 服务卡片电源按钮（postCardAction router，契约 §17.e③）：用户在卡片上的操作，断开算手动断开（§16.a⑤）。 */
+  private cardToggle(): void {
+    const svc = AppServices.get();
+    svc.connection.toggle().catch((e: Error) => {
+      hilog.error(DOMAIN, TAG, 'card toggle failed: %{public}s', String(e));
+    });
+  }
+
   private handleWant(want: Want): void {
+    const p = want.parameters;
+    if (p !== undefined && p[CARD_ACTION_PARAM] === 'toggle') {
+      hilog.info(DOMAIN, TAG, 'card toggle');
+      if (this.contentReady) {
+        this.cardToggle();
+      } else {
+        this.pendingCardToggle = true;
+      }
+      return;
+    }
     const req = DeepLinks.parse(want.uri, Date.now());
     if (req === undefined) {
       return;
