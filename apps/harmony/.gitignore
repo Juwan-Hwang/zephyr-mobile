@@ -17,3 +17,5 @@
 *.csr
 # 预编译原生库由 tools/build-*.sh 产出，不入库
 /entry/libs/**/*.so
+# 开源许可原文由构建从仓库根复制（tools/build-hmos.sh / entry/hvigorfile.ts）
+/entry/src/main/resources/rawfile/licenses/

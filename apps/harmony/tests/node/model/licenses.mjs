@@ -1,0 +1,12 @@
+const { Licenses, LicenseDoc } = await import('../.out/rt/app/Licenses.ts');
+import fs from 'fs';
+let bad=0; const ok=(c,m)=>{ if(!c){ bad++; console.log('FAIL',m); } };
+ok(JSON.stringify(Licenses.blocks('a\r\nb\r\n\r\n\r\n  \nc  \n\n'))==='["a\\nb","  \\nc"]','blocks');
+ok(Licenses.sourceTag('1.2.0')==='mobile-v1.2.0','tag');
+const m=new Map(); m.set(LicenseDoc.APP,'MIT\n\nx'); m.set(LicenseDoc.TEXTS,'');
+const r=Licenses.rows(m); ok(r.length===3&&r[0].header&&r[1].text==='MIT'&&r[2].key==='LICENSE-1','rows');
+ok(Licenses.rows(new Map()).length===0,'empty');
+const big=fs.readFileSync(new URL('../../../../../THIRD_PARTY_LICENSES.txt',import.meta.url),'utf8');
+const b=Licenses.blocks(big); ok(b.length>100,'big file blocks '+b.length);
+ok(b.join('\n\n').replace(/\s/g,'')===big.replace(/\s/g,''),'round trip');
+console.log(bad?'FAILED '+bad:'licenses OK'); process.exit(bad?1:0);

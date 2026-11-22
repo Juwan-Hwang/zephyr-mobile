@@ -62,6 +62,13 @@ find "$PROJ" -mindepth 1 -maxdepth 1 ! -name entry ! -name .hvigor -exec rm -rf 
 (cd "$APP" && tar cf - --exclude=./native --exclude=./tools --exclude=./docs --exclude=./tests --exclude=node_modules --exclude=oh_modules \
    --exclude=build --exclude=.hvigor --exclude=local.properties .) | (cd "$PROJ" && tar xf -)
 
+# 2b. 开源许可原文放进 rawfile/licenses/（同 Android bundleLicenseAssets；不入库，设置 › 开源许可读取）
+REPO=$(cd "$APP/../.." && pwd)
+mkdir -p "$PROJ/entry/src/main/resources/rawfile/licenses"
+for f in LICENSE THIRD_PARTY_NOTICES.md THIRD_PARTY_LICENSES.txt; do
+  [ -f "$REPO/$f" ] && cp "$REPO/$f" "$PROJ/entry/src/main/resources/rawfile/licenses/$f"
+done
+
 # 3. ohpm install 的效果：唯一依赖是本地 file: 类型声明包（libcore_ohos.so）。
 #    用软链模拟，避免 ohpm 去访问网络；缺了它 MobileCore 会被推成 any，报假的 arkts-no-any-unknown。
 mkdir -p "$PROJ/entry/oh_modules"

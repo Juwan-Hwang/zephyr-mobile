@@ -345,10 +345,6 @@
       "value": "Timeout"
     },
     {
-      "name": "hm_licenses_placeholder",
-      "value": "The full list of licenses will be included in a later build."
-    },
-    {
       "name": "hm_nodes_untested",
       "value": "Not tested yet — visible nodes are tested when you stop scrolling"
     },

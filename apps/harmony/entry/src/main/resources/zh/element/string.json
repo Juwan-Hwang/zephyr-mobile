@@ -341,10 +341,6 @@
       "value": "超时"
     },
     {
-      "name": "hm_licenses_placeholder",
-      "value": "完整的许可列表将在后续版本中提供。"
-    },
-    {
       "name": "hm_nodes_untested",
       "value": "尚未检测，停止滚动后自动测可见节点"
     },

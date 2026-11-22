@@ -13,6 +13,7 @@ import { bundleManager, common } from '@kit.AbilityKit';
 import { SettingsCodec } from '../engine/SettingsCodec';
 import { AppServices } from '../app/AppServices';
 import { Onboarding } from '../app/Onboarding';
+import { SOURCE_URL } from '../app/Licenses';
 import { MockEngine } from '../engine/MockEngine';
 import { SceneFailoverNotice } from '../engine/Model';
 import { Format } from '../common/Format';
@@ -29,8 +30,6 @@ import { ZTerm } from '../generated/ZTerms';
 const MODES: ProxyMode[] = [ProxyMode.RULE, ProxyMode.GLOBAL, ProxyMode.DIRECT];
 const LEVELS: LogLevel[] = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARNING, LogLevel.ERROR];
 const APPEARANCES: Appearance[] = [Appearance.SYSTEM, Appearance.DARK, Appearance.LIGHT];
-/** 设置 › 关于 › 源代码（同 Android SOURCE_URL）。 */
-export const SOURCE_URL: string = 'https://github.com/Juwan-Hwang/zephyr-mobile';
 const TTL_OPTIONS: number[] = SettingsCodec.LATENCY_TTL_OPTIONS;
 
 const ACCENTS: Accent[] = [Accent.BLUE, Accent.GREEN, Accent.ORANGE, Accent.PINK];
