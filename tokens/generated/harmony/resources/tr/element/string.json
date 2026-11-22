@@ -226,7 +226,7 @@
     },
     {
       "name": "term_state_expiring",
-      "value": "Yakında sona eriyor"
+      "value": "Süresi dolmak üzere"
     },
     {
       "name": "term_state_expired",

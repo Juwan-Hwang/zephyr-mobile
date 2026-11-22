@@ -218,7 +218,7 @@
     },
     {
       "name": "term_state_timeout",
-      "value": "مهلت تمام شد"
+      "value": "اتمام مهلت"
     },
     {
       "name": "term_state_untested",
@@ -226,7 +226,7 @@
     },
     {
       "name": "term_state_expiring",
-      "value": "به‌زودی منقضی می‌شود"
+      "value": "نزدیک به انقضا"
     },
     {
       "name": "term_state_expired",
