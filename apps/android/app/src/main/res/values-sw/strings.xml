@@ -518,6 +518,6 @@
     <string name="settings_save_failed">Imeshindwa kuhifadhi mpangilio</string>
     <!-- Contract §18.b status terms (glossary state.ok / state.expired / state.failed) -->
     <string name="state_ok">Kawaida</string>
-    <string name="state_expired">Imeisha muda</string>
+    <string name="state_expired">Imekwisha</string>
     <string name="state_failed">Imeshindwa</string>
 </resources>

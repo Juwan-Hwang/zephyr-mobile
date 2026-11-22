@@ -232,8 +232,8 @@ private fun commandCandidates(conn: com.zephyr.engine.ConnectionState, scenes: L
         Triple(com.zephyr.engine.ProxyMode.GLOBAL, R.string.common_mode_global to R.string.common_mode_global_hint, listOf("全局模式", "global")),
         Triple(com.zephyr.engine.ProxyMode.DIRECT, R.string.common_mode_direct to R.string.common_mode_direct_hint, listOf("直连模式", "direct")),
     ).map { (m, res, aliases) -> CommandCandidate(stringResource(res.first), stringResource(res.second), CommandTarget.Mode(m), aliases, prefix = true) }
-    val toggle = if (on) CommandCandidate(stringResource(R.string.common_disconnect), null, CommandTarget.Toggle(false), listOf("断开", "disconnect"), prefix = true)
-    else CommandCandidate(stringResource(R.string.common_connect), null, CommandTarget.Toggle(true), listOf("连接", "connect"), prefix = true)
+    val toggle = if (on) CommandCandidate(stringResource(R.string.common_disconnect), null, CommandTarget.Toggle(false), CommandResults.DISCONNECT_ALIASES, prefix = true)
+    else CommandCandidate(stringResource(R.string.common_connect), null, CommandTarget.Toggle(true), CommandResults.CONNECT_ALIASES, prefix = true)
     val sceneRows = scenes.map { s -> CommandCandidate(s.displayName(), s.selected.name, CommandTarget.Scene(s.id)) }
     val pages = listOf(
         R.string.common_nodes to CommandPage.NODES, R.string.common_subscriptions to CommandPage.SUBSCRIPTIONS,

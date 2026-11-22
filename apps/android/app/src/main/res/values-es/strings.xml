@@ -552,6 +552,6 @@
     <string name="settings_save_failed">No se ha podido guardar el ajuste</string>
     <!-- Contract §18.b status terms (glossary state.ok / state.expired / state.failed) -->
     <string name="state_ok">Normal</string>
-    <string name="state_expired">Vencido</string>
+    <string name="state_expired">Vencida</string>
     <string name="state_failed">Error</string>
 </resources>

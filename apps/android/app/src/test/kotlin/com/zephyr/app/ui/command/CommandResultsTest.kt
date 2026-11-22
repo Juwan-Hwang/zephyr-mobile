@@ -55,6 +55,21 @@ class CommandResultsTest {
         assertFalse(CommandResults.matches("  ", page))
     }
 
+    @Test fun singleCharacterToggleAliasesMatchWholeWordOnly() {
+        val connect = CommandCandidate("连接", null, CommandTarget.Toggle(true), CommandResults.CONNECT_ALIASES, prefix = true)
+        val disconnect = CommandCandidate("断开连接", null, CommandTarget.Toggle(false), CommandResults.DISCONNECT_ALIASES, prefix = true)
+        assertTrue(CommandResults.matches("开", connect))
+        assertTrue(CommandResults.matches(" 开 ", connect))
+        assertFalse(CommandResults.matches("开", disconnect))
+        assertTrue(CommandResults.matches("关", disconnect))
+        assertFalse(CommandResults.matches("关", connect))
+        assertFalse(CommandResults.matches("开启", connect))
+        assertFalse(CommandResults.matches("关于", disconnect))
+        // Same as iOS: other words still reach their row; a lone 「开」 never prefix-matches a mode.
+        assertTrue(CommandResults.matches("连接", connect))
+        assertFalse(CommandResults.matches("开", CommandCandidate("规则", null, CommandTarget.Mode(ProxyMode.RULE), listOf("规则模式", "rule"), prefix = true)))
+    }
+
     @Test fun highlightWithoutPreviewStartsAtSecondRowAndStopsAtEnds() {
         val keys = listOf("a", "b", "c")
         assertEquals("b", CommandResults.moveHighlight(null, keys, 1, hasPrimary = false))

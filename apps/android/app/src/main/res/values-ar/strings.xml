@@ -688,6 +688,6 @@
     <string name="settings_save_failed">تعذّر حفظ الإعداد</string>
     <!-- Contract §18.b status terms (glossary state.ok / state.expired / state.failed) -->
     <string name="state_ok">طبيعي</string>
-    <string name="state_expired">منتهي</string>
+    <string name="state_expired">منتهي الصلاحية</string>
     <string name="state_failed">فشل</string>
 </resources>
