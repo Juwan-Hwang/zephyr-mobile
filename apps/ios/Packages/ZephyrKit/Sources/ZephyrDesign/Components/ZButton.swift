@@ -1,5 +1,6 @@
 // 按钮（原型 `.btn`：40 高胶囊、14/500、左右 18；`.ob .foot .btn` 52 高、16 号）。
-// primary = `.btn.p`（--t1 底 / --onp 字）；ghost = `.btn.q`（--hl 底 / --t1 字）；danger = --hl 底 / 红字；accent = `.btn.blue` 强调色实心。
+// primary = 主按钮：规范 §9.1 `accent.*.fill` 底 + `on-fill` 字（green / orange 底黑字；原型 `.btn.p` 的 t1 白底已弃用，#1 C 23:35 / Android #299 同步）；
+// ghost = `.btn.q`（--hl 底 / --t1 字）；danger = --hl 底 / 红字；accent = 与 primary 同色（保留给旧调用点）。
 // 视觉高度保持 40（regular），触控区上下各外扩 2pt 到 44（不占布局）；按下缩放 0.97，无触感；
 // 大字体时高度随字号增长、文字可换行。
 
@@ -81,7 +82,7 @@ public struct ZButton: View {
 
     private var foreground: AnyShapeStyle {
         switch kind {
-        case .primary: return AnyShapeStyle(ZTokens.Colors.screenOnPrimary)
+        case .primary: return AnyShapeStyle(ZAccentOnFillStyle())   // §9.1：主按钮 fill + onFill
         case .ghost: return AnyShapeStyle(ZTokens.Colors.screenT1)
         case .danger: return AnyShapeStyle(ZTokens.Colors.screenRedText)
         case .accent: return AnyShapeStyle(ZAccentOnFillStyle())   // X-2：fill + onFill（green / orange 底黑字）
@@ -90,9 +91,8 @@ public struct ZButton: View {
 
     private var background: AnyShapeStyle {
         switch kind {
-        case .primary: return AnyShapeStyle(ZTokens.Colors.screenT1)
         case .ghost, .danger: return AnyShapeStyle(ZTokens.Colors.screenHl)
-        case .accent: return AnyShapeStyle(ZAccentFillStyle())
+        case .primary, .accent: return AnyShapeStyle(ZAccentFillStyle())
         }
     }
 }
