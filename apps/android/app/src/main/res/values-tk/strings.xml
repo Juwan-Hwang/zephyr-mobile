@@ -148,6 +148,8 @@
     <string name="scene_funnel_reachable">Elýeterli</string>
     <string name="scene_funnel_under">%1$d ms-den az</string>
     <string name="home_mini_funnel_a11y">Elýeterli %1$s, 200 millisekuntdan az %2$s</string>
+    <string name="scene_tickbar_timeouts">Wagt gutardy: %1$s</string>
+    <string name="scene_tickbar_a11y">%1$s dalaşgär, %2$s sany 200 millisekuntdan az, %3$s sany wagt gutardy</string>
     <string name="scene_note">Saýlananlar diňe Zephyr-de saklanýar. Abunaňyzyň konfigurasiýasy üýtgemeýär.</string>
     <string name="scene_note_tested">%1$s Soňky barlag: %2$s.</string>
     <string name="command_placeholder">Gözle ýa-da buýruk ýaz</string>

@@ -140,6 +140,8 @@
     <string name="scene_funnel_reachable">接続可能</string>
     <string name="scene_funnel_under">%1$d ms 未満</string>
     <string name="home_mini_funnel_a11y">接続可能 %1$s、200 ミリ秒未満 %2$s</string>
+    <string name="scene_tickbar_timeouts">タイムアウト %1$s</string>
+    <string name="scene_tickbar_a11y">候補 %1$s 件、200 ミリ秒未満 %2$s 件、タイムアウト %3$s 件</string>
     <string name="scene_note">おすすめの結果は Zephyr 内にのみ保存されます。サブスクリプションの構成は変更されません。</string>
     <string name="scene_note_tested">%1$s最終テスト：%2$s。</string>
     <string name="command_placeholder">検索またはコマンドを入力</string>

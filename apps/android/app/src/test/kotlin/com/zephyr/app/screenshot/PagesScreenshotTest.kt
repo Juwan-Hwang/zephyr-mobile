@@ -3,7 +3,12 @@ package com.zephyr.app.screenshot
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.android.resources.NightMode
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.first
 import com.zephyr.app.di.AppGraph
 import com.zephyr.app.ui.activity.ActivitySheet
 import com.zephyr.app.ui.activity.TraceSheet
@@ -50,6 +55,22 @@ class PagesScreenshotTest(private val dark: Boolean) {
         androidx.compose.foundation.layout.Box(androidx.compose.ui.Modifier.fillMaxSize()) { ActivitySheet(true, {}, null, onHost = {}) } } } }
     @Test fun trace() = paparazzi.snapshot { ZephyrTheme(dark = dark) { androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) {
         androidx.compose.runtime.CompositionLocalProvider(androidx.compose.ui.platform.LocalInspectionMode provides true) { androidx.compose.foundation.layout.Box(androidx.compose.ui.Modifier.fillMaxSize()) { TraceSheet("claude.ai") {} } } } } }
+
+    /** J-6 (spec §9.6): the scene sheet with its latency tick bar over the mock candidate pool. */
+    @Test fun sceneSheet() {
+        val scene = kotlinx.coroutines.runBlocking { engine.scenes().first().first() }
+        paparazzi.snapshot { ZephyrTheme(dark = dark) { androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) {
+            androidx.compose.foundation.layout.Box(androidx.compose.ui.Modifier.fillMaxSize()) { com.zephyr.app.ui.scene.SceneSheet(scene, onDismiss = {}) } } } }
+    }
+
+    /** J-6 tick bar alone, fixed data: slow ticks amber, the selected exit (id 2) tall accent, > 600 ms at the right end, 「超时 2」. */
+    @Test fun latencyTickBar() = paparazzi.snapshot { ZephyrTheme(dark = dark) {
+        val ms = listOf(38, 64, 92, 120, 150, 188, 210, 260, 407, 720, -1, -1, null)
+        val nodes = ms.mapIndexed { i, m -> com.zephyr.engine.NodeSummary(id = i.toLong(), name = "n$i", region = "JP", protocol = "", latencyMs = m) }
+        androidx.compose.foundation.layout.Box(androidx.compose.ui.Modifier.fillMaxWidth().background(com.zephyr.design.theme.ZTheme.colors.bg).padding(horizontal = 36.dp, vertical = 24.dp)) {
+            com.zephyr.app.ui.scene.LatencyTickBar(nodes, selectedId = 2L)
+        }
+    } }
 
     companion object {
         @JvmStatic @Parameterized.Parameters(name = "dark={0}")

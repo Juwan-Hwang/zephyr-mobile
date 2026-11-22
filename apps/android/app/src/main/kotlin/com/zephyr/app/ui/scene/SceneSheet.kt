@@ -59,7 +59,7 @@ fun BoxScope.SceneSheet(
         // The whole candidate pool: its size is the lede's "M 个节点"; the list shows the 12 fastest.
         val candidates by produceState(emptyList<NodeSummary>(), s.id, s.selected.id, s.source, s.nodeFilter) {
             value = runCatching { AppGraph.engine.sceneCandidates(s.id, null) }.getOrDefault(emptyList())
-                .sortedBy { it.latencyMs ?: Int.MAX_VALUE }
+                .sortedBy { it.latencyMs?.takeIf { ms -> ms >= 0 } ?: Int.MAX_VALUE } // timeouts (< 0) sort with untested, last
         }
         val pool = candidates.take(12)
         val settings by AppGraph.engine.settings().collectAsState(Settings())
@@ -98,6 +98,11 @@ fun BoxScope.SceneSheet(
             Spacer(Modifier.height(6.dp))
         }
         Spacer(Modifier.height(12.dp))
+        if (candidates.isNotEmpty()) {
+            // Spec §9.6 / J-6: latency tick bar over the whole pool, aligned with the list's row text (16 + 20 dp).
+            LatencyTickBar(candidates, s.selected.id, Modifier.padding(horizontal = 36.dp))
+            Spacer(Modifier.height(8.dp))
+        }
         if (pool.isNotEmpty()) {
             ZListGroup {
                 pool.forEachIndexed { i, n ->
@@ -105,7 +110,7 @@ fun BoxScope.SceneSheet(
                     val fixed = s.exceptions.firstOrNull { it.node.id == n.id }
                     ZSettingsRow(
                         n.name,
-                        value = listOfNotNull(fixed?.let { stringResource(R.string.scene_pinned_for, it.app) }, n.latencyMs?.let { "$it ms" }).joinToString("  ").ifEmpty { null },
+                        value = listOfNotNull(fixed?.let { stringResource(R.string.scene_pinned_for, it.app) }, n.latencyMs?.let { if (it < 0) stringResource(com.zephyr.design.R.string.common_latency_timeout) else "$it ms" }).joinToString("  ").ifEmpty { null },
                         onClick = if (n.id == s.selected.id) null else ({ onPick(s, n) }),
                         trailing = if (n.id == s.selected.id) ({ ZText(stringResource(R.string.common_current), style = ZTheme.type.footnote, color = c.accentText) }) else null,
                     )
