@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
@@ -148,7 +149,7 @@ fun CommandResultList(
     onNodeFooter: () -> Unit = {},
 ) {
     groups.forEach { g ->
-        ZText(g.group.title(), Modifier.padding(start = 14.dp, top = 24.dp, bottom = 8.dp).semantics { androidx.compose.ui.semantics.heading() },
+        ZText(g.group.title(), Modifier.padding(start = 14.dp, top = 24.dp, bottom = 8.dp).semantics { heading() },
             style = ZTheme.type.footnote, color = ZTheme.colors.text3)
         val shown = CommandResults.shown(g, expanded)
         ZCard {
