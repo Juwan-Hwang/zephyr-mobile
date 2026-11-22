@@ -20,18 +20,18 @@ import androidx.compose.ui.unit.dp
 import com.zephyr.design.theme.ZAnim
 import com.zephyr.design.theme.ZTheme
 
-/** Filter chip ("US 312 万"). Selected = inverted pill. */
+/** Filter chip ("US 312 万"). Selected = accent fill pill with `on-fill` text (spec §9.1, follows the user's accent). */
 @Composable
 fun ZChip(label: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier, detail: String? = null) {
     val c = ZTheme.colors
-    val bg by animateColorAsState(if (selected) c.text1 else c.bg.copy(alpha = 0f), ZAnim.standard(), label = "chip")
-    val fg = if (selected) c.bg else c.text2
+    val bg by animateColorAsState(if (selected) c.accentFill else c.accentFill.copy(alpha = 0f), ZAnim.standard(), label = "chip")
+    val fg = if (selected) c.onAccentFill else c.text2
     Row(
         modifier
             .height(30.dp)
             .clip(ZTheme.shapes.pill)
             .background(bg)
-            .border(1.dp, if (selected) c.text1 else c.hairlineStrong, ZTheme.shapes.pill)
+            .border(1.dp, if (selected) c.accentFill else c.hairlineStrong, ZTheme.shapes.pill)
             .semantics { this.selected = selected }
             .zPressable(role = Role.Tab, haptic = !selected, onClick = onClick)
             .padding(horizontal = 12.dp),
@@ -40,7 +40,7 @@ fun ZChip(label: String, selected: Boolean, onClick: () -> Unit, modifier: Modif
         ZText(label, style = ZTheme.type.footnote, color = fg, maxLines = 1)
         if (detail != null) {
             Spacer(Modifier.width(6.dp))
-            ZText(detail, style = ZTheme.type.monoSmall, color = if (selected) c.bg.copy(alpha = 0.6f) else c.text3, maxLines = 1)
+            ZText(detail, style = ZTheme.type.monoSmall, color = if (selected) c.onAccentFill.copy(alpha = 0.6f) else c.text3, maxLines = 1)
         }
     }
 }
