@@ -1,0 +1,18 @@
+const { TrustedWifi, LocalProxy } = await import('../.out/rt/app/NetworkPrefs.ts');
+const { defaultSettings } = await import('../.out/rt/engine/Model.ts');
+let bad=0; const ok=(c,m)=>{ if(!c){ bad++; console.log('FAIL',m); } };
+const s0=defaultSettings();
+let s=TrustedWifi.add(s0,'  Home  '); ok(s&&s.trustedWifi.join()==='Home','add trims');
+ok(s0.trustedWifi.length===0,'no mutation');
+ok(TrustedWifi.add(s,'Home')===undefined,'dup');
+ok(TrustedWifi.add(s,'   ')===undefined,'blank');
+ok(TrustedWifi.add(s,'a'.repeat(33))===undefined,'>32 bytes');
+ok(TrustedWifi.add(s,'家'.repeat(10))!==undefined&&TrustedWifi.add(s,'家'.repeat(11))===undefined,'utf8 bytes');
+let full=s0; for(let i=0;i<50;i++) full=TrustedWifi.add(full,'w'+i); ok(full.trustedWifi.length===50&&TrustedWifi.add(full,'x')===undefined,'max 50');
+ok(TrustedWifi.remove(s,'Home').trustedWifi.length===0&&s.trustedWifi.length===1,'remove');
+ok(LocalProxy.parsePort('7890')===7890&&LocalProxy.parsePort('1024')===1024&&LocalProxy.parsePort('65535')===65535,'ports');
+ok(LocalProxy.parsePort('1023')===undefined&&LocalProxy.parsePort('65536')===undefined&&LocalProxy.parsePort('')===undefined&&LocalProxy.parsePort('12a')===undefined,'bad ports');
+ok(LocalProxy.digits('7a8 9-0123')==='78901','digits');
+ok(LocalProxy.password('zephyr:abc')==='abc','password');
+ok(LocalProxy.url('socks5','zephyr:abc',7890)==='socks5://zephyr:abc@127.0.0.1:7890','url');
+console.log(bad?'FAILED '+bad:'netprefs OK'); process.exit(bad?1:0);

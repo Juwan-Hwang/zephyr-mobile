@@ -16,6 +16,8 @@ import {
   NavArgs,
   ROUTE_LICENSES,
   ROUTE_LOGS,
+  ROUTE_LOCAL_PROXY,
+  ROUTE_TRUSTED_WIFI,
   ROUTE_NODES,
   ROUTE_RULES,
   ROUTE_SETTINGS,
@@ -31,6 +33,8 @@ import { RulesView } from '../views/RulesView';
 import { SettingsView } from '../views/SettingsView';
 import { LibrarySheet } from '../views/LibrarySheet';
 import { LogsPage } from './LogsPage';
+import { TrustedWifiPage } from './TrustedWifiPage';
+import { LocalProxyPage } from './LocalProxyPage';
 import { LicensesPage } from './LicensesPage';
 import { TodayPage } from './TodayPage';
 import { ZTerm } from '../generated/ZTerms';
@@ -225,7 +229,9 @@ struct Index {
       NavDestination() {
         SettingsView({
           onOpenLogs: () => this.push(ROUTE_LOGS, BackTo.PARENT),
-          onOpenLicenses: () => this.push(ROUTE_LICENSES, BackTo.PARENT)
+          onOpenLicenses: () => this.push(ROUTE_LICENSES, BackTo.PARENT),
+          onOpenTrustedWifi: () => this.push(ROUTE_TRUSTED_WIFI, BackTo.PARENT),
+          onOpenLocalProxy: () => this.push(ROUTE_LOCAL_PROXY, BackTo.PARENT)
         })
       }
       .title(ZTerm.settings)
@@ -234,6 +240,10 @@ struct Index {
       LogsPage()
     } else if (name === ROUTE_LICENSES) {
       LicensesPage()
+    } else if (name === ROUTE_TRUSTED_WIFI) {
+      TrustedWifiPage()
+    } else if (name === ROUTE_LOCAL_PROXY) {
+      LocalProxyPage()
     } else if (name === ROUTE_TODAY) {
       TodayPage()
     }

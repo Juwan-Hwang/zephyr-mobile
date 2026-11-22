@@ -13,6 +13,9 @@ export const ROUTE_RULES: string = 'rules';
 export const ROUTE_SETTINGS: string = 'settings';
 export const ROUTE_LOGS: string = 'logs';
 export const ROUTE_LICENSES: string = 'licenses';
+/** 设置里的受信任 Wi‑Fi / 本地代理端口（M1-14）。 */
+export const ROUTE_TRUSTED_WIFI: string = 'trustedWifi';
+export const ROUTE_LOCAL_PROXY: string = 'localProxy';
 /** 今日卡（M1-9），首页流量卡“今日 X”进入。 */
 export const ROUTE_TODAY: string = 'today';
 
@@ -24,7 +27,7 @@ export enum BackTo {
   PARENT = 'parent'
 }
 
-/** 资料库 sheet 的入口（Android `LibraryDest`；鸿蒙暂无受信任 Wi‑Fi / 本地代理 / 服务卡片页，见 §17.c）。 */
+/** 资料库 sheet 的入口（Android `LibraryDest`；受信任 Wi‑Fi / 本地代理在设置里进入，服务卡片页待 M1-19，见 §17.c）。 */
 export enum LibraryDest {
   NODES = 'nodes',
   SUBSCRIPTIONS = 'subscriptions',
@@ -65,7 +68,8 @@ export class AppNav {
   /** 已知的二级页路由。 */
   static isRoute(name: string): boolean {
     return name === ROUTE_NODES || name === ROUTE_SUBSCRIPTIONS || name === ROUTE_RULES || name === ROUTE_SETTINGS ||
-      name === ROUTE_LOGS || name === ROUTE_LICENSES || name === ROUTE_TODAY;
+      name === ROUTE_LOGS || name === ROUTE_LICENSES || name === ROUTE_TODAY || name === ROUTE_TRUSTED_WIFI ||
+      name === ROUTE_LOCAL_PROXY;
   }
 
   /**

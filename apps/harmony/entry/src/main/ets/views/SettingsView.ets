@@ -35,6 +35,8 @@ type SettingsPatch = (s: Settings) => void;
 export struct SettingsView {
   @Event onOpenLogs: () => void = () => {};
   @Event onOpenLicenses: () => void = () => {};
+  @Event onOpenTrustedWifi: () => void = () => {};
+  @Event onOpenLocalProxy: () => void = () => {};
 
   @Local mode: ProxyMode = ProxyMode.RULE;
   @Local onDemand: boolean = true;
@@ -46,6 +48,10 @@ export struct SettingsView {
   @Local logLevel: LogLevel = LogLevel.INFO;
   @Local storage: StorageInfo | undefined = undefined;
   @Local version: string = '';
+  @Local trustedWifi: string[] = [];
+  @Local localProxyEnabled: boolean = false;
+  @Local localProxyPort: number = 7890;
+  @Local localProxyAuth: boolean = true;
 
   private subs: StreamSub[] = [];
 
@@ -57,6 +63,10 @@ export struct SettingsView {
       this.shareDiagnostics = s.shareDiagnostics;
       this.appearance = s.appearance;
       this.accent = s.accent;
+      this.trustedWifi = s.trustedWifi.slice();
+      this.localProxyEnabled = s.localProxyEnabled;
+      this.localProxyPort = s.localProxyPort;
+      this.localProxyAuth = s.localProxyAuth;
     }));
     this.subs.push(svc.engine.connectionState().subscribe((c: ConnectionState) => {
       this.mode = c.mode;
@@ -202,6 +212,16 @@ export struct SettingsView {
                 s.onDemand = on;
               });
             }
+          })
+          ZNavRow({
+            title: $r('app.string.settings_trusted_wifi'),
+            value: this.trustedWifi.length > 0 ? this.trustedWifi.join(', ') : ZTerm.none,
+            onTap: () => this.onOpenTrustedWifi()
+          })
+          ZNavRow({
+            title: ZTerm.localProxyPort,
+            value: this.localProxyEnabled ? ZTerm.on : ZTerm.off,
+            onTap: () => this.onOpenLocalProxy()
           })
           ZToggleRow({ title: $r('app.string.hm_settings_lan_bypass'), isOn: true, isEnabled: false, divider: false })
         }
