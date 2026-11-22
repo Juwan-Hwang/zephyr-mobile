@@ -154,6 +154,11 @@
     </string-array>
     <string name="command_see_all_nodes">Xem cả %1$s nút trong thư viện nút</string>
     <string name="command_test_rule">%1$s đi qua đâu?</string>
+    <string name="command_group_rule_test">Kiểm tra quy tắc</string>
+    <string name="command_action_open">Mở</string>
+    <string name="command_action_test">Kiểm tra</string>
+    <string name="command_show_all">Hiện tất cả (%1$s)</string>
+    <string name="command_enter_hint">Nhấn Enter để thực hiện</string>
     <string name="command_chip_scene">Ngữ cảnh</string>
     <string name="command_chip_service">Dịch vụ</string>
     <string name="command_chip_region">Khu vực</string>

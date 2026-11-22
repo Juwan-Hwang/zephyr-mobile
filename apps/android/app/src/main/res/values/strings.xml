@@ -198,6 +198,11 @@
     <string name="command_see_all_nodes">See all %1$s in the node library</string>
     <!-- %1$s is a domain or IP -->
     <string name="command_test_rule">Where does %1$s go?</string>
+    <string name="command_group_rule_test">Rule Test</string>
+    <string name="command_action_open">Open</string>
+    <string name="command_action_test">Test</string>
+    <string name="command_show_all">Show all %1$s</string>
+    <string name="command_enter_hint">Press Enter to run</string>
     <string name="command_chip_scene">Scene</string>
     <string name="command_chip_service">Service</string>
     <string name="command_chip_region">Region</string>

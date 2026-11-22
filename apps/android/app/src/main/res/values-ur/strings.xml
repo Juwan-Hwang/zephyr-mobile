@@ -170,6 +170,11 @@
     </string-array>
     <string name="command_see_all_nodes">نوڈ لائبریری میں تمام \u2068%1$s\u2069 دیکھیں</string>
     <string name="command_test_rule">\u2068%1$s\u2069 کہاں جاتا ہے؟</string>
+    <string name="command_group_rule_test">اصول کی جانچ</string>
+    <string name="command_action_open">کھولیں</string>
+    <string name="command_action_test">جانچیں</string>
+    <string name="command_show_all">سب دکھائیں (%1$s)</string>
+    <string name="command_enter_hint">چلانے کے لیے Enter دبائیں</string>
     <string name="command_chip_scene">منظر</string>
     <string name="command_chip_service">سروس</string>
     <string name="command_chip_region">علاقہ</string>

@@ -163,6 +163,11 @@
     </string-array>
     <string name="command_see_all_nodes">在节点库中查看全部 %1$s 个</string>
     <string name="command_test_rule">%1$s 走哪里？</string>
+    <string name="command_group_rule_test">规则测试</string>
+    <string name="command_action_open">打开</string>
+    <string name="command_action_test">测试</string>
+    <string name="command_show_all">显示全部 %1$s 项</string>
+    <string name="command_enter_hint">按回车执行</string>
     <string name="command_chip_scene">场景</string>
     <string name="command_chip_service">服务</string>
     <string name="command_chip_region">地区</string>

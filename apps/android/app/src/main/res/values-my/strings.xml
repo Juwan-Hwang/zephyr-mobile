@@ -154,6 +154,11 @@
     </string-array>
     <string name="command_see_all_nodes">နုဒ် စုစည်းမှုတွင် %1$s ခုလုံး ကြည့်ရန်</string>
     <string name="command_test_rule">%1$s ဘယ်လမ်းကြောင်း သွားသလဲ။</string>
+    <string name="command_group_rule_test">စည်းမျဉ်း စမ်းသပ်ချက်</string>
+    <string name="command_action_open">ဖွင့်ရန်</string>
+    <string name="command_action_test">စမ်းသပ်</string>
+    <string name="command_show_all">အားလုံးပြရန် (%1$s)</string>
+    <string name="command_enter_hint">လုပ်ဆောင်ရန် Enter ကိုနှိပ်ပါ</string>
     <string name="command_chip_scene">မြင်ကွင်း</string>
     <string name="command_chip_service">ဝန်ဆောင်မှု</string>
     <string name="command_chip_region">ဒေသ</string>

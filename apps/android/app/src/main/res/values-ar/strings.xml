@@ -202,6 +202,11 @@
     </string-array>
     <string name="command_see_all_nodes">عرض كل العقد (\u2068%1$s\u2069) في مكتبة العقد</string>
     <string name="command_test_rule">إلى أين يذهب \u2068%1$s\u2069؟</string>
+    <string name="command_group_rule_test">اختبار القواعد</string>
+    <string name="command_action_open">فتح</string>
+    <string name="command_action_test">اختبار</string>
+    <string name="command_show_all">عرض الكل (%1$s)</string>
+    <string name="command_enter_hint">اضغط Enter للتنفيذ</string>
     <string name="command_chip_scene">المشهد</string>
     <string name="command_chip_service">الخدمة</string>
     <string name="command_chip_region">المنطقة</string>

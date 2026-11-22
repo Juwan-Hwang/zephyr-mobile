@@ -178,6 +178,11 @@
     </string-array>
     <string name="command_see_all_nodes">Все узлы (%1$s) в библиотеке</string>
     <string name="command_test_rule">Куда пойдёт %1$s?</string>
+    <string name="command_group_rule_test">Проверка правил</string>
+    <string name="command_action_open">Открыть</string>
+    <string name="command_action_test">Проверить</string>
+    <string name="command_show_all">Показать все (%1$s)</string>
+    <string name="command_enter_hint">Нажмите Enter, чтобы выполнить</string>
     <string name="command_chip_scene">Сценарий</string>
     <string name="command_chip_service">Сервис</string>
     <string name="command_chip_region">Регион</string>
