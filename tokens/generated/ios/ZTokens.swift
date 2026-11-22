@@ -90,6 +90,12 @@ public enum ZTokens {
         public static let screenOnPrimary = ZDynamicColor.make(dark: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), light: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0))
         /// 行按下
         public static let screenPressed = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.03), light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.03))
+        /// 列表左滑「更新」底色：中性灰，不跟强调色（pink fill #D1004B 与删除红相邻难分；iOS swipeActions 字色固定白，green / orange fill 配白字不过 AA）。白字 5.99:1；深色 s2 上 3.07:1、浅色白卡上 5.99:1（非文字 ≥3）。2026-11-23 A 定
+        public static let screenSwipeUpdate = ZDynamicColor.make(dark: UIColor(red: 0.3882, green: 0.3882, blue: 0.4, alpha: 1.0), light: UIColor(red: 0.3882, green: 0.3882, blue: 0.4, alpha: 1.0))
+        /// 列表左滑「删除」/「确认删除」底色。白字 5.38:1（screen.red #FF453A 配白字只有 3.41，不用）。2026-11-23 A 定
+        public static let screenSwipeDelete = ZDynamicColor.make(dark: UIColor(red: 0.8431, green: 0.0, blue: 0.0824, alpha: 1.0), light: UIColor(red: 0.8431, green: 0.0, blue: 0.0824, alpha: 1.0))
+        /// 左滑按钮文字 / 图标（与 iOS 系统 swipeActions 一致）
+        public static let screenOnSwipe = ZDynamicColor.make(dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), light: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0))
     }
 
     /// 静态色板（不随外观变化）。
