@@ -1057,47 +1057,46 @@
       "zh": "正常",
       "ja": "正常",
       "ko": "정상",
-      "ru": "Норма",
+      "ru": "В норме",
       "es": "Normal",
       "fa": "عادی",
       "tk": "Kadaly",
       "my": "ပုံမှန်",
       "ar": "طبيعي",
-      "ur": "معمول کے مطابق",
+      "ur": "ٹھیک",
       "sw": "Kawaida",
       "tr": "Normal",
       "vi": "Bình thường",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种于 2026-11-22 在 #293 审校定稿（见 nativeReview）",
       "keys": {
         "ios": "App:正常",
         "android": "state_ok"
       },
       "nativeReview": {
-        "status": "pending",
+        "status": "done",
         "reviewed": [
           "en",
           "zh",
-          "my",
-          "sw",
-          "vi"
-        ],
-        "pending": [
           "ja",
           "ko",
           "ru",
           "es",
           "fa",
           "tk",
+          "my",
           "ar",
           "ur",
-          "tr"
-        ]
+          "sw",
+          "tr",
+          "vi"
+        ],
+        "pending": []
       }
     },
     "state.slow": {
       "en": "Slow",
       "zh": "较慢",
-      "ja": "遅い",
+      "ja": "低速",
       "ko": "느림",
       "ru": "Медленно",
       "es": "Lento",
@@ -1109,30 +1108,29 @@
       "sw": "Polepole",
       "tr": "Yavaş",
       "vi": "Chậm",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种于 2026-11-22 在 #293 审校定稿（见 nativeReview）",
       "keys": {
         "ios": "App:较慢"
       },
       "nativeReview": {
-        "status": "pending",
+        "status": "done",
         "reviewed": [
           "en",
           "zh",
-          "my",
-          "sw",
-          "vi"
-        ],
-        "pending": [
           "ja",
           "ko",
           "ru",
           "es",
           "fa",
           "tk",
+          "my",
           "ar",
           "ur",
-          "tr"
-        ]
+          "sw",
+          "tr",
+          "vi"
+        ],
+        "pending": []
       }
     },
     "state.timeout": {
@@ -1142,7 +1140,7 @@
       "ko": "시간 초과",
       "ru": "Тайм-аут",
       "es": "Tiempo agotado",
-      "fa": "مهلت تمام شد",
+      "fa": "اتمام مهلت",
       "tk": "Wagt gutardy",
       "my": "အချိန်ကုန်",
       "ar": "انتهت المهلة",
@@ -1150,112 +1148,109 @@
       "sw": "Muda umeisha",
       "tr": "Zaman aşımı",
       "vi": "Hết thời gian chờ",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种于 2026-11-22 在 #293 审校定稿（见 nativeReview）",
       "keys": {
         "ios": "App:超时"
       },
       "nativeReview": {
-        "status": "pending",
+        "status": "done",
         "reviewed": [
           "en",
           "zh",
-          "my",
-          "sw",
-          "vi"
-        ],
-        "pending": [
           "ja",
           "ko",
           "ru",
           "es",
           "fa",
           "tk",
+          "my",
           "ar",
           "ur",
-          "tr"
-        ]
+          "sw",
+          "tr",
+          "vi"
+        ],
+        "pending": []
       }
     },
     "state.untested": {
       "en": "Untested",
       "zh": "未测",
-      "ja": "未テスト",
+      "ja": "未測定",
       "ko": "미측정",
-      "ru": "Не проверен",
+      "ru": "Не проверено",
       "es": "Sin probar",
       "fa": "آزمایش‌نشده",
       "tk": "Barlanmadyk",
       "my": "မစမ်းရသေး",
       "ar": "لم يُختبر",
-      "ur": "غیر جانچا",
+      "ur": "غیر جانچ شدہ",
       "sw": "Haijapimwa",
       "tr": "Test edilmedi",
       "vi": "Chưa kiểm tra",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种于 2026-11-22 在 #293 审校定稿（见 nativeReview）",
       "keys": {
         "ios": "App:未测"
       },
       "nativeReview": {
-        "status": "pending",
+        "status": "done",
         "reviewed": [
           "en",
           "zh",
-          "my",
-          "sw",
-          "vi"
-        ],
-        "pending": [
           "ja",
           "ko",
           "ru",
           "es",
           "fa",
           "tk",
+          "my",
           "ar",
           "ur",
-          "tr"
-        ]
+          "sw",
+          "tr",
+          "vi"
+        ],
+        "pending": []
       }
     },
     "state.expiring": {
       "en": "Expiring soon",
       "zh": "即将到期",
-      "ja": "まもなく期限切れ",
+      "ja": "期限間近",
       "ko": "곧 만료",
       "ru": "Скоро истекает",
       "es": "Vence pronto",
-      "fa": "به‌زودی منقضی می‌شود",
+      "fa": "نزدیک به انقضا",
       "tk": "Möhleti golaýar",
       "my": "သက်တမ်းကုန်ခါနီး",
       "ar": "ينتهي قريبًا",
       "ur": "جلد ختم ہو رہا ہے",
       "sw": "Inakaribia kuisha",
-      "tr": "Yakında sona eriyor",
+      "tr": "Süresi dolmak üzere",
       "vi": "Sắp hết hạn",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种于 2026-11-22 在 #293 审校定稿（见 nativeReview）",
       "keys": {
         "ios": "App:即将到期"
       },
       "nativeReview": {
-        "status": "pending",
+        "status": "done",
         "reviewed": [
           "en",
           "zh",
-          "my",
-          "sw",
-          "vi"
-        ],
-        "pending": [
           "ja",
           "ko",
           "ru",
           "es",
           "fa",
           "tk",
+          "my",
           "ar",
           "ur",
-          "tr"
-        ]
+          "sw",
+          "tr",
+          "vi"
+        ],
+        "pending": []
       }
     },
     "state.expired": {
@@ -1263,41 +1258,40 @@
       "zh": "已过期",
       "ja": "期限切れ",
       "ko": "만료됨",
-      "ru": "Истёк",
-      "es": "Vencido",
+      "ru": "Срок истёк",
+      "es": "Vencida",
       "fa": "منقضی‌شده",
       "tk": "Möhleti geçdi",
       "my": "သက်တမ်းကုန်ပြီ",
-      "ar": "منتهي",
-      "ur": "ختم شدہ",
-      "sw": "Imeisha muda",
+      "ar": "منتهي الصلاحية",
+      "ur": "میعاد ختم",
+      "sw": "Imekwisha",
       "tr": "Süresi doldu",
       "vi": "Đã hết hạn",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种于 2026-11-22 在 #293 审校定稿（见 nativeReview）",
       "keys": {
         "ios": "App:已过期",
         "android": "state_expired"
       },
       "nativeReview": {
-        "status": "pending",
+        "status": "done",
         "reviewed": [
           "en",
           "zh",
-          "my",
-          "sw",
-          "vi"
-        ],
-        "pending": [
           "ja",
           "ko",
           "ru",
           "es",
           "fa",
           "tk",
+          "my",
           "ar",
           "ur",
-          "tr"
-        ]
+          "sw",
+          "tr",
+          "vi"
+        ],
+        "pending": []
       }
     },
     "state.failed": {
@@ -1315,31 +1309,30 @@
       "sw": "Imeshindwa",
       "tr": "Başarısız",
       "vi": "Thất bại",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种于 2026-11-22 在 #293 审校定稿（见 nativeReview）",
       "keys": {
         "ios": "App:失败",
         "android": "state_failed"
       },
       "nativeReview": {
-        "status": "pending",
+        "status": "done",
         "reviewed": [
           "en",
           "zh",
-          "my",
-          "sw",
-          "vi"
-        ],
-        "pending": [
           "ja",
           "ko",
           "ru",
           "es",
           "fa",
           "tk",
+          "my",
           "ar",
           "ur",
-          "tr"
-        ]
+          "sw",
+          "tr",
+          "vi"
+        ],
+        "pending": []
       }
     },
     "reachable": {
@@ -1347,7 +1340,7 @@
       "zh": "可连通",
       "ja": "接続可能",
       "ko": "연결 가능",
-      "ru": "Доступны",
+      "ru": "Доступно",
       "es": "Accesibles",
       "fa": "در دسترس",
       "tk": "Elýeterli",
@@ -1357,37 +1350,36 @@
       "sw": "Zinafikika",
       "tr": "Erişilebilir",
       "vi": "Kết nối được",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种于 2026-11-22 在 #293 审校定稿（见 nativeReview）",
       "keys": {
         "ios": "App:可连通 %1$@ · 已检测 %2$@",
         "android": "scene_funnel_reachable"
       },
       "nativeReview": {
-        "status": "pending",
+        "status": "done",
         "reviewed": [
           "en",
           "zh",
-          "my",
-          "sw",
-          "vi"
-        ],
-        "pending": [
           "ja",
           "ko",
           "ru",
           "es",
           "fa",
           "tk",
+          "my",
           "ar",
           "ur",
-          "tr"
-        ]
+          "sw",
+          "tr",
+          "vi"
+        ],
+        "pending": []
       }
     },
     "tested": {
       "en": "Tested",
       "zh": "已检测",
-      "ja": "テスト済み",
+      "ja": "測定済み",
       "ko": "측정됨",
       "ru": "Проверено",
       "es": "Probados",
@@ -1399,31 +1391,30 @@
       "sw": "Zimepimwa",
       "tr": "Test edildi",
       "vi": "Đã kiểm tra",
-      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
+      "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种于 2026-11-22 在 #293 审校定稿（见 nativeReview）",
       "keys": {
         "ios": "App:已检测 %@",
         "android": "nodes_tested"
       },
       "nativeReview": {
-        "status": "pending",
+        "status": "done",
         "reviewed": [
           "en",
           "zh",
-          "my",
-          "sw",
-          "vi"
-        ],
-        "pending": [
           "ja",
           "ko",
           "ru",
           "es",
           "fa",
           "tk",
+          "my",
           "ar",
           "ur",
-          "tr"
-        ]
+          "sw",
+          "tr",
+          "vi"
+        ],
+        "pending": []
       }
     }
   }

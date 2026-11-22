@@ -214,7 +214,7 @@
     },
     {
       "name": "term_state_slow",
-      "value": "遅い"
+      "value": "低速"
     },
     {
       "name": "term_state_timeout",
@@ -222,11 +222,11 @@
     },
     {
       "name": "term_state_untested",
-      "value": "未テスト"
+      "value": "未測定"
     },
     {
       "name": "term_state_expiring",
-      "value": "まもなく期限切れ"
+      "value": "期限間近"
     },
     {
       "name": "term_state_expired",
@@ -242,7 +242,7 @@
     },
     {
       "name": "term_tested",
-      "value": "テスト済み"
+      "value": "測定済み"
     }
   ]
 }
