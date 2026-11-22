@@ -147,6 +147,7 @@
     <string name="scene_funnel_tested">Barlanan</string>
     <string name="scene_funnel_reachable">Birikip bolýan</string>
     <string name="scene_funnel_under">%1$d ms-den az</string>
+    <string name="home_mini_funnel_a11y">Elýeterli %1$s, 200 millisekuntdan az %2$s</string>
     <string name="scene_note">Saýlananlar diňe Zephyr-de saklanýar. Abunaňyzyň konfigurasiýasy üýtgemeýär.</string>
     <string name="scene_note_tested">%1$s Soňky barlag: %2$s.</string>
     <string name="command_placeholder">Gözle ýa-da buýruk ýaz</string>

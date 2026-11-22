@@ -611,6 +611,16 @@ class CoreEngine(
         }
     }
 
+    /** Contract v0.7 §19.a: forwards core `sceneFunnel`; any error (SceneNotFound, library not loaded) → null. */
+    override suspend fun sceneFunnel(sceneId: String, maxAgeMs: Long, thresholdMs: Int): NodeFunnel? {
+        val c = nodes() ?: return if (mockData) fallback.sceneFunnel(sceneId, maxAgeMs, thresholdMs) else null
+        return withContext(io) {
+            runCatching { c.sceneFunnel(sceneId, clock(), maxAgeMs, thresholdMs) }.getOrNull()?.let {
+                NodeFunnel(it.sourceCount.toInt(), it.poolSize.toLong(), it.tested.toLong(), it.reachable.toLong(), it.underThreshold.toLong(), it.thresholdMs)
+            }
+        }
+    }
+
     /**
      * Contract §15.e: core's scene freshness window follows 设置 › 测速 › 结果保留 (process-local, re-sent on every change).
      * Audit E16: out-of-range values are rejected like iOS (port, TTL, auto-update, MTU 576…9000).

@@ -56,7 +56,7 @@ class RtlScreenshotTest(private val lang: String) {
         val subs = runBlocking { e.subscriptions().first() }
         val usage = runBlocking { e.usageToday() }
         val spark = runBlocking { e.recentTraffic(90) }
-        val ui = HomeUi(now = HomeScreenshotTest.NOW, usage = usage)
+        val ui = HomeUi(now = HomeScreenshotTest.NOW, usage = usage, funnels = HomeScreenshotTest.funnels(e, scenes))
         val live = HomeLive(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = HomeScreenshotTest.NOW)
         paparazzi.snapshot {
             ZephyrTheme(dark = true, accent = ZAccent.BLUE) {

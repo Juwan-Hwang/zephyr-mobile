@@ -38,6 +38,12 @@ interface ZephyrEngine {
      */
     suspend fun nodeFunnel(maxAgeMs: Long, thresholdMs: Int): NodeFunnel? = null
     /**
+     * Home scene-row mini funnel (contract v0.7 §19.a `sceneFunnel`): same fields as [nodeFunnel] but scoped to the
+     * scene's candidate range (current node's region + §15.h node filter, not capped at 50). A scene with no node yet
+     * returns all zeros; null when the engine cannot count (no core, unknown scene) — the row then keeps its text.
+     */
+    suspend fun sceneFunnel(sceneId: String, maxAgeMs: Long, thresholdMs: Int): NodeFunnel? = null
+    /**
      * Pins one app of a scene to a node ("Gemini 走日本" → Gemini：东京 03; contract §14 setSceneException).
      * `nodeId = null` removes the pin. Never called by automation: only on an explicit, confirmed user action.
      */

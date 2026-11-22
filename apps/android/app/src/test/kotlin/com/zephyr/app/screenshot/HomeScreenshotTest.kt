@@ -43,7 +43,7 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
         val (conn, scenes, subs, usage, spark) = runBlocking {
             Quint(e.connectionState().first(), e.scenes().first(), e.subscriptions().first(), e.usageToday(), e.recentTraffic(90))
         }
-        val ui = HomeUi(now = NOW, usage = usage)
+        val ui = HomeUi(now = NOW, usage = usage, funnels = funnels(e, scenes))
         val live = HomeLive(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = NOW)
         paparazzi.snapshot {
             ZephyrTheme(dark = dark, accent = accent) {
@@ -76,7 +76,7 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
             Quint(e.connectionState().first(), e.scenes().first(), e.subscriptions().first(), e.usageToday(), e.recentTraffic(90))
         }
         val ai = scenes.first { it.kind == com.zephyr.engine.SceneKind.AI }.id
-        val ui = HomeUi(now = NOW, usage = usage)
+        val ui = HomeUi(now = NOW, usage = usage, funnels = funnels(e, scenes))
         val live = HomeLive(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = NOW)
         paparazzi.snapshot {
             ZephyrTheme(dark = dark, accent = accent) {
@@ -88,6 +88,12 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
     private data class Quint<A, B, C, D, E>(val a: A, val b: B, val c: C, val d: D, val e: E)
 
     companion object {
+        /** J-1: each row's mini funnel as the home view model loads it (sceneFunnel, 24 h window, 200 ms). */
+        fun funnels(e: com.zephyr.engine.ZephyrEngine, scenes: List<com.zephyr.engine.Scene>): Map<String, com.zephyr.engine.NodeFunnel> = runBlocking {
+            scenes.filter { it.source != com.zephyr.engine.SceneSource.SUBSCRIPTION_GROUP }
+                .mapNotNull { s -> e.sceneFunnel(s.id, 24 * 3_600_000L, 200)?.takeIf { it.poolSize > 0 }?.let { s.id to it } }.toMap()
+        }
+
         /** 2026-11-06 09:41 CST, the prototype's status-bar time. */
         const val NOW = 1_793_929_260_000L
 
