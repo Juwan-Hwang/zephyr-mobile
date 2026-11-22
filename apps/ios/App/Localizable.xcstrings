@@ -1936,7 +1936,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "テスト済み"
+            "value" : "測定済み"
           }
         },
         "ko" : {
@@ -20866,7 +20866,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ テスト済み"
+            "value" : "%@ 測定済み"
           }
         },
         "ko" : {
@@ -20948,7 +20948,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@個テスト済み"
+            "value" : "%@個測定済み"
           }
         },
         "ko" : {
@@ -22188,7 +22188,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "レイテンシ未テスト"
+            "value" : "レイテンシ未測定"
           }
         },
         "ko" : {
@@ -27190,7 +27190,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未テスト"
+            "value" : "未測定"
           }
         },
         "ko" : {
@@ -27272,7 +27272,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未テスト"
+            "value" : "未測定"
           }
         },
         "ko" : {
@@ -37390,7 +37390,7 @@
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "مهلت تمام شد"
+            "value" : "اتمام مهلت"
           }
         },
         "ja" : {
@@ -37408,7 +37408,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "အချိန်ကုန်သွားသည်"
+            "value" : "အချိန်ကုန်"
           }
         },
         "ru" : {
@@ -37444,7 +37444,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hết thời gian"
+            "value" : "Hết thời gian chờ"
           }
         }
       }
@@ -45762,7 +45762,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未テスト"
+            "value" : "未測定"
           }
         },
         "ko" : {
@@ -45780,7 +45780,7 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Не проверен"
+            "value" : "Не проверено"
           }
         },
         "sw" : {
@@ -45804,7 +45804,7 @@
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "غیر جانچا"
+            "value" : "غیر جانچ شدہ"
           }
         },
         "vi" : {
@@ -45844,7 +45844,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "遅い"
+            "value" : "低速"
           }
         },
         "ko" : {
@@ -45856,7 +45856,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "နှေးသည်"
+            "value" : "နှေး"
           }
         },
         "ru" : {
@@ -45920,13 +45920,13 @@
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "به‌زودی منقضی می‌شود"
+            "value" : "نزدیک به انقضا"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "まもなく期限切れ"
+            "value" : "期限間近"
           }
         },
         "ko" : {
@@ -45938,7 +45938,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "မကြာမီ သက်တမ်းကုန်မည်"
+            "value" : "သက်တမ်းကုန်ခါနီး"
           }
         },
         "ru" : {
@@ -45950,7 +45950,7 @@
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inaisha hivi karibuni"
+            "value" : "Inakaribia kuisha"
           }
         },
         "tk" : {
@@ -45962,7 +45962,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Yakında sona eriyor"
+            "value" : "Süresi dolmak üzere"
           }
         },
         "ur" : {
@@ -46172,7 +46172,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "接続可能 %1$@ · テスト済み %2$@"
+            "value" : "接続可能 %1$@ · 測定済み %2$@"
           }
         },
         "ko" : {
@@ -46190,7 +46190,7 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Доступны: %1$@ · Проверено: %2$@"
+            "value" : "Доступно: %1$@ · Проверено: %2$@"
           }
         },
         "sw" : {
@@ -46330,7 +46330,7 @@
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "مهلت تمام شد: %@"
+            "value" : "اتمام مهلت: %@"
           }
         },
         "ja" : {
@@ -46384,7 +46384,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hết thời gian: %@"
+            "value" : "Hết thời gian chờ: %@"
           }
         }
       }
@@ -46412,7 +46412,7 @@
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ نامزد، %2$@ زیر ۲۰۰ میلی‌ثانیه، %3$@ مهلت تمام شد"
+            "value" : "%1$@ نامزد، %2$@ زیر ۲۰۰ میلی‌ثانیه، %3$@ اتمام مهلت"
           }
         },
         "ja" : {
@@ -46466,7 +46466,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ ứng viên, %2$@ dưới 200 mili giây, %3$@ hết thời gian"
+            "value" : "%1$@ ứng viên, %2$@ dưới 200 mili giây, %3$@ hết thời gian chờ"
           }
         }
       }
@@ -46846,7 +46846,7 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Норма"
+            "value" : "В норме"
           }
         },
         "sw" : {
@@ -46870,7 +46870,7 @@
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "معمول کے مطابق"
+            "value" : "ٹھیک"
           }
         },
         "vi" : {
@@ -46886,7 +46886,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "منتهي"
+            "value" : "منتهي الصلاحية"
           }
         },
         "en" : {
@@ -46898,7 +46898,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vencido"
+            "value" : "Vencida"
           }
         },
         "fa" : {
@@ -46928,13 +46928,13 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Истёк"
+            "value" : "Срок истёк"
           }
         },
         "sw" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Imeisha muda"
+            "value" : "Imekwisha"
           }
         },
         "tk" : {
@@ -46952,7 +46952,7 @@
         "ur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ختم شدہ"
+            "value" : "میعاد ختم"
           }
         },
         "vi" : {
@@ -47004,7 +47004,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "မအောင်မြင်ပါ"
+            "value" : "မအောင်မြင်"
           }
         },
         "ru" : {

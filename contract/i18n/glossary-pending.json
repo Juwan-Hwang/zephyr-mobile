@@ -1,29 +1,5 @@
 {
   "version": 1,
   "note": "已知未对齐项：平台 术语 语言。对应端改完后必须从此删除，否则 check-glossary 报“过期豁免”。",
-  "pending": [
-    "ios reachable ru",
-    "ios state.expired ar",
-    "ios state.expired es",
-    "ios state.expired ru",
-    "ios state.expired sw",
-    "ios state.expired ur",
-    "ios state.expiring fa",
-    "ios state.expiring ja",
-    "ios state.expiring my",
-    "ios state.expiring sw",
-    "ios state.expiring tr",
-    "ios state.failed my",
-    "ios state.ok ru",
-    "ios state.ok ur",
-    "ios state.slow ja",
-    "ios state.slow my",
-    "ios state.timeout fa",
-    "ios state.timeout my",
-    "ios state.timeout vi",
-    "ios state.untested ja",
-    "ios state.untested ru",
-    "ios state.untested ur",
-    "ios tested ja"
-  ]
+  "pending": []
 }
