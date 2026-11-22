@@ -1250,7 +1250,7 @@
     },
     {
       "name": "term_reachable",
-      "value": "Доступны"
+      "value": "Доступно"
     },
     {
       "name": "term_require_password",
@@ -1278,7 +1278,7 @@
     },
     {
       "name": "term_state_expired",
-      "value": "Истёк"
+      "value": "Срок истёк"
     },
     {
       "name": "term_state_expiring",
@@ -1290,7 +1290,7 @@
     },
     {
       "name": "term_state_ok",
-      "value": "Норма"
+      "value": "В норме"
     },
     {
       "name": "term_state_slow",
@@ -1302,7 +1302,7 @@
     },
     {
       "name": "term_state_untested",
-      "value": "Не проверен"
+      "value": "Не проверено"
     },
     {
       "name": "term_status_connecting",

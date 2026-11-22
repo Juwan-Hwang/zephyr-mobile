@@ -1278,7 +1278,7 @@
     },
     {
       "name": "term_state_expired",
-      "value": "ختم شدہ"
+      "value": "میعاد ختم"
     },
     {
       "name": "term_state_expiring",
@@ -1290,7 +1290,7 @@
     },
     {
       "name": "term_state_ok",
-      "value": "معمول کے مطابق"
+      "value": "ٹھیک"
     },
     {
       "name": "term_state_slow",
@@ -1302,7 +1302,7 @@
     },
     {
       "name": "term_state_untested",
-      "value": "غیر جانچا"
+      "value": "غیر جانچ شدہ"
     },
     {
       "name": "term_status_connecting",

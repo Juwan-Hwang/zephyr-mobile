@@ -1298,7 +1298,7 @@
     },
     {
       "name": "term_state_timeout",
-      "value": "Hết thời gian"
+      "value": "Hết thời gian chờ"
     },
     {
       "name": "term_state_untested",

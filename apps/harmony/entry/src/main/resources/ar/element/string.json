@@ -1278,7 +1278,7 @@
     },
     {
       "name": "term_state_expired",
-      "value": "منتهي"
+      "value": "منتهي الصلاحية"
     },
     {
       "name": "term_state_expiring",

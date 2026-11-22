@@ -1278,7 +1278,7 @@
     },
     {
       "name": "term_state_expired",
-      "value": "Vencido"
+      "value": "Vencida"
     },
     {
       "name": "term_state_expiring",
