@@ -100,6 +100,9 @@ class ZephyrWidget : GlanceAppWidget() {
         // so RemoteViews clipped the last lines. Below TALL_MIN the card keeps power row + title + detail only
         // (tighter padding, 22sp title) and the scene column shows two rows; 「今日」 returns once the cell is tall enough.
         val compact = LocalSize.current.height < TALL_MIN
+        // CodeAnt #285: at large system font sizes even the compact set overflows, so what shows is budgeted from
+        // the cell height and the font scale (detail, then 「今日」, then scene rows drop first).
+        val fit = widgetFit(LocalSize.current.height.value, ctx.resources.configuration.fontScale)
         val (tv, tu) = ZFormat.bytes(today)
         Row(
             GlanceModifier.fillMaxSize().background(bg).cornerRadius(24.dp).padding(if (compact) 12.dp else 16.dp).clickable(actionStartActivity<MainActivity>()),
@@ -126,8 +129,8 @@ class ZephyrWidget : GlanceAppWidget() {
                 }
                 Spacer(GlanceModifier.defaultWeight())
                 Text(title, style = TextStyle(color = t1, fontSize = if (compact) 22.sp else 24.sp), maxLines = 1)
-                Text(detail, style = TextStyle(color = t2, fontSize = 12.sp), maxLines = 1)
-                if (!compact) {
+                if (fit.detail) Text(detail, style = TextStyle(color = t2, fontSize = 12.sp), maxLines = 1)
+                if (fit.today) {
                     Spacer(GlanceModifier.height(6.dp))
                     Text(ctx.getString(R.string.widget_today, tv, tu), style = TextStyle(color = t3, fontSize = 12.sp), maxLines = 1)
                 }
@@ -136,7 +139,7 @@ class ZephyrWidget : GlanceAppWidget() {
                 Spacer(GlanceModifier.width(16.dp))
                 Column(GlanceModifier.defaultWeight()) {
                     Text(ctx.getString(R.string.common_scenes), style = TextStyle(color = t3, fontSize = 12.sp))
-                    scenes.take(if (compact) 2 else 3).forEach { s ->
+                    scenes.take(fit.sceneRows).forEach { s ->
                         Spacer(GlanceModifier.height(8.dp))
                         Row(GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                             Text(ctx.resources.sceneName(s), style = TextStyle(color = t2, fontSize = 13.sp), modifier = GlanceModifier.width(40.dp))
@@ -160,6 +163,22 @@ class ZephyrWidget : GlanceAppWidget() {
         /** Below this cell height the status card drops the 「今日」 line (content would clip). */
         val TALL_MIN = 140.dp
 
+        /**
+         * Which optional lines fit a status card [heightDp] tall at [fontScale]: power row 36 dp, then title, detail,
+         * 「今日」 (only at ≥ [TALL_MIN]); scene column header + up to 3 rows. Text lines are budgeted at 1.4 × size × scale
+         * (CJK fallback line height). At scale 1 this is exactly the 110 / 150 dp layouts in the snapshots.
+         */
+        internal fun widgetFit(heightDp: Float, fontScale: Float): WidgetFit {
+            val compact = heightDp < TALL_MIN.value
+            val avail = heightDp - 2 * (if (compact) 12f else 16f)
+            fun line(sp: Float) = sp * 1.4f * fontScale
+            val head = 36f + line(if (compact) 22f else 24f)
+            val detail = head + line(12f) <= avail
+            val today = !compact && detail && head + line(12f) + 6f + line(12f) <= avail
+            val rows = ((avail - line(12f)) / (8f + line(13f))).toInt().coerceIn(0, 3)
+            return WidgetFit(detail, today, rows)
+        }
+
         suspend fun refreshAll(ctx: Context) {
             runCatching { ZephyrWidget().updateAll(ctx) }
             runCatching { ZephyrUsageWidget().updateAll(ctx) }
@@ -169,6 +188,8 @@ class ZephyrWidget : GlanceAppWidget() {
         const val LIVE_REFRESH_MS = 60_000L
     }
 }
+
+internal data class WidgetFit(val detail: Boolean, val today: Boolean, val sceneRows: Int)
 
 class ToggleAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
