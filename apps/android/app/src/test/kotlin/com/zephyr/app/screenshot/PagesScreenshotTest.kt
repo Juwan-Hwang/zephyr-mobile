@@ -15,6 +15,7 @@ import com.zephyr.app.ui.activity.TraceSheet
 import com.zephyr.app.ui.nodes.NodesScreen
 import com.zephyr.app.ui.nodes.NodesViewModel
 import com.zephyr.app.ui.rules.RulesScreen
+import com.zephyr.app.ui.scene.SceneSheet
 import com.zephyr.app.ui.settings.SettingsScreen
 import com.zephyr.app.ui.subs.SubscriptionsScreen
 import com.zephyr.design.theme.ZephyrTheme
@@ -60,7 +61,7 @@ class PagesScreenshotTest(private val dark: Boolean) {
     @Test fun sceneSheet() {
         val scene = kotlinx.coroutines.runBlocking { engine.scenes().first().first() }
         paparazzi.snapshot { ZephyrTheme(dark = dark) { androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) {
-            androidx.compose.foundation.layout.Box(androidx.compose.ui.Modifier.fillMaxSize()) { com.zephyr.app.ui.scene.SceneSheet(scene, onDismiss = {}) } } } }
+            androidx.compose.foundation.layout.Box(androidx.compose.ui.Modifier.fillMaxSize()) { SceneSheet(scene, onDismiss = {}) } } } }
     }
 
     /** J-6 tick bar alone, fixed data: slow ticks amber, the selected exit (id 2) tall accent, > 600 ms at the right end, 「超时 2」. */
