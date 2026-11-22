@@ -1,12 +1,12 @@
 /*
  * UI 进程把引擎状态写成服务卡片快照并推给已添加的卡片（契约 §17.c；对照 Android ZephyrWidget.refreshAll）：
  * - 连接状态变化（含模式 / 全局节点）与场景变化：立即写；
- * - 连接期间：至多每 CARD_LIVE_REFRESH_MS（60 s）一次刷新今日用量与场景出口，从不按流量样本刷新；
+ * - 连接期间：UI 进程在前台时每 CARD_LIVE_REFRESH_MS（60 s）重写快照（今日用量、场景出口），只写文件不推卡片；
+ *   每 60 s 的 updateForm 由 VPN 扩展进程读文件发起（#297：UI 进程进后台会被冻结）；
  * - 文案按当前语言格式化好再写（卡片进程不加载引擎）。
  * 详情行同 Android：连接中 → “连接中…”；未连接 → “未连接”；已连接 → “模式 · 出口”（规则 = 第一个场景的出口，全局 = 全局节点，直连无出口）。
  */
 import { common } from '@kit.AbilityKit';
-import { formBindingData, formProvider } from '@kit.FormKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { Format } from '../common/Format';
 import { Labels } from '../common/Labels';
@@ -15,6 +15,7 @@ import { Subscription } from '../engine/Stream';
 import { ZephyrEngine } from '../engine/ZephyrEngine';
 import { ZTerm } from '../generated/ZTerms';
 import { CARD_LIVE_REFRESH_MS, CARD_SCENE_ROWS, CardScene, CardSnapshot, CardSnapshots } from './CardSnapshot';
+import { CardPush } from './CardPush';
 import { CardStore } from './CardStore';
 
 const DOMAIN: number = 0x5A50;
@@ -57,7 +58,7 @@ export class CardSync {
 
   private schedule(live: boolean): void {
     if (live && this.timer < 0) {
-      this.timer = setInterval(() => this.refresh(), CARD_LIVE_REFRESH_MS);
+      this.timer = setInterval(() => this.refresh(false), CARD_LIVE_REFRESH_MS);
     } else if (!live && this.timer >= 0) {
       clearInterval(this.timer);
       this.timer = -1;
@@ -76,12 +77,12 @@ export class CardSync {
   }
 
   /** 同时只跑一次；跑的期间又来的请求合并成结束后再跑一次。 */
-  private refresh(): void {
+  private refresh(push: boolean = true): void {
     if (this.pending) {
       return;
     }
     this.pending = true;
-    this.build().then((s: CardSnapshot) => this.publish(s)).catch((e: Error) => {
+    this.build().then((s: CardSnapshot) => this.publish(s, push)).catch((e: Error) => {
       hilog.error(DOMAIN, TAG, 'snapshot failed: %{public}s', String(e));
     }).finally(() => {
       this.pending = false;
@@ -143,19 +144,15 @@ export class CardSync {
     return '';
   }
 
-  private publish(s: CardSnapshot): void {
+  private publish(s: CardSnapshot, push: boolean): void {
     const dir = this.ctx.filesDir;
     try {
       CardStore.saveSnapshot(dir, s);
     } catch (e) {
       hilog.error(DOMAIN, TAG, 'save snapshot failed: %{public}s', String(e));
     }
-    CardStore.ids(dir).forEach((entry: string) => {
-      const id = CardSnapshots.idOf(entry);
-      const data = formBindingData.createFormBindingData(CardSnapshots.binding(s, CardSnapshots.isWide(entry)));
-      formProvider.updateForm(id, data).catch((e: Error) => {
-        hilog.warn(DOMAIN, TAG, 'updateForm %{public}s failed: %{public}s', id, String(e));
-      });
-    });
+    if (push) {
+      CardPush.push(dir, s);
+    }
   }
 }

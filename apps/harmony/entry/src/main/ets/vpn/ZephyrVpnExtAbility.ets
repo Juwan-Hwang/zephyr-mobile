@@ -9,7 +9,8 @@
  * - onDestroy：停 bridge → destroy 连接（回收 fd；fd 系统所有，本进程从不 close）→ 回报 idle + destroyedAt。
  *
  * 待办（需真机 / 内核）：运行时配置（core-ohos runtimeConfig）未实现，所以目前 TunBridges.pick 总是 Simulated；
- * 按需连接、受信任 Wi‑Fi、网络切换 closeAll、通知 / 卡片同步都还没接（Android 在 ZephyrVpnService 里）。
+ * 按需连接、受信任 Wi‑Fi、网络切换 closeAll、通知同步都还没接（Android 在 ZephyrVpnService 里）。
+ * 服务卡片：RUNNING 期间每 CARD_LIVE_REFRESH_MS 读快照推一次卡片（§17.c / #297），teardown 时停。
  */
 import { Want } from '@kit.AbilityKit';
 import { BusinessError } from '@kit.BasicServicesKit';
@@ -23,6 +24,8 @@ import {
 } from './StartIntent';
 import { RuntimeConfigProvider, SimulatedTunBridge, TunBridge, TunBridges } from './TunBridge';
 import { buildVpnConfig } from './VpnConfigBuilder';
+import { CARD_LIVE_REFRESH_MS } from '../widget/CardSnapshot';
+import { CardPush } from '../widget/CardPush';
 
 const DOMAIN: number = 0x5A50;
 const TAG: string = 'ZephyrVpnExt';
@@ -50,6 +53,7 @@ export default class ZephyrVpnExtAbility extends VpnExtensionAbility {
   private generation: number = 0;
   private stopped: boolean = false;
   private simulated: boolean = false;
+  private cardTimer: number = -1;
 
   /** 运行时配置来源（core-ohos runtimeConfig）。TODO：core-ohos 导出后在此接上；undefined → Simulated。 */
   private configProvider: RuntimeConfigProvider | undefined = undefined;
@@ -103,6 +107,7 @@ export default class ZephyrVpnExtAbility extends VpnExtensionAbility {
       this.simulated = true;
       hilog.warn(DOMAIN, TAG, 'simulated tunnel (no core); no tun created');
       this.report(intent.generation, VpnPhase.RUNNING);
+      this.startCardLoop();
       return;
     }
 
@@ -122,6 +127,28 @@ export default class ZephyrVpnExtAbility extends VpnExtensionAbility {
       throw new ZephyrError(ErrorCode.CORE_CRASHED, err);
     }
     this.report(intent.generation, VpnPhase.RUNNING);
+    this.startCardLoop();
+  }
+
+  private startCardLoop(): void {
+    if (this.cardTimer >= 0) {
+      return;
+    }
+    const dir = this.context.filesDir;
+    this.cardTimer = setInterval(() => {
+      try {
+        CardPush.republish(dir);
+      } catch (e) {
+        hilog.warn(DOMAIN, TAG, 'card republish failed');
+      }
+    }, CARD_LIVE_REFRESH_MS);
+  }
+
+  private stopCardLoop(): void {
+    if (this.cardTimer >= 0) {
+      clearInterval(this.cardTimer);
+      this.cardTimer = -1;
+    }
   }
 
   private async createTun(conn: vpnExtension.VpnConnection, cfg: vpnExtension.VpnConfig): Promise<number> {
@@ -167,6 +194,7 @@ export default class ZephyrVpnExtAbility extends VpnExtensionAbility {
   }
 
   private async teardown(): Promise<void> {
+    this.stopCardLoop();
     this.bridge.stop();
     this.bridge = new SimulatedTunBridge();
     const conn = this.conn;
