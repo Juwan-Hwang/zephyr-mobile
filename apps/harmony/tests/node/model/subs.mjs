@@ -10,4 +10,9 @@ r=await SubscriptionImport.importItems(e,'url',[{url:'https://a.example/s',name:
 ok(SubscriptionImport.isInsecure('HTTP://x')&&!SubscriptionImport.isInsecure('https://x'),'insecure');
 ok(SubscriptionImport.displayName({url:'https://sub.example.com/a?b'})==='sub.example.com','host');
 ok(SubscriptionImport.displayName({url:'x',name:' N '})==='N','name');
+ok(SubscriptionImport.fileSizeAllowed(1)&&SubscriptionImport.fileSizeAllowed(32*1024*1024),'size ok');
+ok(!SubscriptionImport.fileSizeAllowed(0)&&!SubscriptionImport.fileSizeAllowed(32*1024*1024+1),'size cap');
+ok(SubscriptionImport.stripBom('\uFEFFproxies:')==='proxies:'&&SubscriptionImport.stripBom('a')==='a'&&SubscriptionImport.stripBom('')==='','bom');
+r=await SubscriptionImport.importText(e,'file','proxies:\n  - {name: a, type: ss, server: 1.2.3.4, port: 1, cipher: aes-128-gcm, password: p}\n'); ok(r.added===1,'file import '+JSON.stringify(r));
+r=await SubscriptionImport.importText(e,'qr','https://qr.example.com/sub'); ok(r.added===1,'qr import '+JSON.stringify(r));
 console.log(bad?'FAILED '+bad:'subs OK'); process.exit(bad?1:0);

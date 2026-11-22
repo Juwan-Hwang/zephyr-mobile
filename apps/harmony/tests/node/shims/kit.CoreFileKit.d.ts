@@ -10,5 +10,14 @@ declare namespace fileIo {
   function renameSync(oldPath: string, newPath: string): void;
   function readTextSync(filePath: string): string;
   function unlinkSync(path: string): void;
+  interface Stat { readonly size: number; }
+  function open(path: string, mode?: number): Promise<File>;
+  function stat(file: string | number): Promise<Stat>;
+  function read(fd: number, buffer: ArrayBuffer, options?: { offset?: number; length?: number }): Promise<number>;
+  function close(file: number | File): Promise<void>;
 }
-export { fileIo };
+declare namespace picker {
+  class DocumentSelectOptions { maxSelectNumber?: number; fileSuffixFilters?: string[]; }
+  class DocumentViewPicker { constructor(context?: object); select(option?: DocumentSelectOptions): Promise<string[]>; }
+}
+export { fileIo, picker };

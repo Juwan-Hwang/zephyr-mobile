@@ -40,7 +40,7 @@ for f in $(find "$OUT/rt" -name '*.ts'); do
   sed -i -e "s#from '\(\.[^']*\)'#from '\1.ts'#" \
     -e "s#from '@kit.CoreFileKit'#from '$rel/kit.CoreFileKit.ts'#" \
     -e "s#from '@kit.NetworkKit'#from '$rel/kit.NetworkKit.ts'#" \
-    -e "s#from '@kit.\(AbilityKit\|BasicServicesKit\|PerformanceAnalysisKit\|AccessibilityKit\|SensorServiceKit\|ArkData\|ArkUI\)'#from '$rel/kit.Empty.ts'#" \
+    -e "s#from '@kit.\(AbilityKit\|BasicServicesKit\|PerformanceAnalysisKit\|AccessibilityKit\|SensorServiceKit\|ArkData\|ArkUI\|ArkTS\|ScanKit\)'#from '$rel/kit.Empty.ts'#" \
     -e "s/^import { BusinessError }/import type { BusinessError }/" -e "s/^import { Want }/import type { Want }/" \
     -e "s/^import { common, Want }/import type { common, Want }/" "$f"
 done

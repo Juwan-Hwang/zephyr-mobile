@@ -61,10 +61,11 @@ export class Labels {
   }
 
   /** 订阅导入 / 更新错误。 */
-  static importError(code: ErrorCode): Resource {
+  /** fromFile：文件导入格式不对时说“不是有效的配置文件”（同 Android message(src = FILE)）。 */
+  static importError(code: ErrorCode, fromFile: boolean = false): Resource {
     switch (code) {
       case ErrorCode.SUBSCRIPTION_INVALID:
-        return $r('app.string.subs_error_invalid_link');
+        return fromFile ? $r('app.string.subs_error_invalid_file') : $r('app.string.subs_error_invalid_link');
       case ErrorCode.SUBSCRIPTION_FETCH_FAILED:
       case ErrorCode.NETWORK_UNAVAILABLE:
         return $r('app.string.subs_error_fetch');

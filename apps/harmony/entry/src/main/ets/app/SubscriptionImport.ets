@@ -14,7 +14,20 @@ export interface ImportOutcome {
   error?: ErrorCode;
 }
 
+/** 文件导入上限（同 Android SubscriptionImporter.MAX_BYTES）。 */
+export const MAX_IMPORT_FILE_BYTES: number = 32 * 1024 * 1024;
+
 export class SubscriptionImport {
+  /** 文件大小是否在上限内（空文件也算读不了）。 */
+  static fileSizeAllowed(size: number): boolean {
+    return size > 0 && size <= MAX_IMPORT_FILE_BYTES;
+  }
+
+  /** 去掉开头的 UTF-8 BOM（有的编辑器存 YAML 会带）。 */
+  static stripBom(text: string): string {
+    return text.length > 0 && text.charCodeAt(0) === 0xFEFF ? text.substring(1) : text;
+  }
+
   /** 明文 http 链接：确认面板显示“此链接未加密”警告。 */
   static isInsecure(url: string): boolean {
     return url.trim().toLowerCase().startsWith('http://');

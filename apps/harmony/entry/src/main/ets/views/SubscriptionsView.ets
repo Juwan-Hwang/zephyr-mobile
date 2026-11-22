@@ -17,6 +17,8 @@ import { BusinessError } from '@kit.BasicServicesKit';
 import { AppServices } from '../app/AppServices';
 import { ImportInbox } from '../app/ImportInbox';
 import { ImportOutcome, SubscriptionImport } from '../app/SubscriptionImport';
+import { ImportPickers, PickError, PickResult } from '../app/ImportPickers';
+import { ZNavRow } from '../components/ZNavRow';
 import { Format } from '../common/Format';
 import { Labels } from '../common/Labels';
 import { ZCard } from '../components/ZCard';
@@ -39,6 +41,8 @@ import { ZToggleRow } from '../components/ZToggleRow';
 export const SUBS_REVIEW_CONFIRM_ID: string = 'zephyr.subs.review.confirm';
 export const SUBS_REVIEW_ID: string = 'zephyr.subs.review';
 export const SUBS_SHOW_CHANGES_ID: string = 'zephyr.subs.showChanges';
+export const SUBS_SCAN_QR_ID: string = 'zephyr.subs.scanQr';
+export const SUBS_IMPORT_FILE_ID: string = 'zephyr.subs.importFile';
 export const SUBS_UPDATE_ALL_ID: string = 'zephyr.subs.updateAll';
 
 export function subsRowId(id: string): string {
@@ -178,10 +182,41 @@ export struct SubscriptionsView {
         this.showAdd = false;
         this.reportOutcome(o);
       } else if (o.error !== undefined) {
-        this.addError = Labels.importError(o.error);
+        this.addError = Labels.importError(o.error, source === ImportSource.FILE);
       }
     }).finally(() => {
       this.adding = false;
+    });
+  }
+
+  // ── 扫码 / 文件（M1-12） ─────────────────────────────────────────────────
+  private scanQr(): void {
+    const ctx = this.getUIContext().getHostContext();
+    if (this.adding || ctx === undefined) {
+      return;
+    }
+    this.addError = undefined;
+    ImportPickers.scanQr(ctx).then((r: PickResult) => {
+      if (r.text !== undefined) {
+        this.addFromText(ImportSource.QR, r.text);
+      } else if (r.error === PickError.UNAVAILABLE) {
+        this.addError = $r('app.string.subs_scan_no_camera');
+      }
+    });
+  }
+
+  private pickFile(): void {
+    const ctx = this.getUIContext().getHostContext();
+    if (this.adding || ctx === undefined) {
+      return;
+    }
+    this.addError = undefined;
+    ImportPickers.pickFile(ctx).then((r: PickResult) => {
+      if (r.text !== undefined) {
+        this.addFromText(ImportSource.FILE, r.text);
+      } else if (r.error === PickError.UNREADABLE) {
+        this.addError = $r('app.string.subs_error_read_file');
+      }
     });
   }
 
@@ -521,6 +556,16 @@ export struct SubscriptionsView {
             .onClick(() => this.addFromText(ImportSource.URL, this.link))
         }
         .width('100%')
+
+        Column() {
+          ZNavRow({ title: $r('app.string.subs_scan_qr'), onTap: () => this.scanQr() })
+            .id(SUBS_SCAN_QR_ID)
+          ZNavRow({ title: $r('app.string.subs_import_desktop'), onTap: () => this.scanQr() })
+          ZNavRow({ title: ZTerm.importFromFile, divider: false, onTap: () => this.pickFile() })
+            .id(SUBS_IMPORT_FILE_ID)
+        }
+        .width('100%')
+        .enabled(!this.adding)
       }
       .width('100%')
       .alignItems(HorizontalAlign.Start)
