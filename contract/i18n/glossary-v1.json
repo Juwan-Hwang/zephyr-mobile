@@ -1076,7 +1076,10 @@
         "status": "pending",
         "reviewed": [
           "en",
-          "zh"
+          "zh",
+          "my",
+          "sw",
+          "vi"
         ],
         "pending": [
           "ja",
@@ -1085,12 +1088,9 @@
           "es",
           "fa",
           "tk",
-          "my",
           "ar",
           "ur",
-          "sw",
-          "tr",
-          "vi"
+          "tr"
         ]
       }
     },
@@ -1103,7 +1103,7 @@
       "es": "Lento",
       "fa": "کند",
       "tk": "Haýal",
-      "my": "နှေးသည်",
+      "my": "နှေး",
       "ar": "بطيء",
       "ur": "سست",
       "sw": "Polepole",
@@ -1117,7 +1117,10 @@
         "status": "pending",
         "reviewed": [
           "en",
-          "zh"
+          "zh",
+          "my",
+          "sw",
+          "vi"
         ],
         "pending": [
           "ja",
@@ -1126,12 +1129,9 @@
           "es",
           "fa",
           "tk",
-          "my",
           "ar",
           "ur",
-          "sw",
-          "tr",
-          "vi"
+          "tr"
         ]
       }
     },
@@ -1144,12 +1144,12 @@
       "es": "Tiempo agotado",
       "fa": "مهلت تمام شد",
       "tk": "Wagt gutardy",
-      "my": "အချိန်ကုန်သွားသည်",
+      "my": "အချိန်ကုန်",
       "ar": "انتهت المهلة",
       "ur": "وقت ختم",
       "sw": "Muda umeisha",
       "tr": "Zaman aşımı",
-      "vi": "Hết thời gian",
+      "vi": "Hết thời gian chờ",
       "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
       "keys": {
         "ios": "App:超时"
@@ -1158,7 +1158,10 @@
         "status": "pending",
         "reviewed": [
           "en",
-          "zh"
+          "zh",
+          "my",
+          "sw",
+          "vi"
         ],
         "pending": [
           "ja",
@@ -1167,12 +1170,9 @@
           "es",
           "fa",
           "tk",
-          "my",
           "ar",
           "ur",
-          "sw",
-          "tr",
-          "vi"
+          "tr"
         ]
       }
     },
@@ -1199,7 +1199,10 @@
         "status": "pending",
         "reviewed": [
           "en",
-          "zh"
+          "zh",
+          "my",
+          "sw",
+          "vi"
         ],
         "pending": [
           "ja",
@@ -1208,12 +1211,9 @@
           "es",
           "fa",
           "tk",
-          "my",
           "ar",
           "ur",
-          "sw",
-          "tr",
-          "vi"
+          "tr"
         ]
       }
     },
@@ -1226,10 +1226,10 @@
       "es": "Vence pronto",
       "fa": "به‌زودی منقضی می‌شود",
       "tk": "Möhleti golaýar",
-      "my": "မကြာမီ သက်တမ်းကုန်မည်",
+      "my": "သက်တမ်းကုန်ခါနီး",
       "ar": "ينتهي قريبًا",
       "ur": "جلد ختم ہو رہا ہے",
-      "sw": "Inaisha hivi karibuni",
+      "sw": "Inakaribia kuisha",
       "tr": "Yakında sona eriyor",
       "vi": "Sắp hết hạn",
       "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
@@ -1240,7 +1240,10 @@
         "status": "pending",
         "reviewed": [
           "en",
-          "zh"
+          "zh",
+          "my",
+          "sw",
+          "vi"
         ],
         "pending": [
           "ja",
@@ -1249,12 +1252,9 @@
           "es",
           "fa",
           "tk",
-          "my",
           "ar",
           "ur",
-          "sw",
-          "tr",
-          "vi"
+          "tr"
         ]
       }
     },
@@ -1282,7 +1282,10 @@
         "status": "pending",
         "reviewed": [
           "en",
-          "zh"
+          "zh",
+          "my",
+          "sw",
+          "vi"
         ],
         "pending": [
           "ja",
@@ -1291,12 +1294,9 @@
           "es",
           "fa",
           "tk",
-          "my",
           "ar",
           "ur",
-          "sw",
-          "tr",
-          "vi"
+          "tr"
         ]
       }
     },
@@ -1309,7 +1309,7 @@
       "es": "Error",
       "fa": "ناموفق",
       "tk": "Şowsuz",
-      "my": "မအောင်မြင်ပါ",
+      "my": "မအောင်မြင်",
       "ar": "فشل",
       "ur": "ناکام",
       "sw": "Imeshindwa",
@@ -1324,7 +1324,10 @@
         "status": "pending",
         "reviewed": [
           "en",
-          "zh"
+          "zh",
+          "my",
+          "sw",
+          "vi"
         ],
         "pending": [
           "ja",
@@ -1333,12 +1336,9 @@
           "es",
           "fa",
           "tk",
-          "my",
           "ar",
           "ur",
-          "sw",
-          "tr",
-          "vi"
+          "tr"
         ]
       }
     },
@@ -1366,7 +1366,10 @@
         "status": "pending",
         "reviewed": [
           "en",
-          "zh"
+          "zh",
+          "my",
+          "sw",
+          "vi"
         ],
         "pending": [
           "ja",
@@ -1375,12 +1378,9 @@
           "es",
           "fa",
           "tk",
-          "my",
           "ar",
           "ur",
-          "sw",
-          "tr",
-          "vi"
+          "tr"
         ]
       }
     },
@@ -1408,7 +1408,10 @@
         "status": "pending",
         "reviewed": [
           "en",
-          "zh"
+          "zh",
+          "my",
+          "sw",
+          "vi"
         ],
         "pending": [
           "ja",
@@ -1417,12 +1420,9 @@
           "es",
           "fa",
           "tk",
-          "my",
           "ar",
           "ur",
-          "sw",
-          "tr",
-          "vi"
+          "tr"
         ]
       }
     }
