@@ -150,6 +150,18 @@ export interface ExitChange {
   unchangedApps: string[];
 }
 
+/**
+ * 契约 v0.2「场景自动切换」+ §14.y（同 iOS SceneFailoverNotice / Android CoreEngine.failovers）：一轮出口探测里某场景的已选节点无响应。
+ * switchedTo 为空 = 未自动切换（AI 场景，出口 IP 只能由用户确认后更改），只提示；否则核心已在热备内切换，previousNodeId 用于撤销。
+ */
+export interface SceneFailoverNotice {
+  sceneId: string;
+  sceneName: string;
+  failedNode: string;
+  switchedTo?: string;
+  previousNodeId?: NodeId;
+}
+
 /** §15.h 场景节点过滤：允许值只有 'uhd'（只用 4K 节点）；undefined = 不过滤。 */
 export const SCENE_NODE_FILTER_UHD: string = 'uhd';
 

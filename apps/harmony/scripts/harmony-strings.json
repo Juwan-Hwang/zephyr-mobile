@@ -29,7 +29,9 @@
     "hm_settings_mode": "Default mode",
     "hm_licenses_placeholder": "The full list of licenses will be included in a later build.",
     "hm_number_myriad": "false",
-    "hm_unit_wan": "万"
+    "hm_unit_wan": "万",
+    "hm_settings_mock_failover": "Simulate failover",
+    "hm_settings_mock_failover_offline": "Connect first to simulate a failover."
   },
   "zh": {
     "module_desc": "Zephyr 应用模块",
@@ -61,6 +63,8 @@
     "hm_settings_mode": "代理模式",
     "hm_licenses_placeholder": "完整的许可列表将在后续版本中提供。",
     "hm_number_myriad": "true",
-    "hm_unit_wan": "万"
+    "hm_unit_wan": "万",
+    "hm_settings_mock_failover": "模拟故障切换",
+    "hm_settings_mock_failover_offline": "先连接，再模拟故障切换。"
   }
 }

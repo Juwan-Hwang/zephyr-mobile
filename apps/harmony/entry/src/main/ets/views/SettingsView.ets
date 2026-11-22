@@ -11,6 +11,8 @@
  */
 import { bundleManager } from '@kit.AbilityKit';
 import { AppServices } from '../app/AppServices';
+import { MockEngine } from '../engine/MockEngine';
+import { SceneFailoverNotice } from '../engine/Model';
 import { Format } from '../common/Format';
 import { Labels } from '../common/Labels';
 import { ZNavRow } from '../components/ZNavRow';
@@ -144,6 +146,24 @@ export struct SettingsView {
     })
   }
 
+  private simulateFailover(): void {
+    const svc = AppServices.get();
+    const engine = svc.engine;
+    if (!(engine instanceof MockEngine)) {
+      return;
+    }
+    engine.simulateFailover().then((n: SceneFailoverNotice | undefined) => {
+      if (n === undefined) {
+        try {
+          svc.toasts.show(this.getUIContext().getHostContext()!.resourceManager
+            .getStringSync($r('app.string.hm_settings_mock_failover_offline').id));
+        } catch (e) {
+          // 资源取不到时静默
+        }
+      }
+    }).catch(() => {});
+  }
+
   private engineLabel(): Resource {
     return AppServices.get().engine.kind === 'mock' ? $r('app.string.hm_settings_engine_mock')
       : $r('app.string.hm_settings_engine_native');
@@ -267,6 +287,10 @@ export struct SettingsView {
         ZSection({ header: $r('app.string.settings_section_about') }) {
           ZNavRow({ title: $r('app.string.hm_settings_version'), value: this.version, chevron: false })
           ZNavRow({ title: $r('app.string.hm_settings_engine'), value: this.engineLabel(), chevron: false })
+          if (AppServices.get().engine.kind === 'mock') {
+            // 仅演示引擎：触发一次场景故障切换，供首页「已切换」卡片和撤销在真机 / 云调试上验证（M1-6）。
+            ZNavRow({ title: $r('app.string.hm_settings_mock_failover'), onTap: () => this.simulateFailover() })
+          }
           ZNavRow({ title: $r('app.string.settings_licenses'), divider: false, onTap: () => this.onOpenLicenses() })
         }
       }

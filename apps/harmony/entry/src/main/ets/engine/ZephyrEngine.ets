@@ -1,7 +1,7 @@
 import {
   CommandSuggestion, ConnectionInfo, ConnectionState, ConnectionTrace, ErrorCode, ExitChange, ImportItem,
   ImportPayload, ImportSource, LatencyUpdate, LogLevel, LogLine, NodeDetail, NodeFunnel, NodeId, NodeIndex, NodePage,
-  NodeFilterPreview, NodeQueryResult, NodeSummary, PolicyGroup, ProxyMode, RuleStats, RuleTrace, ScanProgress, Scene, SceneSource,
+  NodeFilterPreview, NodeQueryResult, NodeSummary, PolicyGroup, ProxyMode, RuleStats, RuleTrace, ScanProgress, Scene, SceneFailoverNotice, SceneSource,
   Settings, StorageInfo, Subscription, SubscriptionDiff, SubscriptionsSummary, TraceTarget, TrafficSample,
   UsageSummary, ZephyrErrorInfo
 } from './Model';
@@ -68,6 +68,8 @@ export interface ZephyrEngine {
   sceneCandidates(sceneId: string, region?: string): Promise<NodeSummary[]>;
   previewSceneChange(sceneId: string, nodeId: NodeId): Promise<ExitChange>;
   applySceneChange(sceneId: string, nodeId: NodeId): Promise<void>;
+  /** 场景出口探测事件（U8）：UI 只在前台且已连接时订阅。 */
+  sceneFailovers(): EventStream<SceneFailoverNotice>;
   retestScene(sceneId: string): Promise<Scene>;
   scanProgress(): StateStream<ScanProgress | undefined>;
   nodeFunnel(maxAgeMs: number, thresholdMs: number): Promise<NodeFunnel | undefined>;

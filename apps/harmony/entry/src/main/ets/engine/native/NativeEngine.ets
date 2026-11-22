@@ -2,7 +2,7 @@ import {
   CommandSuggestion, ConnectionInfo, ConnectionState, ConnectionStatus, ConnectionTrace, ErrorCode, ExitChange,
   ImportItem, ImportPayload, ImportSource, LatencyUpdate, LogLevel, LogLine, NodeDetail, NodeFilterPreview, NodeFunnel, NodeId, NodeIndex,
   NodePage, NodeQueryResult, NodeSummary, PolicyGroup, ProxyMode, RuleStats, RuleTrace, ScanProgress, Scene,
-  SceneSource, Settings, StorageInfo, Subscription, SubscriptionDiff, SubscriptionsSummary, TraceTarget,
+  SceneFailoverNotice, SceneSource, Settings, StorageInfo, Subscription, SubscriptionDiff, SubscriptionsSummary, TraceTarget,
   TrafficSample, UsageSummary, defaultSettings
 } from '../Model';
 import { EventStream, StateStream } from '../Stream';
@@ -35,6 +35,8 @@ export class NativeEngine implements ZephyrEngine {
   private subs: StateStream<Subscription[]> = new StateStream<Subscription[]>([]);
   private settingsState: StateStream<Settings> = new StateStream<Settings>(defaultSettings());
   private trafficEvents: EventStream<TrafficSample> = new EventStream<TrafficSample>();
+  /** M3 接核心探测事件前不发任何通知。 */
+  private failoverEvents: EventStream<SceneFailoverNotice> = new EventStream<SceneFailoverNotice>();
   private latencyEvents: EventStream<LatencyUpdate[]> = new EventStream<LatencyUpdate[]>();
   private connEvents: EventStream<ConnectionInfo[]> = new EventStream<ConnectionInfo[]>();
   private hostEvents: EventStream<ConnectionInfo[]> = new EventStream<ConnectionInfo[]>();
@@ -141,6 +143,10 @@ export class NativeEngine implements ZephyrEngine {
 
   applySceneChange(sceneId: string, nodeId: NodeId): Promise<void> {
     return NativeEngine.ni<void>('applySceneChange');
+  }
+
+  sceneFailovers(): EventStream<SceneFailoverNotice> {
+    return this.failoverEvents;
   }
 
   retestScene(sceneId: string): Promise<Scene> {

@@ -381,6 +381,14 @@
       "value": "Log level"
     },
     {
+      "name": "hm_settings_mock_failover",
+      "value": "Simulate failover"
+    },
+    {
+      "name": "hm_settings_mock_failover_offline",
+      "value": "Connect first to simulate a failover."
+    },
+    {
       "name": "hm_settings_mode",
       "value": "Default mode"
     },

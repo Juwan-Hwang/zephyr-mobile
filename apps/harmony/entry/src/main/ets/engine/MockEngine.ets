@@ -2,7 +2,7 @@ import {
   CommandSuggestion, ConnectionInfo, ConnectionState, ConnectionStatus, ConnectionTrace, defaultSettings, ErrorCode,
   ExitChange, ImportItem, ImportPayload, ImportSource, LATENCY_TIMEOUT, LatencyUpdate, LogLevel, LogLine, NetworkKind,
   NodeDetail, NodeFilterPreview, NodeFunnel, NodeId, NodeIndex, NodePage, NodeQueryResult, NodeSummary, PolicyGroup, ProxyMode, RuleStats,
-  RuleTrace, ScanProgress, Scene, SceneException, SceneKind, SceneSource, Settings, StorageInfo, Subscription,
+  RuleTrace, ScanProgress, Scene, SceneException, SceneFailoverNotice, SceneKind, SceneSource, Settings, StorageInfo, Subscription,
   SubscriptionDiff, SubscriptionsSummary, TraceOverride, TraceTarget, TrafficSample, UsageSummary, copySettings
 } from './Model';
 import { delay, EventStream, StateStream } from './Stream';
@@ -111,6 +111,7 @@ export class MockEngine implements ZephyrEngine {
   private latencyBus: EventStream<LatencyUpdate[]> = new EventStream<LatencyUpdate[]>();
   private trafficBus: EventStream<TrafficSample> = new EventStream<TrafficSample>();
   private logBus: EventStream<LogLine> = new EventStream<LogLine>();
+  private failoverBus: EventStream<SceneFailoverNotice> = new EventStream<SceneFailoverNotice>();
 
   private tested: Map<number, number> = new Map<number, number>();
   private testedCount: number = BASE_TESTED;
@@ -354,6 +355,43 @@ export class MockEngine implements ZephyrEngine {
       s.exitIp = MockScenes.exitIp(to.id);
       s.source = SceneSource.MANUAL;
     });
+  }
+
+  sceneFailovers(): EventStream<SceneFailoverNotice> {
+    return this.failoverBus;
+  }
+
+  /**
+   * Mock 触发（U8，调试 / 测试用）：模拟一轮出口探测发现 sceneId 的已选节点无响应。
+   * AI 场景只发提示（§14.y：出口 IP 只能由用户确认后更改）；其余场景切到候选里延迟最低的另一个节点，再发带 previousNodeId 的通知。
+   * 未连接时不探测，返回 undefined。
+   */
+  async simulateFailover(sceneId?: string): Promise<SceneFailoverNotice | undefined> {
+    if (this.connection.value.status !== ConnectionStatus.CONNECTED) {
+      return undefined;
+    }
+    const scenes = this.sceneState.value;
+    const scene = sceneId !== undefined ? scenes.find((s: Scene) => s.id === sceneId)
+      : scenes.find((s: Scene) => s.kind !== SceneKind.AI);
+    if (scene === undefined) {
+      return undefined;
+    }
+    const n: SceneFailoverNotice = { sceneId: scene.id, sceneName: scene.name, failedNode: scene.selected.name };
+    if (scene.kind !== SceneKind.AI) {
+      const pool = await this.sceneCandidates(scene.id);
+      const next = pool.find((x: NodeSummary) => x.id !== scene.selected.id && MockScenes.byId(x.id) !== undefined);
+      if (next !== undefined) {
+        const previous = scene.selected.id;
+        this.patchScene(scene.id, (s: Scene) => {
+          s.selected = next;
+          s.exitIp = MockScenes.exitIp(next.id);
+        });
+        n.switchedTo = next.name;
+        n.previousNodeId = previous;
+      }
+    }
+    this.failoverBus.emit(n);
+    return n;
   }
 
   async retestScene(sceneId: string): Promise<Scene> {

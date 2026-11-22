@@ -267,6 +267,7 @@ struct Index {
         onOpenNodesQuery: (q: string) => this.pathStack.pushPathByName(ROUTE_NODES, new NavArgs(BackTo.HOME, q)),
         onOpenRules: () => this.push(ROUTE_RULES, BackTo.HOME),
         onOpenToday: () => this.push(ROUTE_TODAY, BackTo.HOME),
+        onOpenSubscriptions: () => this.push(ROUTE_SUBSCRIPTIONS, BackTo.HOME),
         sceneRequest: this.sceneRequest
       })
     }

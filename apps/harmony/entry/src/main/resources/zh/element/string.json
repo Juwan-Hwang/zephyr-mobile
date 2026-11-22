@@ -377,6 +377,14 @@
       "value": "日志级别"
     },
     {
+      "name": "hm_settings_mock_failover",
+      "value": "模拟故障切换"
+    },
+    {
+      "name": "hm_settings_mock_failover_offline",
+      "value": "先连接，再模拟故障切换。"
+    },
+    {
       "name": "hm_settings_mode",
       "value": "代理模式"
     },

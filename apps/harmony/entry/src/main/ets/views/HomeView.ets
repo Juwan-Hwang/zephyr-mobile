@@ -8,6 +8,16 @@
  * - 顶栏：Zephyr + 右上设置；底栏（原型 .dock）：左侧指令栏“搜索或输入指令”（点开 CommandSheet，M1-7b）+ 右侧资料库按钮（契约 §17.e，无底部 Tab）。
  * - 场景详情 sheet（M1-5，SceneSheet）：点场景行打开；资料库“场景”入口经 Index 递增 sceneRequest 打开第一个场景
  *   （同 Android AppRoot LibraryDest.Scenes）。sheet 里点候选 → 收起 sheet，首页出同一张“更改出口 IP？”确认卡。
+ * - M1-6（U4 / U6 / U7 / U8；同 Android HomeScreen / HomeCards / HomeViewModel，iOS GlobalModeCard / TrafficPanel /
+ *   SubscriptionsSection / AppModel+Streams）：
+ *   · 流量曲线：已连接时速率下方画最近 90 秒下行曲线（recentTraffic(90) 回填，之后每个样本推进），未连接画虚线基线；
+ *   · “场景”小标题，右侧扫描进度 / “x 分钟前检测”（全局模式不显示）；
+ *   · 全局模式卡替代场景行：“所有流量均经由 X。场景已暂停。”、使用规则模式 / 更换节点；更换节点展开内联建议
+ *     （延迟最低的另一个节点，出口 IP 行 previewGlobalChange）→“更改为 X”setGlobalNode，5 s 撤销吐司；
+ *   · “订阅”小标题，右侧“今日 X ›”打开今日卡；订阅卡最多 3 行（名称、用量条、剩余、到期），§16.e④ 琥珀，
+ *     其余“更多 N 个订阅”，点按去订阅页；
+ *   · 自动切换提示（failover）：已连接时订阅 engine.sceneFailovers()，已切换 → “X 出口已自动切换到 Y”+ 撤销
+ *     （吐司期间又换过节点则撤销不动作），AI 场景未切换 → 只提示。Mock 由设置页“模拟场景自动切换”触发。
  */
 import { ActivitySheet } from './ActivitySheet';
 import { CommandSheet } from './CommandSheet';
@@ -17,13 +27,18 @@ import { AppServices } from '../app/AppServices';
 import { Format } from '../common/Format';
 import { Labels } from '../common/Labels';
 import { ZCard } from '../components/ZCard';
+import { ZSparkline } from '../components/ZSparkline';
+import { Failover, GlobalPick, HomeSubs, HomeSubsView, SPARK_POINTS, SparkRing } from '../app/HomeModel';
+import { SubscriptionWarning, SubscriptionsModel } from '../app/SubscriptionsModel';
+import { ZTheme } from '../common/Theme';
+import { ZColorsDark, ZColorsLight } from '../generated/ZTokens';
 import { ZSegmented } from '../components/ZSegmented';
 import { SceneRow } from './SceneRow';
 import { SceneSheet } from './SceneSheet';
 import { HapticKind, Haptics } from '../app/Haptics';
 import {
-  ConnectionState, ConnectionStatus, ErrorCode, ExitChange, NodeDetail, NodeId, NodeSummary, ProxyMode, Scene, ServiceHealth,
-  TrafficSample, UsageSummary
+  ConnectionState, ConnectionStatus, ErrorCode, ExitChange, NodeDetail, NodeId, NodeSummary, ProxyMode, ScanProgress, Scene,
+  SceneFailoverNotice, ServiceHealth, Subscription, TrafficSample, UsageSummary
 } from '../engine/Model';
 import { Subscription as StreamSub } from '../engine/Stream';
 import { VpnState } from '../vpn/VpnController';
@@ -33,6 +48,11 @@ import { ZTerm } from '../generated/ZTerms';
 export const HOME_TRAFFIC_ID: string = 'zephyr.home.traffic';
 /** 资料库按钮（界面测试用）。 */
 export const HOME_LIBRARY_ID: string = 'zephyr.home.library';
+/** 全局模式卡“更换节点” / “更改为 X”（UiTest）。 */
+export const HOME_GLOBAL_CHANGE_ID: string = 'zephyr.home.global.change';
+export const HOME_GLOBAL_CONFIRM_ID: string = 'zephyr.home.global.confirm';
+/** 首页订阅卡（UiTest）。 */
+export const HOME_SUBS_ID: string = 'zephyr.home.subs';
 
 const MODES: ProxyMode[] = [ProxyMode.RULE, ProxyMode.GLOBAL, ProxyMode.DIRECT];
 
@@ -46,6 +66,8 @@ export struct HomeView {
   @Event onOpenRules: () => void = () => {};
   /** 流量卡“今日 X”：今日卡（M1-9，同 Android onToday）。 */
   @Event onOpenToday: () => void = () => {};
+  /** 订阅卡：订阅页（同 Android onSubscriptions）。 */
+  @Event onOpenSubscriptions: () => void = () => {};
   @Local showCommand: boolean = false;
   /** 最近连接 sheet（M1-8）。 */
   @Local showActivity: boolean = false;
@@ -71,6 +93,17 @@ export struct HomeView {
   @Local pendingNode: NodeSummary | undefined = undefined;
   @Local pendingChange: ExitChange | undefined = undefined;
   @Local applying: boolean = false;
+  /** 最近 90 个下行样本（曲线）。 */
+  @Local spark: number[] = [];
+  @Local subList: Subscription[] = [];
+  /** 分钟级时钟：到期 / “x 分钟前检测”。 */
+  @Local minuteNow: number = Date.now();
+  @Local scan: ScanProgress | undefined = undefined;
+  /** 全局模式“更换节点”的内联建议（原型 gcf）。 */
+  @Local globalProposal: NodeSummary | undefined = undefined;
+  @Local globalChange: ExitChange | undefined = undefined;
+  @Local globalLoading: boolean = false;
+  @Local theme: ZTheme = ZTheme.shared();
 
   private services: AppServices = AppServices.get();
   /** 指令面板最近一次关闭的时间（CommandApplier.suppressesTap）。 */
@@ -78,6 +111,12 @@ export struct HomeView {
   private subs: StreamSub[] = [];
   private ticker: number = -1;
   private globalId: NodeId | undefined = undefined;
+  private live: boolean = false;
+  private ring: SparkRing = new SparkRing(SPARK_POINTS);
+  private minuteTimer: number = -1;
+  private failoverSub: StreamSub | undefined = undefined;
+  /** 连接代次：断开后到达的 recentTraffic 回填作废。 */
+  private liveGen: number = 0;
 
   aboutToAppear(): void {
     const engine = this.services.engine;
@@ -85,10 +124,20 @@ export struct HomeView {
     this.subs.push(engine.traffic().subscribe((t: TrafficSample) => {
       this.upBps = t.upBps;
       this.downBps = t.downBps;
+      if (this.status === ConnectionStatus.CONNECTED) {
+        this.spark = this.ring.push(t.downBps);
+      }
     }));
     this.subs.push(engine.scenes().subscribe((s: Scene[]) => {
       this.scenes = s;
     }));
+    this.subs.push(engine.subscriptions().subscribe((s: Subscription[]) => {
+      this.subList = s;
+    }));
+    this.subs.push(engine.scanProgress().subscribe((p: ScanProgress | undefined) => {
+      this.scan = p;
+    }));
+    this.startMinuteClock();
     const vpn = this.services.vpn;
     if (vpn !== undefined) {
       this.subs.push(vpn.state().subscribe((v: VpnState) => {
@@ -98,9 +147,7 @@ export struct HomeView {
       // 预览器：没有 VPN 扩展，连接本来就是模拟的。
       this.simulated = true;
     }
-    engine.usageToday().then((u: UsageSummary) => {
-      this.todayBytes = u.todayBytes;
-    }).catch(() => {});
+    this.refreshUsage();
   }
 
   aboutToDisappear(): void {
@@ -109,6 +156,128 @@ export struct HomeView {
     }
     this.subs = [];
     this.stopTicker();
+    this.stopFailovers();
+    if (this.minuteTimer >= 0) {
+      clearTimeout(this.minuteTimer);
+      this.minuteTimer = -1;
+    }
+  }
+
+  private refreshUsage(): void {
+    this.services.engine.usageToday().then((u: UsageSummary) => {
+      this.todayBytes = u.todayBytes;
+    }).catch(() => {});
+  }
+
+  /** 分钟级时钟（同 Android HomeViewModel：对齐整分，顺带刷新今日用量）。 */
+  private startMinuteClock(): void {
+    const wait = 60000 - Date.now() % 60000;
+    this.minuteTimer = setTimeout(() => {
+      this.minuteNow = Date.now();
+      this.refreshUsage();
+      this.startMinuteClock();
+    }, wait);
+  }
+
+  // ── 自动切换提示（U8）────────────────────────────────────────────────────
+  private startFailovers(): void {
+    if (this.failoverSub !== undefined) {
+      return;
+    }
+    this.failoverSub = this.services.engine.sceneFailovers().subscribe((n: SceneFailoverNotice) => this.onFailover(n));
+  }
+
+  private stopFailovers(): void {
+    if (this.failoverSub !== undefined) {
+      this.failoverSub.cancel();
+      this.failoverSub = undefined;
+    }
+  }
+
+  private onFailover(n: SceneFailoverNotice): void {
+    if (this.status !== ConnectionStatus.CONNECTED) {
+      return;
+    }
+    const name = this.resolve(Labels.sceneNameRaw(n.sceneName));
+    hilog.info(0x5A50, 'HomeView', 'failover %{public}s switched=%{public}s', n.sceneId, String(n.switchedTo !== undefined));
+    const to = n.switchedTo;
+    if (to === undefined) {
+      this.services.toasts.show(this.text($r('app.string.home_failover_none'), name));
+      return;
+    }
+    const engine = this.services.engine;
+    const prev = n.previousNodeId;
+    if (prev === undefined) {
+      this.services.toasts.show(this.text2($r('app.string.home_failover_switched'), name, to));
+      return;
+    }
+    this.services.toasts.show(this.text2($r('app.string.home_failover_switched'), name, to), {
+      onUndo: () => {
+        // 吐司期间用户又换了节点：撤销不覆盖那次选择（同 iOS）。
+        if (Failover.canUndo(n, this.scenes)) {
+          engine.applySceneChange(n.sceneId, prev).catch(() => {});
+        }
+      }
+    });
+  }
+
+  // ── 全局模式卡（U6）──────────────────────────────────────────────────────
+  private toggleGlobalChange(): void {
+    if (this.globalProposal !== undefined) {
+      this.globalProposal = undefined;
+      this.globalChange = undefined;
+      return;
+    }
+    if (this.globalLoading) {
+      return;
+    }
+    this.globalLoading = true;
+    const engine = this.services.engine;
+    const cur = this.globalNode;
+    GlobalPick.candidates(engine, this.scenes).then((nodes: NodeSummary[]) => {
+      const best = GlobalPick.best(nodes, cur);
+      if (best === undefined) {
+        this.services.toasts.show(this.text($r('app.string.home_error_node_gone'),
+          this.resolve($r('app.string.home_action_load_nodes'))));
+        return;
+      }
+      engine.previewGlobalChange(best.id).then((x: ExitChange) => {
+        this.globalChange = x;
+      }).catch(() => {
+        this.globalChange = undefined;
+      }).finally(() => {
+        if (this.mode === ProxyMode.GLOBAL) {
+          this.globalProposal = best;
+        }
+      });
+    }).catch(() => {}).finally(() => {
+      this.globalLoading = false;
+    });
+  }
+
+  private confirmGlobal(): void {
+    const to = this.globalProposal;
+    if (to === undefined || this.applying) {
+      return;
+    }
+    const from = this.globalNode;
+    const engine = this.services.engine;
+    this.applying = true;
+    engine.setGlobalNode(to.id).then(() => {
+      Haptics.play(HapticKind.SUCCESS);
+      this.globalProposal = undefined;
+      this.globalChange = undefined;
+      this.services.toasts.show(this.text($r('app.string.home_switched_to'), to.name), from === undefined ? undefined : {
+        onUndo: () => {
+          engine.setGlobalNode(from.id).catch(() => {});
+        }
+      });
+    }).catch(() => {
+      this.services.toasts.show(this.text($r('app.string.home_error_failed'),
+        this.resolve($r('app.string.home_action_switch_node'))));
+    }).finally(() => {
+      this.applying = false;
+    });
   }
 
   @Monitor('sceneRequest')
@@ -150,15 +319,39 @@ export struct HomeView {
     this.errorCode = c.status === ConnectionStatus.FAILED && c.error !== undefined ? c.error.code : undefined;
     if (c.status === ConnectionStatus.CONNECTED) {
       this.startTicker();
+      this.startFailovers();
+      if (!this.live) {
+        this.live = true;
+        this.backfillSpark();
+      }
     } else {
       this.stopTicker();
+      this.stopFailovers();
       this.upBps = 0;
       this.downBps = 0;
+      this.live = false;
+      this.liveGen++;
+      this.ring.clear();
+      this.spark = [];
+    }
+    if (c.mode !== ProxyMode.GLOBAL) {
+      this.globalProposal = undefined;
+      this.globalChange = undefined;
     }
     if (c.globalNodeId !== this.globalId) {
       this.globalId = c.globalNodeId;
       this.loadGlobal(c.globalNodeId);
     }
+  }
+
+  /** 刚连上：recentTraffic(90) 回填曲线（同 Android trafficLive）。 */
+  private backfillSpark(): void {
+    const gen = ++this.liveGen;
+    this.services.engine.recentTraffic(SPARK_POINTS).then((back: TrafficSample[]) => {
+      if (gen === this.liveGen && back.length > 0) {
+        this.spark = this.ring.fill(back);
+      }
+    }).catch(() => {});
   }
 
   private loadGlobal(id: NodeId | undefined): void {
@@ -248,12 +441,42 @@ export struct HomeView {
     });
   }
 
+  private plain(r: Resource): string {
+    try {
+      const ctx = this.getUIContext().getHostContext();
+      return ctx !== undefined ? ctx.resourceManager.getStringSync(r.id) : '';
+    } catch (e) {
+      return '';
+    }
+  }
+
   private text(r: Resource, arg: string): string {
     try {
       const ctx = this.getUIContext().getHostContext();
       return ctx !== undefined ? ctx.resourceManager.getStringSync(r.id, arg) : arg;
     } catch (e) {
       return arg;
+    }
+  }
+
+  private text2(r: Resource, a: string, b: string): string {
+    try {
+      const ctx = this.getUIContext().getHostContext();
+      return ctx !== undefined ? ctx.resourceManager.getStringSync(r.id, a, b) : a + ' ' + b;
+    } catch (e) {
+      return a + ' ' + b;
+    }
+  }
+
+  private resolve(r: ResourceStr): string {
+    if (typeof r === 'string') {
+      return r;
+    }
+    try {
+      const ctx = this.getUIContext().getHostContext();
+      return ctx !== undefined ? ctx.resourceManager.getStringSync((r as Resource).id) : '';
+    } catch (e) {
+      return '';
     }
   }
 
@@ -385,20 +608,21 @@ export struct HomeView {
           }
         })
 
-        if (this.todayBytes >= 0) {
-          Row({ space: 2 }) {
-            Text($r('app.string.home_today_usage', Format.bytesText(this.todayBytes)))
-              .fontSize(13)
-              .fontColor($r('app.color.screen_t3'))
-            Text('›')
-              .fontSize(15)
-              .fontColor($r('app.color.screen_t4'))
-              .accessibilityLevel('no')
-          }
-          .accessibilityGroup(true)
-          .accessibilityRole(AccessibilityRoleType.BUTTON)
-          .onClick(() => this.onOpenToday())
-        }
+        // 曲线（U4）：已连接 = 最近 90 秒下行；未连接 = 虚线基线。点曲线同样打开最近连接（原型整块 .wind）。
+        ZSparkline({
+          values: this.spark,
+          color: this.theme.isDark ? ZColorsDark.colorDownload : ZColorsLight.colorDownload,
+          idle: !this.isConnected(),
+          dark: this.theme.isDark,
+          description: this.plain($r('app.string.home_spark_a11y'))
+        })
+          .width('100%')
+          .height(72)
+          .onClick(() => {
+            if (this.status === ConnectionStatus.CONNECTED) {
+              this.showActivity = true;
+            }
+          })
       }
       .width('100%')
       .alignItems(HorizontalAlign.Start)
@@ -431,6 +655,275 @@ export struct HomeView {
     }
     .width('100%')
     .height(32)
+  }
+
+  /** 小标题（同 Android ZSectionHeader）：左标题，右侧可选说明（可点）。 */
+  @Builder
+  sectionHeader(title: ResourceStr, trailing: string, onTrailing: (() => void) | undefined) {
+    Row({ space: 8 }) {
+      Text(title)
+        .fontSize(13)
+        .fontWeight(FontWeight.Medium)
+        .fontColor($r('app.color.screen_t3'))
+        .accessibilityRole(AccessibilityRoleType.TEXT)
+      Blank()
+      if (trailing.length > 0) {
+        Row({ space: 2 }) {
+          Text(trailing)
+            .fontSize(13)
+            .fontColor($r('app.color.screen_t3'))
+          if (onTrailing !== undefined) {
+            Text('›')
+              .fontSize(15)
+              .fontColor($r('app.color.screen_t4'))
+              .accessibilityLevel('no')
+          }
+        }
+        .accessibilityGroup(true)
+        .accessibilityRole(onTrailing !== undefined ? AccessibilityRoleType.BUTTON : AccessibilityRoleType.TEXT)
+        .onClick(() => {
+          if (onTrailing !== undefined) {
+            onTrailing();
+          }
+        })
+      }
+    }
+    .width('100%')
+    .padding({ left: 4, right: 4 })
+    .margin({ top: 8 })
+  }
+
+  /** “场景”右侧：扫描进度 / 检测中 / “x 分钟前检测”；全局模式不显示（同 Android）。 */
+  private scenesTrailing(): string {
+    if (this.mode === ProxyMode.GLOBAL) {
+      return '';
+    }
+    const p = this.scan;
+    if (p !== undefined) {
+      return this.textNum2($r('app.string.home_scan_progress'), p.done, p.total);
+    }
+    let tested = 0;
+    for (const s of this.scenes) {
+      tested = Math.max(tested, s.testedAt ?? 0);
+    }
+    if (tested <= 0) {
+      return '';
+    }
+    const ago = Format.ago(tested, this.minuteNow);
+    return this.text($r('app.string.home_scenes_tested'), this.textNum(Labels.ago(ago), ago.count));
+  }
+
+  private textNum(r: Resource, n: number): string {
+    try {
+      const ctx = this.getUIContext().getHostContext();
+      return ctx !== undefined ? ctx.resourceManager.getStringSync(r.id, n) : String(n);
+    } catch (e) {
+      return String(n);
+    }
+  }
+
+  private textNum2(r: Resource, a: number, b: number): string {
+    try {
+      const ctx = this.getUIContext().getHostContext();
+      return ctx !== undefined ? ctx.resourceManager.getStringSync(r.id, a, b) : String(a) + '/' + String(b);
+    } catch (e) {
+      return String(a) + '/' + String(b);
+    }
+  }
+
+  private todayTrailing(): string {
+    return this.todayBytes >= 0 ? this.text($r('app.string.home_today_usage'), Format.bytesText(this.todayBytes)) : '';
+  }
+
+  /** 原型 global（689–692）：全局模式卡 + “更换节点”内联建议。 */
+  @Builder
+  globalCard() {
+    Column({ space: 5 }) {
+      Text(ZTerm.modeGlobalTitle)
+        .fontSize(15)
+        .fontColor($r('app.color.screen_t1'))
+      Text(this.globalNode !== undefined ? $r('app.string.home_global_body', this.globalNode.name)
+        : $r('app.string.home_global_body_any'))
+        .fontSize(13)
+        .lineHeight(19.5)
+        .fontColor($r('app.color.screen_t3'))
+      Row({ space: 8 }) {
+        Button($r('app.string.home_global_use_rule'))
+          .type(ButtonType.Capsule)
+          .layoutWeight(1)
+          .height(40)
+          .fontSize(14)
+          .fontWeight(FontWeight.Medium)
+          .fontColor($r('app.color.screen_on_primary'))
+          .backgroundColor($r('app.color.screen_primary'))
+          .onClick(() => this.setMode(MODES.indexOf(ProxyMode.RULE)))
+        Button($r('app.string.home_global_change_node'))
+          .type(ButtonType.Capsule)
+          .layoutWeight(1)
+          .height(40)
+          .fontSize(14)
+          .fontWeight(FontWeight.Medium)
+          .fontColor($r('app.color.screen_t1'))
+          .backgroundColor($r('app.color.screen_hl'))
+          .enabled(!this.globalLoading)
+          .id(HOME_GLOBAL_CHANGE_ID)
+          .onClick(() => this.toggleGlobalChange())
+      }
+      .width('100%')
+      .margin({ top: 9 })
+      if (this.globalProposal !== undefined) {
+        this.globalConfirm(this.globalProposal)
+      }
+    }
+    .width('100%')
+    .padding(16)
+    .borderRadius(22)
+    .backgroundColor($r('app.color.screen_s1'))
+    .alignItems(HorizontalAlign.Start)
+  }
+
+  private globalFrom(): string {
+    const c = this.globalChange;
+    if (c !== undefined && c.fromIp !== undefined) {
+      return c.fromRegion + ' ' + c.fromIp;
+    }
+    const n = this.globalNode;
+    return n !== undefined ? n.region + ' ' + n.name : this.resolve($r('app.string.common_current'));
+  }
+
+  private globalTo(p: NodeSummary): string {
+    const c = this.globalChange;
+    return c !== undefined && c.toIp !== undefined ? c.toRegion + ' ' + c.toIp : p.region + ' ' + p.name;
+  }
+
+  @Builder
+  globalConfirm(p: NodeSummary) {
+    Column({ space: 8 }) {
+      Column({ space: 4 }) {
+        Row({ space: 8 }) {
+          Circle({ width: 6, height: 6 }).fill($r('app.color.screen_amber'))
+          Text($r('app.string.common_exit_ip_changes'))
+            .fontSize(13)
+            .fontColor($r('app.color.screen_t1'))
+        }
+        Text(this.globalFrom() + ' → ' + this.globalTo(p))
+          .fontSize(12.5)
+          .fontFamily('monospace')
+          .fontColor($r('app.color.screen_t2'))
+          .maxLines(2)
+      }
+      .width('100%')
+      .padding(12)
+      .borderRadius(12)
+      .backgroundColor($r('app.color.screen_s3'))
+      .alignItems(HorizontalAlign.Start)
+      Text($r('app.string.home_global_change_note', p.name))
+        .fontSize(13)
+        .fontColor($r('app.color.screen_t3'))
+      Row({ space: 8 }) {
+        Button($r('app.string.home_global_change_to', p.name))
+          .type(ButtonType.Capsule)
+          .layoutWeight(1)
+          .height(40)
+          .fontSize(14)
+          .fontWeight(FontWeight.Medium)
+          .fontColor($r('app.color.screen_on_primary'))
+          .backgroundColor($r('app.color.screen_primary'))
+          .enabled(!this.applying)
+          .id(HOME_GLOBAL_CONFIRM_ID)
+          .onClick(() => this.confirmGlobal())
+        Button($r('app.string.common_cancel'))
+          .type(ButtonType.Capsule)
+          .layoutWeight(1)
+          .height(40)
+          .fontSize(14)
+          .fontWeight(FontWeight.Medium)
+          .fontColor($r('app.color.screen_t1'))
+          .backgroundColor($r('app.color.screen_hl'))
+          .onClick(() => this.toggleGlobalChange())
+      }
+      .width('100%')
+      .margin({ top: 4 })
+    }
+    .width('100%')
+    .margin({ top: 9 })
+    .alignItems(HorizontalAlign.Start)
+  }
+
+  private expiryLine(at: number): string {
+    const ex = Format.expiry(at, this.minuteNow);
+    return this.textNum(Labels.expiry(ex), ex.days);
+  }
+
+  /** 订阅摘要（同 Android SubscriptionsCard）：名称、用量条、剩余、到期；§16.e④ 琥珀。 */
+  @Builder
+  subRow(s: Subscription, divider: boolean) {
+    Column() {
+      Row({ space: 24 }) {
+        Column({ space: 12 }) {
+          Text(s.name)
+            .fontSize(17)
+            .fontColor($r('app.color.screen_t1'))
+            .maxLines(1)
+            .textOverflow({ overflow: TextOverflow.Ellipsis })
+          Progress({ value: SubscriptionsModel.usedFraction(s) * 100, total: 100, type: ProgressType.Linear })
+            .width('100%')
+            .color(SubscriptionWarning.isWarning(s, this.minuteNow) ? $r('app.color.screen_amber') : $r('app.color.screen_t3'))
+            .backgroundColor($r('app.color.screen_s3'))
+        }
+        .layoutWeight(1)
+        .alignItems(HorizontalAlign.Start)
+        Column({ space: 4 }) {
+          if (s.remainingBytes !== undefined) {
+            Text(Format.bytesText(s.remainingBytes))
+              .fontSize(15)
+              .fontFamily('monospace')
+              .fontColor($r('app.color.screen_t1'))
+          }
+          if (s.expiresAt !== undefined) {
+            Text(this.expiryLine(s.expiresAt))
+              .fontSize(12)
+              .fontColor(SubscriptionWarning.isWarning(s, this.minuteNow) ? $r('app.color.screen_amber') : $r('app.color.screen_t3'))
+          }
+        }
+        .alignItems(HorizontalAlign.End)
+      }
+      .width('100%')
+      .padding(18)
+      if (divider) {
+        Divider().strokeWidth(0.5).color($r('app.color.screen_hl'))
+      }
+    }
+    .width('100%')
+    .accessibilityGroup(true)
+    .accessibilityRole(AccessibilityRoleType.BUTTON)
+    .onClick(() => this.onOpenSubscriptions())
+  }
+
+  @Builder
+  subsCard(v: HomeSubsView) {
+    Column() {
+      ForEach(v.rows, (s: Subscription, i: number) => {
+        this.subRow(s, i < v.rows.length - 1 || v.more > 0)
+      }, (s: Subscription) => s.id + ':' + String(s.usedBytes) + ':' + String(s.remainingBytes) + ':' + String(s.expiresAt) +
+        ':' + String(this.minuteNow))
+      if (v.more > 0) {
+        Row() {
+          Text($r('app.plural.home_subs_more', v.more, v.more))
+            .fontSize(13)
+            .fontColor($r('app.color.screen_t3'))
+        }
+        .width('100%')
+        .padding({ left: 18, right: 18, top: 14, bottom: 14 })
+        .accessibilityRole(AccessibilityRoleType.BUTTON)
+        .onClick(() => this.onOpenSubscriptions())
+      }
+    }
+    .width('100%')
+    .borderRadius(22)
+    .backgroundColor($r('app.color.screen_s1'))
+    .clip(true)
+    .id(HOME_SUBS_ID)
   }
 
   @Builder
@@ -717,10 +1210,21 @@ export struct HomeView {
         .alignItems(HorizontalAlign.Start)
 
         this.traffic()
-        if (this.mode === ProxyMode.RULE && this.scenes.length > 0) {
+
+        // 场景（同 Android item scenes-h / scenes）：全局模式换成全局模式卡。
+        this.sectionHeader(ZTerm.scenes, this.scenesTrailing(), undefined)
+        if (this.mode === ProxyMode.GLOBAL) {
+          this.globalCard()
+        } else if (this.scenes.length > 0) {
           this.sceneRows()
         } else {
           this.currentNode()
+        }
+
+        // 订阅（U7）：右侧“今日 X ›”打开今日卡。
+        this.sectionHeader(ZTerm.subscriptions, this.todayTrailing(), this.todayBytes >= 0 ? () => this.onOpenToday() : undefined)
+        if (this.subList.length > 0) {
+          this.subsCard(HomeSubs.view(this.subList))
         }
       }
       .width('100%')
