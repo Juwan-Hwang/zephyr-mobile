@@ -1,15 +1,5 @@
 {
   "version": 1,
   "note": "已知未对齐项：平台 术语 语言。对应端改完后必须从此删除，否则 check-glossary 报“过期豁免”。",
-  "pending": [
-    "android reachable ar",
-    "android reachable fa",
-    "android reachable ru",
-    "android reachable sw",
-    "android reachable tk",
-    "android tested ar",
-    "android tested ko",
-    "android tested my",
-    "android tested ur"
-  ]
+  "pending": []
 }
