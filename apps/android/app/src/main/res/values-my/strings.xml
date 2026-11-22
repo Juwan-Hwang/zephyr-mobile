@@ -140,6 +140,8 @@
     <string name="scene_funnel_reachable">ချိတ်ဆက်နိုင်</string>
     <string name="scene_funnel_under">%1$d ms အောက်</string>
     <string name="home_mini_funnel_a11y">ချိတ်ဆက်နိုင် %1$s၊ မီလီစက္ကန့် 200 အောက် %2$s</string>
+    <string name="scene_tickbar_timeouts">အချိန်ကုန်: %1$s</string>
+    <string name="scene_tickbar_a11y">ရွေးချယ်စရာ %1$s ခု၊ မီလီစက္ကန့် 200 အောက် %2$s ခု၊ အချိန်ကုန် %3$s ခု</string>
     <string name="scene_note">ရွေးချယ်မှုများကို Zephyr တွင်သာ သိမ်းသည်။ စာရင်းသွင်းမှု ဖွဲ့စည်းပုံ မပြောင်းပါ။</string>
     <string name="scene_note_tested">%1$s နောက်ဆုံး စမ်းသပ်ချိန်: %2$s။</string>
     <string name="command_placeholder">ရှာရန် သို့မဟုတ် ညွှန်ကြားချက် ထည့်ပါ</string>

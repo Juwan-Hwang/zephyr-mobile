@@ -186,6 +186,8 @@
     <string name="scene_funnel_reachable">متاحة</string>
     <string name="scene_funnel_under">أقل من %1$d ms</string>
     <string name="home_mini_funnel_a11y">متاحة %1$s، أقل من 200 ملي ثانية %2$s</string>
+    <string name="scene_tickbar_timeouts">انتهت المهلة: %1$s</string>
+    <string name="scene_tickbar_a11y">%1$s مرشحة، %2$s أقل من 200 ملي ثانية، %3$s انتهت مهلتها</string>
     <string name="scene_note">تُحفظ الاختيارات في Zephyr فقط، ولا يتغيّر إعداد اشتراكك.</string>
     <string name="scene_note_tested">\u2068%1$s\u2069 آخر اختبار: \u2068%2$s\u2069.</string>
 

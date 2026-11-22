@@ -148,6 +148,8 @@
     <string name="scene_funnel_reachable">Erişilebilir</string>
     <string name="scene_funnel_under">%1$d ms altı</string>
     <string name="home_mini_funnel_a11y">Erişilebilir %1$s, 200 milisaniyenin altında %2$s</string>
+    <string name="scene_tickbar_timeouts">Zaman aşımı: %1$s</string>
+    <string name="scene_tickbar_a11y">%1$s aday, %2$s tanesi 200 milisaniyenin altında, %3$s zaman aşımı</string>
     <string name="scene_note">Seçimler yalnızca Zephyr’de saklanır. Abonelik yapılandırmanız değişmez.</string>
     <string name="scene_note_tested">%1$s Son test: %2$s.</string>
     <string name="command_placeholder">Arayın veya komut girin</string>

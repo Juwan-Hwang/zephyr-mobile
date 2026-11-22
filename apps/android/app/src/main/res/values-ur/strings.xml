@@ -154,6 +154,8 @@
     <string name="scene_funnel_reachable">قابلِ رسائی</string>
     <string name="scene_funnel_under">%1$d ms سے کم</string>
     <string name="home_mini_funnel_a11y">قابلِ رسائی %1$s، 200 ملی سیکنڈ سے کم %2$s</string>
+    <string name="scene_tickbar_timeouts">وقت ختم: %1$s</string>
+    <string name="scene_tickbar_a11y">%1$s امیدوار، %2$s 200 ملی سیکنڈ سے کم، %3$s کا وقت ختم</string>
     <string name="scene_note">انتخاب صرف Zephyr میں محفوظ ہوتے ہیں۔ آپ کی سبسکرپشن کی کنفیگریشن تبدیل نہیں ہوتی۔</string>
     <string name="scene_note_tested">\u2068%1$s\u2069 آخری ٹیسٹ: \u2068%2$s\u2069۔</string>
 

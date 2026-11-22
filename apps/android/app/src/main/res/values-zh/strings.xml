@@ -146,6 +146,8 @@
     <string name="scene_funnel_reachable">可连通</string>
     <string name="scene_funnel_under">延迟低于 %1$d ms</string>
     <string name="home_mini_funnel_a11y">可连通 %1$s，低于 200 毫秒 %2$s</string>
+    <string name="scene_tickbar_timeouts">超时 %1$s</string>
+    <string name="scene_tickbar_a11y">%1$s 个候选，%2$s 个低于 200 毫秒，超时 %3$s</string>
     <string name="scene_note">优选结果仅保存在 Zephyr 中，订阅配置保持原样。</string>
     <string name="scene_note_tested">%1$s 上次检测 %2$s。</string>
 
