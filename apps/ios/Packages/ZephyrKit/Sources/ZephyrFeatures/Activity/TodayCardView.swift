@@ -91,10 +91,10 @@ struct TodayCardView: View {
                 ShareLink(item: exported, preview: SharePreview(Text("Zephyr · 今日"), image: exported)) {
                     Text("分享")
                         .zType(.body)
-                        .foregroundStyle(ZPage.background)
+                        .foregroundStyle(ZAccentOnFillStyle())   // 主按钮：规范 §9.1 accent fill + on-fill（同 ZButton .primary）
                         .frame(maxWidth: .infinity, minHeight: ZTokens.Layout.touchMinIos)
                         .padding(.vertical, ZTokens.Space.n1)
-                        .background(Capsule(style: .continuous).fill(ZTokens.Colors.screenT1))
+                        .background(Capsule(style: .continuous).fill(ZAccentFillStyle()))
                         .contentShape(Capsule(style: .continuous))
                 }
                 .buttonStyle(ZPressStyle(haptic: .none))
@@ -179,15 +179,17 @@ struct TodayThemePicker: View {
                             .overlay { Circle().strokeBorder(ZTokens.Colors.screenT4, lineWidth: HMetrics.hairline) }
                         Text(verbatim: t.title)
                             .zType(.footnote)
-                            .foregroundStyle(on ? ZTokens.Colors.screenT1 : ZColor.t2)
+                            .foregroundStyle(on ? AnyShapeStyle(ZAccentOnFillStyle()) : AnyShapeStyle(ZColor.t2))
                     }
                     .padding(.leading, ZTokens.Space.n2)
                     .padding(.trailing, ZTokens.Space.n4)
                     .frame(minHeight: chip)
-                    .background(Capsule(style: .continuous).fill(on ? AnyShapeStyle(ZCardFill()) : AnyShapeStyle(Color.clear)))
+                    // 选中胶囊：规范 §9.1 accent fill + on-fill（此前 s2 底 + t4 描边，与未选中只差描边）。
+                    .background(Capsule(style: .continuous).fill(on ? AnyShapeStyle(ZAccentFillStyle()) : AnyShapeStyle(Color.clear)))
                     .overlay {
-                        Capsule(style: .continuous)
-                            .strokeBorder(on ? ZTokens.Colors.screenT4 : ZTokens.Colors.screenHl2, lineWidth: HMetrics.hairline)
+                        if !on {
+                            Capsule(style: .continuous).strokeBorder(ZTokens.Colors.screenHl2, lineWidth: HMetrics.hairline)
+                        }
                     }
                     .frame(minHeight: ZTokens.Layout.touchMinIos)
                     .contentShape(Rectangle())
