@@ -319,6 +319,10 @@
     {
       "name": "start_window_background",
       "value": "#FF000000"
+    },
+    {
+      "name": "screen_fade_clear",
+      "value": "#00000000"
     }
   ]
 }

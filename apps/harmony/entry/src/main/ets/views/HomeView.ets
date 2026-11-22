@@ -1161,12 +1161,13 @@ export struct HomeView {
       Row({ space: 10 }) {
         // 指令栏（原型 .cmd）：整条可点，打开指令面板；读屏读作按钮“搜索或输入指令”。
         Row({ space: 8 }) {
+          // §9.7：玻璃上的文字用 t2，不用 t3（玻璃合成到最亮底时余量最小）。
           SymbolGlyph($r('sys.symbol.magnifyingglass'))
             .fontSize(18)
-            .fontColor([$r('app.color.screen_t3')])
+            .fontColor([$r('app.color.screen_t2')])
           Text($r('app.string.command_placeholder'))
             .fontSize(15)
-            .fontColor($r('app.color.screen_t3'))
+            .fontColor($r('app.color.screen_t2'))
             .maxLines(1)
             .textOverflow({ overflow: TextOverflow.Ellipsis })
             .layoutWeight(1)
@@ -1175,8 +1176,7 @@ export struct HomeView {
         .height(52)
         .padding({ left: 16, right: 16 })
         .borderRadius(26)
-        .backgroundColor($r('app.color.screen_cmd_bg'))
-        .shadow({ radius: 12, color: '#22000000', offsetY: 4 })
+        .glassBar()
         .accessibilityGroup(true)
         .accessibilityRole(AccessibilityRoleType.BUTTON)
         .accessibilityText($r('app.string.command_placeholder'))
@@ -1200,12 +1200,11 @@ export struct HomeView {
         Button({ type: ButtonType.Circle }) {
           SymbolGlyph($r('sys.symbol.square_grid_2x2'))
             .fontSize(22)
-            .fontColor([$r('app.color.screen_on_primary')])
+            .fontColor([$r('app.color.screen_t2')])
         }
         .width(52)
         .height(52)
-        .backgroundColor($r('app.color.screen_primary'))
-        .shadow({ radius: 12, color: '#33000000', offsetY: 4 })
+        .glassButton()
         .accessibilityText($r('app.string.common_library'))
         .id(HOME_LIBRARY_ID)
         .onClick(() => this.onOpenLibrary())
@@ -1214,6 +1213,11 @@ export struct HomeView {
       .padding({ left: 12, right: 12, top: 10, bottom: 10 })
     }
     .width('100%')
+    // §9.7：滚动内容在底栏背后用 screen.fade 渐隐盖住，下方不露出可滚动内容。
+    .linearGradient({
+      direction: GradientDirection.Bottom,
+      colors: [[$r('app.color.screen_fade_clear'), 0], [$r('app.color.screen_fade'), 0.55]]
+    })
     .hitTestBehavior(HitTestMode.Transparent)
   }
 
@@ -1309,4 +1313,24 @@ export struct HomeView {
     .align(Alignment.Top)
     .scrollBar(BarState.Off)
   }
+}
+
+/**
+ * §9.7 悬浮玻璃（设计评审 J-4）：只用于首页指令栏和资料库按钮，其余卡片保持实色。
+ * 鸿蒙不适用 Liquid Glass（平台差异）：screen.glass + COMPONENT_ULTRA_THIN 模糊 + 细描边。
+ */
+@Extend(Row)
+function glassBar() {
+  .backgroundColor($r('app.color.screen_glass'))
+  .backgroundBlurStyle(BlurStyle.COMPONENT_ULTRA_THIN)
+  .border({ width: 0.5, color: $r('app.color.screen_hl') })
+  .shadow({ radius: 12, color: '#1F000000', offsetY: 4 })
+}
+
+@Extend(Button)
+function glassButton() {
+  .backgroundColor($r('app.color.screen_glass'))
+  .backgroundBlurStyle(BlurStyle.COMPONENT_ULTRA_THIN)
+  .border({ width: 0.5, color: $r('app.color.screen_hl') })
+  .shadow({ radius: 12, color: '#1F000000', offsetY: 4 })
 }

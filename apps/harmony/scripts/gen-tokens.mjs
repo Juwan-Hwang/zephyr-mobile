@@ -3,7 +3,8 @@
 // 默认：A 的官方生成器已产出 ArkTS（tokens/build.mjs → tokens/generated/harmony/，#242 已合），本脚本只**拷贝**它：
 //   tokens/generated/harmony/ZTokens.ets                          → entry/src/main/ets/generated/ZTokens.ets
 //   tokens/generated/harmony/resources/{base,dark}/element/color.json → entry/src/main/resources/{base,dark}/element/color.json
-//   （color.json 末尾追加 start_window_background = screen_bg，供 module.json5 startWindowBackground 引用）
+//   （color.json 末尾追加 start_window_background = screen_bg，供 module.json5 startWindowBackground 引用；
+//    以及 screen_fade_clear = screen_fade 的 alpha 00，供首页底栏渐隐 §9.7 做起点，避免过渡到透明黑时发灰）
 // 颜色资源名以官方产物为准：$r('app.color.<snake_name>')，如 app.color.text_primary。
 // --local：退回旧的本地转换（读 tokens/ 与 vendor/zephyr 桌面 token，资源名带 z_ 前缀），仅在官方产物缺失时用；待确认无用后删除。
 // 输出禁止手改。用法：node apps/harmony/scripts/gen-tokens.mjs [--check] [--local]
@@ -22,7 +23,14 @@ if (!process.argv.includes('--local') && fs.existsSync(path.join(upstream, 'ZTok
     const res = JSON.parse(fs.readFileSync(file, 'utf8'));
     const bg = res.color.find((c) => c.name === 'screen_bg');
     if (!bg) throw new Error(`${path.relative(root, file)} 缺少 screen_bg`);
-    res.color = res.color.filter((c) => c.name !== 'start_window_background').concat([{ name: 'start_window_background', value: bg.value }]);
+    const fade = res.color.find((c) => c.name === 'screen_fade');
+    if (!fade) throw new Error(`${path.relative(root, file)} 缺少 screen_fade`);
+    const clear = '#00' + fade.value.replace('#', '').slice(-6);
+    const extra = ['start_window_background', 'screen_fade_clear'];
+    res.color = res.color.filter((c) => !extra.includes(c.name)).concat([
+      { name: 'start_window_background', value: bg.value },
+      { name: 'screen_fade_clear', value: clear }
+    ]);
     return JSON.stringify(res, null, 2) + '\n';
   };
   const copies = {
