@@ -9300,7 +9300,7 @@
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "مهلت تمام شد"
+            "value" : "اتمام مهلت"
           }
         },
         "ja" : {
@@ -9318,7 +9318,7 @@
         "my" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "အချိန်ကုန်သွားသည်"
+            "value" : "အချိန်ကုန်"
           }
         },
         "ru" : {
@@ -9354,7 +9354,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hết thời gian"
+            "value" : "Hết thời gian chờ"
           }
         }
       }
