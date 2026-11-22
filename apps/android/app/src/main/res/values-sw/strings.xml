@@ -162,6 +162,11 @@
     </string-array>
     <string name="command_see_all_nodes">Ona nodi zote %1$s kwenye maktaba ya nodi</string>
     <string name="command_test_rule">%1$s inapita wapi?</string>
+    <string name="command_group_rule_test">Jaribio la kanuni</string>
+    <string name="command_action_open">Fungua</string>
+    <string name="command_action_test">Jaribu</string>
+    <string name="command_show_all">Onyesha zote (%1$s)</string>
+    <string name="command_enter_hint">Bonyeza Enter ili kutekeleza</string>
     <string name="command_chip_scene">Mazingira</string>
     <string name="command_chip_service">Huduma</string>
     <string name="command_chip_region">Eneo</string>

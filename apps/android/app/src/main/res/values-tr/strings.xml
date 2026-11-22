@@ -162,6 +162,11 @@
     </string-array>
     <string name="command_see_all_nodes">Düğüm kütüphanesinde %1$s düğümün tümünü gör</string>
     <string name="command_test_rule">%1$s nereden geçiyor?</string>
+    <string name="command_group_rule_test">Kural testi</string>
+    <string name="command_action_open">Aç</string>
+    <string name="command_action_test">Test et</string>
+    <string name="command_show_all">Tümünü göster (%1$s)</string>
+    <string name="command_enter_hint">Çalıştırmak için Enter\'a basın</string>
     <string name="command_chip_scene">Senaryo</string>
     <string name="command_chip_service">Hizmet</string>
     <string name="command_chip_region">Bölge</string>

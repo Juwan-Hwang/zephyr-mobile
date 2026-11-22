@@ -170,6 +170,11 @@
     </string-array>
     <string name="command_see_all_nodes">Ver los %1$s en la biblioteca de nodos</string>
     <string name="command_test_rule">¿Por dónde va %1$s?</string>
+    <string name="command_group_rule_test">Prueba de reglas</string>
+    <string name="command_action_open">Abrir</string>
+    <string name="command_action_test">Probar</string>
+    <string name="command_show_all">Mostrar todo (%1$s)</string>
+    <string name="command_enter_hint">Pulsa Intro para ejecutar</string>
     <string name="command_chip_scene">Escenario</string>
     <string name="command_chip_service">Servicio</string>
     <string name="command_chip_region">Región</string>

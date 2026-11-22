@@ -40,6 +40,7 @@ import com.zephyr.app.di.AppGraph
 import com.zephyr.app.ui.activity.ActivitySheet
 import com.zephyr.app.ui.command.CommandAction
 import com.zephyr.app.ui.command.CommandOverlay
+import com.zephyr.app.ui.command.CommandPage
 import com.zephyr.app.ui.common.BackTo
 import com.zephyr.app.ui.common.resolve
 import com.zephyr.app.ui.home.HomeActions
@@ -235,6 +236,20 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                     is CommandAction.TestRule -> nav.navigate(Rules(a.input, back = BackTo.HOME))
                     is CommandAction.OpenNodes -> nav.navigate(Nodes(a.query, back = BackTo.HOME))
                     is CommandAction.Apply -> home.applyCommand(a.plan)
+                    is CommandAction.SetMode -> home.setMode(a.mode)
+                    is CommandAction.Toggle -> onToggle(a.connect)
+                    is CommandAction.OpenScene -> scene = a.scene
+                    is CommandAction.OpenPage -> when (a.page) {
+                        CommandPage.NODES -> nav.navigate(Nodes(back = BackTo.HOME))
+                        CommandPage.SUBSCRIPTIONS -> nav.navigate(Subs(back = BackTo.HOME))
+                        CommandPage.RULES -> nav.navigate(Rules(back = BackTo.HOME))
+                        CommandPage.SETTINGS -> nav.navigate(SettingsRoute(back = BackTo.HOME))
+                        CommandPage.TRUSTED_WIFI -> nav.navigate(TrustedWifiRoute(BackTo.HOME))
+                        CommandPage.LOCAL_PROXY -> nav.navigate(LocalProxyRoute(BackTo.HOME))
+                        CommandPage.WIDGETS -> nav.navigate(WidgetsRoute(BackTo.HOME))
+                        CommandPage.LOGS -> nav.navigate(Logs)
+                        CommandPage.LICENSES -> nav.navigate(Licenses)
+                    }
                 }
             }
         }

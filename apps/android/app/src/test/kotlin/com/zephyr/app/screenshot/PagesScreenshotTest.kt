@@ -73,6 +73,23 @@ class PagesScreenshotTest(private val dark: Boolean) {
         }
     } }
 
+    /** J-3 (spec §9.5): grouped command results, action labels, bold Enter row = keyboard highlight on the 2nd row, group footers. */
+    @Test fun commandResults() = paparazzi.snapshot { ZephyrTheme(dark = dark) {
+        val r = com.zephyr.app.ui.command.CommandResults.rows(listOf(
+            Triple("全局", "所有流量经由一个节点", com.zephyr.app.ui.command.CommandTarget.Mode(com.zephyr.engine.ProxyMode.GLOBAL)),
+            Triple("AI", "东京 03", com.zephyr.app.ui.command.CommandTarget.Scene("ai")),
+            Triple("日本 东京 01 NTT", "JP · 38 ms", com.zephyr.app.ui.command.CommandTarget.Nodes("日本", 1)),
+            Triple("日本 大阪 02", "JP · 64 ms", com.zephyr.app.ui.command.CommandTarget.Nodes("日本", 2)),
+            Triple("本地代理端口", null, com.zephyr.app.ui.command.CommandTarget.Page(com.zephyr.app.ui.command.CommandPage.LOCAL_PROXY)),
+            Triple("claude.ai 走哪里？", null, com.zephyr.app.ui.command.CommandTarget.Rule("claude.ai")),
+        ))
+        val groups = com.zephyr.app.ui.command.CommandResults.groups(r)
+        androidx.compose.foundation.layout.Column(androidx.compose.ui.Modifier.fillMaxSize().background(com.zephyr.design.theme.ZTheme.colors.bg).padding(horizontal = 12.dp)) {
+            com.zephyr.app.ui.command.CommandResultList(groups, emptySet(), highlighted = r[1].key, defaultKey = r[1].key, onRun = {}, onExpand = {},
+                nodeFooter = "在节点库中查看全部 1,204 个")
+        }
+    } }
+
     companion object {
         @JvmStatic @Parameterized.Parameters(name = "dark={0}")
         fun params() = listOf(arrayOf<Any>(true), arrayOf<Any>(false))

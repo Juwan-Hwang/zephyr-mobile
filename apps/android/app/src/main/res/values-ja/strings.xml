@@ -154,6 +154,11 @@
     </string-array>
     <string name="command_see_all_nodes">ノードライブラリで%1$s個すべてを表示</string>
     <string name="command_test_rule">%1$sの経路は？</string>
+    <string name="command_group_rule_test">ルールテスト</string>
+    <string name="command_action_open">開く</string>
+    <string name="command_action_test">テスト</string>
+    <string name="command_show_all">すべて表示（%1$s 件）</string>
+    <string name="command_enter_hint">Enter キーで実行</string>
     <string name="command_chip_scene">シーン</string>
     <string name="command_chip_service">サービス</string>
     <string name="command_chip_region">地域</string>
