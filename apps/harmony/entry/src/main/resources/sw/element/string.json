@@ -945,18 +945,6 @@
       "value": "Washa mahali pa mfumo ili kutambua majina ya Wi‑Fi"
     },
     {
-      "name": "state_expired",
-      "value": "Imeisha muda"
-    },
-    {
-      "name": "state_failed",
-      "value": "Imeshindwa"
-    },
-    {
-      "name": "state_ok",
-      "value": "Kawaida"
-    },
-    {
       "name": "subs_add",
       "value": "Ongeza usajili"
     },

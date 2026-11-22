@@ -945,18 +945,6 @@
       "value": "Wi‑Fi 名を識別するにはシステムの位置情報をオンにしてください"
     },
     {
-      "name": "state_expired",
-      "value": "期限切れ"
-    },
-    {
-      "name": "state_failed",
-      "value": "失敗"
-    },
-    {
-      "name": "state_ok",
-      "value": "正常"
-    },
-    {
       "name": "subs_add",
       "value": "サブスクリプションを追加"
     },

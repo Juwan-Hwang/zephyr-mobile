@@ -10,7 +10,7 @@
  *   行左滑出“更新 / 删除”，删除第一下变“确认删除”并保持展开、第二下才删（再走 §16.e⑥ 撤销吐司），长按菜单同两项（无障碍）；
  *   其余订阅并入“其他 N 个 ›”，打开“全部订阅”sheet；
  *   “更新”分组：自动更新 6/12/24/48 小时（菜单）、仅在 Wi‑Fi 下更新、更新前显示更改、更新全部。
- * 暂未移植：扫码、文件导入、从桌面端导入。
+ * M1-12：扫码 / 从电脑上的 Zephyr 导入（ScanKit）与从文件导入（DocumentViewPicker），见 ImportPickers。
  */
 import { pasteboard } from '@kit.BasicServicesKit';
 import { BusinessError } from '@kit.BasicServicesKit';

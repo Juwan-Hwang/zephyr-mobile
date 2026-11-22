@@ -32,6 +32,7 @@
     "hm_unit_wan": "万",
     "hm_settings_mock_failover": "Simulate failover",
     "hm_settings_mock_failover_offline": "Connect first to simulate a failover.",
+    "hm_settings_mock_onboarding": "Show onboarding (demo)",
     "hm_nodes_untested": "Not tested yet — visible nodes are tested when you stop scrolling",
     "hm_term_number_order": "number_first"
   },
@@ -68,6 +69,7 @@
     "hm_unit_wan": "万",
     "hm_settings_mock_failover": "模拟故障切换",
     "hm_settings_mock_failover_offline": "先连接，再模拟故障切换。",
+    "hm_settings_mock_onboarding": "显示引导页（演示）",
     "hm_nodes_untested": "尚未检测，停止滚动后自动测可见节点",
     "hm_term_number_order": "term_first"
   }

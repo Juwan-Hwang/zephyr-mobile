@@ -389,6 +389,10 @@
       "value": "先连接，再模拟故障切换。"
     },
     {
+      "name": "hm_settings_mock_onboarding",
+      "value": "显示引导页（演示）"
+    },
+    {
       "name": "hm_settings_mode",
       "value": "代理模式"
     },
@@ -1071,18 +1075,6 @@
     {
       "name": "settings_trusted_wifi_location_off",
       "value": "打开系统定位以识别 Wi‑Fi 名称"
-    },
-    {
-      "name": "state_expired",
-      "value": "已过期"
-    },
-    {
-      "name": "state_failed",
-      "value": "失败"
-    },
-    {
-      "name": "state_ok",
-      "value": "正常"
     },
     {
       "name": "subs_add",

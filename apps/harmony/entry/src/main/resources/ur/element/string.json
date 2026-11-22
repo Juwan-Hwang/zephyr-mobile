@@ -945,18 +945,6 @@
       "value": "Wi‑Fi کے نام پہچاننے کے لیے سسٹم کا مقام آن کریں"
     },
     {
-      "name": "state_expired",
-      "value": "ختم شدہ"
-    },
-    {
-      "name": "state_failed",
-      "value": "ناکام"
-    },
-    {
-      "name": "state_ok",
-      "value": "معمول کے مطابق"
-    },
-    {
       "name": "subs_add",
       "value": "سبسکرپشن شامل کریں"
     },

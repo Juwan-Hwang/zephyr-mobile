@@ -945,18 +945,6 @@
       "value": "Activa la ubicación del sistema para reconocer las redes Wi‑Fi"
     },
     {
-      "name": "state_expired",
-      "value": "Vencido"
-    },
-    {
-      "name": "state_failed",
-      "value": "Error"
-    },
-    {
-      "name": "state_ok",
-      "value": "Normal"
-    },
-    {
       "name": "subs_add",
       "value": "Añadir suscripción"
     },

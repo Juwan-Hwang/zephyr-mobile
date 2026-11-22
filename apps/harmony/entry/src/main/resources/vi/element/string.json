@@ -945,18 +945,6 @@
       "value": "Bật vị trí hệ thống để nhận diện tên Wi‑Fi"
     },
     {
-      "name": "state_expired",
-      "value": "Đã hết hạn"
-    },
-    {
-      "name": "state_failed",
-      "value": "Thất bại"
-    },
-    {
-      "name": "state_ok",
-      "value": "Bình thường"
-    },
-    {
       "name": "subs_add",
       "value": "Thêm đăng ký"
     },

@@ -393,6 +393,10 @@
       "value": "Connect first to simulate a failover."
     },
     {
+      "name": "hm_settings_mock_onboarding",
+      "value": "Show onboarding (demo)"
+    },
+    {
       "name": "hm_settings_mode",
       "value": "Default mode"
     },
@@ -1075,18 +1079,6 @@
     {
       "name": "settings_trusted_wifi_location_off",
       "value": "Turn on system location to recognize Wi‑Fi names"
-    },
-    {
-      "name": "state_expired",
-      "value": "Expired"
-    },
-    {
-      "name": "state_failed",
-      "value": "Failed"
-    },
-    {
-      "name": "state_ok",
-      "value": "Normal"
     },
     {
       "name": "subs_add",

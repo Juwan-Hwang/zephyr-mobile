@@ -945,18 +945,6 @@
       "value": "Включите геолокацию в системе, чтобы распознавать сети Wi‑Fi"
     },
     {
-      "name": "state_expired",
-      "value": "Истёк"
-    },
-    {
-      "name": "state_failed",
-      "value": "Ошибка"
-    },
-    {
-      "name": "state_ok",
-      "value": "Норма"
-    },
-    {
       "name": "subs_add",
       "value": "Добавить подписку"
     },

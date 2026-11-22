@@ -1,0 +1,17 @@
+const { Onboarding } = await import('../.out/rt/app/Onboarding.ts');
+const { MockEngine } = await import('../.out/rt/engine/MockEngine.ts');
+const { SceneSource } = await import('../.out/rt/engine/Model.ts');
+const { SettingsStore, MemoryBackend } = await import('../.out/rt/app/SettingsStore.ts');
+let bad=0; const ok=(c,m)=>{ if(!c){ bad++; console.log('FAIL',m); } };
+ok(Onboarding.shouldShow('native',false)&&!Onboarding.shouldShow('native',true)&&!Onboarding.shouldShow('mock',false),'shouldShow');
+const e=new MockEngine({demo:true});
+await Onboarding.applyMode(e,true);
+ok(e.scenes().value.length>0&&e.scenes().value.every(s=>s.source===SceneSource.SUBSCRIPTION_GROUP),'simple');
+await Onboarding.applyMode(e,false);
+ok(e.scenes().value.every(s=>s.source===SceneSource.AUTO),'optimized');
+ok(await Onboarding.applyMode(e,false)===0,'idempotent');
+const st=new SettingsStore(e,new MemoryBackend());
+ok(!(await st.onboarded()),'not onboarded'); await st.setOnboarded(); ok(await st.onboarded(),'onboarded');
+const broken={get:async()=>{throw new Error('x')},put:async()=>{throw new Error('x')}};
+const st2=new SettingsStore(e,broken); ok(await st2.onboarded(),'read fail = onboarded'); await st2.setOnboarded();
+console.log(bad?'FAILED '+bad:'onboarding OK'); process.exit(bad?1:0);

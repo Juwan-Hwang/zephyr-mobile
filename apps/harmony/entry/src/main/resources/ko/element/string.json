@@ -945,18 +945,6 @@
       "value": "Wi‑Fi 이름을 확인하려면 시스템 위치를 켜세요"
     },
     {
-      "name": "state_expired",
-      "value": "만료됨"
-    },
-    {
-      "name": "state_failed",
-      "value": "실패"
-    },
-    {
-      "name": "state_ok",
-      "value": "정상"
-    },
-    {
       "name": "subs_add",
       "value": "구독 추가"
     },

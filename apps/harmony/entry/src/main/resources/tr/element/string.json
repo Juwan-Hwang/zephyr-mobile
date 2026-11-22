@@ -945,18 +945,6 @@
       "value": "Wi‑Fi adlarını tanımak için sistem konumunu açın"
     },
     {
-      "name": "state_expired",
-      "value": "Süresi doldu"
-    },
-    {
-      "name": "state_failed",
-      "value": "Başarısız"
-    },
-    {
-      "name": "state_ok",
-      "value": "Normal"
-    },
-    {
       "name": "subs_add",
       "value": "Abonelik ekle"
     },

@@ -12,6 +12,7 @@
 import { bundleManager, common } from '@kit.AbilityKit';
 import { SettingsCodec } from '../engine/SettingsCodec';
 import { AppServices } from '../app/AppServices';
+import { Onboarding } from '../app/Onboarding';
 import { MockEngine } from '../engine/MockEngine';
 import { SceneFailoverNotice } from '../engine/Model';
 import { Format } from '../common/Format';
@@ -380,6 +381,12 @@ export struct SettingsView {
           if (AppServices.get().engine.kind === 'mock') {
             // 仅演示引擎：触发一次场景故障切换，供首页「已切换」卡片和撤销在真机 / 云调试上验证（M1-6）。
             ZNavRow({ title: $r('app.string.hm_settings_mock_failover'), onTap: () => this.simulateFailover() })
+            ZNavRow({
+              title: $r('app.string.hm_settings_mock_onboarding'),
+              onTap: () => {
+                Onboarding.request.value = Onboarding.request.value + 1;
+              }
+            })
           }
           ZNavRow({ title: $r('app.string.settings_licenses'), onTap: () => this.onOpenLicenses() })
           ZNavRow({

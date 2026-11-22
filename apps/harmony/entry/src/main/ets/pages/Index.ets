@@ -8,6 +8,7 @@
  * - 首页场景行横滑期间（GestureLock）吞掉首页上的系统返回，免得滑动贴边时被当成返回退出 App。
  * 状态管理统一用 V2（@ComponentV2 / @Local / @Param / @Event），引擎流在 aboutToAppear 订阅、aboutToDisappear 取消。
  */
+import { AppServices } from '../app/AppServices';
 import { ImportInbox } from '../app/ImportInbox';
 import {
   AppNav,
@@ -33,6 +34,8 @@ import { RulesView } from '../views/RulesView';
 import { SettingsView } from '../views/SettingsView';
 import { LibrarySheet } from '../views/LibrarySheet';
 import { LogsPage } from './LogsPage';
+import { OnboardingView } from '../views/OnboardingView';
+import { Onboarding } from '../app/Onboarding';
 import { TrustedWifiPage } from './TrustedWifiPage';
 import { LocalProxyPage } from './LocalProxyPage';
 import { LicensesPage } from './LicensesPage';
@@ -74,6 +77,9 @@ function toastLayer(args: ToastLayerArgs) {
 @ComponentV2
 struct Index {
   @Local showLibrary: boolean = false;
+  /** 首次引导（M1-16）：在屏时替换整个导航。 */
+  @Local onboarding: boolean = false;
+  private onboardingSub: StreamSub | undefined = undefined;
   /** 资料库“场景”入口：资料库收起后递增，首页打开第一个场景的 sheet（M1-5）。 */
   @Local sceneRequest: number = 0;
   private sceneAfterLibrary: boolean = false;
@@ -88,6 +94,19 @@ struct Index {
       didShow: (from: NavDestinationContext | NavBar, to: NavDestinationContext | NavBar, op: NavigationOperation,
         animated: boolean) => this.didShow(from, to, op)
     });
+    const svc = AppServices.get();
+    svc.settings.onboarded().then((done: boolean) => {
+      if (Onboarding.shouldShow(svc.engine.kind, done)) {
+        this.onboarding = true;
+      }
+    });
+    this.onboardingSub = Onboarding.request.subscribe((n: number) => {
+      if (n > 0) {
+        this.pathStack.clear(false);
+        this.showLibrary = false;
+        this.onboarding = true;
+      }
+    });
     this.inboxSub = ImportInbox.stream().subscribe((r: ImportRequest | undefined) => {
       if (r !== undefined) {
         this.openForImport();
@@ -101,6 +120,10 @@ struct Index {
 
   /** 首页场景行横滑期间吞掉系统返回（栈空时返回会退出 App）；子页的返回照常交给 Navigation。 */
   onBackPress(): boolean | void {
+    if (this.onboarding) {
+      const h = Onboarding.backHandler;
+      return h !== undefined ? h() : false;
+    }
     if (this.pathStack.size() === 0 && GestureLock.active()) {
       hilog.warn(0x5A50, 'Index', 'back blocked during scene-row swipe');
       return true;
@@ -256,7 +279,15 @@ struct Index {
 
   build() {
     Stack({ alignContent: Alignment.Bottom }) {
-      this.navigation()
+      if (this.onboarding) {
+        OnboardingView({
+          onDone: () => {
+            this.onboarding = false;
+          }
+        })
+      } else {
+        this.navigation()
+      }
       if (this.inlineToast) {
         ZToastHost({ bottom: DOCK_CLEARANCE })
       }

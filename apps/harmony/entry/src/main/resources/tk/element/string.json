@@ -945,18 +945,6 @@
       "value": "Wi‑Fi atlaryny tanamak üçin ulgamyň ýerleşişini açyň"
     },
     {
-      "name": "state_expired",
-      "value": "Möhleti geçdi"
-    },
-    {
-      "name": "state_failed",
-      "value": "Şowsuz"
-    },
-    {
-      "name": "state_ok",
-      "value": "Kadaly"
-    },
-    {
       "name": "subs_add",
       "value": "Abuna goş"
     },

@@ -945,18 +945,6 @@
       "value": "برای شناسایی نام Wi‑Fi، موقعیت مکانی سیستم را روشن کنید"
     },
     {
-      "name": "state_expired",
-      "value": "منقضی‌شده"
-    },
-    {
-      "name": "state_failed",
-      "value": "ناموفق"
-    },
-    {
-      "name": "state_ok",
-      "value": "عادی"
-    },
-    {
       "name": "subs_add",
       "value": "افزودن اشتراک"
     },

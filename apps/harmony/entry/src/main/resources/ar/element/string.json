@@ -945,18 +945,6 @@
       "value": "شغّل خدمة الموقع في النظام للتعرّف على أسماء شبكات Wi‑Fi"
     },
     {
-      "name": "state_expired",
-      "value": "منتهي"
-    },
-    {
-      "name": "state_failed",
-      "value": "فشل"
-    },
-    {
-      "name": "state_ok",
-      "value": "طبيعي"
-    },
-    {
       "name": "subs_add",
       "value": "إضافة اشتراك"
     },

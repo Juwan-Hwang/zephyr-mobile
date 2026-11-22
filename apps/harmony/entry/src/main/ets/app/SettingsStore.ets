@@ -31,6 +31,8 @@ export class MemoryBackend implements KeyValueBackend {
 
 export const KEY_SETTINGS: string = 'settings_v0';
 export const KEY_MODE: string = 'mode';
+/** 引导页走完（Android SettingsStore.onboarded）。 */
+export const KEY_ONBOARDED: string = 'onboarded';
 
 export class SettingsStore {
   private engine: ZephyrEngine;
@@ -84,6 +86,23 @@ export class SettingsStore {
     } catch (e) {
       await this.engine.updateSettings(SettingsCodec.decode(before)).catch(() => {});
       throw new ZephyrError(ErrorCode.INTERNAL, 'settings write failed');
+    }
+  }
+
+  /** 是否已走完引导；读失败当作已走完（宁可不打扰老用户，同 Android 读不到时不闪引导页）。 */
+  async onboarded(): Promise<boolean> {
+    try {
+      return (await this.backend.get(KEY_ONBOARDED)) === '1';
+    } catch (e) {
+      return true;
+    }
+  }
+
+  async setOnboarded(): Promise<void> {
+    try {
+      await this.backend.put(KEY_ONBOARDED, '1');
+    } catch (e) {
+      // 写失败：下次启动再走一遍引导，不影响本次。
     }
   }
 
