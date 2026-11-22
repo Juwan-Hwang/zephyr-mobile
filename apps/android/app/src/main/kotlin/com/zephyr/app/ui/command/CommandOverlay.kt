@@ -129,11 +129,13 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
     val sceneById = scenes.associateBy { it.id }
     val nodeRows = nodes?.second.orEmpty()
     val ruleTitle = stringResource(R.string.command_test_rule, input.trim())
-    val groups = remember(input, candidates, nodeRows, ruleTitle) {
+    // Node rows belong to the committed text (nodes skips pinyin mid-composition), so they open that query (CodeAnt #295).
+    val nodeQuery = nodes?.let { committed.trim() }.orEmpty()
+    val groups = remember(input, candidates, nodeRows, nodeQuery, ruleTitle) {
         val q = input.trim()
         val entries = buildList<Triple<String, String?, CommandTarget>> {
             if (q.isNotEmpty()) candidates.filter { CommandResults.matches(q, it) }.forEach { add(Triple(it.title, it.subtitle, it.target)) }
-            nodeRows.forEach { n -> add(Triple(n.name, listOfNotNull(n.region, n.latencyMs?.takeIf { it >= 0 }?.let { "$it ms" }).joinToString(" · "), CommandTarget.Nodes(q, n.id))) }
+            nodeRows.forEach { n -> add(Triple(n.name, listOfNotNull(n.region, n.latencyMs?.takeIf { it >= 0 }?.let { "$it ms" }).joinToString(" · "), CommandTarget.Nodes(nodeQuery, n.id))) }
             if (looksLikeHost(q)) add(Triple(ruleTitle, null, CommandTarget.Rule(q)))
         }
         CommandResults.groups(CommandResults.rows(entries))
@@ -149,6 +151,7 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
             is CommandTarget.Mode -> onAction(CommandAction.SetMode(t.mode))
             is CommandTarget.Toggle -> onAction(CommandAction.Toggle(t.connect))
             is CommandTarget.Scene -> sceneById[t.id]?.let { onAction(CommandAction.OpenScene(it)) }
+            // Like iOS openNodeQuery: opens the node library on the query (nodeId only keeps row keys unique).
             is CommandTarget.Nodes -> onAction(CommandAction.OpenNodes(t.query))
             is CommandTarget.Page -> onAction(CommandAction.OpenPage(t.page))
             is CommandTarget.Rule -> onAction(CommandAction.TestRule(t.input))
@@ -207,7 +210,7 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
                 defaultKey = highlighted ?: if (hasPrimary) null else CommandResults.firstRow(groups)?.key,
                 onRun = run, onExpand = { expanded = expanded + it },
                 nodeFooter = nodes?.first?.total?.let { stringResource(R.string.command_see_all_nodes, ZFormat.grouped(it)) },
-                onNodeFooter = { onAction(CommandAction.OpenNodes(input.trim())) },
+                onNodeFooter = { onAction(CommandAction.OpenNodes(nodeQuery)) },
             )
             if (!parsed.hasChips && plan == null && groups.isEmpty() && nodes != null) {
                 ZText(stringResource(R.string.common_no_results), Modifier.fillMaxWidth().padding(vertical = 40.dp), style = ZTheme.type.body.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = c.text3)
