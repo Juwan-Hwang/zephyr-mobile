@@ -293,7 +293,7 @@ private fun ExitConfirm(p: PendingChange, onConfirm: () -> Unit, onCancel: () ->
         }
         Spacer(Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            CompactButton(stringResource(R.string.common_change), c.primaryButton, c.onPrimaryButton, onConfirm, Modifier.weight(1f))
+            CompactButton(stringResource(R.string.common_change), c.accentFill, c.onAccentFill, onConfirm, Modifier.weight(1f))
             CompactButton(stringResource(R.string.common_cancel), c.hairline, c.text1, onCancel, Modifier.weight(1f))
         }
     }

@@ -22,7 +22,8 @@ enum class ZButtonKind { Primary, Secondary, Ghost, Danger, Accent }
 enum class ZButtonSize { Compact, Large }
 
 /**
- * Pill button. Primary = t1 pill (prototype `.btn.p`), Secondary = `--hl` fill without a border (`.btn.q`).
+ * Pill button. Primary = accent fill pill (spec §9.1: `accent.*.fill` + `on-fill`, black text on green / orange; follows the
+ * user's accent), Secondary = `--hl` fill without a border (`.btn.q`).
  * Review D-P2-4: visual height follows the prototype (40 compact / 52 large) while the touch target stays ≥ 48 dp.
  */
 @Composable
@@ -36,7 +37,7 @@ fun ZButton(
 ) {
     val c = ZTheme.colors
     val (bg, fg) = when (kind) {
-        ZButtonKind.Primary -> c.primaryButton to c.onPrimaryButton
+        ZButtonKind.Primary -> c.accentFill to c.onAccentFill
         ZButtonKind.Secondary -> c.hairline to c.text1
         ZButtonKind.Ghost -> c.bg.copy(alpha = 0f) to c.accentText
         ZButtonKind.Danger -> c.danger.copy(alpha = 0.14f) to c.dangerText

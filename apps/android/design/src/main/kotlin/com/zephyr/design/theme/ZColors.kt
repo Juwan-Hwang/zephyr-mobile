@@ -48,6 +48,7 @@ data class ZThemeColors(
     val upload: Color,
     val glass: Color,
     val scrim: Color,
+    /** Neutral t1 pill (tokens `screen.primary` / `on-primary`). No longer used by ZButton.Primary / chips: §9.1 moved those to [accentFill]. */
     val onPrimaryButton: Color,
     val primaryButton: Color,
 ) {
