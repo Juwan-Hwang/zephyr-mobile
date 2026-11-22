@@ -405,6 +405,10 @@
       "value": "استفاده از حالت قانون"
     },
     {
+      "name": "home_mini_funnel_a11y",
+      "value": "در دسترس %1$s، کمتر از ۲۰۰ میلی‌ثانیه %2$s"
+    },
+    {
       "name": "home_now_all_nodes",
       "value": "\\u2068%1$s\\u2069: دوباره همهٔ نودها"
     },
@@ -649,10 +653,6 @@
       "value": "%1$s · %2$s"
     },
     {
-      "name": "nodes_tested",
-      "value": "\\u2068%1$s\\u2069 آزمایش‌شده"
-    },
-    {
       "name": "notif_action_global",
       "value": "حالت سراسری"
     },
@@ -795,10 +795,6 @@
     {
       "name": "scene_auto_switch",
       "value": "تغییر خودکار"
-    },
-    {
-      "name": "scene_funnel_reachable",
-      "value": "قابل اتصال"
     },
     {
       "name": "scene_funnel_tested",
@@ -947,6 +943,18 @@
     {
       "name": "settings_trusted_wifi_location_off",
       "value": "برای شناسایی نام Wi‑Fi، موقعیت مکانی سیستم را روشن کنید"
+    },
+    {
+      "name": "state_expired",
+      "value": "منقضی‌شده"
+    },
+    {
+      "name": "state_failed",
+      "value": "ناموفق"
+    },
+    {
+      "name": "state_ok",
+      "value": "عادی"
     },
     {
       "name": "subs_add",
@@ -1253,6 +1261,10 @@
       "value": "پروکسی"
     },
     {
+      "name": "term_reachable",
+      "value": "در دسترس"
+    },
+    {
       "name": "term_require_password",
       "value": "نیاز به گذرواژه"
     },
@@ -1275,6 +1287,34 @@
     {
       "name": "term_settings",
       "value": "تنظیمات"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "منقضی‌شده"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "به‌زودی منقضی می‌شود"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "ناموفق"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "عادی"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "کند"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "مهلت تمام شد"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "آزمایش‌نشده"
     },
     {
       "name": "term_status_connecting",
@@ -1303,6 +1343,10 @@
     {
       "name": "term_test_again",
       "value": "آزمایش دوباره"
+    },
+    {
+      "name": "term_tested",
+      "value": "آزمایش‌شده"
     },
     {
       "name": "term_testing",

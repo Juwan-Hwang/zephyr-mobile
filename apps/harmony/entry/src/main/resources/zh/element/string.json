@@ -345,6 +345,10 @@
       "value": "完整的许可列表将在后续版本中提供。"
     },
     {
+      "name": "hm_nodes_untested",
+      "value": "尚未检测，停止滚动后自动测可见节点"
+    },
+    {
       "name": "hm_number_myriad",
       "value": "true"
     },
@@ -391,6 +395,10 @@
     {
       "name": "hm_settings_version",
       "value": "版本"
+    },
+    {
+      "name": "hm_term_number_order",
+      "value": "term_first"
     },
     {
       "name": "hm_time_days_ago",
@@ -519,6 +527,10 @@
     {
       "name": "home_global_use_rule",
       "value": "使用规则模式"
+    },
+    {
+      "name": "home_mini_funnel_a11y",
+      "value": "可连通 %1$s，低于 200 毫秒 %2$s"
     },
     {
       "name": "home_now_all_nodes",
@@ -769,10 +781,6 @@
       "value": "%1$s 个 · %2$s"
     },
     {
-      "name": "nodes_tested",
-      "value": "已检测 %1$s"
-    },
-    {
       "name": "notif_action_global",
       "value": "全局模式"
     },
@@ -915,10 +923,6 @@
     {
       "name": "scene_auto_switch",
       "value": "自动切换"
-    },
-    {
-      "name": "scene_funnel_reachable",
-      "value": "可连通"
     },
     {
       "name": "scene_funnel_tested",
@@ -1067,6 +1071,18 @@
     {
       "name": "settings_trusted_wifi_location_off",
       "value": "打开系统定位以识别 Wi‑Fi 名称"
+    },
+    {
+      "name": "state_expired",
+      "value": "已过期"
+    },
+    {
+      "name": "state_failed",
+      "value": "失败"
+    },
+    {
+      "name": "state_ok",
+      "value": "正常"
     },
     {
       "name": "subs_add",
@@ -1373,6 +1389,10 @@
       "value": "代理"
     },
     {
+      "name": "term_reachable",
+      "value": "可连通"
+    },
+    {
       "name": "term_require_password",
       "value": "需要密码"
     },
@@ -1395,6 +1415,34 @@
     {
       "name": "term_settings",
       "value": "设置"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "已过期"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "即将到期"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "失败"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "正常"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "较慢"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "超时"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "未测"
     },
     {
       "name": "term_status_connecting",
@@ -1423,6 +1471,10 @@
     {
       "name": "term_test_again",
       "value": "重新检测"
+    },
+    {
+      "name": "term_tested",
+      "value": "已检测"
     },
     {
       "name": "term_testing",

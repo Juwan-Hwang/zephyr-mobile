@@ -405,6 +405,10 @@
       "value": "Düzgün režimini ulan"
     },
     {
+      "name": "home_mini_funnel_a11y",
+      "value": "Elýeterli %1$s, 200 millisekuntdan az %2$s"
+    },
+    {
       "name": "home_now_all_nodes",
       "value": "%1$s: ýene ähli düwünler"
     },
@@ -649,10 +653,6 @@
       "value": "%1$s · %2$s"
     },
     {
-      "name": "nodes_tested",
-      "value": "%1$s barlandy"
-    },
-    {
       "name": "notif_action_global",
       "value": "Global režim"
     },
@@ -795,10 +795,6 @@
     {
       "name": "scene_auto_switch",
       "value": "Awtomatik çalyş"
-    },
-    {
-      "name": "scene_funnel_reachable",
-      "value": "Birikip bolýan"
     },
     {
       "name": "scene_funnel_tested",
@@ -947,6 +943,18 @@
     {
       "name": "settings_trusted_wifi_location_off",
       "value": "Wi‑Fi atlaryny tanamak üçin ulgamyň ýerleşişini açyň"
+    },
+    {
+      "name": "state_expired",
+      "value": "Möhleti geçdi"
+    },
+    {
+      "name": "state_failed",
+      "value": "Şowsuz"
+    },
+    {
+      "name": "state_ok",
+      "value": "Kadaly"
     },
     {
       "name": "subs_add",
@@ -1253,6 +1261,10 @@
       "value": "Proksi"
     },
     {
+      "name": "term_reachable",
+      "value": "Elýeterli"
+    },
+    {
       "name": "term_require_password",
       "value": "Parol talap et"
     },
@@ -1275,6 +1287,34 @@
     {
       "name": "term_settings",
       "value": "Sazlamalar"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Möhleti geçdi"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Möhleti golaýar"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Şowsuz"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Kadaly"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Haýal"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Wagt gutardy"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Barlanmadyk"
     },
     {
       "name": "term_status_connecting",
@@ -1303,6 +1343,10 @@
     {
       "name": "term_test_again",
       "value": "Gaýtadan barla"
+    },
+    {
+      "name": "term_tested",
+      "value": "Barlandy"
     },
     {
       "name": "term_testing",

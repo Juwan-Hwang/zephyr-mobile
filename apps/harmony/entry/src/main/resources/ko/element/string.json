@@ -405,6 +405,10 @@
       "value": "규칙 모드 사용"
     },
     {
+      "name": "home_mini_funnel_a11y",
+      "value": "연결 가능 %1$s, 200밀리초 미만 %2$s"
+    },
+    {
       "name": "home_now_all_nodes",
       "value": "%1$s: 다시 모든 노드 사용"
     },
@@ -649,10 +653,6 @@
       "value": "%1$s개 · %2$s"
     },
     {
-      "name": "nodes_tested",
-      "value": "%1$s 테스트됨"
-    },
-    {
       "name": "notif_action_global",
       "value": "글로벌 모드"
     },
@@ -795,10 +795,6 @@
     {
       "name": "scene_auto_switch",
       "value": "자동 전환"
-    },
-    {
-      "name": "scene_funnel_reachable",
-      "value": "연결 가능"
     },
     {
       "name": "scene_funnel_tested",
@@ -947,6 +943,18 @@
     {
       "name": "settings_trusted_wifi_location_off",
       "value": "Wi‑Fi 이름을 확인하려면 시스템 위치를 켜세요"
+    },
+    {
+      "name": "state_expired",
+      "value": "만료됨"
+    },
+    {
+      "name": "state_failed",
+      "value": "실패"
+    },
+    {
+      "name": "state_ok",
+      "value": "정상"
     },
     {
       "name": "subs_add",
@@ -1253,6 +1261,10 @@
       "value": "프록시"
     },
     {
+      "name": "term_reachable",
+      "value": "연결 가능"
+    },
+    {
       "name": "term_require_password",
       "value": "암호 요구"
     },
@@ -1275,6 +1287,34 @@
     {
       "name": "term_settings",
       "value": "설정"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "만료됨"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "곧 만료"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "실패"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "정상"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "느림"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "시간 초과"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "미측정"
     },
     {
       "name": "term_status_connecting",
@@ -1303,6 +1343,10 @@
     {
       "name": "term_test_again",
       "value": "다시 테스트"
+    },
+    {
+      "name": "term_tested",
+      "value": "측정됨"
     },
     {
       "name": "term_testing",

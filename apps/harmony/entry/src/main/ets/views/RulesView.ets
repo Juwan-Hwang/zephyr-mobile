@@ -157,7 +157,7 @@ export struct RulesView {
           if (this.invalid) {
             Text($r('app.string.rules_test_hint'))
               .fontSize(12)
-              .fontColor($r('app.color.screen_red'))
+              .fontColor($r('app.color.screen_red_text'))
           } else if (this.trace === undefined) {
             Text($r('app.string.rules_test_hint'))
               .fontSize(12)

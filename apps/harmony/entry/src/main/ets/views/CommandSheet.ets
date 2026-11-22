@@ -482,7 +482,7 @@ export struct CommandSheet {
         if (p.releasesPin !== undefined) {
           Text($r('app.string.command_plan_releases_pin', p.serviceName, p.releasesPin))
             .fontSize(13)
-            .fontColor($r('app.color.screen_amber'))
+            .fontColor($r('app.color.screen_amber_text'))
         }
         Text(p.isSceneWord ? $r('app.string.command_plan_fallback_scene', this.str(commandRegionName(p.regionCode))) :
           $r('app.string.command_plan_fallback_pause', this.str(commandRegionName(p.regionCode)), this.who(p)))

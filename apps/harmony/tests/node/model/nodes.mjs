@@ -49,4 +49,12 @@ ok(P('Tokyo IIJ 03 ×1.5',['tokyo','iij'])==='h:Tokyo|p: |h:IIJ|p: 03|m: ×1.5',
 ok(P('aaa',['aa','a'])==='h:aa|p:a','overlap skipped '+P('aaa',['aa','a']));
 ok(P('x ×',['x'])==='h:x|p: ×','bare × not multiplier');
 ok(P('JP',['jp'])==='h:JP','whole hit');
+// §18.a 判断句
+const J=NodeListModel.judgement;
+ok(J(12,30,99).kind==='both'&&J(12,30,99).tested===30,'both uses funnel tested');
+ok(J(undefined,0,7).kind==='tested'&&J(undefined,0,7).tested===7,'fallback tested');
+ok(J(0,5,5).kind==='both'&&J(0,5,5).reachable===0,'reachable 0 still shown');
+ok(J(undefined,0,0).kind==='untested','untested');
+await m.refreshFunnel(); const fs18=m.state();
+ok(fs18.reachableCount!==undefined && fs18.reachableCount<=fs18.funnelTested,'reachable ≤ tested '+fs18.reachableCount+'/'+fs18.funnelTested);
 m.dispose(); console.log(bad?'FAILED '+bad:'nodes OK'); process.exit(bad?1:0);

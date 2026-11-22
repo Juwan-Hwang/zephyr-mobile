@@ -405,6 +405,10 @@
       "value": "Usar modo regla"
     },
     {
+      "name": "home_mini_funnel_a11y",
+      "value": "Accesibles: %1$s, por debajo de 200 milisegundos: %2$s"
+    },
+    {
       "name": "home_now_all_nodes",
       "value": "%1$s vuelve a usar todos los nodos"
     },
@@ -649,10 +653,6 @@
       "value": "%1$s · %2$s"
     },
     {
-      "name": "nodes_tested",
-      "value": "%1$s probados"
-    },
-    {
       "name": "notif_action_global",
       "value": "Modo global"
     },
@@ -795,10 +795,6 @@
     {
       "name": "scene_auto_switch",
       "value": "Cambiar automáticamente"
-    },
-    {
-      "name": "scene_funnel_reachable",
-      "value": "Accesibles"
     },
     {
       "name": "scene_funnel_tested",
@@ -947,6 +943,18 @@
     {
       "name": "settings_trusted_wifi_location_off",
       "value": "Activa la ubicación del sistema para reconocer las redes Wi‑Fi"
+    },
+    {
+      "name": "state_expired",
+      "value": "Vencido"
+    },
+    {
+      "name": "state_failed",
+      "value": "Error"
+    },
+    {
+      "name": "state_ok",
+      "value": "Normal"
     },
     {
       "name": "subs_add",
@@ -1253,6 +1261,10 @@
       "value": "Proxy"
     },
     {
+      "name": "term_reachable",
+      "value": "Accesibles"
+    },
+    {
       "name": "term_require_password",
       "value": "Solicitar contraseña"
     },
@@ -1275,6 +1287,34 @@
     {
       "name": "term_settings",
       "value": "Ajustes"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Vencido"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Vence pronto"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Error"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Normal"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Lento"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Tiempo agotado"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Sin probar"
     },
     {
       "name": "term_status_connecting",
@@ -1303,6 +1343,10 @@
     {
       "name": "term_test_again",
       "value": "Volver a probar"
+    },
+    {
+      "name": "term_tested",
+      "value": "Probados"
     },
     {
       "name": "term_testing",

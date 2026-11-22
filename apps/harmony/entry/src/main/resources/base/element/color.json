@@ -142,15 +142,15 @@
     },
     {
       "name": "latency_slow",
-      "value": "#FFFF9F0A"
+      "value": "#FFB25000"
     },
     {
       "name": "latency_timeout",
-      "value": "#FFFF3B30"
+      "value": "#FFD70015"
     },
     {
       "name": "latency_unknown",
-      "value": "#8C000000"
+      "value": "#8F000000"
     },
     {
       "name": "screen_bg",
@@ -190,7 +190,7 @@
     },
     {
       "name": "screen_t3",
-      "value": "#8C000000"
+      "value": "#8F000000"
     },
     {
       "name": "screen_t4",
@@ -213,8 +213,20 @@
       "value": "#FFFF3B30"
     },
     {
+      "name": "screen_amber_text",
+      "value": "#FFB25000"
+    },
+    {
+      "name": "screen_green_text",
+      "value": "#FF1F7A35"
+    },
+    {
+      "name": "screen_red_text",
+      "value": "#FFD70015"
+    },
+    {
       "name": "screen_up",
-      "value": "#FFFF5E57"
+      "value": "#FFD13A3F"
     },
     {
       "name": "screen_glass",
@@ -239,6 +251,70 @@
     {
       "name": "screen_pressed",
       "value": "#08000000"
+    },
+    {
+      "name": "accent_blue",
+      "value": "#FF007AFF"
+    },
+    {
+      "name": "accent_blue_text",
+      "value": "#FF005BBF"
+    },
+    {
+      "name": "accent_blue_fill",
+      "value": "#FF0066D6"
+    },
+    {
+      "name": "accent_blue_on_fill",
+      "value": "#FFFFFFFF"
+    },
+    {
+      "name": "accent_green",
+      "value": "#FF34C759"
+    },
+    {
+      "name": "accent_green_text",
+      "value": "#FF1C6E31"
+    },
+    {
+      "name": "accent_green_fill",
+      "value": "#FF34C759"
+    },
+    {
+      "name": "accent_green_on_fill",
+      "value": "#FF000000"
+    },
+    {
+      "name": "accent_orange",
+      "value": "#FFFF9500"
+    },
+    {
+      "name": "accent_orange_text",
+      "value": "#FFB03000"
+    },
+    {
+      "name": "accent_orange_fill",
+      "value": "#FFFF9500"
+    },
+    {
+      "name": "accent_orange_on_fill",
+      "value": "#FF000000"
+    },
+    {
+      "name": "accent_pink",
+      "value": "#FFFF2D55"
+    },
+    {
+      "name": "accent_pink_text",
+      "value": "#FFBB0040"
+    },
+    {
+      "name": "accent_pink_fill",
+      "value": "#FFD1004B"
+    },
+    {
+      "name": "accent_pink_on_fill",
+      "value": "#FFFFFFFF"
     },
     {
       "name": "start_window_background",

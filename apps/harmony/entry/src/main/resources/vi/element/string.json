@@ -405,6 +405,10 @@
       "value": "Dùng chế độ quy tắc"
     },
     {
+      "name": "home_mini_funnel_a11y",
+      "value": "Kết nối được %1$s, dưới 200 mili giây %2$s"
+    },
+    {
       "name": "home_now_all_nodes",
       "value": "%1$s: dùng lại tất cả nút"
     },
@@ -649,10 +653,6 @@
       "value": "%1$s · %2$s"
     },
     {
-      "name": "nodes_tested",
-      "value": "Đã kiểm tra %1$s"
-    },
-    {
       "name": "notif_action_global",
       "value": "Chế độ toàn cục"
     },
@@ -795,10 +795,6 @@
     {
       "name": "scene_auto_switch",
       "value": "Tự động chuyển"
-    },
-    {
-      "name": "scene_funnel_reachable",
-      "value": "Kết nối được"
     },
     {
       "name": "scene_funnel_tested",
@@ -947,6 +943,18 @@
     {
       "name": "settings_trusted_wifi_location_off",
       "value": "Bật vị trí hệ thống để nhận diện tên Wi‑Fi"
+    },
+    {
+      "name": "state_expired",
+      "value": "Đã hết hạn"
+    },
+    {
+      "name": "state_failed",
+      "value": "Thất bại"
+    },
+    {
+      "name": "state_ok",
+      "value": "Bình thường"
     },
     {
       "name": "subs_add",
@@ -1253,6 +1261,10 @@
       "value": "Proxy"
     },
     {
+      "name": "term_reachable",
+      "value": "Kết nối được"
+    },
+    {
       "name": "term_require_password",
       "value": "Yêu cầu mật khẩu"
     },
@@ -1275,6 +1287,34 @@
     {
       "name": "term_settings",
       "value": "Cài đặt"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Đã hết hạn"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Sắp hết hạn"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Thất bại"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Bình thường"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Chậm"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Hết thời gian"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Chưa kiểm tra"
     },
     {
       "name": "term_status_connecting",
@@ -1303,6 +1343,10 @@
     {
       "name": "term_test_again",
       "value": "Kiểm tra lại"
+    },
+    {
+      "name": "term_tested",
+      "value": "Đã kiểm tra"
     },
     {
       "name": "term_testing",

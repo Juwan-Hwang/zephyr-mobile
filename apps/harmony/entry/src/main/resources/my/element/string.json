@@ -405,6 +405,10 @@
       "value": "စည်းမျဉ်း မုဒ် သုံးရန်"
     },
     {
+      "name": "home_mini_funnel_a11y",
+      "value": "ချိတ်ဆက်နိုင် %1$s၊ မီလီစက္ကန့် 200 အောက် %2$s"
+    },
+    {
       "name": "home_now_all_nodes",
       "value": "%1$s: နုဒ်အားလုံး ပြန်သုံးသည်"
     },
@@ -649,10 +653,6 @@
       "value": "%1$s ခု · %2$s"
     },
     {
-      "name": "nodes_tested",
-      "value": "%1$s ခု စမ်းသပ်ပြီး"
-    },
-    {
       "name": "notif_action_global",
       "value": "ကမ္ဘာလုံးဆိုင်ရာ မုဒ်"
     },
@@ -795,10 +795,6 @@
     {
       "name": "scene_auto_switch",
       "value": "အလိုအလျောက် ပြောင်းရန်"
-    },
-    {
-      "name": "scene_funnel_reachable",
-      "value": "ချိတ်ဆက်နိုင်"
     },
     {
       "name": "scene_funnel_tested",
@@ -947,6 +943,18 @@
     {
       "name": "settings_trusted_wifi_location_off",
       "value": "Wi‑Fi အမည်များကို သိရှိရန် စနစ်တည်နေရာကို ဖွင့်ပါ"
+    },
+    {
+      "name": "state_expired",
+      "value": "သက်တမ်းကုန်ပြီ"
+    },
+    {
+      "name": "state_failed",
+      "value": "မအောင်မြင်ပါ"
+    },
+    {
+      "name": "state_ok",
+      "value": "ပုံမှန်"
     },
     {
       "name": "subs_add",
@@ -1253,6 +1261,10 @@
       "value": "ပရောက်စီ"
     },
     {
+      "name": "term_reachable",
+      "value": "ချိတ်ဆက်နိုင်"
+    },
+    {
       "name": "term_require_password",
       "value": "စကားဝှက် လိုအပ်သည်"
     },
@@ -1275,6 +1287,34 @@
     {
       "name": "term_settings",
       "value": "ဆက်တင်များ"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "သက်တမ်းကုန်ပြီ"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "မကြာမီ သက်တမ်းကုန်မည်"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "မအောင်မြင်ပါ"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "ပုံမှန်"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "နှေးသည်"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "အချိန်ကုန်သွားသည်"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "မစမ်းရသေး"
     },
     {
       "name": "term_status_connecting",
@@ -1303,6 +1343,10 @@
     {
       "name": "term_test_again",
       "value": "ပြန်စမ်းသပ်ရန်"
+    },
+    {
+      "name": "term_tested",
+      "value": "စမ်းပြီး"
     },
     {
       "name": "term_testing",

@@ -405,6 +405,10 @@
       "value": "Tumia hali ya sheria"
     },
     {
+      "name": "home_mini_funnel_a11y",
+      "value": "Zinafikika %1$s, chini ya milisekunde 200 %2$s"
+    },
+    {
       "name": "home_now_all_nodes",
       "value": "%1$s sasa inatumia nodi zote"
     },
@@ -649,10 +653,6 @@
       "value": "%1$s · %2$s"
     },
     {
-      "name": "nodes_tested",
-      "value": "%1$s zimepimwa"
-    },
-    {
       "name": "notif_action_global",
       "value": "Hali ya Jumla"
     },
@@ -795,10 +795,6 @@
     {
       "name": "scene_auto_switch",
       "value": "Badilisha kiotomatiki"
-    },
-    {
-      "name": "scene_funnel_reachable",
-      "value": "Zinazofikika"
     },
     {
       "name": "scene_funnel_tested",
@@ -947,6 +943,18 @@
     {
       "name": "settings_trusted_wifi_location_off",
       "value": "Washa mahali pa mfumo ili kutambua majina ya Wi‑Fi"
+    },
+    {
+      "name": "state_expired",
+      "value": "Imeisha muda"
+    },
+    {
+      "name": "state_failed",
+      "value": "Imeshindwa"
+    },
+    {
+      "name": "state_ok",
+      "value": "Kawaida"
     },
     {
       "name": "subs_add",
@@ -1253,6 +1261,10 @@
       "value": "Proksi"
     },
     {
+      "name": "term_reachable",
+      "value": "Zinafikika"
+    },
+    {
       "name": "term_require_password",
       "value": "Hitaji nenosiri"
     },
@@ -1275,6 +1287,34 @@
     {
       "name": "term_settings",
       "value": "Mipangilio"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Imeisha muda"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Inaisha hivi karibuni"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Imeshindwa"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Kawaida"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Polepole"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Muda umeisha"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Haijapimwa"
     },
     {
       "name": "term_status_connecting",
@@ -1303,6 +1343,10 @@
     {
       "name": "term_test_again",
       "value": "Pima tena"
+    },
+    {
+      "name": "term_tested",
+      "value": "Zimepimwa"
     },
     {
       "name": "term_testing",

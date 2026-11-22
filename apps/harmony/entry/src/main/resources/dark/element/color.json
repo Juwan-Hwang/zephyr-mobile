@@ -213,6 +213,18 @@
       "value": "#FFFF453A"
     },
     {
+      "name": "screen_amber_text",
+      "value": "#FFFFD60A"
+    },
+    {
+      "name": "screen_green_text",
+      "value": "#FF30D158"
+    },
+    {
+      "name": "screen_red_text",
+      "value": "#FFFF453A"
+    },
+    {
       "name": "screen_up",
       "value": "#FFFF6B6B"
     },
@@ -239,6 +251,70 @@
     {
       "name": "screen_pressed",
       "value": "#08FFFFFF"
+    },
+    {
+      "name": "accent_blue",
+      "value": "#FF0A84FF"
+    },
+    {
+      "name": "accent_blue_text",
+      "value": "#FF409CFF"
+    },
+    {
+      "name": "accent_blue_fill",
+      "value": "#FF0066D6"
+    },
+    {
+      "name": "accent_blue_on_fill",
+      "value": "#FFFFFFFF"
+    },
+    {
+      "name": "accent_green",
+      "value": "#FF30D158"
+    },
+    {
+      "name": "accent_green_text",
+      "value": "#FF30D158"
+    },
+    {
+      "name": "accent_green_fill",
+      "value": "#FF30D158"
+    },
+    {
+      "name": "accent_green_on_fill",
+      "value": "#FF000000"
+    },
+    {
+      "name": "accent_orange",
+      "value": "#FFFF9F0A"
+    },
+    {
+      "name": "accent_orange_text",
+      "value": "#FFFF9F0A"
+    },
+    {
+      "name": "accent_orange_fill",
+      "value": "#FFFF9F0A"
+    },
+    {
+      "name": "accent_orange_on_fill",
+      "value": "#FF000000"
+    },
+    {
+      "name": "accent_pink",
+      "value": "#FFFF375F"
+    },
+    {
+      "name": "accent_pink_text",
+      "value": "#FFFF6482"
+    },
+    {
+      "name": "accent_pink_fill",
+      "value": "#FFD1004B"
+    },
+    {
+      "name": "accent_pink_on_fill",
+      "value": "#FFFFFFFF"
     },
     {
       "name": "start_window_background",

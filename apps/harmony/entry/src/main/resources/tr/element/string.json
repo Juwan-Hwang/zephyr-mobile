@@ -405,6 +405,10 @@
       "value": "Kural modunu kullan"
     },
     {
+      "name": "home_mini_funnel_a11y",
+      "value": "Erişilebilir %1$s, 200 milisaniyenin altında %2$s"
+    },
+    {
       "name": "home_now_all_nodes",
       "value": "%1$s: yeniden tüm düğümler"
     },
@@ -649,10 +653,6 @@
       "value": "%1$s · %2$s"
     },
     {
-      "name": "nodes_tested",
-      "value": "%1$s test edildi"
-    },
-    {
       "name": "notif_action_global",
       "value": "Küresel mod"
     },
@@ -795,10 +795,6 @@
     {
       "name": "scene_auto_switch",
       "value": "Otomatik değiştir"
-    },
-    {
-      "name": "scene_funnel_reachable",
-      "value": "Erişilebilir"
     },
     {
       "name": "scene_funnel_tested",
@@ -947,6 +943,18 @@
     {
       "name": "settings_trusted_wifi_location_off",
       "value": "Wi‑Fi adlarını tanımak için sistem konumunu açın"
+    },
+    {
+      "name": "state_expired",
+      "value": "Süresi doldu"
+    },
+    {
+      "name": "state_failed",
+      "value": "Başarısız"
+    },
+    {
+      "name": "state_ok",
+      "value": "Normal"
     },
     {
       "name": "subs_add",
@@ -1253,6 +1261,10 @@
       "value": "Proxy"
     },
     {
+      "name": "term_reachable",
+      "value": "Erişilebilir"
+    },
+    {
       "name": "term_require_password",
       "value": "Parola gerektir"
     },
@@ -1275,6 +1287,34 @@
     {
       "name": "term_settings",
       "value": "Ayarlar"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Süresi doldu"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Yakında sona eriyor"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Başarısız"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Normal"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Yavaş"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Zaman aşımı"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Test edilmedi"
     },
     {
       "name": "term_status_connecting",
@@ -1303,6 +1343,10 @@
     {
       "name": "term_test_again",
       "value": "Yeniden test et"
+    },
+    {
+      "name": "term_tested",
+      "value": "Test edildi"
     },
     {
       "name": "term_testing",

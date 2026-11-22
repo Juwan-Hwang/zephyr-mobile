@@ -41,9 +41,9 @@ export interface ZColors {
   colorUpload: string;
   /** < 200ms（= screen.t2） */
   latencyNormal: string;
-  /** >= 200ms（= screen.amber） */
+  /** >= 200ms（读数文字：深色 = screen.amber，浅色 = screen.amber-text #B25000，2026-11-21 由 #FF9F0A 改） */
   latencySlow: string;
-  /** 超时 -1（= screen.red） */
+  /** 超时 -1（深色 = screen.red，浅色 = screen.red-text #D70015，2026-11-21 由 #FF3B30 改） */
   latencyTimeout: string;
   /** 未测（= screen.t3） */
   latencyUnknown: string;
@@ -62,14 +62,20 @@ export interface ZColors {
   screenHl2: string;
   screenT1: string;
   screenT2: string;
-  /** 浅色 0.55：白底 4.74:1、#F2F2F7 底 4.63:1；深色 0.5：黑底 5.28:1、#1C1C1E 5.16:1、#2C2C2E 4.69:1；均满足 WCAG AA */
+  /** 浅色 0.56（2026-11-21 由 0.55 上调，为过 s4 #DCDCE1 4.52:1）：白底 ≥4.8:1；深色 0.5：黑底 5.28:1、#1C1C1E 5.16:1、#2C2C2E 4.69:1；均满足 WCAG AA */
   screenT3: string;
   screenT4: string;
   screenGreen: string;
   screenAmber: string;
   screenAmberA: string;
   screenRed: string;
-  /** 上行速率 */
+  /** 状态色作文字（订阅剩余 / 到期日期、延迟较慢读数、失败副标题）。浅色 #F2F2F7 4.66、白 5.20；深色同 amber。原 amber / green / red 只给圆点、进度条、图标填充（2026-11-21 设计评审） */
+  screenAmberText: string;
+  /** 如更新 diff「+1,204」。浅色 #F2F2F7 4.83、白 5.39（#248A3D 在页面底只有 3.94，不用） */
+  screenGreenText: string;
+  /** 如「−318」、超时、已过期。浅色 #F2F2F7 4.83、白 5.38 */
+  screenRedText: string;
+  /** 上行速率。浅色 2026-11-21 由 #FF5E57 改为与 color.upload 浅色相同的 #D13A3F（#F2F2F7 底 4.29:1），消除 iOS / Android 漂移 */
   screenUp: string;
   /** 浮层/底栏玻璃底色（叠系统模糊） */
   screenGlass: string;
@@ -138,6 +144,9 @@ export const ZColorsDark: ZColors = {
   screenAmber: '#FFFFD60A',
   screenAmberA: '#1FFFD60A',
   screenRed: '#FFFF453A',
+  screenAmberText: '#FFFFD60A',
+  screenGreenText: '#FF30D158',
+  screenRedText: '#FFFF453A',
   screenUp: '#FFFF6B6B',
   screenGlass: '#D11C1C20',
   screenCmdBg: '#B8000000',
@@ -183,9 +192,9 @@ export const ZColorsLight: ZColors = {
   colorDownload: '#FF007AFF',
   colorUpload: '#FFD13A3F',
   latencyNormal: '#94000000',
-  latencySlow: '#FFFF9F0A',
-  latencyTimeout: '#FFFF3B30',
-  latencyUnknown: '#8C000000',
+  latencySlow: '#FFB25000',
+  latencyTimeout: '#FFD70015',
+  latencyUnknown: '#8F000000',
   screenBg: '#FFF2F2F7',
   screenS1: '#FFFFFFFF',
   screenS2: '#FFFFFFFF',
@@ -195,13 +204,16 @@ export const ZColorsLight: ZColors = {
   screenHl2: '#1F000000',
   screenT1: '#E6000000',
   screenT2: '#94000000',
-  screenT3: '#8C000000',
+  screenT3: '#8F000000',
   screenT4: '#2E000000',
   screenGreen: '#FF34C759',
   screenAmber: '#FFFF9F0A',
   screenAmberA: '#1FFF9F0A',
   screenRed: '#FFFF3B30',
-  screenUp: '#FFFF5E57',
+  screenAmberText: '#FFB25000',
+  screenGreenText: '#FF1F7A35',
+  screenRedText: '#FFD70015',
+  screenUp: '#FFD13A3F',
   screenGlass: '#D1FFFFFF',
   screenCmdBg: '#CCF2F2F7',
   screenFade: '#FFF2F2F7',
@@ -250,6 +262,56 @@ export enum ZAccent {
   GREEN = '#FF34C759',
   ORANGE = '#FFFF9500',
   PINK = '#FFFF2D55',
+}
+
+/** 强调色深浅色变体（资源里也有 accent_<name>[_text|_fill|_on_fill]，随深浅色自动切换）。 */
+export interface ZAccentColors {
+  /** 开关 / 进度 / 光晕等填充与大图形 */
+  base: string;
+  /** 前景小字 / 链接 / 图标（浅色加深，过正文 4.5） */
+  text: string;
+  /** 主按钮 / 选中胶囊的底 */
+  fill: string;
+  /** fill 上的文字 */
+  onFill: string;
+}
+
+/** name：'blue' | 'green' | 'orange' | 'pink'；未知名按 blue。 */
+export function zAccentColors(name: string, isDark: boolean): ZAccentColors {
+  switch (name) {
+    case 'green': {
+      if (isDark) {
+        const d: ZAccentColors = { base: '#FF30D158', text: '#FF30D158', fill: '#FF30D158', onFill: '#FF000000' };
+        return d;
+      }
+      const l: ZAccentColors = { base: '#FF34C759', text: '#FF1C6E31', fill: '#FF34C759', onFill: '#FF000000' };
+      return l;
+    }
+    case 'orange': {
+      if (isDark) {
+        const d: ZAccentColors = { base: '#FFFF9F0A', text: '#FFFF9F0A', fill: '#FFFF9F0A', onFill: '#FF000000' };
+        return d;
+      }
+      const l: ZAccentColors = { base: '#FFFF9500', text: '#FFB03000', fill: '#FFFF9500', onFill: '#FF000000' };
+      return l;
+    }
+    case 'pink': {
+      if (isDark) {
+        const d: ZAccentColors = { base: '#FFFF375F', text: '#FFFF6482', fill: '#FFD1004B', onFill: '#FFFFFFFF' };
+        return d;
+      }
+      const l: ZAccentColors = { base: '#FFFF2D55', text: '#FFBB0040', fill: '#FFD1004B', onFill: '#FFFFFFFF' };
+      return l;
+    }
+    default: {
+      if (isDark) {
+        const d: ZAccentColors = { base: '#FF0A84FF', text: '#FF409CFF', fill: '#FF0066D6', onFill: '#FFFFFFFF' };
+        return d;
+      }
+      const l: ZAccentColors = { base: '#FF007AFF', text: '#FF005BBF', fill: '#FF0066D6', onFill: '#FFFFFFFF' };
+      return l;
+    }
+  }
 }
 
 export class ZSpace {

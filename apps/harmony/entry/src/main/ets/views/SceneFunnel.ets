@@ -39,7 +39,7 @@ export struct SceneFunnel {
       case 1:
         return $r('app.string.scene_funnel_tested');
       case 2:
-        return $r('app.string.scene_funnel_reachable');
+        return ZTerm.reachable;
       default:
         return $r('app.string.scene_funnel_under', this.funnel.thresholdMs);
     }

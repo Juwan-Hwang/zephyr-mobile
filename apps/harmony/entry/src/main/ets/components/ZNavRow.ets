@@ -26,7 +26,7 @@ export struct ZNavRow {
         if (this.chevron) {
           Text('›')
             .fontSize(20)
-            .fontColor($r('app.color.screen_t4'))
+            .fontColor($r('app.color.screen_t3'))
         }
       }
       .width('100%')

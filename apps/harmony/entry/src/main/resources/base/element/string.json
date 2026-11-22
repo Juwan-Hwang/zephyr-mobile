@@ -349,6 +349,10 @@
       "value": "The full list of licenses will be included in a later build."
     },
     {
+      "name": "hm_nodes_untested",
+      "value": "Not tested yet — visible nodes are tested when you stop scrolling"
+    },
+    {
       "name": "hm_number_myriad",
       "value": "false"
     },
@@ -395,6 +399,10 @@
     {
       "name": "hm_settings_version",
       "value": "Version"
+    },
+    {
+      "name": "hm_term_number_order",
+      "value": "number_first"
     },
     {
       "name": "hm_time_days_ago",
@@ -523,6 +531,10 @@
     {
       "name": "home_global_use_rule",
       "value": "Use rule mode"
+    },
+    {
+      "name": "home_mini_funnel_a11y",
+      "value": "%1$s reachable, %2$s under 200 milliseconds"
     },
     {
       "name": "home_now_all_nodes",
@@ -773,10 +785,6 @@
       "value": "%1$s · %2$s"
     },
     {
-      "name": "nodes_tested",
-      "value": "%1$s tested"
-    },
-    {
       "name": "notif_action_global",
       "value": "Global mode"
     },
@@ -919,10 +927,6 @@
     {
       "name": "scene_auto_switch",
       "value": "Switch automatically"
-    },
-    {
-      "name": "scene_funnel_reachable",
-      "value": "Reachable"
     },
     {
       "name": "scene_funnel_tested",
@@ -1071,6 +1075,18 @@
     {
       "name": "settings_trusted_wifi_location_off",
       "value": "Turn on system location to recognize Wi‑Fi names"
+    },
+    {
+      "name": "state_expired",
+      "value": "Expired"
+    },
+    {
+      "name": "state_failed",
+      "value": "Failed"
+    },
+    {
+      "name": "state_ok",
+      "value": "Normal"
     },
     {
       "name": "subs_add",
@@ -1377,6 +1393,10 @@
       "value": "Proxy"
     },
     {
+      "name": "term_reachable",
+      "value": "Reachable"
+    },
+    {
       "name": "term_require_password",
       "value": "Require password"
     },
@@ -1399,6 +1419,34 @@
     {
       "name": "term_settings",
       "value": "Settings"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Expired"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Expiring soon"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Failed"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Normal"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Slow"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Timed out"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Untested"
     },
     {
       "name": "term_status_connecting",
@@ -1427,6 +1475,10 @@
     {
       "name": "term_test_again",
       "value": "Test again"
+    },
+    {
+      "name": "term_tested",
+      "value": "Tested"
     },
     {
       "name": "term_testing",

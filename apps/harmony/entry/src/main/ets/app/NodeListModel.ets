@@ -9,7 +9,7 @@
  * 停滚自动测速 autoTestIds/autoTest（仅 Wi‑Fi 测速 + 按流量计费网络时不测，同 Android testVisible / NetworkMonitor.autoTestAllowed）、
  * 详情单测 testOne、名称高亮 NodeNameParts（同 Android NodeRows.highlighted）。
  */
-import { ErrorCode, LatencyUpdate, NodeId, NodeIndex, NodePage, NodeQueryResult, NodeSummary, RegionSection } from '../engine/Model';
+import { ErrorCode, LatencyUpdate, NodeFunnel, NodeId, NodeIndex, NodePage, NodeQueryResult, NodeSummary, RegionSection } from '../engine/Model';
 import { Subscription as StreamSub } from '../engine/Stream';
 import { ZephyrEngine, ZephyrError } from '../engine/ZephyrEngine';
 
@@ -60,7 +60,22 @@ export interface NodeListState {
   failed: boolean;
   loading: boolean;
   testedCount: number;
+  /** §18.a：同一次 nodeFunnel 的 reachable / tested；undefined = 取不到，只显示「已检测 N」。 */
+  reachableCount?: number;
+  funnelTested: number;
 }
+
+/** §18.a 节点页头部判断句的三种形态。 */
+export interface NodeJudgement {
+  /** 'both' = 可连通 x · 已检测 N；'tested' = 已检测 N；'untested' = 尚未检测提示。 */
+  kind: string;
+  reachable: number;
+  tested: number;
+}
+
+/** 判断句用的有效期（§15.e latencyFreshMillis 默认 24 h）和阈值（latency.threshold-slow）。 */
+export const JUDGEMENT_MAX_AGE_MS: number = 24 * 3600 * 1000;
+export const JUDGEMENT_THRESHOLD_MS: number = 200;
 
 interface RowPos {
   section: RegionSection;
@@ -83,6 +98,9 @@ export class NodeListModel {
   private visibleFrom: number = 0;
   private visibleTo: number = -1;
   private testedCount: number = 0;
+  private reachableCount: number | undefined = undefined;
+  private funnelTested: number = 0;
+  private funnelTimer: number = -1;
   private failed: boolean = false;
   private loading: boolean = false;
   private currentQuery: string = '';
@@ -112,6 +130,7 @@ export class NodeListModel {
       this.chips = NodeListModel.chipsOf(idx.sections);
       this.subscriptionCount = this.engine.subscriptions().value.length;
       this.publish();
+      this.refreshFunnel();
     }).catch(() => {});
   }
 
@@ -121,6 +140,10 @@ export class NodeListModel {
       this.latencySub = undefined;
     }
     this.runId++;
+    if (this.funnelTimer >= 0) {
+      clearTimeout(this.funnelTimer);
+      this.funnelTimer = -1;
+    }
   }
 
   state(): NodeListState {
@@ -137,7 +160,9 @@ export class NodeListModel {
       tookMicros: r !== undefined ? r.tookMicros : 0,
       failed: this.failed,
       loading: this.loading,
-      testedCount: this.testedCount
+      testedCount: this.testedCount,
+      reachableCount: this.reachableCount,
+      funnelTested: this.funnelTested
     };
     return s;
   }
@@ -384,6 +409,44 @@ export class NodeListModel {
     this.testedCount += batch.length;
     this.notifyIds(ids);
     this.publish();
+    this.scheduleFunnel();
+  }
+
+  /** §18.a：可连通数与已检测数取自同一次 nodeFunnel（保证 reachable ≤ tested）；抛错 / 未实现 = undefined。 */
+  refreshFunnel(): Promise<void> {
+    return this.engine.nodeFunnel(JUDGEMENT_MAX_AGE_MS, JUDGEMENT_THRESHOLD_MS).then((f: NodeFunnel | undefined) => {
+      this.reachableCount = f !== undefined ? f.reachable : undefined;
+      this.funnelTested = f !== undefined ? f.tested : 0;
+      this.publish();
+    }).catch(() => {
+      this.reachableCount = undefined;
+      this.funnelTested = 0;
+      this.publish();
+    });
+  }
+
+  /** 测速回写时节流刷新判断句（1 s 内合并）。 */
+  private scheduleFunnel(): void {
+    if (this.funnelTimer >= 0) {
+      return;
+    }
+    this.funnelTimer = setTimeout(() => {
+      this.funnelTimer = -1;
+      this.refreshFunnel();
+    }, 1000);
+  }
+
+  static judgement(reachable: number | undefined, funnelTested: number, testedCount: number): NodeJudgement {
+    if (reachable !== undefined && funnelTested > 0) {
+      const j: NodeJudgement = { kind: 'both', reachable: reachable, tested: funnelTested };
+      return j;
+    }
+    if (testedCount > 0) {
+      const j: NodeJudgement = { kind: 'tested', reachable: 0, tested: testedCount };
+      return j;
+    }
+    const j: NodeJudgement = { kind: 'untested', reachable: 0, tested: 0 };
+    return j;
   }
 
   private notifyIds(ids: NodeId[]): void {

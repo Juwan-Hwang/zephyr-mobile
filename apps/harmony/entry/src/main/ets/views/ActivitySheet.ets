@@ -199,7 +199,7 @@ export struct ActivitySheet {
           .fontColor($r('app.color.screen_t2'))
         Text('›')
           .fontSize(18)
-          .fontColor($r('app.color.screen_t4'))
+          .fontColor($r('app.color.screen_t3'))
           .accessibilityLevel('no')
       }
       .width('100%')

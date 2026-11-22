@@ -13,7 +13,7 @@
  */
 import { AppServices } from '../app/AppServices';
 import {
-  NamePart, NamePartKind, NodeListState, NodeNameParts, NodeRowItem, NodeRowKind, NodeRowSource, RegionChip,
+  NamePart, NamePartKind, NodeJudgement, NodeListModel, NodeListState, NodeNameParts, NodeRowItem, NodeRowKind, NodeRowSource, RegionChip,
   SETTLE_DELAY_MS
 } from '../app/NodeListModel';
 import { NodeDetail, NodeSummary, RegionSection } from '../engine/Model';
@@ -55,13 +55,14 @@ struct LatencyText {
         .fontFamily('monospace')
         .fontColor(Labels.latencyColor(Format.latencyClass(this.ms)))
     } else if (this.ms !== undefined) {
-      Text($r('app.string.hm_latency_timeout'))
+      Text(ZTerm.stateTimeout)
         .fontSize(this.fontPx)
         .fontColor($r('app.color.latency_timeout'))
     } else {
       Text('—')
         .fontSize(this.fontPx)
         .fontColor($r('app.color.latency_unknown'))
+        .accessibilityText(ZTerm.stateUntested)
     }
   }
 }
@@ -222,6 +223,8 @@ export struct NodesView {
   @Local total: number = 0;
   @Local tookMicros: number = 0;
   @Local testedCount: number = 0;
+  @Local reachableCount: number | undefined = undefined;
+  @Local funnelTested: number = 0;
   @Local failed: boolean = false;
   @Local loading: boolean = true;
   @Local ranOnce: boolean = false;
@@ -299,6 +302,8 @@ export struct NodesView {
     this.total = s.total;
     this.tookMicros = s.tookMicros;
     this.testedCount = s.testedCount;
+    this.reachableCount = s.reachableCount;
+    this.funnelTested = s.funnelTested;
     this.failed = s.failed;
     this.loading = s.loading;
     this.indexTotal = s.indexTotal;
@@ -407,6 +412,9 @@ export struct NodesView {
           .margin({ bottom: 8 })
       }
       .alignItems(VerticalAlign.Bottom)
+      if (!this.failed && this.indexTotal > 0 && this.query.trim().length === 0) {
+        this.judgementLine()
+      }
       Text(this.subtitle())
         .fontSize(12)
         .fontColor($r('app.color.screen_t3'))
@@ -414,6 +422,52 @@ export struct NodesView {
     .width('100%')
     .alignItems(HorizontalAlign.Start)
     .padding({ left: 22, right: 22 })
+  }
+
+  /** §18.a 判断句：可连通 x · 已检测 N（同一次 nodeFunnel）/ 已检测 N / 尚未检测。整行 t2，数字 t1，可连通 0 用 red-text。 */
+  @Builder
+  judgementLine() {
+    if (this.judgement().kind === 'untested') {
+      Text($r('app.string.hm_nodes_untested'))
+        .fontSize(13)
+        .fontColor($r('app.color.screen_t2'))
+    } else {
+      Text() {
+        if (this.judgement().kind === 'both') {
+          if (this.termFirst()) {
+            Span(ZTerm.reachable)
+            Span(' ')
+          }
+          Span(Format.grouped(this.judgement().reachable))
+            .fontColor(this.judgement().reachable === 0 ? $r('app.color.screen_red_text') : $r('app.color.screen_t1'))
+            .fontWeight(FontWeight.Medium)
+          if (!this.termFirst()) {
+            Span(' ')
+            Span(ZTerm.reachable)
+          }
+          Span(' · ')
+        }
+        if (this.termFirst()) {
+          Span(ZTerm.tested)
+          Span(' ')
+        }
+        Span(Format.grouped(this.judgement().tested))
+        if (!this.termFirst()) {
+          Span(' ')
+          Span(ZTerm.tested)
+        }
+      }
+      .fontSize(13)
+      .fontColor($r('app.color.screen_t2'))
+    }
+  }
+
+  private judgement(): NodeJudgement {
+    return NodeListModel.judgement(this.reachableCount, this.funnelTested, this.testedCount);
+  }
+
+  private termFirst(): boolean {
+    return this.str($r('app.string.hm_term_number_order')) === 'term_first';
   }
 
   @Builder
@@ -449,7 +503,8 @@ export struct NodesView {
         .fontFamily('monospace')
         .fontColor($r('app.color.screen_t3'))
       Blank()
-      Text($r('app.string.nodes_tested', Format.grouped(this.testedCount)))
+      Text(this.termFirst() ? this.str(ZTerm.tested) + ' ' + Format.grouped(this.testedCount)
+        : Format.grouped(this.testedCount) + ' ' + this.str(ZTerm.tested))
         .fontSize(12)
         .fontFamily('monospace')
         .fontColor($r('app.color.screen_t3'))

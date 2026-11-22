@@ -405,6 +405,10 @@
       "value": "Режим правил"
     },
     {
+      "name": "home_mini_funnel_a11y",
+      "value": "Доступны: %1$s, быстрее 200 миллисекунд: %2$s"
+    },
+    {
       "name": "home_now_all_nodes",
       "value": "%1$s: снова все узлы"
     },
@@ -649,10 +653,6 @@
       "value": "%1$s · %2$s"
     },
     {
-      "name": "nodes_tested",
-      "value": "Проверено: %1$s"
-    },
-    {
       "name": "notif_action_global",
       "value": "Глобальный режим"
     },
@@ -795,10 +795,6 @@
     {
       "name": "scene_auto_switch",
       "value": "Переключать автоматически"
-    },
-    {
-      "name": "scene_funnel_reachable",
-      "value": "Доступно"
     },
     {
       "name": "scene_funnel_tested",
@@ -947,6 +943,18 @@
     {
       "name": "settings_trusted_wifi_location_off",
       "value": "Включите геолокацию в системе, чтобы распознавать сети Wi‑Fi"
+    },
+    {
+      "name": "state_expired",
+      "value": "Истёк"
+    },
+    {
+      "name": "state_failed",
+      "value": "Ошибка"
+    },
+    {
+      "name": "state_ok",
+      "value": "Норма"
     },
     {
       "name": "subs_add",
@@ -1253,6 +1261,10 @@
       "value": "Прокси"
     },
     {
+      "name": "term_reachable",
+      "value": "Доступны"
+    },
+    {
       "name": "term_require_password",
       "value": "Требовать пароль"
     },
@@ -1275,6 +1287,34 @@
     {
       "name": "term_settings",
       "value": "Настройки"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Истёк"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Скоро истекает"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Ошибка"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Норма"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Медленно"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Тайм-аут"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Не проверен"
     },
     {
       "name": "term_status_connecting",
@@ -1303,6 +1343,10 @@
     {
       "name": "term_test_again",
       "value": "Проверить снова"
+    },
+    {
+      "name": "term_tested",
+      "value": "Проверено"
     },
     {
       "name": "term_testing",

@@ -417,7 +417,7 @@ export struct SubscriptionsView {
         if (r.payload === undefined) {
           Text($r('app.string.subs_error_invalid_link'))
             .fontSize(15)
-            .fontColor($r('app.color.screen_red'))
+            .fontColor($r('app.color.screen_red_text'))
           Button($r('app.string.common_cancel'))
             .fontSize(14)
             .fontColor($r('app.color.screen_t1'))
@@ -449,7 +449,7 @@ export struct SubscriptionsView {
           if (this.anyInsecure()) {
             Text($r('app.string.subs_import_insecure'))
               .fontSize(13)
-              .fontColor($r('app.color.screen_amber'))
+              .fontColor($r('app.color.screen_amber_text'))
           }
           Text($r('app.string.subs_import_trust'))
             .fontSize(13)
@@ -494,7 +494,7 @@ export struct SubscriptionsView {
         if (this.addError !== undefined) {
           Text(this.addError)
             .fontSize(13)
-            .fontColor($r('app.color.screen_red'))
+            .fontColor($r('app.color.screen_red_text'))
         }
         Row({ space: 8 }) {
           PasteButton({ icon: PasteIconStyle.LINES, text: PasteDescription.PASTE, buttonType: ButtonType.Capsule })
@@ -1004,7 +1004,7 @@ export struct SubscriptionsView {
           if (this.error.length > 0) {
             Text(this.error)
               .fontSize(13)
-              .fontColor($r('app.color.screen_red'))
+              .fontColor($r('app.color.screen_red_text'))
               .padding({ left: 6, right: 6 })
           }
 

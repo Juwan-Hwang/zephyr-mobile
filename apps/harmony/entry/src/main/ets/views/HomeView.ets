@@ -528,7 +528,7 @@ export struct HomeView {
       if (this.errorCode !== undefined) {
         Text(Labels.connectError(this.errorCode))
           .fontSize(14)
-          .fontColor($r('app.color.screen_red'))
+          .fontColor($r('app.color.screen_red_text'))
       }
 
       Button(this.isConnected() || this.status === ConnectionStatus.DISCONNECTING
@@ -675,7 +675,7 @@ export struct HomeView {
           if (onTrailing !== undefined) {
             Text('›')
               .fontSize(15)
-              .fontColor($r('app.color.screen_t4'))
+              .fontColor($r('app.color.screen_t3'))
               .accessibilityLevel('no')
           }
         }

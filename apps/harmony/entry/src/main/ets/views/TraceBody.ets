@@ -294,7 +294,7 @@ export struct TraceBody {
       if (this.overrideError) {
         Text($r('app.string.trace_override_error'))
           .fontSize(12)
-          .fontColor($r('app.color.screen_red'))
+          .fontColor($r('app.color.screen_red_text'))
           .padding({ left: 26, right: 26, top: 8, bottom: 8 })
       }
       Column() {
