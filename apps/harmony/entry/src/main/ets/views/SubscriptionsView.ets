@@ -15,7 +15,7 @@
 import { pasteboard } from '@kit.BasicServicesKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { AppServices } from '../app/AppServices';
-import { ImportInbox } from '../app/ImportInbox';
+import { AddSubscriptionRequest, ImportInbox } from '../app/ImportInbox';
 import { ImportOutcome, SubscriptionImport } from '../app/SubscriptionImport';
 import { ImportPickers, PickError, PickResult } from '../app/ImportPickers';
 import { ZNavRow } from '../components/ZNavRow';
@@ -98,6 +98,15 @@ export struct SubscriptionsView {
       this.request = r;
     }));
     this.streamSubs.push(engine.settings().subscribe((st: Settings) => this.applySettings(st)));
+    // §16.b②：没有订阅时点连接 → 展开“添加订阅”。
+    if (AddSubscriptionRequest.consume()) {
+      this.showAdd = true;
+    }
+    this.streamSubs.push(AddSubscriptionRequest.events.subscribe(() => {
+      if (AddSubscriptionRequest.consume()) {
+        this.showAdd = true;
+      }
+    }));
     this.applySettings(engine.settings().value);
     // 每分钟刷新“2 小时前 / 26 天后到期”（同 Android L-P2-9）。
     this.minuteTimer = setInterval(() => {

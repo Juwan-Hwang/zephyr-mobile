@@ -9,7 +9,7 @@
  * 状态管理统一用 V2（@ComponentV2 / @Local / @Param / @Event），引擎流在 aboutToAppear 订阅、aboutToDisappear 取消。
  */
 import { AppServices } from '../app/AppServices';
-import { ImportInbox } from '../app/ImportInbox';
+import { AddSubscriptionRequest, ImportInbox } from '../app/ImportInbox';
 import {
   AppNav,
   BackTo,
@@ -80,6 +80,7 @@ struct Index {
   /** 首次引导（M1-16）：在屏时替换整个导航。 */
   @Local onboarding: boolean = false;
   private onboardingSub: StreamSub | undefined = undefined;
+  private importReqSub: StreamSub | undefined = undefined;
   /** 资料库“场景”入口：资料库收起后递增，首页打开第一个场景的 sheet（M1-5）。 */
   @Local sceneRequest: number = 0;
   private sceneAfterLibrary: boolean = false;
@@ -106,6 +107,11 @@ struct Index {
         this.showLibrary = false;
         this.onboarding = true;
       }
+    });
+    // §16.b②（同 Android MainActivity.requestConnect）：没有订阅时点连接 → 订阅页、展开添加订阅。
+    this.importReqSub = svc.connection.importRequests.subscribe(() => {
+      AddSubscriptionRequest.request();
+      this.openForImport();
     });
     this.inboxSub = ImportInbox.stream().subscribe((r: ImportRequest | undefined) => {
       if (r !== undefined) {

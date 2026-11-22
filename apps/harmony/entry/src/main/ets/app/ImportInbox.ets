@@ -4,7 +4,7 @@
  * §16.e⑦：只出确认面板，从不自动导入。
  */
 import { IMPORT_REQUEST_KEY, ImportRequest } from '../entryability/DeepLink';
-import { StateStream } from '../engine/Stream';
+import { EventStream, StateStream } from '../engine/Stream';
 
 export class ImportInbox {
   private static readonly state: StateStream<ImportRequest | undefined> = new StateStream<ImportRequest | undefined>(undefined);
@@ -25,5 +25,24 @@ export class ImportInbox {
       AppStorage.delete(IMPORT_REQUEST_KEY);
       ImportInbox.state.value = undefined;
     }
+  }
+}
+
+/**
+ * “打开添加订阅”请求（§16.b② 无订阅时点连接）：Index 设 pending 并 emit，订阅页出现时或已在屏时展开添加区并消费。
+ */
+export class AddSubscriptionRequest {
+  private static pending: boolean = false;
+  static readonly events: EventStream<number> = new EventStream<number>();
+
+  static request(): void {
+    AddSubscriptionRequest.pending = true;
+    AddSubscriptionRequest.events.emit(1);
+  }
+
+  static consume(): boolean {
+    const p = AddSubscriptionRequest.pending;
+    AddSubscriptionRequest.pending = false;
+    return p;
   }
 }

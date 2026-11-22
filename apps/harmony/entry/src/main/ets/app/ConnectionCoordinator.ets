@@ -7,7 +7,7 @@
  * vpn 为 undefined（DevEco 预览器没有 UIAbility）时只驱动引擎，界面照常可点。
  */
 import { ConnectionStatus, ErrorCode, ZephyrErrorInfo } from '../engine/Model';
-import { Subscription as StreamSub } from '../engine/Stream';
+import { EventStream, Subscription as StreamSub } from '../engine/Stream';
 import { ZephyrEngine, ZephyrError } from '../engine/ZephyrEngine';
 import { VpnPhase } from '../vpn/StartIntent';
 import { VpnController, VpnState } from '../vpn/VpnController';
@@ -50,8 +50,24 @@ export class ConnectionCoordinator {
     }
   }
 
+  /** §16.b②：没有订阅时连接改为打开导入（订阅页展开“添加订阅”），不起 VPN、不弹授权。值无意义，只是事件。 */
+  readonly importRequests: EventStream<number> = new EventStream<number>();
+
+  /** 同 Android ConnectionController.hasNoSubscription：取不到时按“有”处理（照常连接）。 */
+  async hasNoSubscription(): Promise<boolean> {
+    try {
+      return (await this.engine.subscriptionsSummary()).count === 0;
+    } catch (e) {
+      return false;
+    }
+  }
+
   async connect(): Promise<void> {
     if (this.busy) {
+      return;
+    }
+    if (await this.hasNoSubscription()) {
+      this.importRequests.emit(1);
       return;
     }
     this.busy = true;

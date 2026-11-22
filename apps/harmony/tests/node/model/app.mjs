@@ -2,7 +2,7 @@ const store=new Map(); globalThis.AppStorage={setOrCreate:(k,v)=>store.set(k,v),
 const { MockEngine } = await import('../.out/rt/engine/MockEngine.ts');
 const { ConnectionCoordinator } = await import('../.out/rt/app/ConnectionCoordinator.ts');
 const { LogsModel } = await import('../.out/rt/app/LogsModel.ts');
-const { ImportInbox } = await import('../.out/rt/app/ImportInbox.ts');
+const { ImportInbox, AddSubscriptionRequest } = await import('../.out/rt/app/ImportInbox.ts');
 const { DeepLinks } = await import('../.out/rt/entryability/DeepLink.ts');
 let bad=0; const ok=(c,m)=>{ if(!c){bad++;console.log('FAIL',m);} };
 const e=new MockEngine({latencyScale:0});
@@ -18,4 +18,10 @@ lm.stop(); ok(!lm.running,'stopped');
 const r=DeepLinks.parse('clash://install-config?url=https%3A%2F%2Fa.b%2Fc',1);
 let seen; const s=ImportInbox.stream().subscribe(v=>seen=v); ImportInbox.post(r);
 ok(seen&&seen.id===r.id && store.has('zephyr.importRequest'),'post'); ImportInbox.consume(r.id); ok(seen===undefined&&!store.has('zephyr.importRequest'),'consume'); s.cancel();
+// §16.b②：没有订阅时连接 → 导入请求，不连接
+const e2=new MockEngine({latencyScale:0}); const c2=new ConnectionCoordinator(e2, undefined);
+e2.subscriptionsSummary=async()=>({count:0,totalNodes:0});
+let asks=0; const rs=c2.importRequests.subscribe(()=>asks++);
+await c2.toggle(); ok(asks===1&&e2.connectionState().value.status==='disconnected','no subs -> import '+asks+' '+e2.connectionState().value.status); rs.cancel();
+ok(!AddSubscriptionRequest.consume(),'nothing pending'); AddSubscriptionRequest.request(); ok(AddSubscriptionRequest.consume()&&!AddSubscriptionRequest.consume(),'consume once');
 console.log(bad?'FAILED '+bad:'app OK'); process.exit(bad?1:0);
