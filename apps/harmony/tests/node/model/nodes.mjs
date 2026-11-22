@@ -41,8 +41,8 @@ const sent=m.autoTest(false); ok(sent===cand.length&&cand.every(id=>m.isTesting(
 ok(m.autoTestIds().length===0,'no repeat while testing');
 await new Promise(r=>setTimeout(r,50)); ok(cand.every(id=>m.latencyOf(id)!==undefined),'auto latencies');
 ok(m.autoTestIds().length===0,'tested rows skipped');
-let pub=0; m.onState=()=>pub++; m.testOne(cand[0]); ok(m.isTesting(cand[0])&&pub>0,'testOne retests');
-await new Promise(r=>setTimeout(r,50)); ok(!m.isTesting(cand[0]),'testOne done');
+let pub=0; const tc0=m.state().testedCount; m.onState=()=>pub++; m.testOne(cand[0]); ok(m.isTesting(cand[0])&&pub>0,'testOne retests');
+await new Promise(r=>setTimeout(r,50)); ok(!m.isTesting(cand[0]),'testOne done'); ok(m.state().testedCount===tc0,'retest does not bump tested count');
 const P=(n,t)=>NodeNameParts.split(n,t).map(p=>p.kind[0]+':'+p.text).join('|');
 ok(P('Tokyo 03',[])==='p:Tokyo 03','plain');
 ok(P('Tokyo IIJ 03 ×1.5',['tokyo','iij'])==='h:Tokyo|p: |h:IIJ|p: 03|m: ×1.5',P('Tokyo IIJ 03 ×1.5',['tokyo','iij']));

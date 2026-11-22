@@ -401,12 +401,17 @@ export class NodeListModel {
 
   private onLatency(batch: LatencyUpdate[]): void {
     const ids: NodeId[] = [];
+    let fresh = 0;
     for (const u of batch) {
+      // 重测（详情 sheet 的“测速”、自动测速重复命中）不再加计数；同 Android MockEngine tested.put(..) == null。
+      if (!this.latency.has(u.id)) {
+        fresh++;
+      }
       this.latency.set(u.id, u.latencyMs);
       this.testing.delete(u.id);
       ids.push(u.id);
     }
-    this.testedCount += batch.length;
+    this.testedCount += fresh;
     this.notifyIds(ids);
     this.publish();
     this.scheduleFunnel();
