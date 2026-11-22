@@ -183,9 +183,11 @@
     <string name="scene_pinned_value">\u2068%1$s\u2069 (مثبّتة)</string>
     <string name="scene_retest">إعادة الاختبار</string>
     <string name="scene_funnel_tested">مختبرة</string>
-    <string name="scene_funnel_reachable">قابلة للاتصال</string>
+    <string name="scene_funnel_reachable">متاحة</string>
     <string name="scene_funnel_under">أقل من %1$d ms</string>
     <string name="home_mini_funnel_a11y">متاحة %1$s، أقل من 200 ملي ثانية %2$s</string>
+    <string name="scene_tickbar_timeouts">انتهت المهلة: %1$s</string>
+    <string name="scene_tickbar_a11y">%1$s مرشحة، %2$s أقل من 200 ملي ثانية، %3$s انتهت مهلتها</string>
     <string name="scene_note">تُحفظ الاختيارات في Zephyr فقط، ولا يتغيّر إعداد اشتراكك.</string>
     <string name="scene_note_tested">\u2068%1$s\u2069 آخر اختبار: \u2068%2$s\u2069.</string>
 
@@ -200,6 +202,11 @@
     </string-array>
     <string name="command_see_all_nodes">عرض كل العقد (\u2068%1$s\u2069) في مكتبة العقد</string>
     <string name="command_test_rule">إلى أين يذهب \u2068%1$s\u2069؟</string>
+    <string name="command_group_rule_test">اختبار القواعد</string>
+    <string name="command_action_open">فتح</string>
+    <string name="command_action_test">اختبار</string>
+    <string name="command_show_all">عرض الكل (%1$s)</string>
+    <string name="command_enter_hint">اضغط Enter للتنفيذ</string>
     <string name="command_chip_scene">المشهد</string>
     <string name="command_chip_service">الخدمة</string>
     <string name="command_chip_region">المنطقة</string>
@@ -359,7 +366,9 @@
     <string name="nodes_empty_message">استورد اشتراكًا وستظهر عقده هنا</string>
     <string name="nodes_empty_action">استيراد اشتراك</string>
     <string name="nodes_no_match">لا توجد عقد تطابق «\u2068%1$s\u2069»</string>
-    <string name="nodes_tested">تم اختبار \u2068%1$s\u2069</string>
+    <string name="nodes_tested">مُختبرة: \u2068%1$s\u2069</string>
+    <string name="nodes_judgement">متاحة \u2068%1$s\u2069 · مُختبرة \u2068%2$s\u2069</string>
+    <string name="nodes_untested_hint">لم تُختبر بعد — تُختبر العقد الظاهرة عند التوقف عن التمرير</string>
     <string name="nodes_jump_to">الانتقال إلى \u2068%1$s\u2069</string>
     <string name="nodes_detail_protocol">البروتوكول</string>
     <string name="nodes_detail_latency">التأخير</string>

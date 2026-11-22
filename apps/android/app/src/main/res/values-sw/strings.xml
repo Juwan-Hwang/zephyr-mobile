@@ -145,9 +145,11 @@
     <string name="scene_pinned_value">%1$s (imebanwa)</string>
     <string name="scene_retest">Pima tena</string>
     <string name="scene_funnel_tested">Zilizopimwa</string>
-    <string name="scene_funnel_reachable">Zinazofikika</string>
+    <string name="scene_funnel_reachable">Zinafikika</string>
     <string name="scene_funnel_under">Chini ya %1$d ms</string>
     <string name="home_mini_funnel_a11y">Zinafikika %1$s, chini ya milisekunde 200 %2$s</string>
+    <string name="scene_tickbar_timeouts">Muda umeisha: %1$s</string>
+    <string name="scene_tickbar_a11y">Wagombea %1$s, %2$s chini ya milisekunde 200, %3$s muda umeisha</string>
     <string name="scene_note">Chaguo huhifadhiwa ndani ya Zephyr pekee. Usanidi wa usajili wako haubadilishwi.</string>
     <string name="scene_note_tested">%1$s Ilipimwa mara ya mwisho %2$s.</string>
     <string name="command_placeholder">Tafuta au weka amri</string>
@@ -160,6 +162,11 @@
     </string-array>
     <string name="command_see_all_nodes">Ona nodi zote %1$s kwenye maktaba ya nodi</string>
     <string name="command_test_rule">%1$s inapita wapi?</string>
+    <string name="command_group_rule_test">Jaribio la kanuni</string>
+    <string name="command_action_open">Fungua</string>
+    <string name="command_action_test">Jaribu</string>
+    <string name="command_show_all">Onyesha zote (%1$s)</string>
+    <string name="command_enter_hint">Bonyeza Enter ili kutekeleza</string>
     <string name="command_chip_scene">Mazingira</string>
     <string name="command_chip_service">Huduma</string>
     <string name="command_chip_region">Eneo</string>
@@ -268,6 +275,8 @@
     <string name="nodes_empty_action">Leta usajili</string>
     <string name="nodes_no_match">Hakuna nodi zinazolingana na “%1$s”</string>
     <string name="nodes_tested">%1$s zimepimwa</string>
+    <string name="nodes_judgement">%1$s zinafikika · %2$s zimepimwa</string>
+    <string name="nodes_untested_hint">Bado hazijapimwa — nodi zinazoonekana hupimwa unapoacha kusogeza</string>
     <string name="nodes_jump_to">Nenda kwenye %1$s</string>
     <string name="nodes_detail_protocol">Itifaki</string>
     <string name="nodes_detail_latency">Kuchelewa</string>

@@ -140,6 +140,8 @@
     <string name="scene_funnel_reachable">연결 가능</string>
     <string name="scene_funnel_under">%1$d ms 미만</string>
     <string name="home_mini_funnel_a11y">연결 가능 %1$s, 200밀리초 미만 %2$s</string>
+    <string name="scene_tickbar_timeouts">시간 초과 %1$s</string>
+    <string name="scene_tickbar_a11y">후보 %1$s개, 200밀리초 미만 %2$s개, 시간 초과 %3$s개</string>
     <string name="scene_note">추천 결과는 Zephyr에만 저장됩니다. 구독 구성은 변경되지 않습니다.</string>
     <string name="scene_note_tested">%1$s 마지막 테스트: %2$s.</string>
     <string name="command_placeholder">검색 또는 명령 입력</string>
@@ -152,6 +154,11 @@
     </string-array>
     <string name="command_see_all_nodes">노드 보관함에서 %1$s개 모두 보기</string>
     <string name="command_test_rule">%1$s은(는) 어디로 가나요?</string>
+    <string name="command_group_rule_test">규칙 테스트</string>
+    <string name="command_action_open">열기</string>
+    <string name="command_action_test">테스트</string>
+    <string name="command_show_all">모두 보기(%1$s개)</string>
+    <string name="command_enter_hint">Enter 키를 눌러 실행</string>
     <string name="command_chip_scene">시나리오</string>
     <string name="command_chip_service">서비스</string>
     <string name="command_chip_region">지역</string>
@@ -248,7 +255,9 @@
     <string name="nodes_empty_message">구독을 가져오면 노드가 여기에 표시됩니다</string>
     <string name="nodes_empty_action">구독 가져오기</string>
     <string name="nodes_no_match">‘%1$s’와(과) 일치하는 노드 없음</string>
-    <string name="nodes_tested">%1$s 테스트됨</string>
+    <string name="nodes_tested">%1$s 측정됨</string>
+    <string name="nodes_judgement">%1$s 연결 가능 · %2$s 측정됨</string>
+    <string name="nodes_untested_hint">아직 테스트하지 않음 — 스크롤을 멈추면 보이는 노드를 자동으로 테스트합니다</string>
     <string name="nodes_jump_to">%1$s(으)로 이동</string>
     <string name="nodes_detail_protocol">프로토콜</string>
     <string name="nodes_detail_latency">지연 시간</string>

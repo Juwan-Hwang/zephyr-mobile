@@ -146,6 +146,8 @@
     <string name="scene_funnel_reachable">可连通</string>
     <string name="scene_funnel_under">延迟低于 %1$d ms</string>
     <string name="home_mini_funnel_a11y">可连通 %1$s，低于 200 毫秒 %2$s</string>
+    <string name="scene_tickbar_timeouts">超时 %1$s</string>
+    <string name="scene_tickbar_a11y">%1$s 个候选，%2$s 个低于 200 毫秒，超时 %3$s</string>
     <string name="scene_note">优选结果仅保存在 Zephyr 中，订阅配置保持原样。</string>
     <string name="scene_note_tested">%1$s 上次检测 %2$s。</string>
 
@@ -161,6 +163,11 @@
     </string-array>
     <string name="command_see_all_nodes">在节点库中查看全部 %1$s 个</string>
     <string name="command_test_rule">%1$s 走哪里？</string>
+    <string name="command_group_rule_test">规则测试</string>
+    <string name="command_action_open">打开</string>
+    <string name="command_action_test">测试</string>
+    <string name="command_show_all">显示全部 %1$s 项</string>
+    <string name="command_enter_hint">按回车执行</string>
     <string name="command_chip_scene">场景</string>
     <string name="command_chip_service">服务</string>
     <string name="command_chip_region">地区</string>
@@ -266,6 +273,8 @@
     <string name="nodes_empty_action">导入订阅</string>
     <string name="nodes_no_match">没有与“%1$s”匹配的节点</string>
     <string name="nodes_tested">已检测 %1$s</string>
+    <string name="nodes_judgement">可连通 %1$s · 已检测 %2$s</string>
+    <string name="nodes_untested_hint">尚未检测，停止滚动后自动测可见节点</string>
     <string name="nodes_jump_to">跳到 %1$s</string>
     <string name="nodes_detail_protocol">协议</string>
     <string name="nodes_detail_latency">延迟</string>

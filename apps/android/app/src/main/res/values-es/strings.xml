@@ -156,6 +156,8 @@
     <string name="scene_funnel_reachable">Accesibles</string>
     <string name="scene_funnel_under">Menos de %1$d ms</string>
     <string name="home_mini_funnel_a11y">Accesibles: %1$s, por debajo de 200 milisegundos: %2$s</string>
+    <string name="scene_tickbar_timeouts">Tiempo agotado: %1$s</string>
+    <string name="scene_tickbar_a11y">%1$s candidatos, %2$s por debajo de 200 milisegundos, %3$s con tiempo agotado</string>
     <string name="scene_note">La selección solo se guarda en Zephyr. La configuración de tu suscripción no cambia.</string>
     <string name="scene_note_tested">%1$s Última prueba: %2$s.</string>
     <string name="command_placeholder">Buscar o introducir comando</string>
@@ -168,6 +170,11 @@
     </string-array>
     <string name="command_see_all_nodes">Ver los %1$s en la biblioteca de nodos</string>
     <string name="command_test_rule">¿Por dónde va %1$s?</string>
+    <string name="command_group_rule_test">Prueba de reglas</string>
+    <string name="command_action_open">Abrir</string>
+    <string name="command_action_test">Probar</string>
+    <string name="command_show_all">Mostrar todo (%1$s)</string>
+    <string name="command_enter_hint">Pulsa Intro para ejecutar</string>
     <string name="command_chip_scene">Escenario</string>
     <string name="command_chip_service">Servicio</string>
     <string name="command_chip_region">Región</string>
@@ -287,6 +294,8 @@
     <string name="nodes_empty_action">Importar suscripción</string>
     <string name="nodes_no_match">Ningún nodo coincide con «%1$s»</string>
     <string name="nodes_tested">%1$s probados</string>
+    <string name="nodes_judgement">%1$s accesibles · %2$s probados</string>
+    <string name="nodes_untested_hint">Sin probar aún: los nodos visibles se prueban al dejar de desplazarte</string>
     <string name="nodes_jump_to">Ir a %1$s</string>
     <string name="nodes_detail_protocol">Protocolo</string>
     <string name="nodes_detail_latency">Latencia</string>

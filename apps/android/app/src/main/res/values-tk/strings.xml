@@ -145,9 +145,11 @@
     <string name="scene_pinned_value">%1$s (berkidilen)</string>
     <string name="scene_retest">Gaýtadan barla</string>
     <string name="scene_funnel_tested">Barlanan</string>
-    <string name="scene_funnel_reachable">Birikip bolýan</string>
+    <string name="scene_funnel_reachable">Elýeterli</string>
     <string name="scene_funnel_under">%1$d ms-den az</string>
     <string name="home_mini_funnel_a11y">Elýeterli %1$s, 200 millisekuntdan az %2$s</string>
+    <string name="scene_tickbar_timeouts">Wagt gutardy: %1$s</string>
+    <string name="scene_tickbar_a11y">%1$s dalaşgär, %2$s sany 200 millisekuntdan az, %3$s sany wagt gutardy</string>
     <string name="scene_note">Saýlananlar diňe Zephyr-de saklanýar. Abunaňyzyň konfigurasiýasy üýtgemeýär.</string>
     <string name="scene_note_tested">%1$s Soňky barlag: %2$s.</string>
     <string name="command_placeholder">Gözle ýa-da buýruk ýaz</string>
@@ -160,6 +162,11 @@
     </string-array>
     <string name="command_see_all_nodes">Düwün kitaphanasynda ähli %1$s düwüni gör</string>
     <string name="command_test_rule">%1$s nireden geçýär?</string>
+    <string name="command_group_rule_test">Düzgün barlagy</string>
+    <string name="command_action_open">Aç</string>
+    <string name="command_action_test">Barla</string>
+    <string name="command_show_all">Hemmesini görkez (%1$s)</string>
+    <string name="command_enter_hint">Ýerine ýetirmek üçin Enter basyň</string>
     <string name="command_chip_scene">Ssenariý</string>
     <string name="command_chip_service">Hyzmat</string>
     <string name="command_chip_region">Sebit</string>
@@ -268,6 +275,8 @@
     <string name="nodes_empty_action">Abuna import et</string>
     <string name="nodes_no_match">“%1$s” bilen gabat gelýän düwün ýok</string>
     <string name="nodes_tested">%1$s barlandy</string>
+    <string name="nodes_judgement">%1$s elýeterli · %2$s barlandy</string>
+    <string name="nodes_untested_hint">Entek barlanmady — aýlamagy bes edeniňizde görünýän düwünler barlanýar</string>
     <string name="nodes_jump_to">%1$s bölümine geç</string>
     <string name="nodes_detail_protocol">Protokol</string>
     <string name="nodes_detail_latency">Gijikme</string>

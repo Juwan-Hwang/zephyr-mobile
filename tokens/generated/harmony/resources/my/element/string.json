@@ -214,11 +214,11 @@
     },
     {
       "name": "term_state_slow",
-      "value": "နှေးသည်"
+      "value": "နှေး"
     },
     {
       "name": "term_state_timeout",
-      "value": "အချိန်ကုန်သွားသည်"
+      "value": "အချိန်ကုန်"
     },
     {
       "name": "term_state_untested",
@@ -226,7 +226,7 @@
     },
     {
       "name": "term_state_expiring",
-      "value": "မကြာမီ သက်တမ်းကုန်မည်"
+      "value": "သက်တမ်းကုန်ခါနီး"
     },
     {
       "name": "term_state_expired",
@@ -234,7 +234,7 @@
     },
     {
       "name": "term_state_failed",
-      "value": "မအောင်မြင်ပါ"
+      "value": "မအောင်မြင်"
     },
     {
       "name": "term_reachable",

@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
@@ -39,6 +40,11 @@ data class NodesUi(
     val chips: List<Pair<String, Long>> = emptyList(),
     val subscriptionCount: Int = 0,
     val testedCount: Long = 0,
+    /** The index loaded (§18.a: a failed load shows no header sentence, not "尚未检测"). */
+    val indexLoaded: Boolean = false,
+    /** §18.a: reachable / tested from ONE nodeFunnel (NodeIndex.reachableCount + Android-local funnelTested); null = unavailable. */
+    val reachable: Long? = null,
+    val funnelTested: Long? = null,
     /** The query (or the page under it) failed: the list shows an error with "重试" instead of empty rows (audit U12). */
     val failed: Boolean = false,
     /** Bumped when a stale token could not be re-queried in place (§16.b ①): the list quietly goes back to the top. */
@@ -63,6 +69,7 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
     val testing = mutableStateMapOf<NodeId, Boolean>()
     private var token = 0L
     private var testJob: Job? = null
+    private val funnelDirty = kotlinx.coroutines.flow.MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = kotlinx.coroutines.channels.BufferOverflow.DROP_OLDEST)
 
     init {
         viewModelScope.launch {
@@ -70,7 +77,8 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
             val chips = idx.sections.filter { it.count > 0 }.sortedByDescending { it.count }.take(8).map { it.region to it.count }
             // Review And-6: "来自 214 个订阅" counts every subscription (subscriptionsSummary), not just the loaded detail list.
             val subs = runCatching { engine.subscriptionsSummary().count }.getOrDefault(0)
-            _ui.value = _ui.value.copy(total = idx.total, regionCount = idx.sections.size, testedCount = idx.testedCount, chips = chips, subscriptionCount = subs)
+            _ui.value = _ui.value.copy(total = idx.total, regionCount = idx.sections.size, testedCount = idx.testedCount, chips = chips, subscriptionCount = subs,
+                indexLoaded = true, reachable = idx.reachableCount?.takeIf { idx.funnelTested != null }, funnelTested = idx.funnelTested?.takeIf { idx.reachableCount != null })
         }
         viewModelScope.launch {
             queryFlow.debounce(80).distinctUntilChanged().collect { q -> if (q != null && q != lastRun) launchRun(q) }
@@ -79,9 +87,22 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
             engine.latencyUpdates().collect { batch ->
                 batch.forEach { u -> latency[u.id] = u.latencyMs; testing.remove(u.id) }
                 _ui.value = _ui.value.copy(testedCount = _ui.value.testedCount + batch.size)
+                funnelDirty.tryEmit(Unit)
+            }
+        }
+        // §18.a: the headline pair comes from one funnel; re-read it (debounced) after latency results land so
+        // 「可连通 x · 已检测 N」 does not stay at its value from when the page opened (CodeAnt #286).
+        viewModelScope.launch {
+            funnelDirty.debounce(FUNNEL_REFRESH_MS).collectLatest {
+                val idx = runCatching { engine.nodeIndex() }.getOrNull() ?: return@collectLatest
+                _ui.value = _ui.value.copy(
+                    reachable = idx.reachableCount?.takeIf { idx.funnelTested != null },
+                    funnelTested = idx.funnelTested?.takeIf { idx.reachableCount != null },
+                )
             }
         }
     }
+
 
     /** [composing]: an IME is mid-composition, so show the text but don't query half-typed letters (review L-P2-5). */
     fun setQuery(q: String, immediate: Boolean = false, composing: Boolean = false) {
@@ -208,5 +229,7 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
     companion object {
         const val PAGE = 200
         const val CACHE_PAGES = 24
+        /** Re-read the §18.a funnel at most this often while results stream in. */
+        const val FUNNEL_REFRESH_MS = 600L
     }
 }

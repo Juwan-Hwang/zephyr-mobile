@@ -140,6 +140,8 @@
     <string name="scene_funnel_reachable">Kết nối được</string>
     <string name="scene_funnel_under">Dưới %1$d ms</string>
     <string name="home_mini_funnel_a11y">Kết nối được %1$s, dưới 200 mili giây %2$s</string>
+    <string name="scene_tickbar_timeouts">Hết thời gian: %1$s</string>
+    <string name="scene_tickbar_a11y">%1$s ứng viên, %2$s dưới 200 mili giây, %3$s hết thời gian</string>
     <string name="scene_note">Kết quả chọn lọc chỉ được lưu trong Zephyr. Cấu hình đăng ký không thay đổi.</string>
     <string name="scene_note_tested">%1$s Kiểm tra lần cuối %2$s.</string>
     <string name="command_placeholder">Tìm kiếm hoặc nhập lệnh</string>
@@ -152,6 +154,11 @@
     </string-array>
     <string name="command_see_all_nodes">Xem cả %1$s nút trong thư viện nút</string>
     <string name="command_test_rule">%1$s đi qua đâu?</string>
+    <string name="command_group_rule_test">Kiểm tra quy tắc</string>
+    <string name="command_action_open">Mở</string>
+    <string name="command_action_test">Kiểm tra</string>
+    <string name="command_show_all">Hiện tất cả (%1$s)</string>
+    <string name="command_enter_hint">Nhấn Enter để thực hiện</string>
     <string name="command_chip_scene">Ngữ cảnh</string>
     <string name="command_chip_service">Dịch vụ</string>
     <string name="command_chip_region">Khu vực</string>
@@ -249,6 +256,8 @@
     <string name="nodes_empty_action">Nhập gói đăng ký</string>
     <string name="nodes_no_match">Không có nút nào khớp với “%1$s”</string>
     <string name="nodes_tested">Đã kiểm tra %1$s</string>
+    <string name="nodes_judgement">Kết nối được %1$s · Đã kiểm tra %2$s</string>
+    <string name="nodes_untested_hint">Chưa kiểm tra — các nút đang hiển thị sẽ được kiểm tra khi bạn ngừng cuộn</string>
     <string name="nodes_jump_to">Đến %1$s</string>
     <string name="nodes_detail_protocol">Giao thức</string>
     <string name="nodes_detail_latency">Độ trễ</string>

@@ -58,6 +58,9 @@ import com.zephyr.design.components.ZSurface
 import com.zephyr.design.components.ZSurfaceStyle
 import com.zephyr.design.components.ZText
 import com.zephyr.design.format.ZFormat
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import com.zephyr.design.theme.ZTheme
 import com.zephyr.design.tokens.ZMotion
 import kotlinx.coroutines.delay
@@ -103,7 +106,10 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: BackTo = BackTo.
                 ZText(pluralStringResource(R.plurals.nodes_total_unit, ui.total.toPluralCount()), Modifier.padding(bottom = 10.dp), style = ZTheme.type.body, color = c.text3)
             }
             val fromSubs = ui.subscriptionCount.takeIf { it > 0 }?.let { pluralStringResource(R.plurals.nodes_from_subs, it, it) }
-            ZText(listOfNotNull(fromSubs, pluralStringResource(R.plurals.common_region_count, ui.regionCount, ui.regionCount)).joinToString(" · "), Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
+            val judgement = judgement(ui)
+            judgement?.let { ZText(it, Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text2) }
+            // Spec §9.2: one "A · B" midpoint per screen, and that is the sentence above; the two facts here split by an em space.
+            ZText(listOfNotNull(fromSubs, pluralStringResource(R.plurals.common_region_count, ui.regionCount, ui.regionCount)).joinToString("\u2003"), Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
             Spacer(Modifier.height(18.dp))
             var composing by remember { mutableStateOf(false) }
             ZSearchField(
@@ -157,7 +163,7 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: BackTo = BackTo.
                         scope.launch { list.scrollToItem(target.coerceAtMost(rowCount - 1L).toInt()) }
                         secs[gi]
                     }
-                    Footer(vm, list, ui.testedCount, result?.total ?: 0, Modifier.align(Alignment.BottomCenter))
+                    Footer(vm, list, ui.testedCount.takeIf { judgement == null }, result?.total ?: 0, Modifier.align(Alignment.BottomCenter))
                 }
             }
         }
@@ -178,7 +184,7 @@ private fun PinnedHeader(vm: NodesViewModel, list: androidx.compose.foundation.l
 }
 
 @Composable
-private fun Footer(vm: NodesViewModel, list: androidx.compose.foundation.lazy.LazyListState, tested: Long, total: Long, modifier: Modifier) {
+private fun Footer(vm: NodesViewModel, list: androidx.compose.foundation.lazy.LazyListState, tested: Long?, total: Long, modifier: Modifier) {
     val c = ZTheme.colors
     val pos by remember {
         derivedStateOf {
@@ -191,7 +197,34 @@ private fun Footer(vm: NodesViewModel, list: androidx.compose.foundation.lazy.La
     ) {
         ZText(if (pos > 0) "${ZFormat.grouped(pos)} / ${ZFormat.grouped(total)}" else "", style = ZTheme.type.monoSmall, color = c.text3)
         Spacer(Modifier.weight(1f))
-        ZText(stringResource(R.string.nodes_tested, ZFormat.grouped(tested)), style = ZTheme.type.monoSmall, color = c.text3)
+        // §18.a: the header sentence already says "已检测 N"; the footer repeats it only when the sentence is hidden (search).
+        if (tested != null) ZText(stringResource(R.string.nodes_tested, ZFormat.grouped(tested)), style = ZTheme.type.monoSmall, color = c.text3)
+    }
+}
+
+/**
+ * Contract §18.a / spec §9.4 header sentence under the big number, or null when it must not show: index not loaded
+ * (load failure is the page's error state, never "尚未检测"), empty library, a search, or a failed query.
+ * 「可连通 x · 已检测 N」 takes both numbers from one nodeFunnel; line t2, reachable number t1 (red-text when 0).
+ */
+@Composable
+private fun judgement(ui: NodesUi): AnnotatedString? {
+    if (!ui.indexLoaded || ui.total <= 0 || ui.query.isNotBlank() || ui.failed) return null
+    val c = ZTheme.colors
+    val r = ui.reachable
+    val t = ui.funnelTested
+    return when {
+        r != null && t != null && t > 0 -> {
+            val num = ZFormat.grouped(r)
+            val text = stringResource(R.string.nodes_judgement, num, ZFormat.grouped(t))
+            val at = text.indexOf(num)
+            buildAnnotatedString {
+                append(text)
+                if (at >= 0) addStyle(SpanStyle(color = if (r == 0L) c.dangerText else c.text1), at, at + num.length)
+            }
+        }
+        r == null && ui.testedCount > 0 -> AnnotatedString(stringResource(R.string.nodes_tested, ZFormat.grouped(ui.testedCount)))
+        else -> AnnotatedString(stringResource(R.string.nodes_untested_hint))
     }
 }
 

@@ -140,6 +140,8 @@
     <string name="scene_funnel_reachable">ချိတ်ဆက်နိုင်</string>
     <string name="scene_funnel_under">%1$d ms အောက်</string>
     <string name="home_mini_funnel_a11y">ချိတ်ဆက်နိုင် %1$s၊ မီလီစက္ကန့် 200 အောက် %2$s</string>
+    <string name="scene_tickbar_timeouts">အချိန်ကုန်: %1$s</string>
+    <string name="scene_tickbar_a11y">ရွေးချယ်စရာ %1$s ခု၊ မီလီစက္ကန့် 200 အောက် %2$s ခု၊ အချိန်ကုန် %3$s ခု</string>
     <string name="scene_note">ရွေးချယ်မှုများကို Zephyr တွင်သာ သိမ်းသည်။ စာရင်းသွင်းမှု ဖွဲ့စည်းပုံ မပြောင်းပါ။</string>
     <string name="scene_note_tested">%1$s နောက်ဆုံး စမ်းသပ်ချိန်: %2$s။</string>
     <string name="command_placeholder">ရှာရန် သို့မဟုတ် ညွှန်ကြားချက် ထည့်ပါ</string>
@@ -152,6 +154,11 @@
     </string-array>
     <string name="command_see_all_nodes">နုဒ် စုစည်းမှုတွင် %1$s ခုလုံး ကြည့်ရန်</string>
     <string name="command_test_rule">%1$s ဘယ်လမ်းကြောင်း သွားသလဲ။</string>
+    <string name="command_group_rule_test">စည်းမျဉ်း စမ်းသပ်ချက်</string>
+    <string name="command_action_open">ဖွင့်ရန်</string>
+    <string name="command_action_test">စမ်းသပ်</string>
+    <string name="command_show_all">အားလုံးပြရန် (%1$s)</string>
+    <string name="command_enter_hint">လုပ်ဆောင်ရန် Enter ကိုနှိပ်ပါ</string>
     <string name="command_chip_scene">မြင်ကွင်း</string>
     <string name="command_chip_service">ဝန်ဆောင်မှု</string>
     <string name="command_chip_region">ဒေသ</string>
@@ -248,7 +255,9 @@
     <string name="nodes_empty_message">စာရင်းသွင်းမှု တင်သွင်းလျှင် ၎င်း၏ နုဒ်များ ဤနေရာတွင် ပေါ်မည်</string>
     <string name="nodes_empty_action">စာရင်းသွင်းမှု တင်သွင်းရန်</string>
     <string name="nodes_no_match">“%1$s” နှင့် ကိုက်ညီသော နုဒ် မရှိပါ</string>
-    <string name="nodes_tested">%1$s ခု စမ်းသပ်ပြီး</string>
+    <string name="nodes_tested">%1$s ခု စမ်းပြီး</string>
+    <string name="nodes_judgement">%1$s ခု ချိတ်ဆက်နိုင် · %2$s ခု စမ်းပြီး</string>
+    <string name="nodes_untested_hint">မစမ်းရသေးပါ — လှိမ့်ခြင်း ရပ်လိုက်လျှင် မြင်ရသော နုဒ်များကို အလိုအလျောက် စမ်းသပ်မည်</string>
     <string name="nodes_jump_to">%1$s သို့ သွားရန်</string>
     <string name="nodes_detail_protocol">ပရိုတိုကော</string>
     <string name="nodes_detail_latency">နောက်ကျမှု</string>

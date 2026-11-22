@@ -34,6 +34,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.isShiftPressed
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -72,12 +79,19 @@ sealed interface CommandAction {
     data class Apply(val plan: CommandPlan) : CommandAction
     data class OpenNodes(val query: String) : CommandAction
     data class TestRule(val input: String) : CommandAction
+    /** J-3 result rows (spec §9.5): mode switch, connect / disconnect, open a scene sheet, open a page. */
+    data class SetMode(val mode: com.zephyr.engine.ProxyMode) : CommandAction
+    data class Toggle(val connect: Boolean) : CommandAction
+    data class OpenScene(val scene: com.zephyr.engine.Scene) : CommandAction
+    data class OpenPage(val page: CommandPage) : CommandAction
 }
 
 /**
  * "搜索或输入指令" (prototype `cmdv`, index.html 879 / 1020–1061). Empty field: example phrases that fill the
  * field (never actions). Typed text: tokens underlined in place (service blue, region green, action amber),
- * parse chips, one preview card with the exit-IP line, then "应用". Enter applies only a previewed plan.
+ * parse chips, one preview card with the exit-IP line, then "应用". Below it the Raycast-style grouped rows
+ * (spec §9.5, [CommandResultList]). Enter applies the previewed plan, else runs the first row; with a hardware keyboard
+ * ↓ / Tab and ↑ / Shift+Tab move a highlight and Enter runs the highlighted row (J-3, iOS CommandView.move / submit).
  */
 @Composable
 fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (CommandAction) -> Unit) {
@@ -107,7 +121,46 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
         }.getOrNull()
     }
     val transform = remember(parsed, c) { TokenUnderline(parsed.spans, c.accent, c.connected, c.warning) }
-    val apply: (CommandPlan) -> Unit = { p -> if (p !is CommandPlan.NoNodes && !(p is CommandPlan.Uhd && p.unavailable)) onAction(CommandAction.Apply(p)) }
+    val applicable: (CommandPlan) -> Boolean = { p -> p !is CommandPlan.NoNodes && !(p is CommandPlan.Uhd && p.unavailable) }
+    val apply: (CommandPlan) -> Unit = { p -> if (applicable(p)) onAction(CommandAction.Apply(p)) }
+    val conn by remember { AppGraph.engine.connectionState() }.collectAsState(com.zephyr.engine.ConnectionState())
+    val scenes by remember { AppGraph.engine.scenes() }.collectAsState(emptyList())
+    val candidates = commandCandidates(conn, scenes)
+    val sceneById = scenes.associateBy { it.id }
+    val nodeRows = nodes?.second.orEmpty()
+    val ruleTitle = stringResource(R.string.command_test_rule, input.trim())
+    // Node rows belong to the committed text (nodes skips pinyin mid-composition), so they open that query (CodeAnt #295).
+    val nodeQuery = nodes?.let { committed.trim() }.orEmpty()
+    val groups = remember(input, candidates, nodeRows, nodeQuery, ruleTitle) {
+        val q = input.trim()
+        val entries = buildList<Triple<String, String?, CommandTarget>> {
+            if (q.isNotEmpty()) candidates.filter { CommandResults.matches(q, it) }.forEach { add(Triple(it.title, it.subtitle, it.target)) }
+            nodeRows.forEach { n -> add(Triple(n.name, listOfNotNull(n.region, n.latencyMs?.takeIf { it >= 0 }?.let { "$it ms" }).joinToString(" · "), CommandTarget.Nodes(nodeQuery, n.id))) }
+            if (looksLikeHost(q)) add(Triple(ruleTitle, null, CommandTarget.Rule(q)))
+        }
+        CommandResults.groups(CommandResults.rows(entries))
+    }
+    var expanded by remember { mutableStateOf(emptySet<CommandGroup>()) }
+    var highlighted by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(input) { highlighted = null; expanded = emptySet() }
+    val visibleKeys = CommandResults.visibleRows(groups, expanded).map { it.key }
+    LaunchedEffect(visibleKeys) { if (highlighted !in visibleKeys) highlighted = null }
+    val hasPrimary = plan?.let(applicable) == true
+    val run: (CommandRow) -> Unit = { row ->
+        when (val t = row.target) {
+            is CommandTarget.Mode -> onAction(CommandAction.SetMode(t.mode))
+            is CommandTarget.Toggle -> onAction(CommandAction.Toggle(t.connect))
+            is CommandTarget.Scene -> sceneById[t.id]?.let { onAction(CommandAction.OpenScene(it)) }
+            // Like iOS openNodeQuery: opens the node library on the query (nodeId only keeps row keys unique).
+            is CommandTarget.Nodes -> onAction(CommandAction.OpenNodes(t.query))
+            is CommandTarget.Page -> onAction(CommandAction.OpenPage(t.page))
+            is CommandTarget.Rule -> onAction(CommandAction.TestRule(t.input))
+        }
+    }
+    val submit: () -> Unit = {
+        val row = CommandResults.enterRow(groups, expanded, highlighted, hasPrimary)
+        if (row != null) run(row) else plan?.let(apply)
+    }
 
     AnimatedVisibility(visible, enter = fadeIn(ZAnim.standard()), exit = fadeOut(ZAnim.standard())) {
         // Review H-P2-11: tapping the scrim dismisses without the press-scale of zPressable (the whole screen shrank).
@@ -122,8 +175,21 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
         Column(Modifier.fillMaxSize().statusBarsPadding().imePadding().padding(horizontal = 12.dp).verticalScroll(rememberScrollState())) {
             Spacer(Modifier.height(12.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                ZSearchField(input, { input = it }, stringResource(R.string.command_placeholder), Modifier.weight(1f), focusRequester = focus, onComposingChange = { composing = it },
-                    onSubmit = { plan?.let(apply) }, visualTransformation = transform, large = true)
+                ZSearchField(input, { input = it }, stringResource(R.string.command_placeholder),
+                    Modifier.weight(1f).onPreviewKeyEvent { e ->
+                        // Hardware keyboard (§9.5). Keys the IME is composing with (pinyin) never reach here.
+                        if (e.type != KeyEventType.KeyDown || composing || input.isBlank()) return@onPreviewKeyEvent false
+                        val step = when {
+                            e.key == Key.DirectionDown || (e.key == Key.Tab && !e.isShiftPressed) -> 1
+                            e.key == Key.DirectionUp || (e.key == Key.Tab && e.isShiftPressed) -> -1
+                            e.key == Key.Enter || e.key == Key.NumPadEnter -> { submit(); return@onPreviewKeyEvent true }
+                            else -> return@onPreviewKeyEvent false
+                        }
+                        highlighted = CommandResults.moveHighlight(highlighted, visibleKeys, step, hasPrimary)
+                        true
+                    },
+                    focusRequester = focus, onComposingChange = { composing = it },
+                    onSubmit = submit, visualTransformation = transform, large = true)
                 Spacer(Modifier.width(4.dp))
                 ZText(stringResource(R.string.common_cancel), Modifier.zPressable(onClick = onDismiss).padding(horizontal = 8.dp, vertical = 14.dp), style = ZTheme.type.body, color = c.accentText)
             }
@@ -139,24 +205,43 @@ fun BoxScope.CommandOverlay(visible: Boolean, onDismiss: () -> Unit, onAction: (
                 Chips(parsed)
             }
             plan?.let { PlanCard(it, onApply = { apply(it) }) }
-            nodes?.let { (r, rows) ->
-                if (rows.isNotEmpty()) {
-                    Label(stringResource(R.string.common_nodes))
-                    rows.forEach { n -> NodeLine(n) { onAction(CommandAction.OpenNodes(input.trim())) } }
-                    ZText(stringResource(R.string.command_see_all_nodes, ZFormat.grouped(r.total)), Modifier.fillMaxWidth().zPressable(row = true, onClick = { onAction(CommandAction.OpenNodes(input.trim())) }).padding(horizontal = 14.dp, vertical = 12.dp),
-                        style = ZTheme.type.footnote, color = c.accentText)
-                }
-            }
-            if (looksLikeHost(input)) {
-                Label(stringResource(R.string.common_rules))
-                ZText(stringResource(R.string.command_test_rule, input.trim()), Modifier.fillMaxWidth().zPressable(row = true, onClick = { onAction(CommandAction.TestRule(input.trim())) }).padding(horizontal = 14.dp, vertical = 14.dp), style = ZTheme.type.body)
-            }
-            if (!parsed.hasChips && plan == null && nodes?.second.isNullOrEmpty() && !looksLikeHost(input) && nodes != null) {
+            CommandResultList(
+                groups, expanded, highlighted,
+                defaultKey = highlighted ?: if (hasPrimary) null else CommandResults.firstRow(groups)?.key,
+                onRun = run, onExpand = { expanded = expanded + it },
+                nodeFooter = nodes?.first?.total?.let { stringResource(R.string.command_see_all_nodes, ZFormat.grouped(it)) },
+                onNodeFooter = { onAction(CommandAction.OpenNodes(nodeQuery)) },
+            )
+            if (!parsed.hasChips && plan == null && groups.isEmpty() && nodes != null) {
                 ZText(stringResource(R.string.common_no_results), Modifier.fillMaxWidth().padding(vertical = 40.dp), style = ZTheme.type.body.copy(textAlign = androidx.compose.ui.text.style.TextAlign.Center), color = c.text3)
             }
             Spacer(Modifier.height(40.dp))
         }
     }
+}
+
+/**
+ * Searchable modes, connect / disconnect, scenes and pages (§9.5 groups ①②④). Commands match by prefix only, so typing
+ * 「连接」 while connected never offers 「断开连接」 as the Enter row; scenes and pages match anywhere in the name.
+ */
+@Composable
+private fun commandCandidates(conn: com.zephyr.engine.ConnectionState, scenes: List<com.zephyr.engine.Scene>): List<CommandCandidate> {
+    val on = conn.status == com.zephyr.engine.ConnectionStatus.CONNECTED || conn.status == com.zephyr.engine.ConnectionStatus.CONNECTING
+    val modes = listOf(
+        Triple(com.zephyr.engine.ProxyMode.RULE, R.string.common_mode_rule to R.string.common_mode_rule_hint, listOf("规则模式", "rule")),
+        Triple(com.zephyr.engine.ProxyMode.GLOBAL, R.string.common_mode_global to R.string.common_mode_global_hint, listOf("全局模式", "global")),
+        Triple(com.zephyr.engine.ProxyMode.DIRECT, R.string.common_mode_direct to R.string.common_mode_direct_hint, listOf("直连模式", "direct")),
+    ).map { (m, res, aliases) -> CommandCandidate(stringResource(res.first), stringResource(res.second), CommandTarget.Mode(m), aliases, prefix = true) }
+    val toggle = if (on) CommandCandidate(stringResource(R.string.common_disconnect), null, CommandTarget.Toggle(false), listOf("断开", "disconnect"), prefix = true)
+    else CommandCandidate(stringResource(R.string.common_connect), null, CommandTarget.Toggle(true), listOf("连接", "connect"), prefix = true)
+    val sceneRows = scenes.map { s -> CommandCandidate(s.displayName(), s.selected.name, CommandTarget.Scene(s.id)) }
+    val pages = listOf(
+        R.string.common_nodes to CommandPage.NODES, R.string.common_subscriptions to CommandPage.SUBSCRIPTIONS,
+        R.string.common_rules to CommandPage.RULES, R.string.common_settings to CommandPage.SETTINGS,
+        R.string.settings_trusted_wifi to CommandPage.TRUSTED_WIFI, R.string.settings_local_proxy to CommandPage.LOCAL_PROXY,
+        R.string.library_widgets to CommandPage.WIDGETS, R.string.logs_title to CommandPage.LOGS, R.string.settings_licenses to CommandPage.LICENSES,
+    ).map { (res, page) -> CommandCandidate(stringResource(res), null, CommandTarget.Page(page)) }
+    return modes + toggle + sceneRows + pages
 }
 
 @Composable
@@ -267,17 +352,6 @@ private fun IpLine(from: String, to: String) {
         }
         Spacer(Modifier.height(4.dp))
         ZText("$from → $to", style = ZTheme.type.monoSmall, color = c.text2)
-    }
-}
-
-@Composable
-private fun NodeLine(n: NodeSummary, onClick: () -> Unit) {
-    val c = ZTheme.colors
-    Row(Modifier.fillMaxWidth().zPressable(row = true, onClick = onClick).padding(horizontal = 14.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
-        ZText(n.region, style = ZTheme.type.monoSmall, color = c.text3)
-        Spacer(Modifier.width(10.dp))
-        ZText(n.name, Modifier.weight(1f), style = ZTheme.type.body, maxLines = 1)
-        n.latencyMs?.let { ZText("$it ms", style = ZTheme.type.numeric.copy(fontSize = ZTheme.type.footnote.fontSize), color = c.text3) }
     }
 }
 

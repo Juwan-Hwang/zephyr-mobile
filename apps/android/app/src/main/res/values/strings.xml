@@ -177,6 +177,9 @@
     <string name="scene_funnel_reachable">Reachable</string>
     <string name="scene_funnel_under">Under %1$d ms</string>
     <string name="home_mini_funnel_a11y">%1$s reachable, %2$s under 200 milliseconds</string>
+    <!-- Scene sheet latency tick bar (spec §9.6): trailing timeout count; TalkBack summary of the bar -->
+    <string name="scene_tickbar_timeouts">Timed out: %1$s</string>
+    <string name="scene_tickbar_a11y">%1$s candidates, %2$s under 200 milliseconds, %3$s timed out</string>
     <string name="scene_note">Picks are saved only in Zephyr. Your subscription configuration isn’t changed.</string>
     <!-- %1$s is scene_note, %2$s a relative time ("5 min ago") -->
     <string name="scene_note_tested">%1$s Last tested %2$s.</string>
@@ -195,6 +198,11 @@
     <string name="command_see_all_nodes">See all %1$s in the node library</string>
     <!-- %1$s is a domain or IP -->
     <string name="command_test_rule">Where does %1$s go?</string>
+    <string name="command_group_rule_test">Rule Test</string>
+    <string name="command_action_open">Open</string>
+    <string name="command_action_test">Test</string>
+    <string name="command_show_all">Show all %1$s</string>
+    <string name="command_enter_hint">Press Enter to run</string>
     <string name="command_chip_scene">Scene</string>
     <string name="command_chip_service">Service</string>
     <string name="command_chip_region">Region</string>
@@ -321,6 +329,8 @@
     <string name="nodes_empty_action">Import subscription</string>
     <string name="nodes_no_match">No nodes match “%1$s”</string>
     <string name="nodes_tested">%1$s tested</string>
+    <string name="nodes_judgement">%1$s reachable · %2$s tested</string>
+    <string name="nodes_untested_hint">Not tested yet — visible nodes are tested when you stop scrolling</string>
     <!-- Accessibility: region index entry, %1$s is a region code -->
     <string name="nodes_jump_to">Jump to %1$s</string>
     <string name="nodes_detail_protocol">Protocol</string>

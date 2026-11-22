@@ -161,9 +161,11 @@
     <string name="scene_pinned_value">%1$s (закреплён)</string>
     <string name="scene_retest">Проверить снова</string>
     <string name="scene_funnel_tested">Проверено</string>
-    <string name="scene_funnel_reachable">Доступно</string>
+    <string name="scene_funnel_reachable">Доступны</string>
     <string name="scene_funnel_under">Менее %1$d мс</string>
     <string name="home_mini_funnel_a11y">Доступны: %1$s, быстрее 200 миллисекунд: %2$s</string>
+    <string name="scene_tickbar_timeouts">Тайм-аут: %1$s</string>
+    <string name="scene_tickbar_a11y">Кандидатов: %1$s, быстрее 200 миллисекунд: %2$s, тайм-аут: %3$s</string>
     <string name="scene_note">Результаты выбора сохраняются только в Zephyr. Конфигурация подписки не меняется.</string>
     <string name="scene_note_tested">%1$s Последняя проверка: %2$s.</string>
     <string name="command_placeholder">Поиск или команда</string>
@@ -176,6 +178,11 @@
     </string-array>
     <string name="command_see_all_nodes">Все узлы (%1$s) в библиотеке</string>
     <string name="command_test_rule">Куда пойдёт %1$s?</string>
+    <string name="command_group_rule_test">Проверка правил</string>
+    <string name="command_action_open">Открыть</string>
+    <string name="command_action_test">Проверить</string>
+    <string name="command_show_all">Показать все (%1$s)</string>
+    <string name="command_enter_hint">Нажмите Enter, чтобы выполнить</string>
     <string name="command_chip_scene">Сценарий</string>
     <string name="command_chip_service">Сервис</string>
     <string name="command_chip_region">Регион</string>
@@ -306,6 +313,8 @@
     <string name="nodes_empty_action">Импортировать подписку</string>
     <string name="nodes_no_match">Нет узлов по запросу «%1$s»</string>
     <string name="nodes_tested">Проверено: %1$s</string>
+    <string name="nodes_judgement">Доступны: %1$s · Проверено: %2$s</string>
+    <string name="nodes_untested_hint">Ещё не проверено — видимые узлы проверяются, когда вы перестаёте прокручивать</string>
     <string name="nodes_jump_to">Перейти к %1$s</string>
     <string name="nodes_detail_protocol">Протокол</string>
     <string name="nodes_detail_latency">Задержка</string>

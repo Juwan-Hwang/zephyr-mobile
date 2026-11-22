@@ -148,6 +148,8 @@
     <string name="scene_funnel_reachable">Erişilebilir</string>
     <string name="scene_funnel_under">%1$d ms altı</string>
     <string name="home_mini_funnel_a11y">Erişilebilir %1$s, 200 milisaniyenin altında %2$s</string>
+    <string name="scene_tickbar_timeouts">Zaman aşımı: %1$s</string>
+    <string name="scene_tickbar_a11y">%1$s aday, %2$s tanesi 200 milisaniyenin altında, %3$s zaman aşımı</string>
     <string name="scene_note">Seçimler yalnızca Zephyr’de saklanır. Abonelik yapılandırmanız değişmez.</string>
     <string name="scene_note_tested">%1$s Son test: %2$s.</string>
     <string name="command_placeholder">Arayın veya komut girin</string>
@@ -160,6 +162,11 @@
     </string-array>
     <string name="command_see_all_nodes">Düğüm kütüphanesinde %1$s düğümün tümünü gör</string>
     <string name="command_test_rule">%1$s nereden geçiyor?</string>
+    <string name="command_group_rule_test">Kural testi</string>
+    <string name="command_action_open">Aç</string>
+    <string name="command_action_test">Test et</string>
+    <string name="command_show_all">Tümünü göster (%1$s)</string>
+    <string name="command_enter_hint">Çalıştırmak için Enter\'a basın</string>
     <string name="command_chip_scene">Senaryo</string>
     <string name="command_chip_service">Hizmet</string>
     <string name="command_chip_region">Bölge</string>
@@ -268,6 +275,8 @@
     <string name="nodes_empty_action">Abonelik içe aktar</string>
     <string name="nodes_no_match">“%1$s” ile eşleşen düğüm yok</string>
     <string name="nodes_tested">%1$s test edildi</string>
+    <string name="nodes_judgement">%1$s erişilebilir · %2$s test edildi</string>
+    <string name="nodes_untested_hint">Henüz test edilmedi — kaydırmayı bıraktığınızda görünen düğümler test edilir</string>
     <string name="nodes_jump_to">%1$s bölümüne git</string>
     <string name="nodes_detail_protocol">Protokol</string>
     <string name="nodes_detail_latency">Gecikme</string>

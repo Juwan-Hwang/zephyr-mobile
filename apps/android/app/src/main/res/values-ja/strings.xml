@@ -140,6 +140,8 @@
     <string name="scene_funnel_reachable">接続可能</string>
     <string name="scene_funnel_under">%1$d ms 未満</string>
     <string name="home_mini_funnel_a11y">接続可能 %1$s、200 ミリ秒未満 %2$s</string>
+    <string name="scene_tickbar_timeouts">タイムアウト %1$s</string>
+    <string name="scene_tickbar_a11y">候補 %1$s 件、200 ミリ秒未満 %2$s 件、タイムアウト %3$s 件</string>
     <string name="scene_note">おすすめの結果は Zephyr 内にのみ保存されます。サブスクリプションの構成は変更されません。</string>
     <string name="scene_note_tested">%1$s最終テスト：%2$s。</string>
     <string name="command_placeholder">検索またはコマンドを入力</string>
@@ -152,6 +154,11 @@
     </string-array>
     <string name="command_see_all_nodes">ノードライブラリで%1$s個すべてを表示</string>
     <string name="command_test_rule">%1$sの経路は？</string>
+    <string name="command_group_rule_test">ルールテスト</string>
+    <string name="command_action_open">開く</string>
+    <string name="command_action_test">テスト</string>
+    <string name="command_show_all">すべて表示（%1$s 件）</string>
+    <string name="command_enter_hint">Enter キーで実行</string>
     <string name="command_chip_scene">シーン</string>
     <string name="command_chip_service">サービス</string>
     <string name="command_chip_region">地域</string>
@@ -249,6 +256,8 @@
     <string name="nodes_empty_action">サブスクリプションをインポート</string>
     <string name="nodes_no_match">「%1$s」に一致するノードはありません</string>
     <string name="nodes_tested">%1$s テスト済み</string>
+    <string name="nodes_judgement">%1$s 接続可能 · %2$s テスト済み</string>
+    <string name="nodes_untested_hint">未テスト — スクロールを止めると表示中のノードを自動でテストします</string>
     <string name="nodes_jump_to">%1$sへ移動</string>
     <string name="nodes_detail_protocol">プロトコル</string>
     <string name="nodes_detail_latency">レイテンシ</string>
