@@ -71,7 +71,7 @@ extension CoreEngine {
         for m in Self.commandModes where CommandMatch.action(q, names: m.2 + [Self.switchModeTitle(m.1)]) {
             out.append(CommandSuggestion(kind: .switchMode, title: Self.switchModeTitle(m.1), subtitle: nil, payload: m.1.rawValue))
         }
-        if CommandMatch.action(q, names: CommandMatch.toggleAliases + [toggle.title]) { out.append(toggle) }
+        if CommandMatch.action(q, names: CommandMatch.toggleAliases(connected: on) + [toggle.title]) { out.append(toggle) }
 
         if !Self.looksLikeHost(q), let r = try? await queryNodes(query: q), r.total > 0, !r.highlights.isEmpty {
             out.append(CommandSuggestion(kind: .openNodeQuery, title: ZL.s("在节点库中查找“%@”", raw),

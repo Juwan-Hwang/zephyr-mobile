@@ -27,6 +27,10 @@ public enum CommandMatch {
         return names.contains { normalize($0).contains(q) }
     }
 
-    /// 连接 / 断开的别名（两端一致：含「开」「关」整词）。
-    public static let toggleAliases = ["连接", "断开", "connect", "disconnect", "开", "关"]
+    /// 连接 / 断开的别名，按当前状态只取一组（与 Android CommandResults.CONNECT_ALIASES / DISCONNECT_ALIASES 同词）：
+    /// 未连接时行是「连接」，只认连接类别名；已连接时行是「断开连接」，只认断开类别名。
+    /// 否则未连接时输入 di / 断开 会出一条实际执行「连接」的行（CodeAnt #301）。「开」「关」只能整词命中。
+    public static let connectAliases = ["连接", "connect", "开"]
+    public static let disconnectAliases = ["断开", "disconnect", "关"]
+    public static func toggleAliases(connected: Bool) -> [String] { connected ? disconnectAliases : connectAliases }
 }
