@@ -135,7 +135,7 @@ object CommandResults {
 
 /**
  * The grouped list. [defaultKey] is the row Enter runs (bold label + TalkBack hint), [highlighted] the keyboard row
- * (surface3 fill). [nodeTotal] > the node rows shown adds the node library footer instead of expanding in place.
+ * (t1 8% wash). [nodeTotal] > the node rows shown adds the node library footer instead of expanding in place.
  */
 @Composable
 fun CommandResultList(
@@ -183,7 +183,8 @@ private fun ResultRow(row: CommandRow, isDefault: Boolean, isHighlighted: Boolea
     Row(
         Modifier.fillMaxWidth()
             .bringIntoViewRequester(bring)
-            .then(if (isHighlighted) Modifier.background(c.surface3) else Modifier)
+            // iOS screen.pressed: a t1 wash reads on both s2 cards (surface3 is near-invisible on dark s2).
+            .then(if (isHighlighted) Modifier.background(c.text1.copy(alpha = 0.08f)) else Modifier)
             .zPressable(row = true, label = verb, onClick = onClick)
             .semantics { selected = isHighlighted; if (hint != null) stateDescription = hint }
             .padding(horizontal = 18.dp, vertical = 14.dp),
@@ -197,7 +198,7 @@ private fun ResultRow(row: CommandRow, isDefault: Boolean, isHighlighted: Boolea
         }
         Spacer(Modifier.width(10.dp))
         // §9.5: footnote, accent.*.text, no fill; Android marks the Enter row with a bold label instead of a ⏎ keycap.
-        ZText(verb, style = if (isDefault) ZTheme.type.footnote.copy(fontWeight = FontWeight.SemiBold) else ZTheme.type.footnote,
+        ZText(verb, style = if (isDefault) ZTheme.type.footnote.copy(fontWeight = FontWeight.Bold) else ZTheme.type.footnote,
             color = c.accentText, maxLines = 1)
     }
 }
