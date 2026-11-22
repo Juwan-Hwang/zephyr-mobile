@@ -58,7 +58,7 @@ enum MockCommands {
             out.append(CommandSuggestion(kind: .switchMode, title: "切换到\(m.0)模式", subtitle: nil, payload: m.1.rawValue))
         }
 
-        if CommandMatch.action(q, names: CommandMatch.toggleAliases + [toggle.title]) { out.append(toggle) }
+        if CommandMatch.action(q, names: CommandMatch.toggleAliases(connected: on) + [toggle.title]) { out.append(toggle) }
 
         let model = MockQuery.build(q)
         if !model.highlights.isEmpty && model.total > 0 {
