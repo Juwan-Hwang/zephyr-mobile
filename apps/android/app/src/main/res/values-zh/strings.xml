@@ -508,4 +508,8 @@
     <string name="connect_no_subscription">还没有订阅</string>
     <!-- Contract §16.c: the settings write failed and the change was rolled back. -->
     <string name="settings_save_failed">未能保存设置</string>
+    <!-- Contract §18.b status terms (glossary state.ok / state.expired / state.failed) -->
+    <string name="state_ok">正常</string>
+    <string name="state_expired">已过期</string>
+    <string name="state_failed">失败</string>
 </resources>

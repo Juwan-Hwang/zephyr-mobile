@@ -473,4 +473,8 @@
     <string name="connect_no_subscription">စာရင်းသွင်းမှု မရှိသေးပါ</string>
     <!-- Contract §16.c: the settings write failed and the change was rolled back. -->
     <string name="settings_save_failed">ဆက်တင်ကို သိမ်း၍မရပါ</string>
+    <!-- Contract §18.b status terms (glossary state.ok / state.expired / state.failed) -->
+    <string name="state_ok">ပုံမှန်</string>
+    <string name="state_expired">သက်တမ်းကုန်ပြီ</string>
+    <string name="state_failed">မအောင်မြင်ပါ</string>
 </resources>

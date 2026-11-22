@@ -575,4 +575,8 @@
     <string name="connect_no_subscription">Подписок пока нет</string>
     <!-- Contract §16.c: the settings write failed and the change was rolled back. -->
     <string name="settings_save_failed">Не удалось сохранить настройку</string>
+    <!-- Contract §18.b status terms (glossary state.ok / state.expired / state.failed) -->
+    <string name="state_ok">Норма</string>
+    <string name="state_expired">Истёк</string>
+    <string name="state_failed">Ошибка</string>
 </resources>

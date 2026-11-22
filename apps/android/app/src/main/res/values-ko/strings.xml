@@ -473,4 +473,8 @@
     <string name="connect_no_subscription">아직 구독이 없습니다</string>
     <!-- Contract §16.c: the settings write failed and the change was rolled back. -->
     <string name="settings_save_failed">설정을 저장하지 못했습니다</string>
+    <!-- Contract §18.b status terms (glossary state.ok / state.expired / state.failed) -->
+    <string name="state_ok">정상</string>
+    <string name="state_expired">만료됨</string>
+    <string name="state_failed">실패</string>
 </resources>

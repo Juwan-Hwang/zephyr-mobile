@@ -114,8 +114,9 @@ object ZFormat {
      * Expiries 1–6 days out read as the weekday with [weekday] (home card, review H-P2-7), otherwise as the month and
      * day ("Expires Nov 9" / "11月9日到期", prototype subscriptions page; iOS ZFormat.expiry).
      */
-    fun expires(res: Resources, at: Long, now: Long, weekday: Boolean = false, zone: java.time.ZoneId = java.time.ZoneId.systemDefault()): String {
-        if (at <= now) return res.getString(R.string.common_expiry_expired)
+    fun expires(res: Resources, at: Long, now: Long, weekday: Boolean = false, zone: java.time.ZoneId = java.time.ZoneId.systemDefault(), expired: String? = null): String {
+        // `expired`: the App passes its glossary term state_expired (contract §18.b); the design module keeps its own fallback.
+        if (at <= now) return expired ?: res.getString(R.string.common_expiry_expired)
         val due = java.time.Instant.ofEpochMilli(at).atZone(zone).toLocalDate()
         val days = java.time.temporal.ChronoUnit.DAYS.between(java.time.Instant.ofEpochMilli(now).atZone(zone).toLocalDate(), due)
         return when {

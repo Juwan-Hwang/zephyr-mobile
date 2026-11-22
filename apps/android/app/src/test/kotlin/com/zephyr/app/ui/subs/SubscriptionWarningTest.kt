@@ -34,4 +34,12 @@ class SubscriptionWarningTest {
         assertFalse(SubscriptionWarning.isWarning(sub(null, 80, 0), now, zone))
         assertFalse(SubscriptionWarning.isWarning(sub(null, 80, null), now, zone))
     }
+
+    @Test fun expiredIsAtOrBeforeNow() {
+        val now = at(2026, 11, 22)
+        assertTrue(SubscriptionWarning.expired(now, now))
+        assertTrue(SubscriptionWarning.expired(now - 1, now))
+        assertFalse(SubscriptionWarning.expired(now + 1, now))
+        assertFalse(SubscriptionWarning.expired(null, now))
+    }
 }
