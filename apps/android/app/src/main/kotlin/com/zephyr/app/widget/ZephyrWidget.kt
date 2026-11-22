@@ -62,7 +62,7 @@ import androidx.glance.action.actionStartActivity
  * power button connects/disconnects.
  */
 class ZephyrWidget : GlanceAppWidget() {
-    override val sizeMode = SizeMode.Responsive(setOf(SMALL, MEDIUM))
+    override val sizeMode = SizeMode.Responsive(setOf(SMALL, MEDIUM, SMALL_TALL, MEDIUM_TALL))
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         AppGraph.init(context)
@@ -96,9 +96,13 @@ class ZephyrWidget : GlanceAppWidget() {
         val pwBg = ColorProvider(day = Color(0x0F000000), night = Color(0x1AFFFFFF))
         val accent = ColorProvider(day = Color(0xFF007AFF), night = Color(0xFF0A84FF))
         val wide = LocalSize.current.width >= MEDIUM.width
+        // And-8: a 110 dp tall cell leaves ~86 dp for content, but power row + title + detail + 「今日」 need ~133 dp,
+        // so RemoteViews clipped the last lines. Below TALL_MIN the card keeps power row + title + detail only
+        // (tighter padding, 22sp title) and the scene column shows two rows; 「今日」 returns once the cell is tall enough.
+        val compact = LocalSize.current.height < TALL_MIN
         val (tv, tu) = ZFormat.bytes(today)
         Row(
-            GlanceModifier.fillMaxSize().background(bg).cornerRadius(24.dp).padding(16.dp).clickable(actionStartActivity<MainActivity>()),
+            GlanceModifier.fillMaxSize().background(bg).cornerRadius(24.dp).padding(if (compact) 12.dp else 16.dp).clickable(actionStartActivity<MainActivity>()),
         ) {
             Column(GlanceModifier.defaultWeight()) {
                 Row(GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -121,16 +125,18 @@ class ZephyrWidget : GlanceAppWidget() {
                     }
                 }
                 Spacer(GlanceModifier.defaultWeight())
-                Text(title, style = TextStyle(color = t1, fontSize = 24.sp), maxLines = 1)
+                Text(title, style = TextStyle(color = t1, fontSize = if (compact) 22.sp else 24.sp), maxLines = 1)
                 Text(detail, style = TextStyle(color = t2, fontSize = 12.sp), maxLines = 1)
-                Spacer(GlanceModifier.height(6.dp))
-                Text(ctx.getString(R.string.widget_today, tv, tu), style = TextStyle(color = t3, fontSize = 12.sp), maxLines = 1)
+                if (!compact) {
+                    Spacer(GlanceModifier.height(6.dp))
+                    Text(ctx.getString(R.string.widget_today, tv, tu), style = TextStyle(color = t3, fontSize = 12.sp), maxLines = 1)
+                }
             }
             if (wide) {
                 Spacer(GlanceModifier.width(16.dp))
                 Column(GlanceModifier.defaultWeight()) {
                     Text(ctx.getString(R.string.common_scenes), style = TextStyle(color = t3, fontSize = 12.sp))
-                    scenes.take(3).forEach { s ->
+                    scenes.take(if (compact) 2 else 3).forEach { s ->
                         Spacer(GlanceModifier.height(8.dp))
                         Row(GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                             Text(ctx.resources.sceneName(s), style = TextStyle(color = t2, fontSize = 13.sp), modifier = GlanceModifier.width(40.dp))
@@ -148,6 +154,11 @@ class ZephyrWidget : GlanceAppWidget() {
     companion object {
         val SMALL = DpSize(110.dp, 110.dp)
         val MEDIUM = DpSize(250.dp, 110.dp)
+        val SMALL_TALL = DpSize(110.dp, 150.dp)
+        val MEDIUM_TALL = DpSize(250.dp, 150.dp)
+
+        /** Below this cell height the status card drops the 「今日」 line (content would clip). */
+        val TALL_MIN = 140.dp
 
         suspend fun refreshAll(ctx: Context) {
             runCatching { ZephyrWidget().updateAll(ctx) }
