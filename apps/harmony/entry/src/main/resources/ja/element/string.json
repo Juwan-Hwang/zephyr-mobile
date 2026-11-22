@@ -29,6 +29,14 @@
       "value": "最近の接続"
     },
     {
+      "name": "command_action_open",
+      "value": "開く"
+    },
+    {
+      "name": "command_action_test",
+      "value": "テスト"
+    },
+    {
       "name": "command_chip_action",
       "value": "操作"
     },
@@ -55,6 +63,14 @@
     {
       "name": "command_direct_title",
       "value": "%1$sをダイレクト接続"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "Enter キーで実行"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "ルールテスト"
     },
     {
       "name": "command_no_nodes_available",
@@ -135,6 +151,10 @@
     {
       "name": "command_see_all_nodes",
       "value": "ノードライブラリで%1$s個すべてを表示"
+    },
+    {
+      "name": "command_show_all",
+      "value": "すべて表示（%1$s 件）"
     },
     {
       "name": "command_test_rule",
@@ -637,6 +657,10 @@
       "value": "ノードを読み込めませんでした"
     },
     {
+      "name": "nodes_judgement",
+      "value": "%1$s 接続可能 · %2$s テスト済み"
+    },
+    {
       "name": "nodes_jump_to",
       "value": "%1$sへ移動"
     },
@@ -651,6 +675,10 @@
     {
       "name": "nodes_search_stats",
       "value": "%1$s件 · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "未テスト — スクロールを止めると表示中のノードを自動でテストします"
     },
     {
       "name": "notif_action_global",
@@ -839,6 +867,14 @@
     {
       "name": "scene_tested_from_pool",
       "value": "%1$d件のサブスクリプションから%2$s個のノードをテスト"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "候補 %1$s 件、200 ミリ秒未満 %2$s 件、タイムアウト %3$s 件"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "タイムアウト %1$s"
     },
     {
       "name": "scene_uhd_only",

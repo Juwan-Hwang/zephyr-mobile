@@ -319,7 +319,7 @@ export struct CommandSheet {
       case CommandGroup.SETTINGS:
         return ZTerm.settings;
       default:
-        return $r('app.string.hm_command_group_rule_test');
+        return $r('app.string.command_group_rule_test');
     }
   }
 
@@ -327,7 +327,7 @@ export struct CommandSheet {
     if (v === CommandVerb.APPLY) {
       return ZTerm.apply;
     }
-    return v === CommandVerb.TEST ? $r('app.string.hm_command_action_test') : $r('app.string.hm_command_action_open');
+    return v === CommandVerb.TEST ? $r('app.string.command_action_test') : $r('app.string.command_action_open');
   }
 
   private rowSymbol(k: CommandTargetKind): Resource {
@@ -696,7 +696,7 @@ export struct CommandSheet {
         }, (row: CommandRow) => row.key + (row.key === defaultKey ? '*' : '') + (row.key === this.highlighted ? '^' : ''))
         if (CommandResults.shown(g, this.expanded).length < g.rows.length) {
           Divider().strokeWidth(0.5).color($r('app.color.screen_hl'))
-          this.footer($r('app.string.hm_command_show_all', String(g.rows.length)), () => {
+          this.footer($r('app.string.command_show_all', String(g.rows.length)), () => {
             this.expanded = this.expanded.concat([g.group]);
           })
         } else if (g.group === CommandGroup.NODE && this.nodeTotal > g.rows.length) {
@@ -763,7 +763,7 @@ export struct CommandSheet {
     .backgroundColor(isHighlighted ? $r('app.color.screen_pressed') : Color.Transparent)
     .accessibilityGroup(true)
     .accessibilityRole(AccessibilityRoleType.BUTTON)
-    .accessibilityDescription(isDefault ? getContext(this).resourceManager.getStringSync($r('app.string.hm_command_enter_hint').id) : '')
+    .accessibilityDescription(isDefault ? getContext(this).resourceManager.getStringSync($r('app.string.command_enter_hint').id) : '')
     .accessibilitySelected(isHighlighted)
     .onClick(() => this.run(row))
   }

@@ -29,6 +29,14 @@
       "value": "မကြာသေးမီ ချိတ်ဆက်မှုများ"
     },
     {
+      "name": "command_action_open",
+      "value": "ဖွင့်ရန်"
+    },
+    {
+      "name": "command_action_test",
+      "value": "စမ်းသပ်"
+    },
+    {
       "name": "command_chip_action",
       "value": "လုပ်ဆောင်ချက်"
     },
@@ -55,6 +63,14 @@
     {
       "name": "command_direct_title",
       "value": "%1$s ကို တိုက်ရိုက် ချိတ်ဆက်ရန်"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "လုပ်ဆောင်ရန် Enter ကိုနှိပ်ပါ"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "စည်းမျဉ်း စမ်းသပ်ချက်"
     },
     {
       "name": "command_no_nodes_available",
@@ -135,6 +151,10 @@
     {
       "name": "command_see_all_nodes",
       "value": "နုဒ် စုစည်းမှုတွင် %1$s ခုလုံး ကြည့်ရန်"
+    },
+    {
+      "name": "command_show_all",
+      "value": "အားလုံးပြရန် (%1$s)"
     },
     {
       "name": "command_test_rule",
@@ -637,6 +657,10 @@
       "value": "နုဒ်များကို ဖွင့်၍ မရပါ"
     },
     {
+      "name": "nodes_judgement",
+      "value": "%1$s ခု ချိတ်ဆက်နိုင် · %2$s ခု စမ်းပြီး"
+    },
+    {
       "name": "nodes_jump_to",
       "value": "%1$s သို့ သွားရန်"
     },
@@ -651,6 +675,10 @@
     {
       "name": "nodes_search_stats",
       "value": "%1$s ခု · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "မစမ်းရသေးပါ — လှိမ့်ခြင်း ရပ်လိုက်လျှင် မြင်ရသော နုဒ်များကို အလိုအလျောက် စမ်းသပ်မည်"
     },
     {
       "name": "notif_action_global",
@@ -839,6 +867,14 @@
     {
       "name": "scene_tested_from_pool",
       "value": "စာရင်းသွင်းမှု %1$d ခုမှ နုဒ် %2$s ခုကို စမ်းသပ်ပြီး"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "ရွေးချယ်စရာ %1$s ခု၊ မီလီစက္ကန့် 200 အောက် %2$s ခု၊ အချိန်ကုန် %3$s ခု"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "အချိန်ကုန်: %1$s"
     },
     {
       "name": "scene_uhd_only",

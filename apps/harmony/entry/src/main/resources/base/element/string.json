@@ -29,6 +29,14 @@
       "value": "Recent connections"
     },
     {
+      "name": "command_action_open",
+      "value": "Open"
+    },
+    {
+      "name": "command_action_test",
+      "value": "Test"
+    },
+    {
       "name": "command_chip_action",
       "value": "Action"
     },
@@ -55,6 +63,14 @@
     {
       "name": "command_direct_title",
       "value": "Connect %1$s directly"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "Press Enter to run"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "Rule Test"
     },
     {
       "name": "command_no_nodes_available",
@@ -135,6 +151,10 @@
     {
       "name": "command_see_all_nodes",
       "value": "See all %1$s in the node library"
+    },
+    {
+      "name": "command_show_all",
+      "value": "Show all %1$s"
     },
     {
       "name": "command_test_rule",
@@ -321,26 +341,6 @@
       "value": "Service widgets"
     },
     {
-      "name": "hm_command_action_open",
-      "value": "Open"
-    },
-    {
-      "name": "hm_command_action_test",
-      "value": "Test"
-    },
-    {
-      "name": "hm_command_enter_hint",
-      "value": "Press Enter to run"
-    },
-    {
-      "name": "hm_command_group_rule_test",
-      "value": "Rule Test"
-    },
-    {
-      "name": "hm_command_show_all",
-      "value": "Show all %1$s"
-    },
-    {
       "name": "hm_error_generic",
       "value": "Something went wrong"
     },
@@ -375,10 +375,6 @@
     {
       "name": "hm_latency_timeout",
       "value": "Timeout"
-    },
-    {
-      "name": "hm_nodes_untested",
-      "value": "Not tested yet — visible nodes are tested when you stop scrolling"
     },
     {
       "name": "hm_number_myriad",
@@ -435,14 +431,6 @@
     {
       "name": "hm_term_number_order",
       "value": "number_first"
-    },
-    {
-      "name": "hm_ticks_a11y",
-      "value": "%1$d candidates, %2$d under 200 ms, %3$d timed out"
-    },
-    {
-      "name": "hm_ticks_timeouts",
-      "value": "Timed out %1$d"
     },
     {
       "name": "hm_time_days_ago",
@@ -809,6 +797,10 @@
       "value": "Couldn’t load nodes"
     },
     {
+      "name": "nodes_judgement",
+      "value": "%1$s reachable · %2$s tested"
+    },
+    {
       "name": "nodes_jump_to",
       "value": "Jump to %1$s"
     },
@@ -823,6 +815,10 @@
     {
       "name": "nodes_search_stats",
       "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "Not tested yet — visible nodes are tested when you stop scrolling"
     },
     {
       "name": "notif_action_global",
@@ -1011,6 +1007,14 @@
     {
       "name": "scene_tested_from_pool",
       "value": "Tested %2$s nodes from %1$d subscriptions"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "%1$s candidates, %2$s under 200 milliseconds, %3$s timed out"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "Timed out: %1$s"
     },
     {
       "name": "scene_uhd_only",

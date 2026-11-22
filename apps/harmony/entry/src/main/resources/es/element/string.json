@@ -29,6 +29,14 @@
       "value": "Conexiones recientes"
     },
     {
+      "name": "command_action_open",
+      "value": "Abrir"
+    },
+    {
+      "name": "command_action_test",
+      "value": "Probar"
+    },
+    {
       "name": "command_chip_action",
       "value": "Acción"
     },
@@ -55,6 +63,14 @@
     {
       "name": "command_direct_title",
       "value": "Conectar %1$s directamente"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "Pulsa Intro para ejecutar"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "Prueba de reglas"
     },
     {
       "name": "command_no_nodes_available",
@@ -135,6 +151,10 @@
     {
       "name": "command_see_all_nodes",
       "value": "Ver los %1$s en la biblioteca de nodos"
+    },
+    {
+      "name": "command_show_all",
+      "value": "Mostrar todo (%1$s)"
     },
     {
       "name": "command_test_rule",
@@ -637,6 +657,10 @@
       "value": "No se pudieron cargar los nodos"
     },
     {
+      "name": "nodes_judgement",
+      "value": "%1$s accesibles · %2$s probados"
+    },
+    {
       "name": "nodes_jump_to",
       "value": "Ir a %1$s"
     },
@@ -651,6 +675,10 @@
     {
       "name": "nodes_search_stats",
       "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "Sin probar aún: los nodos visibles se prueban al dejar de desplazarte"
     },
     {
       "name": "notif_action_global",
@@ -839,6 +867,14 @@
     {
       "name": "scene_tested_from_pool",
       "value": "%2$s nodos probados de %1$d suscripciones"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "%1$s candidatos, %2$s por debajo de 200 milisegundos, %3$s con tiempo agotado"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "Tiempo agotado: %1$s"
     },
     {
       "name": "scene_uhd_only",

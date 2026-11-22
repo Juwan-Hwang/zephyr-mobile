@@ -29,6 +29,14 @@
       "value": "最近连接"
     },
     {
+      "name": "command_action_open",
+      "value": "打开"
+    },
+    {
+      "name": "command_action_test",
+      "value": "测试"
+    },
+    {
       "name": "command_chip_action",
       "value": "操作"
     },
@@ -55,6 +63,14 @@
     {
       "name": "command_direct_title",
       "value": "%1$s 直连"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "按回车执行"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "规则测试"
     },
     {
       "name": "command_no_nodes_available",
@@ -135,6 +151,10 @@
     {
       "name": "command_see_all_nodes",
       "value": "在节点库中查看全部 %1$s 个"
+    },
+    {
+      "name": "command_show_all",
+      "value": "显示全部 %1$s 项"
     },
     {
       "name": "command_test_rule",
@@ -317,26 +337,6 @@
       "value": "服务卡片"
     },
     {
-      "name": "hm_command_action_open",
-      "value": "打开"
-    },
-    {
-      "name": "hm_command_action_test",
-      "value": "测试"
-    },
-    {
-      "name": "hm_command_enter_hint",
-      "value": "按回车执行"
-    },
-    {
-      "name": "hm_command_group_rule_test",
-      "value": "规则测试"
-    },
-    {
-      "name": "hm_command_show_all",
-      "value": "显示全部 %1$s 项"
-    },
-    {
       "name": "hm_error_generic",
       "value": "出错了"
     },
@@ -371,10 +371,6 @@
     {
       "name": "hm_latency_timeout",
       "value": "超时"
-    },
-    {
-      "name": "hm_nodes_untested",
-      "value": "尚未检测，停止滚动后自动测可见节点"
     },
     {
       "name": "hm_number_myriad",
@@ -431,14 +427,6 @@
     {
       "name": "hm_term_number_order",
       "value": "term_first"
-    },
-    {
-      "name": "hm_ticks_a11y",
-      "value": "%1$d 个候选，%2$d 个低于 200 毫秒，超时 %3$d"
-    },
-    {
-      "name": "hm_ticks_timeouts",
-      "value": "超时 %1$d"
     },
     {
       "name": "hm_time_days_ago",
@@ -805,6 +793,10 @@
       "value": "节点加载失败"
     },
     {
+      "name": "nodes_judgement",
+      "value": "可连通 %1$s · 已检测 %2$s"
+    },
+    {
       "name": "nodes_jump_to",
       "value": "跳到 %1$s"
     },
@@ -819,6 +811,10 @@
     {
       "name": "nodes_search_stats",
       "value": "%1$s 个 · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "尚未检测，停止滚动后自动测可见节点"
     },
     {
       "name": "notif_action_global",
@@ -1007,6 +1003,14 @@
     {
       "name": "scene_tested_from_pool",
       "value": "检测自 %1$d 个订阅中的 %2$s 个节点"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "%1$s 个候选，%2$s 个低于 200 毫秒，超时 %3$s"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "超时 %1$s"
     },
     {
       "name": "scene_uhd_only",

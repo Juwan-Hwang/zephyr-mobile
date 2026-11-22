@@ -29,6 +29,14 @@
       "value": "حالیہ کنکشنز"
     },
     {
+      "name": "command_action_open",
+      "value": "کھولیں"
+    },
+    {
+      "name": "command_action_test",
+      "value": "جانچیں"
+    },
+    {
       "name": "command_chip_action",
       "value": "عمل"
     },
@@ -55,6 +63,14 @@
     {
       "name": "command_direct_title",
       "value": "\\u2068%1$s\\u2069 کو براہ راست منسلک کریں"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "چلانے کے لیے Enter دبائیں"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "اصول کی جانچ"
     },
     {
       "name": "command_no_nodes_available",
@@ -135,6 +151,10 @@
     {
       "name": "command_see_all_nodes",
       "value": "نوڈ لائبریری میں تمام \\u2068%1$s\\u2069 دیکھیں"
+    },
+    {
+      "name": "command_show_all",
+      "value": "سب دکھائیں (%1$s)"
     },
     {
       "name": "command_test_rule",
@@ -637,6 +657,10 @@
       "value": "نوڈز لوڈ نہیں ہو سکے"
     },
     {
+      "name": "nodes_judgement",
+      "value": "\\u2068%1$s\\u2069 قابلِ رسائی · \\u2068%2$s\\u2069 جانچے گئے"
+    },
+    {
       "name": "nodes_jump_to",
       "value": "\\u2068%1$s\\u2069 پر جائیں"
     },
@@ -651,6 +675,10 @@
     {
       "name": "nodes_search_stats",
       "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "ابھی ٹیسٹ نہیں ہوا — اسکرول روکنے پر نظر آنے والے نوڈز ٹیسٹ ہوتے ہیں"
     },
     {
       "name": "notif_action_global",
@@ -839,6 +867,14 @@
     {
       "name": "scene_tested_from_pool",
       "value": "%1$d سبسکرپشنز کے %2$s نوڈز ٹیسٹ کیے گئے"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "%1$s امیدوار، %2$s 200 ملی سیکنڈ سے کم، %3$s کا وقت ختم"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "وقت ختم: %1$s"
     },
     {
       "name": "scene_uhd_only",

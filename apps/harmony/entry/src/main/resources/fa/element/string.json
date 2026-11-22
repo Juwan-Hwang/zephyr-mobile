@@ -29,6 +29,14 @@
       "value": "اتصال‌های اخیر"
     },
     {
+      "name": "command_action_open",
+      "value": "باز کردن"
+    },
+    {
+      "name": "command_action_test",
+      "value": "آزمایش"
+    },
+    {
       "name": "command_chip_action",
       "value": "عملیات"
     },
@@ -55,6 +63,14 @@
     {
       "name": "command_direct_title",
       "value": "اتصال مستقیم \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "برای اجرا Enter را بزنید"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "آزمایش قانون"
     },
     {
       "name": "command_no_nodes_available",
@@ -135,6 +151,10 @@
     {
       "name": "command_see_all_nodes",
       "value": "دیدن همهٔ \\u2068%1$s\\u2069 نود در کتابخانهٔ نودها"
+    },
+    {
+      "name": "command_show_all",
+      "value": "نمایش همه (%1$s)"
     },
     {
       "name": "command_test_rule",
@@ -637,6 +657,10 @@
       "value": "بارگیری نودها ناموفق بود"
     },
     {
+      "name": "nodes_judgement",
+      "value": "\\u2068%1$s\\u2069 در دسترس · \\u2068%2$s\\u2069 آزمایش‌شده"
+    },
+    {
       "name": "nodes_jump_to",
       "value": "رفتن به \\u2068%1$s\\u2069"
     },
@@ -651,6 +675,10 @@
     {
       "name": "nodes_search_stats",
       "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "هنوز آزمایش نشده — نودهای قابل مشاهده پس از توقف پیمایش آزمایش می‌شوند"
     },
     {
       "name": "notif_action_global",
@@ -839,6 +867,14 @@
     {
       "name": "scene_tested_from_pool",
       "value": "%2$s نود از %1$d اشتراک آزمایش شد"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "%1$s نامزد، %2$s زیر ۲۰۰ میلی‌ثانیه، %3$s مهلت تمام شد"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "مهلت تمام شد: %1$s"
     },
     {
       "name": "scene_uhd_only",

@@ -429,7 +429,7 @@ export struct NodesView {
   @Builder
   judgementLine() {
     if (this.judgement().kind === 'untested') {
-      Text($r('app.string.hm_nodes_untested'))
+      Text($r('app.string.nodes_untested_hint'))
         .fontSize(13)
         .fontColor($r('app.color.screen_t2'))
     } else {

@@ -5,6 +5,7 @@
  * 短刻 1×6（t3；≥ 200 ms 琥珀），200 ms 长刻 1×12（t2）并在上方写“200 ms”，当前出口 1×10 强调色；
  * 超时计入右侧“超时 n”（red-text，0 不显示）。数轴总是从左到右；读屏读一句汇总。
  */
+import { Format } from '../common/Format';
 import { LatencyTicks, Tick, TickSummary } from '../app/LatencyTicks';
 import { ZTheme } from '../common/Theme';
 import { NodeId, NodeSummary } from '../engine/Model';
@@ -29,8 +30,8 @@ export struct LatencyTickBar {
     const s = this.summary();
     try {
       const ctx = this.getUIContext().getHostContext();
-      return ctx !== undefined ? ctx.resourceManager.getStringSync($r('app.string.hm_ticks_a11y').id, s.total,
-        s.underThreshold, s.timeouts) : '';
+      return ctx !== undefined ? ctx.resourceManager.getStringSync($r('app.string.scene_tickbar_a11y').id, Format.grouped(s.total),
+        Format.grouped(s.underThreshold), Format.grouped(s.timeouts)) : '';
     } catch (e) {
       return '';
     }
@@ -67,7 +68,7 @@ export struct LatencyTickBar {
         this.barWidth = Number(n.width);
       })
       if (this.summary().timeouts > 0) {
-        Text($r('app.string.hm_ticks_timeouts', this.summary().timeouts))
+        Text($r('app.string.scene_tickbar_timeouts', Format.grouped(this.summary().timeouts)))
           .fontSize(11)
           .fontColor($r('app.color.screen_red_text'))
       }

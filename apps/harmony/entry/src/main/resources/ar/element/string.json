@@ -29,6 +29,14 @@
       "value": "الاتصالات الأخيرة"
     },
     {
+      "name": "command_action_open",
+      "value": "فتح"
+    },
+    {
+      "name": "command_action_test",
+      "value": "اختبار"
+    },
+    {
       "name": "command_chip_action",
       "value": "الإجراء"
     },
@@ -55,6 +63,14 @@
     {
       "name": "command_direct_title",
       "value": "اتصال \\u2068%1$s\\u2069 مباشرةً"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "اضغط Enter للتنفيذ"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "اختبار القواعد"
     },
     {
       "name": "command_no_nodes_available",
@@ -135,6 +151,10 @@
     {
       "name": "command_see_all_nodes",
       "value": "عرض كل العقد (\\u2068%1$s\\u2069) في مكتبة العقد"
+    },
+    {
+      "name": "command_show_all",
+      "value": "عرض الكل (%1$s)"
     },
     {
       "name": "command_test_rule",
@@ -637,6 +657,10 @@
       "value": "تعذّر تحميل العقد"
     },
     {
+      "name": "nodes_judgement",
+      "value": "متاحة \\u2068%1$s\\u2069 · مُختبرة \\u2068%2$s\\u2069"
+    },
+    {
       "name": "nodes_jump_to",
       "value": "الانتقال إلى \\u2068%1$s\\u2069"
     },
@@ -651,6 +675,10 @@
     {
       "name": "nodes_search_stats",
       "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "لم تُختبر بعد — تُختبر العقد الظاهرة عند التوقف عن التمرير"
     },
     {
       "name": "notif_action_global",
@@ -839,6 +867,14 @@
     {
       "name": "scene_tested_from_pool",
       "value": "تم اختبار %2$s عقدة من %1$d اشتراك"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "%1$s مرشحة، %2$s أقل من 200 ملي ثانية، %3$s انتهت مهلتها"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "انتهت المهلة: %1$s"
     },
     {
       "name": "scene_uhd_only",

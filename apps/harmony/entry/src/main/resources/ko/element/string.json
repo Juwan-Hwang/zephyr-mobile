@@ -29,6 +29,14 @@
       "value": "최근 연결"
     },
     {
+      "name": "command_action_open",
+      "value": "열기"
+    },
+    {
+      "name": "command_action_test",
+      "value": "테스트"
+    },
+    {
       "name": "command_chip_action",
       "value": "동작"
     },
@@ -55,6 +63,14 @@
     {
       "name": "command_direct_title",
       "value": "%1$s 다이렉트 연결"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "Enter 키를 눌러 실행"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "규칙 테스트"
     },
     {
       "name": "command_no_nodes_available",
@@ -135,6 +151,10 @@
     {
       "name": "command_see_all_nodes",
       "value": "노드 보관함에서 %1$s개 모두 보기"
+    },
+    {
+      "name": "command_show_all",
+      "value": "모두 보기(%1$s개)"
     },
     {
       "name": "command_test_rule",
@@ -637,6 +657,10 @@
       "value": "노드를 불러오지 못했습니다"
     },
     {
+      "name": "nodes_judgement",
+      "value": "%1$s 연결 가능 · %2$s 측정됨"
+    },
+    {
       "name": "nodes_jump_to",
       "value": "%1$s(으)로 이동"
     },
@@ -651,6 +675,10 @@
     {
       "name": "nodes_search_stats",
       "value": "%1$s개 · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "아직 테스트하지 않음 — 스크롤을 멈추면 보이는 노드를 자동으로 테스트합니다"
     },
     {
       "name": "notif_action_global",
@@ -839,6 +867,14 @@
     {
       "name": "scene_tested_from_pool",
       "value": "구독 %1$d개에서 노드 %2$s개 테스트함"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "후보 %1$s개, 200밀리초 미만 %2$s개, 시간 초과 %3$s개"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "시간 초과 %1$s"
     },
     {
       "name": "scene_uhd_only",

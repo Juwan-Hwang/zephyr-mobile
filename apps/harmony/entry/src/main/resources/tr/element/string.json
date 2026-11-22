@@ -29,6 +29,14 @@
       "value": "Son bağlantılar"
     },
     {
+      "name": "command_action_open",
+      "value": "Aç"
+    },
+    {
+      "name": "command_action_test",
+      "value": "Test et"
+    },
+    {
       "name": "command_chip_action",
       "value": "İşlem"
     },
@@ -55,6 +63,14 @@
     {
       "name": "command_direct_title",
       "value": "%1$s için doğrudan bağlantı"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "Çalıştırmak için Enter'a basın"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "Kural testi"
     },
     {
       "name": "command_no_nodes_available",
@@ -135,6 +151,10 @@
     {
       "name": "command_see_all_nodes",
       "value": "Düğüm kütüphanesinde %1$s düğümün tümünü gör"
+    },
+    {
+      "name": "command_show_all",
+      "value": "Tümünü göster (%1$s)"
     },
     {
       "name": "command_test_rule",
@@ -637,6 +657,10 @@
       "value": "Düğümler yüklenemedi"
     },
     {
+      "name": "nodes_judgement",
+      "value": "%1$s erişilebilir · %2$s test edildi"
+    },
+    {
       "name": "nodes_jump_to",
       "value": "%1$s bölümüne git"
     },
@@ -651,6 +675,10 @@
     {
       "name": "nodes_search_stats",
       "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "Henüz test edilmedi — kaydırmayı bıraktığınızda görünen düğümler test edilir"
     },
     {
       "name": "notif_action_global",
@@ -839,6 +867,14 @@
     {
       "name": "scene_tested_from_pool",
       "value": "%1$d abonelikten %2$s düğüm test edildi"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "%1$s aday, %2$s tanesi 200 milisaniyenin altında, %3$s zaman aşımı"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "Zaman aşımı: %1$s"
     },
     {
       "name": "scene_uhd_only",

@@ -29,6 +29,14 @@
       "value": "Недавние подключения"
     },
     {
+      "name": "command_action_open",
+      "value": "Открыть"
+    },
+    {
+      "name": "command_action_test",
+      "value": "Проверить"
+    },
+    {
       "name": "command_chip_action",
       "value": "Действие"
     },
@@ -55,6 +63,14 @@
     {
       "name": "command_direct_title",
       "value": "%1$s напрямую"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "Нажмите Enter, чтобы выполнить"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "Проверка правил"
     },
     {
       "name": "command_no_nodes_available",
@@ -135,6 +151,10 @@
     {
       "name": "command_see_all_nodes",
       "value": "Все узлы (%1$s) в библиотеке"
+    },
+    {
+      "name": "command_show_all",
+      "value": "Показать все (%1$s)"
     },
     {
       "name": "command_test_rule",
@@ -637,6 +657,10 @@
       "value": "Не удалось загрузить узлы"
     },
     {
+      "name": "nodes_judgement",
+      "value": "Доступны: %1$s · Проверено: %2$s"
+    },
+    {
       "name": "nodes_jump_to",
       "value": "Перейти к %1$s"
     },
@@ -651,6 +675,10 @@
     {
       "name": "nodes_search_stats",
       "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "Ещё не проверено — видимые узлы проверяются, когда вы перестаёте прокручивать"
     },
     {
       "name": "notif_action_global",
@@ -839,6 +867,14 @@
     {
       "name": "scene_tested_from_pool",
       "value": "Проверено узлов: %2$s (подписок: %1$d)"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "Кандидатов: %1$s, быстрее 200 миллисекунд: %2$s, тайм-аут: %3$s"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "Тайм-аут: %1$s"
     },
     {
       "name": "scene_uhd_only",

@@ -29,6 +29,14 @@
       "value": "Kết nối gần đây"
     },
     {
+      "name": "command_action_open",
+      "value": "Mở"
+    },
+    {
+      "name": "command_action_test",
+      "value": "Kiểm tra"
+    },
+    {
       "name": "command_chip_action",
       "value": "Thao tác"
     },
@@ -55,6 +63,14 @@
     {
       "name": "command_direct_title",
       "value": "Kết nối trực tiếp %1$s"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "Nhấn Enter để thực hiện"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "Kiểm tra quy tắc"
     },
     {
       "name": "command_no_nodes_available",
@@ -135,6 +151,10 @@
     {
       "name": "command_see_all_nodes",
       "value": "Xem cả %1$s nút trong thư viện nút"
+    },
+    {
+      "name": "command_show_all",
+      "value": "Hiện tất cả (%1$s)"
     },
     {
       "name": "command_test_rule",
@@ -637,6 +657,10 @@
       "value": "Không tải được nút"
     },
     {
+      "name": "nodes_judgement",
+      "value": "Kết nối được %1$s · Đã kiểm tra %2$s"
+    },
+    {
       "name": "nodes_jump_to",
       "value": "Đến %1$s"
     },
@@ -651,6 +675,10 @@
     {
       "name": "nodes_search_stats",
       "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "Chưa kiểm tra — các nút đang hiển thị sẽ được kiểm tra khi bạn ngừng cuộn"
     },
     {
       "name": "notif_action_global",
@@ -839,6 +867,14 @@
     {
       "name": "scene_tested_from_pool",
       "value": "Đã kiểm tra %2$s nút từ %1$d đăng ký"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "%1$s ứng viên, %2$s dưới 200 mili giây, %3$s hết thời gian"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "Hết thời gian: %1$s"
     },
     {
       "name": "scene_uhd_only",
