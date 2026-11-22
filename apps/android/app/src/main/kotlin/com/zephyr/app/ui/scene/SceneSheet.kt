@@ -57,7 +57,7 @@ fun BoxScope.SceneSheet(
         val s = scene ?: return@ZSheet
         val subs by produceState(0, s.id) { value = runCatching { AppGraph.engine.subscriptions().first().size }.getOrDefault(0) }
         // The whole candidate pool: its size is the lede's "M 个节点"; the list shows the 12 fastest.
-        val candidates by produceState(emptyList<NodeSummary>(), s.id, s.selected.id, s.source, s.nodeFilter) {
+        val candidates by produceState(emptyList<NodeSummary>(), s.id, s.selected.id, s.source, s.nodeFilter, s.testedAt) {
             value = runCatching { AppGraph.engine.sceneCandidates(s.id, null) }.getOrDefault(emptyList())
                 .sortedBy { it.latencyMs?.takeIf { ms -> ms >= 0 } ?: Int.MAX_VALUE } // timeouts (< 0) sort with untested, last
         }
