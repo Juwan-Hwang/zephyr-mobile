@@ -1,3 +1,4 @@
+import { LengthMetrics } from '@kit.ArkUI';
 /*
  * 吐司宿主：由根页面挂进 OverlayManager 浮层（窗口根，盖在 Navigation / 子页之上；失败时退回根 Stack），显示 AppServices.toasts 的当前吐司（§16.e⑥）。
  * - 出现时朗读文案（有撤销时连同“撤销”）；吐司获得读屏焦点期间不消失（ToastCenter.setFocused）。
@@ -101,7 +102,7 @@ export struct ZToastHost {
         }
         .width('100%')
         .constraintSize({ minHeight: 48 })
-        .padding({ left: 16, right: 8 })
+        .padding({ start: LengthMetrics.vp(16), end: LengthMetrics.vp(8) })
         .borderRadius(14)
         .backgroundColor($r('app.color.screen_primary'))
         .shadow({ radius: 12, color: '#33000000', offsetY: 4 })

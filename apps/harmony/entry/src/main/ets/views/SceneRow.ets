@@ -1,3 +1,4 @@
+import { LengthMetrics } from '@kit.ArkUI';
 /*
  * 首页场景行（U5，对照 Android SceneCard.SceneRow，简化）：
  * - 左：场景名 + “N 个可用” / 服务不可用 / 订阅分组；右：地区徽标 + 当前节点名，下方例外（钉住）行。
@@ -187,7 +188,7 @@ export struct SceneRow {
         .padding({ left: 16, right: 16, bottom: 6 })
       }
       if (this.divider) {
-        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
       }
     }
     .width('100%')

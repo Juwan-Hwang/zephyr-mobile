@@ -1,3 +1,4 @@
+import { LengthMetrics } from '@kit.ArkUI';
 /*
  * 今日卡（M1-9 / U13，原型 today；对照 Android ui/today/TodayScreen.kt、iOS Activity/TodayCard*、WindArt）。
  * 首页流量卡“今日 X”点按进入（NavDestination，同 Android composable<Today>）。页面恒为黑底（审查 H-P2-13）。
@@ -280,7 +281,7 @@ export struct TodayPage {
             .fontSize(15)
             .fontColor(Color.White)
         }
-        .padding({ left: 6, right: 16, top: 6, bottom: 6 })
+        .padding({ start: LengthMetrics.vp(6), end: LengthMetrics.vp(16), top: LengthMetrics.vp(6), bottom: LengthMetrics.vp(6) })
         .borderRadius(20)
         .border({ width: 1, color: s === this.style ? '#99FFFFFF' : '#29FFFFFF', radius: 20 })
         .accessibilityGroup(true)

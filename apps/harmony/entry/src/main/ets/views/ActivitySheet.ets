@@ -1,3 +1,4 @@
+import { LengthMetrics } from '@kit.ArkUI';
 /*
  * 最近连接（M1-8 / U11，原型 actSheet；对照 Android ui/activity/ActivitySheet.kt、iOS Activity/ActivitySheet + RecentHostRow）：
  * 首页流量卡（速率区，已连接时）点按打开（bindSheet，同 Android 风区 onActivity / 审计 H-P2-3）。
@@ -176,7 +177,7 @@ export struct ActivitySheet {
   row(c: ConnectionInfo, divider: boolean) {
     Column() {
       if (divider) {
-        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
       }
       Row({ space: 10 }) {
         Column({ space: 3 }) {

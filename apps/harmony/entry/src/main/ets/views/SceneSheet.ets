@@ -1,3 +1,4 @@
+import { LengthMetrics } from '@kit.ArkUI';
 /*
  * 场景详情 sheet（M1-5 / U9，原型 sceneSheet 804–823；对照 Android ui/scene/SceneSheet.kt、iOS Scene/SceneSheet）。
  * 首页场景行点按、资料库“场景”入口打开（bindSheet，由 HomeView 承载）。内容全部来自引擎：
@@ -276,7 +277,7 @@ export struct SceneSheet {
       .padding({ left: 16, right: 16 })
 
       if (divider) {
-        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
       }
     }
     .width('100%')

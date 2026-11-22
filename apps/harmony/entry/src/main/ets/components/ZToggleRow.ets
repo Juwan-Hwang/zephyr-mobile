@@ -1,3 +1,4 @@
+import { LengthMetrics } from '@kit.ArkUI';
 /*
  * 开关行：标题 + 可选说明 + Switch。状态由父组件持有（@Param isOn 单向下发，@Event onChange 回传），
  * 父组件在引擎写入成功后再更新，写入失败时开关自然回弹。
@@ -43,10 +44,10 @@ export struct ZToggleRow {
       }
       .width('100%')
       .constraintSize({ minHeight: 52 })
-      .padding({ left: 16, right: 12, top: 8, bottom: 8 })
+      .padding({ start: LengthMetrics.vp(16), end: LengthMetrics.vp(12), top: LengthMetrics.vp(8), bottom: LengthMetrics.vp(8) })
 
       if (this.divider) {
-        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
       }
     }
     .width('100%')

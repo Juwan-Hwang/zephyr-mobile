@@ -1,3 +1,4 @@
+import { LengthMetrics } from '@kit.ArkUI';
 /*
  * 规则段（对照 Android ui/rules RulesScreen，简化）：总数 + 分层摘要（engine.ruleStats），
  * 匹配顺序从上到下的各层列表，域名 / IP 测试框（engine.testRule）显示命中层、规则、策略与用时。
@@ -258,7 +259,7 @@ export struct RulesView {
               .width('100%')
               .padding({ left: 16, right: 16, top: 10, bottom: 10 })
               if (i < this.layers().length - 1) {
-                Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 44 })
+                Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(44) })
               }
             }
           }, (l: RuleLayer) => String(l.index) + ':' + String(l.count))

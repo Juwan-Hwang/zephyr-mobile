@@ -1,3 +1,4 @@
+import { LengthMetrics } from '@kit.ArkUI';
 /*
  * 导航 / 取值行：标题 · 右侧值 · 箭头。用于设置里的“日志”“开源许可”、订阅详情等。
  */
@@ -34,7 +35,7 @@ export struct ZNavRow {
       .padding({ left: 16, right: 16 })
 
       if (this.divider) {
-        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
       }
     }
     .width('100%')

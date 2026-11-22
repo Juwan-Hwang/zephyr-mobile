@@ -1,3 +1,4 @@
+import { LengthMetrics } from '@kit.ArkUI';
 /*
  * 设置 › 本地代理端口（M1-14；对照 Android LibraryPages LocalProxyScreen，契约 §16.c / §16.g①）：
  * 开关、端口（1024–65535，点“应用”才写）、需要密码；开着密码时显示连接信息：用户名 zephyr、密码（点按显示 / 隐藏）、
@@ -199,7 +200,7 @@ export struct LocalProxyPage {
                 .onClick(() => this.save())
             }
             .width('100%')
-            .padding({ left: 4, right: 8 })
+            .padding({ start: LengthMetrics.vp(4), end: LengthMetrics.vp(8) })
             if (this.port.length > 0 && this.parsed() === undefined) {
               Text($r('app.string.local_proxy_port_invalid', PROXY_PORT_MIN, PROXY_PORT_MAX))
                 .fontSize(13)

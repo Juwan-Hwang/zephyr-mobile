@@ -1,3 +1,4 @@
+import { LengthMetrics } from '@kit.ArkUI';
 /*
  * 设置 › 受信任的 Wi‑Fi（M1-14；对照 Android LibraryPages TrustedWifiScreen / iOS TrustedWifiView）：
  * “连上这些 Wi‑Fi 时自动断开”开关、网络列表（每行“删除”）、添加输入框（1–32 字节、不重复、最多 50 个）。
@@ -98,8 +99,8 @@ export struct TrustedWifiPage {
                 }
                 .width('100%')
                 .height(52)
-                .padding({ left: 16, right: 8 })
-                Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+                .padding({ start: LengthMetrics.vp(16), end: LengthMetrics.vp(8) })
+                Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
               }
             }, (ssid: string) => ssid)
             Row() {
@@ -125,7 +126,7 @@ export struct TrustedWifiPage {
                 .onClick(() => this.add())
             }
             .width('100%')
-            .padding({ left: 4, right: 8 })
+            .padding({ start: LengthMetrics.vp(4), end: LengthMetrics.vp(8) })
           }
         }
         .width('100%')

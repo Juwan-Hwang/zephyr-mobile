@@ -1,3 +1,4 @@
+import { LengthMetrics } from '@kit.ArkUI';
 /*
  * 首次引导（M1-16；对照 Android ui/onboarding OnboardingScreen，原型 ob1 / ob2）：两步。
  * 1 / 2 添加订阅：粘贴链接输入框 + 粘贴（PasteButton 安全控件）+ 添加，扫码 / 从文件导入；导入路径同订阅页（SubscriptionImport），
@@ -275,11 +276,11 @@ export struct OnboardingView {
         .fontSize(22)
         .fontWeight(FontWeight.Medium)
         .fontColor($r('app.color.screen_t1'))
-        .padding({ left: 6 })
+        .padding({ start: LengthMetrics.vp(6) })
       Text(`${this.step + 1} / 2`)
         .fontSize(12)
         .fontColor($r('app.color.screen_t3'))
-        .padding({ left: 6, top: 28, bottom: 8 })
+        .padding({ start: LengthMetrics.vp(6), top: LengthMetrics.vp(28), bottom: LengthMetrics.vp(8) })
       Scroll() {
         Column() {
           if (this.step === 0) {

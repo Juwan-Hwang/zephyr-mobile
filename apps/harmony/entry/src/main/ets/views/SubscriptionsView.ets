@@ -1,3 +1,4 @@
+import { LengthMetrics } from '@kit.ArkUI';
 /*
  * 订阅段（对照 Android ui/subs SubscriptionsScreen / ImportSheet / SubscriptionImporter，简化）：
  * - 外链导入确认卡（ImportInbox，§16.e⑦ 从不自动导入）：条目、http 警告、信任提示、取消 / 添加；解析失败只显示原因。
@@ -885,7 +886,7 @@ export struct SubscriptionsView {
         .height(52)
         .padding({ left: 16, right: 16 })
         .bindMenu(this.autoUpdateMenu())
-        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
       }
       ZToggleRow({
         title: $r('app.string.subs_update_wifi_only'),
@@ -940,7 +941,7 @@ export struct SubscriptionsView {
       Column() {
         ForEach(this.visibleSubs(), (s: Subscription, i: number) => {
           if (i > 0) {
-            Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+            Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
           }
           Row({ space: 8 }) {
             Column({ space: 2 }) {
@@ -1020,7 +1021,7 @@ export struct SubscriptionsView {
         }
         .width('100%')
         .alignItems(VerticalAlign.Bottom)
-        .padding({ left: 6 })
+        .padding({ start: LengthMetrics.vp(6) })
 
         if (this.showAdd) {
           this.addCard()

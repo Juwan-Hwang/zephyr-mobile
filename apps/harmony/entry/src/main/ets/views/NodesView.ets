@@ -1,3 +1,4 @@
+import { LengthMetrics } from '@kit.ArkUI';
 /*
  * 节点库（U14 / U15；对照 Android ui/nodes NodesScreen / NodeRows / NodeDetailSheet，iOS Nodes/*）：
  * - 页眉：库总数（大号）+ “个”，下一行“来自 N 个订阅 · N 个地区”；
@@ -146,9 +147,9 @@ struct NodeRowView {
       }
       .width('100%')
       .height(ROW_HEIGHT - 1)
-      .padding({ left: 22, right: 16 })
+      .padding({ start: LengthMetrics.vp(22), end: LengthMetrics.vp(16) })
 
-      Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 22 })
+      Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(22) })
     }
     .width('100%')
     .id(this.item !== undefined && this.item.node !== undefined ? nodeRowId(this.item.node.id) : '')
@@ -179,7 +180,7 @@ struct SectionHeaderView {
     }
     .width('100%')
     .height(ROW_HEIGHT)
-    .padding({ left: 22, right: 16 })
+    .padding({ start: LengthMetrics.vp(22), end: LengthMetrics.vp(16) })
     .backgroundColor($r('app.color.screen_bg'))
   }
 }
@@ -663,7 +664,7 @@ export struct NodesView {
         Column() {
           this.detailRow($r('app.string.nodes_detail_protocol'),
             this.selected.protocol.length > 0 ? this.selected.protocol : '—')
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
           Row() {
             Text($r('app.string.nodes_detail_latency'))
               .fontSize(15)
@@ -674,14 +675,14 @@ export struct NodesView {
           .width('100%')
           .height(48)
           .padding({ left: 16, right: 16 })
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
           this.detailRow($r('app.string.nodes_detail_server'),
             this.detail !== undefined ? this.detail.server + ':' + this.detail.port : '—')
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
           this.detailRow(ZTerm.subscription,
             this.detail !== undefined && this.detail.subscription.length > 0 ? this.detail.subscription : '—')
           if (this.selected.tag !== undefined) {
-            Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+            Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
             this.detailRow($r('app.string.nodes_detail_route'), this.route(this.selected))
           }
         }

@@ -1,3 +1,4 @@
+import { LengthMetrics } from '@kit.ArkUI';
 /*
  * 设置（对照 Android ui/settings SettingsScreen，简化）：
  * - 连接：代理模式（engine.setMode）、按需连接、局域网不经代理（§16.a① 恒开、不可关闭，只作说明）；
@@ -240,7 +241,7 @@ export struct SettingsView {
           .width('100%')
           .alignItems(HorizontalAlign.Start)
           .padding(16)
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
           ZToggleRow({
             title: $r('app.string.settings_on_demand'),
             isOn: this.onDemand,
@@ -311,7 +312,7 @@ export struct SettingsView {
           .width('100%')
           .alignItems(HorizontalAlign.Start)
           .padding(16)
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
           ZNavRow({ title: ZTerm.logs, divider: false, onTap: () => this.onOpenLogs() })
         }
 
@@ -346,7 +347,7 @@ export struct SettingsView {
           }
           .width('100%')
           .padding(16)
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
+          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
           Row() {
             Text(ZTerm.accent)
               .fontSize(16)
@@ -357,7 +358,7 @@ export struct SettingsView {
             }, (a: Accent) => a as string)
           }
           .width('100%')
-          .padding({ left: 16, right: 6, top: 4, bottom: 4 })
+          .padding({ start: LengthMetrics.vp(16), end: LengthMetrics.vp(6), top: LengthMetrics.vp(4), bottom: LengthMetrics.vp(4) })
         }
 
         ZSection({ header: $r('app.string.settings_section_privacy') }) {
