@@ -15,6 +15,7 @@ import sceneOpenTest from './SceneOpen.test';
 import recentHostsTest from './RecentHosts.test';
 import nodesTest from './Nodes.test';
 import subscriptionsTest from './Subscriptions.test';
+import m1PagesTest from './M1Pages.test';
 
 export default function testsuite(): void {
   mockFixturesTest();
@@ -34,4 +35,5 @@ export default function testsuite(): void {
   recentHostsTest();
   nodesTest();
   subscriptionsTest();
+  m1PagesTest();
 }
