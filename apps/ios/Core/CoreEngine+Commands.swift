@@ -1,5 +1,5 @@
 // 命令搜索（契约 §9）的真实实现：规则走 Rust 规则引擎、节点查询与最快节点走 mmap 节点库，≤ 8 条。
-// 规则与 Mock 一致：像域名/IP → test_rule；"全局/规则/直连" → switch_mode；"连接/断开" → toggle_connection；
+// 规则与 Mock 一致：像域名/IP → test_rule；"全局/规则/直连" → switch_mode；"连接/断开" → toggle_connection（执行类：整词或前缀 ≥ 2）；
 // 命中地区/城市/运营商/标签 → open_node_query + 该结果里有效期内最快节点 switch_node；页面名 → open_page。
 
 import Foundation
@@ -67,10 +67,11 @@ extension CoreEngine {
             out.append(CommandSuggestion(kind: .testRule, title: ZL.s("测试规则 %@", t.input), subtitle: "\(layer) → \(result)", payload: t.input))
         }
 
-        for m in Self.commandModes where m.2.contains(q) || m.2.contains(where: { $0.hasPrefix(q) && q.count >= 2 }) {
+        // 触发规则见 CommandMatch（#1 A 2026-11-22 20:43）：执行类整词或前缀 ≥ 2，导航类子串；标题（含译文）与别名都算。
+        for m in Self.commandModes where CommandMatch.action(q, names: m.2 + [Self.switchModeTitle(m.1)]) {
             out.append(CommandSuggestion(kind: .switchMode, title: Self.switchModeTitle(m.1), subtitle: nil, payload: m.1.rawValue))
         }
-        if ["连接", "断开", "connect", "disconnect", "开", "关"].contains(q) { out.append(toggle) }
+        if CommandMatch.action(q, names: CommandMatch.toggleAliases + [toggle.title]) { out.append(toggle) }
 
         if !Self.looksLikeHost(q), let r = try? await queryNodes(query: q), r.total > 0, !r.highlights.isEmpty {
             out.append(CommandSuggestion(kind: .openNodeQuery, title: ZL.s("在节点库中查找“%@”", raw),
@@ -81,7 +82,7 @@ extension CoreEngine {
             }
         }
 
-        for p in Self.commandPages where p.2.contains(q) {
+        for p in Self.commandPages where CommandMatch.navigation(q, names: p.2 + [ZL.tr(p.0)]) {
             out.append(CommandSuggestion(kind: .openPage, title: ZL.tr(p.0), subtitle: nil, payload: p.1))
         }
         return Array(out.prefix(8))

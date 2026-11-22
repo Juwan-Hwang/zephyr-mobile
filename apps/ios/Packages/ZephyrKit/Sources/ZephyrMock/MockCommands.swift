@@ -54,11 +54,11 @@ enum MockCommands {
             out.append(CommandSuggestion(kind: .testRule, title: "测试规则 \(t.input)", subtitle: "\(layer) → \(result)", payload: t.input))
         }
 
-        for m in modes where m.2.contains(q) || m.2.contains(where: { $0.hasPrefix(q) && q.count >= 2 }) {
+        for m in modes where CommandMatch.action(q, names: m.2 + ["切换到\(m.0)模式"]) {
             out.append(CommandSuggestion(kind: .switchMode, title: "切换到\(m.0)模式", subtitle: nil, payload: m.1.rawValue))
         }
 
-        if ["连接", "断开", "connect", "disconnect", "开", "关"].contains(q) { out.append(toggle) }
+        if CommandMatch.action(q, names: CommandMatch.toggleAliases + [toggle.title]) { out.append(toggle) }
 
         let model = MockQuery.build(q)
         if !model.highlights.isEmpty && model.total > 0 {
@@ -70,7 +70,7 @@ enum MockCommands {
             }
         }
 
-        for p in pages where p.2.contains(q) {
+        for p in pages where CommandMatch.navigation(q, names: p.2 + [p.0]) {
             out.append(CommandSuggestion(kind: .openPage, title: p.0, subtitle: nil, payload: p.1))
         }
         return Array(out.prefix(8))
