@@ -305,6 +305,26 @@
       "value": "Zephyr"
     },
     {
+      "name": "hm_command_action_open",
+      "value": "打开"
+    },
+    {
+      "name": "hm_command_action_test",
+      "value": "测试"
+    },
+    {
+      "name": "hm_command_enter_hint",
+      "value": "按回车执行"
+    },
+    {
+      "name": "hm_command_group_rule_test",
+      "value": "规则测试"
+    },
+    {
+      "name": "hm_command_show_all",
+      "value": "显示全部 %1$s 项"
+    },
+    {
       "name": "hm_error_generic",
       "value": "出错了"
     },

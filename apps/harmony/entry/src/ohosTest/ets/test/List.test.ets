@@ -16,6 +16,7 @@ import recentHostsTest from './RecentHosts.test';
 import nodesTest from './Nodes.test';
 import subscriptionsTest from './Subscriptions.test';
 import m1PagesTest from './M1Pages.test';
+import commandResultsTest from './CommandResults.test';
 
 export default function testsuite(): void {
   mockFixturesTest();
@@ -36,4 +37,5 @@ export default function testsuite(): void {
   nodesTest();
   subscriptionsTest();
   m1PagesTest();
+  commandResultsTest();
 }

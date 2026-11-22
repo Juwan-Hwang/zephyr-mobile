@@ -8,6 +8,7 @@
  * - 首页场景行横滑期间（GestureLock）吞掉首页上的系统返回，免得滑动贴边时被当成返回退出 App。
  * 状态管理统一用 V2（@ComponentV2 / @Local / @Param / @Event），引擎流在 aboutToAppear 订阅、aboutToDisappear 取消。
  */
+import { CommandPage } from '../app/CommandResults';
 import { AppServices } from '../app/AppServices';
 import { AddSubscriptionRequest, ImportInbox } from '../app/ImportInbox';
 import {
@@ -315,6 +316,7 @@ struct Index {
         onOpenRules: () => this.push(ROUTE_RULES, BackTo.HOME),
         onOpenToday: () => this.push(ROUTE_TODAY, BackTo.HOME),
         onOpenSubscriptions: () => this.push(ROUTE_SUBSCRIPTIONS, BackTo.HOME),
+        onOpenPage: (pg: CommandPage) => this.push(AppNav.commandRoute(pg), BackTo.HOME),
         sceneRequest: this.sceneRequest
       })
     }

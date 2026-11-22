@@ -21,6 +21,7 @@
  */
 import { ActivitySheet } from './ActivitySheet';
 import { CommandSheet } from './CommandSheet';
+import { CommandPage } from '../app/CommandResults';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { CommandApplier } from '../app/CommandApplier';
 import { AppServices } from '../app/AppServices';
@@ -69,12 +70,16 @@ export struct HomeView {
   @Event onOpenToday: () => void = () => {};
   /** 订阅卡：订阅页（同 Android onSubscriptions）。 */
   @Event onOpenSubscriptions: () => void = () => {};
+  /** 指令面板设置组的页面（J-3）。 */
+  @Event onOpenPage: (p: CommandPage) => void = (p: CommandPage) => {};
   @Local showCommand: boolean = false;
   /** 最近连接 sheet（M1-8）。 */
   @Local showActivity: boolean = false;
   /** 资料库“场景”入口：每次递增 = 打开第一个场景的 sheet。 */
   @Param sceneRequest: number = 0;
   @Local showScene: boolean = false;
+  /** 指令面板「打开场景」：面板消失后再开场景 sheet。 */
+  private sceneAfterCommand: Scene | undefined = undefined;
   @Local sheetSceneId: string = '';
 
   @Local status: ConnectionStatus = ConnectionStatus.DISCONNECTED;
@@ -1120,6 +1125,31 @@ export struct HomeView {
       },
       onDone: () => {
         this.closeCommand();
+      },
+      connected: this.status === ConnectionStatus.CONNECTED || this.status === ConnectionStatus.CONNECTING,
+      scenes: this.scenes,
+      onSetMode: (m: ProxyMode) => {
+        this.closeCommand();
+        this.setMode(MODES.indexOf(m));
+      },
+      onToggle: (connect: boolean) => {
+        this.closeCommand();
+        const on = this.status === ConnectionStatus.CONNECTED || this.status === ConnectionStatus.CONNECTING;
+        if (on !== connect) {
+          this.toggle();
+        }
+      },
+      onOpenScene: (id: string) => {
+        this.showCommand = false;
+        const sc = this.scenes.find((x: Scene) => x.id === id);
+        if (sc !== undefined) {
+          // 两个 sheet 不叠：等指令面板消失（onDisappear）再开场景 sheet。
+          this.sceneAfterCommand = sc;
+        }
+      },
+      onOpenPage: (pg: CommandPage) => {
+        this.showCommand = false;
+        this.onOpenPage(pg);
       }
     })
   }
@@ -1160,6 +1190,11 @@ export struct HomeView {
           backgroundColor: $r('app.color.screen_bg'),
           onDisappear: () => {
             this.closeCommand();
+            const sc = this.sceneAfterCommand;
+            if (sc !== undefined) {
+              this.sceneAfterCommand = undefined;
+              this.openScene(sc);
+            }
           }
         })
         Button({ type: ButtonType.Circle }) {

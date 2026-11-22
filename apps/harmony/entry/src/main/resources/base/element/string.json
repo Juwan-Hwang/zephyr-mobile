@@ -309,6 +309,26 @@
       "value": "Zephyr"
     },
     {
+      "name": "hm_command_action_open",
+      "value": "Open"
+    },
+    {
+      "name": "hm_command_action_test",
+      "value": "Test"
+    },
+    {
+      "name": "hm_command_enter_hint",
+      "value": "Press Enter to run"
+    },
+    {
+      "name": "hm_command_group_rule_test",
+      "value": "Rule Test"
+    },
+    {
+      "name": "hm_command_show_all",
+      "value": "Show all %1$s"
+    },
+    {
       "name": "hm_error_generic",
       "value": "Something went wrong"
     },

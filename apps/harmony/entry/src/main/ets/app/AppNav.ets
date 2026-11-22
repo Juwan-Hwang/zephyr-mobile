@@ -1,3 +1,4 @@
+import { CommandPage } from './CommandResults';
 /*
  * 应用导航（契约 §17.e：同 iOS RootView / Android AppRoot 与原型，**没有底部 Tab**）：
  * 单一首页（Navigation 的 navBar）+ 资料库 sheet + 二级页（NavDestination）。
@@ -51,6 +52,28 @@ export class NavArgs {
 }
 
 export class AppNav {
+  /** 指令面板设置组（J-3）打开的页面 → 路由。 */
+  static commandRoute(p: CommandPage): string {
+    switch (p) {
+      case CommandPage.NODES:
+        return ROUTE_NODES;
+      case CommandPage.SUBSCRIPTIONS:
+        return ROUTE_SUBSCRIPTIONS;
+      case CommandPage.RULES:
+        return ROUTE_RULES;
+      case CommandPage.TRUSTED_WIFI:
+        return ROUTE_TRUSTED_WIFI;
+      case CommandPage.LOCAL_PROXY:
+        return ROUTE_LOCAL_PROXY;
+      case CommandPage.LOGS:
+        return ROUTE_LOGS;
+      case CommandPage.LICENSES:
+        return ROUTE_LICENSES;
+      default:
+        return ROUTE_SETTINGS;
+    }
+  }
+
   /** 资料库入口 → 路由名；场景没有独立页（收起资料库后由首页开场景 sheet，M1-5），返回 ''。 */
   static routeOf(d: LibraryDest): string {
     switch (d) {
