@@ -47,7 +47,7 @@ class LocaleScreenshotTest(private val locale: String) {
         val (conn, scenes, subs) = runBlocking { Triple(engine.connectionState().first(), engine.scenes().first(), engine.subscriptions().first()) }
         val usage = runBlocking { engine.usageToday() }
         val spark = runBlocking { engine.recentTraffic(90) }
-        val ui = HomeUi(now = HomeScreenshotTest.NOW, usage = usage)
+        val ui = HomeUi(now = HomeScreenshotTest.NOW, usage = usage, funnels = HomeScreenshotTest.funnels(engine, scenes))
         val live = HomeLive(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = HomeScreenshotTest.NOW)
         paparazzi.snapshot {
             ZephyrTheme(dark = true, accent = ZAccent.BLUE) {

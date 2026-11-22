@@ -67,6 +67,8 @@ data class HomeUi(
     val toast: UndoToast? = null,
     /** Scrub slots per scene (prototype `#aiTrack`): best node of each region in the scene's pool, current included. */
     val slots: Map<String, List<NodeSummary>> = emptyMap(),
+    /** Mini funnel per scene row (spec §9.3, contract v0.7 §19.a `sceneFunnel`); missing = not counted, row keeps its text. */
+    val funnels: Map<String, com.zephyr.engine.NodeFunnel> = emptyMap(),
     /** Global mode: the exit now, and the inline "更换节点" proposal when open (prototype `gcf`). */
     val globalNode: NodeSummary? = null,
     val globalProposal: NodeSummary? = null,
@@ -152,6 +154,16 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         val slots = byRegion.map { (r, ns) -> ns.firstOrNull { it.id == scene.selected.id } ?: ns.minBy { it.latencyMs ?: Int.MAX_VALUE } }
             .sortedWith(compareBy({ REGION_ORDER.indexOf(it.region.uppercase()).let { i -> if (i < 0) Int.MAX_VALUE else i } }, { it.region.uppercase() }))
         _ui.update { it.copy(slots = it.slots + (scene.id to slots)) }
+    }
+
+    /**
+     * J-1: this row's own funnel (contract v0.7 §19.a), same freshness window as the scene candidates (设置 › 结果保留)
+     * and the 200 ms slow threshold. A failure or an empty range drops the entry, so the row writes "n 个可用" again.
+     */
+    fun prefetchFunnel(scene: Scene) = viewModelScope.launch {
+        val ttl = runCatching { engine.settings().first().latencyTtlHours }.getOrDefault(24).coerceAtLeast(1) * 3_600_000L
+        val f = runCatching { engine.sceneFunnel(scene.id, ttl, MINI_FUNNEL_THRESHOLD_MS) }.getOrNull()
+        _ui.update { it.copy(funnels = if (f != null && f.poolSize > 0) it.funnels + (scene.id to f) else it.funnels - scene.id) }
     }
 
     /** A candidate tapped in the scene sheet: same inline confirm as the swipe (exit IP line, 更改/取消). */
@@ -302,6 +314,8 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         /** Group/built-in members of GLOBAL that are not exits. */
         private val NON_NODES = setOf("SELECTOR", "URLTEST", "FALLBACK", "LOADBALANCE", "RELAY", "DIRECT", "REJECT", "REJECTDROP", "PASS", "COMPATIBLE")
         const val SPARK_POINTS = 90
+        /** Contract §19.a: home passes `latency.threshold-slow` (200 ms). */
+        const val MINI_FUNNEL_THRESHOLD_MS = 200
         val REGION_ORDER = listOf("HK", "TW", "JP", "KR", "SG", "US", "GB", "DE", "FR", "NL", "CA", "AU")
         fun preview() = HomeViewModel(MockEngine(demo = true))
     }

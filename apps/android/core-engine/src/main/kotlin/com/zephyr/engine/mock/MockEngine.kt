@@ -348,6 +348,29 @@ class MockEngine(
         return NodeFunnel(FUNNEL_SOURCES, FUNNEL_POOL.toLong(), t, ok, under, threshold)
     }
 
+    /**
+     * Contract v0.7 §19.b mock: counted over the mock candidates — the scene's current region in the mock pool, 4K-only
+     * when the scene filters (§15.h) — never invented numbers. Latency = measured first, else the pool's cached value;
+     * freshness as [nodeFunnel] (pool samples date from engine start). Same as iOS MockEngine.sceneFunnel.
+     */
+    override suspend fun sceneFunnel(sceneId: String, maxAgeMs: Long, thresholdMs: Int): NodeFunnel? {
+        val scene = sceneState.value.firstOrNull { it.id == sceneId } ?: return null
+        val threshold = if (thresholdMs > 0) thresholdMs else 300
+        if (scene.selected.id < 0 || scene.selected.region.isBlank()) return NodeFunnel(FUNNEL_SOURCES, 0, 0, 0, 0, threshold)
+        val scope = MockScenes.pool(scene.selected.region).filter { scene.nodeFilter == null || isUhd(it) }
+        val now = clock()
+        var t = 0L; var ok = 0L; var under = 0L
+        for (n in scope) {
+            val live = tested[n.id]
+            val ms = live ?: MockScenes.latency(n.id) ?: continue
+            val at = if (live != null) testedAt[n.id] ?: startedAt else startedAt
+            if (maxAgeMs > 0 && now - at > maxAgeMs) continue
+            t++
+            if (ms >= 0) { ok++; if (ms < threshold) under++ }
+        }
+        return NodeFunnel(FUNNEL_SOURCES, scope.size.toLong(), t, ok, under, threshold)
+    }
+
     private fun latencyDelay(id: Long): Long {
         val r = (id / MockCatalog.ID_STRIDE).toInt()
         val j = (id % MockCatalog.ID_STRIDE).toInt()

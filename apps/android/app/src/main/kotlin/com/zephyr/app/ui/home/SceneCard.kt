@@ -82,6 +82,9 @@ fun SceneCard(
     onConfirm: () -> Unit,
     onCancel: () -> Unit,
     onOpen: (Scene) -> Unit,
+    /** J-1 mini funnel per row (contract v0.7 §19.a); a missing entry keeps the "n 个可用" text. */
+    funnels: Map<String, com.zephyr.engine.NodeFunnel> = emptyMap(),
+    onFunnel: (Scene) -> Unit = {},
 ) {
     val hint = com.zephyr.app.ui.common.LocalScrubHint.current
     var hinted by remember(hint.seen) { mutableStateOf(hint.seen) }
@@ -95,9 +98,12 @@ fun SceneCard(
                 if (prev.kind == SceneKind.AI && !hinted && pending == null) ScrubCoach()
             }
             if (s.source != SceneSource.SUBSCRIPTION_GROUP) androidx.compose.runtime.LaunchedEffect(s.id, s.selected.id, s.source) { onPrefetch(s) }
+            // Re-count on re-test, exit change (region), node filter change (§19.a range).
+            if (s.source != SceneSource.SUBSCRIPTION_GROUP) androidx.compose.runtime.LaunchedEffect(s.id, s.selected.region, s.testedAt, s.nodeFilter) { onFunnel(s) }
             SceneRow(
                 s, slots[s.id].orEmpty(), pendingNode = pending?.takeIf { it.scene.id == s.id }?.node,
                 probing = if (s.id in retesting) (scan?.fraction ?: 0f) else null,
+                funnel = funnels[s.id]?.takeIf { it.poolSize > 0 },
                 onScrubStart = { if (!hinted) { hinted = true; hint.markSeen() }; if (pending != null) onCancel() },
                 onPick = { n -> onPick(s, n) }, onOpen = { onOpen(s) },
             )
@@ -117,6 +123,8 @@ private fun SceneRow(
     pendingNode: NodeSummary?,
     /** Prototype 10 (scan): non-null while this scene is re-tested, the pool scan's fraction done. */
     probing: Float?,
+    /** Spec §9.3: drawn instead of "n 个可用" only when counted (poolSize > 0); never a made-up ratio. */
+    funnel: com.zephyr.engine.NodeFunnel?,
     onScrubStart: () -> Unit,
     onPick: (NodeSummary) -> Unit,
     onOpen: () -> Unit,
@@ -194,6 +202,9 @@ private fun SceneRow(
                 Spacer(Modifier.height(6.dp))
                 val shown by androidx.compose.animation.core.animateFloatAsState(probing, label = "scan")
                 com.zephyr.design.components.ZProgressBar(shown, Modifier.width(96.dp), color = c.accent)
+            } else if (down.isEmpty() && s.source != SceneSource.SUBSCRIPTION_GROUP && funnel != null) {
+                Spacer(Modifier.height(4.dp))
+                MiniFunnel(funnel)
             } else ZText(
                 when {
                     down.isNotEmpty() -> stringResource(R.string.home_scene_services_down, joinList(down.map { it.name }))

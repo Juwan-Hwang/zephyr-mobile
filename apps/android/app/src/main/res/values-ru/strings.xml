@@ -163,6 +163,7 @@
     <string name="scene_funnel_tested">Проверено</string>
     <string name="scene_funnel_reachable">Доступно</string>
     <string name="scene_funnel_under">Менее %1$d мс</string>
+    <string name="home_mini_funnel_a11y">Доступны: %1$s, быстрее 200 миллисекунд: %2$s</string>
     <string name="scene_note">Результаты выбора сохраняются только в Zephyr. Конфигурация подписки не меняется.</string>
     <string name="scene_note_tested">%1$s Последняя проверка: %2$s.</string>
     <string name="command_placeholder">Поиск или команда</string>

@@ -139,6 +139,7 @@
     <string name="scene_funnel_tested">측정됨</string>
     <string name="scene_funnel_reachable">연결 가능</string>
     <string name="scene_funnel_under">%1$d ms 미만</string>
+    <string name="home_mini_funnel_a11y">연결 가능 %1$s, 200밀리초 미만 %2$s</string>
     <string name="scene_note">추천 결과는 Zephyr에만 저장됩니다. 구독 구성은 변경되지 않습니다.</string>
     <string name="scene_note_tested">%1$s 마지막 테스트: %2$s.</string>
     <string name="command_placeholder">검색 또는 명령 입력</string>

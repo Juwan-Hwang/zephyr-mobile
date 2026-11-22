@@ -77,7 +77,7 @@ fun HomeScreen(vm: HomeViewModel, actions: HomeActions) {
     val live = vm.live.collectAsStateWithLifecycle()
     HomeContent(
         conn, scenes, subs, ui, { live.value }, actions,
-        HomeCallbacks({ vm.setMode(it) }, { s, n -> vm.pick(s, n) }, { vm.confirmPending() }, { vm.cancelPending() }, { vm.undo() }, { vm.toggleGlobalChange() }, { vm.confirmGlobal() }, { vm.prefetchSlots(it) }),
+        HomeCallbacks({ vm.setMode(it) }, { s, n -> vm.pick(s, n) }, { vm.confirmPending() }, { vm.cancelPending() }, { vm.undo() }, { vm.toggleGlobalChange() }, { vm.confirmGlobal() }, { vm.prefetchSlots(it) }, { vm.prefetchFunnel(it) }),
         retesting, scan,
     )
 }
@@ -92,6 +92,7 @@ data class HomeCallbacks(
     val toggleGlobalChange: () -> Unit = {},
     val confirmGlobal: () -> Unit = {},
     val prefetchSlots: (Scene) -> Unit = {},
+    val prefetchFunnel: (Scene) -> Unit = {},
 )
 
 @Composable
@@ -162,7 +163,7 @@ fun HomeContent(
                 if (conn.mode == ProxyMode.GLOBAL) {
                     GlobalModeCard(ui.globalNode, ui.globalProposal, ui.globalChange, onUseRule = { cb.setMode(ProxyMode.RULE) }, onChangeNode = cb.toggleGlobalChange, onConfirm = cb.confirmGlobal)
                 } else {
-                    SceneCard(scenes, ui.pending, ui.slots, retesting, scan, cb.pick, cb.prefetchSlots, { cb.confirm() }, cb.cancel, actions.onScene)
+                    SceneCard(scenes, ui.pending, ui.slots, retesting, scan, cb.pick, cb.prefetchSlots, { cb.confirm() }, cb.cancel, actions.onScene, funnels = ui.funnels, onFunnel = cb.prefetchFunnel)
                 }
             }
             item("subs-h") {

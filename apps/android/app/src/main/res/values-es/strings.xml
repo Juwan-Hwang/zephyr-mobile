@@ -155,6 +155,7 @@
     <string name="scene_funnel_tested">Probados</string>
     <string name="scene_funnel_reachable">Accesibles</string>
     <string name="scene_funnel_under">Menos de %1$d ms</string>
+    <string name="home_mini_funnel_a11y">Accesibles: %1$s, por debajo de 200 milisegundos: %2$s</string>
     <string name="scene_note">La selección solo se guarda en Zephyr. La configuración de tu suscripción no cambia.</string>
     <string name="scene_note_tested">%1$s Última prueba: %2$s.</string>
     <string name="command_placeholder">Buscar o introducir comando</string>
