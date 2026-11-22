@@ -253,6 +253,18 @@
       "value": "#08000000"
     },
     {
+      "name": "screen_swipe_update",
+      "value": "#FF636366"
+    },
+    {
+      "name": "screen_swipe_delete",
+      "value": "#FFD70015"
+    },
+    {
+      "name": "screen_on_swipe",
+      "value": "#FFFFFFFF"
+    },
+    {
       "name": "accent_blue",
       "value": "#FF007AFF"
     },

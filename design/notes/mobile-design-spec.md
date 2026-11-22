@@ -83,6 +83,7 @@
 - **状态不只靠颜色**：每个状态至少同时有形状（● 圆点、✕、进度条位置）或文字（契约 §18.b 术语：较慢 / 超时 / 未测 / 即将到期 / 已过期 / 失败）。超时延迟写「超时」，不只显示红色「—」。色盲与灰度截图下必须仍能分辨。
 - **t4 不承载可读信息**：`screen.t4` 只给禁用态、装饰分隔、sheet 把手。序号、未测延迟、可点行的 chevron 用 t3；未测延迟用 `latency.unknown`（= t3）显示「—」，不用「···」。
 - **强调色分角色**：开关 / 进度 / 光晕用 `accent.*.base`（深色自动换成更亮的系统深色变体）；前景小字、链接、索引条、搜索高亮、「+」图标用 `accent.*.text`；主按钮与选中胶囊用 `accent.*.fill` + `on-fill`（green / orange 底为黑字）。`ZTokens.Accent.color` / `ZAccent.color` 只为兼容保留，新代码不要再拿它当前景文字或按钮底。
+- **列表左滑按钮**（订阅、受信任 Wi‑Fi 等）：「更新」用 `screen.swipe-update`（中性灰 #636366），「删除 / 确认删除」用 `screen.swipe-delete`（#D70015），文字与图标 `screen.on-swipe`（白），深浅色相同。「更新」不跟强调色：pink fill 与删除红相邻难分，iOS 系统 swipeActions 字色固定白，green / orange fill 配白字不过 AA。两端白字均 ≥5.3:1。（2026-11-23）
 - **浮起表面（s4，ZSurface.elevated / 按下态）上的说明文字用 t2**，不用 t3（浅色 t3 on s4 = 4.39:1）。
 - 连接开关不加彩色外发光（浅色下会发脏）；§4 的「accent glow」只指状态切换瞬间的轻微光晕，深色下 alpha ≤ `glow.alpha`，浅色不加。
 

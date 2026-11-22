@@ -88,6 +88,12 @@ export interface ZColors {
   screenOnPrimary: string;
   /** 行按下 */
   screenPressed: string;
+  /** 列表左滑「更新」底色：中性灰，不跟强调色（pink fill #D1004B 与删除红相邻难分；iOS swipeActions 字色固定白，green / orange fill 配白字不过 AA）。白字 5.99:1；深色 s2 上 3.07:1、浅色白卡上 5.99:1（非文字 ≥3）。2026-11-23 A 定 */
+  screenSwipeUpdate: string;
+  /** 列表左滑「删除」/「确认删除」底色。白字 5.38:1（screen.red #FF453A 配白字只有 3.41，不用）。2026-11-23 A 定 */
+  screenSwipeDelete: string;
+  /** 左滑按钮文字 / 图标（与 iOS 系统 swipeActions 一致） */
+  screenOnSwipe: string;
 }
 
 export const ZColorsDark: ZColors = {
@@ -154,6 +160,9 @@ export const ZColorsDark: ZColors = {
   screenPrimary: '#FFF2F2F2',
   screenOnPrimary: '#FF000000',
   screenPressed: '#08FFFFFF',
+  screenSwipeUpdate: '#FF636366',
+  screenSwipeDelete: '#FFD70015',
+  screenOnSwipe: '#FFFFFFFF',
 };
 
 export const ZColorsLight: ZColors = {
@@ -220,6 +229,9 @@ export const ZColorsLight: ZColors = {
   screenPrimary: '#FF000000',
   screenOnPrimary: '#FFFFFFFF',
   screenPressed: '#08000000',
+  screenSwipeUpdate: '#FF636366',
+  screenSwipeDelete: '#FFD70015',
+  screenOnSwipe: '#FFFFFFFF',
 };
 
 export function zColors(isDark: boolean): ZColors {

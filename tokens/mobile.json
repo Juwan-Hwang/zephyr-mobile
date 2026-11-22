@@ -66,7 +66,10 @@
     "fade":   { "value": "#000000", "lightValue": "#F2F2F7", "comment": "列表上下渐隐终点" },
     "primary":    { "value": "#F2F2F2", "lightValue": "#000000", "comment": "主按钮底（原型深色 #F2F2F2 黑字）" },
     "on-primary": { "value": "#000000", "lightValue": "#FFFFFF" },
-    "pressed":    { "value": "rgba(255, 255, 255, 0.03)", "lightValue": "rgba(0, 0, 0, 0.03)", "comment": "行按下" }
+    "pressed":    { "value": "rgba(255, 255, 255, 0.03)", "lightValue": "rgba(0, 0, 0, 0.03)", "comment": "行按下" },
+    "swipe-update": { "value": "#636366", "lightValue": "#636366", "comment": "列表左滑「更新」底色：中性灰，不跟强调色（pink fill #D1004B 与删除红相邻难分；iOS swipeActions 字色固定白，green / orange fill 配白字不过 AA）。白字 5.99:1；深色 s2 上 3.07:1、浅色白卡上 5.99:1（非文字 ≥3）。2026-11-23 A 定" },
+    "swipe-delete": { "value": "#D70015", "lightValue": "#D70015", "comment": "列表左滑「删除」/「确认删除」底色。白字 5.38:1（screen.red #FF453A 配白字只有 3.41，不用）。2026-11-23 A 定" },
+    "on-swipe":     { "value": "#FFFFFF", "lightValue": "#FFFFFF", "comment": "左滑按钮文字 / 图标（与 iOS 系统 swipeActions 一致）" }
   },
   "accent": {
     "$comment": "用户可选强调色（blue 默认）。value = 深色，lightValue = 浅色。base：开关 / 进度 / 光晕 / 选中描边等填充与大图形；text：前景小字、链接、索引条、搜索高亮、「+」等图标（浅色加深以过正文 4.5）；fill + on-fill：主按钮、选中胶囊的底与字（过正文 4.5）。深色 base 即原 Android ZColors.kt 的 darkVariant。2026-11-21 设计评审。",

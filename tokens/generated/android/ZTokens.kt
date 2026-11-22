@@ -80,6 +80,9 @@ data class ZColors(
     val screenPrimary: Color,
     val screenOnPrimary: Color,
     val screenPressed: Color,
+    val screenSwipeUpdate: Color,
+    val screenSwipeDelete: Color,
+    val screenOnSwipe: Color,
     val isDark: Boolean,
 ) {
     companion object {
@@ -147,6 +150,9 @@ data class ZColors(
             screenPrimary = Color(0xFFF2F2F2),
             screenOnPrimary = Color(0xFF000000),
             screenPressed = Color(0x08FFFFFF),
+            screenSwipeUpdate = Color(0xFF636366),
+            screenSwipeDelete = Color(0xFFD70015),
+            screenOnSwipe = Color(0xFFFFFFFF),
             isDark = true,
         )
         val Light = ZColors(
@@ -213,6 +219,9 @@ data class ZColors(
             screenPrimary = Color(0xFF000000),
             screenOnPrimary = Color(0xFFFFFFFF),
             screenPressed = Color(0x08000000),
+            screenSwipeUpdate = Color(0xFF636366),
+            screenSwipeDelete = Color(0xFFD70015),
+            screenOnSwipe = Color(0xFFFFFFFF),
             isDark = false,
         )
     }
