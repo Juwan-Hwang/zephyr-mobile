@@ -24,6 +24,9 @@ object SubscriptionWarning {
         return days <= DAYS
     }
 
+    /** Contract §18.b state.expired: red dot + "已过期" instead of the amber "soon" treatment. */
+    fun expired(expiresAt: Long?, now: Long): Boolean = expiresAt != null && expiresAt <= now
+
     fun mostlyUsed(used: Long?, total: Long?): Boolean {
         if (used == null || total == null || total <= 0) return false
         return used.toDouble() / total >= USED_FRACTION

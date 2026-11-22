@@ -473,4 +473,8 @@
     <string name="connect_no_subscription">サブスクリプションがまだありません</string>
     <!-- Contract §16.c: the settings write failed and the change was rolled back. -->
     <string name="settings_save_failed">設定を保存できませんでした</string>
+    <!-- Contract §18.b status terms (glossary state.ok / state.expired / state.failed) -->
+    <string name="state_ok">正常</string>
+    <string name="state_expired">期限切れ</string>
+    <string name="state_failed">失敗</string>
 </resources>

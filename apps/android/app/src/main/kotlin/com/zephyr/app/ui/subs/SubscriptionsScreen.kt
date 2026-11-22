@@ -29,6 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zephyr.app.R
@@ -80,9 +82,14 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
     var showAll by remember { mutableStateOf(false) }
     // Audit U2: "更新前显示更改" previews first and waits for 更新 on the review card.
     var review by remember { mutableStateOf<UpdateReview?>(null) }
+    // Contract §18.b state.failed: a subscription whose last update from this page failed shows "失败" in its row
+    // (red dot + text, in place of the expiry) until an update succeeds (iOS SubscriptionsModel.failedUpdates).
+    var failedUpdates by remember { mutableStateOf(emptySet<String>()) }
     fun updateOne(s: com.zephyr.engine.Subscription) = scope.launch {
         busyId = s.id
-        runCatching { engine.updateSubscription(s.id) }.onFailure { error = res.getString(R.string.subs_error_update, s.name) }
+        runCatching { engine.updateSubscription(s.id) }
+            .onSuccess { failedUpdates = failedUpdates - s.id }
+            .onFailure { failedUpdates = failedUpdates + s.id; error = res.getString(R.string.subs_error_update, s.name) }
         busyId = null
     }
     fun requestUpdate(s: com.zephyr.engine.Subscription) {
@@ -99,7 +106,7 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
     fun runUpdateAll() = scope.launch {
         updating = true
         runCatching { engine.updateAll() }
-            .onSuccess { d -> onNotice(uiPlural(R.plurals.subs_updated_count, d.size)) }
+            .onSuccess { d -> failedUpdates = emptySet(); onNotice(uiPlural(R.plurals.subs_updated_count, d.size)) }
             .onFailure { error = res.getString(R.string.subs_error_update_all) }
         updating = false
     }
@@ -161,6 +168,16 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
                 metered.forEachIndexed { i, s ->
                     if (i > 0) ZDivider(inset = false)
                     val soon = SubscriptionWarning.isWarning(s, now) // §16.e ④
+                    val failed = s.id in failedUpdates
+                    val expired = SubscriptionWarning.expired(s.expiresAt, now)
+                    // §18.b: the row's state for TalkBack — failed / expired, otherwise "正常" (normal is unmarked on screen).
+                    val stateText = stringResource(
+                        when {
+                            failed -> R.string.state_failed
+                            expired -> R.string.state_expired
+                            else -> R.string.state_ok
+                        },
+                    )
                     val armed = pendingDelete == s.id
                     SwipeActionsRow(
                         listOf(
@@ -180,16 +197,20 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
                         resetKey = subs.size,
                         onClosed = { if (pendingDelete == s.id) pendingDelete = null },
                     ) {
-                    Row(Modifier.fillMaxWidth().padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Row(Modifier.fillMaxWidth().semantics(mergeDescendants = true) { stateDescription = stateText }.padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
                             ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight))
                             // §9.1: the line stays t3; only the expiry date is amber-text, led by an amber dot (shape + colour).
                             val countText = pluralStringResource(R.plurals.common_node_count, s.nodeCount.toPluralCount(), ZFormat.grouped(s.nodeCount))
+                            // §18.b: failed → red dot + "失败" (replaces the expiry); expired → red dot + "已过期"; ≤ 7 days → amber dot + date.
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                ZText(countText + (if (s.expiresAt != null) " · " else ""), style = ZTheme.type.footnote, color = c.text3, maxLines = 1)
-                                s.expiresAt?.let { at ->
-                                    if (soon) { Box(Modifier.size(6.dp).background(c.warning, CircleShape)); Spacer(Modifier.width(5.dp)) }
-                                    ZText(ZFormat.expires(res, at, now), style = ZTheme.type.footnote, color = if (soon) c.warningText else c.text3, maxLines = 1)
+                                ZText(countText + (if (failed || s.expiresAt != null) " · " else ""), style = ZTheme.type.footnote, color = c.text3, maxLines = 1)
+                                if (failed) {
+                                    Box(Modifier.size(6.dp).background(c.danger, CircleShape)); Spacer(Modifier.width(5.dp))
+                                    ZText(stringResource(R.string.state_failed), style = ZTheme.type.footnote, color = c.dangerText, maxLines = 1)
+                                } else s.expiresAt?.let { at ->
+                                    if (soon) { Box(Modifier.size(6.dp).background(if (expired) c.danger else c.warning, CircleShape)); Spacer(Modifier.width(5.dp)) }
+                                    ZText(ZFormat.expires(res, at, now, expired = stringResource(R.string.state_expired)), style = ZTheme.type.footnote, color = if (expired) c.dangerText else if (soon) c.warningText else c.text3, maxLines = 1)
                                 }
                             }
                             Spacer(Modifier.height(10.dp))
@@ -256,7 +277,7 @@ private fun androidx.compose.foundation.layout.BoxScope.AllSubscriptionsSheet(vi
                 ZSettingsRow(
                     s.name,
                     subtitle = pluralStringResource(R.plurals.common_node_count, s.nodeCount.toPluralCount(), ZFormat.grouped(s.nodeCount)) +
-                        (s.expiresAt?.let { " · " + ZFormat.expires(res, it, now) } ?: ""),
+                        (s.expiresAt?.let { " · " + ZFormat.expires(res, it, now, expired = stringResource(R.string.state_expired)) } ?: ""),
                     value = s.remainingBytes?.let(ZFormat::bytesText),
                 )
             }

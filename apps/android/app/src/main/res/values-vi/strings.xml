@@ -473,4 +473,8 @@
     <string name="connect_no_subscription">Chưa có gói đăng ký nào</string>
     <!-- Contract §16.c: the settings write failed and the change was rolled back. -->
     <string name="settings_save_failed">Không thể lưu cài đặt</string>
+    <!-- Contract §18.b status terms (glossary state.ok / state.expired / state.failed) -->
+    <string name="state_ok">Bình thường</string>
+    <string name="state_expired">Đã hết hạn</string>
+    <string name="state_failed">Thất bại</string>
 </resources>
