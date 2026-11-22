@@ -1,0 +1,16 @@
+const { LogsModel } = await import('../.out/rt/app/LogsModel.ts');
+const { defaultSettings, LogLevel } = await import('../.out/rt/engine/Model.ts');
+let bad=0; const ok=(c,m)=>{ if(!c){ bad++; console.log('FAIL',m); } };
+const at=Date.UTC(2026,10,22,10,5,7,9);
+ok(LogsModel.time(at,480)==='18:05:07.009','time +8');
+ok(LogsModel.format({at,level:LogLevel.WARNING,message:'x'},0)==='10:05:07.009 W x','format');
+const s=defaultSettings(); s.trustedWifi=['Home'];
+const d=LogsModel.diagnosticsSummary('1.0 (1)','HarmonyOS 6 (API 21)',s,[],480);
+ok(d.startsWith('# Zephyr diagnostics\napp: 1.0 (1)\nos: HarmonyOS 6 (API 21)\nsettings: {'),'header');
+ok(!d.includes('trustedWifi')&&!d.includes('Home'),'no ssid');
+ok(d.endsWith('errors: none'),'no errors');
+const errs=[]; for(let i=0;i<25;i++) errs.push({at:at+i,code:'SUBSCRIPTION_FETCH_FAILED'});
+const d2=LogsModel.diagnosticsSummary('a','b',s,errs,480);
+ok((d2.match(/subscription_fetch_failed/g)||[]).length===20,'last 20');
+ok(d2.includes('\n  2026-11-22 18:05:07.014 subscription_fetch_failed'),'error line');
+console.log(bad?'FAILED '+bad:'logsexport OK'); process.exit(bad?1:0);

@@ -9,7 +9,8 @@
  * 设置一律“读当前 → 改一项 → AppServices.settings.update 全量写回并落盘”；写失败时开关随状态流回弹并提示。
  * 暂未移植：受信任 Wi‑Fi、本地代理端口、DNS / TUN 高级项（v1 不展示）。
  */
-import { bundleManager } from '@kit.AbilityKit';
+import { bundleManager, common } from '@kit.AbilityKit';
+import { SettingsCodec } from '../engine/SettingsCodec';
 import { AppServices } from '../app/AppServices';
 import { MockEngine } from '../engine/MockEngine';
 import { SceneFailoverNotice } from '../engine/Model';
@@ -27,6 +28,10 @@ import { ZTerm } from '../generated/ZTerms';
 const MODES: ProxyMode[] = [ProxyMode.RULE, ProxyMode.GLOBAL, ProxyMode.DIRECT];
 const LEVELS: LogLevel[] = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARNING, LogLevel.ERROR];
 const APPEARANCES: Appearance[] = [Appearance.SYSTEM, Appearance.DARK, Appearance.LIGHT];
+/** 设置 › 关于 › 源代码（同 Android SOURCE_URL）。 */
+export const SOURCE_URL: string = 'https://github.com/Juwan-Hwang/zephyr-mobile';
+const TTL_OPTIONS: number[] = SettingsCodec.LATENCY_TTL_OPTIONS;
+
 const ACCENTS: Accent[] = [Accent.BLUE, Accent.GREEN, Accent.ORANGE, Accent.PINK];
 
 type SettingsPatch = (s: Settings) => void;
@@ -41,6 +46,7 @@ export struct SettingsView {
   @Local mode: ProxyMode = ProxyMode.RULE;
   @Local onDemand: boolean = true;
   @Local testOnWifiOnly: boolean = true;
+  @Local latencyTtlHours: number = 24;
   @Local shareDiagnostics: boolean = false;
   @Local appearance: Appearance = Appearance.SYSTEM;
   @Local accent: Accent = Accent.BLUE;
@@ -60,6 +66,7 @@ export struct SettingsView {
     this.subs.push(svc.engine.settings().subscribe((s: Settings) => {
       this.onDemand = s.onDemand;
       this.testOnWifiOnly = s.testOnWifiOnly;
+      this.latencyTtlHours = s.latencyTtlHours;
       this.shareDiagnostics = s.shareDiagnostics;
       this.appearance = s.appearance;
       this.accent = s.accent;
@@ -103,6 +110,7 @@ export struct SettingsView {
       const cur = engine.settings().value;
       this.onDemand = cur.onDemand;
       this.testOnWifiOnly = cur.testOnWifiOnly;
+      this.latencyTtlHours = cur.latencyTtlHours;
       this.shareDiagnostics = cur.shareDiagnostics;
       this.appearance = cur.appearance;
       this.accent = cur.accent;
@@ -174,6 +182,36 @@ export struct SettingsView {
     }).catch(() => {});
   }
 
+  private openSource(): void {
+    try {
+      const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
+      ctx.openLink(SOURCE_URL, { appLinkingOnly: false }).catch(() => {});
+    } catch (e) {
+      // 没有可打开链接的应用：忽略
+    }
+  }
+
+  /** 存储条（同 Android StorageBar）：节点（强调色）/ 规则（t3）/ 剩余（底色）。 */
+  @Builder
+  storageBar() {
+    Row() {
+      if (this.storage !== undefined && this.storage.nodesBytes > 0) {
+        Row().height('100%').layoutWeight(this.storage.nodesBytes).backgroundColor(this.theme.accentColor())
+      }
+      if (this.storage !== undefined && this.storage.rulesBytes > 0) {
+        Row().height('100%').layoutWeight(this.storage.rulesBytes).backgroundColor($r('app.color.screen_t3'))
+      }
+      if (this.storage !== undefined && this.storage.freeBytes > 0) {
+        Row().height('100%').layoutWeight(this.storage.freeBytes)
+      }
+    }
+    .width('100%')
+    .height(6)
+    .borderRadius(3)
+    .clip(true)
+    .backgroundColor($r('app.color.screen_s4'))
+  }
+
   private engineLabel(): Resource {
     return AppServices.get().engine.kind === 'mock' ? $r('app.string.hm_settings_engine_mock')
       : $r('app.string.hm_settings_engine_native');
@@ -230,7 +268,6 @@ export struct SettingsView {
           ZToggleRow({
             title: $r('app.string.settings_test_wifi_only'),
             isOn: this.testOnWifiOnly,
-            divider: false,
             onChange: (on: boolean) => {
               this.testOnWifiOnly = on;
               this.patch((s: Settings) => {
@@ -238,6 +275,25 @@ export struct SettingsView {
               });
             }
           })
+          Column({ space: 6 }) {
+            Text($r('app.string.settings_keep_results'))
+              .fontSize(16)
+              .fontColor($r('app.color.screen_t1'))
+            ZSegmented({
+              options: TTL_OPTIONS.map((h: number): ResourceStr => $r('app.plural.settings_hours', h, h)),
+              selected: TTL_OPTIONS.indexOf(this.latencyTtlHours),
+              onSelect: (i: number) => {
+                const h = TTL_OPTIONS[i];
+                this.latencyTtlHours = h;
+                this.patch((s: Settings) => {
+                  s.latencyTtlHours = h;
+                });
+              }
+            })
+          }
+          .width('100%')
+          .alignItems(HorizontalAlign.Start)
+          .padding(16)
         }
 
         ZSection({ header: ZTerm.diagnostics }) {
@@ -256,22 +312,22 @@ export struct SettingsView {
           .alignItems(HorizontalAlign.Start)
           .padding(16)
           Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ left: 16 })
-          ZNavRow({ title: ZTerm.logs, onTap: () => this.onOpenLogs() })
-          ZToggleRow({
-            title: $r('app.string.settings_share_diagnostics'),
-            isOn: this.shareDiagnostics,
-            divider: false,
-            onChange: (on: boolean) => {
-              this.shareDiagnostics = on;
-              this.patch((s: Settings) => {
-                s.shareDiagnostics = on;
-              });
-            }
-          })
+          ZNavRow({ title: ZTerm.logs, divider: false, onTap: () => this.onOpenLogs() })
         }
 
-        ZSection({ header: $r('app.string.settings_section_storage'), footer: $r('app.string.settings_local_data_note') }) {
-          ZNavRow({ title: $r('app.string.settings_storage_title'), value: this.storageText(), chevron: false, divider: false })
+        ZSection({ header: $r('app.string.settings_section_storage') }) {
+          Column({ space: 10 }) {
+            Text($r('app.string.settings_storage_title'))
+              .fontSize(16)
+              .fontColor($r('app.color.screen_t1'))
+            this.storageBar()
+            Text(this.storageText())
+              .fontSize(12)
+              .fontColor($r('app.color.screen_t3'))
+          }
+          .width('100%')
+          .alignItems(HorizontalAlign.Start)
+          .padding(16)
         }
 
         ZSection({ header: ZTerm.appearance }) {
@@ -304,14 +360,34 @@ export struct SettingsView {
           .padding({ left: 16, right: 6, top: 4, bottom: 4 })
         }
 
-        ZSection({ header: $r('app.string.settings_section_about') }) {
+        ZSection({ header: $r('app.string.settings_section_privacy') }) {
+          ZToggleRow({
+            title: $r('app.string.settings_share_diagnostics'),
+            isOn: this.shareDiagnostics,
+            divider: false,
+            onChange: (on: boolean) => {
+              this.shareDiagnostics = on;
+              this.patch((s: Settings) => {
+                s.shareDiagnostics = on;
+              });
+            }
+          })
+        }
+
+        ZSection({ header: $r('app.string.settings_section_about'), footer: $r('app.string.settings_local_data_note') }) {
           ZNavRow({ title: $r('app.string.hm_settings_version'), value: this.version, chevron: false })
           ZNavRow({ title: $r('app.string.hm_settings_engine'), value: this.engineLabel(), chevron: false })
           if (AppServices.get().engine.kind === 'mock') {
             // 仅演示引擎：触发一次场景故障切换，供首页「已切换」卡片和撤销在真机 / 云调试上验证（M1-6）。
             ZNavRow({ title: $r('app.string.hm_settings_mock_failover'), onTap: () => this.simulateFailover() })
           }
-          ZNavRow({ title: $r('app.string.settings_licenses'), divider: false, onTap: () => this.onOpenLicenses() })
+          ZNavRow({ title: $r('app.string.settings_licenses'), onTap: () => this.onOpenLicenses() })
+          ZNavRow({
+            title: $r('app.string.settings_source_code'),
+            value: SOURCE_URL.substring('https://'.length),
+            divider: false,
+            onTap: () => this.openSource()
+          })
         }
       }
       .width('100%')

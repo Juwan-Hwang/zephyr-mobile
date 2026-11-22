@@ -5,11 +5,27 @@
  * - 暂停只停止追加；清空只清本地缓冲。
  * 进程内单例（AppServices.logs）：设置页的“日志级别”与日志页共用同一级别。
  */
-import { LogLevel, logLevelRank, LogLine } from '../engine/Model';
+import { LogLevel, logLevelRank, LogLine, Settings } from '../engine/Model';
+import { SettingsCodec } from '../engine/SettingsCodec';
 import { StateStream, Subscription as StreamSub } from '../engine/Stream';
 import { ZephyrEngine } from '../engine/ZephyrEngine';
 
 export const LOG_CAPACITY: number = 500;
+export const RECENT_ERRORS_MAX: number = 20;
+
+export interface DiagError {
+  at: number;
+  /** ErrorCode 名，如 SUBSCRIPTION_FETCH_FAILED。 */
+  code: string;
+}
+
+function pad(n: number, w: number): string {
+  let s = String(n);
+  while (s.length < w) {
+    s = '0' + s;
+  }
+  return s;
+}
 
 export class LogsModel {
   private engine: ZephyrEngine;
@@ -76,9 +92,68 @@ export class LogsModel {
     this.publish();
   }
 
-  /** 纯文本导出（核心已脱敏）。 */
-  exportText(): string {
-    return this.visible().map((l: LogLine) => new Date(l.at).toISOString() + ' ' + String(l.level).toUpperCase() + ' ' + l.message).join('\n');
+  /**
+   * 纯文本导出（核心已脱敏），每行 "HH:mm:ss.SSS W message"（同 Android LogsModel.format）。
+   * diagnostics 不为空时放在日志前面，中间空一行（§16.c 共享诊断数据）。
+   */
+  exportText(diagnostics?: string, tzOffsetMin?: number): string {
+    const log = this.visible().map((l: LogLine) => LogsModel.format(l, tzOffsetMin)).join('\n');
+    return diagnostics === undefined ? log : diagnostics + '\n\n' + log;
+  }
+
+  /**
+   * §16.c 诊断摘要：App 版本、系统版本、设置（去掉 trustedWifi）、最近 20 个错误码及时间。
+   * 与 Android diagnosticsSummary 同格式；鸿蒙目前没有错误环形缓冲，errors 由调用方给（M2 接内核后补）。
+   */
+  static diagnosticsSummary(appVersion: string, os: string, settings: Settings, errors: DiagError[],
+    tzOffsetMin?: number): string {
+    const all = JSON.parse(SettingsCodec.encode(settings)) as Record<string, Object>;
+    const o: Record<string, Object> = {};
+    for (const k of Object.keys(all)) {
+      if (k !== 'trustedWifi') {
+        o[k] = all[k];
+      }
+    }
+    let out = '# Zephyr diagnostics\n' + 'app: ' + appVersion + '\n' + 'os: ' + os + '\n' + 'settings: ' + JSON.stringify(o) +
+      '\n' + 'errors:';
+    if (errors.length === 0) {
+      out += ' none';
+    }
+    for (const e of errors.slice(Math.max(0, errors.length - RECENT_ERRORS_MAX))) {
+      const d = LogsModel.local(e.at, tzOffsetMin);
+      out += '\n  ' + d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1, 2) + '-' + pad(d.getUTCDate(), 2) + ' ' +
+        LogsModel.time(e.at, tzOffsetMin) + ' ' + e.code.toLowerCase();
+    }
+    return out;
+  }
+
+  static format(l: LogLine, tzOffsetMin?: number): string {
+    return LogsModel.time(l.at, tzOffsetMin) + ' ' + LogsModel.badge(l.level) + ' ' + l.message;
+  }
+
+  /** HH:mm:ss.SSS，按本地时区（测试可传固定偏移，分钟，东八区 = 480）。 */
+  static time(ms: number, tzOffsetMin?: number): string {
+    const d = LogsModel.local(ms, tzOffsetMin);
+    return pad(d.getUTCHours(), 2) + ':' + pad(d.getUTCMinutes(), 2) + ':' + pad(d.getUTCSeconds(), 2) + '.' +
+      pad(d.getUTCMilliseconds(), 3);
+  }
+
+  static badge(l: LogLevel): string {
+    switch (l) {
+      case LogLevel.DEBUG:
+        return 'D';
+      case LogLevel.WARNING:
+        return 'W';
+      case LogLevel.ERROR:
+        return 'E';
+      default:
+        return 'I';
+    }
+  }
+
+  private static local(ms: number, tzOffsetMin?: number): Date {
+    const off = tzOffsetMin !== undefined ? tzOffsetMin : -new Date(ms).getTimezoneOffset();
+    return new Date(ms + off * 60000);
   }
 
   append(line: LogLine): void {

@@ -2,7 +2,12 @@
  * 设置 › 诊断 › 日志（对照 Android LogsScreen）：级别分段（§16.h：debug 抬高内核级别，离开回 info，由 LogsModel 处理）、
  * 暂停 / 继续、清空；新行到达时滚到底部（暂停时不滚）。最多 500 行（LogsModel.LOG_CAPACITY）。
  */
+import { deviceInfo } from '@kit.BasicServicesKit';
+import { bundleManager, common } from '@kit.AbilityKit';
+import { systemShare } from '@kit.ShareKit';
+import { uniformTypeDescriptor } from '@kit.ArkData';
 import { AppServices } from '../app/AppServices';
+import { LogsModel } from '../app/LogsModel';
 import { Format } from '../common/Format';
 import { Labels } from '../common/Labels';
 import { ZEmpty } from '../components/ZEmpty';
@@ -10,6 +15,8 @@ import { ZSegmented } from '../components/ZSegmented';
 import { LogLevel, LogLine } from '../engine/Model';
 import { Subscription as StreamSub } from '../engine/Stream';
 import { ZTerm } from '../generated/ZTerms';
+
+export const LOGS_SHARE_ID: string = 'zephyr.logs.share';
 
 const LEVELS: LogLevel[] = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARNING, LogLevel.ERROR];
 
@@ -50,6 +57,35 @@ export struct LogsPage {
     AppServices.get().logs.stop();
   }
 
+  /** 分享（同 Android LogsScreen）：开了“共享诊断数据”才在日志前加诊断摘要（§16.c）；走系统分享面板，纯文本。 */
+  private async share(): Promise<void> {
+    const svc = AppServices.get();
+    const s = svc.engine.settings().value;
+    let diag: string | undefined = undefined;
+    if (s.shareDiagnostics) {
+      let app = '';
+      try {
+        const info = bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT);
+        app = info.versionName + ' (' + info.versionCode + ')';
+      } catch (e) {
+        app = '';
+      }
+      const os = deviceInfo.displayVersion + ' (API ' + deviceInfo.sdkApiVersion + ')';
+      diag = LogsModel.diagnosticsSummary(app, os, s, []);
+    }
+    const text = svc.logs.exportText(diag);
+    const record: systemShare.SharedRecord = {
+      utd: uniformTypeDescriptor.UniformDataType.PLAIN_TEXT,
+      content: text
+    };
+    const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
+    const controller = new systemShare.ShareController(new systemShare.SharedData(record));
+    await controller.show(ctx, {
+      previewMode: systemShare.SharePreviewMode.DEFAULT,
+      selectionMode: systemShare.SelectionMode.SINGLE
+    });
+  }
+
   build() {
     NavDestination() {
       Column({ space: 10 }) {
@@ -72,7 +108,18 @@ export struct LogsPage {
             .fontSize(13)
             .fontColor($r('app.color.screen_t1'))
             .backgroundColor($r('app.color.screen_s3'))
+            .enabled(this.lines.length > 0)
             .onClick(() => AppServices.get().logs.clear())
+          Button($r('app.string.common_share'))
+            .id(LOGS_SHARE_ID)
+            .height(30)
+            .fontSize(13)
+            .fontColor($r('app.color.screen_t1'))
+            .backgroundColor($r('app.color.screen_s3'))
+            .enabled(this.lines.length > 0)
+            .onClick(() => {
+              this.share().catch(() => {});
+            })
         }
 
         if (this.lines.length === 0) {
