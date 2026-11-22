@@ -10,6 +10,7 @@
  * - 脚注：优选只存在 Zephyr 里 + 上次检测时间。
  * 只读行没有箭头、不响应点按。
  */
+import { LatencyTickBar } from '../components/LatencyTickBar';
 import { AppServices } from '../app/AppServices';
 import { HapticKind, Haptics } from '../app/Haptics';
 import { Lede, LedeKind, SceneSheetModel } from '../app/SceneSheetModel';
@@ -227,6 +228,8 @@ export struct SceneSheet {
 
       Column({ space: 12 }) {
         if (this.candidates.length > 0) {
+          // 规范 §9.6 / J-6：候选列表顶部的延迟刻度条（200 ms 阈值）。
+          LatencyTickBar({ candidates: this.candidates, selectedId: s.selected.id })
           this.pool(s)
         }
         this.settingsGroup(s)

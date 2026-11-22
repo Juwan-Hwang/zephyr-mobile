@@ -405,6 +405,14 @@
       "value": "number_first"
     },
     {
+      "name": "hm_ticks_a11y",
+      "value": "%1$d candidates, %2$d under 200 ms, %3$d timed out"
+    },
+    {
+      "name": "hm_ticks_timeouts",
+      "value": "Timed out %1$d"
+    },
+    {
       "name": "hm_time_days_ago",
       "value": "%1$dd ago"
     },
