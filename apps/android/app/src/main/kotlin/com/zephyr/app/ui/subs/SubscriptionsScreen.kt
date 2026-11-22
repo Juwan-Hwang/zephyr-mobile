@@ -83,7 +83,7 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
     // Audit U2: "更新前显示更改" previews first and waits for 更新 on the review card.
     var review by remember { mutableStateOf<UpdateReview?>(null) }
     // Contract §18.b state.failed: a subscription whose last update from this page failed shows "失败" in its row
-    // (red dot + text, in place of the expiry) until an update succeeds (iOS SubscriptionsModel.failedUpdates).
+    // (red dot + text, in place of the expiry) until updating that subscription succeeds (iOS SubscriptionsModel.failedUpdates).
     var failedUpdates by remember { mutableStateOf(emptySet<String>()) }
     fun updateOne(s: com.zephyr.engine.Subscription) = scope.launch {
         busyId = s.id
@@ -106,7 +106,9 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
     fun runUpdateAll() = scope.launch {
         updating = true
         runCatching { engine.updateAll() }
-            .onSuccess { d -> failedUpdates = emptySet(); onNotice(uiPlural(R.plurals.subs_updated_count, d.size)) }
+            // updateAll() skips / swallows per-subscription failures and its diffs carry no id, so it does not clear
+            // failure markers (CodeAnt #290); a successful single update does.
+            .onSuccess { d -> onNotice(uiPlural(R.plurals.subs_updated_count, d.size)) }
             .onFailure { error = res.getString(R.string.subs_error_update_all) }
         updating = false
     }
