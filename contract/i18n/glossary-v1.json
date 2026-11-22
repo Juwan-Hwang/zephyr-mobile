@@ -1068,11 +1068,9 @@
       "tr": "Normal",
       "vi": "Bình thường",
       "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
-      "keysPlanned": {
-        "android": "state_ok"
-      },
       "keys": {
-        "ios": "App:正常"
+        "ios": "App:正常",
+        "android": "state_ok"
       },
       "nativeReview": {
         "status": "pending",
@@ -1276,11 +1274,9 @@
       "tr": "Süresi doldu",
       "vi": "Đã hết hạn",
       "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
-      "keysPlanned": {
-        "android": "state_expired"
-      },
       "keys": {
-        "ios": "App:已过期"
+        "ios": "App:已过期",
+        "android": "state_expired"
       },
       "nativeReview": {
         "status": "pending",
@@ -1320,11 +1316,9 @@
       "tr": "Başarısız",
       "vi": "Thất bại",
       "note": "2026-11-21 §18.b 新增（状态不只靠颜色 / 节点页判断句）；en、zh 为定稿，其余 12 种为 A 起草，未经母语审校（见 nativeReview）",
-      "keysPlanned": {
-        "android": "state_failed"
-      },
       "keys": {
-        "ios": "App:失败"
+        "ios": "App:失败",
+        "android": "state_failed"
       },
       "nativeReview": {
         "status": "pending",
