@@ -1,6 +1,8 @@
 /*
  * 规则段（对照 Android ui/rules RulesScreen，简化）：总数 + 分层摘要（engine.ruleStats），
  * 匹配顺序从上到下的各层列表，域名 / IP 测试框（engine.testRule）显示命中层、规则、策略与用时。
+ * 右上“+”（M1-13，同 Android Review L-P2-8）：以测试框里的域名为对象，打开与轨迹页同一张 TraceBody sheet
+ * （目标 / 场景 / 保留覆写）；测试框为空时只把焦点给测试框。
  */
 import { AppServices } from '../app/AppServices';
 import { Format } from '../common/Format';
@@ -9,6 +11,13 @@ import { ZCard } from '../components/ZCard';
 import { ZSection } from '../components/ZSection';
 import { ErrorCode, RuleLayer, RuleStats, RuleTrace } from '../engine/Model';
 import { ZephyrError } from '../engine/ZephyrEngine';
+import { ZTerm } from '../generated/ZTerms';
+import { ZTheme } from '../common/Theme';
+import { TraceBody } from './TraceBody';
+
+/** 界面测试用组件 id。 */
+export const RULES_ADD_ID: string = 'zephyr.rules.add';
+export const RULES_INPUT_ID: string = 'zephyr.rules.input';
 
 @ComponentV2
 export struct RulesView {
@@ -17,6 +26,36 @@ export struct RulesView {
   @Local trace: RuleTrace | undefined = undefined;
   @Local invalid: boolean = false;
   @Local testing: boolean = false;
+  @Local overrideHost: string = '';
+  @Local showOverride: boolean = false;
+  @Local theme: ZTheme = ZTheme.shared();
+
+  /** “+”：有域名就开覆写 sheet，没有就聚焦测试框。 */
+  private addOverride(): void {
+    const h = this.input.trim();
+    if (h.length === 0) {
+      this.getUIContext().getFocusController().requestFocus(RULES_INPUT_ID);
+      return;
+    }
+    this.overrideHost = h;
+    this.showOverride = true;
+  }
+
+  @Builder
+  overrideSheet() {
+    Scroll() {
+      Column() {
+        if (this.overrideHost.length > 0) {
+          TraceBody({ host: this.overrideHost })
+        }
+      }
+      .width('100%')
+      .padding({ top: 8, bottom: 24 })
+    }
+    .width('100%')
+    .align(Alignment.Top)
+    .scrollBar(BarState.Off)
+  }
 
   aboutToAppear(): void {
     AppServices.get().engine.ruleStats().then((s: RuleStats) => {
@@ -109,32 +148,54 @@ export struct RulesView {
     }
   }
 
+  @Builder
+  statsHeader() {
+    if (this.stats !== undefined) {
+      Column({ space: 4 }) {
+        Row({ space: 6 }) {
+          Text(Format.grouped(this.total()))
+            .fontSize(28)
+            .fontWeight(FontWeight.Medium)
+            .fontFamily('monospace')
+            .fontColor($r('app.color.screen_t1'))
+          Text($r('app.plural.rules_total_unit', this.total()))
+            .fontSize(14)
+            .fontColor($r('app.color.screen_t3'))
+        }
+        .alignItems(VerticalAlign.Bottom)
+        Text($r('app.plural.rules_summary', this.layers().length, this.layers().length, this.diskText()))
+          .fontSize(13)
+          .fontColor($r('app.color.screen_t3'))
+      }
+      .alignItems(HorizontalAlign.Start)
+    }
+  }
+
   build() {
     Scroll() {
       Column({ space: 16 }) {
-        if (this.stats !== undefined) {
-          Column({ space: 4 }) {
-            Row({ space: 6 }) {
-              Text(Format.grouped(this.total()))
-                .fontSize(28)
-                .fontWeight(FontWeight.Medium)
-                .fontFamily('monospace')
-                .fontColor($r('app.color.screen_t1'))
-              Text($r('app.plural.rules_total_unit', this.total()))
-                .fontSize(14)
-                .fontColor($r('app.color.screen_t3'))
-            }
-            .alignItems(VerticalAlign.Bottom)
-            Text($r('app.plural.rules_summary', this.layers().length, this.layers().length, this.diskText()))
-              .fontSize(13)
-              .fontColor($r('app.color.screen_t3'))
+        Row() {
+          this.statsHeader()
+          Blank()
+          Button({ type: ButtonType.Circle }) {
+            SymbolGlyph($r('sys.symbol.plus'))
+              .fontSize(22)
+              .fontColor([this.theme.accentColor()])
           }
-          .alignItems(HorizontalAlign.Start)
+          .width(44)
+          .height(44)
+          .backgroundColor(Color.Transparent)
+          .accessibilityText($r('app.string.rules_add_override_a11y'))
+          .id(RULES_ADD_ID)
+          .onClick(() => this.addOverride())
         }
+        .width('100%')
+        .alignItems(VerticalAlign.Top)
 
         Column({ space: 8 }) {
           Row({ space: 8 }) {
             TextInput({ text: this.input, placeholder: $r('app.string.rules_test_placeholder') })
+              .id(RULES_INPUT_ID)
               .layoutWeight(1)
               .height(40)
               .type(InputType.URL)
@@ -210,5 +271,15 @@ export struct RulesView {
     .width('100%')
     .align(Alignment.Top)
     .scrollBar(BarState.Off)
+    .bindSheet(this.showOverride, this.overrideSheet(), {
+      detents: [SheetSize.MEDIUM, SheetSize.LARGE],
+      showClose: true,
+      dragBar: true,
+      backgroundColor: $r('app.color.screen_bg'),
+      onDisappear: () => {
+        this.showOverride = false;
+        this.overrideHost = '';
+      }
+    })
   }
 }
