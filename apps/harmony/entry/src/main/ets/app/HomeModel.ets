@@ -9,7 +9,7 @@
  * - Failover：撤销只在吐司期间用户没再换过节点时生效（同 iOS apply(failover:) 的守卫）。
  */
 import {
-  LATENCY_TIMEOUT, NodeId, NodeSummary, Scene, SceneFailoverNotice, SceneSource, Subscription, TrafficSample
+  LATENCY_TIMEOUT, NodeFunnel, NodeId, NodeSummary, Scene, SceneFailoverNotice, SceneSource, Subscription, TrafficSample
 } from '../engine/Model';
 import { ZephyrEngine } from '../engine/ZephyrEngine';
 
@@ -195,5 +195,35 @@ export class Failover {
     }
     const s = scenes.find((x: Scene) => x.id === n.sceneId);
     return s !== undefined && s.selected.name === n.switchedTo;
+  }
+}
+
+export const MINI_FUNNEL_WIDTH: number = 120;
+export const MINI_FUNNEL_GAP: number = 2;
+export const MINI_FUNNEL_BAR: number = 3;
+
+/** J-1 迷你漏斗（设计规范 §9.3，同 Android MiniFunnel / iOS MiniFunnel）。 */
+export class MiniFunnelGeom {
+  /** 四段宽度（vp）：log10(count + 1) 占去掉间距后剩余宽度的比例，每段至少 minimum，0 也看得见。 */
+  static widths(f: NodeFunnel, total?: number, gap?: number, minimum?: number): number[] {
+    const t = total ?? MINI_FUNNEL_WIDTH;
+    const g = gap ?? MINI_FUNNEL_GAP;
+    const m = minimum ?? 2;
+    const counts: number[] = [f.poolSize, f.tested, f.reachable, f.underThreshold];
+    const logs: number[] = counts.map((c: number) => Math.log10(Math.max(0, c) + 1));
+    let sum = 0;
+    for (const l of logs) {
+      sum += l;
+    }
+    const room = t - g * (logs.length - 1) - m * logs.length;
+    if (sum <= 0 || room <= 0) {
+      return logs.map(() => m);
+    }
+    return logs.map((l: number) => m + room * (l / sum));
+  }
+
+  /** 画不画：取到了且范围非空（poolSize > 0）；否则行保留「n 个可用」文字，不画假比例（§9.3）。 */
+  static drawable(f: NodeFunnel | undefined): boolean {
+    return f !== undefined && f.poolSize > 0;
   }
 }

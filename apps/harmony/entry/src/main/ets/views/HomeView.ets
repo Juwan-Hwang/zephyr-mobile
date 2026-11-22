@@ -29,6 +29,7 @@ import { Labels } from '../common/Labels';
 import { ZCard } from '../components/ZCard';
 import { ZSparkline } from '../components/ZSparkline';
 import { Failover, GlobalPick, HomeSubs, HomeSubsView, SPARK_POINTS, SparkRing } from '../app/HomeModel';
+import { JUDGEMENT_MAX_AGE_MS, JUDGEMENT_THRESHOLD_MS } from '../app/NodeListModel';
 import { SubscriptionWarning, SubscriptionsModel } from '../app/SubscriptionsModel';
 import { ZTheme } from '../common/Theme';
 import { ZColorsDark, ZColorsLight } from '../generated/ZTokens';
@@ -37,7 +38,7 @@ import { SceneRow } from './SceneRow';
 import { SceneSheet } from './SceneSheet';
 import { HapticKind, Haptics } from '../app/Haptics';
 import {
-  ConnectionState, ConnectionStatus, ErrorCode, ExitChange, NodeDetail, NodeId, NodeSummary, ProxyMode, ScanProgress, Scene,
+  ConnectionState, ConnectionStatus, ErrorCode, ExitChange, NodeDetail, NodeFunnel, NodeId, NodeSummary, ProxyMode, ScanProgress, Scene,
   SceneFailoverNotice, ServiceHealth, Subscription, TrafficSample, UsageSummary
 } from '../engine/Model';
 import { Subscription as StreamSub } from '../engine/Stream';
@@ -86,6 +87,9 @@ export struct HomeView {
   @Local todayBytes: number = -1;
   @Local globalNode: NodeSummary | undefined = undefined;
   @Local scenes: Scene[] = [];
+  /** §19.a 每个场景自己的漏斗（J-1 迷你漏斗）；取不到的场景不在表里。 */
+  @Local funnels: Map<string, NodeFunnel> = new Map<string, NodeFunnel>();
+  private funnelTimer: number = -1;
   @Local simulated: boolean = false;
   @Local busy: boolean = false;
   /** 场景行滑动后待确认的出口更改（同一时间一条）。 */
@@ -130,6 +134,7 @@ export struct HomeView {
     }));
     this.subs.push(engine.scenes().subscribe((s: Scene[]) => {
       this.scenes = s;
+      this.scheduleFunnels();
     }));
     this.subs.push(engine.subscriptions().subscribe((s: Subscription[]) => {
       this.subList = s;
@@ -157,6 +162,10 @@ export struct HomeView {
     this.subs = [];
     this.stopTicker();
     this.stopFailovers();
+    if (this.funnelTimer >= 0) {
+      clearTimeout(this.funnelTimer);
+      this.funnelTimer = -1;
+    }
     if (this.minuteTimer >= 0) {
       clearTimeout(this.minuteTimer);
       this.minuteTimer = -1;
@@ -439,6 +448,33 @@ export struct HomeView {
     }).finally(() => {
       this.applying = false;
     });
+  }
+
+  /** 场景刷新后 500 ms 内合并，每个场景各取一次 sceneFunnel（契约 §19.a 性能说明：与 scenes() 刷新同节流）。 */
+  private scheduleFunnels(): void {
+    if (this.funnelTimer >= 0) {
+      return;
+    }
+    this.funnelTimer = setTimeout(() => {
+      this.funnelTimer = -1;
+      this.refreshFunnels();
+    }, 500);
+  }
+
+  private refreshFunnels(): void {
+    const engine = this.services.engine;
+    const ids = this.scenes.map((s: Scene) => s.id);
+    Promise.all(ids.map((id: string) => engine.sceneFunnel(id, JUDGEMENT_MAX_AGE_MS, JUDGEMENT_THRESHOLD_MS)
+      .catch((): NodeFunnel | undefined => undefined)))
+      .then((fs: (NodeFunnel | undefined)[]) => {
+        const m = new Map<string, NodeFunnel>();
+        fs.forEach((f: NodeFunnel | undefined, i: number) => {
+          if (f !== undefined) {
+            m.set(ids[i], f);
+          }
+        });
+        this.funnels = m;
+      });
   }
 
   private plain(r: Resource): string {
@@ -1024,6 +1060,7 @@ export struct HomeView {
           scene: s,
           pendingNode: this.pendingSceneId === s.id ? this.pendingNode : undefined,
           divider: i < this.scenes.length - 1 && this.pendingSceneId !== s.id,
+          funnel: this.funnels.get(s.id),
           onPick: (n: NodeSummary) => this.pick(s, n),
           onOpen: () => this.openScene(s),
           onScrubStart: () => {

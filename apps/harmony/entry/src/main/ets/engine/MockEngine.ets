@@ -449,6 +449,44 @@ export class MockEngine implements ZephyrEngine {
     return f;
   }
 
+  /**
+   * §19.b Mock：按 mock 候选算（场景当前节点所在地区的 mock 池，场景开了 4K 过滤时只数 4K），不另编。
+   * 延迟 = 已测优先，否则池里的缓存值；与 nodeFunnel 一样不按 maxAge 过滤（mock 样本都是本次启动内的）。同 Android / iOS MockEngine.sceneFunnel。
+   */
+  async sceneFunnel(sceneId: string, maxAgeMs: number, thresholdMs: number): Promise<NodeFunnel | undefined> {
+    const scene = this.sceneState.value.find((s: Scene) => s.id === sceneId);
+    if (scene === undefined) {
+      return undefined;
+    }
+    const threshold = thresholdMs > 0 ? thresholdMs : 300;
+    if (scene.selected.id < 0 || scene.selected.region.length === 0) {
+      const z: NodeFunnel = { sourceCount: FUNNEL_SOURCES, poolSize: 0, tested: 0, reachable: 0, underThreshold: 0, thresholdMs: threshold };
+      return z;
+    }
+    const scope = MockScenes.pool(scene.selected.region)
+      .filter((n: NodeSummary) => scene.nodeFilter === undefined || isUhdName(n.name));
+    let t = 0;
+    let ok = 0;
+    let under = 0;
+    for (const n of scope) {
+      const ms = this.tested.get(n.id) ?? MockScenes.latency(n.id);
+      if (ms === undefined) {
+        continue;
+      }
+      t++;
+      if (ms >= 0) {
+        ok++;
+        if (ms < threshold) {
+          under++;
+        }
+      }
+    }
+    const f: NodeFunnel = {
+      sourceCount: FUNNEL_SOURCES, poolSize: scope.length, tested: t, reachable: ok, underThreshold: under, thresholdMs: threshold
+    };
+    return f;
+  }
+
   async setSceneSource(sceneId: string, source: SceneSource): Promise<NodeSummary | undefined> {
     this.requireScene(sceneId);
     this.patchScene(sceneId, (s: Scene) => {

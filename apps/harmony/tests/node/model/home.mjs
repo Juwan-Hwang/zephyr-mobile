@@ -1,5 +1,5 @@
 // M1-6 首页背后的纯逻辑：速率曲线环形缓冲 + 几何、全局模式换节点、订阅摘要、故障切换撤销。
-const { SparkRing, SparkGeometry, GlobalPick, HomeSubs, Failover, HOME_SUBS_MAX } = await import('../.out/rt/app/HomeModel.ts');
+const { SparkRing, SparkGeometry, GlobalPick, HomeSubs, Failover, HOME_SUBS_MAX, MiniFunnelGeom, MINI_FUNNEL_WIDTH, MINI_FUNNEL_GAP } = await import('../.out/rt/app/HomeModel.ts');
 const { MockEngine } = await import('../.out/rt/engine/MockEngine.ts');
 let bad = 0; const ok = (c, m) => { if (!c) { bad++; console.log('FAIL', m); } };
 
@@ -39,5 +39,17 @@ if (notice.switchedTo !== undefined) {
   ok(!Failover.canUndo({ ...notice, switchedTo: 'nope' }, scenes), 'undo invalid after manual change');
 }
 ok(!Failover.canUndo({ sceneId: 'x', sceneName: 'x', failedNode: 'y' }, scenes), 'no target → no undo');
+
+// J-1 迷你漏斗几何 + §19.b Mock sceneFunnel
+const w = MiniFunnelGeom.widths({ poolSize: 1e7, tested: 5000, reachable: 300, underThreshold: 9 });
+ok(w.length === 4 && w[0] > w[1] && w[1] > w[2] && w[2] > w[3] && w[3] >= 2, 'widths shrink ' + w);
+ok(Math.abs(w.reduce((a, b) => a + b, 0) + 3 * MINI_FUNNEL_GAP - MINI_FUNNEL_WIDTH) < 1e-6, 'widths fill');
+ok(MiniFunnelGeom.widths({ poolSize: 0, tested: 0, reachable: 0, underThreshold: 0 }).every(x => x === 2), 'all-zero minimum');
+ok(!MiniFunnelGeom.drawable(undefined) && !MiniFunnelGeom.drawable({ poolSize: 0 }) && MiniFunnelGeom.drawable({ poolSize: 3 }), 'drawable');
+for (const s of e.scenes().value) {
+  const f = await e.sceneFunnel(s.id, 0, 200);
+  ok(f && f.underThreshold <= f.reachable && f.reachable <= f.tested && f.tested <= f.poolSize, 'funnel order ' + s.id + JSON.stringify(f));
+}
+ok(await e.sceneFunnel('nope', 0, 200) === undefined, 'unknown scene → undefined');
 sub.cancel();
 console.log(bad ? 'FAILED ' + bad : 'home OK'); process.exit(bad ? 1 : 0);

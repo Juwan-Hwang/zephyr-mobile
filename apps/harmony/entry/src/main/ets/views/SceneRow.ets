@@ -13,7 +13,10 @@ import { AppServices } from '../app/AppServices';
 import { SceneSlots } from '../app/SceneSlots';
 import { Labels } from '../common/Labels';
 import { ZTheme } from '../common/Theme';
-import { NodeSummary, Scene, SceneSource, ServiceHealth } from '../engine/Model';
+import { NodeFunnel, NodeSummary, Scene, SceneSource, ServiceHealth } from '../engine/Model';
+import { MiniFunnelGeom } from '../app/HomeModel';
+import { Format } from '../common/Format';
+import { ZMiniFunnel } from '../components/ZMiniFunnel';
 
 /** 场景行组件 id（UiTest 按 id 点行）。 */
 export function sceneRowId(sceneId: string): string {
@@ -26,6 +29,8 @@ export struct SceneRow {
   /** 确认卡打开时显示待切换的节点。 */
   @Param pendingNode: NodeSummary | undefined = undefined;
   @Param divider: boolean = true;
+  /** §19.a 该场景的漏斗；取不到 / 范围为空时为 undefined 或 poolSize 0，行显示「n 个可用」。 */
+  @Param funnel: NodeFunnel | undefined = undefined;
   @Event onPick: (node: NodeSummary) => void = (node: NodeSummary) => {};
   @Event onScrubStart: () => void = () => {};
   /** 点按：打开场景 sheet（M1-5）。 */
@@ -82,6 +87,26 @@ export struct SceneRow {
     return $r('app.plural.common_available_count', this.scene.available, this.scene.available);
   }
 
+  /** 同 Android SceneCard：没有服务异常、不是订阅分组、漏斗取到且范围非空时，迷你漏斗替换「n 个可用」。 */
+  private showFunnel(): boolean {
+    return !this.scene.services.some((h: ServiceHealth) => !h.ok) && this.scene.source !== SceneSource.SUBSCRIPTION_GROUP
+      && MiniFunnelGeom.drawable(this.funnel);
+  }
+
+  private funnelSpoken(): string {
+    const f = this.funnel;
+    if (f === undefined) {
+      return '';
+    }
+    try {
+      const ctx = this.getUIContext().getHostContext();
+      return ctx !== undefined ? ctx.resourceManager.getStringSync($r('app.string.home_mini_funnel_a11y').id,
+        Format.grouped(f.reachable), Format.grouped(f.underThreshold)) : '';
+    } catch (e) {
+      return '';
+    }
+  }
+
   private pinLine(): ResourceStr | undefined {
     const up = this.scene.services.filter((h: ServiceHealth) => h.ok);
     if (this.scene.services.some((h: ServiceHealth) => !h.ok) && up.length > 0) {
@@ -102,11 +127,16 @@ export struct SceneRow {
             .fontSize(17)
             .fontColor($r('app.color.screen_t1'))
             .maxLines(1)
-          Text(this.subtitle())
-            .fontSize(13)
-            .fontColor(this.scene.services.some((h: ServiceHealth) => !h.ok) ? $r('app.color.screen_red')
-              : $r('app.color.screen_t3'))
-            .maxLines(1)
+          if (this.showFunnel()) {
+            ZMiniFunnel({ funnel: this.funnel!, spoken: this.funnelSpoken() })
+              .margin({ top: 4 })
+          } else {
+            Text(this.subtitle())
+              .fontSize(13)
+              .fontColor(this.scene.services.some((h: ServiceHealth) => !h.ok) ? $r('app.color.screen_red_text')
+                : $r('app.color.screen_t3'))
+              .maxLines(1)
+          }
         }
         .layoutWeight(4)
         .alignItems(HorizontalAlign.Start)

@@ -161,6 +161,10 @@ export class NativeEngine implements ZephyrEngine {
     return NativeEngine.ni<NodeFunnel | undefined>('nodeFunnel');
   }
 
+  sceneFunnel(sceneId: string, maxAgeMs: number, thresholdMs: number): Promise<NodeFunnel | undefined> {
+    return NativeEngine.ni<NodeFunnel | undefined>('sceneFunnel');
+  }
+
   setSceneSource(sceneId: string, source: SceneSource): Promise<NodeSummary | undefined> {
     return NativeEngine.ni<NodeSummary | undefined>('setSceneSource');
   }

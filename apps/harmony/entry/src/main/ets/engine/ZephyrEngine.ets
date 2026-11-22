@@ -73,6 +73,8 @@ export interface ZephyrEngine {
   retestScene(sceneId: string): Promise<Scene>;
   scanProgress(): StateStream<ScanProgress | undefined>;
   nodeFunnel(maxAgeMs: number, thresholdMs: number): Promise<NodeFunnel | undefined>;
+  /** §19.a 场景漏斗（首页场景卡迷你漏斗）：范围 = 当前节点所在地区 + §15.h 过滤；未选节点全 0；undefined = 取不到（行只显示文字）。 */
+  sceneFunnel(sceneId: string, maxAgeMs: number, thresholdMs: number): Promise<NodeFunnel | undefined>;
   setSceneSource(sceneId: string, source: SceneSource): Promise<NodeSummary | undefined>;
   setSceneException(sceneId: string, appId: string, nodeId?: NodeId): Promise<void>;
   /** §15.h：预览“只用 4K 节点”；平台据此出确认卡（poolMatching == 0 时禁用）。 */
