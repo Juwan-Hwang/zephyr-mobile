@@ -184,6 +184,19 @@ class WidgetScreenshotTest(private val dark: Boolean) {
         paparazzi.snapshot(render(DpSize(170.dp, 170.dp)) { ZephyrUsageWidget().Content(u.todayBytes, hourly) })
     }
 
+    // And-8: the usage widget's real cells (provider minHeight 110 dp; Responsive MEDIUM / MEDIUM_TALL).
+    @Test fun usageMedium() {
+        val u = runBlocking { engine.usageToday() }
+        val hourly = u.hourly.let { h -> if (h.size >= 24) h.takeLast(24) else List(24 - h.size) { 0L } + h }
+        paparazzi.snapshot(render(ZephyrWidget.MEDIUM) { ZephyrUsageWidget().Content(u.todayBytes, hourly) })
+    }
+
+    @Test fun usageMediumTall() {
+        val u = runBlocking { engine.usageToday() }
+        val hourly = u.hourly.let { h -> if (h.size >= 24) h.takeLast(24) else List(24 - h.size) { 0L } + h }
+        paparazzi.snapshot(render(ZephyrWidget.MEDIUM_TALL) { ZephyrUsageWidget().Content(u.todayBytes, hourly) })
+    }
+
     companion object {
         @JvmStatic @Parameterized.Parameters(name = "dark={0}")
         fun params() = listOf(arrayOf<Any>(true), arrayOf<Any>(false))
