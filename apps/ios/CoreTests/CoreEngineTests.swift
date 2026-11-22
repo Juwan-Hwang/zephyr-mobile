@@ -117,4 +117,12 @@ final class CoreEngineTests: XCTestCase {
         XCTAssertEqual(CoreEngine.defaultName(URL(string: "https://api.flyairport.net/sub")), "Flyairport")
         XCTAssertEqual(CoreEngine.defaultName(nil), "本地配置")
     }
+
+    /// #1 A 2026-11-22 20:43：ms < 0 → -1（超时），ms ≥ 0 → 原值（0 ms 不是未测）。
+    func testLatencyMappingKeepsTimeoutAndZero() {
+        XCTAssertEqual(CoreEngine.latency(-1), -1)
+        XCTAssertEqual(CoreEngine.latency(-5000), -1)
+        XCTAssertEqual(CoreEngine.latency(0), 0)
+        XCTAssertEqual(CoreEngine.latency(38), 38)
+    }
 }

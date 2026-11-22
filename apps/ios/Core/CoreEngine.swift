@@ -283,7 +283,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
             let now = clock()
             let fresh = latencyFreshMillis
             let top = await runQuiet { (try? c.fastestNodes(query: "", limit: 1, nowMillis: now, maxAgeMillis: fresh)) ?? [] }
-            fastest = top.first.map(\.latencyMs).flatMap { $0 > 0 ? $0 : nil }
+            fastest = top.first.map(\.latencyMs).flatMap { $0 >= 0 ? $0 : nil }   // #1 A 20:43：超时（< 0）不算最快，0 ms 合法
             if let g = c.globalNode(), let r = try? await run(.nodeNotFound, { try c.nodeDetail(id: g) }) { regions.insert(r.row.region) }
         }
         return UsageSummary(todayBytes: hourly.reduce(0, +), regionsToday: Int32(regions.count),
@@ -356,7 +356,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         guard let c = await nodes() else { return mockData ? try await fallback.sceneCandidates(sceneId: sceneId, region: region) : [] }
         let now = clock()
         return try await run(.sceneNotFound) { try c.sceneCandidates(sceneId: sceneId, region: region, nowMillis: now) }
-            .map { r in var s = CoreEngine.row(r.row); s.latencyMs = r.latencyMs > 0 ? r.latencyMs : nil; return s }
+            .map { r in var s = CoreEngine.row(r.row); s.latencyMs = CoreEngine.latency(r.latencyMs); return s }
     }
 
     /// 契约 §15.c。节点库未就绪或核心报错时返回 nil（场景 sheet 隐藏漏斗数据，不编造）。
@@ -615,7 +615,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         let now = clock()
         let maxAge = latencyFreshMillis   // 与 testedCount / 最快节点同一有效期，测过的节点不会在列表里“消失”
         let lat = await runQuiet { c.cachedLatencies(ids: ids, nowMillis: now, maxAgeMillis: maxAge) }
-        let rows = zip(page.rows, lat).map { r, ms -> NodeSummary in var s = CoreEngine.row(r); s.latencyMs = ms; return s }
+        let rows = zip(page.rows, lat).map { r, ms -> NodeSummary in var s = CoreEngine.row(r); s.latencyMs = ms.map(CoreEngine.latency); return s }
         return ZephyrKit.NodePage(rows: rows, offset: Int64(page.offset), total: Int64(page.total))
     }
 
@@ -629,7 +629,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         }
         let d = try await run(.nodeNotFound) { try c.nodeDetail(id: id) }
         var summary = CoreEngine.row(d.row)
-        if let ms = d.latencyMs { summary.latencyMs = ms }
+        if let ms = d.latencyMs { summary.latencyMs = CoreEngine.latency(ms) }
         return ZephyrKit.NodeDetail(summary: summary, server: d.server, port: d.port, subscription: d.subscription, extra: d.extra)
     }
 
@@ -1174,7 +1174,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         let now = clock()
         let fresh = latencyFreshMillis
         let top = await runQuiet { (try? c.fastestNodes(query: query, limit: 1, nowMillis: now, maxAgeMillis: fresh)) ?? [] }
-        guard let r = top.first, r.latencyMs > 0 else { return nil }
+        guard let r = top.first, r.latencyMs >= 0 else { return nil }
         var s = CoreEngine.row(r.row)
         s.latencyMs = r.latencyMs
         return s
@@ -1223,13 +1223,17 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
                                updatedAt: s.updatedAt, autoUpdateHours: s.autoUpdateHours, lastDiff: s.lastDiff.map(diff))
     }
 
+    /// 延迟映射（契约 §0 第 4 条 / §18.b，#1 A 2026-11-22 20:43 决定，三端同规则）：核心给的 ms < 0 → -1（超时，state.timeout），
+    /// ms ≥ 0 → 原值（0 ms 合法）；只有核心给 nil（无样本 / 过期）才是未测。此前 `> 0` 把超时吞成未测、把 0 ms 算成未测。
+    static func latency(_ ms: Int32) -> Int32 { ms < 0 ? -1 : ms }
+
     static let unselected = NodeSummary(id: NodeId.max, name: "未选择", region: "", protocol: "")
 
     static func scene(_ s: Scene) -> ZephyrKit.Scene {
         let kind: ZephyrKit.SceneKind = switch s.kind { case .ai: .ai; case .video: .video; case .other: .other; case .custom: .custom }
         let source: ZephyrKit.SceneSource = switch s.source { case .auto: .auto; case .manual: .manual; case .subscriptionGroup: .subscriptionGroup }
         var selected = s.selected.map(row) ?? unselected
-        if let ms = s.selectedLatencyMs, ms > 0 { selected.latencyMs = ms }
+        if let ms = s.selectedLatencyMs { selected.latencyMs = latency(ms) }
         return ZephyrKit.Scene(id: s.id, kind: kind, name: s.name, available: s.available, selected: selected, exitIp: s.exitIp,
                                source: source, testedAt: s.testedAt, note: s.note,
                                exceptions: s.exceptions.compactMap { e in e.node.map { ZephyrKit.SceneException(app: e.app, node: row($0), appId: e.appId) } },
