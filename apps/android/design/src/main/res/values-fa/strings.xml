@@ -9,7 +9,7 @@
     <string name="common_latency_timeout">تایم‌اوت</string>
     <string name="common_latency_a11y_untested">تأخیر بررسی نشده</string>
     <string name="common_latency_a11y_testing">در حال بررسی تأخیر</string>
-    <string name="common_latency_a11y_timeout">تأخیر: مهلت تمام شد</string>
+    <string name="common_latency_a11y_timeout">تأخیر: اتمام مهلت</string>
     <plurals name="common_latency_a11y_ms">
         <item quantity="one">تأخیر %1$d میلی‌ثانیه</item>
         <item quantity="other">تأخیر %1$d میلی‌ثانیه</item>

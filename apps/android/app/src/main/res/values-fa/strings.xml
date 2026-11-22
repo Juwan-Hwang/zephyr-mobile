@@ -154,8 +154,8 @@
     <string name="scene_funnel_reachable">در دسترس</string>
     <string name="scene_funnel_under">کمتر از %1$d ms</string>
     <string name="home_mini_funnel_a11y">در دسترس %1$s، کمتر از ۲۰۰ میلی‌ثانیه %2$s</string>
-    <string name="scene_tickbar_timeouts">مهلت تمام شد: %1$s</string>
-    <string name="scene_tickbar_a11y">%1$s نامزد، %2$s زیر ۲۰۰ میلی‌ثانیه، %3$s مهلت تمام شد</string>
+    <string name="scene_tickbar_timeouts">اتمام مهلت: %1$s</string>
+    <string name="scene_tickbar_a11y">%1$s نامزد، %2$s زیر ۲۰۰ میلی‌ثانیه، %3$s اتمام مهلت</string>
     <string name="scene_note">منتخب‌ها فقط در Zephyr ذخیره می‌شوند. پیکربندی اشتراک شما تغییر نمی‌کند.</string>
     <string name="scene_note_tested">\u2068%1$s\u2069 آخرین آزمایش: \u2068%2$s\u2069.</string>
 

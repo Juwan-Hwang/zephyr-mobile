@@ -4,7 +4,7 @@
     <string name="common_done">Xong</string>
     <string name="common_close">Đóng</string>
     <string name="common_clear">Xóa</string>
-    <string name="common_latency_timeout">Hết thời gian</string>
+    <string name="common_latency_timeout">Hết thời gian chờ</string>
     <string name="common_latency_a11y_untested">Chưa kiểm tra độ trễ</string>
     <string name="common_latency_a11y_testing">Đang kiểm tra độ trễ</string>
     <string name="common_latency_a11y_timeout">Độ trễ: hết thời gian chờ</string>

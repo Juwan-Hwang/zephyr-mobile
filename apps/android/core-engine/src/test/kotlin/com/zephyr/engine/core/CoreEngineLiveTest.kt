@@ -52,6 +52,8 @@ class CoreEngineLiveTest {
 
         val page = e.groupMembers("AI", 0, 50)
         assertEquals(3L, page.total); assertEquals("直连", page.rows[2].name)
+        // A on #1: -1 stays a timeout (not untested), null stays untested.
+        assertEquals(listOf(162, -1, null), page.rows.map { it.latencyMs })
         try { e.groupMembers("nope", 0, 5); fail() } catch (x: ZephyrException) { assertEquals(ErrorCode.GROUP_NOT_FOUND, x.code) }
         try { e.testGroup("nope"); fail() } catch (x: ZephyrException) { assertEquals(ErrorCode.GROUP_NOT_FOUND, x.code) }
 

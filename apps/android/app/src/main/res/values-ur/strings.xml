@@ -551,7 +551,7 @@
     <!-- Contract §16.c: the settings write failed and the change was rolled back. -->
     <string name="settings_save_failed">ترتیب محفوظ نہیں ہو سکی</string>
     <!-- Contract §18.b status terms (glossary state.ok / state.expired / state.failed) -->
-    <string name="state_ok">معمول کے مطابق</string>
-    <string name="state_expired">ختم شدہ</string>
+    <string name="state_ok">ٹھیک</string>
+    <string name="state_expired">میعاد ختم</string>
     <string name="state_failed">ناکام</string>
 </resources>

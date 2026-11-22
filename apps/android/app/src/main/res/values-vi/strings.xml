@@ -140,8 +140,8 @@
     <string name="scene_funnel_reachable">Kết nối được</string>
     <string name="scene_funnel_under">Dưới %1$d ms</string>
     <string name="home_mini_funnel_a11y">Kết nối được %1$s, dưới 200 mili giây %2$s</string>
-    <string name="scene_tickbar_timeouts">Hết thời gian: %1$s</string>
-    <string name="scene_tickbar_a11y">%1$s ứng viên, %2$s dưới 200 mili giây, %3$s hết thời gian</string>
+    <string name="scene_tickbar_timeouts">Hết thời gian chờ: %1$s</string>
+    <string name="scene_tickbar_a11y">%1$s ứng viên, %2$s dưới 200 mili giây, %3$s hết thời gian chờ</string>
     <string name="scene_note">Kết quả chọn lọc chỉ được lưu trong Zephyr. Cấu hình đăng ký không thay đổi.</string>
     <string name="scene_note_tested">%1$s Kiểm tra lần cuối %2$s.</string>
     <string name="command_placeholder">Tìm kiếm hoặc nhập lệnh</string>

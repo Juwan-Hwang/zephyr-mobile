@@ -467,7 +467,7 @@ class CoreEngine(
     private fun summary(name: String, type: String?, latency: Int?): NodeSummary {
         val id = LiveNames.idOf(name).also { names[it] = name }
         if (name == "DIRECT") return NodeSummary(id, "直连", "CN", protocol = "DIRECT")
-        return NodeSummary(id = id, name = name, region = LiveNames.regionOf(name), protocol = type?.uppercase() ?: "", latencyMs = latency?.takeIf { it > 0 })
+        return NodeSummary(id = id, name = name, region = LiveNames.regionOf(name), protocol = type?.uppercase() ?: "", latencyMs = LatencyMapping.map(latency))
     }
 
     // ── Scenes (core-mobile owns pools, selection, exceptions; mihomo hot-switches) ─────────────────
@@ -527,7 +527,7 @@ class CoreEngine(
 
     override suspend fun sceneCandidates(sceneId: String, region: String?): List<NodeSummary> {
         val c = nodes() ?: return if (mockData) fallback.sceneCandidates(sceneId, region) else emptyList()
-        return withContext(io) { sceneCall(ErrorMapping.Call.SCENE_CANDIDATES) { c.sceneCandidates(sceneId, region, clock()) } }.map { row(it.row).copy(latencyMs = it.latencyMs.takeIf { ms -> ms > 0 }) }
+        return withContext(io) { sceneCall(ErrorMapping.Call.SCENE_CANDIDATES) { c.sceneCandidates(sceneId, region, clock()) } }.map { row(it.row).copy(latencyMs = LatencyMapping.map(it.latencyMs)) }
     }
 
     override suspend fun previewSceneChange(sceneId: String, nodeId: NodeId): ExitChange {
@@ -746,8 +746,8 @@ class CoreEngine(
             val sel = groups[sc.group]?.selected ?: continue
             val nodeId = sc.selected?.id ?: continue
             val tested = withContext(io) { runCatching { l.test(sc.group, LivePort.TEST_URL, 5_000) }.getOrNull() } ?: continue
-            if (tested.none { (it.latencyMs ?: 0) > 0 }) continue
-            val ok = (tested.firstOrNull { it.name == sel }?.latencyMs ?: 0) > 0
+            if (tested.none { LatencyMapping.reachable(it.latencyMs) }) continue
+            val ok = LatencyMapping.reachable(tested.firstOrNull { it.name == sel }?.latencyMs)
             val still = withContext(io) { runCatching { c.scenes(clock()) }.getOrNull() }?.firstOrNull { it.id == sc.id }?.selected?.id
             if (still != nodeId) continue
             if (sc.kind == CoreSceneKind.AI) {
@@ -804,7 +804,7 @@ class CoreEngine(
         id = s.id,
         kind = when (s.kind) { CoreSceneKind.AI -> SceneKind.AI; CoreSceneKind.VIDEO -> SceneKind.VIDEO; CoreSceneKind.OTHER -> SceneKind.OTHER; CoreSceneKind.CUSTOM -> SceneKind.CUSTOM },
         name = s.name, available = s.available,
-        selected = s.selected?.let { row(it).copy(latencyMs = s.selectedLatencyMs?.takeIf { ms -> ms > 0 }) } ?: unselected,
+        selected = s.selected?.let { row(it).copy(latencyMs = LatencyMapping.map(s.selectedLatencyMs)) } ?: unselected,
         exitIp = s.exitIp,
         source = when (s.source) { CoreSceneSource.AUTO -> SceneSource.AUTO; CoreSceneSource.MANUAL -> SceneSource.MANUAL; CoreSceneSource.SUBSCRIPTION_GROUP -> SceneSource.SUBSCRIPTION_GROUP },
         testedAt = s.testedAt, note = s.note,
@@ -868,7 +868,7 @@ class CoreEngine(
     override suspend fun node(id: NodeId): NodeDetail {
         val c = nodes() ?: return if (mockData) fallback.node(id) else throw noSubscription()
         val d = withContext(io) { wrap(ErrorMapping.Call.NODE_DETAIL) { c.nodeDetail(id.toULong()) } }
-        return NodeDetail(row(d.row), d.server, d.port, d.subscription, d.extra, d.latencyMs?.takeIf { it > 0 }, d.latencyAt)
+        return NodeDetail(row(d.row), d.server, d.port, d.subscription, d.extra, LatencyMapping.map(d.latencyMs), d.latencyAt)
     }
 
     /**
@@ -1030,7 +1030,7 @@ class CoreEngine(
             // §5 / scale-architecture: rows carry the cached latency (within the TTL, -1 = timeout), so tested nodes
             // keep their reading across restarts and are not re-tested on settle (audit E37, same as iOS).
             val lat = runCatching { c.cachedLatencies(p.rows.map { it.id }, clock(), ttl) }.getOrNull()
-            NodePage(p.rows.mapIndexed { i, r -> row(r).copy(latencyMs = lat?.getOrNull(i)) }, p.offset.toLong(), p.total.toLong())
+            NodePage(p.rows.mapIndexed { i, r -> row(r).copy(latencyMs = LatencyMapping.map(lat?.getOrNull(i))) }, p.offset.toLong(), p.total.toLong())
         }
     }
 
@@ -1133,7 +1133,7 @@ class CoreEngine(
             (sc + listOfNotNull(globalNode()?.region)).toSet().size
         }.getOrDefault(0)
         val ttl = ttlMs()
-        val fastest = withContext(io) { runCatching { c.fastestNodes("", 1u, now, ttl).firstOrNull()?.latencyMs?.takeIf { it > 0 } }.getOrNull() }
+        val fastest = withContext(io) { runCatching { c.fastestNodes("", 1u, now, ttl).firstOrNull()?.latencyMs?.takeIf { it >= 0 } }.getOrNull() }
         return UsageSummary(u.hourly.sum(), regions, u.onlineMs, fastest, u.hourly)
     }
 

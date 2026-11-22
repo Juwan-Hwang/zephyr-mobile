@@ -78,6 +78,13 @@ data class CommandCandidate(
 object CommandResults {
     const val GROUP_LIMIT = 5
 
+    /**
+     * Connect / disconnect aliases, same words as iOS (CoreEngine+Commands). The one-character 「开」 / 「关」 only
+     * ever match as the whole word: [matches] needs two characters before a prefix counts (A on #1, §16.d).
+     */
+    val CONNECT_ALIASES = listOf("连接", "connect", "开")
+    val DISCONNECT_ALIASES = listOf("断开", "disconnect", "关")
+
     data class Grouped(val group: CommandGroup, val rows: List<CommandRow>)
 
     /** Case-insensitive match on the label and aliases (prefix for commands, substring otherwise); blank input matches nothing. */
