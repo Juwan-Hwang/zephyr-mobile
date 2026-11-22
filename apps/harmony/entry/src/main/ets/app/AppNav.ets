@@ -27,13 +27,15 @@ export enum BackTo {
   PARENT = 'parent'
 }
 
-/** 资料库 sheet 的入口（Android `LibraryDest`；受信任 Wi‑Fi / 本地代理在设置里进入，服务卡片页待 M1-19，见 §17.c）。 */
+/** 资料库 sheet 的入口（Android `LibraryDest`；受信任 Wi‑Fi / 本地代理在资料库和设置里都能进，服务卡片页待做，见 §17.c）。 */
 export enum LibraryDest {
   NODES = 'nodes',
   SUBSCRIPTIONS = 'subscriptions',
   RULES = 'rules',
   SCENES = 'scenes',
-  SETTINGS = 'settings'
+  SETTINGS = 'settings',
+  TRUSTED_WIFI = 'trustedWifi',
+  LOCAL_PROXY = 'localProxy'
 }
 
 /** NavPathStack 的 param。 */
@@ -60,6 +62,10 @@ export class AppNav {
         return ROUTE_RULES;
       case LibraryDest.SETTINGS:
         return ROUTE_SETTINGS;
+      case LibraryDest.TRUSTED_WIFI:
+        return ROUTE_TRUSTED_WIFI;
+      case LibraryDest.LOCAL_PROXY:
+        return ROUTE_LOCAL_PROXY;
       default:
         return '';
     }

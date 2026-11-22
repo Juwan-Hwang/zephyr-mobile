@@ -4,6 +4,8 @@ let bad=0; const ok=(c,m)=>{ if(!c){bad++;console.log('FAIL',m);} };
 ok(AppNav.routeOf(LibraryDest.NODES)===ROUTE_NODES,'nodes');
 ok(AppNav.routeOf(LibraryDest.SUBSCRIPTIONS)===ROUTE_SUBSCRIPTIONS,'subs');
 ok(AppNav.routeOf(LibraryDest.RULES)===ROUTE_RULES,'rules');
+ok(AppNav.routeOf(LibraryDest.TRUSTED_WIFI)==='trustedWifi'&&AppNav.isRoute('trustedWifi'),'trusted wifi');
+ok(AppNav.routeOf(LibraryDest.LOCAL_PROXY)==='localProxy'&&AppNav.isRoute('localProxy'),'local proxy');
 ok(AppNav.routeOf(LibraryDest.SETTINGS)===ROUTE_SETTINGS,'settings');
 ok(AppNav.routeOf(LibraryDest.SCENES)==='','scenes closes only');
 for (const r of [ROUTE_NODES,ROUTE_SUBSCRIPTIONS,ROUTE_RULES,ROUTE_SETTINGS,ROUTE_LOGS,ROUTE_LICENSES]) ok(AppNav.isRoute(r),'route '+r);

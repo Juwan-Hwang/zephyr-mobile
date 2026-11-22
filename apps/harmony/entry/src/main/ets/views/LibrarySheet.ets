@@ -2,13 +2,14 @@
  * 资料库 sheet 内容（原型 libSheet，对照 Android LibrarySheet / iOS LibraryDestination）：
  * 2×2 统计入口（节点、订阅、规则、场景）+ 下方列表（设置）。由 Index 用 bindSheet 呈现。
  * 计数在 sheet 出现时读一次，订阅列表变化（导入 / 更新 / 删除）时重读（Android L-P2-2）。
- * 鸿蒙暂无的行（契约 §17.c）：小组件与控制中心（鸿蒙只有服务卡片，卡片未做）、受信任 Wi‑Fi、本地代理端口——页面做好后再加。
+ * 下方列表：受信任 Wi‑Fi（值 = 第一个网络或“无”）、本地代理端口（开 / 关）、设置（同 Android）。
+ * 鸿蒙暂无的行（契约 §17.c）：小组件与控制中心（鸿蒙只有服务卡片，卡片未做）。
  */
 import { AppServices } from '../app/AppServices';
 import { LibraryDest } from '../app/AppNav';
 import { Format } from '../common/Format';
 import { ZNavRow } from '../components/ZNavRow';
-import { Scene, Subscription } from '../engine/Model';
+import { Scene, Settings, Subscription } from '../engine/Model';
 import { Subscription as StreamSub } from '../engine/Stream';
 import { ZTerm } from '../generated/ZTerms';
 
@@ -24,6 +25,8 @@ export struct LibrarySheet {
   @Local subs: number = -1;
   @Local rules: number = -1;
   @Local scenes: number = -1;
+  @Local firstWifi: string = '';
+  @Local proxyOn: boolean = false;
   private streams: StreamSub[] = [];
 
   aboutToAppear(): void {
@@ -33,6 +36,10 @@ export struct LibrarySheet {
     }));
     this.streams.push(e.scenes().subscribe((s: Scene[]) => {
       this.scenes = s.length;
+    }));
+    this.streams.push(e.settings().subscribe((s: Settings) => {
+      this.firstWifi = s.trustedWifi.length > 0 ? s.trustedWifi[0] : '';
+      this.proxyOn = s.localProxyEnabled;
     }));
   }
 
@@ -103,6 +110,16 @@ export struct LibrarySheet {
         .width('100%')
 
         Column() {
+          ZNavRow({
+            title: $r('app.string.settings_trusted_wifi'),
+            value: this.firstWifi.length > 0 ? this.firstWifi : ZTerm.none,
+            onTap: () => this.onOpen(LibraryDest.TRUSTED_WIFI)
+          })
+          ZNavRow({
+            title: ZTerm.localProxyPort,
+            value: this.proxyOn ? ZTerm.on : ZTerm.off,
+            onTap: () => this.onOpen(LibraryDest.LOCAL_PROXY)
+          })
           ZNavRow({ title: ZTerm.settings, divider: false, onTap: () => this.onOpen(LibraryDest.SETTINGS) })
         }
         .width('100%')
