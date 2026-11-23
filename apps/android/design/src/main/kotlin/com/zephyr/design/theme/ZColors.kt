@@ -51,6 +51,10 @@ data class ZThemeColors(
     /** Neutral t1 pill (tokens `screen.primary` / `on-primary`). No longer used by ZButton.Primary / chips: §9.1 moved those to [accentFill]. */
     val onPrimaryButton: Color,
     val primaryButton: Color,
+    /** List swipe actions (tokens `screen.swipe-update` / `swipe-delete` / `on-swipe`, #305): neutral grey update, deep red delete, white label. */
+    val swipeUpdate: Color,
+    val swipeDelete: Color,
+    val onSwipe: Color,
 ) {
     fun withAccent(accent: ZAccent): ZThemeColors {
         val c = accent.base(isDark)
@@ -100,6 +104,9 @@ data class ZThemeColors(
             scrim = Color.Black.copy(alpha = if (t.isDark) 0.5f else 0.3f),
             onPrimaryButton = t.screenOnPrimary,
             primaryButton = t.screenPrimary,
+            swipeUpdate = t.screenSwipeUpdate,
+            swipeDelete = t.screenSwipeDelete,
+            onSwipe = t.screenOnSwipe,
         )
     }
 }
