@@ -16,6 +16,8 @@
 #   ZephyrTests            单测：Shared/Core、PacketTunnel 的纯逻辑部分（不托管于 App）
 #   ZephyrAppTests         单测：App 侧纯逻辑（SharedStatePublisher 映射/节流/合并），不托管
 #   ZephyrSnapshotTests    swift-snapshot-testing：页面/组件/小组件 × 深浅 × AX5 × 强调色
+#   ZephyrGlassHost        只给玻璃快照当宿主的空 App（提供 UIWindowScene），不进 scheme Zephyr
+#   ZephyrGlassSnapshotTests  iOS 26 Liquid Glass 快照（托管于 ZephyrGlassHost），scheme ZephyrGlass，只由 CI ios26 任务跑
 # scheme Zephyr 的 test 还跑本地包的 ZephyrKitTests / ZephyrMockTests。
 
 name: Zephyr
@@ -466,6 +468,57 @@ targets:
         product: SnapshotTesting
       - sdk: WidgetKit.framework
 
+  # ───────────────────────── iOS 26 玻璃快照（J-4） ─────────────────────────
+  # 玻璃由系统合成，只有挂在 UIWindowScene 上的真窗口才拍得到；ZephyrSnapshotTests 不托管，拍不到。
+  # 单开一对 target：空宿主 App + 托管的快照 bundle，只拍带悬浮玻璃的 10 张界面。
+  # 不进 scheme Zephyr：iOS 18 的 ios 任务与 ZephyrSnapshotTests 的 142 张基线完全不受影响。
+  ZephyrGlassHost:
+    type: application
+    platform: iOS
+    sources:
+      - path: GlassHost
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.juwanh.zephyr.glass-host
+        PRODUCT_NAME: ZephyrGlassHost
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks"
+
+  ZephyrGlassSnapshotTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      # 参考图在 GlassSnapshotTests/__Snapshots__/<测试文件名>/，不进 bundle（测试按源码路径读写）。
+      - path: GlassSnapshotTests
+        excludes:
+          - "__Snapshots__/**"
+          - "**/__Snapshots__/**"
+          - "**/*.md"
+      # 变体 / 录制模式 / 比对精度与 ZephyrSnapshotTests 共用（只用中文变体，不切语言）。
+      - path: SnapshotTests/Support
+        group: SnapshotTests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.juwanh.zephyr.glass-snapshot-tests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/ZephyrGlassHost.app/ZephyrGlassHost"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+    dependencies:
+      - target: ZephyrGlassHost
+      - package: ZephyrKit
+        product: ZephyrKit
+      - package: ZephyrKit
+        product: ZephyrMock
+      - package: ZephyrKit
+        product: ZephyrDesign
+      - package: ZephyrKit
+        product: ZephyrFeatures
+      - package: SnapshotTesting
+        product: SnapshotTesting
+
 schemes:
   Zephyr:
     build:
@@ -518,3 +571,19 @@ schemes:
       config: Debug
     archive:
       config: Release
+
+  # J-4：iOS 26 玻璃快照。CI ios26 任务（macos-26 / Xcode 26）只跑这个 scheme；iOS 18 模拟器上用例自动跳过。
+  ZephyrGlass:
+    build:
+      targets:
+        ZephyrGlassHost: all
+        ZephyrGlassSnapshotTests: [test]
+    test:
+      config: Debug
+      targets:
+        - name: ZephyrGlassSnapshotTests
+          parallelizable: false
+      environmentVariables:
+        # 与 scheme Zephyr 相同：参考图入库后缺图即失败；录制用 TEST_RUNNER_ZEPHYR_SNAPSHOT_RECORD=all。
+        SNAPSHOT_RECORD: never
+        TZ: Asia/Shanghai

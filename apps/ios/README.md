@@ -78,6 +78,14 @@ scheme 的 Run 默认带 `-ZephyrEngine mock`。在测试进程里（`XCTestConf
 - **数据**：`AppModel.preview(frozen: true)` / `MockEngine(clock: .frozen941)`；小组件用 `SharedState.prototype(now:)`，时间固定 9:41。
 - **参考图**：`SnapshotTests/__Snapshots__/<测试文件名>/<测试名>.<名字>-<变体>.png`。
 
+### iOS 26 玻璃快照（J-4）
+
+Liquid Glass 由系统合成，只有挂在 `UIWindowScene` 上、真正上屏的窗口才画得出来；`ZephyrSnapshotTests` 不挂宿主，拍不到。所以单独一对 target：
+
+- `ZephyrGlassHost`：空 App，只提供 scene。`ZephyrGlassSnapshotTests` 托管于它，用 `GlassSnapshotTests/ZGlassSnapshot.swift` 的 `zAssertGlassSnapshots`（窗口上屏 + `drawHierarchy`），变体 / 录制模式 / 精度与上面共用。
+- 只拍带悬浮玻璃（首页指令栏 + 资料库按钮）的 10 张界面，参考图在 `GlassSnapshotTests/__Snapshots__/`。非 iOS 26 系统自动跳过；拍出空图直接判失败。
+- scheme `ZephyrGlass`，不在 scheme `Zephyr` 里：iOS 18 的 142 张基线与 `ios` 任务不受影响。只由 CI 的 `ios26` 任务（macos-26 / iPhone 17）录制与校验：手动触发 workflow 勾选 `record_ios26_snapshots`，审核 artifact 后入库。
+
 ### 录制模式
 
 由环境变量 `ZEPHYR_SNAPSHOT_RECORD`（优先）或 `SNAPSHOT_RECORD` 控制（scheme 的 test action 固定 `SNAPSHOT_RECORD=missing`）：
