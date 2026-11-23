@@ -76,7 +76,8 @@ class CommandPlanner(private val engine: ZephyrEngine) {
         val rg = p.region ?: return null
         if (p.act != null || scene == null || svc.kind == SceneKind.OTHER) return null
         val pool = runCatching { engine.sceneCandidates(scene.id, rg.code) }.getOrDefault(emptyList())
-            .sortedBy { it.latencyMs?.takeIf { ms -> ms >= 0 } ?: Int.MAX_VALUE }
+            .filter { (it.latencyMs ?: 0) >= 0 } // 超时（-1）不能当「最快」；全超时时走 NoNodes
+            .sortedBy { it.latencyMs ?: Int.MAX_VALUE }
         val best = pool.firstOrNull() ?: return CommandPlan.NoNodes(
             who,
             if (scene.kind == SceneKind.AI) uiText(R.string.command_scene_ai) else uiText(R.string.command_scene_named, scene.displayText),

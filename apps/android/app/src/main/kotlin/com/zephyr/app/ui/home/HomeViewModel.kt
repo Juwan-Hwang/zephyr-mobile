@@ -216,8 +216,8 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         if (_ui.value.globalProposal != null) { _ui.update { it.copy(globalProposal = null) }; return@launchCatching }
         val cur = globalNow()
         val page = engine.groupMembers(com.zephyr.engine.core.CoreEngine.GLOBAL, 0, 500).rows
-        val best = page.filter { it.protocol.uppercase() !in NON_NODES && it.name != cur?.name && it.id >= 0 }
-            .minByOrNull { it.latencyMs?.takeIf { ms -> ms >= 0 } ?: Int.MAX_VALUE } ?: throw com.zephyr.engine.ZephyrException(com.zephyr.engine.ErrorCode.NODE_NOT_FOUND, "no other node")
+        val best = page.filter { it.protocol.uppercase() !in NON_NODES && it.name != cur?.name && it.id >= 0 && (it.latencyMs ?: 0) >= 0 }
+            .minByOrNull { it.latencyMs ?: Int.MAX_VALUE } ?: throw com.zephyr.engine.ZephyrException(com.zephyr.engine.ErrorCode.NODE_NOT_FOUND, "no other node")
         val x = runCatching { engine.previewGlobalChange(best.id) }.getOrNull()
         _ui.update { it.copy(globalNode = cur, globalProposal = best, globalChange = x) }
     }
