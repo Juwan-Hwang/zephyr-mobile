@@ -151,7 +151,7 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
     fun prefetchSlots(scene: Scene) = viewModelScope.launch {
         val pool = runCatching { engine.sceneCandidates(scene.id, null) }.getOrDefault(emptyList())
         val byRegion = (pool + scene.selected).filter { it.id >= 0 && it.region.isNotBlank() }.groupBy { it.region.uppercase() }
-        val slots = byRegion.map { (r, ns) -> ns.firstOrNull { it.id == scene.selected.id } ?: ns.minBy { it.latencyMs ?: Int.MAX_VALUE } }
+        val slots = byRegion.map { (r, ns) -> ns.firstOrNull { it.id == scene.selected.id } ?: ns.minBy { it.latencyMs?.takeIf { ms -> ms >= 0 } ?: Int.MAX_VALUE } }
             .sortedWith(compareBy({ REGION_ORDER.indexOf(it.region.uppercase()).let { i -> if (i < 0) Int.MAX_VALUE else i } }, { it.region.uppercase() }))
         _ui.update { it.copy(slots = it.slots + (scene.id to slots)) }
     }
@@ -217,7 +217,7 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         val cur = globalNow()
         val page = engine.groupMembers(com.zephyr.engine.core.CoreEngine.GLOBAL, 0, 500).rows
         val best = page.filter { it.protocol.uppercase() !in NON_NODES && it.name != cur?.name && it.id >= 0 }
-            .minByOrNull { it.latencyMs ?: Int.MAX_VALUE } ?: throw com.zephyr.engine.ZephyrException(com.zephyr.engine.ErrorCode.NODE_NOT_FOUND, "no other node")
+            .minByOrNull { it.latencyMs?.takeIf { ms -> ms >= 0 } ?: Int.MAX_VALUE } ?: throw com.zephyr.engine.ZephyrException(com.zephyr.engine.ErrorCode.NODE_NOT_FOUND, "no other node")
         val x = runCatching { engine.previewGlobalChange(best.id) }.getOrNull()
         _ui.update { it.copy(globalNode = cur, globalProposal = best, globalChange = x) }
     }

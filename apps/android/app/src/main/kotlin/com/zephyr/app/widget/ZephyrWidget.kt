@@ -146,7 +146,7 @@ class ZephyrWidget : GlanceAppWidget() {
                             Text("${s.selected.region}  ${s.selected.name}", style = TextStyle(color = t1, fontSize = 13.sp), maxLines = 1, modifier = GlanceModifier.defaultWeight())
                             // Review W-P2-3: prototype hs shows the scene's last measured latency ("61 ms"). It is a
                             // snapshot like everything else here, refreshed with the widget, never a live reading.
-                            s.selected.latencyMs?.let { Text("$it ms", style = TextStyle(color = t3, fontSize = 12.sp), maxLines = 1) }
+                            s.selected.latencyMs?.takeIf { it >= 0 }?.let { Text("$it ms", style = TextStyle(color = t3, fontSize = 12.sp), maxLines = 1) }
                         }
                     }
                 }
