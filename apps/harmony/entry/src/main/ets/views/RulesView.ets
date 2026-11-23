@@ -8,6 +8,7 @@ import { LengthMetrics } from '@kit.ArkUI';
 import { AppServices } from '../app/AppServices';
 import { Format } from '../common/Format';
 import { Labels } from '../common/Labels';
+import { ZHero } from '../common/ZTypeMods';
 import { ZCard } from '../components/ZCard';
 import { ZSection } from '../components/ZSection';
 import { ErrorCode, RuleLayer, RuleStats, RuleTrace } from '../engine/Model';
@@ -155,13 +156,13 @@ export struct RulesView {
       Column({ space: 4 }) {
         Row({ space: 6 }) {
           Text(Format.grouped(this.total()))
-            .fontSize(28)
-            .fontWeight(FontWeight.Medium)
-            .fontFamily('monospace')
+            // Android：hero × 0.86（规则数位数多）。
+            .attributeModifier(ZHero.hero(48))
             .fontColor($r('app.color.screen_t1'))
           Text($r('app.plural.rules_total_unit', this.total()))
-            .fontSize(14)
+            .fontSize(15)
             .fontColor($r('app.color.screen_t3'))
+            .margin({ bottom: 8 })
         }
         .alignItems(VerticalAlign.Bottom)
         Text($r('app.plural.rules_summary', this.layers().length, this.layers().length, this.diskText()))

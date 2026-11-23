@@ -21,14 +21,13 @@ import { Format } from '../common/Format';
 import { Labels } from '../common/Labels';
 import { ZNavRow } from '../components/ZNavRow';
 import { ZSection } from '../components/ZSection';
-import { ZSegmented } from '../components/ZSegmented';
 import { ZToggleRow } from '../components/ZToggleRow';
+import { ZChoiceRow } from '../components/ZChoiceRow';
 import { accentDark, accentLight, ZTheme } from '../common/Theme';
 import { Accent, Appearance, ConnectionState, copySettings, LogLevel, ProxyMode, Settings, StorageInfo } from '../engine/Model';
 import { Subscription as StreamSub } from '../engine/Stream';
 import { ZTerm } from '../generated/ZTerms';
 
-const MODES: ProxyMode[] = [ProxyMode.RULE, ProxyMode.GLOBAL, ProxyMode.DIRECT];
 const LEVELS: LogLevel[] = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARNING, LogLevel.ERROR];
 const APPEARANCES: Appearance[] = [Appearance.SYSTEM, Appearance.DARK, Appearance.LIGHT];
 const TTL_OPTIONS: number[] = SettingsCodec.LATENCY_TTL_OPTIONS;
@@ -220,28 +219,9 @@ export struct SettingsView {
 
   build() {
     Scroll() {
-      // 标题由外层 NavDestination 给（Index 路由 settings）。
+      // 标题由外层 ZPageHeader 给（Index 路由 settings）。
       Column({ space: 20 }) {
         ZSection({ header: $r('app.string.settings_section_connection'), footer: $r('app.string.hm_settings_lan_bypass_footer') }) {
-          Column({ space: 6 }) {
-            Text($r('app.string.hm_settings_mode'))
-              .fontSize(16)
-              .fontColor($r('app.color.screen_t1'))
-            ZSegmented({
-              options: [Labels.mode(ProxyMode.RULE), Labels.mode(ProxyMode.GLOBAL), Labels.mode(ProxyMode.DIRECT)],
-              selected: MODES.indexOf(this.mode),
-              onSelect: (i: number) => {
-                AppServices.get().engine.setMode(MODES[i]).catch(() => {});
-              }
-            })
-            Text(Labels.modeHint(this.mode))
-              .fontSize(12)
-              .fontColor($r('app.color.screen_t3'))
-          }
-          .width('100%')
-          .alignItems(HorizontalAlign.Start)
-          .padding(16)
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
           ZToggleRow({
             title: $r('app.string.settings_on_demand'),
             isOn: this.onDemand,
@@ -276,44 +256,19 @@ export struct SettingsView {
               });
             }
           })
-          Column({ space: 6 }) {
-            Text($r('app.string.settings_keep_results'))
-              .fontSize(16)
-              .fontColor($r('app.color.screen_t1'))
-            ZSegmented({
-              options: TTL_OPTIONS.map((h: number): ResourceStr => $r('app.plural.settings_hours', h, h)),
-              selected: TTL_OPTIONS.indexOf(this.latencyTtlHours),
-              onSelect: (i: number) => {
-                const h = TTL_OPTIONS[i];
-                this.latencyTtlHours = h;
-                this.patch((s: Settings) => {
-                  s.latencyTtlHours = h;
-                });
-              }
-            })
-          }
-          .width('100%')
-          .alignItems(HorizontalAlign.Start)
-          .padding(16)
-        }
-
-        ZSection({ header: ZTerm.diagnostics }) {
-          Column({ space: 6 }) {
-            Text($r('app.string.hm_settings_log_level'))
-              .fontSize(16)
-              .fontColor($r('app.color.screen_t1'))
-            ZSegmented({
-              options: [Labels.logLevel(LogLevel.DEBUG), Labels.logLevel(LogLevel.INFO), Labels.logLevel(LogLevel.WARNING),
-                Labels.logLevel(LogLevel.ERROR)],
-              selected: LEVELS.indexOf(this.logLevel),
-              onSelect: (i: number) => AppServices.get().logs.setLevel(LEVELS[i])
-            })
-          }
-          .width('100%')
-          .alignItems(HorizontalAlign.Start)
-          .padding(16)
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
-          ZNavRow({ title: ZTerm.logs, divider: false, onTap: () => this.onOpenLogs() })
+          ZChoiceRow({
+            title: $r('app.string.settings_keep_results'),
+            options: TTL_OPTIONS.map((h: number): ResourceStr => $r('app.plural.settings_hours', h, h)),
+            selected: TTL_OPTIONS.indexOf(this.latencyTtlHours),
+            divider: false,
+            onSelect: (i: number) => {
+              const h = TTL_OPTIONS[i];
+              this.latencyTtlHours = h;
+              this.patch((s: Settings) => {
+                s.latencyTtlHours = h;
+              });
+            }
+          })
         }
 
         ZSection({ header: $r('app.string.settings_section_storage') }) {
@@ -332,21 +287,19 @@ export struct SettingsView {
         }
 
         ZSection({ header: ZTerm.appearance }) {
-          Column({ space: 6 }) {
-            ZSegmented({
-              options: [ZTerm.appearanceSystem, ZTerm.appearanceDark, ZTerm.appearanceLight],
-              selected: APPEARANCES.indexOf(this.appearance),
-              onSelect: (i: number) => {
-                const a = APPEARANCES[i];
-                this.appearance = a;
-                this.patch((s: Settings) => {
-                  s.appearance = a;
-                });
-              }
-            })
-          }
-          .width('100%')
-          .padding(16)
+          ZChoiceRow({
+            title: ZTerm.appearance,
+            options: [ZTerm.appearanceSystem, ZTerm.appearanceDark, ZTerm.appearanceLight],
+            selected: APPEARANCES.indexOf(this.appearance),
+            divider: false,
+            onSelect: (i: number) => {
+              const a = APPEARANCES[i];
+              this.appearance = a;
+              this.patch((s: Settings) => {
+                s.appearance = a;
+              });
+            }
+          })
           Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
           Row() {
             Text(ZTerm.accent)
@@ -373,6 +326,17 @@ export struct SettingsView {
               });
             }
           })
+        }
+
+        ZSection({ header: ZTerm.diagnostics }) {
+          ZChoiceRow({
+            title: $r('app.string.hm_settings_log_level'),
+            options: [Labels.logLevel(LogLevel.DEBUG), Labels.logLevel(LogLevel.INFO), Labels.logLevel(LogLevel.WARNING),
+              Labels.logLevel(LogLevel.ERROR)],
+            selected: LEVELS.indexOf(this.logLevel),
+            onSelect: (i: number) => AppServices.get().logs.setLevel(LEVELS[i])
+          })
+          ZNavRow({ title: ZTerm.logs, divider: false, onTap: () => this.onOpenLogs() })
         }
 
         ZSection({ header: $r('app.string.settings_section_about'), footer: $r('app.string.settings_local_data_note') }) {

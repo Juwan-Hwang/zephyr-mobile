@@ -22,6 +22,7 @@ import { ImportPickers, PickError, PickResult } from '../app/ImportPickers';
 import { ZNavRow } from '../components/ZNavRow';
 import { Format } from '../common/Format';
 import { Labels } from '../common/Labels';
+import { ZHero } from '../common/ZTypeMods';
 import { ZCard } from '../components/ZCard';
 import { ZEmpty } from '../components/ZEmpty';
 import { ImportRequest } from '../entryability/DeepLink';
@@ -65,6 +66,13 @@ export struct SubscriptionsView {
   @Local request: ImportRequest | undefined = undefined;
   @Local adding: boolean = false;
   @Local showAdd: boolean = false;
+  /** 页头“+”点按计数（Index 传入）；变化即开合添加卡（同 Android 页头 Plus）。 */
+  @Param addTick: number = 0;
+
+  @Monitor('addTick')
+  onAddTick(): void {
+    this.showAdd = !this.showAdd;
+  }
   @Local link: string = '';
   @Local addError: Resource | undefined = undefined;
   @Local updating: string[] = [];
@@ -999,25 +1007,14 @@ export struct SubscriptionsView {
 
         Row({ space: 8 }) {
           Text(Format.grouped(this.summary !== undefined ? this.summary.count : this.visibleSubs().length))
-            .fontSize(40)
-            .fontWeight(FontWeight.Bold)
-            .fontFamily('monospace')
+            .attributeModifier(ZHero.hero())
             .fontColor($r('app.color.screen_t1'))
           Text(this.plural($r('app.plural.subs_total_unit'), this.summary !== undefined ? this.summary.count : 0, '') + ' · ' +
             this.plural($r('app.plural.subs_update_every'), this.autoUpdateHours, String(this.autoUpdateHours)))
             .fontSize(15)
             .fontColor($r('app.color.screen_t3'))
-            .margin({ bottom: 8 })
+            .margin({ bottom: 10 })
             .layoutWeight(1)
-          Button($r('app.string.subs_add'))
-            .height(32)
-            .fontSize(14)
-            .fontColor($r('app.color.screen_on_primary'))
-            .backgroundColor($r('app.color.screen_primary'))
-            .margin({ bottom: 8 })
-            .onClick(() => {
-              this.showAdd = !this.showAdd;
-            })
         }
         .width('100%')
         .alignItems(VerticalAlign.Bottom)

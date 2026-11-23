@@ -34,7 +34,7 @@ import { JUDGEMENT_MAX_AGE_MS, JUDGEMENT_THRESHOLD_MS } from '../app/NodeListMod
 import { SubscriptionWarning, SubscriptionsModel } from '../app/SubscriptionsModel';
 import { ZTheme } from '../common/Theme';
 import { ZColorsDark, ZColorsLight } from '../generated/ZTokens';
-import { ZSegmented } from '../components/ZSegmented';
+import { ZHero } from '../common/ZTypeMods';
 import { SceneRow } from './SceneRow';
 import { SceneSheet } from './SceneSheet';
 import { HapticKind, Haptics } from '../app/Haptics';
@@ -550,123 +550,218 @@ export struct HomeView {
     }
   }
 
+  @Local showModeMenu: boolean = false;
+
+  private isOn(): boolean {
+    return this.status === ConnectionStatus.CONNECTED || this.status === ConnectionStatus.CONNECTING;
+  }
+
+  /** 状态行下的说明（同 Android HomeStatus）：失败 → 下一步提示；已连接 → 时长；否则场景数。 */
+  private subLine(): ResourceStr {
+    if (this.status === ConnectionStatus.FAILED && this.errorCode !== undefined) {
+      return Labels.connectError(this.errorCode);
+    }
+    if (this.isConnected() && this.since > 0) {
+      return Format.duration(this.now - this.since);
+    }
+    return $r('app.plural.home_scene_count', this.scenes.length, this.scenes.length);
+  }
+
+  /** “已连接” + 大开关；下面“规则 ⌄  2:14:07”（原型 01/02，Android HomeStatus）。 */
   @Builder
   header() {
-    Column({ space: 6 }) {
-      Row({ space: 8 }) {
-        Circle({ width: 8, height: 8 }).fill(this.statusColor())
+    Column() {
+      Row({ space: 12 }) {
         Text(Labels.status(this.status))
-          .fontSize(15)
-          .fontColor($r('app.color.screen_t2'))
-        if (this.isConnected() && this.since > 0) {
-          Text(Format.duration(this.now - this.since))
-            .fontSize(15)
-            .fontFamily('monospace')
-            .fontColor($r('app.color.screen_t3'))
+          .attributeModifier(ZHero.status())
+          .fontColor($r('app.color.screen_t1'))
+          .layoutWeight(1)
+          .accessibilityRole(AccessibilityRoleType.TEXT)
+          .transition(TransitionEffect.OPACITY.animation({ duration: 200 }))
+        Toggle({ type: ToggleType.Switch, isOn: this.isOn() })
+          .width(64)
+          .height(38)
+          .selectedColor($r('app.color.screen_green'))
+          .switchPointColor(Color.White)
+          .enabled(!this.isTransitioning() && !this.busy)
+          .accessibilityText($r('app.string.common_connect'))
+          .onChange((on: boolean) => {
+            if (on !== this.isOn()) {
+              this.toggle();
+            }
+          })
+      }
+      .width('100%')
+
+      Row({ space: 18 }) {
+        Row({ space: 4 }) {
+          Text(Labels.mode(this.mode))
+            .fontSize(14)
+            .fontWeight(FontWeight.Medium)
+            .fontColor($r('app.color.screen_t1'))
+          SymbolGlyph($r('sys.symbol.chevron_down'))
+            .fontSize(14)
+            .fontColor([$r('app.color.screen_t2')])
+            .rotate({ angle: this.showModeMenu ? 180 : 0 })
+            .animation({ duration: 200, curve: Curve.EaseOut })
         }
+        .padding({ top: 6, bottom: 6 })
+        .accessibilityGroup(true)
+        .accessibilityRole(AccessibilityRoleType.BUTTON)
+        .accessibilityDescription(ZTerm.switchMode)
+        .stateStyles({ pressed: { .opacity(0.5) }, normal: { .opacity(1) } })
+        .onClick(() => {
+          this.showModeMenu = true;
+        })
+        .bindMenu(this.showModeMenu, this.modeMenu(), {
+          placement: Placement.BottomLeft,
+          onDisappear: () => {
+            this.showModeMenu = false;
+          }
+        })
+        Text(this.subLine())
+          .attributeModifier(ZHero.numeric(14))
+          .fontColor(this.status === ConnectionStatus.FAILED ? $r('app.color.screen_red_text') : $r('app.color.screen_t3'))
+          .maxLines(1)
+          .textOverflow({ overflow: TextOverflow.Ellipsis })
+          .layoutWeight(1)
       }
-
-      if (this.errorCode !== undefined) {
-        Text(Labels.connectError(this.errorCode))
-          .fontSize(14)
-          .fontColor($r('app.color.screen_red_text'))
-      }
-
-      Button(this.isConnected() || this.status === ConnectionStatus.DISCONNECTING
-        ? ZTerm.disconnect : $r('app.string.common_connect'))
-        .type(ButtonType.Capsule)
-        .width('100%')
-        .height(52)
-        .margin({ top: 12 })
-        .fontSize(17)
-        .fontWeight(FontWeight.Medium)
-        .enabled(!this.isTransitioning() && !this.busy)
-        .opacity(this.isTransitioning() ? 0.6 : 1)
-        .fontColor(this.isConnected() ? $r('app.color.screen_t1') : $r('app.color.screen_on_primary'))
-        .backgroundColor(this.isConnected() ? $r('app.color.screen_s3') : $r('app.color.screen_primary'))
-        .onClick(() => this.toggle())
+      .width('100%')
+      .margin({ top: 10 })
 
       if (this.simulated && this.isConnected()) {
         Text($r('app.string.hm_home_simulated'))
           .fontSize(12)
           .fontColor($r('app.color.screen_t3'))
+          .margin({ top: 4 })
       }
     }
     .width('100%')
     .alignItems(HorizontalAlign.Start)
+    .padding({ left: 6, right: 6 })
   }
 
+  /** 模式下拉（Android ModePicker）：模式名 + 说明，当前项打勾。 */
   @Builder
-  rateTile(label: ResourceStr, bps: number, color: ResourceColor) {
+  modeMenu() {
+    Column() {
+      ForEach(MODES, (m: ProxyMode, i: number) => {
+        Row({ space: 8 }) {
+          Column({ space: 2 }) {
+            Text(Labels.mode(m))
+              .fontSize(16)
+              .fontColor($r('app.color.screen_t1'))
+            Text(Labels.modeHint(m))
+              .fontSize(12)
+              .fontColor($r('app.color.screen_t3'))
+          }
+          .alignItems(HorizontalAlign.Start)
+          .layoutWeight(1)
+          if (m === this.mode) {
+            SymbolGlyph($r('sys.symbol.checkmark'))
+              .fontSize(18)
+              .fontColor([this.theme.accentColor()])
+          }
+        }
+        .width(200)
+        .padding({ left: 16, right: 16, top: 12, bottom: 12 })
+        .stateStyles({ pressed: { .backgroundColor($r('app.color.screen_s3')) }, normal: { .backgroundColor(Color.Transparent) } })
+        .onClick(() => {
+          this.showModeMenu = false;
+          if (m !== this.mode) {
+            Haptics.play(HapticKind.SELECTION);
+            this.setMode(i);
+          }
+        })
+      }, (m: ProxyMode) => m as string)
+    }
+    .padding({ top: 6, bottom: 6 })
+  }
+
+  /** 速率（Android ZTrafficStat）：下行大数字 + 单位 + ↓，下一行上行小字 + ↑。 */
+  @Builder
+  trafficStat() {
     Column({ space: 2 }) {
-      Text(label)
-        .fontSize(12)
-        .fontColor($r('app.color.screen_t3'))
-      Row({ space: 4 }) {
-        Text(Format.rate(bps).value)
-          .fontSize(26)
-          .fontWeight(FontWeight.Medium)
-          .fontFamily('monospace')
-          .fontColor(color)
-        Text(Format.rate(bps).unit + '/s')
+      Row() {
+        Text(Format.rate(this.downBps).value)
+          .attributeModifier(ZHero.hero())
+          .fontColor($r('app.color.screen_t1'))
+        Text(Format.rate(this.downBps).unit + '/s')
           .fontSize(13)
           .fontColor($r('app.color.screen_t3'))
+          .margin({ left: 10, bottom: 8 })
+        SymbolGlyph($r('sys.symbol.arrow_down'))
+          .fontSize(16)
+          .fontColor([$r('app.color.color_download')])
+          .margin({ left: 4, bottom: 9 })
       }
       .alignItems(VerticalAlign.Bottom)
+      Row({ space: 4 }) {
+        Text(Format.rate(this.upBps).value + ' ' + Format.rate(this.upBps).unit + '/s')
+          .attributeModifier(ZHero.numeric(13))
+          .fontColor($r('app.color.screen_t2'))
+        SymbolGlyph($r('sys.symbol.arrow_up'))
+          .fontSize(14)
+          .fontColor([$r('app.color.screen_up')])
+      }
     }
-    .layoutWeight(1)
     .alignItems(HorizontalAlign.Start)
+    .padding({ left: 6, right: 6 })
+    .direction(Direction.Ltr)
   }
 
+  /**
+   * 风区（原型 .wind）：已连接 = 速率 + 曲线（整块点按打开“最近连接”，H-P2-3）；未连接 = 150 高的虚线基线。
+   * 曲线左右出血到屏幕边缘（同 Android / 原型）。
+   */
   @Builder
   traffic() {
-    ZCard() {
-      Column({ space: 10 }) {
-        // 已连接时速率区打开“最近连接”（M1-8，同 Android 风区 onActivity / H-P2-3）。
-        Row({ space: 12 }) {
-          this.rateTile($r('app.string.hm_home_download'), this.downBps, $r('app.color.color_download'))
-          this.rateTile($r('app.string.hm_home_upload'), this.upBps, $r('app.color.screen_up'))
-        }
-        .width('100%')
-        .id(HOME_TRAFFIC_ID)
-        .accessibilityGroup(this.status === ConnectionStatus.CONNECTED)
-        .accessibilityRole(this.status === ConnectionStatus.CONNECTED ? AccessibilityRoleType.BUTTON :
-          AccessibilityRoleType.TEXT)
-        .accessibilityDescription(this.status === ConnectionStatus.CONNECTED ? this.text($r('app.string.activity_title'), '') : '')
-        .onClick(() => {
-          if (this.status === ConnectionStatus.CONNECTED) {
-            hilog.info(0x5A50, 'HomeView', 'open recent connections');
-            this.showActivity = true;
-          }
-        })
-        .bindSheet(this.showActivity, this.activitySheet(), {
-          detents: [SheetSize.MEDIUM, SheetSize.LARGE],
-          showClose: true,
-          dragBar: true,
-          backgroundColor: $r('app.color.screen_bg'),
-          onDisappear: () => {
-            this.showActivity = false;
-          }
-        })
-
-        // 曲线（U4）：已连接 = 最近 90 秒下行；未连接 = 虚线基线。点曲线同样打开最近连接（原型整块 .wind）。
+    if (this.isConnected()) {
+      Column() {
+        this.trafficStat()
         ZSparkline({
           values: this.spark,
           color: this.theme.isDark ? ZColorsDark.colorDownload : ZColorsLight.colorDownload,
-          idle: !this.isConnected(),
+          idle: false,
           dark: this.theme.isDark,
           description: this.plain($r('app.string.home_spark_a11y'))
         })
-          .width('100%')
+          .width('calc(100% + 32vp)')
           .height(72)
-          .onClick(() => {
-            if (this.status === ConnectionStatus.CONNECTED) {
-              this.showActivity = true;
-            }
-          })
+          .margin({ left: -16 })
       }
       .width('100%')
+      .margin({ top: 36 })
       .alignItems(HorizontalAlign.Start)
+      .id(HOME_TRAFFIC_ID)
+      .accessibilityGroup(true)
+      .accessibilityRole(AccessibilityRoleType.BUTTON)
+      .accessibilityText(this.plain($r('app.string.activity_title')))
+      .transition(TransitionEffect.OPACITY.animation({ duration: 300 }))
+      .onClick(() => {
+        hilog.info(0x5A50, 'HomeView', 'open recent connections');
+        this.showActivity = true;
+      })
+      .bindSheet(this.showActivity, this.activitySheet(), {
+        detents: [SheetSize.MEDIUM, SheetSize.LARGE],
+        showClose: true,
+        dragBar: true,
+        backgroundColor: $r('app.color.screen_bg'),
+        onDisappear: () => {
+          this.showActivity = false;
+        }
+      })
+    } else {
+      ZSparkline({
+        values: [],
+        color: this.theme.isDark ? ZColorsDark.colorDownload : ZColorsLight.colorDownload,
+        idle: true,
+        dark: this.theme.isDark,
+        description: ''
+      })
+        .width('calc(100% + 32vp)')
+        .height(150)
+        .margin({ left: -16 })
     }
   }
 
@@ -1089,14 +1184,34 @@ export struct HomeView {
     .clip(true)
   }
 
+  /** 顶栏（原型 .top，Android HomeTopBar）：状态点（已连接带光晕）+ 品牌字标 + 设置。 */
   @Builder
   topBar() {
     Row() {
-      Text($r('app.string.EntryAbility_label'))
-        .fontSize(28)
-        .fontWeight(FontWeight.Bold)
-        .fontColor($r('app.color.screen_t1'))
-        .accessibilityLevel('yes')
+      Stack() {
+        if (this.isConnected()) {
+          Circle({ width: 16, height: 16 }).fill($r('app.color.screen_green')).fillOpacity(0.22)
+        }
+        Circle({ width: 8, height: 8 }).fill(this.isConnected() ? $r('app.color.screen_green') : $r('app.color.screen_t4'))
+      }
+      .width(16)
+      .height(16)
+      .accessibilityLevel('no')
+      Row({ space: 4 }) {
+        Image($r('app.media.ic_zephyr_glyph'))
+          .width(16)
+          .height(16)
+          .fillColor($r('app.color.screen_t1'))
+        Text('Zephyr')
+          .fontSize(15)
+          .fontWeight(600)
+          .letterSpacing(-0.1)
+          .fontColor($r('app.color.screen_t1'))
+      }
+      .margin({ left: 6 })
+      .direction(Direction.Ltr)
+      .accessibilityGroup(true)
+      .accessibilityText('Zephyr')
       Blank()
       Button({ type: ButtonType.Circle }) {
         SymbolGlyph($r('sys.symbol.gearshape'))
@@ -1110,6 +1225,8 @@ export struct HomeView {
       .onClick(() => this.onOpenSettings())
     }
     .width('100%')
+    .padding({ left: 6 })
+    .margin({ right: -8 })
   }
 
   @Builder
@@ -1268,27 +1385,17 @@ export struct HomeView {
   @Builder
   content() {
     Scroll() {
-      Column({ space: 16 }) {
+      Column() {
+        // 间距同 Android HomeContent：顶栏 12 → 状态 24 → 风区 36 → 场景 28 → 订阅 28。
         this.topBar()
-
+        Blank().height(24)
         this.header()
-
-        Column({ space: 6 }) {
-          ZSegmented({
-            options: [Labels.mode(ProxyMode.RULE), Labels.mode(ProxyMode.GLOBAL), Labels.mode(ProxyMode.DIRECT)],
-            selected: MODES.indexOf(this.mode),
-            onSelect: (i: number) => this.setMode(i)
-          })
-          Text(Labels.modeHint(this.mode))
-            .fontSize(12)
-            .fontColor($r('app.color.screen_t3'))
-        }
-        .alignItems(HorizontalAlign.Start)
-
         this.traffic()
 
         // 场景（同 Android item scenes-h / scenes）：全局模式换成全局模式卡。
+        Blank().height(28)
         this.sectionHeader(ZTerm.scenes, this.scenesTrailing(), undefined)
+        Blank().height(8)
         if (this.mode === ProxyMode.GLOBAL) {
           this.globalCard()
         } else if (this.scenes.length > 0) {
@@ -1298,14 +1405,16 @@ export struct HomeView {
         }
 
         // 订阅（U7）：右侧“今日 X ›”打开今日卡。
+        Blank().height(28)
         this.sectionHeader(ZTerm.subscriptions, this.todayTrailing(), this.todayBytes >= 0 ? () => this.onOpenToday() : undefined)
+        Blank().height(8)
         if (this.subList.length > 0) {
           this.subsCard(HomeSubs.view(this.subList))
         }
       }
       .width('100%')
       // 底部留出底栏（52 + 20）+ 间距，最后一张卡不被资料库按钮挡住。
-      .padding({ left: 16, right: 16, top: 16, bottom: 96 })
+      .padding({ left: 16, right: 16, top: 12, bottom: 120 })
       .alignItems(HorizontalAlign.Start)
     }
     .width('100%')

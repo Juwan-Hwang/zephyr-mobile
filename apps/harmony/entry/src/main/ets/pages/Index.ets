@@ -43,6 +43,7 @@ import { LicensesPage } from './LicensesPage';
 import { TodayPage } from './TodayPage';
 import { ZTerm } from '../generated/ZTerms';
 import { ZToastHost } from '../components/ZToastHost';
+import { ZPageHeader } from '../components/ZPageHeader';
 import { GestureLock } from '../common/GestureLock';
 import { ComponentContent, window } from '@kit.ArkUI';
 import { hilog } from '@kit.PerformanceAnalysisKit';
@@ -78,6 +79,8 @@ function toastLayer(args: ToastLayerArgs) {
 @ComponentV2
 struct Index {
   @Local showLibrary: boolean = false;
+  /** 订阅页页头“+”：每点一次加一，订阅页据此开合添加卡。 */
+  @Local subsAddTick: number = 0;
   /** 首次引导（M1-16）：在屏时替换整个导航。 */
   @Local onboarding: boolean = false;
   private onboardingSub: StreamSub | undefined = undefined;
@@ -232,39 +235,85 @@ struct Index {
     }
   }
 
+  /** “‹ 资料库 / 首页 / 设置”返回链接的文字（同 Android BackTo.label）。 */
+  private backLabel(param: Object): ResourceStr {
+    switch (AppNav.backOf(param)) {
+      case BackTo.LIBRARY:
+        return $r('app.string.common_library');
+      case BackTo.PARENT:
+        return ZTerm.settings;
+      default:
+        return $r('app.string.common_home');
+    }
+  }
+
+  @Builder
+  pageHeader(param: Object, title: ResourceStr) {
+    ZPageHeader({
+      backLabel: this.backLabel(param),
+      title: title,
+      onBack: () => this.pathStack.pop()
+    })
+  }
+
   @Builder
   routes(name: string, param: Object) {
     if (name === ROUTE_NODES) {
       NavDestination() {
-        NodesView({
-          initialQuery: AppNav.queryOf(param),
-          onImport: () => this.push(ROUTE_SUBSCRIPTIONS, BackTo.PARENT)
-        })
+        Column() {
+          this.pageHeader(param, ZTerm.nodes)
+          NodesView({
+            initialQuery: AppNav.queryOf(param),
+            onImport: () => this.push(ROUTE_SUBSCRIPTIONS, BackTo.PARENT)
+          })
+            .layoutWeight(1)
+        }
       }
-      .title(ZTerm.nodes)
+      .hideTitleBar(true)
       .backgroundColor($r('app.color.screen_bg'))
     } else if (name === ROUTE_SUBSCRIPTIONS) {
       NavDestination() {
-        SubscriptionsView()
+        Column() {
+          ZPageHeader({
+            backLabel: this.backLabel(param),
+            title: ZTerm.subscriptions,
+            trailingSymbol: $r('sys.symbol.plus'),
+            trailingLabel: $r('app.string.subs_add'),
+            onBack: () => this.pathStack.pop(),
+            onTrailing: () => {
+              this.subsAddTick++;
+            }
+          })
+          SubscriptionsView({ addTick: this.subsAddTick })
+            .layoutWeight(1)
+        }
       }
-      .title(ZTerm.subscriptions)
+      .hideTitleBar(true)
       .backgroundColor($r('app.color.screen_bg'))
     } else if (name === ROUTE_RULES) {
       NavDestination() {
-        RulesView()
+        Column() {
+          this.pageHeader(param, ZTerm.rules)
+          RulesView()
+            .layoutWeight(1)
+        }
       }
-      .title(ZTerm.rules)
+      .hideTitleBar(true)
       .backgroundColor($r('app.color.screen_bg'))
     } else if (name === ROUTE_SETTINGS) {
       NavDestination() {
-        SettingsView({
-          onOpenLogs: () => this.push(ROUTE_LOGS, BackTo.PARENT),
-          onOpenLicenses: () => this.push(ROUTE_LICENSES, BackTo.PARENT),
-          onOpenTrustedWifi: () => this.push(ROUTE_TRUSTED_WIFI, BackTo.PARENT),
-          onOpenLocalProxy: () => this.push(ROUTE_LOCAL_PROXY, BackTo.PARENT)
-        })
+        Column() {
+          this.pageHeader(param, ZTerm.settings)
+          SettingsView({
+            onOpenLogs: () => this.push(ROUTE_LOGS, BackTo.PARENT),
+            onOpenLicenses: () => this.push(ROUTE_LICENSES, BackTo.PARENT),
+            onOpenTrustedWifi: () => this.push(ROUTE_TRUSTED_WIFI, BackTo.PARENT),
+            onOpenLocalProxy: () => this.push(ROUTE_LOCAL_PROXY, BackTo.PARENT)
+          })
+            .layoutWeight(1)
+        }
       }
-      .title(ZTerm.settings)
+      .hideTitleBar(true)
       .backgroundColor($r('app.color.screen_bg'))
     } else if (name === ROUTE_LOGS) {
       LogsPage()

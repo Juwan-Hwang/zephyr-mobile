@@ -15,3 +15,12 @@ interface DataChangeListener { onDataReloaded(): void; onDataAdd(index: number):
 interface IDataSource { totalCount(): number; getData(index: number): Object; registerDataChangeListener(listener: DataChangeListener): void; unregisterDataChangeListener(listener: DataChangeListener): void; }
 declare function ObservedV2<T extends new (...args: any[]) => object>(c: T): T;
 declare function Trace(target: undefined, context: ClassFieldDecoratorContext): void;
+// common/ZTypeMods.ets（AttributeModifier 字阶）只需类型可解析。
+declare enum FontWeight { Normal, Medium, Bold }
+declare enum TextOverflow { Clip, Ellipsis }
+interface TextAttribute {
+  fontSize(v: number): TextAttribute; fontWeight(v: number | FontWeight): TextAttribute; letterSpacing(v: number): TextAttribute;
+  lineHeight(v: number): TextAttribute; fontFeature(v: string): TextAttribute; maxLines(v: number): TextAttribute;
+  minFontSize(v: number): TextAttribute; maxFontSize(v: number): TextAttribute; textOverflow(v: { overflow: TextOverflow }): TextAttribute;
+}
+interface AttributeModifier<T> { applyNormalAttribute?(instance: T): void; }

@@ -20,6 +20,7 @@ import {
 import { NodeDetail, NodeSummary, RegionSection } from '../engine/Model';
 import { Format } from '../common/Format';
 import { Labels } from '../common/Labels';
+import { ZHero } from '../common/ZTypeMods';
 import { NetMeter } from '../common/NetMeter';
 import { ZTheme } from '../common/Theme';
 import { ZTerm } from '../generated/ZTerms';
@@ -403,9 +404,7 @@ export struct NodesView {
     Column({ space: 2 }) {
       Row({ space: 8 }) {
         Text(Format.grouped(this.indexTotal))
-          .fontSize(40)
-          .fontWeight(FontWeight.Bold)
-          .fontFamily('monospace')
+          .attributeModifier(ZHero.hero())
           .fontColor($r('app.color.screen_t1'))
         Text(this.plural($r('app.plural.nodes_total_unit'), this.indexTotal))
           .fontSize(15)
