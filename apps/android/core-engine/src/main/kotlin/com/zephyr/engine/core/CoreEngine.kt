@@ -922,7 +922,7 @@ class CoreEngine(
         val r = live() ?: return if (mockData) fallback.testGroup(group) else throw notRunning()
         val res = withContext(io) { liveCall(ErrorMapping.Call.TEST_GROUP) { r.test(group, LivePort.TEST_URL, 5_000) } }
         val now = clock()
-        liveLatency.tryEmit(res.map { LatencyUpdate(LiveNames.idOf(it.name).also { id -> names[id] = it.name }, it.latencyMs ?: -1, now) })
+        liveLatency.tryEmit(res.mapNotNull { r0 -> r0.latencyMs?.let { ms -> LatencyUpdate(LiveNames.idOf(r0.name).also { id -> names[id] = r0.name }, ms, now) } })
     }
 
     override fun latencyUpdates(): Flow<List<LatencyUpdate>> = merge(fallback.latencyUpdates(), liveLatency)

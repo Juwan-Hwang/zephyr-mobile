@@ -40,7 +40,7 @@ fun ZChip(label: String, selected: Boolean, onClick: () -> Unit, modifier: Modif
         ZText(label, style = ZTheme.type.footnote, color = fg, maxLines = 1)
         if (detail != null) {
             Spacer(Modifier.width(6.dp))
-            ZText(detail, style = ZTheme.type.monoSmall, color = if (selected) c.onAccentFill.copy(alpha = 0.6f) else c.text3, maxLines = 1)
+            ZText(detail, style = ZTheme.type.monoSmall, color = if (selected) c.onAccentFill else c.text3, maxLines = 1)
         }
     }
 }
