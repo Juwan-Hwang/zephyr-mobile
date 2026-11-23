@@ -310,13 +310,7 @@ enum ZSnapshotRenderer {
         let image = UIGraphicsImageRenderer(size: size, format: format).image { ctx in
             background.setFill()
             ctx.fill(CGRect(origin: .zero, size: size))
-            if ZSnapshotPaths.osBaseline != nil {
-                // iOS 26：Liquid Glass 由合成器渲染，layer.render 拍不到（玻璃变透明、底下内容透出来叠字）。
-                // 系统分基线只用 drawHierarchy；默认基线仍用 layer.render，已入库的 iOS 18 图不变。
-                host.view.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: true)
-            } else {
-                host.view.layer.render(in: ctx.cgContext)
-            }
+            host.view.layer.render(in: ctx.cgContext)
         }
 
         window.isHidden = true
