@@ -54,18 +54,26 @@ final class LiveActivityController {
         let now = Date()
         lastContent = content
         lastUpdate = now
+        // Activity 不是 Sendable：Swift 6（Xcode 26）不允许把主线程持有的实例送进 nonisolated 的 update。
+        // 只把 id 带进 Task，在 Task 里重新取实例（新取出的值不属于任何隔离域，可以送出）。
+        let id = activity.id
+        let next = ActivityContent(state: content, staleDate: now.addingTimeInterval(Self.staleAfter))
         Task {
-            await activity.update(ActivityContent(state: content, staleDate: now.addingTimeInterval(Self.staleAfter)))
+            for a in Activity<ZephyrActivityAttributes>.activities where a.id == id {
+                await a.update(next)
+            }
         }
     }
 
     private func end() {
-        let all = Activity<ZephyrActivityAttributes>.activities
         activity = nil
         lastContent = nil
-        guard !all.isEmpty else { return }
+        guard !Activity<ZephyrActivityAttributes>.activities.isEmpty else { return }
+        // 同 update：在 Task 里取实例，不跨隔离域传 Activity。
         Task {
-            for a in all { await a.end(nil, dismissalPolicy: .immediate) }
+            for a in Activity<ZephyrActivityAttributes>.activities {
+                await a.end(nil, dismissalPolicy: .immediate)
+            }
         }
     }
 }
