@@ -5,7 +5,8 @@
 //     参考图存在时正常断言（precision 0.995 / perceptual 0.98；参考图由 CI 同一模拟器录制，只需容忍抗锯齿抖动）。
 //  2. 自己托管渲染：UIHostingController 放进 393×852（iPhone 16）的 UIWindow，等 `.task` / 异步数据落定
 //     （`settle`）后再用 layer.render 出图。库的 `.image(on:)` 不会等 `.task`，NodesView / RulesView 会拍成空页。
-//  3. 参考图统一放 SnapshotTests/__Snapshots__/<测试文件名>/<测试名>.<名字>.png（与库默认命名规则一致）。
+//  3. 参考图统一放 SnapshotTests/__Snapshots__/<测试文件名>/<测试名>.<名字>.png（与库默认命名规则一致）；
+//     ZEPHYR_SNAPSHOT_OS=ios26 时放 __Snapshots__/ios26/<测试文件名>/（J-4，见 ZSnapshotPaths.osBaseline）。
 //
 // 录制模式：环境变量 ZEPHYR_SNAPSHOT_RECORD（优先）或 SNAPSHOT_RECORD（scheme 的 test action 设为 never：参考图已入库）
 //   missing（默认）缺图录制、不失败；有图断言
@@ -193,8 +194,18 @@ enum ZSnapshotPaths {
             root.deleteLastPathComponent()
         }
         if root.lastPathComponent != "SnapshotTests" { root = fileURL.deletingLastPathComponent() }
-        return root.appendingPathComponent("__Snapshots__", isDirectory: true)
-            .appendingPathComponent(fileName, isDirectory: true)
+        var base = root.appendingPathComponent("__Snapshots__", isDirectory: true)
+        if let os = osBaseline { base.appendPathComponent(os, isDirectory: true) }
+        return base.appendingPathComponent(fileName, isDirectory: true)
+    }
+
+    /// J-4：按系统分基线。ZEPHYR_SNAPSHOT_OS=ios26（CI ios26 任务，macos-26 / Xcode 26）时参考图放
+    /// __Snapshots__/ios26/<测试文件名>/，与 iOS 18 基线（__Snapshots__/<测试文件名>/）分开：Liquid Glass 只在 iOS 26 渲染，
+    /// 两套图不可能互相通过。未设置或为空 = 默认基线。只接受字母数字，防止拼出意外路径。
+    static var osBaseline: String? {
+        let raw = ProcessInfo.processInfo.environment["ZEPHYR_SNAPSHOT_OS"]?.trimmingCharacters(in: .whitespaces) ?? ""
+        guard !raw.isEmpty, raw.range(of: "^[A-Za-z0-9]+$", options: .regularExpression) != nil else { return nil }
+        return raw
     }
 
     /// 与 swift-snapshot-testing 的命名规则一致：`sanitize(testName).sanitize(name).png`。

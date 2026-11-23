@@ -77,6 +77,7 @@ scheme 的 Run 默认带 `-ZephyrEngine mock`。在测试进程里（`XCTestConf
 - **变体**：`ZSnapshotVariant.standard` = 深色 / 浅色 / 深色 AX5；`standardPlusAccent(_:)` 再加一个强调色抽样（各用例轮流抽 green / orange / pink）。
 - **数据**：`AppModel.preview(frozen: true)` / `MockEngine(clock: .frozen941)`；小组件用 `SharedState.prototype(now:)`，时间固定 9:41。
 - **参考图**：`SnapshotTests/__Snapshots__/<测试文件名>/<测试名>.<名字>-<变体>.png`。
+- **iOS 26 基线（J-4）**：`ZEPHYR_SNAPSHOT_OS=ios26` 时参考图改放 `SnapshotTests/__Snapshots__/ios26/<测试文件名>/`，只由 CI 的 `ios26` 任务（macos-26 / Xcode 26）读写，Liquid Glass 只在这套图里出现。重录：手动触发 workflow 勾选 `record_ios26_snapshots`，下载 artifact `ios26-snapshots` 里的 `ios26/` 目录入库。
 
 ### 录制模式
 
