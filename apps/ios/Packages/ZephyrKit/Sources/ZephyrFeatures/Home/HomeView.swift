@@ -36,15 +36,18 @@ public struct HomeView: View {
         }
         // 规范 §9.7：指令栏下方不得露出滚动内容。渐隐层铺到屏幕最底（含 home indicator 区），
         // 只在指令栏上沿以上 n8 内由透明过渡到 screen.fade，指令栏背后与下方为实色。
+        // 安全区底边必须在 ignoresSafeArea 之外读：GeometryReader 自己忽略安全区时 geo.safeAreaInsets.bottom 恒为 0，
+        // 实色段只有 dockSolid 高、落在指令栏下方，指令栏背后露出订阅卡（iOS 26 玻璃快照审核发现，Refs #1）。
         .overlay(alignment: .bottom) {
             GeometryReader { geo in
+                let bottomInset = geo.safeAreaInsets.bottom
                 VStack(spacing: 0) {
                     Spacer(minLength: 0)
-                    HomeBottomFade(solidHeight: dockSolid + geo.safeAreaInsets.bottom)
-                        .frame(height: dockClearance + geo.safeAreaInsets.bottom)
+                    HomeBottomFade(solidHeight: dockSolid + bottomInset)
+                        .frame(height: dockClearance + bottomInset)
                 }
+                .ignoresSafeArea(edges: .bottom)
             }
-            .ignoresSafeArea(edges: .bottom)
             .allowsHitTesting(false)
         }
         .overlay(alignment: .bottom) {
