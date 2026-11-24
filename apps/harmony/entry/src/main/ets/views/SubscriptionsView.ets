@@ -682,7 +682,7 @@ export struct SubscriptionsView {
         .width('100%')
         if (s.lastDiff !== undefined) {
           this.deltas(s.lastDiff)
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl'))
+          Divider().strokeWidth(1).color($r('app.color.screen_hl'))
           Row({ space: 10 }) {
             Circle().width(7).height(7).fill($r('app.color.screen_green'))
             Text(this.diffNote(s.lastDiff))
@@ -799,7 +799,7 @@ export struct SubscriptionsView {
           ListItem() {
             Column() {
               if (i > 0) {
-                Divider().strokeWidth(0.5).color($r('app.color.screen_hl'))
+                Divider().strokeWidth(1).color($r('app.color.screen_hl'))
               }
               this.meteredRow(s)
             }
@@ -828,7 +828,7 @@ export struct SubscriptionsView {
 
       if (g.others > 0) {
         if (g.metered.length > 0) {
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl'))
+          Divider().strokeWidth(1).color($r('app.color.screen_hl'))
         }
         Row({ space: 8 }) {
           Column({ space: 2 }) {
@@ -853,9 +853,10 @@ export struct SubscriptionsView {
       }
     }
     .width('100%')
-    .borderRadius(16)
+    .borderRadius(24)
     .clip(true)
-    .backgroundColor($r('app.color.screen_s1'))
+    .backgroundColor($r('app.color.screen_s2'))
+    .border({ width: 1, color: $r('app.color.screen_hl') })
   }
 
   @Builder
@@ -894,7 +895,7 @@ export struct SubscriptionsView {
         .height(52)
         .padding({ left: 16, right: 16 })
         .bindMenu(this.autoUpdateMenu())
-        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
+        Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
       }
       ZToggleRow({
         title: $r('app.string.subs_update_wifi_only'),
@@ -949,7 +950,7 @@ export struct SubscriptionsView {
       Column() {
         ForEach(this.visibleSubs(), (s: Subscription, i: number) => {
           if (i > 0) {
-            Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
+            Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
           }
           Row({ space: 8 }) {
             Column({ space: 2 }) {
@@ -975,8 +976,9 @@ export struct SubscriptionsView {
           .padding({ left: 16, right: 16, top: 12, bottom: 12 })
         }, (s: Subscription) => s.id)
       }
-      .borderRadius(16)
-      .backgroundColor($r('app.color.screen_s1'))
+      .borderRadius(24)
+      .backgroundColor($r('app.color.screen_s2'))
+      .border({ width: 1, color: $r('app.color.screen_hl') })
       .margin({ left: 16, right: 16 })
       Text(this.allFooter())
         .fontSize(13)

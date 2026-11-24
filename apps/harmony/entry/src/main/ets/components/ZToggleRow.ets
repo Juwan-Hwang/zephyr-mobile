@@ -26,7 +26,7 @@ export struct ZToggleRow {
             .fontColor(this.isEnabled ? $r('app.color.screen_t1') : $r('app.color.screen_t3'))
           if (this.subtitle !== undefined) {
             Text(this.subtitle)
-              .fontSize(12)
+              .fontSize(13)
               .fontColor($r('app.color.screen_t3'))
           }
         }
@@ -43,11 +43,11 @@ export struct ZToggleRow {
           })
       }
       .width('100%')
-      .constraintSize({ minHeight: 52 })
-      .padding({ start: LengthMetrics.vp(16), end: LengthMetrics.vp(12), top: LengthMetrics.vp(8), bottom: LengthMetrics.vp(8) })
+      .constraintSize({ minHeight: 56 })
+      .padding({ start: LengthMetrics.vp(20), end: LengthMetrics.vp(16), top: LengthMetrics.vp(12), bottom: LengthMetrics.vp(12) })
 
       if (this.divider) {
-        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
+        Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(20) })
       }
     }
     .width('100%')

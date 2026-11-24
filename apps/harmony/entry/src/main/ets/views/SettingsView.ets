@@ -117,6 +117,20 @@ export struct SettingsView {
     });
   }
 
+  /** 同 Android：127.0.0.1:端口，开了认证再加“ · 需要密码”。 */
+  private localProxySubtitle(): string {
+    const base = '127.0.0.1:' + String(this.localProxyPort);
+    if (!this.localProxyAuth) {
+      return base;
+    }
+    try {
+      const ctx = this.getUIContext().getHostContext();
+      return ctx !== undefined ? base + ' · ' + ctx.resourceManager.getStringSync(ZTerm.requirePassword.id) : base;
+    } catch (e) {
+      return base;
+    }
+  }
+
   private storageText(): ResourceStr {
     const s = this.storage;
     if (s === undefined) {
@@ -234,11 +248,13 @@ export struct SettingsView {
           })
           ZNavRow({
             title: $r('app.string.settings_trusted_wifi'),
+            subtitle: $r('app.string.settings_trusted_wifi_hint'),
             value: this.trustedWifi.length > 0 ? this.trustedWifi.join(', ') : ZTerm.none,
             onTap: () => this.onOpenTrustedWifi()
           })
           ZNavRow({
             title: ZTerm.localProxyPort,
+            subtitle: this.localProxySubtitle(),
             value: this.localProxyEnabled ? ZTerm.on : ZTerm.off,
             onTap: () => this.onOpenLocalProxy()
           })
@@ -278,12 +294,12 @@ export struct SettingsView {
               .fontColor($r('app.color.screen_t1'))
             this.storageBar()
             Text(this.storageText())
-              .fontSize(12)
+              .fontSize(13)
               .fontColor($r('app.color.screen_t3'))
           }
           .width('100%')
           .alignItems(HorizontalAlign.Start)
-          .padding(16)
+          .padding({ left: 20, right: 20, top: 16, bottom: 16 })
         }
 
         ZSection({ header: ZTerm.appearance }) {
@@ -300,7 +316,7 @@ export struct SettingsView {
               });
             }
           })
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
+          Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(20) })
           Row() {
             Text(ZTerm.accent)
               .fontSize(16)
@@ -311,7 +327,8 @@ export struct SettingsView {
             }, (a: Accent) => a as string)
           }
           .width('100%')
-          .padding({ start: LengthMetrics.vp(16), end: LengthMetrics.vp(6), top: LengthMetrics.vp(4), bottom: LengthMetrics.vp(4) })
+          .constraintSize({ minHeight: 56 })
+          .padding({ start: LengthMetrics.vp(20), end: LengthMetrics.vp(10), top: LengthMetrics.vp(4), bottom: LengthMetrics.vp(4) })
         }
 
         ZSection({ header: $r('app.string.settings_section_privacy') }) {

@@ -308,9 +308,10 @@ export struct TraceBody {
         })
       }
       .margin({ left: 16, right: 16, top: 16 })
-      .borderRadius(16)
+      .borderRadius(24)
       .clip(true)
-      .backgroundColor($r('app.color.screen_s1'))
+      .backgroundColor($r('app.color.screen_s2'))
+      .border({ width: 1, color: $r('app.color.screen_hl') })
     }
     .width('100%')
     .alignItems(HorizontalAlign.Start)

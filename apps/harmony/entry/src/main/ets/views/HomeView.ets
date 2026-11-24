@@ -1027,7 +1027,7 @@ export struct HomeView {
       .width('100%')
       .padding(18)
       if (divider) {
-        Divider().strokeWidth(0.5).color($r('app.color.screen_hl'))
+        Divider().strokeWidth(1).color($r('app.color.screen_hl'))
       }
     }
     .width('100%')
@@ -1179,8 +1179,9 @@ export struct HomeView {
         String(s.exceptions.length) + ':' + String(s.services.filter((h: ServiceHealth) => !h.ok).length))
     }
     .width('100%')
-    .borderRadius(16)
-    .backgroundColor($r('app.color.screen_s1'))
+    .borderRadius(24)
+    .backgroundColor($r('app.color.screen_s2'))
+    .border({ width: 1, color: $r('app.color.screen_hl') })
     .clip(true)
   }
 

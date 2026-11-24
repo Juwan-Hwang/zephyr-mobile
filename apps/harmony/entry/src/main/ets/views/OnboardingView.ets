@@ -171,7 +171,7 @@ export struct OnboardingView {
     .width('100%')
     .alignItems(VerticalAlign.Top)
     .padding(18)
-    .borderRadius(16)
+    .borderRadius(24)
     .backgroundColor(selected ? '#12' + this.theme.accentColor().substring(3) : $r('app.color.screen_s1'))
     .border({ width: 1, color: selected ? this.theme.accentColor() : $r('app.color.screen_hl') })
     .accessibilityRole(AccessibilityRoleType.RADIO)

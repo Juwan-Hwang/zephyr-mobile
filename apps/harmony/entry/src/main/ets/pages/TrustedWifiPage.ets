@@ -100,7 +100,7 @@ export struct TrustedWifiPage {
                 .width('100%')
                 .height(52)
                 .padding({ start: LengthMetrics.vp(16), end: LengthMetrics.vp(8) })
-                Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
+                Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
               }
             }, (ssid: string) => ssid)
             Row() {

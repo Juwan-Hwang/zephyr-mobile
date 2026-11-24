@@ -664,8 +664,9 @@ export struct CommandSheet {
     }
     .width('100%')
     .padding(16)
-    .borderRadius(16)
-    .backgroundColor($r('app.color.screen_s1'))
+    .borderRadius(24)
+    .backgroundColor($r('app.color.screen_s2'))
+    .border({ width: 1, color: $r('app.color.screen_hl') })
     .alignItems(HorizontalAlign.Start)
   }
 
@@ -690,25 +691,26 @@ export struct CommandSheet {
       Column() {
         ForEach(CommandResults.shown(g, this.expanded), (row: CommandRow, i: number) => {
           if (i > 0) {
-            Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(48) })
+            Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(48) })
           }
           this.resultRow(row, row.key === defaultKey, row.key === this.highlighted)
         }, (row: CommandRow) => row.key + (row.key === defaultKey ? '*' : '') + (row.key === this.highlighted ? '^' : ''))
         if (CommandResults.shown(g, this.expanded).length < g.rows.length) {
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl'))
+          Divider().strokeWidth(1).color($r('app.color.screen_hl'))
           this.footer($r('app.string.command_show_all', String(g.rows.length)), () => {
             this.expanded = this.expanded.concat([g.group]);
           })
         } else if (g.group === CommandGroup.NODE && this.nodeTotal > g.rows.length) {
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl'))
+          Divider().strokeWidth(1).color($r('app.color.screen_hl'))
           this.footer($r('app.string.command_see_all_nodes', Format.grouped(this.nodeTotal)), () => {
             this.onOpenNodes(this.nodeQuery);
           })
         }
       }
       .width('100%')
-      .borderRadius(14)
-      .backgroundColor($r('app.color.screen_s1'))
+      .borderRadius(24)
+      .backgroundColor($r('app.color.screen_s2'))
+      .border({ width: 1, color: $r('app.color.screen_hl') })
       .clip(true)
     }
     .width('100%')

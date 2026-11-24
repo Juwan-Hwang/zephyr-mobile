@@ -32,7 +32,7 @@ export struct ZChoiceRow {
         .width(200)
         .height(48)
         .padding({ left: 16, right: 16 })
-        .stateStyles({ pressed: { .backgroundColor($r('app.color.screen_s3')) }, normal: { .backgroundColor(Color.Transparent) } })
+        .stateStyles({ pressed: { .backgroundColor($r('app.color.screen_pressed')) }, normal: { .backgroundColor(Color.Transparent) } })
         .onClick(() => {
           this.open = false;
           if (i !== this.selected) {
@@ -46,25 +46,26 @@ export struct ZChoiceRow {
 
   build() {
     Column() {
-      Row({ space: 8 }) {
+      Row({ space: 12 }) {
         Text(this.title)
           .fontSize(16)
           .fontColor($r('app.color.screen_t1'))
           .layoutWeight(1)
         Text(this.selected >= 0 && this.selected < this.options.length ? this.options[this.selected] : '')
-          .fontSize(15)
+          .fontSize(16)
           .fontColor($r('app.color.screen_t3'))
           .maxLines(1)
-        Text('›')
-          .fontSize(20)
-          .fontColor($r('app.color.screen_t3'))
+        SymbolGlyph($r('sys.symbol.chevron_right'))
+          .fontSize(16)
+          .fontColor([$r('app.color.screen_t3')])
+          .margin({ left: -6 })
       }
       .width('100%')
-      .height(52)
-      .padding({ left: 16, right: 16 })
+      .constraintSize({ minHeight: 56 })
+      .padding({ left: 20, right: 20, top: 12, bottom: 12 })
       .accessibilityGroup(true)
       .accessibilityRole(AccessibilityRoleType.BUTTON)
-      .stateStyles({ pressed: { .backgroundColor($r('app.color.screen_s3')) }, normal: { .backgroundColor(Color.Transparent) } })
+      .stateStyles({ pressed: { .backgroundColor($r('app.color.screen_pressed')) }, normal: { .backgroundColor(Color.Transparent) } })
       .onClick(() => {
         this.open = true;
       })
@@ -76,7 +77,7 @@ export struct ZChoiceRow {
       })
 
       if (this.divider) {
-        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
+        Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(20) })
       }
     }
     .width('100%')

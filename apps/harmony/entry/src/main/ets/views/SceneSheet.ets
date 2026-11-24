@@ -277,7 +277,7 @@ export struct SceneSheet {
       .padding({ left: 16, right: 16 })
 
       if (divider) {
-        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
+        Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
       }
     }
     .width('100%')
@@ -311,9 +311,10 @@ export struct SceneSheet {
       }, (n: NodeSummary) => String(n.id) + ':' + String(n.latencyMs ?? -2) + ':' + String(s.selected.id))
     }
     .width('100%')
-    .borderRadius(16)
+    .borderRadius(24)
     .clip(true)
-    .backgroundColor($r('app.color.screen_s1'))
+    .backgroundColor($r('app.color.screen_s2'))
+    .border({ width: 1, color: $r('app.color.screen_hl') })
   }
 
   @Builder
@@ -332,8 +333,9 @@ export struct SceneSheet {
         !this.retesting, () => this.retest(s))
     }
     .width('100%')
-    .borderRadius(16)
+    .borderRadius(24)
     .clip(true)
-    .backgroundColor($r('app.color.screen_s1'))
+    .backgroundColor($r('app.color.screen_s2'))
+    .border({ width: 1, color: $r('app.color.screen_hl') })
   }
 }

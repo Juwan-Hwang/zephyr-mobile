@@ -666,7 +666,7 @@ export struct NodesView {
         Column() {
           this.detailRow($r('app.string.nodes_detail_protocol'),
             this.selected.protocol.length > 0 ? this.selected.protocol : '—')
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
+          Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
           Row() {
             Text($r('app.string.nodes_detail_latency'))
               .fontSize(15)
@@ -677,14 +677,14 @@ export struct NodesView {
           .width('100%')
           .height(48)
           .padding({ left: 16, right: 16 })
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
+          Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
           this.detailRow($r('app.string.nodes_detail_server'),
             this.detail !== undefined ? this.detail.server + ':' + this.detail.port : '—')
-          Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
+          Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
           this.detailRow(ZTerm.subscription,
             this.detail !== undefined && this.detail.subscription.length > 0 ? this.detail.subscription : '—')
           if (this.selected.tag !== undefined) {
-            Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
+            Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
             this.detailRow($r('app.string.nodes_detail_route'), this.route(this.selected))
           }
         }
@@ -722,10 +722,10 @@ export struct NodesView {
     // 标题由外层 NavDestination 给（Index 路由 nodes）。
     Column({ space: 10 }) {
       this.header()
-      // Android ZSearchField：48 高、surface 圆角 12、s3 底、t2 放大镜、t3 占位。
+      // Android ZSearchField：48 高、surface 圆角 16、s3 底、t2 放大镜、t3 占位。
       Search({ value: this.query, placeholder: $r('app.string.nodes_search_placeholder') })
         .height(48)
-        .borderRadius(12)
+        .borderRadius(16)
         .margin({ left: 16, right: 16, top: 8 })
         .backgroundColor($r('app.color.screen_s3'))
         .fontColor($r('app.color.screen_t1'))

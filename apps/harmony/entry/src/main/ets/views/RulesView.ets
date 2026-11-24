@@ -132,7 +132,7 @@ struct LayerRowView {
           .fontFamily('monospace')
           .fontColor(this.accent ? this.theme.accentColor() : $r('app.color.screen_t2'))
           .padding({ left: 7, right: 7, top: 2, bottom: 2 })
-          .borderRadius(8)
+          .borderRadius(10)
           .border({ width: 1, color: this.accent ? this.theme.accentColor() : $r('app.color.screen_hl2') })
           .margin({ right: 12 })
       }
@@ -335,7 +335,7 @@ export struct RulesView {
         Search({ value: this.input, placeholder: $r('app.string.rules_test_placeholder') })
           .id(RULES_INPUT_ID)
           .height(48)
-          .borderRadius(12)
+          .borderRadius(16)
           .margin({ left: 16, right: 16, top: 18 })
           .backgroundColor($r('app.color.screen_s3'))
           .fontColor($r('app.color.screen_t1'))
@@ -404,9 +404,10 @@ export struct RulesView {
           }
         }
         .width('100%')
-        .borderRadius(16)
+        .borderRadius(24)
         .clip(true)
-        .backgroundColor($r('app.color.screen_s1'))
+        .backgroundColor($r('app.color.screen_s2'))
+        .border({ width: 1, color: $r('app.color.screen_hl') })
         }
         .width('100%')
         .padding({ left: 16, right: 16 })

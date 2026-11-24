@@ -1,5 +1,5 @@
 /*
- * 卡片容器（原型 .card）：screen_s1 底、16 圆角、默认 16 内边距。内容由尾随闭包给出：
+ * 卡片容器（原型 .card）：screen_s2 底、24 圆角、1 vp hairline 描边（同 Android ZCard）、默认 16 内边距。内容由尾随闭包给出：
  *   ZCard() { Text(...) }
  */
 @ComponentV2
@@ -15,8 +15,9 @@ export struct ZCard {
     }
     .width('100%')
     .padding(this.pad)
-    .borderRadius(16)
-    .backgroundColor($r('app.color.screen_s1'))
+    .borderRadius(24)
+    .backgroundColor($r('app.color.screen_s2'))
+    .border({ width: 1, color: $r('app.color.screen_hl') })
     .alignItems(HorizontalAlign.Start)
     .onClick(() => this.onTap())
   }

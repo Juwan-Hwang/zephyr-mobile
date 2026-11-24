@@ -152,8 +152,9 @@ export struct ActivitySheet {
             }, (c: ConnectionInfo) => c.host)
           }
           .width('100%')
-          .borderRadius(16)
-          .backgroundColor($r('app.color.screen_s1'))
+          .borderRadius(24)
+          .backgroundColor($r('app.color.screen_s2'))
+          .border({ width: 1, color: $r('app.color.screen_hl') })
           .clip(true)
 
           if (RecentHostsModel.showsNoAppNote(this.hosts)) {
@@ -177,7 +178,7 @@ export struct ActivitySheet {
   row(c: ConnectionInfo, divider: boolean) {
     Column() {
       if (divider) {
-        Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
+        Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
       }
       Row({ space: 10 }) {
         Column({ space: 3 }) {
