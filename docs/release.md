@@ -89,7 +89,7 @@ iOS（B）：
 - [ ] 冷启动 < 1 s；节点列表滚动 60fps（ProMotion 设备 120fps）。
 
 Android（C）：
-- [ ] 16 KB 页设备（或 16 KB 模拟器镜像）上能加载 `libzephyr_mobile_core.so` 与 `libzmihomo.so`。
+- [ ] 16 KB 页设备（或 16 KB 模拟器镜像）上能加载 `libzephyr_mobile_core.so` 与 `libzmihomo.so`。（CI 非阻塞任务 `android-16k`：API 35 `google_apis_ps16k` x86_64 模拟器，脚本 `tools/android-16k/load-test.sh`；arm64 仍需真机）
 - [ ] Release（R8）包启动、连接、UniFFI 调用不因混淆失败。
 - [ ] 真实 VPN 流量（同 iOS 列表），常驻通知、快速设置磁贴、Glance 小组件、开机自启。
 - [ ] 中端机冷启动 < 1 s、节点列表 2000 行滚动 60fps。

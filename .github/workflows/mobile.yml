@@ -308,6 +308,10 @@ jobs:
         working-directory: apps/android
         # zephyr.versionCode：P1-1 规则，build number = run_number；app/build.gradle.kts 读取前不生效。
         run: ./gradlew --no-daemon -Pzephyr.rust=true -Pzephyr.strict16k=true -Pzephyr.versionCode=${{ github.run_number }} assembleRelease bundleRelease
+      - name: 上传 debug APK（给 android-16k 任务复用，不重编）
+        if: ${{ !inputs.record_android_snapshots }}
+        uses: actions/upload-artifact@v4
+        with: { name: android-debug-apk, path: apps/android/app/build/outputs/apk/debug/*.apk, retention-days: 3, if-no-files-found: error }
       - name: paparazzi record（手动触发）
         if: ${{ inputs.record_android_snapshots }}
         working-directory: apps/android
@@ -318,3 +322,35 @@ jobs:
       - if: failure()
         uses: actions/upload-artifact@v4
         with: { name: paparazzi-failures, path: apps/android/**/build/paparazzi/failures }
+  android-16k:
+    # 非阻塞：16 KB 页大小模拟器（google_apis_ps16k）上确认 App 打包的 .so 真能加载。
+    # 复用 android 任务的 debug APK；getconf PAGE_SIZE 必须是 16384；逐个 dlopen APK 里的 .so（含 libzmihomo.so、libzephyr_mobile_core.so）；
+    # 再启动 MainActivity 查 logcat。脚本见 tools/android-16k/load-test.sh。模拟器偶发起不来属基础设施问题，不挡合并。
+    needs: [detect, android]
+    if: ${{ needs.detect.outputs.android == 'true' && !inputs.record_android_snapshots }}
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: android-debug-apk, path: build/apk }
+      - name: 启用 KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: 编译 dlopen 探针（NDK，x86_64）
+        run: tools/android-16k/load-test.sh build-probe build/probe && ls -la build/apk
+      - name: 16 KB 模拟器加载测试
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis_ps16k
+          arch: x86_64
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: tools/android-16k/load-test.sh run "$(ls build/apk/*.apk | head -1)" build/probe/zm-dlopen
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: android-16k-logcat, path: /tmp/logcat.txt, if-no-files-found: ignore }
