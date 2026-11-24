@@ -38,7 +38,7 @@ public struct ZIconButton: View {
                 .fontWeight(style == .accent ? .medium : .regular)
                 .foregroundStyle(foreground)
                 .frame(width: diameter, height: diameter)
-                .background { backgroundShape }
+                .modifier(ZIconButtonChrome(style: style))
                 .frame(minWidth: ZTokens.Layout.touchMinIos, minHeight: ZTokens.Layout.touchMinIos)
                 .contentShape(Circle())
         }
@@ -55,11 +55,19 @@ public struct ZIconButton: View {
         }
     }
 
-    @ViewBuilder
-    private var backgroundShape: some View {
+}
+
+/// glass：规范 §9.7，资料库按钮与指令栏同为悬浮玻璃（iOS 26 Liquid Glass，更早回退 screen.glass + 材质）。
+/// 玻璃直接加在图标上（和指令栏胶囊一样），图标画在玻璃之上。之前是 `.background { Color.clear.zFloatingGlass }`，
+/// 放进 GlassEffectContainer 后，iOS 26 会把图标当成玻璃后面的内容去模糊，图标几乎看不见（J-4 第二轮录图）。
+private struct ZIconButtonChrome: ViewModifier {
+    let style: ZIconButtonStyle
+
+    func body(content: Content) -> some View {
         if style == .glass {
-            // 规范 §9.7：资料库按钮与指令栏同为悬浮玻璃（iOS 26 Liquid Glass，更早回退 screen.glass + 材质）。
-            Color.clear.zFloatingGlass(Circle())
+            content.zFloatingGlass(Circle())
+        } else {
+            content
         }
     }
 }
