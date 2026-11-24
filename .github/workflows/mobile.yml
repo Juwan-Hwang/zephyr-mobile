@@ -353,4 +353,4 @@ jobs:
           script: tools/android-16k/load-test.sh run "$(ls build/apk/*.apk | head -1)" build/probe/zm-dlopen
       - if: always()
         uses: actions/upload-artifact@v4
-        with: { name: android-16k-logcat, path: /tmp/logcat.txt, if-no-files-found: ignore }
+        with: { name: android-16k-logcat, path: /tmp/*log*.txt, if-no-files-found: ignore }

@@ -5,7 +5,7 @@
 #     1. getconf PAGE_SIZE 必须是 16384
 #     2. adb install APK（安装器会拒绝未 16 KB 对齐的未压缩 .so）
 #     3. 从 APK 取出本机 ABI 的全部 .so（必须含 libzmihomo.so 与 libzephyr_mobile_core.so），推到 /data/local/tmp 逐个 dlopen
-#     4. 启动 MainActivity，15 秒后进程必须还在，logcat 不得出现 dlopen failed / UnsatisfiedLinkError / 页大小相关错误
+#     4. 启动 LAUNCHER Activity，15 秒后进程必须还在，logcat 不得出现 dlopen failed / UnsatisfiedLinkError / 页大小相关错误
 # 不改 apps/android：.so 是 App 惰性加载的（libzmihomo 在开 VPN 时才加载），所以第 3 步用独立探针直接 dlopen 同一份字节。
 set -euo pipefail
 cmd=${1:-}; shift || true
@@ -55,17 +55,25 @@ for need in libzmihomo.so libzephyr_mobile_core.so; do
   echo "$out" | grep -q "^OK   $dev/$need" || err "$need 未加载成功"
 done
 
-echo "== launch MainActivity"
+echo "== launch app"
 adb logcat -c || true
-adb shell am start -W -n "$PKG/.MainActivity" || err "MainActivity 启动失败"
+# namespace 与 applicationId 不同，按 LAUNCHER 解析组件名，不写死类名
+comp=$(adb shell cmd package resolve-activity --brief -c android.intent.category.LAUNCHER "$PKG" | tr -d '\r' | tail -1)
+echo "launcher: $comp"
+case $comp in "$PKG"/*) ;; *) err "解析不到 $PKG 的启动 Activity";; esac
+adb shell am start -W -n "$comp" | tr -d '\r' | tee /tmp/am.txt || true
+grep -q "^Status: ok" /tmp/am.txt || err "启动 Activity 失败"
 sleep 15
 pid=$(adb shell pidof "$PKG" | tr -d '\r' || true)
 [ -n "$pid" ] || err "启动 15 秒后进程 $PKG 不在了"
 adb logcat -d > /tmp/logcat.txt || true
-if grep -E "dlopen failed|UnsatisfiedLinkError|not page-aligned|PageSizeMismatch|page size compat|16 ?KB compat|Process: $PKG, PID" /tmp/logcat.txt | grep -v "zm-dlopen" > /tmp/bad.txt; then
+# 只看本 App：进程内日志 + 提到包名的系统日志（排除系统自带 App 的 nativeloader 噪音）
+{ [ -n "$pid" ] && adb logcat -d --pid="$pid"; grep -F "$PKG" /tmp/logcat.txt; } > /tmp/applog.txt 2>/dev/null || true
+echo "（本 App 相关日志 $(wc -l < /tmp/applog.txt) 行）"
+if grep -E "dlopen failed|UnsatisfiedLinkError|not page-aligned|PageSizeMismatch|page size compat|16 ?KB compat|Process: $PKG, PID" /tmp/applog.txt | grep -v "zm-dlopen" > /tmp/bad.txt; then
   cat /tmp/bad.txt; err "logcat 有原生库加载 / 页大小相关错误"
 fi
-grep -E "AndroidRuntime|libc  .*Fatal signal" /tmp/logcat.txt | head -40 || true
+grep -E "AndroidRuntime|Fatal signal" /tmp/applog.txt | head -40 || true
 if [ -n "$pid" ]; then
   echo "== $PKG 进程已映射的 App .so（惰性加载，未开 VPN 时可能为空，仅供参考）"
   adb shell run-as "$PKG" cat /proc/"$pid"/maps 2>/dev/null | grep -oE '[^ /]+\.so$' | sort -u | grep -E 'zmihomo|zephyr|jnidispatch' || echo "(无)"
