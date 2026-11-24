@@ -14,7 +14,7 @@ on:
         type: boolean
         default: false
       record_ios26_snapshots:
-        description: 'iOS 26：在 macos-26（Xcode 26，iOS 26 模拟器）上重录 Liquid Glass 快照（J-4，ZEPHYR_SNAPSHOT_OS=ios26），录出的图作为 artifact ios26-snapshots 上传，人工审核后入库'
+        description: 'iOS 26：在 macos-26（Xcode 26，iOS 26 模拟器）上用 scheme ZephyrGlass 重录 Liquid Glass 快照（J-4），录出的图作为 artifact ios26-snapshots 上传，人工审核后入库到 apps/ios/GlassSnapshotTests/__Snapshots__'
         type: boolean
         default: false
 concurrency:
@@ -124,7 +124,7 @@ jobs:
           go vet ./...
   ios26:
     # J-4：iOS 26 Liquid Glass 快照录图 / 校验线。macos-15（Xcode 16）只编译 ZGlass 的回退分支，玻璃只能在这里看到。
-    # 测试侧用环境变量 ZEPHYR_SNAPSHOT_OS=ios26 区分基线目录（由 iOS 侧实现）。
+    # 只跑 scheme ZephyrGlass（宿主 ZephyrGlassHost + ZephyrGlassSnapshotTests，#311），scheme Zephyr 的 142 张基线不在这里跑。
     # 校验暂不阻塞（continue-on-error）：iOS 26 基线入库并稳定后再去掉。
     needs: detect
     if: ${{ inputs.record_ios26_snapshots || needs.detect.outputs.ios == 'true' }}
@@ -167,25 +167,22 @@ jobs:
         timeout-minutes: 5
         working-directory: apps/ios
         run: xcodegen generate
-      - name: iOS 26 快照（record 或校验，只跑 ZephyrSnapshotTests）
+      - name: iOS 26 玻璃快照（scheme ZephyrGlass；record 或校验）
         working-directory: apps/ios
-        env:
-          TEST_RUNNER_ZEPHYR_SNAPSHOT_OS: ios26
-          TEST_RUNNER_ZEPHYR_SNAPSHOT_RECORD: ${{ inputs.record_ios26_snapshots && 'all' || '' }}
         run: |
           set -o pipefail
+          # 只在录图时设置；校验时不设，scheme 的 SNAPSHOT_RECORD=never 生效（缺图即失败）。
+          if [ "${{ inputs.record_ios26_snapshots }}" = "true" ]; then export TEST_RUNNER_ZEPHYR_SNAPSHOT_RECORD=all; fi
           xcrun simctl bootstatus "$SIM" -b || true
           PROJ=$(find . -maxdepth 1 -name '*.xcodeproj' | head -1)
-          SCHEME=${IOS_SCHEME:-Zephyr}
-          xcodebuild -project "$PROJ" -scheme "$SCHEME" \
+          xcodebuild -project "$PROJ" -scheme ZephyrGlass \
             -destination "platform=iOS Simulator,name=$SIM" \
             -parallel-testing-enabled NO \
-            -only-testing:ZephyrSnapshotTests \
             -resultBundlePath build/Test26.xcresult \
             CODE_SIGNING_ALLOWED=NO test | xcbeautify || exit 1
       - if: ${{ inputs.record_ios26_snapshots }}
         uses: actions/upload-artifact@v4
-        with: { name: ios26-snapshots, path: apps/ios/SnapshotTests/__Snapshots__ }
+        with: { name: ios26-snapshots, path: apps/ios/GlassSnapshotTests/__Snapshots__ }
       - if: failure()
         uses: actions/upload-artifact@v4
         with: { name: ios26-xcresult, path: apps/ios/build/Test26.xcresult }
