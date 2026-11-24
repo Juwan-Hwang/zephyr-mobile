@@ -81,6 +81,7 @@ struct Index {
   @Local showLibrary: boolean = false;
   /** 订阅页页头“+”：每点一次加一，订阅页据此开合添加卡。 */
   @Local subsAddTick: number = 0;
+  @Local rulesAddTick: number = 0;
   /** 首次引导（M1-16）：在屏时替换整个导航。 */
   @Local onboarding: boolean = false;
   private onboardingSub: StreamSub | undefined = undefined;
@@ -293,8 +294,17 @@ struct Index {
     } else if (name === ROUTE_RULES) {
       NavDestination() {
         Column() {
-          this.pageHeader(param, ZTerm.rules)
-          RulesView()
+          ZPageHeader({
+            backLabel: this.backLabel(param),
+            title: ZTerm.rules,
+            trailingSymbol: $r('sys.symbol.plus'),
+            trailingLabel: $r('app.string.rules_add_override_a11y'),
+            onBack: () => this.pathStack.pop(),
+            onTrailing: () => {
+              this.rulesAddTick++;
+            }
+          })
+          RulesView({ addTick: this.rulesAddTick })
             .layoutWeight(1)
         }
       }

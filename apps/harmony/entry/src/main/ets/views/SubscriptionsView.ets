@@ -1007,11 +1007,11 @@ export struct SubscriptionsView {
 
         Row({ space: 8 }) {
           Text(Format.grouped(this.summary !== undefined ? this.summary.count : this.visibleSubs().length))
-            .attributeModifier(ZHero.hero())
+            .attributeModifier(ZHero.hero(48))
             .fontColor($r('app.color.screen_t1'))
           Text(this.plural($r('app.plural.subs_total_unit'), this.summary !== undefined ? this.summary.count : 0, '') + ' · ' +
             this.plural($r('app.plural.subs_update_every'), this.autoUpdateHours, String(this.autoUpdateHours)))
-            .fontSize(15)
+            .fontSize(16)
             .fontColor($r('app.color.screen_t3'))
             .margin({ bottom: 10 })
             .layoutWeight(1)
