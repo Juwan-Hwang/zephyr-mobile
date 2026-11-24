@@ -209,6 +209,14 @@
       "value": "Badilisha"
     },
     {
+      "name": "common_clear",
+      "value": "Futa"
+    },
+    {
+      "name": "common_close",
+      "value": "Funga"
+    },
+    {
       "name": "common_connect",
       "value": "Unganisha"
     },
@@ -221,12 +229,52 @@
       "value": "Moja kwa moja"
     },
     {
+      "name": "common_done",
+      "value": "Nimemaliza"
+    },
+    {
       "name": "common_exit_ip_changes",
       "value": "IP ya kutoka itabadilika"
     },
     {
+      "name": "common_expiry_date",
+      "value": "Inaisha %1$s"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "Muda umeisha"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "Inaisha leo"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "Inaisha kesho"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "Inaisha %1$s"
+    },
+    {
       "name": "common_home",
       "value": "Mwanzo"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "Inapima kuchelewa"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "Kuchelewa: muda umeisha"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "Kuchelewa hakujapimwa"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "Muda umeisha"
     },
     {
       "name": "common_library",
@@ -303,6 +351,18 @@
     {
       "name": "common_status_disconnecting",
       "value": "Inatenganisha"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "Sasa hivi"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "sasa hivi"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "Kupakua %1$s %2$s kwa sekunde, kupakia %3$s %4$s kwa sekunde"
     },
     {
       "name": "common_try_again",

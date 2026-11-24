@@ -13,6 +13,7 @@ import { LengthMetrics } from '@kit.ArkUI';
  *   “更新”分组：自动更新 6/12/24/48 小时（菜单）、仅在 Wi‑Fi 下更新、更新前显示更改、更新全部。
  * M1-12：扫码 / 从电脑上的 Zephyr 导入（ScanKit）与从文件导入（DocumentViewPicker），见 ImportPickers。
  */
+import { ZSheetHeader } from '../components/ZSheetHeader';
 import { pasteboard } from '@kit.BasicServicesKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { AppServices } from '../app/AppServices';
@@ -942,11 +943,12 @@ export struct SubscriptionsView {
   @Builder
   allSheet() {
     Column({ space: 8 }) {
-      Text($r('app.string.subs_all_title'))
-        .fontSize(20)
-        .fontWeight(FontWeight.Bold)
-        .fontColor($r('app.color.screen_t1'))
-        .padding({ left: 22, right: 22 })
+      ZSheetHeader({
+        title: $r('app.string.subs_all_title'),
+        onDone: () => {
+          this.showAll = false;
+        }
+      })
       Column() {
         ForEach(this.visibleSubs(), (s: Subscription, i: number) => {
           if (i > 0) {
@@ -1074,9 +1076,9 @@ export struct SubscriptionsView {
     .scrollBar(BarState.Off)
     .bindSheet(this.showAll, this.allSheet(), {
       detents: [SheetSize.MEDIUM, SheetSize.LARGE],
-      showClose: true,
+      showClose: false,
       dragBar: true,
-      backgroundColor: $r('app.color.screen_bg'),
+      backgroundColor: $r('app.color.screen_s1'),
       onDisappear: () => {
         this.showAll = false;
       }

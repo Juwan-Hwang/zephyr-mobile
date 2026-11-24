@@ -209,6 +209,14 @@
       "value": "تغيير"
     },
     {
+      "name": "common_clear",
+      "value": "مسح"
+    },
+    {
+      "name": "common_close",
+      "value": "إغلاق"
+    },
+    {
       "name": "common_connect",
       "value": "اتصال"
     },
@@ -221,12 +229,52 @@
       "value": "مباشر"
     },
     {
+      "name": "common_done",
+      "value": "تم"
+    },
+    {
       "name": "common_exit_ip_changes",
       "value": "سيتغيّر عنوان IP للخروج"
     },
     {
+      "name": "common_expiry_date",
+      "value": "ينتهي في \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "منتهٍ"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "ينتهي اليوم"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "ينتهي غدًا"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "ينتهي يوم \\u2068%1$s\\u2069"
+    },
+    {
       "name": "common_home",
       "value": "الرئيسية"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "جارٍ اختبار التأخير"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "انتهت مهلة التأخير"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "لم يُختبر التأخير"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "انتهت المهلة"
     },
     {
       "name": "common_library",
@@ -303,6 +351,18 @@
     {
       "name": "common_status_disconnecting",
       "value": "جارٍ قطع الاتصال"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "الآن"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "الآن"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "التنزيل \\u2066%1$s %2$s\\u2069 في الثانية، والرفع \\u2066%3$s %4$s\\u2069 في الثانية"
     },
     {
       "name": "common_try_again",

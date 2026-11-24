@@ -209,6 +209,14 @@
       "value": "Change"
     },
     {
+      "name": "common_clear",
+      "value": "Clear"
+    },
+    {
+      "name": "common_close",
+      "value": "Close"
+    },
+    {
       "name": "common_connect",
       "value": "Connect"
     },
@@ -221,8 +229,32 @@
       "value": "Direct"
     },
     {
+      "name": "common_done",
+      "value": "Done"
+    },
+    {
       "name": "common_exit_ip_changes",
       "value": "Exit IP will change"
+    },
+    {
+      "name": "common_expiry_date",
+      "value": "Expires %1$s"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "Expired"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "Expires today"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "Expires tomorrow"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "Expires %1$s"
     },
     {
       "name": "common_home",
@@ -231,6 +263,22 @@
     {
       "name": "common_joined_dot",
       "value": "%1$s · %2$s"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "Testing latency"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "Latency timed out"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "Latency not tested"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "Timeout"
     },
     {
       "name": "common_library",
@@ -307,6 +355,18 @@
     {
       "name": "common_status_disconnecting",
       "value": "Disconnecting"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "Just now"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "just now"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "Download %1$s %2$s per second, upload %3$s %4$s per second"
     },
     {
       "name": "common_try_again",

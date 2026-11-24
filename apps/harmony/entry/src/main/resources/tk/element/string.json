@@ -209,6 +209,14 @@
       "value": "Üýtget"
     },
     {
+      "name": "common_clear",
+      "value": "Arassala"
+    },
+    {
+      "name": "common_close",
+      "value": "Ýap"
+    },
+    {
       "name": "common_connect",
       "value": "Birikdir"
     },
@@ -221,12 +229,52 @@
       "value": "Göni"
     },
     {
+      "name": "common_done",
+      "value": "Taýýar"
+    },
+    {
       "name": "common_exit_ip_changes",
       "value": "Çykyş IP-si üýtgär"
     },
     {
+      "name": "common_expiry_date",
+      "value": "Möhleti: %1$s"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "Möhleti geçdi"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "Şu gün gutarýar"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "Ertir gutarýar"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "%1$s güni gutarýar"
+    },
+    {
       "name": "common_home",
       "value": "Baş sahypa"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "Gijikme barlanýar"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "Gijikme: wagt gutardy"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "Gijikme barlanmady"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "Wagt gutardy"
     },
     {
       "name": "common_library",
@@ -303,6 +351,18 @@
     {
       "name": "common_status_disconnecting",
       "value": "Birikme kesilýär"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "Ýaňy"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "ýaňy"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "Ýükleme sekuntda %1$s %2$s, iberme sekuntda %3$s %4$s"
     },
     {
       "name": "common_try_again",

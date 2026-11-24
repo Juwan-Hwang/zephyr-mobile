@@ -209,6 +209,14 @@
       "value": "تغییر"
     },
     {
+      "name": "common_clear",
+      "value": "پاک کردن"
+    },
+    {
+      "name": "common_close",
+      "value": "بستن"
+    },
+    {
       "name": "common_connect",
       "value": "اتصال"
     },
@@ -221,12 +229,52 @@
       "value": "مستقیم"
     },
     {
+      "name": "common_done",
+      "value": "تمام"
+    },
+    {
       "name": "common_exit_ip_changes",
       "value": "IP خروجی تغییر می‌کند"
     },
     {
+      "name": "common_expiry_date",
+      "value": "انقضا: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "منقضی شده"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "امروز منقضی می‌شود"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "فردا منقضی می‌شود"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "\\u2068%1$s\\u2069 منقضی می‌شود"
+    },
+    {
       "name": "common_home",
       "value": "خانه"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "در حال بررسی تأخیر"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "تأخیر: مهلت تمام شد"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "تأخیر بررسی نشده"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "تایم‌اوت"
     },
     {
       "name": "common_library",
@@ -303,6 +351,18 @@
     {
       "name": "common_status_disconnecting",
       "value": "در حال قطع اتصال"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "همین حالا"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "همین حالا"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "دانلود \\u2066%1$s %2$s\\u2069 در ثانیه، آپلود \\u2066%3$s %4$s\\u2069 در ثانیه"
     },
     {
       "name": "common_try_again",

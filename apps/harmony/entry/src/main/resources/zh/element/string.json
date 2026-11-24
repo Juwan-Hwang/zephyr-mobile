@@ -209,6 +209,14 @@
       "value": "更改"
     },
     {
+      "name": "common_clear",
+      "value": "清除"
+    },
+    {
+      "name": "common_close",
+      "value": "关闭"
+    },
+    {
       "name": "common_connect",
       "value": "连接"
     },
@@ -221,12 +229,52 @@
       "value": "直连"
     },
     {
+      "name": "common_done",
+      "value": "完成"
+    },
+    {
       "name": "common_exit_ip_changes",
       "value": "出口 IP 将更改"
     },
     {
+      "name": "common_expiry_date",
+      "value": "%1$s到期"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "已过期"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "今天到期"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "明天到期"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "%1$s到期"
+    },
+    {
       "name": "common_home",
       "value": "首页"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "延迟检测中"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "延迟超时"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "延迟未检测"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "超时"
     },
     {
       "name": "common_library",
@@ -303,6 +351,18 @@
     {
       "name": "common_status_disconnecting",
       "value": "正在断开"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "刚刚"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "刚刚"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "下载 %1$s %2$s 每秒，上传 %3$s %4$s 每秒"
     },
     {
       "name": "common_try_again",

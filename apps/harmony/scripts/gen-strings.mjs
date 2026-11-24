@@ -2,7 +2,7 @@
 // 鸿蒙端文案合并（角色 D）。三个来源，合成 entry/src/main/resources/<限定词>/element/{string,plural,strarray}.json：
 //   1. 术语：A 的官方产物 tokens/generated/harmony/resources/<base|语言>/element/string.json（tools/gen-harmony-i18n.mjs，
 //      名称 term_*），原样并入；ZTerms.ets 拷到 entry/src/main/ets/generated/ZTerms.ets。代码里术语一律用 ZTerm.xxx。
-//   2. 其余界面文案：Android res/values*/strings.xml（术语表 keys.android 指向的键已被 term_* 取代，不再转换；
+//   2. 其余界面文案：Android app 与 design 模块 res/values*/strings.xml（术语表 keys.android 指向的键已被 term_* 取代，不再转换；
 //      app_name 归 AppScope 所有，不进 entry，避免重名告警）。官方工具只出术语，界面文案仍由本脚本转换。
 //   3. 本端专有文案 scripts/harmony-strings.json。
 // base = 英文兜底，zh = 中文（与官方产物目录一致），其余 12 种语言按语言码目录。
@@ -15,6 +15,8 @@ const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const app = path.resolve(scriptDir, '..');
 const root = path.resolve(app, '../..');
 const androidRes = path.join(root, 'apps/android/app/src/main/res');
+// 设计系统模块（ZSheet“完成”等组件文案）同样并入；与 app 模块不重名。
+const designRes = path.join(root, 'apps/android/design/src/main/res');
 const extra = JSON.parse(fs.readFileSync(path.join(scriptDir, 'harmony-strings.json'), 'utf8'));
 const resDir = path.join(app, 'entry/src/main/resources');
 
@@ -61,6 +63,14 @@ for (const [suffix, dir] of Object.entries(LOCALES)) {
   const file = path.join(androidRes, suffix ? `values-${suffix}` : 'values', 'strings.xml');
   if (!fs.existsSync(file)) continue;
   const p = parse(file);
+  const dfile = path.join(designRes, suffix ? `values-${suffix}` : 'values', 'strings.xml');
+  if (fs.existsSync(dfile)) {
+    const d = parse(dfile);
+    for (const x of d.strings) {
+      if (p.strings.some((s) => s.name === x.name)) throw new Error(`design 模块文案与 app 重名：${x.name}`);
+      p.strings.push(x);
+    }
+  }
   const strings = p.strings
     .filter((s) => (suffix === '' || !s.fixed) && !superseded.has(s.name) && !DROP.has(s.name))
     .map((s) => ({ name: s.name, value: s.value }));

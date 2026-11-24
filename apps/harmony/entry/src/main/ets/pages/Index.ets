@@ -8,6 +8,7 @@
  * - 首页场景行横滑期间（GestureLock）吞掉首页上的系统返回，免得滑动贴边时被当成返回退出 App。
  * 状态管理统一用 V2（@ComponentV2 / @Local / @Param / @Event），引擎流在 aboutToAppear 订阅、aboutToDisappear 取消。
  */
+import { ZSheetHeader } from '../components/ZSheetHeader';
 import { CommandPage } from '../app/CommandResults';
 import { AppServices } from '../app/AppServices';
 import { AddSubscriptionRequest, ImportInbox } from '../app/ImportInbox';
@@ -340,7 +341,18 @@ struct Index {
 
   @Builder
   librarySheet() {
-    LibrarySheet({ onOpen: (d: LibraryDest) => this.openFromLibrary(d) })
+    Column() {
+      ZSheetHeader({
+        title: $r('app.string.common_library'),
+        onDone: () => {
+          this.showLibrary = false;
+        }
+      })
+      LibrarySheet({ onOpen: (d: LibraryDest) => this.openFromLibrary(d) })
+        .layoutWeight(1)
+    }
+    .width('100%')
+    .height('100%')
   }
 
   build() {
@@ -386,10 +398,9 @@ struct Index {
     .backgroundColor($r('app.color.screen_bg'))
     .bindSheet(this.showLibrary, this.librarySheet(), {
       detents: [SheetSize.MEDIUM, SheetSize.LARGE],
-      title: { title: $r('app.string.common_library') },
-      showClose: true,
+      showClose: false,
       dragBar: true,
-      backgroundColor: $r('app.color.screen_bg'),
+      backgroundColor: $r('app.color.screen_s1'),
       onDisappear: () => {
         this.showLibrary = false;
         if (this.sceneAfterLibrary) {

@@ -19,6 +19,7 @@
  *   · 自动切换提示（failover）：已连接时订阅 engine.sceneFailovers()，已切换 → “X 出口已自动切换到 Y”+ 撤销
  *     （吐司期间又换过节点则撤销不动作），AI 场景未切换 → 只提示。Mock 由设置页“模拟场景自动切换”触发。
  */
+import { ZSheetHeader } from '../components/ZSheetHeader';
 import { ActivitySheet } from './ActivitySheet';
 import { CommandSheet } from './CommandSheet';
 import { CommandPage } from '../app/CommandResults';
@@ -744,9 +745,9 @@ export struct HomeView {
       })
       .bindSheet(this.showActivity, this.activitySheet(), {
         detents: [SheetSize.MEDIUM, SheetSize.LARGE],
-        showClose: true,
+        showClose: false,
         dragBar: true,
-        backgroundColor: $r('app.color.screen_bg'),
+        backgroundColor: $r('app.color.screen_s1'),
         onDisappear: () => {
           this.showActivity = false;
         }
@@ -1341,21 +1342,36 @@ export struct HomeView {
 
   @Builder
   activitySheet() {
-    ActivitySheet()
+    ActivitySheet({
+      onDone: () => {
+        this.showActivity = false;
+      }
+    })
   }
 
   @Builder
   sceneSheet() {
-    SceneSheet({
-      sceneId: this.sheetSceneId,
-      onPick: (s: Scene, n: NodeSummary) => {
-        this.showScene = false;
-        this.pick(s, n);
-      },
-      onClose: () => {
-        this.showScene = false;
-      }
-    })
+    Column() {
+      ZSheetHeader({
+        title: this.sceneTitle(),
+        onDone: () => {
+          this.showScene = false;
+        }
+      })
+      SceneSheet({
+        sceneId: this.sheetSceneId,
+        onPick: (s: Scene, n: NodeSummary) => {
+          this.showScene = false;
+          this.pick(s, n);
+        },
+        onClose: () => {
+          this.showScene = false;
+        }
+      })
+        .layoutWeight(1)
+    }
+    .width('100%')
+    .height('100%')
   }
 
   private sceneTitle(): ResourceStr {
@@ -1373,10 +1389,9 @@ export struct HomeView {
     .backgroundColor($r('app.color.screen_bg'))
     .bindSheet(this.showScene, this.sceneSheet(), {
       detents: [SheetSize.MEDIUM, SheetSize.LARGE],
-      title: { title: this.sceneTitle() },
-      showClose: true,
+      showClose: false,
       dragBar: true,
-      backgroundColor: $r('app.color.screen_bg'),
+      backgroundColor: $r('app.color.screen_s1'),
       onDisappear: () => {
         this.showScene = false;
       }

@@ -9,6 +9,7 @@ import { LengthMetrics } from '@kit.ArkUI';
  * - 空：“连接后，最近访问的域名会显示在这里。”；所有行都不知道应用时加脚注。
  * 纯逻辑 app/RecentHostsModel。
  */
+import { ZSheetHeader } from '../components/ZSheetHeader';
 import { AppServices } from '../app/AppServices';
 import { HapticKind, Haptics } from '../app/Haptics';
 import { CloseOutcome, CloseResult, RECENT_HOSTS_MAX, RecentHostsModel } from '../app/RecentHostsModel';
@@ -27,6 +28,7 @@ export function recentHostRowId(host: string): string {
 @ComponentV2
 export struct ActivitySheet {
   /** 非空 = 显示该域名的轨迹。 */
+  @Event onDone: () => void = () => {};
   @Local traceHost: string = '';
   @Local hosts: ConnectionInfo[] = [];
   @Local loaded: boolean = false;
@@ -110,6 +112,7 @@ export struct ActivitySheet {
   traceStep() {
     Scroll() {
       Column({ space: 12 }) {
+        ZSheetHeader({ onDone: () => this.onDone() })
         Text($r('app.string.activity_back'))
           .fontSize(15)
           .fontColor(this.theme.accentColor())
@@ -134,12 +137,8 @@ export struct ActivitySheet {
   listStep() {
     Scroll() {
       Column({ space: 12 }) {
-        Text($r('app.string.activity_title'))
-          .fontSize(20)
-          .fontWeight(FontWeight.Medium)
-          .fontColor($r('app.color.screen_t1'))
-          .padding({ left: 6, right: 6 })
-          .accessibilityRole(AccessibilityRoleType.TEXT)
+        ZSheetHeader({ title: $r('app.string.activity_title'), onDone: () => this.onDone() })
+          .margin({ left: -16, right: -16 })
         if (this.loaded && this.hosts.length === 0) {
           Text($r('app.string.activity_empty'))
             .fontSize(13)
@@ -178,7 +177,7 @@ export struct ActivitySheet {
   row(c: ConnectionInfo, divider: boolean) {
     Column() {
       if (divider) {
-        Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
+        Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(20) })
       }
       Row({ space: 10 }) {
         Column({ space: 3 }) {
@@ -199,16 +198,18 @@ export struct ActivitySheet {
           .fontSize(13)
           .fontFamily('monospace')
           .fontColor($r('app.color.screen_t2'))
-        Text('›')
-          .fontSize(18)
-          .fontColor($r('app.color.screen_t3'))
+        SymbolGlyph($r('sys.symbol.chevron_right'))
+          .fontSize(16)
+          .fontColor([$r('app.color.screen_t3')])
           .accessibilityLevel('no')
       }
       .width('100%')
-      .padding({ left: 16, right: 16, top: 12, bottom: 12 })
+      .constraintSize({ minHeight: 56 })
+      .padding({ left: 20, right: 20, top: 12, bottom: 12 })
     }
     .width('100%')
     .id(recentHostRowId(c.host))
+    .stateStyles({ pressed: { .backgroundColor($r('app.color.screen_pressed')) }, normal: { .backgroundColor(Color.Transparent) } })
     .accessibilityGroup(true)
     .accessibilityRole(AccessibilityRoleType.BUTTON)
     .accessibilityText($r('app.string.activity_host_a11y', c.host))

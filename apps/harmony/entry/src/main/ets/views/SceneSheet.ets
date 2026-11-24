@@ -11,6 +11,7 @@ import { LengthMetrics } from '@kit.ArkUI';
  * - 脚注：优选只存在 Zephyr 里 + 上次检测时间。
  * 只读行没有箭头、不响应点按。
  */
+import { ZHero } from '../common/ZTypeMods';
 import { LatencyTickBar } from '../components/LatencyTickBar';
 import { AppServices } from '../app/AppServices';
 import { HapticKind, Haptics } from '../app/Haptics';
@@ -189,10 +190,9 @@ export struct SceneSheet {
   content(s: Scene) {
     Column() {
       Row({ space: 8 }) {
+        // Android：type.number（ExtraLight + tnum）放大到 hero × 0.8。
         Text(String(s.available))
-          .fontSize(44)
-          .fontWeight(FontWeight.Medium)
-          .fontFamily('monospace')
+          .attributeModifier(ZHero.hero(45))
           .fontColor($r('app.color.screen_t1'))
         Text($r('app.plural.scene_available_unit', s.available))
           .fontSize(16)
@@ -230,7 +230,11 @@ export struct SceneSheet {
       Column({ space: 12 }) {
         if (this.candidates.length > 0) {
           // 规范 §9.6 / J-6：候选列表顶部的延迟刻度条（200 ms 阈值）。
-          LatencyTickBar({ candidates: this.candidates, selectedId: s.selected.id })
+          Column() {
+            LatencyTickBar({ candidates: this.candidates, selectedId: s.selected.id })
+          }
+          .width('100%')
+          .padding({ left: 20, right: 20 })
           this.pool(s)
         }
         this.settingsGroup(s)
@@ -240,7 +244,7 @@ export struct SceneSheet {
       .margin({ top: 12 })
 
       Text(this.note(s))
-        .fontSize(12)
+        .fontSize(13)
         .fontColor($r('app.color.screen_t3'))
         .padding({ left: 22, right: 22, top: 12, bottom: 24 })
     }
@@ -255,13 +259,13 @@ export struct SceneSheet {
       Row({ space: 8 }) {
         Text(title)
           .fontSize(16)
-          .fontColor(tappable && value === undefined && !current ? this.theme.accentColor() : $r('app.color.screen_t1'))
+          .fontColor($r('app.color.screen_t1'))
           .layoutWeight(1)
           .maxLines(1)
           .textOverflow({ overflow: TextOverflow.Ellipsis })
         if (value !== undefined) {
           Text(value)
-            .fontSize(14)
+            .fontSize(16)
             .fontColor($r('app.color.screen_t3'))
             .maxLines(1)
             .textOverflow({ overflow: TextOverflow.Ellipsis })
@@ -273,16 +277,17 @@ export struct SceneSheet {
         }
       }
       .width('100%')
-      .constraintSize({ minHeight: 50 })
-      .padding({ left: 16, right: 16 })
+      .constraintSize({ minHeight: 56 })
+      .padding({ left: 20, right: 20, top: 12, bottom: 12 })
 
       if (divider) {
-        Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(16) })
+        Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(20) })
       }
     }
     .width('100%')
     .accessibilityGroup(true)
     .accessibilityRole(tappable ? AccessibilityRoleType.BUTTON : AccessibilityRoleType.TEXT)
+    .stateStyles({ pressed: { .backgroundColor(tappable ? $r('app.color.screen_pressed') : Color.Transparent) }, normal: { .backgroundColor(Color.Transparent) } })
     .onClick(() => {
       if (tappable) {
         onTap();

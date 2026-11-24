@@ -209,6 +209,14 @@
       "value": "Изменить"
     },
     {
+      "name": "common_clear",
+      "value": "Очистить"
+    },
+    {
+      "name": "common_close",
+      "value": "Закрыть"
+    },
+    {
       "name": "common_connect",
       "value": "Подключить"
     },
@@ -221,12 +229,52 @@
       "value": "Напрямую"
     },
     {
+      "name": "common_done",
+      "value": "Готово"
+    },
+    {
       "name": "common_exit_ip_changes",
       "value": "IP выхода изменится"
     },
     {
+      "name": "common_expiry_date",
+      "value": "Истекает %1$s"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "Срок истёк"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "Истекает сегодня"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "Истекает завтра"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "Истекает %1$s"
+    },
+    {
       "name": "common_home",
       "value": "Главная"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "Измерение задержки"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "Задержка: превышено время ожидания"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "Задержка не измерена"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "Тайм-аут"
     },
     {
       "name": "common_library",
@@ -303,6 +351,18 @@
     {
       "name": "common_status_disconnecting",
       "value": "Отключение"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "Только что"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "только что"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "Загрузка %1$s %2$s в секунду, отдача %3$s %4$s в секунду"
     },
     {
       "name": "common_try_again",

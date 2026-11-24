@@ -6,6 +6,7 @@ import { LengthMetrics } from '@kit.ArkUI';
  * 页头“+”（Index 传 addTick，同 Android PageScaffold trailing Plus）：以搜索框域名打开与轨迹页同一张 TraceBody sheet，
  * 框空时只聚焦搜索框。
  */
+import { ZSheetHeader } from '../components/ZSheetHeader';
 import { AppServices } from '../app/AppServices';
 import { Format } from '../common/Format';
 import { Labels } from '../common/Labels';
@@ -181,6 +182,11 @@ export struct RulesView {
   overrideSheet() {
     Scroll() {
       Column() {
+        ZSheetHeader({
+          onDone: () => {
+            this.showOverride = false;
+          }
+        })
         if (this.overrideHost.length > 0) {
           TraceBody({ host: this.overrideHost })
         }
@@ -426,9 +432,9 @@ export struct RulesView {
     .scrollBar(BarState.Off)
     .bindSheet(this.showOverride, this.overrideSheet(), {
       detents: [SheetSize.MEDIUM, SheetSize.LARGE],
-      showClose: true,
+      showClose: false,
       dragBar: true,
-      backgroundColor: $r('app.color.screen_bg'),
+      backgroundColor: $r('app.color.screen_s1'),
       onDisappear: () => {
         this.showOverride = false;
         this.overrideHost = '';

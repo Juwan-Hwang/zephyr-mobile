@@ -209,6 +209,14 @@
       "value": "Değiştir"
     },
     {
+      "name": "common_clear",
+      "value": "Temizle"
+    },
+    {
+      "name": "common_close",
+      "value": "Kapat"
+    },
+    {
       "name": "common_connect",
       "value": "Bağlan"
     },
@@ -221,12 +229,52 @@
       "value": "Doğrudan"
     },
     {
+      "name": "common_done",
+      "value": "Bitti"
+    },
+    {
       "name": "common_exit_ip_changes",
       "value": "Çıkış IP’si değişecek"
     },
     {
+      "name": "common_expiry_date",
+      "value": "Bitiş: %1$s"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "Süresi doldu"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "Bugün bitiyor"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "Yarın bitiyor"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "%1$s günü bitiyor"
+    },
+    {
       "name": "common_home",
       "value": "Ana sayfa"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "Gecikme test ediliyor"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "Gecikme: zaman aşımı"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "Gecikme test edilmedi"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "Zaman aşımı"
     },
     {
       "name": "common_library",
@@ -303,6 +351,18 @@
     {
       "name": "common_status_disconnecting",
       "value": "Bağlantı kesiliyor"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "Az önce"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "az önce"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "İndirme saniyede %1$s %2$s, yükleme saniyede %3$s %4$s"
     },
     {
       "name": "common_try_again",

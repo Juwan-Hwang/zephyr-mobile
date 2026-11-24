@@ -209,6 +209,14 @@
       "value": "Thay đổi"
     },
     {
+      "name": "common_clear",
+      "value": "Xóa"
+    },
+    {
+      "name": "common_close",
+      "value": "Đóng"
+    },
+    {
       "name": "common_connect",
       "value": "Kết nối"
     },
@@ -221,12 +229,52 @@
       "value": "Trực tiếp"
     },
     {
+      "name": "common_done",
+      "value": "Xong"
+    },
+    {
       "name": "common_exit_ip_changes",
       "value": "IP đầu ra sẽ thay đổi"
     },
     {
+      "name": "common_expiry_date",
+      "value": "Hết hạn %1$s"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "Đã hết hạn"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "Hết hạn hôm nay"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "Hết hạn ngày mai"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "Hết hạn vào %1$s"
+    },
+    {
       "name": "common_home",
       "value": "Trang chủ"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "Đang kiểm tra độ trễ"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "Độ trễ: hết thời gian chờ"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "Chưa kiểm tra độ trễ"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "Hết thời gian"
     },
     {
       "name": "common_library",
@@ -303,6 +351,18 @@
     {
       "name": "common_status_disconnecting",
       "value": "Đang ngắt kết nối"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "Vừa xong"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "vừa xong"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "Tải xuống %1$s %2$s mỗi giây, tải lên %3$s %4$s mỗi giây"
     },
     {
       "name": "common_try_again",

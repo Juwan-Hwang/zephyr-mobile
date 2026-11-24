@@ -12,6 +12,7 @@ import { LengthMetrics } from '@kit.ArkUI';
  * - 底栏：“第一个可见节点序号 / 命中总数” + “已检测 n”；
  * - 点行打开详情 sheet：地区徽标 + 城市、协议、延迟、服务器:端口、订阅、线路（运营商 · 标签）、“测速”（单测，已有读数也重测）。
  */
+import { ZSheetHeader } from '../components/ZSheetHeader';
 import { AppServices } from '../app/AppServices';
 import {
   NamePart, NamePartKind, NodeJudgement, NodeListModel, NodeListState, NodeNameParts, NodeRowItem, NodeRowKind, NodeRowSource, RegionChip,
@@ -648,12 +649,12 @@ export struct NodesView {
   detailSheet() {
     Column({ space: 12 }) {
       if (this.selected !== undefined) {
-        Text(this.selected.name)
-          .fontSize(20)
-          .fontWeight(FontWeight.Bold)
-          .fontColor($r('app.color.screen_t1'))
-          .padding({ left: 22, right: 22 })
-          .width('100%')
+        ZSheetHeader({
+          title: this.selected.name,
+          onDone: () => {
+            this.showDetail = false;
+          }
+        })
         Row({ space: 12 }) {
           RegionBadge({ region: this.selected.region })
           Text(this.place(this.selected))
@@ -770,9 +771,9 @@ export struct NodesView {
     .backgroundColor($r('app.color.screen_bg'))
     .bindSheet(this.showDetail, this.detailSheet(), {
       detents: [SheetSize.MEDIUM, SheetSize.LARGE],
-      showClose: true,
+      showClose: false,
       dragBar: true,
-      backgroundColor: $r('app.color.screen_bg'),
+      backgroundColor: $r('app.color.screen_s1'),
       onDisappear: () => {
         this.showDetail = false;
         this.selected = undefined;

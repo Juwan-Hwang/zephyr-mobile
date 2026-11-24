@@ -209,6 +209,14 @@
       "value": "تبدیل کریں"
     },
     {
+      "name": "common_clear",
+      "value": "صاف کریں"
+    },
+    {
+      "name": "common_close",
+      "value": "بند کریں"
+    },
+    {
       "name": "common_connect",
       "value": "منسلک کریں"
     },
@@ -221,12 +229,52 @@
       "value": "براہ راست"
     },
     {
+      "name": "common_done",
+      "value": "ہو گیا"
+    },
+    {
       "name": "common_exit_ip_changes",
       "value": "ایگزٹ IP بدل جائے گا"
     },
     {
+      "name": "common_expiry_date",
+      "value": "میعاد: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "میعاد ختم"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "میعاد آج ختم ہوگی"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "میعاد کل ختم ہوگی"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "میعاد \\u2068%1$s\\u2069 کو ختم ہوگی"
+    },
+    {
       "name": "common_home",
       "value": "صفحہ اول"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "تاخیر ٹیسٹ ہو رہی ہے"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "تاخیر: ٹائم آؤٹ"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "تاخیر ٹیسٹ نہیں ہوئی"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "ٹائم آؤٹ"
     },
     {
       "name": "common_library",
@@ -303,6 +351,18 @@
     {
       "name": "common_status_disconnecting",
       "value": "منقطع ہو رہا ہے"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "ابھی ابھی"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "ابھی ابھی"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "ڈاؤن لوڈ \\u2066%1$s %2$s\\u2069 فی سیکنڈ، اپ لوڈ \\u2066%3$s %4$s\\u2069 فی سیکنڈ"
     },
     {
       "name": "common_try_again",

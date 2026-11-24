@@ -209,6 +209,14 @@
       "value": "ပြောင်းရန်"
     },
     {
+      "name": "common_clear",
+      "value": "ရှင်းရန်"
+    },
+    {
+      "name": "common_close",
+      "value": "ပိတ်ရန်"
+    },
+    {
       "name": "common_connect",
       "value": "ချိတ်ဆက်ရန်"
     },
@@ -221,12 +229,52 @@
       "value": "တိုက်ရိုက်"
     },
     {
+      "name": "common_done",
+      "value": "ပြီးပြီ"
+    },
+    {
       "name": "common_exit_ip_changes",
       "value": "ထွက်ပေါက် IP ပြောင်းမည်"
     },
     {
+      "name": "common_expiry_date",
+      "value": "%1$s သက်တမ်းကုန်မည်"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "သက်တမ်းကုန်ပြီ"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "ယနေ့ သက်တမ်းကုန်"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "မနက်ဖြန် သက်တမ်းကုန်"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "%1$s နေ့ သက်တမ်းကုန်"
+    },
+    {
       "name": "common_home",
       "value": "ပင်မ"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "နောက်ကျမှု စစ်ဆေးနေသည်"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "နောက်ကျမှု အချိန်ကုန်"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "နောက်ကျမှု မစစ်ရသေး"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "အချိန်ကျော်"
     },
     {
       "name": "common_library",
@@ -303,6 +351,18 @@
     {
       "name": "common_status_disconnecting",
       "value": "အဆက်ဖြတ်နေသည်"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "ယခုလေးတင်"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "ယခုလေးတင်"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "ဒေါင်းလုဒ် တစ်စက္ကန့် %1$s %2$s၊ အပ်လုဒ် တစ်စက္ကန့် %3$s %4$s"
     },
     {
       "name": "common_try_again",

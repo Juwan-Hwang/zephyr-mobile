@@ -209,6 +209,14 @@
       "value": "Cambiar"
     },
     {
+      "name": "common_clear",
+      "value": "Borrar"
+    },
+    {
+      "name": "common_close",
+      "value": "Cerrar"
+    },
+    {
       "name": "common_connect",
       "value": "Conectar"
     },
@@ -221,12 +229,52 @@
       "value": "Directo"
     },
     {
+      "name": "common_done",
+      "value": "Listo"
+    },
+    {
       "name": "common_exit_ip_changes",
       "value": "La IP de salida cambiará"
     },
     {
+      "name": "common_expiry_date",
+      "value": "Caduca el %1$s"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "Caducada"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "Caduca hoy"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "Caduca mañana"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "Caduca el %1$s"
+    },
+    {
       "name": "common_home",
       "value": "Inicio"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "Midiendo latencia"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "Latencia: tiempo de espera agotado"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "Latencia sin medir"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "Tiempo agotado"
     },
     {
       "name": "common_library",
@@ -303,6 +351,18 @@
     {
       "name": "common_status_disconnecting",
       "value": "Desconectando"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "Ahora mismo"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "ahora mismo"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "Descarga %1$s %2$s por segundo, subida %3$s %4$s por segundo"
     },
     {
       "name": "common_try_again",

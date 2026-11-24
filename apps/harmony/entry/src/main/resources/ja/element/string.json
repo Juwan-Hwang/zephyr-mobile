@@ -209,6 +209,14 @@
       "value": "変更"
     },
     {
+      "name": "common_clear",
+      "value": "消去"
+    },
+    {
+      "name": "common_close",
+      "value": "閉じる"
+    },
+    {
       "name": "common_connect",
       "value": "接続"
     },
@@ -221,12 +229,52 @@
       "value": "ダイレクト"
     },
     {
+      "name": "common_done",
+      "value": "完了"
+    },
+    {
       "name": "common_exit_ip_changes",
       "value": "出口 IP が変更されます"
     },
     {
+      "name": "common_expiry_date",
+      "value": "有効期限：%1$s"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "期限切れ"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "今日で期限切れ"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "明日で期限切れ"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "%1$s曜日に期限切れ"
+    },
+    {
       "name": "common_home",
       "value": "ホーム"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "レイテンシを測定中"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "レイテンシ タイムアウト"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "レイテンシ未測定"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "タイムアウト"
     },
     {
       "name": "common_library",
@@ -303,6 +351,18 @@
     {
       "name": "common_status_disconnecting",
       "value": "切断中"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "たった今"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "たった今"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "ダウンロード 毎秒 %1$s %2$s、アップロード 毎秒 %3$s %4$s"
     },
     {
       "name": "common_try_again",

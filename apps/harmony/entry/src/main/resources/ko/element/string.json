@@ -209,6 +209,14 @@
       "value": "변경"
     },
     {
+      "name": "common_clear",
+      "value": "지우기"
+    },
+    {
+      "name": "common_close",
+      "value": "닫기"
+    },
+    {
       "name": "common_connect",
       "value": "연결"
     },
@@ -221,12 +229,52 @@
       "value": "다이렉트"
     },
     {
+      "name": "common_done",
+      "value": "완료"
+    },
+    {
       "name": "common_exit_ip_changes",
       "value": "출구 IP가 변경됨"
     },
     {
+      "name": "common_expiry_date",
+      "value": "%1$s 만료"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "만료됨"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "오늘 만료"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "내일 만료"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "%1$s요일 만료"
+    },
+    {
       "name": "common_home",
       "value": "홈"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "지연 시간 측정 중"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "지연 시간 초과"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "지연 시간 측정 안 됨"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "타임아웃"
     },
     {
       "name": "common_library",
@@ -303,6 +351,18 @@
     {
       "name": "common_status_disconnecting",
       "value": "연결 해제 중"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "방금"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "방금"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "다운로드 초당 %1$s %2$s, 업로드 초당 %3$s %4$s"
     },
     {
       "name": "common_try_again",
