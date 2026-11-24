@@ -101,11 +101,6 @@ struct NodeRowView {
     return it !== undefined && it.node !== undefined ? NodeNameParts.split(it.node.name, this.highlights) : [];
   }
 
-  private protocol(): string {
-    const it = this.item;
-    return it !== undefined && it.node !== undefined ? it.node.protocol : '';
-  }
-
   private partColor(p: NamePart): ResourceColor {
     if (p.kind === NamePartKind.HIT) {
       return this.theme.accentColor();
@@ -127,10 +122,7 @@ struct NodeRowView {
           .textOverflow({ overflow: TextOverflow.Ellipsis })
           .layoutWeight(1)
 
-          Text(this.protocol())
-            .fontSize(12)
-            .fontFamily('monospace')
-            .fontColor($r('app.color.screen_t3'))
+          // Android 节点行只有名称 + 延迟；协议在详情页。
           Row() {
             LatencyText({ ms: this.item?.latencyMs, testing: this.item !== undefined && this.item.testing })
           }
@@ -148,11 +140,12 @@ struct NodeRowView {
       }
       .width('100%')
       .height(ROW_HEIGHT - 1)
-      .padding({ start: LengthMetrics.vp(22), end: LengthMetrics.vp(16) })
+      .padding({ start: LengthMetrics.vp(22), end: LengthMetrics.vp(4) })
 
-      Divider().strokeWidth(0.5).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(22) })
+      Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(22) })
     }
     .width('100%')
+    .stateStyles({ pressed: { .backgroundColor($r('app.color.screen_pressed')) }, normal: { .backgroundColor(Color.Transparent) } })
     .id(this.item !== undefined && this.item.node !== undefined ? nodeRowId(this.item.node.id) : '')
     .onClick(() => {
       if (this.loaded()) {
@@ -181,7 +174,7 @@ struct SectionHeaderView {
     }
     .width('100%')
     .height(ROW_HEIGHT)
-    .padding({ start: LengthMetrics.vp(22), end: LengthMetrics.vp(16) })
+    .padding({ start: LengthMetrics.vp(22), end: LengthMetrics.vp(4) })
     .backgroundColor($r('app.color.screen_bg'))
   }
 }
@@ -195,22 +188,28 @@ struct RegionChipView {
   @Local theme: ZTheme = ZTheme.shared();
 
   build() {
+    // Android ZChip：30 高胶囊；选中 = t1 底 + bg 字，未选 = 透明底 + hl2 细描边 + t2 字。
     Row({ space: 6 }) {
       Text(this.label)
         .fontSize(13)
-        .fontWeight(FontWeight.Medium)
-        .fontColor(this.selected ? this.theme.accentColor() : $r('app.color.screen_t1'))
+        .fontColor(this.selected ? $r('app.color.screen_bg') : $r('app.color.screen_t2'))
+        .maxLines(1)
       if (this.detail.length > 0) {
         Text(this.detail)
-          .fontSize(12)
+          .fontSize(11)
           .fontFamily('monospace')
-          .fontColor($r('app.color.screen_t3'))
+          .fontColor(this.selected ? $r('app.color.screen_bg') : $r('app.color.screen_t3'))
+          .opacity(this.selected ? 0.6 : 1)
+          .maxLines(1)
       }
     }
-    .height(32)
+    .height(30)
     .padding({ left: 12, right: 12 })
-    .borderRadius(16)
-    .backgroundColor(this.selected ? this.theme.accentSoft() : $r('app.color.screen_s3'))
+    .borderRadius(15)
+    .backgroundColor(this.selected ? $r('app.color.screen_t1') : Color.Transparent)
+    .border({ width: 1, color: this.selected ? $r('app.color.screen_t1') : $r('app.color.screen_hl2') })
+    .animation({ duration: 200, curve: Curve.EaseOut })
+    .accessibilitySelected(this.selected)
     .onClick(() => this.onTap())
   }
 }
@@ -404,7 +403,7 @@ export struct NodesView {
     Column({ space: 2 }) {
       Row({ space: 8 }) {
         Text(Format.grouped(this.indexTotal))
-          .attributeModifier(ZHero.hero())
+          .attributeModifier(ZHero.hero(48))
           .fontColor($r('app.color.screen_t1'))
         Text(this.plural($r('app.plural.nodes_total_unit'), this.indexTotal))
           .fontSize(15)
@@ -503,11 +502,14 @@ export struct NodesView {
         .fontFamily('monospace')
         .fontColor($r('app.color.screen_t3'))
       Blank()
-      Text(this.termFirst() ? this.str(ZTerm.tested) + ' ' + Format.grouped(this.testedCount)
-        : Format.grouped(this.testedCount) + ' ' + this.str(ZTerm.tested))
-        .fontSize(12)
-        .fontFamily('monospace')
-        .fontColor($r('app.color.screen_t3'))
+      // §18.a：判断句已写“已检测 N”；只在判断句隐藏（搜索中）时页脚再写一次（同 Android Footer）。
+      if (this.query.trim().length > 0) {
+        Text(this.termFirst() ? this.str(ZTerm.tested) + ' ' + Format.grouped(this.testedCount)
+          : Format.grouped(this.testedCount) + ' ' + this.str(ZTerm.tested))
+          .fontSize(12)
+          .fontFamily('monospace')
+          .fontColor($r('app.color.screen_t3'))
+      }
     }
     .width('100%')
     .padding({ left: 22, right: 22, top: 8, bottom: 8 })
@@ -566,10 +568,11 @@ export struct NodesView {
             .id(NODES_RAIL_ID)
             .height('100%')
             .itemSize(RAIL_WIDTH - 8)
-            .font({ size: 10, weight: FontWeight.Medium, family: 'monospace' })
+            .font({ size: 10, weight: FontWeight.Normal, family: 'monospace' })
+            .selectedFont({ size: 10, weight: FontWeight.Medium, family: 'monospace' })
             .color($r('app.color.color_accent'))
-            .selectedColor($r('app.color.screen_on_primary'))
-            .selectedBackgroundColor($r('app.color.color_accent'))
+            .selectedColor($r('app.color.color_accent'))
+            .selectedBackgroundColor(Color.Transparent)
             .popupColor($r('app.color.screen_t1'))
             .popupBackground($r('app.color.screen_s1'))
             .usingPopup(true)
@@ -719,12 +722,17 @@ export struct NodesView {
     // 标题由外层 NavDestination 给（Index 路由 nodes）。
     Column({ space: 10 }) {
       this.header()
+      // Android ZSearchField：48 高、surface 圆角 12、s3 底、t2 放大镜、t3 占位。
       Search({ value: this.query, placeholder: $r('app.string.nodes_search_placeholder') })
-        
-        .height(40)
+        .height(48)
+        .borderRadius(12)
         .margin({ left: 16, right: 16, top: 8 })
         .backgroundColor($r('app.color.screen_s3'))
         .fontColor($r('app.color.screen_t1'))
+        .placeholderColor($r('app.color.screen_t3'))
+        .placeholderFont({ size: 16 })
+        .textFont({ size: 16 })
+        .searchIcon({ size: 20, color: $r('app.color.screen_t2') })
         .onChange((v: string) => this.onQuery(v))
       if (this.query.trim().length > 0 && this.ranOnce && !this.failed) {
         Text($r('app.string.nodes_search_stats', Format.grouped(this.total), Format.micros(this.tookMicros)))
