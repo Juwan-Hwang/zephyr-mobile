@@ -348,6 +348,10 @@ jobs:
           api-level: 35
           target: google_apis_ps16k
           arch: x86_64
+          # 默认 AVD 内存太小，App 刚起来就被 lowmemorykiller 杀掉（首轮 run 45447925979）
+          ram-size: 4096M
+          heap-size: 512M
+          cores: 4
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           script: tools/android-16k/load-test.sh run "$(ls build/apk/*.apk | head -1)" build/probe/zm-dlopen
