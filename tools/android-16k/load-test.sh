@@ -55,6 +55,8 @@ for need in libzmihomo.so libzephyr_mobile_core.so; do
   echo "$out" | grep -q "^OK   $dev/$need" || err "$need 未加载成功"
 done
 
+adb shell rm -rf "$dev"
+echo "MemTotal: $(adb shell grep MemTotal /proc/meminfo | tr -d '\r')"
 echo "== launch app"
 adb logcat -c || true
 # namespace 与 applicationId 不同，按 LAUNCHER 解析组件名，不写死类名
@@ -65,7 +67,10 @@ adb shell am start -W -n "$comp" | tr -d '\r' | tee /tmp/am.txt || true
 grep -q "^Status: ok" /tmp/am.txt || err "启动 Activity 失败"
 sleep 15
 pid=$(adb shell pidof "$PKG" | tr -d '\r' || true)
-[ -n "$pid" ] || err "启动 15 秒后进程 $PKG 不在了"
+if [ -z "$pid" ]; then
+  err "启动 15 秒后进程 $PKG 不在了"
+  adb logcat -d | grep -E "lowmemorykiller: Kill '$PKG'" && echo "::warning::进程是被 lowmemorykiller 杀的（模拟器内存不足，属基础设施问题，不是 .so 加载失败）"
+fi
 adb logcat -d > /tmp/logcat.txt || true
 # 只看本 App：进程内日志 + 提到包名的系统日志（排除系统自带 App 的 nativeloader 噪音）
 { [ -n "$pid" ] && adb logcat -d --pid="$pid"; grep -F "$PKG" /tmp/logcat.txt; } > /tmp/applog.txt 2>/dev/null || true
