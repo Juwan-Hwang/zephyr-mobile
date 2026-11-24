@@ -542,7 +542,8 @@ export struct CommandSheet {
   sectionTitle(r: Resource) {
     Text(r)
       .fontSize(13)
-      .fontColor($r('app.color.screen_t3'))
+      .fontWeight(FontWeight.Medium)
+      .fontColor($r('app.color.screen_t2'))
   }
 
   @Builder
@@ -686,7 +687,8 @@ export struct CommandSheet {
     Column() {
       Text(this.groupTitle(g.group))
         .fontSize(13)
-        .fontColor($r('app.color.screen_t3'))
+        .fontWeight(FontWeight.Medium)
+        .fontColor($r('app.color.screen_t2'))
         .padding({ start: LengthMetrics.vp(14), top: LengthMetrics.vp(16), bottom: LengthMetrics.vp(8) })
       Column() {
         ForEach(CommandResults.shown(g, this.expanded), (row: CommandRow, i: number) => {
@@ -745,7 +747,7 @@ export struct CommandSheet {
           .textOverflow({ overflow: TextOverflow.Ellipsis })
         if (row.subtitle.length > 0) {
           Text(row.subtitle)
-            .fontSize(12)
+            .fontSize(13)
             .fontColor($r('app.color.screen_t3'))
             .maxLines(1)
             .textOverflow({ overflow: TextOverflow.Ellipsis })
@@ -762,7 +764,9 @@ export struct CommandSheet {
     .width('100%')
     .padding({ start: LengthMetrics.vp(16), end: LengthMetrics.vp(16), top: LengthMetrics.vp(12),
       bottom: LengthMetrics.vp(12) })
+    .constraintSize({ minHeight: 56 })
     .backgroundColor(isHighlighted ? $r('app.color.screen_pressed') : Color.Transparent)
+    .stateStyles({ pressed: { .backgroundColor($r('app.color.screen_pressed')) } })
     .accessibilityGroup(true)
     .accessibilityRole(AccessibilityRoleType.BUTTON)
     .accessibilityDescription(isDefault ? getContext(this).resourceManager.getStringSync($r('app.string.command_enter_hint').id) : '')
