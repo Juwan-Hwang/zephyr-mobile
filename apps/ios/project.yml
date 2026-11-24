@@ -498,8 +498,12 @@ targets:
           - "**/__Snapshots__/**"
           - "**/*.md"
       # 变体 / 录制模式 / 比对精度与 ZephyrSnapshotTests 共用（只用中文变体，不切语言）。
+      # SnapshotFixtures 依赖 Shared/Core（SharedState）与 Shared/LiveActivity（ZephyrActivityAttributes），
+      # 只给小组件 / 实时活动快照用，玻璃 target 不需要，排除掉（#312 的 ios26 编译失败）。
       - path: SnapshotTests/Support
         group: SnapshotTests
+        excludes:
+          - "SnapshotFixtures.swift"
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.juwanh.zephyr.glass-snapshot-tests
