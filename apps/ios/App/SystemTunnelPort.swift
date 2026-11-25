@@ -21,10 +21,15 @@ final class SystemTunnelPort: TunnelPort, @unchecked Sendable {
             nonisolated(unsafe) let token = NotificationCenter.default.addObserver(forName: .NEVPNStatusDidChange, object: nil, queue: nil) { note in
                 guard let conn = note.object as? NEVPNConnection else { return }
                 k.yield(Self.state(conn.status, since: conn.connectedDate))
+                // 扩展失败后可能暂停了按需（ReconnectBackoff）：隧道停下时由 App 把系统的按需关掉。
+                if conn.status == .disconnected || conn.status == .invalid {
+                    Task { await TunnelController.shared.disarmOnDemandIfPaused() }
+                }
             }
             let task = Task {
                 let manager = try? await self.controller.existingManager()
                 k.yield(Self.state(manager?.connection.status ?? .disconnected, since: manager?.connection.connectedDate))
+                await self.controller.disarmOnDemandIfPaused()   // App 启动时补一次（扩展失败时 App 可能不在）
             }
             k.onTermination = { _ in
                 task.cancel()
@@ -42,7 +47,7 @@ final class SystemTunnelPort: TunnelPort, @unchecked Sendable {
         return Self.state(raw ?? .disconnected, since: nil).status
     }
 
-    /// 只有权限 / 配置被拒才是 vpn_permission_denied；还没有配置 → subscription_invalid（§14.x）；其余系统错误 → internal（#207 E07）。
+    /// 只有权限 / 配置被拒才是 vpn_permission_denied；还没有配置（没导入过订阅）→ subscription_not_found（§16 ②）；其余系统错误 → internal（#207 E07）。
     func start() async throws {
         do { try await controller.setConnected(true) } catch {
             throw ZephyrError(code: ErrorCode(rawValue: TunnelController.errorCode(for: error)) ?? .internal, message: "\(error)")
@@ -63,6 +68,9 @@ final class SystemTunnelPort: TunnelPort, @unchecked Sendable {
         guard let l = UsageLedger.load()?.today(Date()) else { return nil }
         return (l.hourly, l.onlineMillis)
     }
+
+    /// 扩展最近一次启动失败留下的日志（TunnelFailureLog，zm_logs 同格式）；连上后扩展会清掉。
+    func failureLogs() async -> String? { TunnelFailureLog.load() }
 
     func logs(since: Int64, minLevel: String, limit: Int32) async -> String? {
         guard let r = try? await controller.request(.logs(since: since, minLevel: minLevel, limit: limit)), r.result == .ok else { return nil }
@@ -112,7 +120,7 @@ final class SystemTunnelPort: TunnelPort, @unchecked Sendable {
         }
         var error: ZephyrError?
         if status == .failed, let code = shared.connection.errorCode, let c = ErrorCode(rawValue: code) {
-            error = ZephyrError(code: c, message: "")
+            error = ZephyrError(code: c, message: shared.connection.errorMessage ?? "")
         }
         let millis = since.map { Int64($0.timeIntervalSince1970 * 1000) }
         return ConnectionState(status: status, mode: mode, since: status == .connected ? millis : nil, error: error)

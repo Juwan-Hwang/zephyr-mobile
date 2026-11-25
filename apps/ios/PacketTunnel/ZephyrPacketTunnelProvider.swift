@@ -28,25 +28,44 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider, @unchecked Senda
 
     enum TunnelError: Error, LocalizedError {
         case coreNotLinked
+        /// 配置文件不存在 / 为空：还没导入过订阅（例如按需连接在导入前就触发）→ subscription_not_found（契约 §16 ②）。
         case configMissing
+        /// 有配置但不能用（不是 UTF-8、缺 fd 哨兵）→ subscription_invalid（契约 §14.x）。
+        case configInvalid
         case tunUnavailable
+        /// setTunnelNetworkSettings 失败（系统错误原文）。
+        case networkSettings(String)
+        /// zm_start 的错误原文（如 `geodata missing: …`）。
         case coreFailed(String)
+        /// 自动启动被拒：连续失败退避中或已暂停按需，等用户手动连接（ReconnectBackoff）。
+        case autoConnectPaused
 
         var errorDescription: String? {
             switch self {
             case .coreNotLinked: String(localized: "此构建未包含代理核心（libmihomo）。")
-            case .configMissing: String(localized: "没有可用的配置，请先添加订阅。")
+            case .configMissing, .configInvalid: String(localized: "没有可用的配置，请先添加订阅。")
             case .tunUnavailable: String(localized: "无法获取虚拟网卡。")
+            case .networkSettings(let message): message
             case .coreFailed(let message): String(localized: "代理核心启动失败：\(message)")
+            case .autoConnectPaused: String(localized: "自动连接已暂停，请打开 Zephyr 手动连接。")
             }
         }
 
         /// 对应契约 §10 ErrorCode 的序列化名。
         var code: String {
             switch self {
-            case .coreNotLinked, .coreFailed: "core_crashed"
-            case .configMissing: "subscription_invalid"
-            case .tunUnavailable: "network_unavailable"
+            case .coreNotLinked, .coreFailed, .autoConnectPaused: "core_crashed"
+            case .configMissing: "subscription_not_found"
+            case .configInvalid: "subscription_invalid"
+            case .tunUnavailable, .networkSettings: "network_unavailable"
+            }
+        }
+
+        /// 写进 SharedState / 日志页的原文（首页“错误详情”展开显示；`geodata missing:` 据此给专门提示）。
+        var detail: String {
+            switch self {
+            case .coreFailed(let message), .networkSettings(let message): message
+            default: errorDescription ?? code
             }
         }
     }
@@ -79,6 +98,16 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider, @unchecked Senda
     // MARK: 生命周期
 
     override func startTunnel(options: [String: NSObject]?, completionHandler: @escaping (Error?) -> Void) {
+        // 起不来的内核不能被按需连接无限次拉起（#1 ②）：手动连接清零；自动启动在退避期 / 已暂停时直接拒绝，不碰内核、不联网。
+        if options?[ReconnectBackoff.manualStartOption] != nil {
+            ReconnectBackoff.manualStart()
+        } else if let wait = autoStartWait() {
+            let why = wait < 0 ? "已暂停" : "退避 \(Int(wait)) s"
+            logger.notice("startTunnel: 自动连接被拒（\(why, privacy: .public)）")
+            return completionHandler(TunnelError.autoConnectPaused)
+        }
+        ReconnectBackoff.beginAttempt()
+
         let config = TunnelConfiguration.load(store: store, options: options)
         setState { $0.mode = config.mode }
         publish(status: .connecting, mode: config.mode)
@@ -87,9 +116,10 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider, @unchecked Senda
             logger.error("startTunnel: libmihomo 未链接（桩构建），拒绝启动以免流量黑洞")
             return fail(.coreNotLinked, completionHandler)
         }
-        guard let mapped = try? MappedFile(url: config.configURL), mapped.count > 0, mapped.looksLikeText else {
+        guard let mapped = try? MappedFile(url: config.configURL), mapped.count > 0 else {
             return fail(.configMissing, completionHandler)
         }
+        guard mapped.looksLikeText else { return fail(.configInvalid, completionHandler) }
         logger.info("startTunnel: config \(mapped.count, privacy: .public) B, mtu \(config.mtu, privacy: .public), ipv6 \(config.ipv6, privacy: .public)")
         let bundledGeodata = prepareGeodata()
 
@@ -97,15 +127,14 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider, @unchecked Senda
             guard let self else { return completionHandler(error) }
             if let error {
                 self.logger.error("setTunnelNetworkSettings: \(error.localizedDescription, privacy: .public)")
-                self.publish(status: .failed, mode: config.mode, errorCode: "network_unavailable")
-                return completionHandler(error)
+                return self.fail(.networkSettings(error.localizedDescription), completionHandler, underlying: error)
             }
             guard let fd = TunFileDescriptor.resolve(from: self.packetFlow) else {
                 return self.fail(.tunUnavailable, completionHandler)
             }
             guard let yaml = String(data: mapped.prefix(mapped.count), encoding: .utf8),
                   let runnable = MihomoBridge.injectingTunFD(yaml, fd: fd) else {
-                return self.fail(.configMissing, completionHandler)
+                return self.fail(.configInvalid, completionHandler)
             }
             do {
                 self.bridge.setMemoryLimit(bytes: Self.goMemoryLimitBytes)
@@ -118,9 +147,13 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider, @unchecked Senda
                 try self.bridge.start(homeDir: AppGroup.coreDirectory.path, config: withMode,
                                       controllerSocket: AppGroup.controllerSocketPath)
                 self.logger.info("mihomo started: \(self.bridge.version, privacy: .public)")
+            } catch MihomoBridge.BridgeError.core(let message) {
+                return self.fail(.coreFailed(message), completionHandler)
             } catch {
                 return self.fail(.coreFailed(String(describing: error)), completionHandler)
             }
+            ReconnectBackoff.reset()
+            TunnelFailureLog.clear()
             let now = Date()
             self.setState { $0.connectedSince = now }
             self.publish(status: .connected, mode: config.mode, since: now)
@@ -386,17 +419,42 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider, @unchecked Senda
         )
     }
 
-    private func publish(status: SharedState.Status, mode: SharedState.Mode, since: Date? = nil, errorCode: String? = nil) {
+    private func publish(status: SharedState.Status, mode: SharedState.Mode, since: Date? = nil, errorCode: String? = nil,
+                         errorMessage: String? = nil) {
         _ = try? store.update {
-            $0.connection = SharedState.Connection(status: status, mode: mode, since: since, errorCode: errorCode)
+            $0.connection = SharedState.Connection(status: status, mode: mode, since: since, errorCode: errorCode,
+                                                   errorMessage: errorMessage)
             if status != .connected { $0.rate.downBps = 0; $0.rate.upBps = 0 }
         }
         DarwinNotifier.post(.tunnelStatus)
     }
 
-    private func fail(_ error: TunnelError, _ completion: (Error?) -> Void) {
-        logger.error("startTunnel failed: \(error.code, privacy: .public)")
-        publish(status: .failed, mode: currentMode, errorCode: error.code)
-        completion(error)
+    /// 启动失败：原因写进 SharedState（首页错误详情）与失败日志文件（日志页），再按 ReconnectBackoff 决定暂停按需 / 退避。
+    private func fail(_ error: TunnelError, _ completion: (Error?) -> Void, underlying: Error? = nil) {
+        let detail = error.detail
+        logger.error("startTunnel failed: \(error.code, privacy: .public) \(detail, privacy: .public)")
+        publish(status: .failed, mode: currentMode, errorCode: error.code, errorMessage: detail)
+        // 内核缓冲里启动失败前后的日志（扩展进程马上退出，App 之后读不到 zm_logs）+ 失败原因本身。
+        TunnelFailureLog.save(coreLogsJSON: bridge.logs(since: 0, minLevel: "info", limit: 60),
+                              failure: "\(error.code): \(detail)", at: Date())
+        let outcome = ReconnectBackoff.onFailure(code: error.code, message: detail, failures: ReconnectBackoff.streak().failures)
+        if outcome.pause {
+            ReconnectBackoff.pause()
+            logger.notice("按需连接已暂停，等下次手动连接")
+        } else if outcome.retryAfter == nil {
+            ReconnectBackoff.reset()   // 不归内核的失败：不退避
+        }
+        DarwinNotifier.post(.tunnelStatus)
+        completion(underlying ?? error)
+    }
+
+    /// 自动启动（系统按需 / 系统设置里的开关）前：还要等多少秒；-1 = 已暂停；nil = 可以启动。
+    private func autoStartWait() -> TimeInterval? {
+        let s = ReconnectBackoff.streak()
+        guard let wait = ReconnectBackoff.waitBeforeAuto(s, now: Date()) else {
+            if !s.paused { ReconnectBackoff.pause() }   // 连续失败用尽（含启动中途被杀的那几次）
+            return -1
+        }
+        return wait > 0 ? wait : nil
     }
 }

@@ -97,7 +97,7 @@ final class CoreEngineTests: XCTestCase {
             try await e.writeTunnelConfig(to: dir.appendingPathComponent("c.yaml"), controllerSocket: "/tmp/zm.sock")
             XCTFail("无订阅应失败")
         } catch let err as ZephyrError {
-            XCTAssertEqual(err.code, .subscriptionInvalid)
+            XCTAssertEqual(err.code, .subscriptionNotFound, "没有订阅不是订阅坏了（契约 §16 ②）")
         } catch { XCTFail("\(error)") }
     }
 

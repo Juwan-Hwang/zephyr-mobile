@@ -5,11 +5,14 @@ import ZephyrKit
 
 public extension ZephyrError {
     var userMessage: String {
-        switch code {
+        // #1：内核因缺地理数据起不来，给专门提示（原文在首页“错误详情”里）。
+        if isGeodataMissing { return String(localized: "缺少地理数据") }
+        return switch code {
         case .notRunning: String(localized: "Zephyr 未在运行")
         case .vpnPermissionDenied: String(localized: "需要允许添加 VPN 配置")
         case .networkUnavailable: String(localized: "网络不可用")
         case .subscriptionInvalid: String(localized: "订阅格式无效")
+        case .subscriptionNotFound: String(localized: "先添加订阅")
         case .subscriptionFetchFailed: String(localized: "无法获取订阅")
         case .nodeNotFound: String(localized: "节点已不存在")
         case .sceneNotFound: String(localized: "场景已不存在")

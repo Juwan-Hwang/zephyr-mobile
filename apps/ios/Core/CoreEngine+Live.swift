@@ -32,6 +32,8 @@ public protocol TunnelPort: AnyObject, Sendable {
     func usageToday() async -> (hourly: [Int64], onlineMillis: Int64)?
     /// zm_logs 增量 JSON；未连接为 nil。
     func logs(since: Int64, minLevel: String, limit: Int32) async -> String?
+    /// 扩展最近一次启动失败留下的日志（zm_logs 同格式 JSON，含失败原因）；没有为 nil。默认不支持（单测、模拟器）。
+    func failureLogs() async -> String?
     /// 系统按需规则（按需连接 / 受信任 Wi‑Fi 自动断开）。`create == false` 时 VPN 配置尚未创建就什么都不做（避免提前弹授权）。
     /// 默认不支持（单测、模拟器）。
     func applyOnDemand(onDemand: Bool, trustedNetworks: [String], disconnectOnTrusted: Bool, create: Bool) async
@@ -42,6 +44,7 @@ public protocol TunnelPort: AnyObject, Sendable {
 public extension TunnelPort {
     func applyOnDemand(onDemand: Bool, trustedNetworks: [String], disconnectOnTrusted: Bool, create: Bool) async {}
     func networkChanges() -> AsyncStream<Void> { AsyncStream { _ in } }
+    func failureLogs() async -> String? { nil }
 }
 
 extension CoreEngine {
@@ -49,11 +52,17 @@ extension CoreEngine {
     // MARK: 连接
 
     func liveConnect(_ t: any TunnelPort) async throws {
-        try await writeTunnelConfig(to: t.configURL, controllerSocket: t.controllerSocketPath)
-        if let s = await currentSettings() {
-            await t.applyOnDemand(onDemand: s.onDemand, trustedNetworks: s.trustedWifi, disconnectOnTrusted: s.disconnectOnTrusted, create: true)
+        do {
+            try await writeTunnelConfig(to: t.configURL, controllerSocket: t.controllerSocketPath)
+            if let s = await currentSettings() {
+                await t.applyOnDemand(onDemand: s.onDemand, trustedNetworks: s.trustedWifi, disconnectOnTrusted: s.disconnectOnTrusted, create: true)
+            }
+            try await t.start()
+        } catch {
+            // 连接失败的原因进日志页（#1 ③）；扩展里的失败（内核起不来）由 liveConnectionState 看到 failed 时记。
+            appLog(.error, CoreEngine.failureLine(error as? ZephyrError ?? ZephyrError(code: .internal, message: "\(error)")))
+            throw error
         }
-        try await t.start()
     }
 
     /// 隧道在跑时：重写配置并让扩展热重载；没在跑则什么都不做（下次连接时 liveConnect 会重写）。
@@ -116,7 +125,18 @@ extension CoreEngine {
 
     func liveLogs(_ t: any TunnelPort, minLevel: LogLevel) -> AsyncStream<LogLine> {
         AsyncStream(bufferingPolicy: .bufferingNewest(500)) { k in
+            // App 自己的日志（连接失败原因等）：先补发缓冲，之后实时。
+            let app = Task {
+                for await l in self.appLogs(minLevel: minLevel) { k.yield(l) }
+            }
             let task = Task {
+                // 扩展上次启动失败时留下的内核日志（扩展已退出，zm_logs 读不到了）。
+                if let json = await t.failureLogs(), let b = try? JSONDecoder().decode(LogBatch.self, from: Data(json.utf8)) {
+                    for l in b.lines {
+                        let level = LogLevel(rawValue: l.level) ?? .info
+                        if level >= minLevel { k.yield(LogLine(at: l.at, level: level, message: l.msg)) }
+                    }
+                }
                 var since: Int64 = 0
                 while !Task.isCancelled {
                     if let json = await t.logs(since: since, minLevel: minLevel.rawValue, limit: 200),
@@ -131,7 +151,7 @@ extension CoreEngine {
                 }
                 k.finish()
             }
-            k.onTermination = { _ in task.cancel() }
+            k.onTermination = { _ in task.cancel(); app.cancel() }
         }
     }
 

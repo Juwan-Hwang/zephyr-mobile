@@ -1,8 +1,9 @@
 // EngineFactory —— 依赖注入的唯一位置。
 //
 // MockEngine：Debug、模拟器、测试、Preview（确定性数据，移植原型 pages.js）。
-// CoreEngine：Release 默认（或 -ZephyrEngine core）。ZephyrCore 是 project.yml 里的静态框架（Rust core-mobile + UniFFI），
-//             Debug 下 core 环境用 MockEngine 兜底空库（mockData），Release 空库即空状态。
+// CoreEngine：Release 默认（或 -ZephyrEngine core）。ZephyrCore 是 project.yml 里的静态框架（Rust core-mobile + UniFFI）。
+//             空库时的 mock 兜底（mockData）只在 Debug 的模拟器上；真机（Debug / Release）一律显示真实的空状态（#1 A 真机结论 ①）。
+//             核心没加载起来：Debug 回落 MockEngine，Release 显示不可用页。
 
 import Foundation
 import os
@@ -30,10 +31,17 @@ enum EngineFactory {
         if environment.engine == .core {
             #if canImport(ZephyrCore)
             #if DEBUG
-            let mockData = true
+            let debug = true
             #else
-            let mockData = false
+            let debug = false
             #endif
+            #if targetEnvironment(simulator)
+            let simulator = true
+            #else
+            let simulator = false
+            #endif
+            // 原生核心加载失败的情形下面单独处理（Debug 换 MockEngine / Release 不可用页），这里按“已加载”决定空库兜底。
+            let mockData = CoreEngine.usesMockData(debug: debug, simulator: simulator, demo: false, nativeLoaded: true)
             // 真机：连接 / 流量 / 策略组 / 连接列表经系统隧道与 mihomo 控制口（SystemTunnelPort + MihomoClient）。
             let tunnel: (any TunnelPort)? = environment.usesSystemTunnel ? SystemTunnelPort() : nil
             let engine = CoreEngine(fallback: MockEngine(seed: environment.seed, clock: .live), mockData: mockData, tunnel: tunnel)

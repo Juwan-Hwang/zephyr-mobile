@@ -71,7 +71,8 @@ final class SharedStatePublisher {
             status: status,
             mode: mode,
             since: value.since.map(Self.date(fromMillis:)),
-            errorCode: value.error?.code.rawValue
+            errorCode: value.error?.code.rawValue,
+            errorMessage: value.error.flatMap { $0.message.isEmpty ? nil : $0.message }
         )
         state.tunnel.mode = mode
         if status != .connected {
