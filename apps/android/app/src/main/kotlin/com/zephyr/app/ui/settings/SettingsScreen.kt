@@ -149,7 +149,7 @@ fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onTrustedWifi: () -> U
             }
             ZSectionHeader(stringResource(R.string.settings_section_privacy), Modifier.padding(top = 12.dp))
             ZListGroup {
-                ZSettingsRow(stringResource(R.string.settings_share_diagnostics), checked = s.shareDiagnostics, onCheckedChange = { v -> set { it.copy(shareDiagnostics = v) } })
+                ZSettingsRow(stringResource(R.string.settings_share_diagnostics), subtitle = stringResource(R.string.settings_share_diagnostics_hint), checked = s.shareDiagnostics, onCheckedChange = { v -> set { it.copy(shareDiagnostics = v) } })
             }
             ZSectionHeader(stringResource(R.string.settings_section_diagnostics), Modifier.padding(top = 12.dp))
             ZListGroup {

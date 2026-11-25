@@ -429,6 +429,7 @@
     <string name="settings_accent_pink">ピンク</string>
     <string name="settings_section_privacy">プライバシー</string>
     <string name="settings_share_diagnostics">診断データを共有</string>
+    <string name="settings_share_diagnostics_hint">ログページから自分で共有するときだけ、ログの前にバージョン・設定・最近のエラーコードを付けます。自動でアップロードされることはありません。</string>
     <string name="settings_section_diagnostics">診断</string>
     <string name="settings_local_data_note">サブスクリプション、ノード、トラフィックのデータは、このデバイスにのみ保存されます。</string>
     <string name="settings_section_about">情報</string>

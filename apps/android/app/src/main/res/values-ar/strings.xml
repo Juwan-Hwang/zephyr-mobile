@@ -613,6 +613,7 @@
     <string name="settings_accent_pink">وردي</string>
     <string name="settings_section_privacy">الخصوصية</string>
     <string name="settings_share_diagnostics">مشاركة بيانات التشخيص</string>
+    <string name="settings_share_diagnostics_hint">فقط عندما تشارك بنفسك من صفحة السجلات: يضيف الإصدار والإعدادات ورموز الأخطاء الأخيرة قبل السجلات. لا يُرفع أي شيء تلقائيًا.</string>
     <string name="settings_section_diagnostics">التشخيص</string>
     <string name="settings_local_data_note">تُحفظ الاشتراكات والعقد وبيانات حركة المرور على هذا الجهاز فقط.</string>
     <string name="settings_section_about">حول</string>

@@ -485,6 +485,7 @@
     <string name="settings_accent_pink">صورتی</string>
     <string name="settings_section_privacy">حریم خصوصی</string>
     <string name="settings_share_diagnostics">اشتراک‌گذاری داده‌های عیب‌یابی</string>
+    <string name="settings_share_diagnostics_hint">فقط وقتی خودتان از صفحهٔ گزارش‌ها هم‌رسانی می‌کنید: نسخه، تنظیمات و کدهای خطای اخیر را پیش از گزارش‌ها اضافه می‌کند. هیچ چیزی خودکار بارگذاری نمی‌شود.</string>
     <string name="settings_section_diagnostics">عیب‌یابی</string>
     <string name="settings_local_data_note">اشتراک‌ها، نودها و داده‌های ترافیک فقط روی این دستگاه ذخیره می‌شوند.</string>
     <string name="settings_section_about">درباره</string>

@@ -461,6 +461,7 @@
     <string name="settings_accent_pink">Pembe</string>
     <string name="settings_section_privacy">Gizlilik</string>
     <string name="settings_share_diagnostics">Tanılama verilerini paylaş</string>
+    <string name="settings_share_diagnostics_hint">Yalnızca Günlükler sayfasından kendiniz paylaştığınızda: günlüklerin önüne sürümü, ayarları ve son hata kodlarını ekler. Hiçbir şey otomatik olarak yüklenmez.</string>
     <string name="settings_section_diagnostics">Tanılama</string>
     <string name="settings_local_data_note">Abonelikler, düğümler ve trafik verileri yalnızca bu cihazda saklanır.</string>
     <string name="settings_section_about">Hakkında</string>

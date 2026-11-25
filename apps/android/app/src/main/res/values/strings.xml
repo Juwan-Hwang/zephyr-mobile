@@ -530,6 +530,7 @@
     <string name="settings_accent_pink">Pink</string>
     <string name="settings_section_privacy">Privacy</string>
     <string name="settings_share_diagnostics">Share diagnostic data</string>
+    <string name="settings_share_diagnostics_hint">Only when you share from the Logs page yourself: adds the version, settings and recent error codes before the logs. Nothing is ever uploaded automatically.</string>
     <string name="settings_section_diagnostics">Diagnostics</string>
     <string name="settings_local_data_note">Subscriptions, nodes, and traffic data are stored only on this device.</string>
     <string name="settings_section_about">About</string>

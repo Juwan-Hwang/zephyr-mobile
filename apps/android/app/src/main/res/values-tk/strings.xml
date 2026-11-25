@@ -461,6 +461,7 @@
     <string name="settings_accent_pink">Gülgüne</string>
     <string name="settings_section_privacy">Gizlinlik</string>
     <string name="settings_share_diagnostics">Diagnostika maglumatlaryny paýlaş</string>
+    <string name="settings_share_diagnostics_hint">Diňe ýazgylar sahypasyndan özüňiz paýlaşanyňyzda: ýazgylaryň öňünden wersiýany, sazlamalary we soňky ýalňyşlyk kodlaryny goşýar. Hiç zat awtomatik ýüklenmeýär.</string>
     <string name="settings_section_diagnostics">Diagnostika</string>
     <string name="settings_local_data_note">Abunalar, düwünler we trafik maglumatlary diňe şu enjamda saklanýar.</string>
     <string name="settings_section_about">Barada</string>
