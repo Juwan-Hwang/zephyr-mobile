@@ -1,4 +1,5 @@
 import { LengthMetrics } from '@kit.ArkUI';
+import { ZLayout } from '../generated/ZTokens';
 import { ZBtn } from '../common/ZButtonMods';
 /*
  * 订阅段（对照 Android ui/subs SubscriptionsScreen / ImportSheet / SubscriptionImporter，简化）：
@@ -1062,6 +1063,9 @@ export struct SubscriptionsView {
     .bindSheet(this.showAll, this.allSheet(), {
       detents: [SheetSize.MEDIUM, SheetSize.LARGE],
       showClose: false,
+      radius: LengthMetrics.vp(ZLayout.sheetRadius),
+      borderWidth: { top: 1 },
+      borderColor: { top: $r('app.color.screen_hl2') },
       dragBar: true,
       backgroundColor: $r('app.color.screen_s1'),
       onDisappear: () => {

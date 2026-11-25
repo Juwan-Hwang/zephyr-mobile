@@ -9,6 +9,7 @@
  * 状态管理统一用 V2（@ComponentV2 / @Local / @Param / @Event），引擎流在 aboutToAppear 订阅、aboutToDisappear 取消。
  */
 import { ZSheetHeader } from '../components/ZSheetHeader';
+import { ZLayout } from '../generated/ZTokens';
 import { CommandPage } from '../app/CommandResults';
 import { AppServices } from '../app/AppServices';
 import { AddSubscriptionRequest, ImportInbox } from '../app/ImportInbox';
@@ -46,7 +47,7 @@ import { ZTerm } from '../generated/ZTerms';
 import { ZToastHost } from '../components/ZToastHost';
 import { ZPageHeader } from '../components/ZPageHeader';
 import { GestureLock } from '../common/GestureLock';
-import { ComponentContent, window } from '@kit.ArkUI';
+import { ComponentContent, LengthMetrics, window } from '@kit.ArkUI';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 
 /** 吐司离底边：首页底栏（52 + 上下 10）之上再留 12（同 Android padding(bottom = 84.dp)），另加导航条避让区。 */
@@ -399,6 +400,9 @@ struct Index {
     .bindSheet(this.showLibrary, this.librarySheet(), {
       detents: [SheetSize.MEDIUM, SheetSize.LARGE],
       showClose: false,
+      radius: LengthMetrics.vp(ZLayout.sheetRadius),
+      borderWidth: { top: 1 },
+      borderColor: { top: $r('app.color.screen_hl2') },
       dragBar: true,
       backgroundColor: $r('app.color.screen_s1'),
       onDisappear: () => {

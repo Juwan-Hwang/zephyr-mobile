@@ -19,6 +19,7 @@
  *   · 自动切换提示（failover）：已连接时订阅 engine.sceneFailovers()，已切换 → “X 出口已自动切换到 Y”+ 撤销
  *     （吐司期间又换过节点则撤销不动作），AI 场景未切换 → 只提示。Mock 由设置页“模拟场景自动切换”触发。
  */
+import { LengthMetrics } from '@kit.ArkUI';
 import { ZSheetHeader } from '../components/ZSheetHeader';
 import { ZBtn } from '../common/ZButtonMods';
 import { ActivitySheet } from './ActivitySheet';
@@ -35,7 +36,7 @@ import { Failover, GlobalPick, HomeSubs, HomeSubsView, SPARK_POINTS, SparkRing }
 import { JUDGEMENT_MAX_AGE_MS, JUDGEMENT_THRESHOLD_MS } from '../app/NodeListModel';
 import { SubscriptionWarning, SubscriptionsModel } from '../app/SubscriptionsModel';
 import { ZTheme } from '../common/Theme';
-import { ZColorsDark, ZColorsLight } from '../generated/ZTokens';
+import { ZColorsDark, ZColorsLight, ZLayout } from '../generated/ZTokens';
 import { ZHero } from '../common/ZTypeMods';
 import { SceneRow } from './SceneRow';
 import { SceneSheet } from './SceneSheet';
@@ -748,6 +749,9 @@ export struct HomeView {
       .bindSheet(this.showActivity, this.activitySheet(), {
         detents: [SheetSize.MEDIUM, SheetSize.LARGE],
         showClose: false,
+        radius: LengthMetrics.vp(ZLayout.sheetRadius),
+        borderWidth: { top: 1 },
+        borderColor: { top: $r('app.color.screen_hl2') },
         dragBar: true,
         backgroundColor: $r('app.color.screen_s1'),
         onDisappear: () => {
@@ -1362,6 +1366,9 @@ export struct HomeView {
     .bindSheet(this.showScene, this.sceneSheet(), {
       detents: [SheetSize.MEDIUM, SheetSize.LARGE],
       showClose: false,
+      radius: LengthMetrics.vp(ZLayout.sheetRadius),
+      borderWidth: { top: 1 },
+      borderColor: { top: $r('app.color.screen_hl2') },
       dragBar: true,
       backgroundColor: $r('app.color.screen_s1'),
       onDisappear: () => {

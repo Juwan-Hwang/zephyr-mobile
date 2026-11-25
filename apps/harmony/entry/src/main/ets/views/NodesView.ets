@@ -1,4 +1,5 @@
 import { LengthMetrics } from '@kit.ArkUI';
+import { ZLayout } from '../generated/ZTokens';
 /*
  * 节点库（U14 / U15；对照 Android ui/nodes NodesScreen / NodeRows / NodeDetailSheet，iOS Nodes/*）：
  * - 页眉：库总数（大号）+ “个”，下一行“来自 N 个订阅 · N 个地区”；
@@ -772,6 +773,9 @@ export struct NodesView {
     .bindSheet(this.showDetail, this.detailSheet(), {
       detents: [SheetSize.MEDIUM, SheetSize.LARGE],
       showClose: false,
+      radius: LengthMetrics.vp(ZLayout.sheetRadius),
+      borderWidth: { top: 1 },
+      borderColor: { top: $r('app.color.screen_hl2') },
       dragBar: true,
       backgroundColor: $r('app.color.screen_s1'),
       onDisappear: () => {

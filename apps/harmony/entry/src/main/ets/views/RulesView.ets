@@ -1,4 +1,5 @@
 import { LengthMetrics } from '@kit.ArkUI';
+import { ZLayout } from '../generated/ZTokens';
 /*
  * 规则页（对照 Android ui/rules RulesScreen）：总数 hero×0.86 + 分层摘要（engine.ruleStats）；
  * 搜索框边输边测（60 ms 去抖，engine.testRule），下方卡片是空提示或“请求 → 第 N 层 → 场景/出口 → 出口 IP”链；
@@ -433,6 +434,9 @@ export struct RulesView {
     .bindSheet(this.showOverride, this.overrideSheet(), {
       detents: [SheetSize.MEDIUM, SheetSize.LARGE],
       showClose: false,
+      radius: LengthMetrics.vp(ZLayout.sheetRadius),
+      borderWidth: { top: 1 },
+      borderColor: { top: $r('app.color.screen_hl2') },
       dragBar: true,
       backgroundColor: $r('app.color.screen_s1'),
       onDisappear: () => {
