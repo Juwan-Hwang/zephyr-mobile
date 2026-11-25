@@ -67,7 +67,7 @@ ohos)
   fi
   "$GO" mod edit -replace="github.com/metacubex/gvisor=$PG"
   MV=$("$GO" list -m -f '{{.Version}}' github.com/metacubex/mihomo)
-  echo "go $("$GO" env GOVERSION)，mihomo $MV，gvisor $GV_VER（已打 fstat 补丁）"
+  echo "go $("$GO" env GOVERSION)，mihomo ${MV}，gvisor ${GV_VER}（已打 fstat 补丁）"
   "$GO" build -trimpath -tags "$TAGS" \
     -ldflags "$LDFLAGS -X github.com/metacubex/mihomo/constant.Version=$MV -extldflags=-Wl,-soname,libzmihomo.so" \
     -buildmode=c-shared -o "$SO" .

@@ -33,7 +33,7 @@ apply() { # name dest
   local name=$1 dest=$2
   local err
   if ! err=$(gh run download "$RUN" -n "$name" -D "$TMP/$name" 2>&1 >/dev/null); then
-    echo "跳过 $name（run $RUN）：${err:-下载失败}"; return 0
+    echo "跳过 ${name}（run ${RUN}）：${err:-下载失败}"; return 0
   fi
   cp -R "$TMP/$name/." "$dest/"
   echo "$name → $dest"

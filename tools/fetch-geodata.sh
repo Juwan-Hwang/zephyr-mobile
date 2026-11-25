@@ -23,11 +23,11 @@ mkdir -p "$OUT"
 while read -r name hash url; do
   [[ -z "$name" || "$name" == \#* ]] && continue
   dst=$OUT/$name
-  if [[ -f "$dst" && "$(sha "$dst")" == "$hash" ]]; then echo "ok   $name（已存在）"; continue; fi
+  if [[ -f "$dst" && "$(sha "$dst")" == "$hash" ]]; then echo "ok   ${name}（已存在）"; continue; fi
   curl -fsSL --retry 3 --connect-timeout 20 -o "$dst.part" "$url"
   got=$(sha "$dst.part")
   if [[ "$got" != "$hash" ]]; then
-    rm -f "$dst.part"; echo "sha256 不符：$name 期望 $hash 实得 $got（$url）" >&2; exit 1
+    rm -f "$dst.part"; echo "sha256 不符：$name 期望 $hash 实得 ${got}（${url}）" >&2; exit 1
   fi
   mv "$dst.part" "$dst"
   echo "ok   $name $(wc -c <"$dst" | tr -d ' ') B"

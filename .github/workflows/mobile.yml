@@ -75,6 +75,11 @@ jobs:
         run: node tools/gen-harmony-i18n.mjs --check
       - name: tools/*.sh 通过 shellcheck
         run: shellcheck --version | sed -n 2p && shellcheck tools/*.sh
+      - name: tools 脚本里变量后不紧跟全角字符（bash 3.2 会把 UTF-8 字节并进变量名，报 unbound variable；写成 ${name}）
+        run: |
+          if bad=$(grep -rnP '\$[A-Za-z_][A-Za-z0-9_]*[^\x00-\x7F]' --include='*.sh' tools/); then
+            echo "$bad"; echo "::error::上面几行的变量后紧跟非 ASCII 字符，请改成 \${var}"; exit 1
+          fi
       - name: workflow 通过 actionlint
         run: docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:1.7.12 -color
   core:
