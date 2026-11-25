@@ -454,6 +454,7 @@
     <string name="settings_accent_pink">粉色</string>
     <string name="settings_section_privacy">隐私</string>
     <string name="settings_share_diagnostics">共享诊断数据</string>
+    <string name="settings_share_diagnostics_hint">只在你从日志页手动分享时，在日志前附上版本、设置和最近错误码。不会自动上传任何数据。</string>
     <string name="settings_section_diagnostics">诊断</string>
     <string name="settings_local_data_note">订阅、节点与流量数据仅保存在此设备上。</string>
     <string name="settings_section_about">关于</string>

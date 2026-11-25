@@ -429,6 +429,7 @@
     <string name="settings_accent_pink">Hồng</string>
     <string name="settings_section_privacy">Quyền riêng tư</string>
     <string name="settings_share_diagnostics">Chia sẻ dữ liệu chẩn đoán</string>
+    <string name="settings_share_diagnostics_hint">Chỉ khi bạn tự chia sẻ từ trang Nhật ký: thêm phiên bản, cài đặt và mã lỗi gần đây trước nhật ký. Không có gì được tự động tải lên.</string>
     <string name="settings_section_diagnostics">Chẩn đoán</string>
     <string name="settings_local_data_note">Đăng ký, nút và dữ liệu lưu lượng chỉ được lưu trên thiết bị này.</string>
     <string name="settings_section_about">Giới thiệu</string>

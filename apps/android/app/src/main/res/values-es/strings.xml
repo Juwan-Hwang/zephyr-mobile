@@ -493,6 +493,7 @@
     <string name="settings_accent_pink">Rosa</string>
     <string name="settings_section_privacy">Privacidad</string>
     <string name="settings_share_diagnostics">Compartir datos de diagnóstico</string>
+    <string name="settings_share_diagnostics_hint">Solo cuando compartes tú mismo desde la página Registros: añade la versión, los ajustes y los códigos de error recientes antes de los registros. Nunca se sube nada automáticamente.</string>
     <string name="settings_section_diagnostics">Diagnóstico</string>
     <string name="settings_local_data_note">Las suscripciones, los nodos y los datos de tráfico solo se guardan en este dispositivo.</string>
     <string name="settings_section_about">Acerca de</string>

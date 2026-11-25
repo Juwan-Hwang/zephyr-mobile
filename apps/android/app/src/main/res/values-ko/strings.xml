@@ -429,6 +429,7 @@
     <string name="settings_accent_pink">분홍색</string>
     <string name="settings_section_privacy">개인정보 보호</string>
     <string name="settings_share_diagnostics">진단 데이터 공유</string>
+    <string name="settings_share_diagnostics_hint">로그 페이지에서 직접 공유할 때만 로그 앞에 버전, 설정, 최근 오류 코드를 붙입니다. 어떤 데이터도 자동으로 업로드하지 않습니다.</string>
     <string name="settings_section_diagnostics">진단</string>
     <string name="settings_local_data_note">구독, 노드 및 트래픽 데이터는 이 기기에만 저장됩니다.</string>
     <string name="settings_section_about">정보</string>

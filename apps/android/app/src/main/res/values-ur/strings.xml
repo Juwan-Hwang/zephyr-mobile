@@ -485,6 +485,7 @@
     <string name="settings_accent_pink">گلابی</string>
     <string name="settings_section_privacy">رازداری</string>
     <string name="settings_share_diagnostics">تشخیصی ڈیٹا شیئر کریں</string>
+    <string name="settings_share_diagnostics_hint">صرف جب آپ خود لاگز صفحے سے شیئر کریں: لاگز سے پہلے ورژن، ترتیبات اور حالیہ خرابی کوڈ شامل کرتا ہے۔ کچھ بھی خود بخود اپ لوڈ نہیں ہوتا۔</string>
     <string name="settings_section_diagnostics">تشخیص</string>
     <string name="settings_local_data_note">سبسکرپشنز، نوڈز اور ٹریفک ڈیٹا صرف اسی ڈیوائس پر محفوظ ہوتے ہیں۔</string>
     <string name="settings_section_about">بارے میں</string>

@@ -461,6 +461,7 @@
     <string name="settings_accent_pink">Waridi</string>
     <string name="settings_section_privacy">Faragha</string>
     <string name="settings_share_diagnostics">Shiriki data ya uchunguzi</string>
+    <string name="settings_share_diagnostics_hint">Ni pale tu unaposhiriki mwenyewe kutoka ukurasa wa Kumbukumbu: huongeza toleo, mipangilio na misimbo ya hitilafu ya hivi karibuni kabla ya kumbukumbu. Hakuna kinachopakiwa kiotomatiki.</string>
     <string name="settings_section_diagnostics">Uchunguzi</string>
     <string name="settings_local_data_note">Usajili, nodi na data ya trafiki huhifadhiwa kwenye kifaa hiki pekee.</string>
     <string name="settings_section_about">Kuhusu</string>

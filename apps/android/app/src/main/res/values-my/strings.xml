@@ -429,6 +429,7 @@
     <string name="settings_accent_pink">ပန်းရောင်</string>
     <string name="settings_section_privacy">ကိုယ်ရေးလုံခြုံမှု</string>
     <string name="settings_share_diagnostics">ပြဿနာရှာ ဒေတာ မျှဝေရန်</string>
+    <string name="settings_share_diagnostics_hint">မှတ်တမ်း စာမျက်နှာမှ ကိုယ်တိုင် မျှဝေသည့်အခါမှသာ မှတ်တမ်းရှေ့တွင် ဗားရှင်း၊ ဆက်တင်များနှင့် မကြာသေးမီ အမှားကုဒ်များကို ထည့်ပေးသည်။ မည်သည့်ဒေတာကိုမျှ အလိုအလျောက် မတင်ပါ။</string>
     <string name="settings_section_diagnostics">ပြဿနာရှာဖွေခြင်း</string>
     <string name="settings_local_data_note">စာရင်းသွင်းမှု၊ နုဒ်နှင့် ဒေတာအသုံးပြုမှုကို ဤစက်တွင်သာ သိမ်းသည်။</string>
     <string name="settings_section_about">အကြောင်း</string>
