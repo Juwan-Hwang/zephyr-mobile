@@ -20,6 +20,8 @@ object OnDemand {
     private const val PREFS = "zephyr_on_demand"
     private const val KEY_ARMED = "armed"
     private const val KEY_ALWAYS_ON = "always_on"
+    private const val KEY_FAILS = "connect_failures"
+    private const val KEY_LAST_ATTEMPT = "last_attempt_at"
 
     private fun prefs(ctx: Context) = ctx.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
@@ -28,8 +30,34 @@ object OnDemand {
      * nothing until then) and after a manual disconnect (paused until the next manual connect).
      */
     fun armed(ctx: Context): Boolean = prefs(ctx).getBoolean(KEY_ARMED, false)
-    fun markManualConnect(ctx: Context) = prefs(ctx).edit().putBoolean(KEY_ARMED, true).apply()
+    /** A manual connect also forgets the failure streak ([ReconnectBackoff]). */
+    fun markManualConnect(ctx: Context) = prefs(ctx).edit().putBoolean(KEY_ARMED, true).putInt(KEY_FAILS, 0).putLong(KEY_LAST_ATTEMPT, 0L).apply()
     fun markManualDisconnect(ctx: Context) = prefs(ctx).edit().putBoolean(KEY_ARMED, false).apply()
+
+    // ── Issue #1: failure streak for [ReconnectBackoff] ─────────────────────────────────────────────
+    /** Consecutive connect attempts that did not reach "connected" (an attempt whose process died included). */
+    fun failures(ctx: Context): Int = prefs(ctx).getInt(KEY_FAILS, 0)
+    fun lastAttemptAt(ctx: Context): Long = prefs(ctx).getLong(KEY_LAST_ATTEMPT, 0L)
+
+    /**
+     * Counts an attempt before the core starts. Written synchronously: a native crash in `zm_start` kills the
+     * process, and the sticky restart must see this attempt.
+     */
+    fun beginAttempt(ctx: Context, now: Long = System.currentTimeMillis()) {
+        prefs(ctx).edit().putInt(KEY_FAILS, failures(ctx) + 1).putLong(KEY_LAST_ATTEMPT, now).commit()
+    }
+
+    /** Connected, or the failure was not the core's (no backoff for those): the streak is over. */
+    fun attemptSucceeded(ctx: Context) {
+        if (failures(ctx) != 0) prefs(ctx).edit().putInt(KEY_FAILS, 0).putLong(KEY_LAST_ATTEMPT, 0L).apply()
+    }
+
+    /** Ms an automatic start still has to wait, 0 = go; [Long.MAX_VALUE] = streak exhausted (manual connect only). */
+    fun autoWaitMs(ctx: Context, now: Long = System.currentTimeMillis()): Long {
+        val n = failures(ctx)
+        if (ReconnectBackoff.exhausted(n)) return Long.MAX_VALUE
+        return ReconnectBackoff.waitBeforeAuto(n, lastAttemptAt(ctx), now)
+    }
 
     /**
      * Last `VpnService.isAlwaysOn()` the service saw (API 29+). The settings row can only learn it from a running
@@ -62,6 +90,9 @@ object OnDemand {
         if (ZephyrVpnService.running) return
         val consent = VpnService.prepare(ctx) == null
         if (!mayAutoConnect(onDemand, armed(ctx), consent)) return
+        // Issue #1: a core that keeps failing is retried on the backoff schedule only, not on every network change.
+        val wait = autoWaitMs(ctx)
+        if (wait > 0L) { android.util.Log.i("Zephyr", "on-demand reconnect ($why) deferred: backoff ${if (wait == Long.MAX_VALUE) "exhausted" else "${wait}ms"}"); return }
         android.util.Log.i("Zephyr", "on-demand reconnect ($why)")
         runCatching {
             ContextCompat.startForegroundService(ctx, Intent(ctx, ZephyrVpnService::class.java).setAction(ZephyrVpnService.ACTION_RESUME))

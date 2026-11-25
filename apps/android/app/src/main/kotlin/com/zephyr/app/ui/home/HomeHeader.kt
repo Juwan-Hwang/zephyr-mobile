@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -122,7 +123,7 @@ fun HomeStatus(
             val since = connection.since
             ZText(
                 when {
-                    connection.status == ConnectionStatus.FAILED -> stringResource(failureText(connection.error?.code))
+                    connection.status == ConnectionStatus.FAILED -> stringResource(failureText(connection.error))
                     connection.status == ConnectionStatus.CONNECTED && since != null -> ZFormat.duration(now - since)
                     else -> pluralStringResource(R.plurals.home_scene_count, sceneCount, sceneCount)
                 },
@@ -130,7 +131,44 @@ fun HomeStatus(
                 color = c.text3,
             )
         }
+        // Issue #1 (S25 Ultra): the raw reason, one line by default; tap to expand. Only while the failure shows.
+        val detail = connection.error?.takeIf { connection.status == ConnectionStatus.FAILED }?.let { failureDetail(it) }
+        if (detail != null) FailureDetail(detail)
     }
+}
+
+/** Expandable "why it failed" line under the failure hint (issue #1): ZephyrError.message, truncated. */
+@Composable
+private fun FailureDetail(detail: String) {
+    val c = ZTheme.colors
+    var open by remember(detail) { mutableStateOf(false) }
+    val rot by animateFloatAsState(if (open) 180f else 0f, ZAnim.standard(), label = "detailChev")
+    Spacer(Modifier.height(6.dp))
+    Row(
+        Modifier.fillMaxWidth().zPressable(label = stringResource(R.string.home_failure_details_a11y)) { open = !open }.padding(vertical = 4.dp),
+        verticalAlignment = Alignment.Top,
+    ) {
+        ZText(
+            detail,
+            Modifier.weight(1f, fill = false),
+            style = ZTheme.type.caption,
+            color = c.text3,
+            maxLines = if (open) FAILURE_DETAIL_LINES else 1,
+        )
+        Spacer(Modifier.width(4.dp))
+        ZIcon(ZIcons.ChevronDown, Modifier.padding(top = 2.dp).graphicsLayer { rotationZ = rot }, tint = c.text3, size = 12.dp)
+    }
+}
+
+/** Expanded detail line cap; longer messages are cut by [failureDetail] first. */
+private const val FAILURE_DETAIL_LINES = 6
+internal const val FAILURE_DETAIL_MAX_CHARS = 240
+
+/** The error's own message, whitespace folded and cut to [FAILURE_DETAIL_MAX_CHARS]; null when there is none. */
+internal fun failureDetail(e: com.zephyr.engine.ZephyrError): String? {
+    val m = e.message.trim().replace(Regex("\\s+"), " ")
+    if (m.isEmpty()) return null
+    return if (m.length <= FAILURE_DETAIL_MAX_CHARS) m else m.take(FAILURE_DETAIL_MAX_CHARS - 1).trimEnd() + "…"
 }
 
 @Composable
@@ -167,7 +205,12 @@ private fun ModePicker(mode: ProxyMode, onMode: (ProxyMode) -> Unit) {
     }
 }
 
-/** One line under "连接失败": what to do next, never a raw error. */
+/** One line under "连接失败": what to do next, never a raw error (that is [failureDetail]'s line). */
+@StringRes
+internal fun failureText(error: com.zephyr.engine.ZephyrError?): Int =
+    // Issue #1: `geodata missing:` gets its own hint instead of the generic "core couldn't start".
+    if (com.zephyr.app.vpn.ReconnectBackoff.isGeodataMissing(error)) R.string.home_failure_geodata else failureText(error?.code)
+
 @StringRes
 internal fun failureText(code: com.zephyr.engine.ErrorCode?): Int = when (code) {
     com.zephyr.engine.ErrorCode.SUBSCRIPTION_NOT_FOUND -> R.string.home_failure_no_subscription

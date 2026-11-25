@@ -89,6 +89,8 @@
     <string name="home_failure_vpn_permission">Ruhusa ya VPN inahitajika</string>
     <string name="home_failure_network">Mtandao haupatikani</string>
     <string name="home_failure_core">Kiini kimeshindwa kuanza</string>
+    <string name="home_failure_geodata">Data ya kijiografia haipo</string>
+    <string name="home_failure_details_a11y">Maelezo ya hitilafu</string>
     <string name="home_action_switch_mode">kubadilisha hali</string>
     <string name="home_action_preview_exit">kuhakiki njia ya kutoka</string>
     <string name="home_action_retest">kupima upya</string>

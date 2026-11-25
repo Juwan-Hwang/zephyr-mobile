@@ -113,6 +113,8 @@
     <string name="home_failure_vpn_permission">يلزم إذن VPN</string>
     <string name="home_failure_network">الشبكة غير متاحة</string>
     <string name="home_failure_core">تعذّر تشغيل النواة</string>
+    <string name="home_failure_geodata">بيانات الموقع الجغرافي مفقودة</string>
+    <string name="home_failure_details_a11y">تفاصيل الخطأ</string>
     <string name="home_action_switch_mode">تبديل الوضع</string>
     <string name="home_action_preview_exit">معاينة المخرج</string>
     <string name="home_action_retest">إعادة الاختبار</string>

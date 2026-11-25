@@ -85,6 +85,14 @@ class ZephyrVpnService : VpnService() {
                 val s = engine.settings().first()
                 val consent = prepare(this@ZephyrVpnService) == null
                 if (!OnDemand.mayAutoConnect(s.onDemand, OnDemand.armed(this@ZephyrVpnService), consent)) { stop(); return@transition }
+                // Issue #1: START_STICKY / network-up must not relaunch a failing core in a loop (ReconnectBackoff).
+                val wait = OnDemand.autoWaitMs(this@ZephyrVpnService)
+                if (wait == Long.MAX_VALUE) {
+                    OnDemand.markManualDisconnect(this@ZephyrVpnService)
+                    appLog(com.zephyr.engine.LogLevel.WARNING, "on-demand paused after ${ReconnectBackoff.MAX_FAILURES} failed starts; connect manually")
+                    stop(); return@transition
+                }
+                if (wait > 0L) { scheduleRetry(applicationContext, wait); stop(); return@transition }
                 val snap = AppGraph.network?.state?.value
                 if (tun == null && snap?.network != null && OnDemand.onTrustedNetwork(s, snap.ssid, alwaysOnNow())) {
                     pause(snap.ssid)
@@ -100,16 +108,28 @@ class ZephyrVpnService : VpnService() {
         paused = false
         noteAlwaysOn()
         val s = engine.settings().first()
+        // Counted before anything can fail (pre-check, zm_start): a native crash mid-start still counts (ReconnectBackoff).
+        OnDemand.beginAttempt(this)
         bridge = TunBridge.pick(this@ZephyrVpnService, engine, s, engine.connectionState().first().mode)
-        if (!bridge.createsTun && !com.zephyr.app.BuildConfig.DEBUG) {
+        val mock = (engine as? com.zephyr.engine.core.CoreEngine)?.usesMockData ?: true
+        if (!bridge.createsTun && !(com.zephyr.app.BuildConfig.DEBUG && mock)) {
             // Release never pretends: without a tunnel the app must not say "已连接" while traffic goes direct.
+            // Issue #1: neither does a debug build on a real device (native libraries loaded, no mock data).
             fail(TunBridge.whyNoTunnel(engine)); return
         }
         if (bridge.createsTun && tun == null) {
+            // Issue #1: check what can be checked before the tun exists — a tun nobody reads black-holes all traffic.
+            bridge.preflight()?.let { err ->
+                android.util.Log.e("Zephyr", "core pre-check failed: $err")
+                fail(com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.CORE_CRASHED, err)); return
+            }
             tun = TunBridge.configure(Builder().setSession("Zephyr"), s.tun.mtu, s.tun.ipv6, s.tun.excludedApps, packageName).establish()
             val err = tun?.let { bridge.attach(it) } ?: "establish() returned null"
             if (err != null) {
                 android.util.Log.e("Zephyr", "core start failed: $err")
+                // Issue #1: close the tun right away, not only in stop(): until then the device has no route out.
+                bridge.detach(); bridge = TunBridge.Simulated // detached once; tearDown() must not stop it again
+                runCatching { tun?.close() }; tun = null
                 fail(com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.CORE_CRASHED, err)); return
             }
         }
@@ -119,6 +139,7 @@ class ZephyrVpnService : VpnService() {
                 ?: com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.CORE_CRASHED, t.message ?: t.javaClass.simpleName)
             fail(e); return
         }
+        OnDemand.attemptSucceeded(this)
         watch()
     }
 
@@ -258,12 +279,27 @@ class ZephyrVpnService : VpnService() {
     private fun noteAlwaysOn() = OnDemand.setAlwaysOn(this, alwaysOnNow())
 
     private suspend fun fail(e: com.zephyr.engine.ZephyrError) {
-        // Nothing to connect to: on-demand would only fail again on every boot / network change.
-        if (e.code == com.zephyr.engine.ErrorCode.SUBSCRIPTION_NOT_FOUND || e.code == com.zephyr.engine.ErrorCode.SUBSCRIPTION_INVALID) {
+        // Issue #1: the reason goes to the logs page too, not only logcat.
+        appLog(com.zephyr.engine.LogLevel.ERROR, "connect failed [${e.code.name.lowercase()}]: ${e.message}")
+        // Nothing to connect to / geodata missing: on-demand would only fail again on every boot / network change.
+        // Any other core failure: retried on the backoff schedule, paused after ReconnectBackoff.MAX_FAILURES.
+        val streak = OnDemand.failures(this).coerceAtLeast(1)
+        val out = ReconnectBackoff.onFailure(e, streak)
+        if (e.code != com.zephyr.engine.ErrorCode.CORE_CRASHED) OnDemand.attemptSucceeded(this) // no backoff streak for these
+        if (out.disarm) {
             OnDemand.markManualDisconnect(this)
+            if (e.code == com.zephyr.engine.ErrorCode.CORE_CRASHED) appLog(com.zephyr.engine.LogLevel.WARNING, "on-demand paused until the next manual connect")
+        }
+        out.retryInMs?.let { ms ->
+            appLog(com.zephyr.engine.LogLevel.INFO, "on-demand retry in ${ms / 1000}s (failure $streak/${ReconnectBackoff.MAX_FAILURES})")
+            scheduleRetry(applicationContext, ms)
         }
         stop()
         (engine as? com.zephyr.engine.core.CoreEngine)?.reportConnectFailure(e)
+    }
+
+    private fun appLog(level: com.zephyr.engine.LogLevel, message: String) {
+        (engine as? com.zephyr.engine.core.CoreEngine)?.appLog(level, message)
     }
 
     /** Without POST_NOTIFICATIONS (13+) the foreground notification stays system-managed; skip updates. */
@@ -337,5 +373,17 @@ class ZephyrVpnService : VpnService() {
         const val ACTION_TOGGLE_MODE = "com.juwanh.zephyr.TOGGLE_MODE"
         /** On-demand's automatic (re)connect: never prompts consent, honours trusted Wi‑Fi. */
         const val ACTION_RESUME = "com.juwanh.zephyr.RESUME"
+
+        @Volatile private var retryJob: Job? = null
+
+        /** Issue #1: one pending backoff retry per process (replaces an earlier one); on-demand decides when it fires. */
+        fun scheduleRetry(app: android.content.Context, delayMs: Long) {
+            retryJob?.cancel()
+            retryJob = AppGraph.appScope.launch {
+                kotlinx.coroutines.delay(delayMs)
+                val on = runCatching { AppGraph.engine.settings().first().onDemand }.getOrDefault(false)
+                OnDemand.reconnectIfWanted(app, on, "backoff retry")
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@ import com.zephyr.core.mobile.SceneKind as CoreSceneKind
 import com.zephyr.core.mobile.SceneSource as CoreSceneSource
 import com.zephyr.core.mobile.TraceTarget as CoreTraceTarget
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.filter
 import com.zephyr.core.mobile.ProxyMode as CoreMode
 import com.zephyr.engine.ErrorCode
 import com.zephyr.engine.ImportSource
@@ -69,9 +70,15 @@ class CoreEngine(
     /**
      * Whether [fallback]'s synthetic catalogue may stand in for an empty native store. True for debug,
      * screenshots and tests; false in release, where an empty store means "no subscription yet" and the
-     * UI shows its empty state instead of fake nodes.
+     * UI shows its empty state instead of fake nodes. Overridden by [mockDataFor] when that is set.
      */
-    private val mockData: Boolean = true,
+    mockData: Boolean = true,
+    /**
+     * Issue #1 (S25 Ultra): decides [mockData] once the native libraries have (or have not) loaded, so a debug build
+     * on a real device with the cores packaged never shows the mock catalogue. Argument: both native libraries loaded.
+     * Null = use [mockData] as given (tests, screenshots).
+     */
+    mockDataFor: ((nativeLoaded: Boolean) -> Boolean)? = null,
     /** mihomo's REST controller while the embedded core runs, else null (VPN off, tests, screenshots). */
     private val live: () -> LivePort? = { null },
     private val tick: Long = 1_000,
@@ -87,6 +94,12 @@ class CoreEngine(
     private val core: MobileCore? = dataDir?.let { dir ->
         try { MobileCore(dir) } catch (_: Throwable) { null } // UnsatisfiedLinkError / missing .so → mock
     }
+
+    /** See the constructor's `mockData` / `mockDataFor`; resolved after [core] tried to load. */
+    private val mockData: Boolean = mockDataFor?.invoke(core != null && runCatching { Mihomo.available }.getOrDefault(false)) ?: mockData
+
+    /** Whether the mock catalogue stands in for missing native data (debug without native libs, demo). */
+    val usesMockData: Boolean get() = mockData
 
     private val bg = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + io)
 
@@ -134,7 +147,7 @@ class CoreEngine(
             }
             done += n
         }
-        if (done > 0) rulesReady = null
+        if (done > 0) invalidateRules()
         return done
     }
 
@@ -145,6 +158,23 @@ class CoreEngine(
 
     @Volatile private var nodesReady: Boolean? = null
     @Volatile private var rulesReady: Boolean? = null
+
+    /**
+     * Issue #1 (S25 Ultra): bumped whenever the node library may have changed (subscription import / update / delete,
+     * mock seeding), so flows that decided "no nodes yet" at collection time ([scenes]) re-check instead of staying
+     * on the empty / mock branch until the app restarts.
+     */
+    private val libraryVersion = kotlinx.coroutines.flow.MutableStateFlow(0)
+
+    /** Node library changed: forget the cached readiness of nodes and rules and wake [libraryVersion] collectors. */
+    private fun invalidateLibrary() {
+        nodesReady = null
+        rulesReady = null
+        libraryVersion.value++
+    }
+
+    /** Rule layers changed (rule sets / GEO compiled): the next [rules] call reads the store again. */
+    private fun invalidateRules() { rulesReady = null }
 
     @Volatile private var corruptRebuilt = false
 
@@ -170,9 +200,11 @@ class CoreEngine(
 
     private suspend fun rules(): MobileCore? {
         val c = core ?: return null
-        rulesReady?.let { return if (it) c else null }
+        if (rulesReady == true) return c
         val ok = withContext(io) { runCatching { rebuildOnCorrupt(c) { c.ruleStats() }.total > 0uL }.getOrDefault(false) }
-        rulesReady = ok
+        // Issue #1: only a positive answer is cached. Rule layers compile after import (subscription rules, then rule
+        // sets / GEO in the background); a cached "not yet" kept 规则 on the mock / empty stats until a restart.
+        rulesReady = ok.takeIf { it }
         return if (ok) c else null
     }
 
@@ -180,7 +212,7 @@ class CoreEngine(
     suspend fun seedMockNodes(scale: Double) {
         val c = core ?: return
         withContext(io) { wrap { c.rebuildMockNodes(scale) } }
-        nodesReady = null
+        invalidateLibrary()
     }
 
     // ── Subscriptions (core-mobile owns parsing/storage; the platform only fetches) ──────────────────
@@ -255,7 +287,7 @@ class CoreEngine(
         val n = name ?: got.fileName?.takeIf { it.isNotBlank() } ?: defaultName(url ?: body, url != null)
         val hours = autoHours ?: runCatching { fallback.settings().first().autoUpdateHours }.getOrDefault(12)
         val s = wrapImport { c.importSubscription(n, url, FetchedSubscription(got.body, got.userInfo, clock()), hours, null) }
-        nodesReady = null
+        invalidateLibrary()
         return sub(s)
     }
 
@@ -264,7 +296,7 @@ class CoreEngine(
 
     private suspend fun afterImport() {
         refreshSubs()
-        rulesReady = null
+        invalidateLibrary()
         refreshRuleProvidersLater()
     }
 
@@ -284,7 +316,7 @@ class CoreEngine(
         val url = wrap { c.subscriptionFetchUrl(id) } ?: throw ZephyrException(ErrorCode.SUBSCRIPTION_INVALID, "local profile")
         val got = fetchOrThrow(url)
         val d = wrap(ErrorMapping.Call.UPDATE_SUBSCRIPTION) { c.updateSubscription(id, FetchedSubscription(got.body, got.userInfo, clock()), null) }
-        nodesReady = null; rulesReady = null; refreshSubs(); refreshRuleProvidersLater(); diff(d)
+        invalidateLibrary(); refreshSubs(); refreshRuleProvidersLater(); diff(d)
     }
 
     private fun changed(d: SubscriptionDiff) = d.addedNodes > 0 || d.removedNodes > 0 || d.ruleChanges > 0
@@ -324,7 +356,7 @@ class CoreEngine(
     override suspend fun deleteSubscription(id: String) {
         val c = core ?: return if (mockData) fallback.deleteSubscription(id) else throw noCore()
         withContext(io) { wrap { c.deleteSubscription(id) } }
-        nodesReady = null; rulesReady = null
+        invalidateLibrary()
         refreshSubs()
     }
 
@@ -516,14 +548,18 @@ class CoreEngine(
         }
     }
 
-    override fun scenes(): Flow<List<Scene>> = flow {
-        val c = nodes()
-        if (c == null) { emitAll(if (mockData) fallback.scenes() else flowOf(emptyList())); return@flow }
-        // Re-read on every bump (apply/retest) and on a slow tick (selection, exits and latencies move underneath).
-        emitAll(merge(scenesBump, flow { while (true) { delay(tick * 5); emit(0) } }).map {
-            withContext(io) { wrap { c.scenes(clock()) } }.map(::scene)
-        }.distinctUntilChanged())
-    }
+    // Issue #1: re-decides real vs. mock / empty whenever the node library changes (import / update / delete), not
+    // only when the flow is first collected — Home no longer needs an app restart to show the imported scenes.
+    override fun scenes(): Flow<List<Scene>> = libraryVersion.flatMapLatest {
+        flow {
+            val c = nodes()
+            if (c == null) { emitAll(if (mockData) fallback.scenes() else flowOf(emptyList())); return@flow }
+            // Re-read on every bump (apply/retest) and on a slow tick (selection, exits and latencies move underneath).
+            emitAll(merge(scenesBump, flow { while (true) { delay(tick * 5); emit(0) } }).map {
+                withContext(io) { wrap { c.scenes(clock()) } }.map(::scene)
+            })
+        }
+    }.distinctUntilChanged()
 
     override suspend fun sceneCandidates(sceneId: String, region: String?): List<NodeSummary> {
         val c = nodes() ?: return if (mockData) fallback.sceneCandidates(sceneId, region) else emptyList()
@@ -899,13 +935,27 @@ class CoreEngine(
         }
     }
 
-    /** mihomo log ring buffer, 1 Hz increments while the core runs in-process (§14.w logs). */
-    override fun logs(minLevel: LogLevel): Flow<LogLine> =
+    /**
+     * App-side lines for the logs page (issue #1): why a connect failed, written by the VPN layer. Kept for late
+     * subscribers (the page is usually opened after the failure).
+     */
+    private val appLogs = kotlinx.coroutines.flow.MutableSharedFlow<LogLine>(replay = APP_LOG_REPLAY, extraBufferCapacity = APP_LOG_REPLAY)
+
+    /** Adds one line to the logs page stream (not the mihomo ring buffer). */
+    fun appLog(level: LogLevel, message: String) { appLogs.tryEmit(LogLine(clock(), level, message)) }
+
+    /**
+     * mihomo log ring buffer, 1 Hz increments whenever the library is loaded (§14.w logs) — issue #1: also before
+     * zm_start / after a failed start, so the reason a start failed is visible — merged with [appLog] lines.
+     */
+    override fun logs(minLevel: LogLevel): Flow<LogLine> = merge(appLogs.filter { it.level >= minLevel }, coreLogs(minLevel))
+
+    private fun coreLogs(minLevel: LogLevel): Flow<LogLine> =
         if (mockData && !Mihomo.available) fallback.logs(minLevel)
         else flow {
             var since = 0L
             while (true) {
-                if (Mihomo.running) {
+                if (Mihomo.available) {
                     val raw = withContext(io) { Mihomo.logs(since, minLevel.name.lowercase(), 200) }
                     if (raw != null) {
                         val o = LogsJson.parse(raw)
@@ -1125,7 +1175,11 @@ class CoreEngine(
     /** Today's usage from the ledger the traffic sampler keeps while the tunnel runs (§2, §14.w). */
     override suspend fun usageToday(): UsageSummary {
         val c = core
-        if (c == null || (mockData && usage.state.lastAt == 0L)) return if (mockData) fallback.usageToday() else UsageSummary(0, 0, 0, null, List(24) { 0L })
+        val empty = UsageSummary(0, 0, 0, null, List(24) { 0L })
+        if (c == null) return if (mockData) fallback.usageToday() else empty
+        // Issue #1: an empty ledger is the real answer whenever the native core is loaded ("nothing yet today");
+        // the mock numbers only stand in for demo mode (mockData with a native core = demo, see useMockData).
+        if (usage.state.lastAt == 0L) return if (mockData) fallback.usageToday() else empty
         val now = clock()
         val u = usage.today(now)
         val regions = runCatching {
@@ -1155,6 +1209,16 @@ class CoreEngine(
         if (mockData) fallback.commandSuggestions(input) else emptyList() // UI plans commands itself (CommandPlanner)
 
     companion object {
+        /** Lines of [appLog] a late logs-page subscriber still sees. */
+        const val APP_LOG_REPLAY = 50
+
+        /**
+         * Issue #1 (S25 Ultra, comment 7152702939): the mock catalogue is only for builds that cannot show real data —
+         * a debug build whose native libraries are missing / failed to load — or the explicit demo mode. A debug build
+         * on a real device with the cores packaged shows the real (possibly empty) store; release never mocks.
+         */
+        fun useMockData(debug: Boolean, demo: Boolean, nativeLoaded: Boolean): Boolean = demo || (debug && !nativeLoaded)
+
         /** Contract §18.a: `latency.threshold-slow`; does not change `reachable`. */
         const val REACHABLE_THRESHOLD_MS = 200
 

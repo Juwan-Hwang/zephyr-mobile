@@ -22,6 +22,11 @@ interface TunBridge {
     val createsTun: Boolean
     /** Returns null on success or an error message. */
     suspend fun attach(fd: ParcelFileDescriptor): String?
+    /**
+     * Issue #1: what can be checked before `establish()` (library loaded, runtime config builds). Null = go ahead,
+     * else the reason; the service fails without ever creating the tun.
+     */
+    suspend fun preflight(): String? = null
     fun detach()
 
     /** No core packaged or no subscription yet: UI flow works, no tun is created (an unread tun would black-hole traffic). */
@@ -41,6 +46,14 @@ interface TunBridge {
             val sock = controllerSocket(ctx)
             engine.tunnelStarting = true // §16.b ③: changes from here on are queued, applied once after start
             try { return start(fd, sock) } finally { engine.tunnelStarting = false }
+        }
+
+        override suspend fun preflight(): String? {
+            if (!Mihomo.available) return "libzmihomo missing"
+            return try {
+                // Same config as attach() minus the fd: catches "no active subscription" and config errors up front.
+                engine.runtimeConfig(null, controllerSocket(ctx).path, settings, mode)?.let { null } ?: "no active subscription"
+            } catch (t: Throwable) { t.message ?: "runtime config failed" }
         }
 
         private suspend fun start(fd: ParcelFileDescriptor, sock: File): String? {
