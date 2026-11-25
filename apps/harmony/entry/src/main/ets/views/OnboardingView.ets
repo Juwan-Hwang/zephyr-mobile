@@ -1,4 +1,5 @@
 import { LengthMetrics } from '@kit.ArkUI';
+import { ZBtn } from '../common/ZButtonMods';
 /*
  * 首次引导（M1-16；对照 Android ui/onboarding OnboardingScreen，原型 ob1 / ob2）：两步。
  * 1 / 2 添加订阅：粘贴链接输入框 + 粘贴（PasteButton 安全控件）+ 添加，扫码 / 从文件导入；导入路径同订阅页（SubscriptionImport），
@@ -214,17 +215,14 @@ export struct OnboardingView {
         Blank()
         if (this.busy) {
           Button($r('app.string.common_cancel'))
-            .fontSize(14)
-            .fontColor(this.theme.accentColor())
-            .backgroundColor(Color.Transparent)
+            .attributeModifier(ZBtn.ghost(this.theme.accentColor()))
             .accessibilityText($r('app.string.onboarding_cancel_import_a11y'))
             .onClick(() => this.cancelImport())
         }
         Button(this.busy ? $r('app.string.common_adding') : $r('app.string.common_add'))
+          .attributeModifier(ZBtn.accentFill(this.theme.accentColor()))
           .id(ONBOARDING_ADD_ID)
-          .fontSize(14)
           .enabled(!this.busy && this.link.trim().length > 0)
-          .backgroundColor(this.theme.accentColor())
           .onClick(() => this.submit(ImportSource.URL, this.link))
       }
       .width('100%')
@@ -296,12 +294,10 @@ export struct OnboardingView {
       .scrollBar(BarState.Off)
       if (this.step === 1) {
         Button($r('app.string.onboarding_continue'))
+          .attributeModifier(ZBtn.accentFill(this.theme.accentColor(), true))
           .id(ONBOARDING_CONTINUE_ID)
           .width('100%')
-          .height(52)
-          .fontSize(17)
           .enabled(!this.saving)
-          .backgroundColor(this.theme.accentColor())
           .onClick(() => this.finish())
         Text($r('app.string.onboarding_change_later'))
           .width('100%')

@@ -1,4 +1,5 @@
 import { LengthMetrics } from '@kit.ArkUI';
+import { ZBtn } from '../common/ZButtonMods';
 /*
  * “搜索或输入指令”面板（原型 cmdv，index.html 879 / 1020–1061；对照 Android CommandOverlay、iOS CommandView；契约 §16.d）。
  * 首页底栏指令栏点开（bindSheet）。
@@ -656,11 +657,9 @@ export struct CommandSheet {
           .fontColor($r('app.color.screen_t3'))
       }
       Button(p.applicable ? ZTerm.apply : $r('app.string.command_no_nodes_available'))
+        .attributeModifier(ZBtn.accentFill(this.theme.accentColor(), true))
         .width('100%')
-        .height(44)
         .enabled(p.applicable && !this.applying)
-        .backgroundColor(p.applicable ? this.theme.accentColor() : $r('app.color.screen_s3'))
-        .fontColor(Color.White)
         .onClick(() => this.apply())
     }
     .width('100%')

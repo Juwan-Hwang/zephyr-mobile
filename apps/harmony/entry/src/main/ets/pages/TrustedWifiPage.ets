@@ -1,4 +1,5 @@
 import { LengthMetrics } from '@kit.ArkUI';
+import { ZBtn } from '../common/ZButtonMods';
 /*
  * 设置 › 受信任的 Wi‑Fi（M1-14；对照 Android LibraryPages TrustedWifiScreen / iOS TrustedWifiView）：
  * “连上这些 Wi‑Fi 时自动断开”开关、网络列表（每行“删除”）、添加输入框（1–32 字节、不重复、最多 50 个）。
@@ -117,11 +118,8 @@ export struct TrustedWifiPage {
                 })
                 .onSubmit(() => this.add())
               Button($r('app.string.common_add'))
+                .attributeModifier(ZBtn.ghost(this.theme.accentColor()))
                 .id(TRUSTED_WIFI_ADD_ID)
-                .fontSize(14)
-                .height(32)
-                .fontColor(this.canAdd() ? this.theme.accentColor() : $r('app.color.screen_t3'))
-                .backgroundColor(Color.Transparent)
                 .enabled(this.canAdd())
                 .onClick(() => this.add())
             }

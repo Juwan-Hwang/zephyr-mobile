@@ -1,4 +1,5 @@
 import { LengthMetrics } from '@kit.ArkUI';
+import { ZBtn } from '../common/ZButtonMods';
 /*
  * 订阅段（对照 Android ui/subs SubscriptionsScreen / ImportSheet / SubscriptionImporter，简化）：
  * - 外链导入确认卡（ImportInbox，§16.e⑦ 从不自动导入）：条目、http 警告、信任提示、取消 / 添加；解析失败只显示原因。
@@ -473,9 +474,7 @@ export struct SubscriptionsView {
             .fontSize(15)
             .fontColor($r('app.color.screen_red_text'))
           Button($r('app.string.common_cancel'))
-            .fontSize(14)
-            .fontColor($r('app.color.screen_t1'))
-            .backgroundColor($r('app.color.screen_s3'))
+            .attributeModifier(ZBtn.secondary())
             .onClick(() => this.dismissRequest())
         } else {
           Text($r('app.plural.subs_import_confirm_title', this.requestItems().length, this.requestItems().length))
@@ -510,17 +509,13 @@ export struct SubscriptionsView {
             .fontColor($r('app.color.screen_t2'))
           Row({ space: 8 }) {
             Button($r('app.string.common_cancel'))
+              .attributeModifier(ZBtn.secondary())
               .layoutWeight(1)
-              .fontSize(15)
-              .fontColor($r('app.color.screen_t1'))
-              .backgroundColor($r('app.color.screen_s3'))
               .onClick(() => this.dismissRequest())
             Button(this.adding ? $r('app.string.common_adding') : $r('app.string.common_add'))
+              .attributeModifier(ZBtn.primary())
               .layoutWeight(1)
-              .fontSize(15)
               .enabled(!this.adding)
-              .fontColor($r('app.color.screen_on_primary'))
-              .backgroundColor($r('app.color.screen_primary'))
               .onClick(() => this.confirmRequest())
           }
           .width('100%')
@@ -560,18 +555,14 @@ export struct SubscriptionsView {
             })
           Blank()
           Button($r('app.string.common_cancel'))
-            .fontSize(14)
-            .fontColor($r('app.color.screen_t1'))
-            .backgroundColor($r('app.color.screen_s3'))
+            .attributeModifier(ZBtn.secondary())
             .onClick(() => {
               this.showAdd = false;
               this.addError = undefined;
             })
           Button(this.adding ? $r('app.string.common_adding') : $r('app.string.common_add'))
-            .fontSize(14)
+            .attributeModifier(ZBtn.primary())
             .enabled(!this.adding && this.link.trim().length > 0)
-            .fontColor($r('app.color.screen_on_primary'))
-            .backgroundColor($r('app.color.screen_primary'))
             .onClick(() => this.addFromText(ImportSource.URL, this.link))
         }
         .width('100%')
@@ -639,19 +630,13 @@ export struct SubscriptionsView {
           Row({ space: 8 }) {
             Blank()
             Button($r('app.string.common_cancel'))
-              .height(34)
-              .fontSize(14)
-              .fontColor($r('app.color.screen_t1'))
-              .backgroundColor($r('app.color.screen_s3'))
+              .attributeModifier(ZBtn.secondary())
               .onClick(() => {
                 this.review = undefined;
               })
             Button(ZTerm.update)
+              .attributeModifier(ZBtn.primary())
               .id(SUBS_REVIEW_CONFIRM_ID)
-              .height(34)
-              .fontSize(14)
-              .fontColor($r('app.color.screen_on_primary'))
-              .backgroundColor($r('app.color.screen_primary'))
               .onClick(() => this.confirmReview())
           }
           .width('100%')

@@ -20,6 +20,7 @@
  *     （吐司期间又换过节点则撤销不动作），AI 场景未切换 → 只提示。Mock 由设置页“模拟场景自动切换”触发。
  */
 import { ZSheetHeader } from '../components/ZSheetHeader';
+import { ZBtn } from '../common/ZButtonMods';
 import { ActivitySheet } from './ActivitySheet';
 import { CommandSheet } from './CommandSheet';
 import { CommandPage } from '../app/CommandResults';
@@ -886,22 +887,12 @@ export struct HomeView {
         .fontColor($r('app.color.screen_t3'))
       Row({ space: 8 }) {
         Button($r('app.string.home_global_use_rule'))
-          .type(ButtonType.Capsule)
+          .attributeModifier(ZBtn.primary())
           .layoutWeight(1)
-          .height(40)
-          .fontSize(14)
-          .fontWeight(FontWeight.Medium)
-          .fontColor($r('app.color.screen_on_primary'))
-          .backgroundColor($r('app.color.screen_primary'))
           .onClick(() => this.setMode(MODES.indexOf(ProxyMode.RULE)))
         Button($r('app.string.home_global_change_node'))
-          .type(ButtonType.Capsule)
+          .attributeModifier(ZBtn.secondary())
           .layoutWeight(1)
-          .height(40)
-          .fontSize(14)
-          .fontWeight(FontWeight.Medium)
-          .fontColor($r('app.color.screen_t1'))
-          .backgroundColor($r('app.color.screen_hl'))
           .enabled(!this.globalLoading)
           .id(HOME_GLOBAL_CHANGE_ID)
           .onClick(() => this.toggleGlobalChange())
@@ -959,24 +950,14 @@ export struct HomeView {
         .fontColor($r('app.color.screen_t3'))
       Row({ space: 8 }) {
         Button($r('app.string.home_global_change_to', p.name))
-          .type(ButtonType.Capsule)
+          .attributeModifier(ZBtn.primary())
           .layoutWeight(1)
-          .height(40)
-          .fontSize(14)
-          .fontWeight(FontWeight.Medium)
-          .fontColor($r('app.color.screen_on_primary'))
-          .backgroundColor($r('app.color.screen_primary'))
           .enabled(!this.applying)
           .id(HOME_GLOBAL_CONFIRM_ID)
           .onClick(() => this.confirmGlobal())
         Button($r('app.string.common_cancel'))
-          .type(ButtonType.Capsule)
+          .attributeModifier(ZBtn.secondary())
           .layoutWeight(1)
-          .height(40)
-          .fontSize(14)
-          .fontWeight(FontWeight.Medium)
-          .fontColor($r('app.color.screen_t1'))
-          .backgroundColor($r('app.color.screen_hl'))
           .onClick(() => this.toggleGlobalChange())
       }
       .width('100%')
@@ -1124,23 +1105,13 @@ export struct HomeView {
       }
       Row({ space: 8 }) {
         Button($r('app.string.common_change'))
-          .type(ButtonType.Capsule)
+          .attributeModifier(ZBtn.primary())
           .layoutWeight(1)
-          .height(40)
-          .fontSize(14)
-          .fontWeight(FontWeight.Medium)
-          .fontColor($r('app.color.screen_on_primary'))
-          .backgroundColor($r('app.color.screen_primary'))
           .enabled(!this.applying)
           .onClick(() => this.confirmPending())
         Button($r('app.string.common_cancel'))
-          .type(ButtonType.Capsule)
+          .attributeModifier(ZBtn.secondary())
           .layoutWeight(1)
-          .height(40)
-          .fontSize(14)
-          .fontWeight(FontWeight.Medium)
-          .fontColor($r('app.color.screen_t1'))
-          .backgroundColor($r('app.color.screen_hl'))
           .onClick(() => this.cancelPending())
       }
       .margin({ top: 2 })

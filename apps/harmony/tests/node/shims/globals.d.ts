@@ -16,7 +16,7 @@ interface IDataSource { totalCount(): number; getData(index: number): Object; re
 declare function ObservedV2<T extends new (...args: any[]) => object>(c: T): T;
 declare function Trace(target: undefined, context: ClassFieldDecoratorContext): void;
 // common/ZTypeMods.ets（AttributeModifier 字阶）只需类型可解析。
-declare enum FontWeight { Normal, Medium, Bold }
+declare enum FontWeight { Normal, Regular, Medium, Bold }
 declare enum TextOverflow { Clip, Ellipsis }
 interface TextAttribute {
   fontSize(v: number): TextAttribute; fontWeight(v: number | FontWeight): TextAttribute; letterSpacing(v: number): TextAttribute;
@@ -24,3 +24,15 @@ interface TextAttribute {
   minFontSize(v: number): TextAttribute; maxFontSize(v: number): TextAttribute; textOverflow(v: { overflow: TextOverflow }): TextAttribute;
 }
 interface AttributeModifier<T> { applyNormalAttribute?(instance: T): void; }
+declare enum ButtonType { Capsule, Circle, Normal }
+declare enum Color { White, Black, Transparent }
+declare enum Curve { Linear, EaseOut, EaseIn }
+interface ButtonAttribute {
+  type(v: ButtonType): ButtonAttribute; stateEffect(v: boolean): ButtonAttribute; height(v: number): ButtonAttribute;
+  constraintSize(v: { minWidth?: number }): ButtonAttribute;
+  padding(v: { left?: number; right?: number }): ButtonAttribute; fontSize(v: number): ButtonAttribute;
+  fontWeight(v: number | FontWeight): ButtonAttribute; opacity(v: number): ButtonAttribute;
+  scale(v: { x: number; y: number }): ButtonAttribute;
+  animation(v: { duration: number; curve: Curve }): ButtonAttribute;
+  backgroundColor(v: ResourceColor): ButtonAttribute; fontColor(v: ResourceColor): ButtonAttribute;
+}
