@@ -478,6 +478,7 @@
     <string name="settings_local_proxy">Local proxy port</string>
     <string name="settings_section_connection">Connection</string>
     <string name="settings_on_demand">Connect on demand</string>
+    <string name="settings_on_demand_hint">After you connect once, reconnects automatically after a drop, a restart or when the network returns. A manual disconnect pauses it until you next connect by hand.</string>
     <string name="settings_trusted_wifi_hint">Disconnect automatically when joined</string>
     <string name="settings_trusted_wifi_location">Allow location access to recognize Wi‑Fi names</string>
     <string name="settings_trusted_wifi_location_off">Turn on system location to recognize Wi‑Fi names</string>

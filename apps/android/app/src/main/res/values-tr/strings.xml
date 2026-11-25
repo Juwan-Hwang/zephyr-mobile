@@ -410,6 +410,7 @@
     <string name="settings_local_proxy">Yerel proxy portu</string>
     <string name="settings_section_connection">Bağlantı</string>
     <string name="settings_on_demand">İsteğe bağlı bağlan</string>
+    <string name="settings_on_demand_hint">Bir kez bağlandıktan sonra bağlantı koptuğunda, yeniden başlatıldığında veya ağ geri geldiğinde otomatik olarak yeniden bağlanır. Elle bağlantıyı keserseniz bir sonraki elle bağlantıya kadar duraklar.</string>
     <string name="settings_trusted_wifi_hint">Bu ağlarda bağlantıyı otomatik olarak kes</string>
     <string name="settings_trusted_wifi_location">Wi‑Fi adlarını tanımak için konum erişimine izin verin</string>
     <string name="settings_trusted_wifi_location_off">Wi‑Fi adlarını tanımak için sistem konumunu açın</string>

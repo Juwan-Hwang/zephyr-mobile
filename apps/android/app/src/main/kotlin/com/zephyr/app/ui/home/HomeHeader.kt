@@ -174,21 +174,22 @@ internal fun failureDetail(e: com.zephyr.engine.ZephyrError): String? {
 @Composable
 private fun ModePicker(mode: ProxyMode, onMode: (ProxyMode) -> Unit) {
     val c = ZTheme.colors
-    var open by remember { mutableStateOf(false) }
+    val toggle = remember { PopupToggle() }
+    val open = toggle.open
     val rot by animateFloatAsState(if (open) 180f else 0f, ZAnim.standard(), label = "chev")
     Box {
-        Row(Modifier.zPressable(label = stringResource(R.string.home_switch_mode)) { open = true }.padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.zPressable(label = stringResource(R.string.home_switch_mode)) { toggle.toggle() }.padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
             ZText(stringResource(mode.labelRes), style = ZTheme.type.bodyStrong.copy(fontSize = 14.sp, lineHeight = 20.sp))
             Spacer(Modifier.width(4.dp))
             ZIcon(ZIcons.ChevronDown, Modifier.then(Modifier), tint = c.text2, size = 14.dp)
         }
         if (open) {
-            Popup(onDismissRequest = { open = false }, properties = PopupProperties(focusable = true)) {
+            Popup(onDismissRequest = { toggle.dismiss() }, properties = PopupProperties(focusable = true)) {
                 ZSurface(Modifier.padding(top = 36.dp).width(200.dp), style = ZSurfaceStyle.Raised, shape = ZTheme.shapes.surface) {
                     Column(Modifier.padding(vertical = 6.dp)) {
                         ProxyMode.entries.forEach { m ->
                             Row(
-                                Modifier.fillMaxWidth().zPressable(row = true, haptic = m != mode) { open = false; onMode(m) }.padding(horizontal = 16.dp, vertical = 12.dp),
+                                Modifier.fillMaxWidth().zPressable(row = true, haptic = m != mode) { toggle.close(); onMode(m) }.padding(horizontal = 16.dp, vertical = 12.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Column(Modifier.weight(1f)) {

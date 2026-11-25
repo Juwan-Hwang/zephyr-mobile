@@ -441,6 +441,7 @@
     <string name="settings_local_proxy">Puerto de proxy local</string>
     <string name="settings_section_connection">Conexión</string>
     <string name="settings_on_demand">Conexión a petición</string>
+    <string name="settings_on_demand_hint">Tras conectarte una vez, vuelve a conectar automáticamente si se cae la conexión, al reiniciar o cuando vuelve la red. Si desconectas a mano, se pausa hasta que vuelvas a conectar a mano.</string>
     <string name="settings_trusted_wifi_hint">Desconectar automáticamente al unirse</string>
     <string name="settings_trusted_wifi_location">Permite el acceso a la ubicación para reconocer las redes Wi‑Fi</string>
     <string name="settings_trusted_wifi_location_off">Activa la ubicación del sistema para reconocer las redes Wi‑Fi</string>

@@ -112,6 +112,10 @@ class ZephyrVpnService : VpnService() {
         OnDemand.beginAttempt(this)
         bridge = TunBridge.pick(this@ZephyrVpnService, engine, s, engine.connectionState().first().mode)
         val mock = (engine as? com.zephyr.engine.core.CoreEngine)?.usesMockData ?: true
+        // Issue #1 (real device): which store the tunnel runs from goes to the logs page, so a report shows it.
+        (engine as? com.zephyr.engine.core.CoreEngine)?.let { core ->
+            appLog(com.zephyr.engine.LogLevel.INFO, "connect: native=${core.isNative} mock=$mock active=${core.activeSubscription() ?: "none"} bridge=${if (bridge.createsTun) "embedded" else "simulated"}")
+        }
         if (!bridge.createsTun && !(com.zephyr.app.BuildConfig.DEBUG && mock)) {
             // Release never pretends: without a tunnel the app must not say "已连接" while traffic goes direct.
             // Issue #1: neither does a debug build on a real device (native libraries loaded, no mock data).
@@ -120,17 +124,19 @@ class ZephyrVpnService : VpnService() {
         if (bridge.createsTun && tun == null) {
             // Issue #1: check what can be checked before the tun exists — a tun nobody reads black-holes all traffic.
             bridge.preflight()?.let { err ->
-                android.util.Log.e("Zephyr", "core pre-check failed: $err")
-                fail(com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.CORE_CRASHED, err)); return
+                android.util.Log.e("Zephyr", "core pre-check failed: ${err.code}: ${err.message}")
+                fail(err); return
             }
             tun = TunBridge.configure(Builder().setSession("Zephyr"), s.tun.mtu, s.tun.ipv6, s.tun.excludedApps, packageName).establish()
-            val err = tun?.let { bridge.attach(it) } ?: "establish() returned null"
+            // Issue #1: not `tun?.let { attach(it) } ?: …` — a successful attach is null too, and must not become an error.
+            val established = tun
+            val err = if (established == null) TunBridge.kernelError("establish() returned null") else bridge.attach(established)
             if (err != null) {
-                android.util.Log.e("Zephyr", "core start failed: $err")
+                android.util.Log.e("Zephyr", "core start failed: ${err.code}: ${err.message}")
                 // Issue #1: close the tun right away, not only in stop(): until then the device has no route out.
                 bridge.detach(); bridge = TunBridge.Simulated // detached once; tearDown() must not stop it again
                 runCatching { tun?.close() }; tun = null
-                fail(com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.CORE_CRASHED, err)); return
+                fail(err); return
             }
         }
         runCatching { engine.connect() }.onFailure { t ->
@@ -288,7 +294,7 @@ class ZephyrVpnService : VpnService() {
         if (e.code != com.zephyr.engine.ErrorCode.CORE_CRASHED) OnDemand.attemptSucceeded(this) // no backoff streak for these
         if (out.disarm) {
             OnDemand.markManualDisconnect(this)
-            if (e.code == com.zephyr.engine.ErrorCode.CORE_CRASHED) appLog(com.zephyr.engine.LogLevel.WARNING, "on-demand paused until the next manual connect")
+            appLog(com.zephyr.engine.LogLevel.WARNING, "on-demand paused until the next manual connect")
         }
         out.retryInMs?.let { ms ->
             appLog(com.zephyr.engine.LogLevel.INFO, "on-demand retry in ${ms / 1000}s (failure $streak/${ReconnectBackoff.MAX_FAILURES})")

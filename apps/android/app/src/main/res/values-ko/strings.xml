@@ -379,6 +379,7 @@
     <string name="settings_local_proxy">로컬 프록시 포트</string>
     <string name="settings_section_connection">연결</string>
     <string name="settings_on_demand">요청 시 연결</string>
+    <string name="settings_on_demand_hint">한 번 연결하면 연결이 끊기거나 재시작하거나 네트워크가 돌아올 때 자동으로 다시 연결합니다. 직접 연결을 해제하면 다음에 직접 연결할 때까지 멈춥니다.</string>
     <string name="settings_trusted_wifi_hint">연결되면 자동으로 해제</string>
     <string name="settings_trusted_wifi_location">Wi‑Fi 이름을 확인하려면 위치 접근 허용</string>
     <string name="settings_trusted_wifi_location_off">Wi‑Fi 이름을 확인하려면 시스템 위치를 켜세요</string>

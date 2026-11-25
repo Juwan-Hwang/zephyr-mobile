@@ -80,7 +80,7 @@ fun SettingsScreen(back: BackTo, onLogs: () -> Unit = {}, onTrustedWifi: () -> U
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
             ZSectionHeader(stringResource(R.string.settings_section_connection))
             ZListGroup {
-                ZSettingsRow(stringResource(R.string.settings_on_demand), checked = s.onDemand, onCheckedChange = { v -> set { it.copy(onDemand = v) } })
+                ZSettingsRow(stringResource(R.string.settings_on_demand), subtitle = stringResource(R.string.settings_on_demand_hint), checked = s.onDemand, onCheckedChange = { v -> set { it.copy(onDemand = v) } })
                 ZDivider()
                 // Audit #208 U10: both rows open their editable pages (shared with the library). The trusted Wi‑Fi page
                 // also carries the location-permission row (#225); here the subtitle only flags that it is missing.

@@ -410,6 +410,7 @@
     <string name="settings_local_proxy">Ýerli proksi porty</string>
     <string name="settings_section_connection">Birikme</string>
     <string name="settings_on_demand">Zerur bolanda birikdir</string>
+    <string name="settings_on_demand_hint">Bir gezek birikdireniňizden soň, baglanyşyk kesilende, gaýtadan açylanda ýa-da tor gaýdyp gelende awtomatik täzeden birikdirýär. El bilen kesseňiz, indiki gezek el bilen birikdirýänçäňiz togtadylýar.</string>
     <string name="settings_trusted_wifi_hint">Bu tora goşulanda birikmäni awtomatik kes</string>
     <string name="settings_trusted_wifi_location">Wi‑Fi atlaryny tanamak üçin ýerleşiş rugsadyny beriň</string>
     <string name="settings_trusted_wifi_location_off">Wi‑Fi atlaryny tanamak üçin ulgamyň ýerleşişini açyň</string>
