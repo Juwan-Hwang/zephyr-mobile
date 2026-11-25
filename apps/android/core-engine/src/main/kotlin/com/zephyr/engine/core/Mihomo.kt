@@ -25,6 +25,7 @@ object Mihomo {
         fun zm_free(p: Pointer?)
         fun zm_logs(since: Long, minLevel: String, limit: Int): Pointer?
         fun zm_url_test(proxiesJson: String, url: String, timeoutMs: Int, concurrency: Int): Pointer?
+        fun zm_set_geodata_timeout(ms: Long)
     }
 
     private val lib: Lib? by lazy { runCatching { Native.load("zmihomo", Lib::class.java) }.getOrNull() }
@@ -46,6 +47,13 @@ object Mihomo {
     /** Soft Go heap cap; keeps the VPN process well under low-memory-killer pressure on 4 GB devices. */
     fun setMemoryLimit(bytes: Long) { lib?.zm_set_memory_limit(bytes) }
     fun trimMemory() { lib?.zm_free_os_memory() }
+
+    /**
+     * Contract §20.b: total time `zm_start` / `zm_reload` may spend downloading missing geodata. 0 = local files only
+     * (missing → immediate `geodata missing:`), negative = default 15000 ms. False when the library is absent or older
+     * than the symbol (JNA resolves it on first call).
+     */
+    fun setGeodataTimeout(ms: Long): Boolean = lib?.let { runCatching { it.zm_set_geodata_timeout(ms) }.isSuccess } ?: false
 
     fun traffic(): Traffic? = lib?.let { l ->
         val a = LongByReference(); val b = LongByReference(); val c = LongByReference(); val d = LongByReference()

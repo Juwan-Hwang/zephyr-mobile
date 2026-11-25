@@ -8,3 +8,7 @@ captures/
 
 # native libs built by tools/build-android-libs.sh and tools/build-mihomo.sh
 **/src/main/jniLibs/
+
+# Kernel geodata snapshot (tools/fetch-geodata.sh, docs/geodata.md) — never committed.
+# The build fetches it into build/generated; this covers running the script by hand into assets.
+app/src/main/assets/geodata/
