@@ -1,0 +1,128 @@
+diff --git a/listener/sing_tun/android_packages.go b/listener/sing_tun/android_packages.go
+new file mode 100644
+index 0000000..b00a95b
+--- /dev/null
++++ b/listener/sing_tun/android_packages.go
+@@ -0,0 +1,38 @@
++package sing_tun
++
++// Zephyr patch (mihomo-mobile/patches/android-package-rules.patch).
++//
++// On recent Android (seen on Android 16), an ordinary non-root VPN app cannot
++// read /data/system/packages.xml, so starting sing-tun's PackageManager fails
++// with "permission denied". Upstream calls it on every TUN start, which makes
++// TUN fail even when the config never uses include-package / exclude-package.
++// The package list is now opened only when those options are set.
++
++import (
++	"errors"
++
++	tun "github.com/metacubex/sing-tun"
++	E "github.com/metacubex/sing/common/exceptions"
++)
++
++// errNoPackageManager is returned by the package name resolver when the
++// Android package list is unavailable; callers fall back to uid / process path.
++var errNoPackageManager = errors.New("android package list unavailable")
++
++// androidPackageManagerFor decides whether TUN setup needs the Android package
++// list. With no include-package / exclude-package it returns (nil, nil) and
++// never calls start. With packages configured, a failing start becomes a clear
++// error, because silently dropping those rules would route the wrong apps.
++func androidPackageManagerFor(includePackage, excludePackage []string, start func() (tun.PackageManager, error)) (tun.PackageManager, error) {
++	if len(includePackage)+len(excludePackage) == 0 {
++		return nil, nil
++	}
++	packageManager, err := start()
++	if err != nil {
++		return nil, E.Cause(err, "tun include-package/exclude-package need the Android package list (/data/system/packages.xml), which this app cannot read; remove include-package/exclude-package or use include-uid/exclude-uid")
++	}
++	if packageManager == nil {
++		return nil, E.New("tun include-package/exclude-package: no Android package manager")
++	}
++	return packageManager, nil
++}
+diff --git a/listener/sing_tun/android_packages_test.go b/listener/sing_tun/android_packages_test.go
+new file mode 100644
+index 0000000..1795f25
+--- /dev/null
++++ b/listener/sing_tun/android_packages_test.go
+@@ -0,0 +1,50 @@
++package sing_tun
++
++import (
++	"io/fs"
++	"os"
++	"strings"
++	"testing"
++
++	tun "github.com/metacubex/sing-tun"
++)
++
++// Zephyr patch test: runs on linux (no android build tag needed).
++
++func TestZephyrNoPackagesNeverOpensPackageList(t *testing.T) {
++	called := false
++	start := func() (tun.PackageManager, error) {
++		called = true
++		return nil, &fs.PathError{Op: "open", Path: "/data/system/packages.xml", Err: os.ErrPermission}
++	}
++	for _, c := range []struct{ inc, exc []string }{{nil, nil}, {[]string{}, []string{}}} {
++		pm, err := androidPackageManagerFor(c.inc, c.exc, start)
++		if err != nil || pm != nil {
++			t.Fatalf("no packages configured: got pm=%v err=%v, want nil, nil", pm, err)
++		}
++	}
++	if called {
++		t.Fatal("package list was opened although include-package/exclude-package are empty")
++	}
++	// With nil package manager and no packages, sing-tun's rule builder must not touch it.
++	opts := tun.Options{}
++	opts.BuildAndroidRules(nil, nil)
++}
++
++func TestZephyrPackagesConfiguredButUnreadableIsClearError(t *testing.T) {
++	start := func() (tun.PackageManager, error) {
++		return nil, &fs.PathError{Op: "open", Path: "/data/system/packages.xml", Err: os.ErrPermission}
++	}
++	for _, c := range []struct{ inc, exc []string }{{[]string{"com.example"}, nil}, {nil, []string{"com.example"}}} {
++		pm, err := androidPackageManagerFor(c.inc, c.exc, start)
++		if err == nil || pm != nil {
++			t.Fatalf("packages configured + unreadable: got pm=%v err=%v, want error", pm, err)
++		}
++		msg := err.Error()
++		for _, want := range []string{"include-package/exclude-package", "/data/system/packages.xml", "permission denied"} {
++			if !strings.Contains(msg, want) {
++				t.Fatalf("error %q does not mention %q", msg, want)
++			}
++		}
++	}
++}
+diff --git a/listener/sing_tun/server_android.go b/listener/sing_tun/server_android.go
+index f180bd3..a0af091 100644
+--- a/listener/sing_tun/server_android.go
++++ b/listener/sing_tun/server_android.go
+@@ -47,7 +47,9 @@ func getPackageManager() (tun.PackageManager, error) {
+ }
+ 
+ func (l *Listener) buildAndroidRules(tunOptions *tun.Options) error {
+-	packageManager, err := getPackageManager()
++	// Zephyr: only open the package list when include-package/exclude-package
++	// are set (android_packages.go); sing-tun skips the package manager then.
++	packageManager, err := androidPackageManagerFor(tunOptions.IncludePackage, tunOptions.ExcludePackage, getPackageManager)
+ 	if err != nil {
+ 		return err
+ 	}
+@@ -57,8 +59,10 @@ func (l *Listener) buildAndroidRules(tunOptions *tun.Options) error {
+ 
+ func findPackageName(metadata *constant.Metadata) (string, error) {
+ 	packageManager, err := getPackageManager()
+-	if err != nil {
+-		return "", err
++	if err != nil || packageManager == nil {
++		// Zephyr: non-root apps cannot read the package list; return quietly so
++		// the caller keeps the uid / process path it already has.
++		return "", errNoPackageManager
+ 	}
+ 	uid := metadata.Uid
+ 	if sharedPackage, loaded := packageManager.SharedPackageByID(uid % 100000); loaded {

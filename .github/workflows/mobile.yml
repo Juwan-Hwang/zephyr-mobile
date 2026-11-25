@@ -132,6 +132,8 @@ jobs:
           unformatted=$(gofmt -l .)
           if [ -n "$unformatted" ]; then echo "未 gofmt：$unformatted"; exit 1; fi
           go vet ./...
+      - name: mihomo 补丁（mihomo-mobile/patches/series）能打上 + go vet（含 GOOS=android）+ 补丁自带测试
+        run: tools/build-mihomo.sh check-patches
   ios26:
     # J-4：iOS 26 Liquid Glass 快照录图 / 校验线。macos-15（Xcode 16）只编译 ZGlass 的回退分支，玻璃只能在这里看到。
     # 只跑 scheme ZephyrGlass（宿主 ZephyrGlassHost + ZephyrGlassSnapshotTests，#311），scheme Zephyr 的 142 张基线不在这里跑。

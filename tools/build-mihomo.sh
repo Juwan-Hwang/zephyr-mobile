@@ -3,17 +3,49 @@
 #   tools/build-mihomo.sh android   → apps/android/core-engine/src/main/jniLibs/<abi>/libzmihomo.so（需 ANDROID_NDK_HOME）
 #   tools/build-mihomo.sh ohos      → build/ohos/arm64-v8a/libzmihomo.so（需 GO_OHOS_ROOT=go-patch 1.27.3、OHOS_NDK_HOME=<OpenHarmony SDK>/native；c-shared，供 apps/harmony 拷入 libs/arm64-v8a）
 #   tools/build-mihomo.sh ios       → build/ios/Zmihomo.xcframework（macOS，c-archive，真机 + 模拟器）
+#   tools/build-mihomo.sh check-patches → 每个目标的补丁都能打上、改到的包 go vet 通过（android 另做 GOOS=android 类型检查）、补丁自带测试在 linux 上跑（CI core 作业）
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT/mihomo-mobile"
 TAGS="with_gvisor"
 LDFLAGS="-s -w -buildid="
 export CGO_ENABLED=1
+
+# 在临时构建目录里拷一份 mihomo-mobile 源码，把 mihomo-mobile/patches/series 里「用于」含 $2 的补丁
+# 打到对应依赖的拷贝上，再 go mod edit -replace；之后在该目录里构建。仓库里的 go.mod / go.sum 不变。
+# 用法：patched_src <构建目录> <目标>（调用后当前目录 = 临时源码目录）
+patched_src() {
+  local build=$1 target=$2 patch mod targets ver dir pg
+  local src=$build/src
+  rm -rf "$src"; mkdir -p "$src"
+  cp go.mod go.sum "$src/"
+  find . -maxdepth 1 -name '*.go' ! -name '*_test.go' -exec cp {} "$src/" \;
+  cd "$src"
+  while read -r patch mod targets; do
+    [[ -z ${patch} || ${patch} == \#* ]] && continue
+    [[ ,${targets}, == *,${target},* ]] || continue
+    patch=$ROOT/mihomo-mobile/patches/${patch}
+    go mod download "$mod"
+    ver=$(go list -m -f '{{.Version}}' "$mod"); dir=$(go list -m -f '{{.Dir}}' "$mod")
+    pg=$build/${mod##*/}-${ver}
+    if ! cmp -s "$patch" "$pg/.zephyr-patch"; then
+      rm -rf "$pg"; cp -R "$dir" "$pg"; chmod -R u+w "$pg"
+      (cd "$pg" && git apply -p1 "$patch")
+      cp "$patch" "$pg/.zephyr-patch"
+    fi
+    go mod edit -replace="$mod=$pg"
+    echo "${mod} ${ver}：已打 $(basename "$patch")"
+  done < "$ROOT/mihomo-mobile/patches/series"
+}
 case "${1:-}" in
 android)
   NDK=${ANDROID_NDK_HOME:?需要 ANDROID_NDK_HOME}
   TC=$(echo "$NDK"/toolchains/llvm/prebuilt/*/bin)
   OUT=${OUT:-$ROOT/apps/android/core-engine/src/main/jniLibs}
+  # 非 root 应用读不了 /data/system/packages.xml（Android 16 实测 permission denied），上游 sing_tun 每次起 TUN
+  # 都去读，导致 TUN 起不来；android-package-rules.patch 改成只在配了 include-package/exclude-package 时才读（#1）。
+  export GOFLAGS=-mod=mod
+  patched_src "${BUILD_DIR:-$ROOT/build/android-work}" android
   for abi in ${ABIS:-arm64-v8a x86_64}; do
     case $abi in
       arm64-v8a) GA=arm64; CCB=aarch64-linux-android26-clang;;
@@ -40,7 +72,7 @@ ohos)
   #   OHOS_NDK_HOME  OpenHarmony SDK 的 native 目录（llvm/bin + sysroot），6.1-Release / API 23 起
   # gVisor：OHOS SELinux 不许 fstat 系统交来的 TUN fd，fdbased.IsSocketFD 会失败。在临时构建目录里拷一份
   # metacubex/gvisor 打 mihomo-mobile/patches/gvisor-fstat-tun.patch（EACCES/EPERM 视为非 socket），再 -replace；
-  # 仓库里的 mihomo-mobile/go.mod 不变，iOS / Android 不受影响。
+  # 仓库里的 mihomo-mobile/go.mod 不变，iOS 不受影响；Android 只打 android-package-rules.patch（清单见 mihomo-mobile/patches/series）。
   GOR=${GO_OHOS_ROOT:?需要 GO_OHOS_ROOT（go-patch 1.27.3 的 GOROOT）}
   NDK=${OHOS_NDK_HOME:?需要 OHOS_NDK_HOME（OpenHarmony SDK 的 native 目录）}
   GO=$GOR/bin/go; [[ -x $GO ]] || { echo "缺 $GO" >&2; exit 1; }
@@ -107,5 +139,29 @@ ios)
   printf 'module Zmihomo {\n  header "zmihomo.h"\n  export *\n}\n' > "$OUT/headers/Zmihomo/module.modulemap"
   xcodebuild -create-xcframework -library "$OUT/ios/libzmihomo.a" -headers "$OUT/headers" -library "$OUT/sim/libzmihomo.a" -headers "$OUT/headers" -output "$ROOT/build/ios/Zmihomo.xcframework"
   ;;
-*) echo "用法：$0 android|ios|ohos"; exit 2;;
+check-patches)
+  export GOFLAGS=-mod=mod
+  BUILD=${BUILD_DIR:-$ROOT/build/patch-check}
+  for t in android ohos; do
+    (
+      patched_src "$BUILD/$t" "$t"
+      while read -r patch mod targets; do
+        [[ -z ${patch} || ${patch} == \#* ]] && continue
+        [[ ,${targets}, == *,${t},* ]] || continue
+        mapfile -t pkgs < <(sed -n 's#^+++ b/\(.*\)/[^/]*$#\1#p' "$ROOT/mihomo-mobile/patches/${patch}" | sort -u | sed "s#^#${mod}/#")
+        echo "== ${t}：${patch} → ${pkgs[*]}"
+        go vet -tags "$TAGS" "${pkgs[@]}"
+        if [[ $t == android ]]; then
+          # 只做类型检查（被改的包不依赖 cgo）；真正的 c-shared 由 CI android 作业用 NDK 构建。
+          CGO_ENABLED=0 GOOS=android GOARCH=arm64 go vet -tags "$TAGS" "${pkgs[@]}"
+        fi
+        if grep -q '^+++ b/.*_test\.go$' "$ROOT/mihomo-mobile/patches/${patch}"; then
+          go test -count=1 -tags "$TAGS" -run Zephyr -v "${pkgs[@]}"
+        fi
+      done < "$ROOT/mihomo-mobile/patches/series"
+    )
+  done
+  echo "OK：补丁全部可打、vet 与补丁测试通过"
+  ;;
+*) echo "用法：$0 android|ios|ohos|check-patches"; exit 2;;
 esac
