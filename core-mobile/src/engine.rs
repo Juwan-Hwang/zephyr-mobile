@@ -185,6 +185,41 @@ fn load_positions(dir: &std::path::Path, gen: u64) -> (u64, FxHashMap<u64, u32>)
     (gen, m)
 }
 
+/// 订阅 rules 里最后一条 MATCH 的去向；没有则 DIRECT（规则页最终策略）。
+fn match_target(lines: &[&str]) -> String {
+    lines
+        .iter()
+        .rev()
+        .find_map(|l| {
+            let mut it = l.split(',').map(str::trim);
+            (it.next()? == "MATCH").then(|| it.next().map(String::from)).flatten()
+        })
+        .unwrap_or_else(|| "DIRECT".into())
+}
+
+impl MobileCore {
+    /// 构造时调用：把 rules/ 下已编译的层按文件名序载入，最终策略按生效订阅的 MATCH 算（与 sync_subscription_rules 一致）。
+    /// 没有层文件时什么都不做；单个层打不开就跳过。
+    fn restore_rules(&self) {
+        let Ok(rd) = std::fs::read_dir(self.dir.join("rules")) else { return };
+        let mut files: Vec<PathBuf> = rd.flatten().map(|e| e.path()).filter(|p| p.extension().is_some_and(|e| e == "zr")).collect();
+        if files.is_empty() {
+            return;
+        }
+        files.sort();
+        let layers: Vec<Layer> = files.iter().filter_map(|f| Layer::open(f).ok()).collect();
+        let fin = match self.active_subscription_body() {
+            Some(body) => {
+                let v: serde_yaml::Value = serde_yaml::from_str(&body).unwrap_or(serde_yaml::Value::Null);
+                let lines: Vec<&str> = v.get("rules").and_then(|r| r.as_sequence()).map(|s| s.iter().filter_map(|x| x.as_str()).collect()).unwrap_or_default();
+                match_target(&lines)
+            }
+            None => "DIRECT".into(),
+        };
+        *self.rules.write() = Arc::new(RuleSet { layers, final_policy: fin });
+    }
+}
+
 /// 建库进度回调（平台实现）。返回 false = 取消。会在后台线程调用。
 #[cfg_attr(feature = "uniffi", uniffi::export(callback_interface))]
 pub trait BuildProgress: Send + Sync {
@@ -201,7 +236,7 @@ impl MobileCore {
         let dir_for_subs = dir.clone();
         let gen: u64 = std::fs::read_to_string(dir.join("nodes.current")).ok().and_then(|s| s.trim().parse().ok()).unwrap_or(0);
         let store = if gen > 0 { NodeStore::open(&dir.join(format!("nodes.{gen}.zn"))).ok().map(Arc::new) } else { None };
-        Ok(Arc::new(Self {
+        let core = Arc::new(Self {
             dir,
             store: RwLock::new(store),
             rules: RwLock::new(Arc::new(RuleSet { layers: vec![], final_policy: "other".into() })),
@@ -214,7 +249,11 @@ impl MobileCore {
             scenes: Mutex::new(crate::scenes::SceneStore::open(&dir_for_subs)?),
             failover: Mutex::new(crate::failover::FailoverState::open(&dir_for_subs)),
             latency_ttl_ms: std::sync::atomic::AtomicI64::new(crate::scene_api::DEFAULT_LATENCY_TTL_MS),
-        }))
+        });
+        // 进程重启（App 冷启动、VPN 进程被拉起）后从磁盘恢复已编译的规则层，否则 ruleStats / testRule 一直是空的，
+        // 直到下一次导入/更新订阅。层文件坏了跳过那一层，不让构造失败。
+        core.restore_rules();
+        Ok(core)
     }
 
     /// 由全部订阅重建节点库，返回与旧库的差异（"+1,204 节点 −318 节点"）。
@@ -459,14 +498,7 @@ impl MobileCore {
             Some((name, body)) => {
                 let v: serde_yaml::Value = serde_yaml::from_str(&body).unwrap_or(serde_yaml::Value::Null);
                 let lines: Vec<&str> = v.get("rules").and_then(|r| r.as_sequence()).map(|s| s.iter().filter_map(|x| x.as_str()).collect()).unwrap_or_default();
-                let fin = lines
-                    .iter()
-                    .rev()
-                    .find_map(|l| {
-                        let mut it = l.split(',').map(str::trim);
-                        (it.next()? == "MATCH").then(|| it.next().map(String::from)).flatten()
-                    })
-                    .unwrap_or_else(|| "DIRECT".into());
+                let fin = match_target(&lines);
                 let text: String = lines.iter().filter(|l| !l.trim_start().starts_with("MATCH")).fold(String::new(), |mut acc, l| {
                     acc.push_str(l);
                     acc.push('\n');
@@ -642,6 +674,36 @@ mod tests {
         drop(core);
         let core = MobileCore::new(d.path().to_string_lossy().into()).unwrap();
         assert_eq!(core.fastest_nodes("JP".into(), 1, 1000, 0).unwrap()[0].latency_ms, 40);
+    }
+
+    /// 进程重启后：新的 MobileCore 打开同一数据目录，ruleStats 与 testRule 和重启前一致（不必等下次导入/更新订阅）。
+    #[test]
+    fn rules_survive_restart() {
+        let d = tempfile::tempdir().unwrap();
+        let dir: String = d.path().to_string_lossy().into();
+        let body = "proxies:\n  - {name: a, server: a.example, port: 443, type: trojan, password: p}\nrules:\n  - DOMAIN-SUFFIX,claude.ai,a\n  - DOMAIN,www.qq.com,DIRECT\n  - IP-CIDR,10.0.0.0/8,DIRECT\n  - MATCH,a\n";
+        let core = MobileCore::new(dir.clone()).unwrap();
+        assert_eq!(core.rule_stats().total, 0);
+        core.import_subscription("S".into(), None, FetchedSubscription { body: body.into(), userinfo: None, now_millis: 1 }, 0, None).unwrap();
+        let before = core.rule_stats();
+        assert!(before.total >= 3, "{before:?}");
+        let probes = ["claude.ai", "www.qq.com", "10.1.2.3", "example.org"];
+        let traces: Vec<(Option<u32>, String)> = probes.iter().map(|h| core.test_rule((*h).into()).map(|t| (t.layer_index, t.policy)).unwrap()).collect();
+        drop(core);
+
+        let core = MobileCore::new(dir.clone()).unwrap();
+        let after = core.rule_stats();
+        assert_eq!(after.total, before.total);
+        assert_eq!(after.layers.iter().map(|l| (&l.name, l.count)).collect::<Vec<_>>(), before.layers.iter().map(|l| (&l.name, l.count)).collect::<Vec<_>>());
+        let again: Vec<(Option<u32>, String)> = probes.iter().map(|h| core.test_rule((*h).into()).map(|t| (t.layer_index, t.policy)).unwrap()).collect();
+        assert_eq!(again, traces);
+        assert_eq!(again[3], (None, "a".to_string()), "最终策略取订阅 MATCH");
+        drop(core);
+
+        // 某层文件损坏：跳过那一层，构造照常成功
+        std::fs::write(d.path().join("rules").join("001.zr"), b"garbage").unwrap();
+        let core = MobileCore::new(dir).unwrap();
+        assert!(core.rule_stats().total < before.total);
     }
 
     #[test]
