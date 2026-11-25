@@ -474,19 +474,19 @@
     <string name="onboarding_change_later">You can change this anytime in Settings.</string>
 
     <!-- ── Settings ── -->
-    <string name="settings_trusted_wifi">Trusted Wi‑Fi</string>
+    <string name="settings_trusted_wifi">Wi‑Fi without proxy</string>
     <string name="settings_local_proxy">Local proxy port</string>
     <string name="settings_section_connection">Connection</string>
     <string name="settings_on_demand">Connect on demand</string>
-    <string name="settings_on_demand_hint">After you connect once, reconnects automatically after a drop, a restart or when the network returns. A manual disconnect pauses it until you next connect by hand.</string>
+    <string name="settings_on_demand_hint">Reconnects automatically after a drop</string>
     <string name="settings_trusted_wifi_hint">Disconnect automatically when joined</string>
     <string name="settings_trusted_wifi_location">Allow location access to recognize Wi‑Fi names</string>
     <string name="settings_trusted_wifi_location_off">Turn on system location to recognize Wi‑Fi names</string>
     <string name="settings_trusted_wifi_always_on">Managed by the system’s Always‑on VPN</string>
-    <string name="notif_paused_trusted">Disconnected on trusted Wi‑Fi “%1$s”. Reconnects automatically when you leave.</string>
+    <string name="notif_paused_trusted">Disconnected on “%1$s”. Reconnects when you leave.</string>
     <string name="settings_password_required">Require password</string>
     <string name="trusted_wifi_disconnect">Disconnect on these Wi‑Fi networks</string>
-    <string name="trusted_wifi_footer">On trusted networks like home or work, Zephyr disconnects automatically and reconnects on demand when you leave.</string>
+    <string name="trusted_wifi_footer">Disconnects on these Wi‑Fi networks and reconnects when you leave.</string>
     <string name="trusted_wifi_networks">Networks</string>
     <string name="trusted_wifi_add_hint">Add Wi‑Fi name</string>
     <string name="local_proxy_footer">When on, Zephyr listens only on 127.0.0.1, so other devices on your network can’t connect.</string>
@@ -530,7 +530,7 @@
     <string name="settings_accent_pink">Pink</string>
     <string name="settings_section_privacy">Privacy</string>
     <string name="settings_share_diagnostics">Share diagnostic data</string>
-    <string name="settings_share_diagnostics_hint">Only when you share from the Logs page yourself: adds the version, settings and recent error codes before the logs. Nothing is ever uploaded automatically.</string>
+    <string name="settings_share_diagnostics_hint">Added only when you share logs. Never uploaded.</string>
     <string name="settings_section_diagnostics">Diagnostics</string>
     <string name="settings_local_data_note">Subscriptions, nodes, and traffic data are stored only on this device.</string>
     <string name="settings_section_about">About</string>

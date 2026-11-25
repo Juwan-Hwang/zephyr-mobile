@@ -400,19 +400,19 @@
     <string name="onboarding_change_later">可随时在设置中更改。</string>
 
     <!-- ── Settings ── -->
-    <string name="settings_trusted_wifi">受信任的 Wi‑Fi</string>
+    <string name="settings_trusted_wifi">不走代理的 Wi‑Fi</string>
     <string name="settings_local_proxy">本地代理端口</string>
     <string name="settings_section_connection">连接</string>
     <string name="settings_on_demand">按需连接</string>
-    <string name="settings_on_demand_hint">连接过一次后，掉线、重启或网络恢复时自动重新连接；手动断开后暂停，直到你下次手动连接。</string>
+    <string name="settings_on_demand_hint">断线后自动重连</string>
     <string name="settings_trusted_wifi_hint">连接后自动断开</string>
     <string name="settings_trusted_wifi_location">允许访问位置信息以识别 Wi‑Fi 名称</string>
     <string name="settings_trusted_wifi_location_off">打开系统定位以识别 Wi‑Fi 名称</string>
     <string name="settings_trusted_wifi_always_on">由系统『始终开启的 VPN』管理</string>
-    <string name="notif_paused_trusted">已在受信任的 Wi‑Fi「%1$s」上断开，离开后自动重新连接</string>
+    <string name="notif_paused_trusted">已在「%1$s」上自动断开，离开后自动重新连接</string>
     <string name="settings_password_required">需要密码</string>
     <string name="trusted_wifi_disconnect">连上这些 Wi‑Fi 时自动断开</string>
-    <string name="trusted_wifi_footer">在家或公司等可信网络中，Zephyr 会自动断开，离开后按需重新连接。</string>
+    <string name="trusted_wifi_footer">连接到这些 Wi‑Fi 时自动断开，离开后自动重新连接。</string>
     <string name="trusted_wifi_networks">网络</string>
     <string name="trusted_wifi_add_hint">添加 Wi‑Fi 名称</string>
     <string name="local_proxy_footer">开启后仅监听 127.0.0.1，局域网中的其他设备无法连接。</string>
@@ -454,7 +454,7 @@
     <string name="settings_accent_pink">粉色</string>
     <string name="settings_section_privacy">隐私</string>
     <string name="settings_share_diagnostics">共享诊断数据</string>
-    <string name="settings_share_diagnostics_hint">只在你从日志页手动分享时，在日志前附上版本、设置和最近错误码。不会自动上传任何数据。</string>
+    <string name="settings_share_diagnostics_hint">仅在分享日志时附加，不会上传</string>
     <string name="settings_section_diagnostics">诊断</string>
     <string name="settings_local_data_note">订阅、节点与流量数据仅保存在此设备上。</string>
     <string name="settings_section_about">关于</string>
