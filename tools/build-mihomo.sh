@@ -14,6 +14,29 @@ android)
   NDK=${ANDROID_NDK_HOME:?需要 ANDROID_NDK_HOME}
   TC=$(echo "$NDK"/toolchains/llvm/prebuilt/*/bin)
   OUT=${OUT:-$ROOT/apps/android/core-engine/src/main/jniLibs}
+  # mihomo（android && !cmfa）在建 TUN 前总会读 /data/system/packages.xml（listener/sing_tun/server_android.go
+  # buildAndroidRules → sing-tun PackageManager.Start），非 root 应用被 SELinux 拒绝 → "build android rules: read
+  # packages list: permission denied"。我们不配 include/exclude-package（分应用走 VpnService.Builder），所以在临时
+  # 构建目录里拷一份 metacubex/mihomo 打 mihomo-mobile/patches/mihomo-android-pkglist.patch（无包规则时不启动
+  # PackageManager），再 -replace；仓库里的 mihomo-mobile/go.mod 不变，iOS / 鸿蒙不受影响。
+  BUILD=${BUILD_DIR:-$ROOT/build/android-work}
+  SRC=$BUILD/src; rm -rf "$SRC"; mkdir -p "$SRC"
+  cp go.mod go.sum "$SRC/"
+  find . -maxdepth 1 -name '*.go' ! -name '*_test.go' -exec cp {} "$SRC/" \;
+  cd "$SRC"
+  export GOFLAGS=-mod=mod
+  go mod download github.com/metacubex/mihomo
+  MV=$(go list -m -f '{{.Version}}' github.com/metacubex/mihomo)
+  MH_DIR=$(go list -m -f '{{.Dir}}' github.com/metacubex/mihomo)
+  PATCH=$ROOT/mihomo-mobile/patches/mihomo-android-pkglist.patch
+  PM=$BUILD/mihomo-$MV
+  if ! cmp -s "$PATCH" "$PM/.zephyr-patch"; then
+    rm -rf "$PM"; cp -R "$MH_DIR" "$PM"; chmod -R u+w "$PM"
+    (cd "$PM" && git apply -p1 "$PATCH")
+    cp "$PATCH" "$PM/.zephyr-patch"
+  fi
+  go mod edit -replace="github.com/metacubex/mihomo=$PM"
+  echo "mihomo $MV（已打 android packages.xml 补丁）"
   for abi in ${ABIS:-arm64-v8a x86_64}; do
     case $abi in
       arm64-v8a) GA=arm64; CCB=aarch64-linux-android26-clang;;

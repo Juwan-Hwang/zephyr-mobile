@@ -1,0 +1,55 @@
+diff --git a/listener/sing_tun/server_android.go b/listener/sing_tun/server_android.go
+--- a/listener/sing_tun/server_android.go
++++ b/listener/sing_tun/server_android.go
+@@ -47,6 +47,16 @@ func getPackageManager() (tun.PackageManager, error) {
+ }
+ 
+ func (l *Listener) buildAndroidRules(tunOptions *tun.Options) error {
++	// Zephyr: only include-package / exclude-package need the PackageManager, which
++	// reads /data/system/packages.xml. A non-root VpnService app cannot read it
++	// (SELinux: permission denied) and does per-app routing via
++	// VpnService.Builder instead, so skip it when no package rule is configured.
++	// BuildAndroidRules only dereferences the manager inside the package loops;
++	// include-android-user and include-uid / exclude-uid keep working.
++	if len(tunOptions.IncludePackage) == 0 && len(tunOptions.ExcludePackage) == 0 {
++		tunOptions.BuildAndroidRules(nil, l.handler)
++		return nil
++	}
+ 	packageManager, err := getPackageManager()
+ 	if err != nil {
+ 		return err
+diff --git a/listener/sing_tun/server_android_zephyr_test.go b/listener/sing_tun/server_android_zephyr_test.go
+new file mode 100644
+--- /dev/null
++++ b/listener/sing_tun/server_android_zephyr_test.go
+@@ -0,0 +1,30 @@
++//go:build android && !cmfa
++
++package sing_tun
++
++import (
++	"testing"
++
++	"github.com/metacubex/sing-tun"
++)
++
++// Zephyr: without include/exclude-package, building android rules must not touch
++// /data/system/packages.xml (unreadable for non-root apps / absent on the host).
++func TestZephyrBuildAndroidRulesWithoutPackages(t *testing.T) {
++	l := &Listener{}
++	if err := l.buildAndroidRules(&tun.Options{IncludeAndroidUser: []int{0}}); err != nil {
++		t.Fatalf("buildAndroidRules without package rules: %v", err)
++	}
++}
++
++// With a package rule configured the PackageManager is still required, so the
++// unreadable / missing packages.xml must still surface as an error.
++func TestZephyrBuildAndroidRulesWithPackagesStillNeedsList(t *testing.T) {
++	if _, err := getPackageManager(); err == nil {
++		t.Skip("packages.xml is readable here (root / real device); nothing to assert")
++	}
++	l := &Listener{}
++	if err := l.buildAndroidRules(&tun.Options{IncludePackage: []string{"com.example"}}); err == nil {
++		t.Fatal("expected read packages list error with include-package set")
++	}
++}
