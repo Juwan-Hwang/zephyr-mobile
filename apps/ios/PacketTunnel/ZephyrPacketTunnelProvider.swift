@@ -1,6 +1,6 @@
 // ZephyrPacketTunnelProvider —— Zephyr 的 NEPacketTunnelProvider。
 //
-// 启动：读 TunnelConfiguration → setTunnelNetworkSettings（IPv4/IPv6 默认路由、DNS、MTU）
+// 启动：读 TunnelConfiguration → 打包的地理数据拷进内核目录（BundledGeodata）→ setTunnelNetworkSettings（IPv4/IPv6 默认路由、DNS、MTU）
 //       → 取 utun fd（TunFileDescriptor）→ 把 App 生成的配置里的 fd 哨兵换成真实 fd → MihomoBridge.start。
 //       mihomo 以静态库在本进程运行，禁止 Process()。控制口 external-controller-unix 在 App Group（App 读策略组/连接）。
 // 状态：写 SharedState.connection / rate（SharedStore 原子写 + Darwin 通知），App、小组件、控制中心据此刷新。
@@ -91,6 +91,7 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider, @unchecked Senda
             return fail(.configMissing, completionHandler)
         }
         logger.info("startTunnel: config \(mapped.count, privacy: .public) B, mtu \(config.mtu, privacy: .public), ipv6 \(config.ipv6, privacy: .public)")
+        let bundledGeodata = prepareGeodata()
 
         setTunnelNetworkSettings(TunnelNetworkSettingsFactory.make(config)) { [weak self] error in
             guard let self else { return completionHandler(error) }
@@ -108,7 +109,12 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider, @unchecked Senda
             }
             do {
                 self.bridge.setMemoryLimit(bytes: Self.goMemoryLimitBytes)
-                let withMode = MihomoBridge.settingMode(runnable, config.mode.rawValue)
+                // 本地地理数据齐全 → 0（只用本地，绝不在 VPN 起来前联网下载）；不齐 → 默认 15 s 有界下载，失败报 `geodata missing:`。
+                let geoTimeout = BundledGeodata.timeoutMillis(bundled: bundledGeodata, extra: MihomoBridge.extraGeodataFiles(yaml),
+                                                              home: AppGroup.coreDirectory)
+                self.bridge.setGeodataTimeout(ms: geoTimeout)
+                self.logger.info("geodata timeout \(geoTimeout, privacy: .public) ms")
+                let withMode = MihomoBridge.forcingGeodataLoader(MihomoBridge.settingMode(runnable, config.mode.rawValue))
                 try self.bridge.start(homeDir: AppGroup.coreDirectory.path, config: withMode,
                                       controllerSocket: AppGroup.controllerSocketPath)
                 self.logger.info("mihomo started: \(self.bridge.version, privacy: .public)")
@@ -149,6 +155,19 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider, @unchecked Senda
             guard let self, self.bridge.isRunning, self.trafficTimer == nil else { return }
             self.scheduleTrafficTimer()
         }
+    }
+
+    // MARK: 地理数据（契约 §20、docs/geodata.md）
+
+    /// zm_start 前：把 appex 里打包的地理数据拷进内核目录里还没有的位置（不覆盖、临时名 + 改名）。返回打包的文件名。
+    private func prepareGeodata() -> [String] {
+        let source = BundledGeodata.bundledDirectory()
+        let bundled = BundledGeodata.names(in: source)
+        if bundled.isEmpty { logger.warning("geodata: 本构建没有打包地理数据（Debug 拉取失败？），缺文件时内核会有界下载") }
+        let r = BundledGeodata.installMissing(from: source, into: AppGroup.coreDirectory)
+        if !r.copied.isEmpty { logger.info("geodata: 拷入 \(r.copied.joined(separator: ","), privacy: .public)") }
+        for (name, why) in r.failed { logger.error("geodata: 拷贝 \(name, privacy: .public) 失败：\(why, privacy: .public)") }
+        return bundled
     }
 
     // MARK: App 消息
@@ -202,7 +221,7 @@ final class ZephyrPacketTunnelProvider: NEPacketTunnelProvider, @unchecked Senda
                 return
             }
             do {
-                try bridge.reload(config: MihomoBridge.settingMode(runnable, currentMode.rawValue))
+                try bridge.reload(config: MihomoBridge.forcingGeodataLoader(MihomoBridge.settingMode(runnable, currentMode.rawValue)))
                 completionHandler?(TunnelMessageCodec.encode(response(.ok)))
             } catch {
                 var r = response(.failed); r.errorCode = "core_crashed"

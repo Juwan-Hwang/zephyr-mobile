@@ -1,7 +1,7 @@
 // MihomoBridge —— 嵌入式 mihomo（mihomo-mobile，Zmihomo.xcframework，c-archive）的 Swift 包装。PacketTunnel 内唯一调用核心的地方。
 //
 // C ABI 见 mihomo-mobile/zmihomo.go：zm_start(home, yaml, ctlSock) / zm_reload / zm_stop / zm_running / zm_traffic /
-// zm_memory / zm_set_memory_limit / zm_free_os_memory / zm_version / zm_free。返回 char* 的函数：NULL = 成功，否则错误串（zm_free）。
+// zm_memory / zm_set_memory_limit / zm_free_os_memory / zm_set_geodata_timeout / zm_version / zm_free。返回 char* 的函数：NULL = 成功，否则错误串（zm_free）。
 //
 // 配置由 App 侧 Rust 核心生成（CoreEngine.writeTunnelConfig），tun.file-descriptor 写哨兵值 -1；
 // 扩展拿到 utun fd 后用 `injectingTunFD` 替换再启动（扩展进程不链接 Rust 核心，省 NE 内存）。
@@ -83,6 +83,40 @@ final class MihomoBridge: @unchecked Sendable {
         return nil
     }
 
+    // MARK: 地理数据（契约 §20、docs/geodata.md）
+
+    /// mihomo 的地理数据加载器固定为 memconservative（mihomo 默认）：GeoSite.dat 按 16 KB 缓冲流式扫描，只把用到的分类读进 Go 堆。
+    /// `standard` 会 ReadFile 整份 dat 再整份反序列化，几 MB 的文件会膨胀成十几 MB 的堆，NE 50 MB 上限扛不住；订阅写了也改掉。
+    static let geodataLoader = "memconservative"
+
+    /// 顶层 `geodata-loader:` 改成 memconservative；没有则不动（mihomo 默认就是它）。
+    static func forcingGeodataLoader(_ yaml: String) -> String {
+        var lines = yaml.components(separatedBy: "\n")
+        guard let i = lines.firstIndex(where: { $0.hasPrefix("geodata-loader:") }) else { return yaml }
+        lines[i] = "geodata-loader: \(geodataLoader)"
+        return lines.joined(separator: "\n")
+    }
+
+    /// 顶层标量（`key: value`，去引号、去行尾注释）；没有为 nil。只看顶格的行，不解析嵌套。
+    static func topLevelValue(_ key: String, in yaml: String) -> String? {
+        let prefix = key + ":"
+        for line in yaml.split(separator: "\n", omittingEmptySubsequences: true) where line.hasPrefix(prefix) {
+            var v = line.dropFirst(prefix.count).trimmingCharacters(in: .whitespaces)
+            if let hash = v.range(of: " #") { v = String(v[..<hash.lowerBound]).trimmingCharacters(in: .whitespaces) }
+            return v.trimmingCharacters(in: CharacterSet(charactersIn: "\"'"))
+        }
+        return nil
+    }
+
+    /// 打包文件（geoip.metadb、GeoSite.dat）之外，这份配置启动时还要读的地理数据：
+    /// `geodata-mode: true` 时 GEOIP 读 GeoIP.dat；有 IP-ASN 规则时读 ASN.mmdb。给 zm_set_geodata_timeout 判断“本地是否齐全”用。
+    static func extraGeodataFiles(_ yaml: String) -> [String] {
+        var out: [String] = []
+        if topLevelValue("geodata-mode", in: yaml)?.lowercased() == "true" { out.append("GeoIP.dat") }
+        if yaml.contains("IP-ASN,") { out.append("ASN.mmdb") }
+        return out
+    }
+
     // MARK: 生命周期
 
     /// - Parameters:
@@ -157,6 +191,14 @@ final class MihomoBridge: @unchecked Sendable {
     func setMemoryLimit(bytes: Int64) {
         #if MIHOMO_LINKED
         zm_set_memory_limit(bytes)
+        #endif
+    }
+
+    /// 缺地理数据时 zm_start / zm_reload 前下载的总时限（毫秒）：<0 恢复默认 15000；0 = 只用本地文件，缺了立即返回 `geodata missing:`。
+    /// zmihomo.h 由 cgo 按 //export 生成（tools/build-mihomo.sh ios），#317 起包含 zm_set_geodata_timeout，强引用即可。
+    func setGeodataTimeout(ms: Int64) {
+        #if MIHOMO_LINKED
+        zm_set_geodata_timeout(ms)
         #endif
     }
 

@@ -126,3 +126,37 @@ final class CoreEngineTests: XCTestCase {
         XCTAssertEqual(CoreEngine.latency(38), 38)
     }
 }
+
+/// 契约 §20：App 在写隧道配置时把核心的 geosite.dat / geoip.dat 补进内核目录（只拷缺的，不覆盖）。
+final class SeedKernelGeodataTests: XCTestCase {
+    private var dir: URL!
+
+    override func setUpWithError() throws {
+        dir = FileManager.default.temporaryDirectory.appendingPathComponent("seed-\(UUID().uuidString)", isDirectory: true)
+    }
+
+    override func tearDownWithError() throws { try? FileManager.default.removeItem(at: dir) }
+
+    func testSeedsMissingAndKeepsExisting() async throws {
+        let data = dir.appendingPathComponent("core")
+        let kernel = dir.appendingPathComponent("kernel")
+        let e = CoreEngine(dataDir: data, mockData: false)
+        XCTAssertTrue(e.isNative)
+        let none = await e.seedKernelGeodata(kernelHome: kernel)
+        XCTAssertEqual(none, [], "核心还没下载过 dat：什么都不拷")
+
+        let geo = data.appendingPathComponent("geo")
+        try FileManager.default.createDirectory(at: geo, withIntermediateDirectories: true)
+        try Data("site".utf8).write(to: geo.appendingPathComponent("geosite.dat"))
+        try Data("ip".utf8).write(to: geo.appendingPathComponent("geoip.dat"))
+        try FileManager.default.createDirectory(at: kernel, withIntermediateDirectories: true)
+        try Data("bundled".utf8).write(to: kernel.appendingPathComponent("GeoSite.dat"))
+
+        let copied = await e.seedKernelGeodata(kernelHome: kernel)
+        XCTAssertEqual(copied, ["GeoIP.dat"])
+        XCTAssertEqual(try String(contentsOf: kernel.appendingPathComponent("GeoSite.dat"), encoding: .utf8), "bundled", "已有的不覆盖")
+        XCTAssertEqual(try String(contentsOf: kernel.appendingPathComponent("GeoIP.dat"), encoding: .utf8), "ip")
+        let again = await e.seedKernelGeodata(kernelHome: kernel)
+        XCTAssertEqual(again, [])
+    }
+}
