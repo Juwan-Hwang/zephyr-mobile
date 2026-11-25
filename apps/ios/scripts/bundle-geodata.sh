@@ -25,7 +25,12 @@ fail() {
 }
 
 [ -f "$LOCK" ] || fail "找不到 ${LOCK}"
-"$ROOT/tools/fetch-geodata.sh" "$CACHE" || fail "tools/fetch-geodata.sh 失败（网络或 sha256 不符）"
+# fetch 的输出先收起来：xcbeautify 只显示 error: / warning: 行，失败时逐行带上前缀，CI 日志里才看得到原因。
+if ! out=$("$ROOT/tools/fetch-geodata.sh" "$CACHE" 2>&1); then
+  while IFS= read -r line; do echo "warning: fetch-geodata: ${line}"; done <<<"$out"
+  fail "tools/fetch-geodata.sh 失败（网络或 sha256 不符）"
+fi
+echo "$out"
 
 mkdir -p "$DEST" || fail "无法创建 ${DEST}"
 names=()
