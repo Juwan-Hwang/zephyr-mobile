@@ -32,12 +32,27 @@ trap 'rm -rf "$CURLRC_DIR"' EXIT
 printf 'max-time = 180\nspeed-limit = 2048\nspeed-time = 30\n' >"$CURLRC_DIR/.curlrc"
 export CURL_HOME="$CURLRC_DIR"
 
-# fetch 的输出先收起来：xcbeautify 只显示 error: / warning: 行，失败时逐行带上前缀，CI 日志里才看得到原因。
-if ! out=$("$ROOT/tools/fetch-geodata.sh" "$CACHE" 2>&1); then
-  while IFS= read -r line; do echo "warning: fetch-geodata: ${line}"; done <<<"$out"
-  fail "tools/fetch-geodata.sh 失败（网络或 sha256 不符）"
+sha256_of() { shasum -a 256 "$1" 2>/dev/null | cut -d' ' -f1; }
+
+# 缓存里的文件已全部与 lock 的 sha256 一致就不调 fetch-geodata.sh：
+# 它在「已存在」分支里写的是 "$name（已存在）"，在 Xcode run script 的 /bin/bash 3.2 + UTF-8 下报 `name\357: unbound variable`
+# （CI Release 构建紧跟 Debug 构建，缓存已在，正好走这条分支）。该脚本归 A，这里只绕开；需要下载时也强制 LC_ALL=C。
+cache_ok=1
+while read -r name hash url; do
+  [[ -z "${name:-}" || "$name" == \#* ]] && continue
+  if [ ! -f "$CACHE/$name" ] || [ "$(sha256_of "$CACHE/$name")" != "$hash" ]; then cache_ok=0; fi
+done <"$LOCK"
+
+if [ $cache_ok = 1 ]; then
+  echo "地理数据缓存与 lock 一致：${CACHE}"
+else
+  # fetch 的输出先收起来：xcbeautify 只显示 error: / warning: 行，失败时逐行带上前缀，CI 日志里才看得到原因。
+  if ! out=$(LC_ALL=C LANG=C "$ROOT/tools/fetch-geodata.sh" "$CACHE" 2>&1); then
+    while IFS= read -r line; do echo "warning: fetch-geodata: ${line}"; done <<<"$out"
+    fail "tools/fetch-geodata.sh 失败（网络或 sha256 不符）"
+  fi
+  echo "$out"
 fi
-echo "$out"
 
 mkdir -p "$DEST" || fail "无法创建 ${DEST}"
 names=()
