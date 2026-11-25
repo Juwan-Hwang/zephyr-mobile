@@ -511,4 +511,47 @@ final class CoreEngineLiveTests: XCTestCase {
         let reopened = CoreEngine(dataDir: dir.appendingPathComponent("core"), mockData: false)
         XCTAssertEqual(reopened.core?.latencyTtlHours(), 6, "重启后按落盘设置下发")
     }
+
+    private static func subBody(_ tag: String) -> String {
+        """
+        proxies:
+          - {name: "\(tag) 01", server: \(tag)1.example, port: 443, type: trojan, password: p}
+        rules:
+          - DOMAIN-SUFFIX,only-\(tag).example,DIRECT
+          - MATCH,DIRECT
+        """
+    }
+
+    /// #1 真机反馈（2026-11-25）：当前订阅 = 列表第一个（契约 §14，与规则页第 2 层同源）。
+    /// 第一个导入的订阅（含引导页导入，同走 importSubscription）连接即用；删除当前订阅后由下一个接替。
+    func testCurrentSubscriptionIsFirstAndFallsBackOnDelete() async throws {
+        let t = FakeTunnel(dir: dir)
+        let e = CoreEngine(dataDir: dir.appendingPathComponent("core"), mockData: false, fetcher: { url in
+            let tag = url.host?.hasPrefix("b.") == true ? "b" : "a"
+            return CoreEngine.FetchedBody(body: CoreEngineLiveTests.subBody(tag), fileName: "\(tag.uppercased()).yaml")
+        }, tunnel: t)
+        let a = try await e.importSubscription(source: .url, payload: "https://a.example.com/sub")
+        let b = try await e.importSubscription(source: .url, payload: "https://b.example.com/sub")
+
+        // 第一个导入的订阅自动成为当前订阅，导入后立即可连接。
+        var it = e.subscriptions().makeAsyncIterator()
+        let listed = await it.next()
+        XCTAssertEqual(listed?.map(\.id), [a.id, b.id])
+        try await e.connect()
+        var yaml = try String(contentsOf: t.configURL, encoding: .utf8)
+        XCTAssertTrue(yaml.contains("only-a.example"), "连接用第一个订阅")
+        XCTAssertFalse(yaml.contains("only-b.example"))
+        try await e.disconnect()
+
+        // 删除当前订阅：下一个自动接替。
+        try await e.deleteSubscription(id: a.id)
+        var it2 = e.subscriptions().makeAsyncIterator()
+        let remaining = await it2.next()
+        XCTAssertEqual(remaining?.first?.id, b.id)
+        try await e.connect()
+        yaml = try String(contentsOf: t.configURL, encoding: .utf8)
+        XCTAssertTrue(yaml.contains("only-b.example"), "删除当前订阅后改用下一个")
+        XCTAssertFalse(yaml.contains("only-a.example"))
+        try await e.disconnect()
+    }
 }

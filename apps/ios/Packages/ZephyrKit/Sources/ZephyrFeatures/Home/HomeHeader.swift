@@ -8,6 +8,8 @@ import ZephyrKit
 struct HomeHeader: View {
     @Environment(AppModel.self) private var model
     @ScaledMetric(relativeTo: .subheadline) private var lockupHeight: CGFloat = ZTokens.FontSize.sm
+    /// 设置按钮的 SF Symbol：标准齿轮。
+    static let settingsSymbol = "gearshape"
 
     var body: some View {
         HStack(spacing: ZTokens.Space.n3) {
@@ -17,9 +19,8 @@ struct HomeHeader: View {
                 .frame(height: lockupHeight)
                 .foregroundStyle(ZTokens.Colors.screenT1)
             Spacer(minLength: 0)
-            // 设置入口沿用原型的太阳图形（品牌决定，原型 03/04 一致；REVIEW H-P2-8）。SF 里 sun.max 语义是"亮度"，
-            // 所以 VoiceOver 标签明确为"设置"；若设计改为 gearshape，只改这里的符号名。
-            ZIconButton(systemImage: "sun.max", label: "设置") {
+            // 设置入口用系统齿轮 gearshape。原型的太阳图形（sun.max）在真机上被当成深浅色切换（#1 真机反馈 2026-11-25），已弃用。
+            ZIconButton(systemImage: HomeHeader.settingsSymbol, label: "设置") {
                 model.push(.settings)
             }
         }

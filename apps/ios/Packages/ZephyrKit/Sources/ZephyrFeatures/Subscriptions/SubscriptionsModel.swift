@@ -103,10 +103,18 @@ final class SubscriptionsModel {
         return (usage(s) ?? 0) >= Self.warnUsage
     }
 
-    /// “8,204 个节点 · 26 天后到期”；更新中为“正在更新…”；上次更新失败为“8,204 个节点 · 失败”（术语 state.failed）。
+    /// 当前订阅（连接时使用的那个）。契约 §14：生效订阅 = 订阅列表的第一个，与运行配置、规则页第 2 层同源；
+    /// 第一个导入的订阅自动成为当前订阅，删除它后自动由下一个接替。
+    var activeID: String? { subscriptions.first?.id }
+
+    func isActive(_ s: Subscription) -> Bool { s.id == activeID }
+
+    /// “8,204 个节点 · 26 天后到期”；当前订阅前加“使用中 · ”；更新中为“正在更新…”；
+    /// 上次更新失败为“8,204 个节点 · 失败”（术语 state.failed）。
     func detail(_ s: Subscription) -> String {
         if updating.contains(s.id) || isUpdatingAll { return ZL.tr("正在更新…") }
-        var parts = [ZL.s("%@ 个节点", ZFormat.count(s.nodeCount))]
+        var parts: [String] = isActive(s) ? [ZL.tr("使用中")] : []
+        parts.append(ZL.s("%@ 个节点", ZFormat.count(s.nodeCount)))
         if failedUpdates.contains(s.id) { parts.append(ZL.tr("失败")) }
         else if let e = s.expiresAt { parts.append(ZFormat.expiry(e, now: now())) }
         else if let u = s.updatedAt { parts.append(ZL.s("%@更新", ZFormat.relative(u, now: now()))) }
