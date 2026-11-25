@@ -10,12 +10,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.ui.Alignment
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -130,16 +124,22 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
         val cmdBlur by androidx.compose.animation.core.animateDpAsState(if (command) 30.dp else 0.dp, ZAnim.standard(), label = "cmdBlur")
         // Push slides in from the end edge, pop returns toward it: mirrored in RTL (slide offsets are absolute px).
         val dir = com.zephyr.app.ui.common.startToEndSign()
+        // 移除动画 / animator scale 0 → cross-fade only (no sliding pages).
+        val ctx = androidx.compose.ui.platform.LocalContext.current
+        val reducedMotion = remember { android.provider.Settings.Global.getFloat(ctx.contentResolver, android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f }
+        val motion = remember(dir, reducedMotion) { NavTransitions(dir, reducedMotion) }
         Box(Modifier.fillMaxSize().background(ZTheme.colors.bg)) {
             NavHost(
                 nav, startDestination = if (startOnboarding) Onboarding else Home,
                 modifier = if (cmdBlur > 0.dp) Modifier.blur(cmdBlur) else Modifier,
-                enterTransition = { slideInHorizontally(ZAnim.slow()) { dir * it / 4 } + fadeIn(ZAnim.standard()) },
-                // Review A-P2-8: the page underneath moves too, so a predictive-back drag (which seeks these
-                // transitions) previews it sliding back in from the left instead of a flat cross-fade.
-                exitTransition = { slideOutHorizontally(ZAnim.slow()) { -dir * it / 10 } + fadeOut(ZAnim.standard()) },
-                popEnterTransition = { slideInHorizontally(ZAnim.standard()) { -dir * it / 10 } + fadeIn(ZAnim.standard()) },
-                popExitTransition = { slideOutHorizontally(ZAnim.standard()) { dir * it / 4 } + fadeOut(ZAnim.standard()) },
+                // #208 real-device feedback: see NavMotion — the predictive pair replaces the library's scaleOut(0.7f)
+                // default that made an edge swipe shrink to the centre, stall and cut.
+                enterTransition = motion.enter,
+                exitTransition = motion.exit,
+                popEnterTransition = motion.popEnter,
+                popExitTransition = motion.popExit,
+                predictivePopEnterTransition = motion.predictivePopEnter,
+                predictivePopExitTransition = motion.predictivePopExit,
             ) {
                 composable<Home> {
                     HomeScreen(
@@ -171,10 +171,8 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                 composable<WidgetsRoute> { e -> val r = e.toRoute<WidgetsRoute>(); com.zephyr.app.ui.library.WidgetsScreen(r.back) { backTo(r.back) } }
                 composable<Logs> { com.zephyr.app.ui.settings.LogsScreen { nav.popBackStack() } }
                 composable<Licenses> { com.zephyr.app.ui.settings.LicensesScreen { nav.popBackStack() } }
-                composable<Today>(
-                    enterTransition = { slideInVertically(ZAnim.slow()) { it / 3 } + fadeIn(ZAnim.standard()) },
-                    popExitTransition = { slideOutVertically(ZAnim.standard()) { it / 3 } + fadeOut(ZAnim.standard()) },
-                ) {
+                // 今日 rises from below and drops back down (NavTransitions special-cases it, gesture included).
+                composable<Today> {
                     // 今日 is always a black page (review H-P2-13): run its buttons and text on the dark palette.
                     ZephyrTheme(dark = true, accent = ZAccent.valueOf(settings.accent.name)) { TodayScreen { nav.popBackStack() } }
                 }
