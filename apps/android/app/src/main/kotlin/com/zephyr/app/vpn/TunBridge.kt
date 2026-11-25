@@ -3,7 +3,10 @@ package com.zephyr.app.vpn
 import android.content.Context
 import android.net.VpnService
 import android.os.ParcelFileDescriptor
+import com.zephyr.engine.ErrorCode
 import com.zephyr.engine.ProxyMode
+import com.zephyr.engine.ZephyrError
+import com.zephyr.engine.ZephyrException
 import com.zephyr.engine.Settings
 import com.zephyr.engine.ZephyrEngine
 import com.zephyr.engine.core.CoreEngine
@@ -20,19 +23,22 @@ import java.io.File
 interface TunBridge {
     /** True when this bridge will actually carry traffic (and therefore wants a real tun). */
     val createsTun: Boolean
-    /** Returns null on success or an error message. */
-    suspend fun attach(fd: ParcelFileDescriptor): String?
+    /**
+     * Null on success, else why (typed, issue #1): `subscription_not_found` when there is nothing to run, the
+     * engine's own code when the runtime config fails, `core_crashed` only for the kernel itself.
+     */
+    suspend fun attach(fd: ParcelFileDescriptor): ZephyrError?
     /**
      * Issue #1: what can be checked before `establish()` (library loaded, runtime config builds). Null = go ahead,
      * else the reason; the service fails without ever creating the tun.
      */
-    suspend fun preflight(): String? = null
+    suspend fun preflight(): ZephyrError? = null
     fun detach()
 
     /** No core packaged or no subscription yet: UI flow works, no tun is created (an unread tun would black-hole traffic). */
     object Simulated : TunBridge {
         override val createsTun = false
-        override suspend fun attach(fd: ParcelFileDescriptor): String? = null
+        override suspend fun attach(fd: ParcelFileDescriptor): ZephyrError? = null
         override fun detach() = Unit
     }
 
@@ -42,19 +48,17 @@ interface TunBridge {
      */
     class Embedded(private val ctx: Context, private val engine: CoreEngine, private val settings: Settings, private val mode: ProxyMode) : TunBridge {
         override val createsTun = true
-        override suspend fun attach(fd: ParcelFileDescriptor): String? {
+        override suspend fun attach(fd: ParcelFileDescriptor): ZephyrError? {
             val sock = controllerSocket(ctx)
             engine.tunnelStarting = true // §16.b ③: changes from here on are queued, applied once after start
             try { return start(fd, sock) } finally { engine.tunnelStarting = false }
         }
 
-        override suspend fun preflight(): String? {
-            if (!Mihomo.available) return "libzmihomo missing"
+        override suspend fun preflight(): ZephyrError? {
+            if (!Mihomo.available) return kernelError("libzmihomo missing")
             prepareGeodata()
-            return try {
-                // Same config as attach() minus the fd: catches "no active subscription" and config errors up front.
-                engine.runtimeConfig(null, controllerSocket(ctx).path, settings, mode)?.let { null } ?: "no active subscription"
-            } catch (t: Throwable) { t.message ?: "runtime config failed" }
+            // Same config as attach() minus the fd: catches "no active subscription" and config errors up front.
+            return configCheck { engine.runtimeConfig(null, controllerSocket(ctx).path, settings, mode) }
         }
 
         /**
@@ -75,25 +79,25 @@ interface TunBridge {
             Mihomo.setGeodataTimeout(if (BundledGeodata.allPresent(bundled, home)) 0L else -1L)
         }
 
-        private suspend fun start(fd: ParcelFileDescriptor, sock: File): String? {
-            val cfg = try {
-                engine.runtimeConfig(fd.fd, sock.path, settings, mode) ?: return "no active subscription"
-            } catch (t: Throwable) { return t.message ?: "runtime config failed" }
+        private suspend fun start(fd: ParcelFileDescriptor, sock: File): ZephyrError? {
+            var cfg: String? = null
+            configCheck { engine.runtimeConfig(fd.fd, sock.path, settings, mode).also { cfg = it } }?.let { return it }
+            val config = cfg!!
             Mihomo.setMemoryLimit(MEMORY_LIMIT)
             sock.delete() // stale socket from a crashed run would make the listener fail
-            val err = withContext(Dispatchers.IO) { Mihomo.start(sock.parentFile!!.path, cfg, sock.path) }
+            val err = withContext(Dispatchers.IO) { Mihomo.start(sock.parentFile!!.path, config, sock.path) }
             if (err == null) engine.tunnelStarted() // usage ledger: a fresh core counts from zero (audit E39)
             if (err == null) engine.reloader = {
                 // Scene/exception/override changes that need new groups or rules: same fd, fresh config.
                 val s = engine.settings().first(); val m = engine.connectionState().first().mode
-                engine.runtimeConfig(fd.fd, sock.path, s, m)?.let { withContext(Dispatchers.IO) { Mihomo.reload(it) } } ?: "no active subscription"
+                reloadWith(engine.runtimeConfig(fd.fd, sock.path, s, m)) { withContext(Dispatchers.IO) { Mihomo.reload(it) } }
             }
             // §16.b③ 连接中: settings changed while connecting (e.g. 本地代理 port / 需要密码) are applied once, right after start.
             if (err == null) {
                 engine.tunnelStarting = false
                 engine.flushPendingReload(force = CoreEngine.affectsRuntime(settings, engine.settings().first()))
             }
-            return err
+            return err?.let { kernelError(it) }
         }
         override fun detach() { engine.reloader = null; Mihomo.stop(); Mihomo.trimMemory() }
     }
@@ -103,6 +107,29 @@ interface TunBridge {
         const val MEMORY_LIMIT = 48L * 1024 * 1024
         const val MTU_MIN = 1280
         const val MTU_MAX = 9000
+        const val NO_ACTIVE_SUBSCRIPTION = "no active subscription"
+
+        /** Nothing to run: on-demand pauses, no backoff (ReconnectBackoff); Home says 「先添加一个订阅」. */
+        fun noSubscription(): ZephyrError = ZephyrError(ErrorCode.SUBSCRIPTION_NOT_FOUND, NO_ACTIVE_SUBSCRIPTION)
+
+        /** The kernel itself (library, `zm_start`): the only `core_crashed` this bridge reports. */
+        fun kernelError(message: String): ZephyrError = ZephyrError(ErrorCode.CORE_CRASHED, message)
+
+        /**
+         * Issue #1 (real device, main 10bd48f): a config that builds is success. The previous
+         * `runtimeConfig(...)?.let { null } ?: "no active subscription"` turned every successful build into that error,
+         * so every real-device connect failed as `core_crashed` and entered the backoff loop.
+         * null config → [noSubscription]; a thrown [ZephyrException] keeps its code; anything else is `core_crashed`.
+         */
+        suspend fun configCheck(build: suspend () -> String?): ZephyrError? = try {
+            if (build() != null) null else noSubscription()
+        } catch (e: ZephyrException) { e.error } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (t: Throwable) {
+            kernelError(t.message ?: "runtime config failed")
+        }
+
+        /** Hot reload: null config → [NO_ACTIVE_SUBSCRIPTION]; else whatever `zm_reload` says (null = applied). */
+        suspend fun reloadWith(cfg: String?, reload: suspend (String) -> String?): String? =
+            if (cfg == null) NO_ACTIVE_SUBSCRIPTION else reload(cfg)
 
         suspend fun pick(ctx: Context, engine: ZephyrEngine, settings: Settings, mode: ProxyMode): TunBridge {
             val core = engine as? CoreEngine
@@ -115,8 +142,8 @@ interface TunBridge {
             val core = engine as? CoreEngine
             return when {
                 !Mihomo.available || core == null || !core.isNative ->
-                    com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.CORE_CRASHED, "native core not packaged")
-                else -> com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.SUBSCRIPTION_NOT_FOUND, "no active subscription")
+                    kernelError("native core not packaged")
+                else -> noSubscription()
             }
         }
 

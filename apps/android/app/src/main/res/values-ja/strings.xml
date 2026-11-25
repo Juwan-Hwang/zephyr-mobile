@@ -379,6 +379,7 @@
     <string name="settings_local_proxy">ローカルプロキシポート</string>
     <string name="settings_section_connection">接続</string>
     <string name="settings_on_demand">オンデマンド接続</string>
+    <string name="settings_on_demand_hint">一度接続すると、切断・再起動・ネットワーク復帰時に自動で再接続します。手動で切断すると、次に手動で接続するまで停止します。</string>
     <string name="settings_trusted_wifi_hint">接続したら自動的に切断</string>
     <string name="settings_trusted_wifi_location">Wi‑Fi 名を識別するには位置情報へのアクセスを許可</string>
     <string name="settings_trusted_wifi_location_off">Wi‑Fi 名を識別するにはシステムの位置情報をオンにしてください</string>

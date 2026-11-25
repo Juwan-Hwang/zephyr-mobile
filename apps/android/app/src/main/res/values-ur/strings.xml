@@ -434,6 +434,7 @@
     <string name="settings_local_proxy">مقامی پراکسی پورٹ</string>
     <string name="settings_section_connection">کنکشن</string>
     <string name="settings_on_demand">ضرورت پر منسلک کریں</string>
+    <string name="settings_on_demand_hint">ایک بار منسلک ہونے کے بعد، رابطہ ٹوٹنے، دوبارہ شروع ہونے یا نیٹ ورک واپس آنے پر خود بخود دوبارہ منسلک ہوتا ہے۔ دستی طور پر منقطع کرنے پر یہ اگلی دستی کنکشن تک رک جاتا ہے۔</string>
     <string name="settings_trusted_wifi_hint">ان سے جڑنے پر خود بخود منقطع ہو جائے</string>
     <string name="settings_trusted_wifi_location">Wi‑Fi کے نام پہچاننے کے لیے مقام تک رسائی کی اجازت دیں</string>
     <string name="settings_trusted_wifi_location_off">Wi‑Fi کے نام پہچاننے کے لیے سسٹم کا مقام آن کریں</string>

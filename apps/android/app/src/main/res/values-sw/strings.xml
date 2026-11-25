@@ -410,6 +410,7 @@
     <string name="settings_local_proxy">Mlango wa proksi ya ndani</string>
     <string name="settings_section_connection">Muunganisho</string>
     <string name="settings_on_demand">Unganisha inapohitajika</string>
+    <string name="settings_on_demand_hint">Baada ya kuunganisha mara moja, huunganisha tena kiotomatiki muunganisho ukikatika, baada ya kuwasha upya au mtandao ukirudi. Ukitenganisha mwenyewe, husimama hadi utakapounganisha mwenyewe tena.</string>
     <string name="settings_trusted_wifi_hint">Tenganisha kiotomatiki ukijiunga</string>
     <string name="settings_trusted_wifi_location">Ruhusu ufikiaji wa mahali ili kutambua majina ya Wi‑Fi</string>
     <string name="settings_trusted_wifi_location_off">Washa mahali pa mfumo ili kutambua majina ya Wi‑Fi</string>

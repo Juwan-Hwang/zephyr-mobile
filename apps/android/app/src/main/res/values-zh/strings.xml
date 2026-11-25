@@ -404,6 +404,7 @@
     <string name="settings_local_proxy">本地代理端口</string>
     <string name="settings_section_connection">连接</string>
     <string name="settings_on_demand">按需连接</string>
+    <string name="settings_on_demand_hint">连接过一次后，掉线、重启或网络恢复时自动重新连接；手动断开后暂停，直到你下次手动连接。</string>
     <string name="settings_trusted_wifi_hint">连接后自动断开</string>
     <string name="settings_trusted_wifi_location">允许访问位置信息以识别 Wi‑Fi 名称</string>
     <string name="settings_trusted_wifi_location_off">打开系统定位以识别 Wi‑Fi 名称</string>

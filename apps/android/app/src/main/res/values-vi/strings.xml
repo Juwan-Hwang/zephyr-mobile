@@ -379,6 +379,7 @@
     <string name="settings_local_proxy">Cổng proxy cục bộ</string>
     <string name="settings_section_connection">Kết nối</string>
     <string name="settings_on_demand">Kết nối theo yêu cầu</string>
+    <string name="settings_on_demand_hint">Sau khi kết nối một lần, tự động kết nối lại khi bị rớt, khi khởi động lại hoặc khi có mạng trở lại. Ngắt kết nối thủ công sẽ tạm dừng cho đến lần kết nối thủ công tiếp theo.</string>
     <string name="settings_trusted_wifi_hint">Tự động ngắt kết nối khi tham gia</string>
     <string name="settings_trusted_wifi_location">Cho phép truy cập vị trí để nhận diện tên Wi‑Fi</string>
     <string name="settings_trusted_wifi_location_off">Bật vị trí hệ thống để nhận diện tên Wi‑Fi</string>

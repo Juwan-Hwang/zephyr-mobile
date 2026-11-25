@@ -379,6 +379,7 @@
     <string name="settings_local_proxy">စက်တွင်း ပရောက်စီ ပေါ့တ်</string>
     <string name="settings_section_connection">ချိတ်ဆက်မှု</string>
     <string name="settings_on_demand">လိုအပ်မှ ချိတ်ဆက်ရန်</string>
+    <string name="settings_on_demand_hint">တစ်ကြိမ် ချိတ်ဆက်ပြီးနောက် ချိတ်ဆက်မှု ပြတ်သွားလျှင်၊ ပြန်စလျှင် သို့မဟုတ် ကွန်ရက် ပြန်ရလျှင် အလိုအလျောက် ပြန်ချိတ်ဆက်သည်။ ကိုယ်တိုင် အဆက်ဖြတ်လျှင် နောက်တစ်ကြိမ် ကိုယ်တိုင် ချိတ်ဆက်သည်အထိ ရပ်ထားသည်။</string>
     <string name="settings_trusted_wifi_hint">ချိတ်မိလျှင် အလိုအလျောက် အဆက်ဖြတ်</string>
     <string name="settings_trusted_wifi_location">Wi‑Fi အမည်များကို သိရှိရန် တည်နေရာ ခွင့်ပြုပါ</string>
     <string name="settings_trusted_wifi_location_off">Wi‑Fi အမည်များကို သိရှိရန် စနစ်တည်နေရာကို ဖွင့်ပါ</string>

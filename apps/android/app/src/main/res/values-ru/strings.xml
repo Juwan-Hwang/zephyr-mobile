@@ -472,6 +472,7 @@
     <string name="settings_local_proxy">Порт локального прокси</string>
     <string name="settings_section_connection">Подключение</string>
     <string name="settings_on_demand">Подключение по запросу</string>
+    <string name="settings_on_demand_hint">После первого подключения автоматически переподключается при обрыве, перезапуске или возвращении сети. Ручное отключение приостанавливает это до следующего ручного подключения.</string>
     <string name="settings_trusted_wifi_hint">Автоматически отключаться в этих сетях</string>
     <string name="settings_trusted_wifi_location">Разрешите доступ к геолокации, чтобы распознавать сети Wi‑Fi</string>
     <string name="settings_trusted_wifi_location_off">Включите геолокацию в системе, чтобы распознавать сети Wi‑Fi</string>
