@@ -3,12 +3,14 @@
  * 暂停 / 继续、清空；新行到达时滚到底部（暂停时不滚）。最多 500 行（LogsModel.LOG_CAPACITY）。
  */
 import { deviceInfo } from '@kit.BasicServicesKit';
+import { ZBtn } from '../common/ZButtonMods';
 import { bundleManager, common } from '@kit.AbilityKit';
 import { systemShare } from '@kit.ShareKit';
 import { uniformTypeDescriptor } from '@kit.ArkData';
 import { AppServices } from '../app/AppServices';
 import { LogsModel } from '../app/LogsModel';
 import { Format } from '../common/Format';
+import { ZTheme } from '../common/Theme';
 import { Labels } from '../common/Labels';
 import { ZEmpty } from '../components/ZEmpty';
 import { ZSegmented } from '../components/ZSegmented';
@@ -25,6 +27,7 @@ export struct LogsPage {
   @Local lines: LogLine[] = [];
   @Local level: LogLevel = LogLevel.INFO;
   @Local paused: boolean = false;
+  @Local theme: ZTheme = ZTheme.shared();
   private scroller: Scroller = new Scroller();
   private subs: StreamSub[] = [];
 
@@ -96,26 +99,17 @@ export struct LogsPage {
           onSelect: (i: number) => AppServices.get().logs.setLevel(LEVELS[i])
         })
 
-        Row({ space: 8 }) {
+        Row({ space: 4 }) {
           Button(this.paused ? $r('app.string.logs_resume') : $r('app.string.logs_pause'))
-            .height(30)
-            .fontSize(13)
-            .fontColor($r('app.color.screen_t1'))
-            .backgroundColor($r('app.color.screen_s3'))
+            .attributeModifier(ZBtn.toolbar(this.theme.accentColor()))
             .onClick(() => AppServices.get().logs.togglePause())
           Button($r('app.string.logs_clear'))
-            .height(30)
-            .fontSize(13)
-            .fontColor($r('app.color.screen_t1'))
-            .backgroundColor($r('app.color.screen_s3'))
+            .attributeModifier(ZBtn.toolbar(this.theme.accentColor()))
             .enabled(this.lines.length > 0)
             .onClick(() => AppServices.get().logs.clear())
           Button($r('app.string.common_share'))
+            .attributeModifier(ZBtn.toolbar(this.theme.accentColor()))
             .id(LOGS_SHARE_ID)
-            .height(30)
-            .fontSize(13)
-            .fontColor($r('app.color.screen_t1'))
-            .backgroundColor($r('app.color.screen_s3'))
             .enabled(this.lines.length > 0)
             .onClick(() => {
               this.share().catch(() => {});

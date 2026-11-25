@@ -589,6 +589,7 @@ export struct HomeView {
           .accessibilityText($r('app.string.common_connect'))
           .onChange((on: boolean) => {
             if (on !== this.isOn()) {
+              Haptics.play(HapticKind.SELECTION);
               this.toggle();
             }
           })

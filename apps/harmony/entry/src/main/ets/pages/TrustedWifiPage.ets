@@ -92,10 +92,7 @@ export struct TrustedWifiPage {
                     .maxLines(1)
                     .textOverflow({ overflow: TextOverflow.Ellipsis })
                   Button(ZTerm.delete)
-                    .fontSize(14)
-                    .height(32)
-                    .fontColor($r('app.color.screen_red_text'))
-                    .backgroundColor(Color.Transparent)
+                    .attributeModifier(ZBtn.danger())
                     .onClick(() => this.write(TrustedWifi.remove(this.current(), ssid)))
                 }
                 .width('100%')

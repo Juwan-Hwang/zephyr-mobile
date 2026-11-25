@@ -2,9 +2,10 @@ import { LengthMetrics } from '@kit.ArkUI';
 /*
  * 开关行：标题 + 可选说明 + Switch。状态由父组件持有（@Param isOn 单向下发，@Event onChange 回传），
  * 父组件在引擎写入成功后再更新，写入失败时开关自然回弹。
- * 打开时用当前强调色（ZTheme）。
+ * 打开时用当前强调色（ZTheme）。拨动时轻触感（同 Android ZToggle ToggleOn/Off）。
  */
 import { ZTheme } from '../common/Theme';
+import { HapticKind, Haptics } from '../app/Haptics';
 
 @ComponentV2
 export struct ZToggleRow {
@@ -38,6 +39,7 @@ export struct ZToggleRow {
           .enabled(this.isEnabled)
           .onChange((on: boolean) => {
             if (on !== this.isOn) {
+              Haptics.play(HapticKind.SELECTION);
               this.onChange(on);
             }
           })
