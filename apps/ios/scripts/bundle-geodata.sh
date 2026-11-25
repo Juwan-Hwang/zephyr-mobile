@@ -25,6 +25,13 @@ fail() {
 }
 
 [ -f "$LOCK" ] || fail "找不到 ${LOCK}"
+# curl 有界：tools/fetch-geodata.sh 只给了 --connect-timeout，传输中途卡住会让整个 Xcode 构建永远等这个脚本（CI 上遇到过）。
+# 用 CURL_HOME 下的 .curlrc 补上总时限与最低速率（fetch-geodata.sh 调 curl 时没有 -q，会读它；不改 A 的脚本）。
+CURLRC_DIR=$(mktemp -d "${TMPDIR:-/tmp}/zgcurl.XXXXXX") || fail "mktemp 失败"
+trap 'rm -rf "$CURLRC_DIR"' EXIT
+printf 'max-time = 180\nspeed-limit = 2048\nspeed-time = 30\n' >"$CURLRC_DIR/.curlrc"
+export CURL_HOME="$CURLRC_DIR"
+
 # fetch 的输出先收起来：xcbeautify 只显示 error: / warning: 行，失败时逐行带上前缀，CI 日志里才看得到原因。
 if ! out=$("$ROOT/tools/fetch-geodata.sh" "$CACHE" 2>&1); then
   while IFS= read -r line; do echo "warning: fetch-geodata: ${line}"; done <<<"$out"
