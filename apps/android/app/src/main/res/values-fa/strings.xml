@@ -430,19 +430,19 @@
     <string name="onboarding_change_later">هر زمان می‌توانید این را در تنظیمات تغییر دهید.</string>
 
     <!-- ── Settings ── -->
-    <string name="settings_trusted_wifi">Wi‑Fi مورد اعتماد</string>
+    <string name="settings_trusted_wifi">Wi‑Fi بدون پراکسی</string>
     <string name="settings_local_proxy">پورت پروکسی محلی</string>
     <string name="settings_section_connection">اتصال</string>
     <string name="settings_on_demand">اتصال در صورت نیاز</string>
-    <string name="settings_on_demand_hint">پس از یک بار اتصال، هنگام قطع شدن، راه‌اندازی مجدد یا بازگشت شبکه خودکار دوباره وصل می‌شود. با قطع دستی متوقف می‌شود تا دفعهٔ بعد که دستی وصل شوید.</string>
+    <string name="settings_on_demand_hint">پس از قطع شدن، خودکار دوباره وصل می‌شود</string>
     <string name="settings_trusted_wifi_hint">هنگام اتصال به آن، به‌طور خودکار قطع شود</string>
     <string name="settings_trusted_wifi_location">برای شناسایی نام Wi‑Fi، دسترسی به موقعیت مکانی را مجاز کنید</string>
     <string name="settings_trusted_wifi_location_off">برای شناسایی نام Wi‑Fi، موقعیت مکانی سیستم را روشن کنید</string>
     <string name="settings_trusted_wifi_always_on">توسط «VPN همیشه روشن» سیستم مدیریت می‌شود</string>
-    <string name="notif_paused_trusted">در Wi‑Fi مورد اعتماد «%1$s» قطع شد. پس از خروج، خودکار دوباره وصل می‌شود.</string>
+    <string name="notif_paused_trusted">در «%1$s» قطع شد. پس از خروج دوباره وصل می‌شود.</string>
     <string name="settings_password_required">نیاز به گذرواژه</string>
     <string name="trusted_wifi_disconnect">قطع اتصال در این شبکه‌های Wi‑Fi</string>
-    <string name="trusted_wifi_footer">در شبکه‌های مورد اعتماد مثل خانه یا محل کار، Zephyr خودکار قطع می‌شود و پس از ترک آن‌ها در صورت نیاز دوباره وصل می‌شود.</string>
+    <string name="trusted_wifi_footer">در این شبکه‌های Wi‑Fi قطع می‌شود و پس از خروج دوباره وصل می‌شود.</string>
     <string name="trusted_wifi_networks">شبکه‌ها</string>
     <string name="trusted_wifi_add_hint">افزودن نام Wi‑Fi</string>
     <string name="local_proxy_footer">در حالت روشن، Zephyr فقط روی 127.0.0.1 گوش می‌دهد و دستگاه‌های دیگر شبکهٔ شما نمی‌توانند وصل شوند.</string>
@@ -485,7 +485,7 @@
     <string name="settings_accent_pink">صورتی</string>
     <string name="settings_section_privacy">حریم خصوصی</string>
     <string name="settings_share_diagnostics">اشتراک‌گذاری داده‌های عیب‌یابی</string>
-    <string name="settings_share_diagnostics_hint">فقط وقتی خودتان از صفحهٔ گزارش‌ها هم‌رسانی می‌کنید: نسخه، تنظیمات و کدهای خطای اخیر را پیش از گزارش‌ها اضافه می‌کند. هیچ چیزی خودکار بارگذاری نمی‌شود.</string>
+    <string name="settings_share_diagnostics_hint">فقط هنگام هم‌رسانی گزارش‌ها اضافه می‌شود. هرگز بارگذاری نمی‌شود.</string>
     <string name="settings_section_diagnostics">عیب‌یابی</string>
     <string name="settings_local_data_note">اشتراک‌ها، نودها و داده‌های ترافیک فقط روی این دستگاه ذخیره می‌شوند.</string>
     <string name="settings_section_about">درباره</string>
