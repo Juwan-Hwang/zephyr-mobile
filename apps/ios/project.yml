@@ -11,7 +11,7 @@
 #
 # Targets
 #   Zephyr                 App（极薄：@main、引擎注入、深链、App Intents、实时活动驱动）
-#   PacketTunnel           NEPacketTunnelProvider（真 mihomo：Zmihomo.xcframework 静态库，MIHOMO_LINKED）
+#   PacketTunnel           NEPacketTunnelProvider（真 mihomo：Zmihomo.xcframework 静态库，MIHOMO_LINKED；构建前打包地理数据）
 #   ZephyrWidgets          WidgetKit：主屏/锁屏小组件、实时活动 + 灵动岛、iOS 18 控制中心开关
 #   ZephyrTests            单测：Shared/Core、PacketTunnel 的纯逻辑部分（不托管于 App）
 #   ZephyrAppTests         单测：App 侧纯逻辑（SharedStatePublisher 映射/节流/合并），不托管
@@ -276,10 +276,19 @@ targets:
           - packet-tunnel-provider
         com.apple.security.application-groups:
           - group.com.juwanh.zephyr
+    # 地理数据（契约 §20、docs/geodata.md）：构建前按 tools/geodata.lock 拉取并校验 geoip.metadb / GeoSite.dat，拷进 PacketTunnel.appex/geodata/；
+    # 扩展 startTunnel 时拷进内核目录（BundledGeodata）。Release 拉不到即失败，Debug 只告警。
+    preBuildScripts:
+      - name: 打包地理数据（tools/fetch-geodata.sh）
+        script: '"${SRCROOT}/scripts/bundle-geodata.sh"'
+        basedOnDependencyAnalysis: false
+        showEnvVars: false
     settings:
       base:
         SWIFT_VERSION: "6.0"  # X-P1-8：App 与扩展切 Swift 6 语言模式（测试与 UniFFI 目标仍 5）
         PRODUCT_BUNDLE_IDENTIFIER: com.juwanh.zephyr.PacketTunnel
+        # bundle-geodata.sh 要联网拉取并写仓库根 build/geodata 缓存，脚本沙箱不允许，本 target 关掉。
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
         PRODUCT_NAME: PacketTunnel
         INFOPLIST_FILE: PacketTunnel/Info.plist
         APPLICATION_EXTENSION_API_ONLY: YES
@@ -367,6 +376,8 @@ targets:
       - path: PacketTunnel/MihomoBridge/MihomoBridge.swift
         group: PacketTunnel/MihomoBridge
       - path: PacketTunnel/MappedFile.swift
+        group: PacketTunnel
+      - path: PacketTunnel/BundledGeodata.swift
         group: PacketTunnel
       - path: PacketTunnel/ControllerSocket.swift
         group: PacketTunnel

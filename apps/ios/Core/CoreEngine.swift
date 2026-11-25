@@ -990,6 +990,18 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         let yaml = try await run(.subscriptionInvalid) { try c.runtimeConfig(subscriptionId: id, options: options) }
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         try Data(yaml.utf8).write(to: url, options: .atomic)
+        // 配置旁边就是 zm_start 的 home（App Group/core）：每次写配置（连接前、订阅 / 设置变更后）顺手补地理数据（契约 §20）。
+        await seedKernelGeodata(kernelHome: url.deletingLastPathComponent())
+    }
+
+    /// 把核心已下载的 geosite.dat / geoip.dat 拷进内核目录里还没有的位置（`MobileCore.seedKernelGeodata`，只拷缺的、临时名 + 改名）。
+    /// geoip.metadb / GeoSite.dat 的主来源是扩展里打包的快照（PacketTunnel/BundledGeodata）；这里补上 geodata-mode 才用的 GeoIP.dat，
+    /// 并在包里没带时（Debug 拉取失败）用核心为规则页下载的 dat 兜底。失败不影响连接（内核会有界下载或报 `geodata missing:`）。
+    @discardableResult
+    public func seedKernelGeodata(kernelHome: URL) async -> [String] {
+        guard let c = core else { return [] }
+        let path = kernelHome.path
+        return await runQuiet { (try? c.seedKernelGeodata(kernelHome: path)) ?? [] }
     }
 
     static func runtimeOptions(settings s: ZephyrKit.Settings?, mode: ZephyrKit.ProxyMode, controllerSocket: String,

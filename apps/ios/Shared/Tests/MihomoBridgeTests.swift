@@ -28,6 +28,29 @@ final class MihomoBridgeTests: XCTestCase {
         XCTAssertEqual(MihomoBridge.mode(in: MihomoBridge.settingMode("tun: {}\n", "direct")), "direct")
     }
 
+    // MARK: 地理数据（契约 §20）
+
+    func testForcesMemConservativeLoader() {
+        let std = "mode: rule\ngeodata-loader: standard\ntun:\n  enable: true\n"
+        let out = MihomoBridge.forcingGeodataLoader(std)
+        XCTAssertTrue(out.contains("\ngeodata-loader: memconservative\n"))
+        XCTAssertFalse(out.contains("standard"))
+        XCTAssertEqual(MihomoBridge.forcingGeodataLoader(yaml), yaml, "没写就不动（mihomo 默认 memconservative）")
+    }
+
+    func testExtraGeodataFiles() {
+        XCTAssertEqual(MihomoBridge.extraGeodataFiles(yaml), [])
+        XCTAssertEqual(MihomoBridge.extraGeodataFiles("geodata-mode: true # v2ray dat\nrules:\n  - GEOIP,CN,DIRECT\n"), ["GeoIP.dat"])
+        XCTAssertEqual(MihomoBridge.extraGeodataFiles("geodata-mode: false\nrules:\n  - IP-ASN,13335,DIRECT\n"), ["ASN.mmdb"])
+        XCTAssertEqual(MihomoBridge.topLevelValue("geodata-mode", in: "dns:\n  geodata-mode: true\n"), nil, "只看顶层")
+        XCTAssertEqual(MihomoBridge.topLevelValue("geodata-loader", in: "geodata-loader: \"memc\"\n"), "memc")
+    }
+
+    func testSetGeodataTimeoutIsSafeOnStub() {
+        MihomoBridge().setGeodataTimeout(ms: 0)
+        MihomoBridge().setGeodataTimeout(ms: -1)
+    }
+
     // MARK: 桩生命周期
 
     private func stubOnly() throws {
