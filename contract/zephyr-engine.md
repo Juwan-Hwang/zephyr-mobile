@@ -984,3 +984,18 @@ sceneFunnel(sceneId: String, nowMillis: Int64, maxAgeMillis: Int64, thresholdMs:
 1. 随安装包分发 `tools/fetch-geodata.sh` 拉下的固定快照（`geoip.metadb` + `GeoSite.dat`，sha256 见 `tools/geodata.lock`），首次启动 / 升级后若内核目录里没有就拷进去（Android：`assets/geodata/` → `filesDir/mihomo/`；iOS：App bundle → App Group 内核目录；鸿蒙：rawfile → 内核目录）。做法与体积说明见 `docs/geodata.md`。
 2. 每次 `zm_start` 前调 `seedKernelGeodata(内核目录)`。
 3. `zm_start` 返回 `geodata missing:` 时：显示错误详情（不是只显示「连接失败」），不立即自动重连。
+
+## 21. v0.9 追加（2026-11-26，Android 非 root 起 TUN 不再读 packages.xml，#1，只追加）
+
+### 21.a 现象与原因
+S25 Ultra（Android 16，非 root）上 `zm_start` 后日志 `Start TUN listening error: build android rules: read packages list: open /data/system/packages.xml: permission denied`，TUN 没起来。mihomo v1.19.33 的 `listener/sing_tun/server.go` 在建 TUN 前**无条件**调 `buildAndroidRules`，`server_android.go`（`android && !cmfa`）里 `getPackageManager()` → sing-tun `PackageManager.Start()` 读 `/data/system/packages.xml`；新系统普通应用无权读。另外 mihomo 的 `ReCreateTun` 只记日志不返回错误，所以平台要按 §20 之后的做法从日志里捕获 `Start TUN listening error`（Android 已做）。
+
+### 21.b mihomo-mobile（补丁 `mihomo-mobile/patches/android-package-rules.patch`，只在 Android 构建时打）
+- 只有 tun 配了 `include-package` / `exclude-package` 时才创建包管理器（读 packages.xml）；都没配 → 不碰 packages.xml，`include-android-user` / uid 规则照常生效。
+- 配了包名但读不到 → TUN 启动失败，错误写明 `tun include-package/exclude-package need the Android package list (/data/system/packages.xml), which this app cannot read; remove include-package/exclude-package or use include-uid/exclude-uid`（不悄悄丢掉分应用规则，以免走错应用）。
+- 按进程 / 包名匹配（`PROCESS-NAME` 等）时拿不到包列表 → 静默返回错误，mihomo 保留已查到的 uid 与进程路径，不刷日志。
+- iOS、鸿蒙、桌面构建不受影响（鸿蒙仍只打 `gvisor-fstat-tun.patch`）。补丁清单在 `mihomo-mobile/patches/series`，`tools/build-mihomo.sh android` 在临时目录里打补丁再 `-replace`，仓库 `go.mod` / `go.sum` 不变；CI core 作业 `tools/build-mihomo.sh check-patches` 校验每个补丁能打上、`go vet`（含 `GOOS=android GOARCH=arm64`）并在 linux 上跑补丁自带的测试。
+
+### 21.c 平台
+- 无需改动。core 生成的运行时配置不写 `include-package` / `exclude-package`；平台若将来要做分应用代理，用系统 VPN API（Android `VpnService.Builder.addAllowedApplication` / `addDisallowedApplication`），不要写进 mihomo 的 tun 配置。
+- 升级 mihomo 版本时补丁须能干净打上（`check-patches` 会失败提示），否则先改补丁。

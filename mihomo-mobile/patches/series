@@ -1,0 +1,5 @@
+# mihomo-mobile 对上游依赖的补丁清单（tools/build-mihomo.sh、tools/check-mihomo-patches.sh 读这里）。
+# 每行：补丁文件  模块  用于哪些目标（逗号分隔：android / ohos）
+# 补丁都在构建临时目录里打到依赖的拷贝上再 -replace，仓库里的 go.mod / go.sum 不变；iOS 不打任何补丁。
+gvisor-fstat-tun.patch      github.com/metacubex/gvisor  ohos
+android-package-rules.patch github.com/metacubex/mihomo  android
