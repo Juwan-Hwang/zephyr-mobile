@@ -29,7 +29,7 @@ adb wait-for-device
 ps=$(adb shell getconf PAGE_SIZE | tr -d '\r')
 abi=$(adb shell getprop ro.product.cpu.abi | tr -d '\r')
 echo "PAGE_SIZE=$ps ABI=$abi SDK=$(adb shell getprop ro.build.version.sdk | tr -d '\r') KERNEL=$(adb shell uname -r | tr -d '\r')"
-[ "$ps" = 16384 ] || { echo "::error::模拟器页大小是 $ps，不是 16384（镜像不是 ps16k）"; exit 1; }
+[ "$ps" = 16384 ] || { echo "::error::模拟器页大小是 ${ps}，不是 16384（镜像不是 ps16k）"; exit 1; }
 
 echo "== install"
 adb install -r -t "$apk" 2>&1 | tee /tmp/install.log
