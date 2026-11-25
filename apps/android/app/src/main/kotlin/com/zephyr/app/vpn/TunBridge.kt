@@ -50,10 +50,29 @@ interface TunBridge {
 
         override suspend fun preflight(): String? {
             if (!Mihomo.available) return "libzmihomo missing"
+            prepareGeodata()
             return try {
                 // Same config as attach() minus the fd: catches "no active subscription" and config errors up front.
                 engine.runtimeConfig(null, controllerSocket(ctx).path, settings, mode)?.let { null } ?: "no active subscription"
             } catch (t: Throwable) { t.message ?: "runtime config failed" }
+        }
+
+        /**
+         * Contract §20.d / docs/geodata.md, before every `zm_start`: copy the APK's bundled snapshot into the mihomo
+         * home when absent, then `seedKernelGeodata` (core's own geo/ files). With the whole snapshot in place mihomo
+         * is told not to download at all (timeout 0); otherwise the bounded default (15 s) stays. Nothing here fails the
+         * start: if a file is still missing, `zm_start` returns `geodata missing:` and ReconnectBackoff / HomeHeader handle it.
+         */
+        private suspend fun prepareGeodata() {
+            val home = controllerSocket(ctx).parentFile!!
+            val bundled = BundledGeodata.bundled(ctx)
+            withContext(Dispatchers.IO) {
+                BundledGeodata.install(ctx, home).takeIf { it.isNotEmpty() }?.let { android.util.Log.i("Zephyr", "geodata installed: $it") }
+            }
+            runCatching { engine.seedKernelGeodata(home.path) }
+                .onSuccess { if (it.isNotEmpty()) android.util.Log.i("Zephyr", "geodata seeded: $it") }
+                .onFailure { android.util.Log.w("Zephyr", "seedKernelGeodata failed: ${it.message}") }
+            Mihomo.setGeodataTimeout(if (BundledGeodata.allPresent(bundled, home)) 0L else -1L)
         }
 
         private suspend fun start(fd: ParcelFileDescriptor, sock: File): String? {

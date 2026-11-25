@@ -392,6 +392,15 @@ class CoreEngine(
         return withContext(io) { wrap { c.runtimeConfig(id, opts) } }
     }
 
+    /**
+     * Contract §20.c: copies geo data core already holds (geo/geosite.dat → GeoSite.dat, geo/geoip.dat → GeoIP.dat) into
+     * the mihomo home dir when absent there; returns the names copied. Called before every `zm_start`; empty without a core.
+     */
+    suspend fun seedKernelGeodata(kernelHome: String): List<String> {
+        val c = core ?: return emptyList()
+        return withContext(io) { wrap { c.seedKernelGeodata(kernelHome) } }
+    }
+
     // ── Loopback mixed port (§16.f E12): the user's "本地代理端口" when enabled, else a private port for service probes ──
     @Volatile private var activeProxyPort: Int = 0
     /** The auth mihomo was last configured with (null = none), so probes keep working across a credential reset. */

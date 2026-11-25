@@ -1,3 +1,7 @@
+import java.io.ByteArrayOutputStream
+import javax.inject.Inject
+import org.gradle.process.ExecOperations
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -145,9 +149,59 @@ val bundleLicenses = tasks.register<BundleLicenses>("bundleLicenseAssets") {
     outputDir.set(layout.buildDirectory.dir("generated/licenseAssets"))
 }
 
+// ── Bundled kernel geodata (contract §20.d, docs/geodata.md) ──────────────────────────────────────
+// tools/fetch-geodata.sh pulls the pinned snapshot (geoip.metadb + GeoSite.dat, sha256 from tools/geodata.lock) into
+// the repo-root build/geodata cache (skips files whose hash already matches), then the files are copied to the APK's
+// assets/geodata/. Nothing is committed. Release builds fail without them; debug builds only warn (offline dev
+// machines still build; the app then falls back to mihomo's bounded 15 s download) and retry on the next build.
+abstract class BundleGeodata : DefaultTask() {
+    @get:InputFile @get:PathSensitive(PathSensitivity.NAME_ONLY) abstract val lockFile: RegularFileProperty
+    @get:InputFile @get:PathSensitive(PathSensitivity.NAME_ONLY) abstract val script: RegularFileProperty
+    @get:Internal abstract val cacheDir: DirectoryProperty
+    @get:Input abstract val required: Property<Boolean>
+    @get:OutputDirectory abstract val outputDir: DirectoryProperty
+    @get:Inject abstract val exec: ExecOperations
+
+    /** File names listed in tools/geodata.lock (`<name> <sha256> <url>` per line). */
+    fun names(): List<String> = lockFile.get().asFile.readLines()
+        .map { it.trim() }.filter { it.isNotEmpty() && !it.startsWith("#") }.map { it.split(Regex("\\s+")).first() }
+
+    @TaskAction fun bundle() {
+        val dir = outputDir.get().dir("geodata").asFile
+        dir.deleteRecursively(); dir.mkdirs()
+        val cache = cacheDir.get().asFile
+        val log = ByteArrayOutputStream()
+        val result = exec.exec {
+            commandLine("bash", script.get().asFile.absolutePath, cache.absolutePath)
+            standardOutput = log; errorOutput = log; isIgnoreExitValue = true
+        }
+        val missing = names().filterNot { File(cache, it).isFile }
+        if (result.exitValue != 0 || missing.isNotEmpty()) {
+            val msg = "Kernel geodata not bundled (tools/fetch-geodata.sh exit ${result.exitValue}, missing $missing):\n$log" +
+                "Run tools/fetch-geodata.sh by hand or check the network; see docs/geodata.md."
+            if (required.get()) throw GradleException(msg)
+            logger.warn("w: $msg\nw: this debug APK ships without geodata (mihomo downloads it on first connect, ≤15 s).")
+            return
+        }
+        names().forEach { File(cache, it).copyTo(File(dir, it), overwrite = true) }
+        logger.lifecycle("geodata → assets/geodata: ${names()}")
+    }
+}
+
 androidComponents {
     onVariants { variant ->
         variant.sources.assets?.addGeneratedSourceDirectory(bundleLicenses, BundleLicenses::outputDir)
+        val geodata = tasks.register<BundleGeodata>("bundleGeodataAssets${variant.name.replaceFirstChar { it.uppercase() }}") {
+            group = "build"
+            description = "Fetches the pinned mihomo geodata snapshot into assets/geodata/ (docs/geodata.md)"
+            lockFile.set(rootProject.file("../../tools/geodata.lock"))
+            script.set(rootProject.file("../../tools/fetch-geodata.sh"))
+            cacheDir.set(rootProject.layout.projectDirectory.dir("../../build/geodata"))
+            required.set(variant.buildType == "release" || providers.gradleProperty("zephyr.requireGeodata").orNull == "true")
+            // A debug build that could not fetch the files is not up to date: try again next build.
+            outputs.upToDateWhen { t -> (t as BundleGeodata).names().all { t.outputDir.get().dir("geodata").file(it).asFile.isFile } }
+        }
+        variant.sources.assets?.addGeneratedSourceDirectory(geodata, BundleGeodata::outputDir)
         val cap = variant.name.replaceFirstChar { it.uppercase() }
         val check = tasks.register<Verify16kAlignment>("verify16kAlignment$cap") {
             group = "verification"
