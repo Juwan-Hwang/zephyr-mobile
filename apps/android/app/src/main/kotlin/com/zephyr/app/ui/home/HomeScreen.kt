@@ -75,10 +75,11 @@ fun HomeScreen(vm: HomeViewModel, actions: HomeActions) {
     val retesting by vm.retesting.collectAsStateWithLifecycle()
     val scan by vm.scan.collectAsStateWithLifecycle()
     val live = vm.live.collectAsStateWithLifecycle()
+    val profileNodes by vm.profileNodes.collectAsStateWithLifecycle()
     HomeContent(
         conn, scenes, subs, ui, { live.value }, actions,
         HomeCallbacks({ vm.setMode(it) }, { s, n -> vm.pick(s, n) }, { vm.confirmPending() }, { vm.cancelPending() }, { vm.undo() }, { vm.toggleGlobalChange() }, { vm.confirmGlobal() }, { vm.prefetchSlots(it) }, { vm.prefetchFunnel(it) }),
-        retesting, scan,
+        retesting, scan, profileNodes,
     )
 }
 
@@ -108,6 +109,8 @@ fun HomeContent(
     /** Prototype 10 (scan): scenes being re-tested and the pool scan's progress. */
     retesting: Set<String> = emptySet(),
     scan: com.zephyr.engine.ScanProgress? = null,
+    /** Issue #1: nodes in the imported profiles (rows with no exit yet show this instead of "0 个可用"). */
+    profileNodes: Long = subs.sumOf { it.nodeCount },
 ) {
     val c = ZTheme.colors
     val connected = conn.status == ConnectionStatus.CONNECTED
@@ -163,7 +166,7 @@ fun HomeContent(
                 if (conn.mode == ProxyMode.GLOBAL) {
                     GlobalModeCard(ui.globalNode, ui.globalProposal, ui.globalChange, onUseRule = { cb.setMode(ProxyMode.RULE) }, onChangeNode = cb.toggleGlobalChange, onConfirm = cb.confirmGlobal)
                 } else {
-                    SceneCard(scenes, ui.pending, ui.slots, retesting, scan, cb.pick, cb.prefetchSlots, { cb.confirm() }, cb.cancel, actions.onScene, funnels = ui.funnels, onFunnel = cb.prefetchFunnel)
+                    SceneCard(scenes, ui.pending, ui.slots, retesting, scan, cb.pick, cb.prefetchSlots, { cb.confirm() }, cb.cancel, actions.onScene, funnels = ui.funnels, onFunnel = cb.prefetchFunnel, profileNodes = profileNodes)
                 }
             }
             item("subs-h") {

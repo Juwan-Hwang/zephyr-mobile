@@ -36,6 +36,31 @@ class LogsModelTest {
         assertEquals("m20", m.lines.value.first().message)
     }
 
+    /** Issue #1 (S25 Ultra): the app's `.875 connect failed` line came before the core's `.552`–`.820` lines. */
+    @Test fun linesAreKeptInTimeOrderAcrossSources() {
+        val m = LogsModel(engine { emptyList() }, TestScope())
+        val t = 3_600_000L * 16 + 27 * 60_000L + 59_000L // 16:27:59 UTC
+        m.append(LogLine(t + 318, LogLevel.INFO, "connect: native=true"))
+        m.append(LogLine(t + 875, LogLevel.ERROR, "connect failed [core_crashed]"))
+        m.append(LogLine(t + 875, LogLevel.INFO, "on-demand retry in 30s"))
+        // core ring polled a tick later
+        m.append(LogLine(t + 552, LogLevel.INFO, "Load GeoSite rule: cn"))
+        m.append(LogLine(t + 801, LogLevel.ERROR, "Start TUN listening error"))
+        m.append(LogLine(t + 820, LogLevel.WARNING, "Mihomo shutting down"))
+        assertEquals(listOf(318L, 552L, 801L, 820L, 875L, 875L), m.lines.value.map { it.at - t })
+        // equal times keep arrival order
+        assertEquals("connect failed [core_crashed]", m.lines.value[4].message)
+        val text = m.exportText(utc).lines()
+        assertEquals("16:27:59.552 I Load GeoSite rule: cn", text[1])
+        assertEquals("16:27:59.875 I on-demand retry in 30s", text.last())
+    }
+
+    @Test fun insertByTimeHandlesEmptyAndFront() {
+        val a = LogLine(5, LogLevel.INFO, "a"); val b = LogLine(1, LogLevel.INFO, "b")
+        assertEquals(listOf(a), LogsModel.insertByTime(emptyList(), a))
+        assertEquals(listOf(b, a), LogsModel.insertByTime(listOf(a), b))
+    }
+
     @Test fun pauseStopsAppendingAndClearEmpties() {
         val m = LogsModel(engine { emptyList() }, TestScope())
         m.append(line(1)); m.togglePause(); m.append(line(2))

@@ -57,7 +57,7 @@ class LogsModel(
 
     fun append(line: LogLine) {
         if (_paused.value) return
-        _lines.update { (it + line).takeLast(CAPACITY) }
+        _lines.update { insertByTime(it, line).takeLast(CAPACITY) }
     }
 
     private fun subscribe() {
@@ -102,6 +102,18 @@ class LogsModel(
                         .append(time(e.at, tz)).append(' ').append(e.code.name.lowercase())
                 }
             }
+        }
+
+        /**
+         * Issue #1 (S25 Ultra log): app lines (written when they happen) and core lines (pulled from mihomo's ring once a
+         * second) arrive out of order, so `00:27:59.875 connect failed` was listed before the core's `.552` lines. Lines are
+         * kept in time order: [line] goes after every line at or before its time (equal times keep arrival order).
+         */
+        fun insertByTime(lines: List<LogLine>, line: LogLine): List<LogLine> {
+            if (lines.isEmpty() || lines.last().at <= line.at) return lines + line
+            var lo = 0; var hi = lines.size
+            while (lo < hi) { val mid = (lo + hi) ushr 1; if (lines[mid].at <= line.at) lo = mid + 1 else hi = mid }
+            return ArrayList<LogLine>(lines.size + 1).apply { addAll(lines.subList(0, lo)); add(line); addAll(lines.subList(lo, lines.size)) }
         }
 
         /** "HH:mm:ss.SSS W message". */

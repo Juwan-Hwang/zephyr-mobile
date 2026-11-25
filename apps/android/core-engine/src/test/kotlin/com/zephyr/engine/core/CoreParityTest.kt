@@ -73,6 +73,8 @@ class CoreParityTest {
         val cfg = core.runtimeConfig(42, "/tmp/zm.sock", com.zephyr.engine.Settings(), com.zephyr.engine.ProxyMode.RULE)!!
         kotlin.test.assertTrue(cfg.contains("/tmp/zm.sock"), "unix controller")
         kotlin.test.assertTrue(Regex("file-descriptor:\\s*42").containsMatchIn(cfg), "tun fd")
+        // Issue #1: VpnService tun — system fd, mihomo does not route, no per-app fields, same MTU as the builder.
+        assertEquals(emptyList(), TunStartCheck.configProblems(cfg, 42, CoreEngine.tunMtu(com.zephyr.engine.Settings().tun.mtu)), "tun block")
         println("runtime config ${cfg.length} B:\n" + cfg.lines().filter { it.startsWith("tun:") || it.startsWith("  ") }.take(14).joinToString("\n"))
         kotlin.test.assertTrue(Regex("(?m)^proxy-groups:").containsMatchIn(cfg), "groups")
         val scenes = core.scenes().first()
