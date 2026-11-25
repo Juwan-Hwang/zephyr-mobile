@@ -8,6 +8,7 @@
 #   - 只拷 lock 里列出的文件名；目标目录里多余的旧文件删掉。
 # 扩展启动时（BundledGeodata）把内核目录里还没有的文件拷过去，从不覆盖已有文件。
 set -uo pipefail
+# 注意：macOS /bin/bash 3.2 会把紧跟变量名的全角字符当成名字的一部分，中文旁的变量一律写成 ${VAR}。
 
 ROOT="${SRCROOT:?}/../.."
 LOCK="$ROOT/tools/geodata.lock"
@@ -23,17 +24,17 @@ fail() {
   exit 0
 }
 
-[ -f "$LOCK" ] || fail "找不到 $LOCK"
+[ -f "$LOCK" ] || fail "找不到 ${LOCK}"
 "$ROOT/tools/fetch-geodata.sh" "$CACHE" || fail "tools/fetch-geodata.sh 失败（网络或 sha256 不符）"
 
-mkdir -p "$DEST" || fail "无法创建 $DEST"
+mkdir -p "$DEST" || fail "无法创建 ${DEST}"
 names=()
 while read -r name hash url; do
   [[ -z "${name:-}" || "$name" == \#* ]] && continue
-  [ -f "$CACHE/$name" ] || fail "缓存里没有 $name"
+  [ -f "$CACHE/$name" ] || fail "缓存里没有 ${name}"
   # cmp 相同就不再拷：增量构建不改动产物时间戳。
   if ! cmp -s "$CACHE/$name" "$DEST/$name"; then
-    cp -f "$CACHE/$name" "$DEST/$name.tmp" && mv -f "$DEST/$name.tmp" "$DEST/$name" || fail "拷贝 $name 失败"
+    cp -f "$CACHE/$name" "$DEST/$name.tmp" && mv -f "$DEST/$name.tmp" "$DEST/$name" || fail "拷贝 ${name} 失败"
   fi
   names+=("$name")
 done <"$LOCK"
@@ -45,4 +46,4 @@ for f in "$DEST"/*; do
   for n in "${names[@]}"; do [ "$(basename "$f")" = "$n" ] && keep=1; done
   [ $keep = 1 ] || rm -f "$f"
 done
-echo "地理数据 → $DEST（${names[*]}）"
+echo "地理数据 → ${DEST}（${names[*]}）"
