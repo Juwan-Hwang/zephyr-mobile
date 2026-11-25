@@ -224,9 +224,21 @@ class CoreEngine(
         return withContext(io) { wrap { c.subscriptions() }.map(::sub) }.also { subsState.value = it }
     }
 
+    /**
+     * Issue #1 (S25 Ultra): Home's 订阅 card was empty while `connect` found `active=sub-1-…`. The list was read from the
+     * store once per process (only while the cache was null) and a failed read ended the flow; now every new collector
+     * (Home coming back, the sheet opening) re-reads the store, and a failed read keeps the last list instead of
+     * ending the stream. Independent of the tunnel: the store is the source, not the running core.
+     */
     override fun subscriptions(): Flow<List<Subscription>> =
         if (!realSubs) fallback.subscriptions()
-        else flow { if (subsState.value == null) refreshSubs(); emitAll(subsState.filterNotNull()) }
+        else flow {
+            try { refreshSubs() } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (t: Throwable) {
+                runCatching { android.util.Log.w("Zephyr", "subscriptions: ${t.message}") }
+                if (subsState.value == null) subsState.value = emptyList()
+            }
+            emitAll(subsState.filterNotNull())
+        }
 
     override suspend fun subscriptionsSummary(): SubscriptionsSummary {
         val c = core ?: return if (mockData) fallback.subscriptionsSummary() else SubscriptionsSummary(0, 0)
@@ -383,7 +395,7 @@ class CoreEngine(
             dns = DnsConfig(settings.dns.fakeIp, settings.dns.nameservers, settings.dns.fallback, settings.dns.ipv6),
             tun = TunConfig(
                 stack = when (settings.tun.stack) { TunStack.SYSTEM -> TunStackKind.SYSTEM; TunStack.GVISOR -> TunStackKind.GVISOR; TunStack.MIXED -> TunStackKind.MIXED },
-                mtu = settings.tun.mtu, ipv6 = settings.tun.ipv6, strictRoute = settings.tun.strictRoute, fileDescriptor = tunFd,
+                mtu = tunMtu(settings.tun.mtu), ipv6 = settings.tun.ipv6, strictRoute = settings.tun.strictRoute, fileDescriptor = tunFd,
             ),
             mode = when (mode) { ProxyMode.RULE -> CoreMode.RULE; ProxyMode.GLOBAL -> CoreMode.GLOBAL; ProxyMode.DIRECT -> CoreMode.DIRECT },
             controllerSocket = controllerSocket, findProcess = true, logLevel = LOG_LEVEL_DEFAULT, // §16.h
@@ -1233,6 +1245,9 @@ class CoreEngine(
 
         /** Contract §16.c: MTU 1280–9000 (core and the iOS tunnel clamp at 1280 too). */
         val MTU_RANGE = SettingsCodec.MTU_RANGE
+
+        /** Issue #1: the MTU both the VpnService builder and the mihomo tun block get (core alone clamps to 65535). */
+        fun tunMtu(mtu: Int): Int = mtu.coerceIn(MTU_RANGE)
 
         /** §16.c: 本地代理端口 1024–65535; anything else is rejected on save. */
         val LOCAL_PROXY_PORTS = SettingsCodec.LOCAL_PROXY_PORTS

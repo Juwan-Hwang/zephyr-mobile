@@ -36,9 +36,19 @@ object Mihomo {
 
     private fun Lib.take(p: Pointer?): String? = p?.let { val s = it.getString(0, "UTF-8"); zm_free(it); s }
 
+    /** Only when the library itself could not be loaded (dlopen / JNA failed). */
+    const val LIB_MISSING = "libzmihomo missing"
+
+    /**
+     * Issue #1 (S25 Ultra, e244006): `lib?.run { take(zm_start(…)) } ?: "libzmihomo missing"` — zm_start's null is
+     * success, and the elvis turned every successful start into "libzmihomo missing", so the app stopped a core that had
+     * started and showed the wrong reason. [LIB_MISSING] now only when [loaded] is false; otherwise the call's own answer.
+     */
+    inline fun callResult(loaded: Boolean, call: () -> String?): String? = if (loaded) call() else LIB_MISSING
+
     /** Starts the core; returns null on success or mihomo's error text. */
-    fun start(home: String, config: String, ctlSock: String): String? = lib?.run { take(zm_start(home, config, ctlSock)) } ?: "libzmihomo missing"
-    fun reload(config: String): String? = lib?.run { take(zm_reload(config)) } ?: "libzmihomo missing"
+    fun start(home: String, config: String, ctlSock: String): String? { val l = lib; return callResult(l != null) { l!!.take(l.zm_start(home, config, ctlSock)) } }
+    fun reload(config: String): String? { val l = lib; return callResult(l != null) { l!!.take(l.zm_reload(config)) } }
     fun stop() { lib?.zm_stop() }
     val running: Boolean get() = (lib?.zm_running() ?: 0) != 0
     val version: String? get() = lib?.run { take(zm_version()) }
@@ -63,6 +73,28 @@ object Mihomo {
 
     /** In-process ring buffer (500 lines): `{"seq":n,"lines":[{seq,level,msg,at}]}` newer than [since]. */
     fun logs(since: Long, minLevel: String, limit: Int): String? = lib?.run { take(zm_logs(since, minLevel, limit)) }
+
+    /** Newest sequence number in the ring (0 without the library); lines written after this are newer than it. */
+    fun logSeq(): Long = logs(Long.MAX_VALUE, "error", 1)?.let { LogsJson.parse(it).seq } ?: 0L
+
+    /**
+     * Issue #1: `zm_start` succeeds even when the TUN listener failed (mihomo only logs it). Waits up to [timeoutMs]
+     * for the TUN verdict in the lines after [since]; null = listening or no verdict in time (not treated as failure).
+     */
+    suspend fun tunStartError(since: Long, timeoutMs: Long = 1_500, pollMs: Long = 50): String? {
+        if (lib == null) return null
+        val deadline = System.currentTimeMillis() + timeoutMs
+        while (true) {
+            val lines = logs(since, "info", 200)?.let { LogsJson.parse(it).lines.map { l -> l.message } }.orEmpty()
+            when (val o = TunStartCheck.outcome(lines)) {
+                is TunStartCheck.Outcome.Failed -> return TunStartCheck.message(o)
+                TunStartCheck.Outcome.Listening -> return null
+                null -> Unit
+            }
+            if (System.currentTimeMillis() >= deadline) return null
+            kotlinx.coroutines.delay(pollMs)
+        }
+    }
 
     /**
      * Temporary outbounds from core `latencyTestBatch` JSON, tested without zm_start (contract §14.w).

@@ -80,6 +80,16 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
     val scenes: StateFlow<List<Scene>> = engine.scenes().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
     val subscriptions: StateFlow<List<Subscription>> = engine.subscriptions().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
+    /**
+     * Issue #1 (S25 Ultra): nodes in the imported profiles, read from the store (core `subscriptionsSummary`) whenever
+     * the scenes or the subscription list move — not from the running core, so it is there before the first connect
+     * and after a failed one. Rows with no exit yet show it instead of "0 个可用".
+     */
+    val profileNodes: StateFlow<Long> = kotlinx.coroutines.flow.merge(engine.scenes().map { }, engine.subscriptions().map { })
+        .map { runCatching { engine.subscriptionsSummary().totalNodes }.getOrDefault(0L) }
+        .distinctUntilChanged()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0L)
+
     private val _ui = MutableStateFlow(HomeUi())
     val ui: StateFlow<HomeUi> = _ui.asStateFlow()
     /** App-level toast (drawn above sheets in AppRoot) without the 1 Hz home churn. */

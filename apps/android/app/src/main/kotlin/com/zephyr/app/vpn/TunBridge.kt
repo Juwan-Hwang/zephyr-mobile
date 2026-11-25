@@ -11,6 +11,7 @@ import com.zephyr.engine.Settings
 import com.zephyr.engine.ZephyrEngine
 import com.zephyr.engine.core.CoreEngine
 import com.zephyr.engine.core.Mihomo
+import com.zephyr.engine.core.TunStartCheck
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.first
@@ -83,9 +84,18 @@ interface TunBridge {
             var cfg: String? = null
             configCheck { engine.runtimeConfig(fd.fd, sock.path, settings, mode).also { cfg = it } }?.let { return it }
             val config = cfg!!
+            // Issue #1: the tun block must be the VpnService one (system fd, mihomo does not route, no per-app fields).
+            TunStartCheck.configProblems(config, fd.fd, tunMtu(settings.tun.mtu)).takeIf { it.isNotEmpty() }?.let {
+                android.util.Log.w("Zephyr", "tun config: ${it.joinToString("; ")}")
+                engine.appLog(com.zephyr.engine.LogLevel.WARNING, "tun config: ${it.joinToString("; ")}")
+            }
             Mihomo.setMemoryLimit(MEMORY_LIMIT)
             sock.delete() // stale socket from a crashed run would make the listener fail
+            val since = withContext(Dispatchers.IO) { Mihomo.logSeq() }
             val err = withContext(Dispatchers.IO) { Mihomo.start(sock.parentFile!!.path, config, sock.path) }
+                // Issue #1: zm_start returns success even when the TUN listener failed (mihomo only logs it); without
+                // this the tun fd is never read and every app's traffic goes nowhere. Stop and report the real reason.
+                ?: Mihomo.tunStartError(since)?.also { withContext(Dispatchers.IO) { Mihomo.stop() } }
             if (err == null) engine.tunnelStarted() // usage ledger: a fresh core counts from zero (audit E39)
             if (err == null) engine.reloader = {
                 // Scene/exception/override changes that need new groups or rules: same fd, fresh config.
@@ -150,10 +160,14 @@ interface TunBridge {
         /** mihomo home dir holds the socket; same path for zm_start and the REST client (RustLive). */
         fun controllerSocket(ctx: Context): File = File(File(ctx.filesDir, "mihomo").apply { mkdirs() }, "ctl.sock")
 
+        /** One MTU for `VpnService.Builder.setMtu` and the mihomo tun block. */
+        fun tunMtu(mtu: Int): Int = CoreEngine.tunMtu(mtu)
+
         /** Tun parameters shared with core config (fake-ip range 198.18.0.0/15, like desktop TUN). */
         fun configure(b: VpnService.Builder, mtu: Int, ipv6: Boolean, excluded: List<String>, self: String): VpnService.Builder = b.apply {
-            // Audit E16: same clamp as iOS TunnelConfiguration (settings already reject < 576 / > 9000).
-            setMtu(mtu.coerceIn(MTU_MIN, MTU_MAX))
+            // Audit E16: same clamp as iOS TunnelConfiguration (settings already reject < 1280 / > 9000); the mihomo tun
+            // block gets the same value (CoreEngine.runtimeConfig uses [tunMtu] too).
+            setMtu(tunMtu(mtu))
             addAddress("198.18.0.1", 30)
             addDnsServer("198.18.0.2")
             if (ipv6) addAddress("fdfe:dcba:9876::1", 126)

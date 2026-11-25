@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.ui.layout.layout
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -51,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import com.zephyr.app.R
 import com.zephyr.app.ui.common.joinAnd
 import com.zephyr.app.ui.common.joinList
+import com.zephyr.app.ui.common.toPluralCount
 import com.zephyr.design.components.ZSurfaceLevel
 import androidx.compose.foundation.shape.RoundedCornerShape
 import com.zephyr.design.components.ZButton
@@ -85,18 +85,14 @@ fun SceneCard(
     /** J-1 mini funnel per row (contract v0.7 §19.a); a missing entry keeps the "n 个可用" text. */
     funnels: Map<String, com.zephyr.engine.NodeFunnel> = emptyMap(),
     onFunnel: (Scene) -> Unit = {},
+    /** Issue #1: nodes in the imported profiles, for rows that have no exit yet (before the first connect / test). */
+    profileNodes: Long = 0,
 ) {
     val hint = com.zephyr.app.ui.common.LocalScrubHint.current
     var hinted by remember(hint.seen) { mutableStateOf(hint.seen) }
     ZCard(Modifier.padding(horizontal = 16.dp), level = ZSurfaceLevel.S1, shape = RoundedCornerShape(22.dp)) {
         scenes.forEachIndexed { i, s ->
-            if (i > 0) {
-                ZDivider(inset = false)
-                // Review H-P2-5: prototype `.coach` (122) floats on the divider under the AI row, masking it with the
-                // card colour and nudging 6 dp left every 2.4 s; it takes no height, so the card never grows.
-                val prev = scenes[i - 1]
-                if (prev.kind == SceneKind.AI && !hinted && pending == null) ScrubCoach()
-            }
+            if (i > 0) ZDivider(inset = false)
             if (s.source != SceneSource.SUBSCRIPTION_GROUP) androidx.compose.runtime.LaunchedEffect(s.id, s.selected.id, s.source) { onPrefetch(s) }
             // Re-count on re-test, exit change (region), node filter change (§19.a range).
             if (s.source != SceneSource.SUBSCRIPTION_GROUP) androidx.compose.runtime.LaunchedEffect(s.id, s.selected.region, s.testedAt, s.nodeFilter) { onFunnel(s) }
@@ -104,6 +100,7 @@ fun SceneCard(
                 s, slots[s.id].orEmpty(), pendingNode = pending?.takeIf { it.scene.id == s.id }?.node,
                 probing = if (s.id in retesting) (scan?.fraction ?: 0f) else null,
                 funnel = funnels[s.id]?.takeIf { it.poolSize > 0 },
+                profileNodes = profileNodes,
                 onScrubStart = { if (!hinted) { hinted = true; hint.markSeen() }; if (pending != null) onCancel() },
                 onPick = { n -> onPick(s, n) }, onOpen = { onOpen(s) },
             )
@@ -112,8 +109,25 @@ fun SceneCard(
                 enter = expandVertically(ZAnim.slow()) + fadeIn(ZAnim.standard()),
                 exit = shrinkVertically(ZAnim.standard()) + fadeOut(ZAnim.micro()),
             ) { pending?.let { ExitConfirm(it, onConfirm, onCancel) } }
+            // Issue #1 (S25 Ultra): the coach used to float on the divider under the AI row (zero height, masked with
+            // surface2 on an S1 card) and covered the divider. It now takes its own line at the bottom of the AI row,
+            // above the divider, still nudging 6 dp every 2.4 s; it goes away after the first scrub as before.
+            if (s.kind == SceneKind.AI && i < scenes.lastIndex && !hinted && pending == null) ScrubCoach()
         }
     }
+}
+
+/** What a scene row's count line says (issue #1: a row with no exit yet shows the profile's node count, not "0 个可用"). */
+sealed interface SceneCount {
+    data class Available(val n: Int) : SceneCount
+    data class ProfileNodes(val n: Long) : SceneCount
+    data object Group : SceneCount
+}
+
+fun sceneCount(s: Scene, profileNodes: Long): SceneCount = when {
+    s.source == SceneSource.SUBSCRIPTION_GROUP -> SceneCount.Group
+    s.selected.id < 0 && s.available <= 0 && profileNodes > 0 -> SceneCount.ProfileNodes(profileNodes)
+    else -> SceneCount.Available(s.available)
 }
 
 @Composable
@@ -125,6 +139,7 @@ private fun SceneRow(
     probing: Float?,
     /** Spec §9.3: drawn instead of "n 个可用" only when counted (poolSize > 0); never a made-up ratio. */
     funnel: com.zephyr.engine.NodeFunnel?,
+    profileNodes: Long,
     onScrubStart: () -> Unit,
     onPick: (NodeSummary) -> Unit,
     onOpen: () -> Unit,
@@ -208,8 +223,11 @@ private fun SceneRow(
             } else ZText(
                 when {
                     down.isNotEmpty() -> stringResource(R.string.home_scene_services_down, joinList(down.map { it.name }))
-                    s.source == SceneSource.SUBSCRIPTION_GROUP -> stringResource(R.string.common_source_group)
-                    else -> pluralStringResource(R.plurals.common_available_count, s.available, s.available)
+                    else -> when (val n = sceneCount(s, profileNodes)) {
+                        SceneCount.Group -> stringResource(R.string.common_source_group)
+                        is SceneCount.ProfileNodes -> pluralStringResource(R.plurals.common_node_count, n.n.toPluralCount(), com.zephyr.design.format.ZFormat.grouped(n.n))
+                        is SceneCount.Available -> pluralStringResource(R.plurals.common_available_count, n.n, n.n)
+                    }
                 },
                 style = ZTheme.type.callout.copy(fontSize = 13.sp), color = if (down.isNotEmpty()) c.dangerText else c.text3, maxLines = lines,
             )
@@ -338,12 +356,8 @@ private fun ScrubCoach() {
         Modifier
             .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
-            .layout { m, c ->
-                val p = m.measure(c.copy(minHeight = 0, maxHeight = androidx.compose.ui.unit.Constraints.Infinity))
-                layout(c.maxWidth, 0) { p.place((c.maxWidth - p.width) / 2, -p.height / 2) }
-            }
+            .padding(top = 0.dp, bottom = 10.dp)
             .graphicsLayer { translationX = dir * dx * density }
-            .background(ZTheme.colors.surface2)
             .padding(horizontal = 8.dp),
         style = ZTheme.type.footnote.copy(fontSize = androidx.compose.ui.unit.TextUnit(11f, androidx.compose.ui.unit.TextUnitType.Sp)),
         color = ZTheme.colors.accentText,
