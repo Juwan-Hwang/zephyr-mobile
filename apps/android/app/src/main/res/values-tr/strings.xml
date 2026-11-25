@@ -89,6 +89,8 @@
     <string name="home_failure_vpn_permission">VPN izni gerekli</string>
     <string name="home_failure_network">Ağ kullanılamıyor</string>
     <string name="home_failure_core">Çekirdek başlatılamadı</string>
+    <string name="home_failure_geodata">Coğrafi veriler eksik</string>
+    <string name="home_failure_details_a11y">Hata ayrıntıları</string>
     <string name="home_action_switch_mode">Mod değiştirme</string>
     <string name="home_action_preview_exit">Çıkış önizlemesi</string>
     <string name="home_action_retest">Yeniden test</string>

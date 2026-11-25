@@ -93,6 +93,8 @@
     <string name="home_failure_vpn_permission">مجوز VPN لازم است</string>
     <string name="home_failure_network">شبکه در دسترس نیست</string>
     <string name="home_failure_core">هسته اجرا نشد</string>
+    <string name="home_failure_geodata">داده‌های جغرافیایی موجود نیست</string>
+    <string name="home_failure_details_a11y">جزئیات خطا</string>
     <string name="home_action_switch_mode">تغییر حالت</string>
     <string name="home_action_preview_exit">پیش‌نمایش خروجی</string>
     <string name="home_action_retest">آزمایش دوباره</string>

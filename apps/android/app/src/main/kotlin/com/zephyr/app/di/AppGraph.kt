@@ -42,7 +42,9 @@ object AppGraph {
         val core = CoreEngine(
             MockEngine(scope = appScope, demo = demo),
             dataDir = java.io.File(app.filesDir, "core").apply { mkdirs() }.path,
-            mockData = BuildConfig.DEBUG,
+            // Issue #1 (S25 Ultra): mock only when the native libraries are missing / failed to load, or in demo
+            // mode; a debug build on a real device with the cores packaged shows the real (possibly empty) store.
+            mockDataFor = { nativeLoaded -> CoreEngine.useMockData(BuildConfig.DEBUG, demo, nativeLoaded) },
             appVersion = BuildConfig.VERSION_NAME, // §16.i fetch User-Agent
             live = run {
                 // Same socket TunBridge.Embedded hands to zm_start; only dialled while mihomo runs in-process.
@@ -66,16 +68,15 @@ object AppGraph {
             }
             // Contract §16.a⑤: 「按需连接」 also reconnects when the network comes back from none (e.g. the tunnel
             // failed to come up offline). The running service handles every other switch itself.
+            // Issue #1: the first snapshot only records (unknown → known is not "the network came back").
             appScope.launch {
-                var had = m.state.value.network != null
+                val back = com.zephyr.app.vpn.NetworkReturn()
                 m.state.collect { snap ->
-                    val has = snap.network != null
-                    if (has && !had && !com.zephyr.app.vpn.ZephyrVpnService.running) {
+                    if (back.update(snap.network != null) && !com.zephyr.app.vpn.ZephyrVpnService.running) {
                         settings.loaded.await()
                         val on = runCatching { core.settings().first().onDemand }.getOrDefault(false)
                         com.zephyr.app.vpn.OnDemand.reconnectIfWanted(app, on, "network up")
                     }
-                    had = has
                 }
             }
         }

@@ -93,6 +93,8 @@
     <string name="home_failure_vpn_permission">VPN کی اجازت درکار ہے</string>
     <string name="home_failure_network">نیٹ ورک دستیاب نہیں</string>
     <string name="home_failure_core">کور شروع نہیں ہو سکا</string>
+    <string name="home_failure_geodata">جغرافیائی ڈیٹا موجود نہیں</string>
+    <string name="home_failure_details_a11y">خرابی کی تفصیلات</string>
     <string name="home_action_switch_mode">موڈ کی تبدیلی</string>
     <string name="home_action_preview_exit">ایگزٹ کا پیش منظر</string>
     <string name="home_action_retest">دوبارہ ٹیسٹ</string>

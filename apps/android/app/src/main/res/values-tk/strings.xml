@@ -89,6 +89,8 @@
     <string name="home_failure_vpn_permission">VPN rugsady gerek</string>
     <string name="home_failure_network">Tor elýeterli däl</string>
     <string name="home_failure_core">Ýadro işe girizilmedi</string>
+    <string name="home_failure_geodata">Geografiki maglumatlar ýok</string>
+    <string name="home_failure_details_a11y">Ýalňyşlyk barada jikme-jiklikler</string>
     <string name="home_action_switch_mode">Režimi çalyşmak</string>
     <string name="home_action_preview_exit">Çykyşy öňünden görmek</string>
     <string name="home_action_retest">Gaýtadan barlamak</string>

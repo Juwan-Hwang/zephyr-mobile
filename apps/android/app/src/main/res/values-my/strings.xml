@@ -84,6 +84,8 @@
     <string name="home_failure_vpn_permission">VPN ခွင့်ပြုချက် လိုအပ်သည်</string>
     <string name="home_failure_network">ကွန်ရက် မရနိုင်ပါ</string>
     <string name="home_failure_core">Core ကို စတင်၍ မရပါ</string>
+    <string name="home_failure_geodata">ပထဝီဒေတာ မရှိပါ</string>
+    <string name="home_failure_details_a11y">အမှား အသေးစိတ်</string>
     <string name="home_action_switch_mode">မုဒ်ပြောင်းခြင်း</string>
     <string name="home_action_preview_exit">ထွက်ပေါက် ကြိုကြည့်ခြင်း</string>
     <string name="home_action_retest">ပြန်စမ်းသပ်ခြင်း</string>

@@ -94,6 +94,8 @@
     <string name="home_failure_vpn_permission">Se necesita permiso de VPN</string>
     <string name="home_failure_network">Red no disponible</string>
     <string name="home_failure_core">No se ha podido iniciar el núcleo</string>
+    <string name="home_failure_geodata">Faltan datos geográficos</string>
+    <string name="home_failure_details_a11y">Detalles del error</string>
     <string name="home_action_switch_mode">cambiar de modo</string>
     <string name="home_action_preview_exit">previsualizar la salida</string>
     <string name="home_action_retest">volver a probar</string>

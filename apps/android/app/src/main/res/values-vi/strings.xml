@@ -84,6 +84,8 @@
     <string name="home_failure_vpn_permission">Cần quyền VPN</string>
     <string name="home_failure_network">Mạng không khả dụng</string>
     <string name="home_failure_core">Không khởi động được lõi</string>
+    <string name="home_failure_geodata">Thiếu dữ liệu địa lý</string>
+    <string name="home_failure_details_a11y">Chi tiết lỗi</string>
     <string name="home_action_switch_mode">đổi chế độ</string>
     <string name="home_action_preview_exit">xem trước đầu ra</string>
     <string name="home_action_retest">kiểm tra lại</string>

@@ -84,6 +84,8 @@
     <string name="home_failure_vpn_permission">VPN 권한 필요</string>
     <string name="home_failure_network">네트워크를 사용할 수 없음</string>
     <string name="home_failure_core">코어를 시작할 수 없음</string>
+    <string name="home_failure_geodata">지리 데이터가 없음</string>
+    <string name="home_failure_details_a11y">오류 세부정보</string>
     <string name="home_action_switch_mode">모드 전환</string>
     <string name="home_action_preview_exit">출구 미리 보기</string>
     <string name="home_action_retest">다시 테스트</string>

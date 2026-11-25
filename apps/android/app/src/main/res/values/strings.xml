@@ -110,6 +110,8 @@
     <string name="home_failure_vpn_permission">VPN permission needed</string>
     <string name="home_failure_network">Network unavailable</string>
     <string name="home_failure_core">The core couldn’t start</string>
+    <string name="home_failure_geodata">Geodata missing</string>
+    <string name="home_failure_details_a11y">Error details</string>
     <!-- Action names below fill %1$s of home_error_*; lowercase in English -->
     <string name="home_action_switch_mode">switch mode</string>
     <string name="home_action_preview_exit">preview the exit</string>

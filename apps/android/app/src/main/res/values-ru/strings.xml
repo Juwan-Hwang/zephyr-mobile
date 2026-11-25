@@ -99,6 +99,8 @@
     <string name="home_failure_vpn_permission">Нужно разрешение на VPN</string>
     <string name="home_failure_network">Сеть недоступна</string>
     <string name="home_failure_core">Не удалось запустить ядро</string>
+    <string name="home_failure_geodata">Нет геоданных</string>
+    <string name="home_failure_details_a11y">Подробности ошибки</string>
     <string name="home_action_switch_mode">сменить режим</string>
     <string name="home_action_preview_exit">показать выход</string>
     <string name="home_action_retest">проверить снова</string>

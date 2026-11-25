@@ -88,6 +88,8 @@
     <string name="home_failure_vpn_permission">需要允许 VPN 连接</string>
     <string name="home_failure_network">网络不可用</string>
     <string name="home_failure_core">内核未能启动</string>
+    <string name="home_failure_geodata">缺少地理数据</string>
+    <string name="home_failure_details_a11y">错误详情</string>
     <string name="home_action_switch_mode">切换模式</string>
     <string name="home_action_preview_exit">预览出口</string>
     <string name="home_action_retest">重新检测</string>
