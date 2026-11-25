@@ -1,0 +1,5 @@
+# mihomo 地理数据快照（tools/fetch-geodata.sh 读取）。格式：<安装后的文件名> <sha256> <url>
+# 快照来源：MetaCubeX/meta-rules-dat release 7ff38ff（2026-11-24），原样转存到本仓库 Release geodata-20261124，地址不随上游每日更新而失效。
+# 更新：tools/fetch-geodata.sh --update 打印上游 latest 的新哈希；把文件传到新的 geodata-YYYYMMDD Release 后改这里。
+geoip.metadb 4236cf8477d12ceb4837eff39a03a65d5d55a72d3cccdc92e2e36d9cdbd686e3 https://github.com/Juwan-Hwang/zephyr-mobile/releases/download/geodata-20261124/geoip.metadb
+GeoSite.dat 2bdf171e1862b47cc5cd322ee43e5d066d9963025919ebb58dc7891d2b92643e https://github.com/Juwan-Hwang/zephyr-mobile/releases/download/geodata-20261124/geosite.dat

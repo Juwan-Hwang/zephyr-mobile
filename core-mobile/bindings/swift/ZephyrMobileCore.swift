@@ -1070,6 +1070,14 @@ public protocol MobileCoreProtocol : AnyObject {
     
     func scenes(nowMillis: Int64) throws  -> [Scene]
     
+    /**
+     * 把核心已有的地理数据拷进 mihomo 内核目录（zm_start 的 home_dir），内核启动就不必联网下载。
+     * 只拷内核目录里还没有的：geo/geosite.dat → GeoSite.dat；geo/geoip.dat → GeoIP.dat（仅 `geodata-mode: true` 时 mihomo 读它，
+     * 默认模式的 GEOIP 读 geoip.metadb，需随安装包分发，见 docs/geodata.md）。返回拷入的文件名。
+     * 平台在每次 zm_start 前调用（便宜：文件已在就直接返回）。
+     */
+    func seedKernelGeodata(kernelHome: String) throws  -> [String]
+    
     func setFailoverPolicy(policy: FailoverPolicy) throws 
     
     /**
@@ -1726,6 +1734,20 @@ open func scenes(nowMillis: Int64)throws  -> [Scene] {
     return try  FfiConverterSequenceTypeScene.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_scenes(self.uniffiClonePointer(),
         FfiConverterInt64.lower(nowMillis),$0
+    )
+})
+}
+    
+    /**
+     * 把核心已有的地理数据拷进 mihomo 内核目录（zm_start 的 home_dir），内核启动就不必联网下载。
+     * 只拷内核目录里还没有的：geo/geosite.dat → GeoSite.dat；geo/geoip.dat → GeoIP.dat（仅 `geodata-mode: true` 时 mihomo 读它，
+     * 默认模式的 GEOIP 读 geoip.metadb，需随安装包分发，见 docs/geodata.md）。返回拷入的文件名。
+     * 平台在每次 zm_start 前调用（便宜：文件已在就直接返回）。
+     */
+open func seedKernelGeodata(kernelHome: String)throws  -> [String] {
+    return try  FfiConverterSequenceString.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_seed_kernel_geodata(self.uniffiClonePointer(),
+        FfiConverterString.lower(kernelHome),$0
     )
 })
 }
@@ -8663,6 +8685,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_scenes() != 51937) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_seed_kernel_geodata() != 38773) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_failover_policy() != 8372) {
