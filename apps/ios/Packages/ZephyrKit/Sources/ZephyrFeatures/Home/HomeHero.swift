@@ -37,6 +37,10 @@ struct HomeHero: View {
                         .lineLimit(2)
                 }
             }
+            // #1 A 真机结论 ③：失败提示下的错误原文（默认一行，点开展开），只在失败时出现。
+            if model.connection.status == .failed, let detail = model.connection.error?.failureDetail {
+                FailureDetail(detail: detail)
+            }
         }
         .padding(.horizontal, HMetrics.homeInset)
     }
@@ -77,6 +81,40 @@ struct HomeHero: View {
 
     private var failureTone: Color {
         model.connection.status == .failed ? ZTokens.Colors.screenRedText : ZColor.t3
+    }
+}
+
+/// 连接失败的原文（ZephyrError.message，折叠空白、截断 240 字）：默认一行，点一下展开到 6 行，再点收起。
+@MainActor
+struct FailureDetail: View {
+    let detail: String
+    @State private var open = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    static let expandedLines = 6
+
+    var body: some View {
+        Button {
+            withAnimation(reduceMotion ? nil : ZMotion.standard) { open.toggle() }
+        } label: {
+            HStack(alignment: .firstTextBaseline, spacing: ZTokens.Space.n1) {
+                Text(verbatim: detail)
+                    .hFont(12, relativeTo: .caption)
+                    .foregroundStyle(ZColor.t3)
+                    .lineLimit(open ? Self.expandedLines : 1)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Image(systemName: "chevron.down")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(ZColor.t3)
+                    .rotationEffect(.degrees(open ? 180 : 0))
+                    .accessibilityHidden(true)
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(verbatim: ZL.tr("错误详情")))
+        .accessibilityValue(Text(verbatim: detail))
     }
 }
 

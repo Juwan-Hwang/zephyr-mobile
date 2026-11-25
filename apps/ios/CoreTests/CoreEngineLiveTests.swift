@@ -82,7 +82,7 @@ final class CoreEngineLiveTests: XCTestCase {
     func testConnectWritesConfigThenStartsTunnel() async throws {
         let (e, t) = make()
         do { try await e.connect(); XCTFail("无订阅不能连接") } catch let err as ZephyrError {
-            XCTAssertEqual(err.code, .subscriptionInvalid)
+            XCTAssertEqual(err.code, .subscriptionNotFound)
         }
         XCTAssertEqual(t.started, 0)
         _ = try await e.importSubscription(source: .url, payload: "https://sub.example.com/a")

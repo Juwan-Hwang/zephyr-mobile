@@ -36,11 +36,11 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
             }
         }
 
-        /// 契约 §10 ErrorCode 序列化名（configMissing 与扩展找不到配置时一致，见 §14.x）。
+        /// 契约 §10 ErrorCode 序列化名。configMissing = 还没有配置文件，即还没导入过订阅 → subscription_not_found（契约 §16 ②，#1 C 22:01 ③）。
         var code: String {
             switch self {
             case .permissionDenied: "vpn_permission_denied"
-            case .configMissing: "subscription_invalid"
+            case .configMissing: "subscription_not_found"
             case .notConnected: "not_running"
             case .badResponse: "internal"
             }
@@ -67,8 +67,9 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
         }
         if on {
             let manager = try await loadOrCreateManager()
-            // 用户手动连接：结束“手动断开暂停”（§16.a⑤）。
+            // 用户手动连接：结束“手动断开暂停”（§16.a⑤）与失败暂停 / 退避（ReconnectBackoff，#1 ②）。
             OnDemandPause.setUserPaused(false)
+            ReconnectBackoff.manualStart()
             // 手动断开时暂停过按需：按设置恢复（规则由 apply(onDemand:) 按当前设置写好）。
             let resume = OnDemandPause.enabledBeforeStart(hasRules: !(manager.onDemandRules ?? []).isEmpty,
                                                           current: manager.isOnDemandEnabled)
@@ -101,12 +102,14 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
     /// startVPNTunnel：配置过期 / 无效（另一进程刚改过配置）时重新 load 再试一次；
     /// 权限 / 配置被拒 → permissionDenied；其余系统错误原样抛出（#207 E07）。
     private func start(_ manager: NETunnelProviderManager) async throws {
+        // 标明手动启动：扩展据此清零连续失败、不受退避 / 失败暂停限制（系统按需启动时没有这个键）。
+        let options: [String: NSObject] = [ReconnectBackoff.manualStartOption: NSNumber(value: true)]
         do {
-            try manager.connection.startVPNTunnel(options: nil)
+            try manager.connection.startVPNTunnel(options: options)
         } catch let error as NSError where error.domain == NEVPNErrorDomain
             && (error.code == NEVPNError.Code.configurationStale.rawValue || error.code == NEVPNError.Code.configurationInvalid.rawValue) {
             try await manager.loadFromPreferences()
-            do { try manager.connection.startVPNTunnel(options: nil) } catch { throw Self.permissionMapped(error) }
+            do { try manager.connection.startVPNTunnel(options: options) } catch { throw Self.permissionMapped(error) }
         } catch {
             throw Self.permissionMapped(error)
         }
@@ -155,6 +158,24 @@ final class TunnelController: ConnectionControlling, @unchecked Sendable {
         manager.isOnDemandEnabled = enabled
         try await manager.saveToPreferences()
         try await manager.loadFromPreferences()
+    }
+
+    /// 扩展因连续失败 / geodata missing / 缺订阅暂停了按需（ReconnectBackoff）：扩展改不了系统 VPN 配置，由 App 把
+    /// isOnDemandEnabled 关掉，系统就不再一次次拉起扩展。规则保留，下次手动连接时 `setConnected(true)` 按设置恢复。
+    /// 返回是否改了系统配置。App 启动与每次隧道状态变化时调用；没有 VPN 配置或按需本就关着时什么都不做。
+    @discardableResult
+    func disarmOnDemandIfPaused() async -> Bool {
+        guard ReconnectBackoff.streak().paused,
+              let manager = try? await existingManager(),
+              let off = OnDemandPause.enabledBeforeStop(current: manager.isOnDemandEnabled) else { return false }
+        manager.isOnDemandEnabled = off
+        do {
+            try await manager.saveToPreferences()
+            try await manager.loadFromPreferences()
+            return true
+        } catch {
+            return false
+        }
     }
 
     // MARK: 状态校正（#207 E05）

@@ -57,6 +57,8 @@ struct SharedState: Codable, Sendable, Hashable {
         var since: Date?
         /// failed 时的 ErrorCode 序列化名（UI 本地化）。
         var errorCode: String?
+        /// failed 时的错误原文（扩展写，如 `geodata missing: …`）：首页“错误详情”与日志页显示，不本地化。旧数据没有此键 → nil。
+        var errorMessage: String? = nil
 
         var isOn: Bool { status.isOn }
     }

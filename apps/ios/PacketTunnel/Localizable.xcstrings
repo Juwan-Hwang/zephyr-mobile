@@ -329,6 +329,88 @@
           }
         }
       }
+    },
+    "自动连接已暂停，请打开 Zephyr 手动连接。" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الاتصال التلقائي متوقف مؤقتًا. افتح Zephyr للاتصال يدويًا."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic connection is paused. Open Zephyr to connect manually."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La conexión automática está en pausa. Abre Zephyr para conectarte manualmente."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اتصال خودکار متوقف شده است. Zephyr را باز کنید و دستی وصل شوید."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自動接続は一時停止中です。Zephyr を開いて手動で接続してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "자동 연결이 일시 중지되었습니다. Zephyr를 열어 직접 연결하세요."
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "အလိုအလျောက် ချိတ်ဆက်မှုကို ခေတ္တရပ်ထားသည်။ Zephyr ကိုဖွင့်ပြီး ကိုယ်တိုင် ချိတ်ဆက်ပါ။"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Автоподключение приостановлено. Откройте Zephyr и подключитесь вручную."
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muunganisho wa kiotomatiki umesitishwa. Fungua Zephyr uunganishe mwenyewe."
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Awtomatik birikme togtadyldy. Zephyr-i açyp, el bilen birikiň."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otomatik bağlantı duraklatıldı. Elle bağlanmak için Zephyr'i açın."
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "خودکار کنکشن موقوف ہے۔ دستی طور پر کنیکٹ کرنے کے لیے Zephyr کھولیں۔"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kết nối tự động đang tạm dừng. Mở Zephyr để kết nối thủ công."
+          }
+        }
+      }
     }
   }
 }

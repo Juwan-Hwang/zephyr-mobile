@@ -24,7 +24,8 @@ final class ModelTests: XCTestCase {
         XCTAssertEqual(try json(ZephyrError(code: .vpnPermissionDenied, message: "x"))["code"] as? String, "vpn_permission_denied")
         XCTAssertEqual(SceneSource.subscriptionGroup.rawValue, "subscription_group")
         XCTAssertEqual(CommandKind.openNodeQuery.rawValue, "open_node_query")
-        XCTAssertEqual(ErrorCode.allCases.count, 13)
+        XCTAssertEqual(ErrorCode.allCases.count, 14)
+        XCTAssertEqual(ErrorCode.subscriptionNotFound.rawValue, "subscription_not_found")
     }
 
     struct GroupTypeBox: Codable { var t: GroupType }

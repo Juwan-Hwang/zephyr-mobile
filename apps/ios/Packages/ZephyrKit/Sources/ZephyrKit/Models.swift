@@ -15,6 +15,8 @@ public enum ErrorCode: String, Sendable, Hashable, Codable, CaseIterable {
     case vpnPermissionDenied = "vpn_permission_denied"
     case networkUnavailable = "network_unavailable"
     case subscriptionInvalid = "subscription_invalid"
+    /// 契约 v0.1 / §16 ②（E07）：还没有订阅（不是订阅坏了）。连接失败时不退避、暂停按需，提示先添加订阅（#1 C 22:01 ③）。
+    case subscriptionNotFound = "subscription_not_found"
     case subscriptionFetchFailed = "subscription_fetch_failed"
     case nodeNotFound = "node_not_found"
     case sceneNotFound = "scene_not_found"

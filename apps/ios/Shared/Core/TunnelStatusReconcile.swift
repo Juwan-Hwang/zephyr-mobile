@@ -35,16 +35,19 @@ extension SharedState {
             s.connection.status = .disconnected
             s.connection.since = nil
             s.connection.errorCode = nil
+            s.connection.errorMessage = nil
         case .connected:
             guard connection.status != .connected || connection.since == nil else { return self }
             s.connection.status = .connected
             s.connection.since = connection.since ?? systemSince
             s.connection.errorCode = nil
+            s.connection.errorMessage = nil
         case .connecting, .disconnecting:
             guard connection.status != system else { return self }
             s.connection.status = system
             s.connection.since = nil
             s.connection.errorCode = nil
+            s.connection.errorMessage = nil
         }
         if s.connection.status != .connected {
             s.rate.downBps = 0

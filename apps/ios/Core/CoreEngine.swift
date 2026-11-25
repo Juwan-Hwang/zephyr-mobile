@@ -40,6 +40,10 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     private var scenePublishedSeq = 0
     var latencyWatchers: [UUID: AsyncStream<[LatencyUpdate]>.Continuation] = [:]
     private var settingsWatchers: [UUID: AsyncStream<ZephyrKit.Settings>.Continuation] = [:]
+    /// App 自己的日志（连接失败原因等，#1 ③）：最近 `appLogCapacity` 条 + 实时订阅者。
+    private var appLogLines: [LogLine] = []
+    private var appLogWatchers: [UUID: AsyncStream<LogLine>.Continuation] = [:]
+    static let appLogCapacity = 100
     private var globalWatchers: [UUID: AsyncStream<Void>.Continuation] = [:]
     private var cachedSettings: ZephyrKit.Settings?
     private let settingsURL: URL
@@ -62,6 +66,18 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
 
     /// 核心是否已加载（不代表已有数据）。
     public var isNative: Bool { core != nil }
+
+    /// 核心为空时是否用 MockEngine 的确定性数据顶上（#1 A 真机结论 ①）：
+    /// 演示模式总是；原生核心没加载起来时只在 Debug（Release 显示不可用页，绝不展示假数据）；
+    /// 原生核心正常时只在 Debug 的模拟器上（真机 Debug 包也显示真实的空状态 / 空用量）。
+    public static func usesMockData(debug: Bool, simulator: Bool, demo: Bool, nativeLoaded: Bool) -> Bool {
+        if demo { return true }
+        guard debug else { return false }
+        return nativeLoaded ? simulator : true
+    }
+
+    /// 本实例是否在用 mock 兜底。
+    public var usesMockData: Bool { mockData }
 
     public struct FetchedBody: Sendable {
         public var body: String
@@ -145,7 +161,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         case .NotFound: return ZephyrError(code: notFound, message: message)
         case .SceneNotFound: return ZephyrError(code: .sceneNotFound, message: message)
         case .Invalid, .RuleInputInvalid: return ZephyrError(code: .ruleInputInvalid, message: message)
-        case .SubscriptionInvalid, .SubscriptionNotFound: return ZephyrError(code: .subscriptionInvalid, message: message)
+        case .SubscriptionInvalid: return ZephyrError(code: .subscriptionInvalid, message: message)
+        case .SubscriptionNotFound: return ZephyrError(code: .subscriptionNotFound, message: message)
         case .NotRunning: return ZephyrError(code: .notRunning, message: message)
         case .Cancelled: return ZephyrError(code: .cancelled, message: message)
         default: return ZephyrError(code: .internal, message: message)
@@ -154,7 +171,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
 
     func locked<T>(_ body: () -> T) -> T { lock.lock(); defer { lock.unlock() }; return body() }
 
-    private func invalidateNodes() { locked { nodesReady = nil } }
+    /// 导入 / 更新 / 删除订阅后：节点库与规则层的就绪缓存都作废（删光订阅后规则页不能还停在“已就绪”，#1 ①）。
+    private func invalidateLibrary() { locked { nodesReady = nil; rulesReady = nil } }
 
     /// 核心没有节点数据时的回落：只有 Debug / 演示（mockData）才用 MockEngine 的确定性数据，
     /// Release 抛出明确错误，绝不把假数据当真的写给用户（REVIEW-Q2 X-P0-2）。
@@ -207,10 +225,18 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
                 if s.mode == .global { s.globalNodeId = c.globalNode() } else { s.globalNodeId = nil }
                 return s
             }
-            let states = Task {
+            let states = Task { [weak self] in
+                var logged: ZephyrError?
                 for await s in t.states() {
                     latest.set(s)
                     k.yield(enrich(s))
+                    // 扩展启动失败（内核起不来等）：原因进日志页，同一个失败只记一次（#1 ③）。
+                    if s.status == .failed, let e = s.error, e != logged {
+                        logged = e
+                        self?.appLog(.error, CoreEngine.failureLine(e))
+                    } else if s.status == .connected {
+                        logged = nil
+                    }
                 }
                 k.finish()
             }
@@ -274,7 +300,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     /// 今日用量：字节与在线时长来自扩展的账本（UsageLedger）；地区数 = 当前各场景/全局出口的不同地区；
     /// 最快 = 延迟缓存里有效期内（设置“延迟结果保留”）最快的节点。
     public func usageToday() async -> UsageSummary {
-        guard let t = tunnel else { return await fallback.usageToday() }
+        // 没有系统隧道（模拟器、单测）：只有 mock 兜底时才给演示用量，否则是真实的空用量（#1 ①）。
+        guard let t = tunnel else { return mockData ? await fallback.usageToday() : CoreEngine.emptyUsage }
         let ledger = await t.usageToday()
         let hourly = ledger?.hourly ?? Array(repeating: 0, count: 24)
         var regions = Set((try? await readScenes())?.compactMap { $0.selected.region.isEmpty ? nil : $0.selected.region } ?? [])
@@ -290,6 +317,9 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
                             onlineMillisToday: ledger?.onlineMillis ?? 0, fastestLatencyMs: fastest, hourly: hourly)
     }
 
+    static let emptyUsage = UsageSummary(todayBytes: 0, regionsToday: 0, onlineMillisToday: 0, fastestLatencyMs: nil,
+                                         hourly: Array(repeating: 0, count: 24))
+
     // MARK: - §3 场景
 
     public func scenes() -> AsyncStream<[ZephyrKit.Scene]> {
@@ -301,20 +331,20 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     }
 
     /// 场景上游：只由 sceneBroadcast 在 0→1 个订阅者时创建一次。
+    /// 每轮重新检查节点库（导入 / 更新 / 删除订阅会作废缓存）：有数据就轮询真实场景；没有时 mock 兜底（仅 Debug 模拟器 / 演示）
+    /// 转发 MockEngine 的场景，否则给空数组。此前 mock 只在开头判断一次，导入订阅后首页永远停在假场景（#1 ①）。
     private func pollScenes() -> AsyncStream<[ZephyrKit.Scene]> {
         let id = UUID()
         let (stream, cont) = AsyncStream<[ZephyrKit.Scene]>.makeStream(bufferingPolicy: .bufferingNewest(1))
         locked { sceneWatchers[id] = cont }
         let task = Task { [weak self] in
             guard let self else { return }
-            if self.mockData, await self.nodes() == nil {
-                for await v in self.fallback.scenes() { cont.yield(v) }
-                return
-            }
-            // 空库先给空数组；之后每轮重新检查节点库（首次导入订阅会 invalidateNodes），有数据就恢复轮询（REVIEW-Q2 X-P1）。
             var last: [ZephyrKit.Scene]?
+            var mock: Task<Void, Never>?
+            defer { mock?.cancel() }
             while !Task.isCancelled {
                 if await self.nodes() != nil {
+                    if let m = mock { m.cancel(); mock = nil; last = nil }   // 真数据来了：停掉 mock，下一份真实快照一定发布
                     let seq = self.locked { () -> Int in self.sceneReadSeq += 1; return self.sceneReadSeq }
                     if let v = try? await self.readScenes(), v != last {
                         let fresh = self.locked { () -> Bool in
@@ -326,7 +356,15 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
                         if fresh { last = v }
                     }
                     try? await Task.sleep(nanoseconds: 5_000_000_000)
+                } else if self.mockData {
+                    if mock == nil {
+                        last = nil
+                        let fallback = self.fallback
+                        mock = Task { for await v in fallback.scenes() { if Task.isCancelled { break }; cont.yield(v) } }
+                    }
+                    try? await Task.sleep(nanoseconds: 1_500_000_000)
                 } else {
+                    // 空库先给空数组；之后每轮重新检查节点库（首次导入订阅会作废缓存），有数据就恢复轮询（REVIEW-Q2 X-P1）。
                     if last != [] { last = []; cont.yield([]) }
                     try? await Task.sleep(nanoseconds: 1_500_000_000)
                 }
@@ -781,7 +819,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
             let s = try await importOne(c, url: it.url, body: p, name: it.name, autoUpdateHours: it.auto ?? defaultHours)
             if first == nil { first = s }
         }
-        invalidateNodes()
+        invalidateLibrary()
         await publishSubs()
         await bumpScenes()
         scheduleRuleProviderRefresh()
@@ -900,7 +938,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         let got = try await fetchFor(id, c)
         let fetched = FetchedSubscription(body: got.body, userinfo: got.userInfo, nowMillis: clock())
         let d = try await run(.subscriptionInvalid) { try c.updateSubscription(id: id, fetched: fetched, progress: nil) }
-        invalidateNodes()
+        invalidateLibrary()
         await publishSubs()
         await bumpScenes()
         scheduleRuleProviderRefresh()
@@ -910,7 +948,7 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     public func deleteSubscription(id: String) async throws {
         guard let c = core else { return try await fallback.deleteSubscription(id: id) }
         try await run(.subscriptionInvalid) { try c.deleteSubscription(id: id) }
-        invalidateNodes()
+        invalidateLibrary()
         await publishSubs()
         await bumpScenes()
     }
@@ -980,7 +1018,8 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     public func writeTunnelConfig(to url: URL, controllerSocket: String) async throws {
         guard let c = core else { throw ZephyrError(code: .notRunning, message: "core unavailable") }
         guard let id = await runQuiet({ c.subscriptions() }).first?.id else {
-            throw ZephyrError(code: .subscriptionInvalid, message: "请先添加订阅")
+            // 契约 §16 ②（E07）：没有订阅是 subscription_not_found，不是订阅坏了（#1 C 22:01 ③）。
+            throw ZephyrError(code: .subscriptionNotFound, message: "no subscription imported yet")
         }
         let s = await currentSettings()
         var modeIterator = connectionState().makeAsyncIterator()
@@ -1094,7 +1133,44 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
     }
     public func logs(minLevel: LogLevel) -> AsyncStream<LogLine> {
         if let t = tunnel { return liveLogs(t, minLevel: minLevel) }
-        return mockData ? fallback.logs(minLevel: minLevel) : AsyncStream { $0.finish() }
+        return mockData ? fallback.logs(minLevel: minLevel) : appLogs(minLevel: minLevel)
+    }
+
+    // MARK: App 日志（#1 ③：连接失败原因进日志页）
+
+    /// 记一行 App 自己的日志（日志页与内核日志混排显示）。
+    func appLog(_ level: LogLevel, _ message: String) {
+        let line = LogLine(at: clock(), level: level, message: message)
+        let watchers = locked { () -> [AsyncStream<LogLine>.Continuation] in
+            appLogLines.append(line)
+            if appLogLines.count > CoreEngine.appLogCapacity { appLogLines.removeFirst(appLogLines.count - CoreEngine.appLogCapacity) }
+            return Array(appLogWatchers.values)
+        }
+        for w in watchers { w.yield(line) }
+    }
+
+    /// App 日志：先补发缓冲里 ≥ minLevel 的，再实时推送。
+    func appLogs(minLevel: LogLevel) -> AsyncStream<LogLine> {
+        let id = UUID()
+        let (stream, cont) = AsyncStream<LogLine>.makeStream(bufferingPolicy: .bufferingNewest(CoreEngine.appLogCapacity))
+        let (sink, sinkCont) = AsyncStream<LogLine>.makeStream(bufferingPolicy: .bufferingNewest(CoreEngine.appLogCapacity))
+        let backlog = locked { () -> [LogLine] in
+            appLogWatchers[id] = sinkCont
+            return appLogLines
+        }
+        for l in backlog where l.level >= minLevel { cont.yield(l) }
+        let forward = Task { for await l in sink where l.level >= minLevel { cont.yield(l) }; cont.finish() }
+        cont.onTermination = { [weak self] _ in
+            forward.cancel(); sinkCont.finish()
+            self?.locked { _ = self?.appLogWatchers.removeValue(forKey: id) }
+        }
+        return stream
+    }
+
+    /// 失败原因的日志行（与内核日志一样不本地化，便于搜索 / 反馈）："connect failed (core_crashed): geodata missing: …"。
+    static func failureLine(_ e: ZephyrError) -> String {
+        let m = e.message.trimmingCharacters(in: .whitespacesAndNewlines)
+        return m.isEmpty ? "connect failed (\(e.code.rawValue))" : "connect failed (\(e.code.rawValue)): \(m)"
     }
     /// 设置落盘（dataDir/settings.json）。无核心时回落 fallback；首次无文件用 `defaultSettings`。
     public func settings() -> AsyncStream<ZephyrKit.Settings> {
