@@ -899,6 +899,8 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -1048,6 +1050,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scene_probe_targets(`ptr`: Pointer,`sceneId`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_scenes(`ptr`: Pointer,`nowMillis`: Long,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_seed_kernel_geodata(`ptr`: Pointer,`kernelHome`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_failover_policy(`ptr`: Pointer,`policy`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
@@ -1329,6 +1333,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_scenes(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_seed_kernel_geodata(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_failover_policy(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_global_node(
@@ -1571,6 +1577,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_scenes() != 51937.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_seed_kernel_geodata() != 38773.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_failover_policy() != 8372.toShort()) {
@@ -2741,6 +2750,14 @@ public interface MobileCoreInterface {
     
     fun `scenes`(`nowMillis`: kotlin.Long): List<Scene>
     
+    /**
+     * 把核心已有的地理数据拷进 mihomo 内核目录（zm_start 的 home_dir），内核启动就不必联网下载。
+     * 只拷内核目录里还没有的：geo/geosite.dat → GeoSite.dat；geo/geoip.dat → GeoIP.dat（仅 `geodata-mode: true` 时 mihomo 读它，
+     * 默认模式的 GEOIP 读 geoip.metadb，需随安装包分发，见 docs/geodata.md）。返回拷入的文件名。
+     * 平台在每次 zm_start 前调用（便宜：文件已在就直接返回）。
+     */
+    fun `seedKernelGeodata`(`kernelHome`: kotlin.String): List<kotlin.String>
+    
     fun `setFailoverPolicy`(`policy`: FailoverPolicy)
     
     /**
@@ -3604,6 +3621,25 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_scenes(
         it, FfiConverterLong.lower(`nowMillis`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 把核心已有的地理数据拷进 mihomo 内核目录（zm_start 的 home_dir），内核启动就不必联网下载。
+     * 只拷内核目录里还没有的：geo/geosite.dat → GeoSite.dat；geo/geoip.dat → GeoIP.dat（仅 `geodata-mode: true` 时 mihomo 读它，
+     * 默认模式的 GEOIP 读 geoip.metadb，需随安装包分发，见 docs/geodata.md）。返回拷入的文件名。
+     * 平台在每次 zm_start 前调用（便宜：文件已在就直接返回）。
+     */
+    @Throws(MobileException::class)override fun `seedKernelGeodata`(`kernelHome`: kotlin.String): List<kotlin.String> {
+            return FfiConverterSequenceString.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_seed_kernel_geodata(
+        it, FfiConverterString.lower(`kernelHome`),_status)
 }
     }
     )

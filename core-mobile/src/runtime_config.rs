@@ -70,6 +70,11 @@ pub struct LocalProxy {
     pub auth: Option<String>,
 }
 
+/// 地理数据下载镜像（jsDelivr 的 testingcf 节点，MetaCubeX/meta-rules-dat 上游 README 列出的国内可达镜像）。
+/// 订阅没写 `geox-url` 的键时补这个，代替 mihomo 默认的 GitHub Release（大陆在 VPN 起来前常连不上）。
+/// 内核启动前缺地理数据才会用到，且 mihomo-mobile 有界下载（默认 15 秒）；推荐做法仍是随安装包分发（docs/geodata.md）。
+pub const GEOX_MIRROR: &str = "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release";
+
 fn s(v: &str) -> Value {
     Value::String(v.into())
 }
@@ -219,6 +224,20 @@ fn apply_plan(m: &mut Mapping, plan: &ScenePlan) {
     m.insert(s("rules"), Value::Sequence(front));
 }
 
+/// 订阅没给的 `geox-url` 键补成国内可达镜像；订阅自己写了的保持不动。
+fn fill_geox_url(m: &mut Mapping) {
+    let mut g = match m.remove(s("geox-url")) {
+        Some(Value::Mapping(g)) => g,
+        _ => Mapping::new(),
+    };
+    for (k, file) in [("geoip", "geoip.dat"), ("geosite", "geosite.dat"), ("mmdb", "geoip.metadb"), ("asn", "GeoLite2-ASN.mmdb")] {
+        if !g.get(s(k)).and_then(|v| v.as_str()).is_some_and(|v| !v.trim().is_empty()) {
+            g.insert(s(k), s(&format!("{GEOX_MIRROR}/{file}")));
+        }
+    }
+    m.insert(s("geox-url"), Value::Mapping(g));
+}
+
 /// 订阅正文（已经过 normalize_body）+ Zephyr 设置 → mihomo 运行时 YAML。
 pub fn build_runtime_config(subscription_yaml: &str, o: &RuntimeOptions) -> Result<String, MobileError> {
     build_runtime_config_with(subscription_yaml, o, &ScenePlan::default())
@@ -247,6 +266,7 @@ pub fn build_runtime_config_with(subscription_yaml: &str, o: &RuntimeOptions, pl
     if !m.contains_key(s("rules")) {
         m.insert(s("rules"), Value::Sequence(vec![s("MATCH,DIRECT")]));
     }
+    fill_geox_url(m);
     apply_plan(m, plan);
     serde_yaml::to_string(&v).map_err(|e| MobileError::Invalid(e.to_string()))
 }
@@ -310,6 +330,21 @@ mod tests {
         let Ok(p) = std::env::var("ZM_RUNTIME_CONFIG") else { return };
         let body = crate::subs::normalize_body(SUB).unwrap();
         std::fs::write(p, build_runtime_config(&body, &opts(None)).unwrap()).unwrap();
+    }
+
+    #[test]
+    fn geox_url_defaults_to_mirror_but_keeps_subscription_values() {
+        let v: Value = serde_yaml::from_str(&build_runtime_config(SUB, &opts(None)).unwrap()).unwrap();
+        assert_eq!(v["geox-url"]["mmdb"].as_str(), Some(format!("{GEOX_MIRROR}/geoip.metadb").as_str()));
+        assert_eq!(v["geox-url"]["geosite"].as_str(), Some(format!("{GEOX_MIRROR}/geosite.dat").as_str()));
+        assert_eq!(v["geox-url"]["geoip"].as_str(), Some(format!("{GEOX_MIRROR}/geoip.dat").as_str()));
+        assert_eq!(v["geox-url"]["asn"].as_str(), Some(format!("{GEOX_MIRROR}/GeoLite2-ASN.mmdb").as_str()));
+        assert!(v.get("geodata-mode").is_none(), "geodata-mode 跟订阅走，不强加");
+        let sub = format!("{SUB}geodata-mode: true\ngeox-url:\n  geosite: https://my.mirror/gs.dat\n");
+        let v: Value = serde_yaml::from_str(&build_runtime_config(&sub, &opts(None)).unwrap()).unwrap();
+        assert_eq!(v["geox-url"]["geosite"].as_str(), Some("https://my.mirror/gs.dat"));
+        assert_eq!(v["geox-url"]["geoip"].as_str(), Some(format!("{GEOX_MIRROR}/geoip.dat").as_str()));
+        assert_eq!(v["geodata-mode"].as_bool(), Some(true));
     }
 
     #[test]

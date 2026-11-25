@@ -1,7 +1,7 @@
 //! GEOSITE / GEOIP 规则 → 规则页规则集之后的层（原型 LAYERS：geosite:cn、geoip:cn）。
 //!
 //! 数据来自 v2ray 格式的 geosite.dat / geoip.dat（protobuf），与 mihomo 的 geox 同源。核心不联网：
-//! `geoSources()` 给出需要的文件、下载地址（订阅 geox-url 优先，否则 MetaCubeX meta-rules-dat）与是否到期；
+//! `geoSources()` 给出需要的文件、下载地址（订阅 geox-url 优先，否则 MetaCubeX meta-rules-dat 的 jsDelivr 镜像）与是否到期；
 //! 平台下载到 `path` 后调 `compileGeo(kind, nowMillis)`，核心只抽取订阅里 GEOSITE / GEOIP 用到的分类编译成层。
 //! 正则域名（Regex）规则引擎不支持，跳过；@属性 不区分（同 mihomo 的不带属性写法）。
 
@@ -72,7 +72,7 @@ fn geox_url(body: &str, kind: GeoKind) -> String {
         .and_then(|u| u.as_str())
         .filter(|u| u.starts_with("https://"))
         .map(String::from)
-        .unwrap_or_else(|| format!("https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/{key}.dat"))
+        .unwrap_or_else(|| format!("{}/{key}.dat", crate::runtime_config::GEOX_MIRROR))
 }
 
 // ---------- 最小 protobuf 读取 ----------
@@ -264,6 +264,31 @@ impl MobileCore {
             .collect()
     }
 
+    /// 把核心已有的地理数据拷进 mihomo 内核目录（zm_start 的 home_dir），内核启动就不必联网下载。
+    /// 只拷内核目录里还没有的：geo/geosite.dat → GeoSite.dat；geo/geoip.dat → GeoIP.dat（仅 `geodata-mode: true` 时 mihomo 读它，
+    /// 默认模式的 GEOIP 读 geoip.metadb，需随安装包分发，见 docs/geodata.md）。返回拷入的文件名。
+    /// 平台在每次 zm_start 前调用（便宜：文件已在就直接返回）。
+    pub fn seed_kernel_geodata(&self, kernel_home: String) -> Result<Vec<String>, MobileError> {
+        let home = std::path::Path::new(&kernel_home);
+        std::fs::create_dir_all(home)?;
+        let present = |want: &str| -> bool {
+            std::fs::read_dir(home).map(|d| d.flatten().any(|e| e.file_name().to_string_lossy().eq_ignore_ascii_case(want))).unwrap_or(false)
+        };
+        let mut out = vec![];
+        for (src, dst) in [("geosite.dat", "GeoSite.dat"), ("geoip.dat", "GeoIP.dat")] {
+            let from = self.geo_dir().join(src);
+            if present(dst) || !from.is_file() {
+                continue;
+            }
+            // 先写临时名再改名：内核目录里不会出现半个文件（mihomo 发现文件存在就不再下载）
+            let tmp = home.join(format!("{dst}.zm-tmp"));
+            std::fs::copy(&from, &tmp)?;
+            std::fs::rename(&tmp, home.join(dst))?;
+            out.push(dst.to_string());
+        }
+        Ok(out)
+    }
+
     /// 平台把 dat 下载到 `geoSources()` 给的 path 后调用：编译该类全部用到的分类，返回编译的层数。
     pub fn compile_geo(&self, kind: GeoKind, now_millis: i64) -> Result<u32, MobileError> {
         let body = self.active_subscription_body().ok_or_else(|| MobileError::NotFound("subscription".into()))?;
@@ -365,6 +390,25 @@ pub(crate) mod tests {
         assert!(geosite_text(&gs, "jp").is_err());
         let gi = geoip(&[("CN", &[(&[223, 5, 5, 0], 24), (&[0x24, 0x08, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 16)])]);
         assert_eq!(geoip_text(&gi, "cn").unwrap(), "223.5.5.0/24\n2408::/16\n");
+    }
+
+    #[test]
+    fn seeds_kernel_home_from_core_geo_dir() {
+        let d = tempfile::tempdir().unwrap();
+        let core = MobileCore::new(d.path().join("core").to_string_lossy().into()).unwrap();
+        let home = d.path().join("mihomo");
+        let home_s: String = home.to_string_lossy().into();
+        assert!(core.seed_kernel_geodata(home_s.clone()).unwrap().is_empty(), "核心没有 dat 时什么都不拷");
+        std::fs::create_dir_all(core.geo_dir()).unwrap();
+        let gs = geosite(&[("CN", &[(2, "qq.com")])]);
+        std::fs::write(core.geo_dir().join("geosite.dat"), &gs).unwrap();
+        std::fs::write(core.geo_dir().join("geoip.dat"), geoip(&[("CN", &[(&[223, 5, 5, 0], 24)])])).unwrap();
+        // 内核目录已有（大小写不同也算）的不覆盖
+        std::fs::write(home.join("geoip.DAT"), b"bundled").unwrap();
+        assert_eq!(core.seed_kernel_geodata(home_s.clone()).unwrap(), vec!["GeoSite.dat".to_string()]);
+        assert_eq!(std::fs::read(home.join("GeoSite.dat")).unwrap(), gs);
+        assert_eq!(std::fs::read(home.join("geoip.DAT")).unwrap(), b"bundled");
+        assert!(core.seed_kernel_geodata(home_s).unwrap().is_empty(), "第二次调用无事可做");
     }
 
     #[test]

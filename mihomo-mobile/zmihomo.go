@@ -13,6 +13,7 @@
 //	char*   zm_url_test(const char* proxies_json, const char* url, int timeout_ms, int concurrency)  // 见 urltest.go；返回 JSON
 //	char*   zm_logs(int64_t since, const char* min_level, int limit)   // 见 logs.go；返回 JSON
 //	void    zm_set_socket_hook(zm_socket_hook_fn fn, void* ctx)  // typedef int (*zm_socket_hook_fn)(void* ctx, int fd, const char* network)  // 见 sockethook.go；NULL 卸载；非 0 拒连（fail-closed）
+//	void    zm_set_geodata_timeout(int64_t ms)   // 见 geodata.go：缺地理数据时启动前下载的总时限，默认 15000；0 = 只用本地文件
 //	char*   zm_version(void)
 //	void    zm_free(char*)
 //
@@ -65,6 +66,9 @@ func start(homeDir, cfg, unix string) error {
 	if unix != "" {
 		opts = append(opts, hub.WithExternalControllerUnix(unix))
 	}
+	if err := ensureGeodata([]byte(cfg)); err != nil {
+		return err
+	}
 	if err := hub.Parse([]byte(cfg), opts...); err != nil {
 		return err
 	}
@@ -75,6 +79,9 @@ func start(homeDir, cfg, unix string) error {
 func reload(cfg string) error {
 	mu.Lock()
 	defer mu.Unlock()
+	if err := ensureGeodata([]byte(cfg)); err != nil {
+		return err
+	}
 	c, err := executor.ParseWithBytes([]byte(cfg))
 	if err != nil {
 		return err

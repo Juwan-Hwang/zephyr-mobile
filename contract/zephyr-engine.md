@@ -218,6 +218,7 @@ v0.1 追加：`stale_token`（查询句柄已淘汰，UI 重新 queryNodes 即�
 - v0.4（2026-11-18）追加 §16：发版审计（#209）的契约补定义——网络与路由、错误码映射、设置默认值、指令语义、格式与无障碍、本地代理凭据、日志级别、订阅拉取、平台差异登记。只追加，不改名。
 - v0.6（2026-11-21）追加 §18：设计评审执行——`NodeIndex.reachableCount`（可选）与节点页头部判断句、状态文字术语（状态不只靠颜色）、三端（含鸿蒙）列。只追加，不改名。
 - v0.7（2026-11-22）追加 §19：场景漏斗 `sceneFunnel`（首页场景卡迷你漏斗按场景取数，回应 #1 J-1），三端（含鸿蒙）列。只追加，不改名。
+- v0.8（2026-11-25）追加 §20：内核地理数据——`zm_start` 前置检查（有界下载、`geodata missing:` 错误、`zm_set_geodata_timeout`）、`runtimeConfig` 的 `geox-url` 镜像默认值、`seedKernelGeodata`、安装包分发快照。只追加，不改名。
 - v0.5（2026-11-21）追加 §17：鸿蒙（HarmonyOS，角色 D，#241）列——§11 平台层、§16.a②④⑤、§16.f、§16.i④ 的鸿蒙行为，鸿蒙平台差异（无控制中心磁贴、无实况窗、无换图标），导航结构与内部深链的决定。只追加，不改名。
 
 ## 13. v0.1 追加（2026-11-06 14:20，只追加不改名）
@@ -961,3 +962,24 @@ sceneFunnel(sceneId: String, nowMillis: Int64, maxAgeMillis: Int64, thresholdMs:
 | 首页场景卡 | 迷你漏斗（§9.3）每个场景行用各自的 `sceneFunnel`；接入前过渡：只在**当前场景卡**画一条全局 `nodeFunnel` 漏斗，其余行保留「n 个可用」文字 | 同左 | 同左（M 阶段跟进） |
 | 取不到 / `poolSize == 0` | 不画迷你漏斗，显示「n 个可用」 | 同左 | 同左 |
 
+
+## 20. v0.8 追加（2026-11-25，内核地理数据 / 启动不再卡 90 秒，#1，只追加）
+
+### 20.a 现象与原因
+订阅含 `GEOIP` / `GEOSITE` 规则（或 DNS `fallback` + 默认 `fallback-filter.geoip`、`nameserver-policy` 的 `geosite:`）时，mihomo 解析配置要读内核目录（`zm_start` 的 `home_dir`）里的 `geoip.metadb` / `GeoSite.dat`；没有就从 `geox-url` 现场下载，超时写死 90 秒。大陆网络在 VPN 起来前常连不上 GitHub，`zm_start` 卡 90 秒后报 `can't download MMDB … context deadline exceeded`。核心 `geoSources` / `compileGeo`（§14.v）下载到 `core/geo/` 的文件只给规则页用，mihomo 不读。
+
+### 20.b mihomo-mobile（`zm_start` / `zm_reload` 前置检查）
+- 解析前先算配置要用的地理数据文件（规则与 sub-rules 里的 `GEOIP` / `SRC-GEOIP`（`LAN` 除外）、`GEOSITE`、`IP-ASN`；DNS 同上）。都在且有效 → 不联网。
+- 缺失或损坏 → 在**总时限**内（默认 15 s）从配置的 `geox-url` 下载，写临时文件、校验后改名；下载走 `zm_set_socket_hook`（若装了）。
+- 仍拿不到 → 立即返回错误串，以 `geodata missing:` 开头，写明文件名、哪类规则要用、内核目录、下载地址与原因。平台把它原样写进日志 / 首页错误详情，不要再自动重试同一配置。
+- `void zm_set_geodata_timeout(int64_t ms)`：改上面的总时限；`0` = 只用本地文件、不下载（缺了立刻报错）；负数恢复默认 15000。
+- `geodata-mode: true` 时 GEOIP 读 `GeoIP.dat`，否则读 `geoip.metadb`；`GeoSite.dat` 两种模式都用。
+
+### 20.c core（运行时配置与种子）
+- `runtimeConfig` 给订阅**没写**的 `geox-url` 键补国内可达镜像 `https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/{geoip.dat, geosite.dat, geoip.metadb, GeoLite2-ASN.mmdb}`；订阅写了的保持不动；`geodata-mode` 跟订阅走。`geoSources` 的默认下载地址同样换成该镜像。
+- `seedKernelGeodata(kernelHome) -> [String]`：把核心已有的 `geo/geosite.dat` → 内核目录 `GeoSite.dat`、`geo/geoip.dat` → `GeoIP.dat`（只拷内核目录里没有的，名字不区分大小写；先写临时名再改名），返回拷入的文件名。平台在每次 `zm_start` 前调用即可（文件已在时几乎无开销）。
+
+### 20.d 平台（推荐做法，三端）
+1. 随安装包分发 `tools/fetch-geodata.sh` 拉下的固定快照（`geoip.metadb` + `GeoSite.dat`，sha256 见 `tools/geodata.lock`），首次启动 / 升级后若内核目录里没有就拷进去（Android：`assets/geodata/` → `filesDir/mihomo/`；iOS：App bundle → App Group 内核目录；鸿蒙：rawfile → 内核目录）。做法与体积说明见 `docs/geodata.md`。
+2. 每次 `zm_start` 前调 `seedKernelGeodata(内核目录)`。
+3. `zm_start` 返回 `geodata missing:` 时：显示错误详情（不是只显示「连接失败」），不立即自动重连。
