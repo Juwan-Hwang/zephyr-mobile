@@ -37,12 +37,19 @@ struct HomeHero: View {
                         .lineLimit(2)
                 }
             }
-            // #1 A 真机结论 ③：失败提示下的错误原文（默认一行，点开展开），只在失败时出现。
-            if model.connection.status == .failed, let detail = model.connection.error?.failureDetail {
-                FailureDetail(detail: detail)
-            }
+            failureDetailRow
         }
         .padding(.horizontal, HMetrics.homeInset)
+    }
+
+    /// #1 A 真机结论 ③：失败提示下的错误原文（默认一行，点开展开），只在失败时出现。
+    @ViewBuilder private var failureDetailRow: some View {
+        if let detail = failureDetailText { FailureDetail(detail: detail) }
+    }
+
+    private var failureDetailText: String? {
+        guard model.connection.status == .failed else { return nil }
+        return model.connection.error?.failureDetail
     }
 
     private var stateText: some View {
