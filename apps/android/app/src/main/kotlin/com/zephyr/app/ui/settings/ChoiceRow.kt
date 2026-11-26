@@ -9,17 +9,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import com.zephyr.app.ui.home.BelowAnchor
+import com.zephyr.app.ui.home.PopupToggle
 import com.zephyr.design.components.ZIcon
 import com.zephyr.design.components.ZIcons
 import com.zephyr.design.components.ZSettingsRow
@@ -40,24 +39,32 @@ internal fun <T> ChoiceRow(
     onSelect: (T) -> Unit,
     subtitle: String? = null,
 ) {
-    var open by remember { mutableStateOf(false) }
+    // Issue #1: the same retap-closes contract as Home's 规则 ⌄ panel.
+    val toggle = remember { PopupToggle() }
+    val open = toggle.open
     val c = ZTheme.colors
     Box {
         ZSettingsRow(
             title, subtitle = subtitle, value = options.firstOrNull { it.first == selected }?.second,
-            chevron = true, onClick = { open = true },
+            chevron = true, onClick = { toggle.toggle() },
         )
         if (open) {
+            // The popup window sits below the row, not over it with transparent padding, so tapping the row again is an
+            // outside touch (→ dismiss) and PopupToggle keeps it closed.
+            val density = LocalDensity.current
+            val provider = remember(density) {
+                with(density) { BelowAnchor(minTop = 48.dp.roundToPx(), alignEnd = true, endInset = 16.dp.roundToPx()) }
+            }
             Popup(
-                alignment = Alignment.TopEnd, offset = IntOffset(0, 0),
-                onDismissRequest = { open = false }, properties = PopupProperties(focusable = true),
+                popupPositionProvider = provider,
+                onDismissRequest = { toggle.dismiss() }, properties = PopupProperties(focusable = true),
             ) {
-                ZSurface(Modifier.padding(top = 48.dp, end = 16.dp).width(200.dp), style = ZSurfaceStyle.Raised, shape = ZTheme.shapes.surface) {
+                ZSurface(Modifier.width(200.dp), style = ZSurfaceStyle.Raised, shape = ZTheme.shapes.surface) {
                     Column(Modifier.padding(vertical = 6.dp).selectableGroup()) {
                         options.forEach { (v, label) ->
                             Row(
                                 Modifier.fillMaxWidth()
-                                    .selectable(selected = v == selected, role = Role.RadioButton) { open = false; if (v != selected) onSelect(v) }
+                                    .selectable(selected = v == selected, role = Role.RadioButton) { toggle.close(); if (v != selected) onSelect(v) }
                                     .padding(horizontal = 16.dp, vertical = 12.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
