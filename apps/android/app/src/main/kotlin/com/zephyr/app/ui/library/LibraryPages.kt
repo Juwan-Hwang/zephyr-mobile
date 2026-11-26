@@ -384,10 +384,10 @@ private fun copySensitive(ctx: Context, text: String, copied: String) {
 @Composable
 fun WidgetsScreen(
     back: BackTo,
-    onBack: () -> Unit,
     // Parameters for screenshot tests (layoutlib has no launcher, so the real answers hide every 添加 button).
     canPinOverride: Boolean? = null,
     canAddTile: Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU,
+    onBack: () -> Unit,
 ) {
     val ctx = LocalContext.current
     val canPin = canPinOverride ?: remember { canPinWidgets(ctx) }
