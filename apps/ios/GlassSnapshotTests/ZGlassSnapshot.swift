@@ -66,19 +66,44 @@ private func zGlassCompare(_ image: UIImage, named name: String, file: StaticStr
     case (.never, false):
         XCTFail("缺少参考图 \(reference.path)（SNAPSHOT_RECORD=never）", file: file, line: line)
     case (_, true):
-        let failure = verifySnapshot(
-            of: image,
-            as: .image(precision: ZSnapshotConfig.precision,
-                       perceptualPrecision: ZSnapshotConfig.perceptualPrecision,
-                       scale: ZSnapshotConfig.scale),
-            named: name,
-            record: false,
-            snapshotDirectory: directory.path,
-            file: file,
-            testName: testName,
-            line: line
-        )
-        if let failure { XCTFail(failure, file: file, line: line) }
+        func verify(_ candidate: String) -> String? {
+            verifySnapshot(
+                of: image,
+                as: .image(precision: ZSnapshotConfig.precision,
+                           perceptualPrecision: ZSnapshotConfig.perceptualPrecision,
+                           scale: ZSnapshotConfig.scale),
+                named: candidate,
+                record: false,
+                snapshotDirectory: directory.path,
+                file: file,
+                testName: testName,
+                line: line
+            )
+        }
+        guard let failure = verify(name) else { return }
+        // 双态玻璃：主图不匹配时再比备用图（同一精度），任一匹配即通过。
+        if let alt = ZGlassAlternates.name(for: name),
+           FileManager.default.fileExists(atPath: ZSnapshotPaths.referenceURL(directory: directory, testName: testName, name: alt).path) {
+            guard let altFailure = verify(alt) else { return }
+            XCTFail("\(failure)\n备用参考图 \(alt) 也不匹配：\(altFailure)", file: file, line: line)
+            return
+        }
+        XCTFail(failure, file: file, line: line)
+    }
+}
+
+/// 双态玻璃快照的备用参考图（白名单，不按文件存在与否自动放行）。
+///
+/// floating-bar-light：浅色下悬浮条压在渐变的蓝紫段上，iOS 26 玻璃的自适应着色在 CI 上随机落到两种稳定状态之一——
+/// 偏白（主图）与偏透（备用图，main 上 ios26 run 45630351111 / 45644865763 / 45649070477 / 45658286420
+/// 四次失败拍出的图逐字节相同）。两态在悬浮条上差 ΔE94 最高 ≈21、ΔE>2 的像素约占全图 7%，放宽精度要到 precision≈0.92
+/// 或 perceptualPrecision≈0.79 才能过，等于不再校验悬浮条；改为两张都按默认 0.995 / 0.98 比，任一匹配即过。
+/// 录制模式（.all）只重录主图，备用图需从 CI 失败产物里取出、审过后手动更新。
+enum ZGlassAlternates {
+    static let names: Set<String> = ["floating-bar-light"]
+
+    static func name(for name: String) -> String? {
+        names.contains(name) ? "\(name)-alt" : nil
     }
 }
 
