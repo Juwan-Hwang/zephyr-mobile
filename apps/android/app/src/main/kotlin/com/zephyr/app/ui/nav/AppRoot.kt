@@ -67,6 +67,7 @@ import kotlinx.coroutines.launch
 @Serializable data class Nodes(val query: String = "", val back: BackTo = BackTo.LIBRARY)
 @Serializable data class Rules(val query: String = "", val back: BackTo = BackTo.LIBRARY)
 @Serializable data class Subs(val back: BackTo = BackTo.LIBRARY)
+@Serializable data class Groups(val back: BackTo = BackTo.LIBRARY)
 @Serializable data class SettingsRoute(val back: BackTo = BackTo.LIBRARY)
 @Serializable object Logs
 @Serializable object Licenses
@@ -158,7 +159,14 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                     )
                 }
                 // Back returns where the page was opened from; from the library it reopens the library (prototype 1287).
-                composable<Nodes> { e -> val r = e.toRoute<Nodes>(); NodesScreen(viewModel { NodesViewModel() }, r.query, back = r.back, onBack = { backTo(r.back) }, onImport = { import = true }) }
+                composable<Nodes> { e ->
+                    val r = e.toRoute<Nodes>()
+                    // #208: in global mode a node's detail sheet can make it the exit for all traffic.
+                    val mode by home.connection.collectAsStateWithLifecycle()
+                    NodesScreen(viewModel { NodesViewModel() }, r.query, back = r.back, onBack = { backTo(r.back) }, onImport = { import = true },
+                        onUseGlobal = if (mode.mode == ProxyMode.GLOBAL) ({ n: com.zephyr.engine.NodeSummary -> home.useGlobalNode(n); backTo(r.back) }) else null)
+                }
+                composable<Groups> { e -> val r = e.toRoute<Groups>(); com.zephyr.app.ui.groups.GroupsScreen(viewModel { com.zephyr.app.ui.groups.GroupsViewModel() }, r.back, onBack = { backTo(r.back) }, onNotice = { home.notify(it) }) }
                 composable<Rules> { e -> val r = e.toRoute<Rules>(); RulesScreen(r.query, back = r.back) { backTo(r.back) } }
                 composable<Subs> { e -> val r = e.toRoute<Subs>(); SubscriptionsScreen(back = r.back, onBack = { backTo(r.back) }, onImport = { import = true }, onNotice = { home.notify(it) }) }
                 composable<SettingsRoute> { e -> val r = e.toRoute<SettingsRoute>(); SettingsScreen(
@@ -188,6 +196,7 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                     LibraryDest.Nodes -> nav.navigate(Nodes())
                     LibraryDest.Subscriptions -> nav.navigate(Subs())
                     LibraryDest.Rules -> nav.navigate(Rules())
+                    LibraryDest.Groups -> nav.navigate(Groups())
                     // scenes is WhileSubscribed: when home is not composed .value can be empty, so subscribe once.
                     LibraryDest.Scenes -> rootScope.launch {
                         scene = home.scenes.value.firstOrNull()

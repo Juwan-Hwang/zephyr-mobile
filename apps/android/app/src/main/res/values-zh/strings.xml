@@ -525,4 +525,16 @@
     <string name="state_ok">正常</string>
     <string name="state_expired">已过期</string>
     <string name="state_failed">失败</string>
+    <!-- #208: policy groups page and global-mode node picking -->
+    <string name="library_groups">策略组</string>
+    <string name="groups_offline">连接后查看策略组</string>
+    <string name="groups_none">没有策略组</string>
+    <string name="groups_type_select">手动选择</string>
+    <string name="groups_type_url_test">自动选最快</string>
+    <string name="groups_type_fallback">故障转移</string>
+    <string name="groups_type_load_balance">负载均衡</string>
+    <string name="groups_type_relay">链式代理</string>
+    <string name="groups_read_only">此组自动选择节点。</string>
+    <string name="nodes_detail_use_global">用于全局模式</string>
+    <string name="home_global_browse">浏览全部节点</string>
 </resources>

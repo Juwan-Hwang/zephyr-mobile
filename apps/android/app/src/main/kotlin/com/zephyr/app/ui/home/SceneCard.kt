@@ -95,7 +95,7 @@ fun SceneCard(
             if (i > 0) ZDivider(inset = false)
             if (s.source != SceneSource.SUBSCRIPTION_GROUP) androidx.compose.runtime.LaunchedEffect(s.id, s.selected.id, s.source) { onPrefetch(s) }
             // Re-count on re-test, exit change (region), node filter change (§19.a range).
-            if (s.source != SceneSource.SUBSCRIPTION_GROUP) androidx.compose.runtime.LaunchedEffect(s.id, s.selected.region, s.testedAt, s.nodeFilter) { onFunnel(s) }
+            if (s.source != SceneSource.SUBSCRIPTION_GROUP) androidx.compose.runtime.LaunchedEffect(s.id, s.selected.region, s.testedAt, s.nodeFilter, s.id in retesting) { onFunnel(s) }
             SceneRow(
                 s, slots[s.id].orEmpty(), pendingNode = pending?.takeIf { it.scene.id == s.id }?.node,
                 probing = if (s.id in retesting) (scan?.fraction ?: 0f) else null,

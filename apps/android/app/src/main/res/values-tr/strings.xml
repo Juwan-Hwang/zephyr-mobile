@@ -524,4 +524,16 @@
     <string name="state_ok">Normal</string>
     <string name="state_expired">Süresi doldu</string>
     <string name="state_failed">Başarısız</string>
+    <!-- #208: policy groups page and global-mode node picking -->
+    <string name="library_groups">Politika grupları</string>
+    <string name="groups_offline">Politika gruplarını görmek için bağlanın</string>
+    <string name="groups_none">Politika grubu yok</string>
+    <string name="groups_type_select">Elle</string>
+    <string name="groups_type_url_test">En hızlı</string>
+    <string name="groups_type_fallback">Yedek</string>
+    <string name="groups_type_load_balance">Yük dengeleme</string>
+    <string name="groups_type_relay">Aktarma</string>
+    <string name="groups_read_only">Bu grup düğümünü otomatik seçer.</string>
+    <string name="nodes_detail_use_global">Küresel modda kullan</string>
+    <string name="home_global_browse">Tüm düğümlere göz at</string>
 </resources>

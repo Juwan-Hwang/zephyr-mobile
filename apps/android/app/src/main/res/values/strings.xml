@@ -613,4 +613,16 @@
     <string name="state_ok">Normal</string>
     <string name="state_expired">Expired</string>
     <string name="state_failed">Failed</string>
+    <!-- #208: policy groups page and global-mode node picking -->
+    <string name="library_groups">Policy groups</string>
+    <string name="groups_offline">Connect to see policy groups</string>
+    <string name="groups_none">No policy groups</string>
+    <string name="groups_type_select">Manual</string>
+    <string name="groups_type_url_test">Fastest</string>
+    <string name="groups_type_fallback">Fallback</string>
+    <string name="groups_type_load_balance">Load balance</string>
+    <string name="groups_type_relay">Relay</string>
+    <string name="groups_read_only">This group picks its node automatically.</string>
+    <string name="nodes_detail_use_global">Use for global mode</string>
+    <string name="home_global_browse">Browse all nodes</string>
 </resources>

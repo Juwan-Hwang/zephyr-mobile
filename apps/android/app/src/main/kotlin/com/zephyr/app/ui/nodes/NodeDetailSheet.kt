@@ -37,6 +37,8 @@ fun BoxScope.NodeDetailSheet(
     load: suspend (Long) -> NodeDetail?,
     onTest: (NodeSummary) -> Unit,
     onDismiss: () -> Unit,
+    /** #208: set in global mode — makes this node the exit for all traffic (core setGlobalNode). */
+    onUseGlobal: ((NodeSummary) -> Unit)? = null,
 ) {
     val c = ZTheme.colors
     ZSheet(node != null, onDismiss, node?.name ?: "") {
@@ -72,6 +74,10 @@ fun BoxScope.NodeDetailSheet(
                 onClick = if (testing) null else ({ onTest(n) }),
                 trailing = null,
             )
+            if (onUseGlobal != null && n.id >= 0) {
+                ZDivider()
+                ZSettingsRow(stringResource(R.string.nodes_detail_use_global), onClick = { onUseGlobal(n) })
+            }
         }
         Spacer(Modifier.height(12.dp))
     }

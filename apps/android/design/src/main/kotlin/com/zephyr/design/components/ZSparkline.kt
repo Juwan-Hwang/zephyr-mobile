@@ -39,6 +39,11 @@ fun ZSparkline(
     /** Review H-P2-3: slide each new sample in over this many ms (0 = jump) and mark the newest point. */
     panMillis: Int = 0,
     headDot: Boolean = false,
+    /**
+     * #208: slots across the width (the ring's size). Fewer samples than this keep the same spacing and sit against
+     * the right edge, newest last, instead of being stretched over the whole width. 0 = spread [values] edge to edge.
+     */
+    capacity: Int = 0,
 ) {
     val shift = remember { Animatable(0f) }
     if (panMillis > 0) LaunchedEffect(values) {
@@ -72,8 +77,9 @@ fun ZSparkline(
                     val max = (smooth.max()).coerceAtLeast(1e-3f) * 1.15f
                     val w = size.width
                     val h = size.height
-                    val dx = w / (n - 1)
-                    val pts = Array(n) { i -> Offset(i * dx, h - smooth[i] / max * h * 0.92f) }
+                    val xs = SparkGeometry.xs(n, capacity, w)
+                    val dx = SparkGeometry.step(n, capacity, w)
+                    val pts = Array(n) { i -> Offset(xs[i], h - smooth[i] / max * h * 0.92f) }
                     // Uniform Catmull-Rom as cubic Béziers (end points duplicated); control points clamped to the canvas
                     // so the curve never dips below the zero baseline or above the top.
                     fun cy(v: Float) = v.coerceIn(0f, h)
@@ -89,7 +95,7 @@ fun ZSparkline(
                     head = pts[n - 1]; step = dx
                     fillTop = pts.minOf { it.y }
                     area.addPath(line)
-                    area.lineTo(w, h); area.lineTo(0f, h); area.close()
+                    area.lineTo(pts[n - 1].x, h); area.lineTo(pts[0].x, h); area.close()
                 }
                 // Fill ≈ α0.12 at the crest, fully faded by 60% of the height (spec §9.8).
                 val fadeEnd = maxOf(size.height * FILL_FADE_AT, fillTop + 1f)
@@ -111,6 +117,21 @@ fun ZSparkline(
                 }
             },
     ) {}
+}
+
+/** Where each sample sits horizontally (pure, unit-tested in :app). */
+object SparkGeometry {
+    /** Distance between neighbouring samples: the full width over the slots ([capacity] when set and ≥ [n]). */
+    fun step(n: Int, capacity: Int, width: Float): Float {
+        val slots = if (capacity >= n) capacity else n
+        return if (slots < 2) 0f else width / (slots - 1)
+    }
+
+    /** x of sample i (oldest first): the newest is always at [width]; older ones step left from it. */
+    fun xs(n: Int, capacity: Int, width: Float): FloatArray {
+        val dx = step(n, capacity, width)
+        return FloatArray(n) { i -> width - (n - 1 - i) * dx }
+    }
 }
 
 private const val SMOOTH_WINDOW = 6

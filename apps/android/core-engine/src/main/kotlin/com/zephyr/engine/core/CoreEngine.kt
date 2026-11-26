@@ -1009,7 +1009,10 @@ class CoreEngine(
     override fun traffic(): Flow<TrafficSample> = switching({ _ ->
         flow {
             while (true) {
-                Mihomo.traffic()?.let { t -> val now = clock(); usage.record(t.upTotal + t.downTotal, now); emit(TrafficSample(now, t.upBps, t.downBps)) }
+                Mihomo.traffic()?.let { t ->
+                    val now = clock(); usage.record(t.upTotal + t.downTotal, now)
+                    val s = TrafficSample(now, t.upBps, t.downBps); trafficHistory.record(s); emit(s)
+                }
                 delay(tick)
             }
         }.flowOn(io)
@@ -1189,7 +1192,10 @@ class CoreEngine(
 
     // ── Release must never show synthetic numbers (review P0-1) ──────────────────────────────────
     override suspend fun recentTraffic(seconds: Int): List<TrafficSample> =
-        if (mockData) fallback.recentTraffic(seconds) else emptyList()
+        if (mockData) fallback.recentTraffic(seconds) else if (live() != null) trafficHistory.recent(seconds, clock()) else emptyList()
+
+    /** What the live sampler in [traffic] read; real samples only, so release shows nothing synthetic (P0-1). */
+    private val trafficHistory = TrafficHistory()
 
     private val usage = UsageLedger(dataDir?.let { java.io.File(it, "usage.json") })
 
@@ -1213,7 +1219,7 @@ class CoreEngine(
     }
 
     /** The embedded core (re)started: its counters begin at zero again (audit E39, same as iOS `tunnelStarted`). */
-    fun tunnelStarted() = usage.tunnelStarted()
+    fun tunnelStarted() { usage.tunnelStarted(); trafficHistory.clear() }
 
     /** Flushes the usage ledger (VPN stop / process trim). */
     fun flushUsage() = usage.save(clock())

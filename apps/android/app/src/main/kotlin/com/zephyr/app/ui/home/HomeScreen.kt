@@ -133,7 +133,7 @@ fun HomeContent(
                         Spacer(Modifier.height(36.dp))
                         Column(Modifier.zPressable(label = stringResource(R.string.activity_title), onClick = actions.onActivity)) {
                             ZTrafficStat(l.traffic.downBps, l.traffic.upBps, Modifier.padding(horizontal = 22.dp))
-                            ZSparkline(l.spark, Modifier.fillMaxWidth().height(72.dp), description = stringResource(R.string.home_spark_a11y), panMillis = 120, headDot = true)
+                            ZSparkline(l.spark, Modifier.fillMaxWidth().height(72.dp), description = stringResource(R.string.home_spark_a11y), panMillis = 120, headDot = true, capacity = HomeViewModel.SPARK_POINTS)
                         }
                     }
                 }
@@ -164,7 +164,7 @@ fun HomeContent(
             }
             item("scenes") {
                 if (conn.mode == ProxyMode.GLOBAL) {
-                    GlobalModeCard(ui.globalNode, ui.globalProposal, ui.globalChange, onUseRule = { cb.setMode(ProxyMode.RULE) }, onChangeNode = cb.toggleGlobalChange, onConfirm = cb.confirmGlobal)
+                    GlobalModeCard(ui.globalNode, ui.globalProposal, ui.globalChange, onUseRule = { cb.setMode(ProxyMode.RULE) }, onChangeNode = cb.toggleGlobalChange, onConfirm = cb.confirmGlobal, open = ui.globalOpen, onBrowse = actions.onChangeGlobalNode)
                 } else {
                     SceneCard(scenes, ui.pending, ui.slots, retesting, scan, cb.pick, cb.prefetchSlots, { cb.confirm() }, cb.cancel, actions.onScene, funnels = ui.funnels, onFunnel = cb.prefetchFunnel, profileNodes = profileNodes)
                 }

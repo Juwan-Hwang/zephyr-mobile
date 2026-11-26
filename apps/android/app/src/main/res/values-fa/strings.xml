@@ -558,4 +558,16 @@
     <string name="state_ok">عادی</string>
     <string name="state_expired">منقضی‌شده</string>
     <string name="state_failed">ناموفق</string>
+    <!-- #208: policy groups page and global-mode node picking -->
+    <string name="library_groups">گروه‌های سیاست</string>
+    <string name="groups_offline">برای دیدن گروه‌های سیاست وصل شوید</string>
+    <string name="groups_none">گروه سیاستی وجود ندارد</string>
+    <string name="groups_type_select">دستی</string>
+    <string name="groups_type_url_test">سریع‌ترین</string>
+    <string name="groups_type_fallback">جایگزین</string>
+    <string name="groups_type_load_balance">توزیع بار</string>
+    <string name="groups_type_relay">زنجیره‌ای</string>
+    <string name="groups_read_only">این گروه نود خود را خودکار انتخاب می‌کند.</string>
+    <string name="nodes_detail_use_global">استفاده در حالت سراسری</string>
+    <string name="home_global_browse">مرور همهٔ نودها</string>
 </resources>

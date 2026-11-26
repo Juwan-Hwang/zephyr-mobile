@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.flatMapLatest
@@ -73,6 +74,8 @@ data class HomeUi(
     val globalNode: NodeSummary? = null,
     val globalProposal: NodeSummary? = null,
     val globalChange: com.zephyr.engine.ExitChange? = null,
+    /** "更换节点" is open: the proposal (when there is one) and 「浏览全部节点」 (iOS GlobalModeCard). */
+    val globalOpen: Boolean = false,
 )
 
 class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewModel() {
@@ -118,7 +121,7 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         viewModelScope.launch {
             connection.map { it.mode }.distinctUntilChanged().collectLatest { m ->
                 if (m == ProxyMode.GLOBAL) runCatching { globalNow() }.getOrNull()?.let { n -> _ui.update { it.copy(globalNode = n) } }
-                else _ui.update { it.copy(globalProposal = null) }
+                else _ui.update { it.copy(globalProposal = null, globalOpen = false) }
             }
         }
         // Minute clock for the slow rows; the 1 Hz one is [live], and only while the screen collects it.
@@ -170,10 +173,12 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
      * J-1: this row's own funnel (contract v0.7 §19.a), same freshness window as the scene candidates (设置 › 结果保留)
      * and the 200 ms slow threshold. A failure or an empty range drops the entry, so the row writes "n 个可用" again.
      */
-    fun prefetchFunnel(scene: Scene) = viewModelScope.launch {
+    fun prefetchFunnel(scene: Scene) = viewModelScope.launch { refreshFunnel(scene.id) }
+
+    private suspend fun refreshFunnel(sceneId: String) {
         val ttl = runCatching { engine.settings().first().latencyTtlHours }.getOrDefault(24).coerceAtLeast(1) * 3_600_000L
-        val f = runCatching { engine.sceneFunnel(scene.id, ttl, MINI_FUNNEL_THRESHOLD_MS) }.getOrNull()
-        _ui.update { it.copy(funnels = if (f != null && f.poolSize > 0) it.funnels + (scene.id to f) else it.funnels - scene.id) }
+        val f = runCatching { engine.sceneFunnel(sceneId, ttl, MINI_FUNNEL_THRESHOLD_MS) }.getOrNull()
+        _ui.update { it.copy(funnels = if (f != null && f.poolSize > 0) it.funnels + (sceneId to f) else it.funnels - sceneId) }
     }
 
     /** A candidate tapped in the scene sheet: same inline confirm as the swipe (exit IP line, 更改/取消). */
@@ -195,7 +200,16 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
     fun retest(sceneId: String) {
         if (sceneId in _retesting.value) return
         _retesting.update { it + sceneId }
-        launchCatching(R.string.home_action_retest) { try { engine.retestScene(sceneId) } finally { _retesting.update { it - sceneId } } }
+        launchCatching(R.string.home_action_retest) {
+            kotlinx.coroutines.coroutineScope {
+                // #208 bug 3: the row's funnel used to be read only when the scene's testedAt moved. A retest writes node
+                // latencies but testedAt is the exit-trace time (video / custom never get one), so the funnel kept the
+                // numbers from before the scan (已测速 0). Re-read it as the scan advances and once it ends.
+                val watch = launch { engine.scanProgress().filterNotNull().distinctUntilChanged().collect { refreshFunnel(sceneId) } }
+                try { engine.retestScene(sceneId) } finally { watch.cancel(); _retesting.update { it - sceneId } }
+                refreshFunnel(sceneId)
+            }
+        }
     }
 
     fun setSource(scene: Scene, source: com.zephyr.engine.SceneSource) = launchCatching(R.string.home_action_switch_source) {
@@ -221,22 +235,48 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         showToast(uiText(R.string.home_switched_to, p.node.name), p.scene.id, previous)
     }
 
-    /** Prototype `#gChange`: toggles an inline proposal (fastest other node), confirmed with "更改为X". */
+    /**
+     * Prototype `#gChange`: toggles the inline proposal (fastest other node), confirmed with "更改为X", plus
+     * 「浏览全部节点」 to pick any node (iOS GlobalModeCard).
+     */
     fun toggleGlobalChange() = launchCatching(R.string.home_action_load_nodes) {
-        if (_ui.value.globalProposal != null) { _ui.update { it.copy(globalProposal = null) }; return@launchCatching }
+        if (_ui.value.globalOpen || _ui.value.globalProposal != null) { _ui.update { it.copy(globalProposal = null, globalOpen = false) }; return@launchCatching }
         val cur = globalNow()
-        val page = engine.groupMembers(com.zephyr.engine.core.CoreEngine.GLOBAL, 0, 500).rows
-        val best = page.filter { it.protocol.uppercase() !in NON_NODES && it.name != cur?.name && it.id >= 0 && (it.latencyMs ?: 0) >= 0 }
-            .minByOrNull { it.latencyMs ?: Int.MAX_VALUE } ?: throw com.zephyr.engine.ZephyrException(com.zephyr.engine.ErrorCode.NODE_NOT_FOUND, "no other node")
-        val x = runCatching { engine.previewGlobalChange(best.id) }.getOrNull()
-        _ui.update { it.copy(globalNode = cur, globalProposal = best, globalChange = x) }
+        val best = globalAlternatives(cur).firstOrNull()
+        val x = best?.let { b -> runCatching { engine.previewGlobalChange(b.id) }.getOrNull() }
+        _ui.update { it.copy(globalNode = cur, globalProposal = best, globalChange = x, globalOpen = true) }
+    }
+
+    /**
+     * Library nodes another global exit could use, fastest first (iOS `globalAlternatives`): the candidates of every
+     * pooled scene. #208: the live GLOBAL group only lists config names (negative live ids), which setGlobalNode can't
+     * take, so on the real core the old GLOBAL-members-only search never found a node. GLOBAL stays the fallback (mock).
+     */
+    private suspend fun globalAlternatives(cur: NodeSummary?): List<NodeSummary> {
+        val seen = HashSet<Long>()
+        val pooled = scenes.value.ifEmpty { runCatching { engine.scenes().first() }.getOrDefault(emptyList()) }
+            .filter { it.source != com.zephyr.engine.SceneSource.SUBSCRIPTION_GROUP }
+        val all = pooled.flatMap { s -> runCatching { engine.sceneCandidates(s.id, null) }.getOrDefault(emptyList()) }.filter { seen.add(it.id) }
+            .ifEmpty { runCatching { engine.groupMembers(com.zephyr.engine.core.CoreEngine.GLOBAL, 0, 500).rows }.getOrDefault(emptyList()).filter { it.protocol.uppercase() !in NON_NODES } }
+        return all.filter { it.id >= 0 && it.id != cur?.id && it.name != cur?.name && (it.latencyMs ?: 0) >= 0 }.sortedBy { it.latencyMs ?: Int.MAX_VALUE }
     }
 
     fun confirmGlobal() = launchCatching(R.string.home_action_switch_node) {
         val to = _ui.value.globalProposal ?: return@launchCatching
+        switchGlobal(to)
+    }
+
+    /** #208: a node picked on the nodes page (detail sheet 「用作全局节点」) becomes the global exit. */
+    fun useGlobalNode(node: NodeSummary) = launchCatching(R.string.home_action_switch_node) {
+        if (_ui.value.globalNode == null) runCatching { globalNow() }.getOrNull()?.let { n -> _ui.update { it.copy(globalNode = n) } }
+        if (node.id == _ui.value.globalNode?.id) return@launchCatching
+        switchGlobal(node)
+    }
+
+    private suspend fun switchGlobal(to: NodeSummary) {
         val from = _ui.value.globalNode
         engine.setGlobalNode(to.id)
-        _ui.update { it.copy(globalProposal = null, globalNode = to) }
+        _ui.update { it.copy(globalProposal = null, globalOpen = false, globalNode = to) }
         showToast(uiText(R.string.home_switched_to, to.name), null, null, from?.let { f -> { engine.setGlobalNode(f.id); _ui.update { u -> u.copy(globalNode = f) } } })
     }
 

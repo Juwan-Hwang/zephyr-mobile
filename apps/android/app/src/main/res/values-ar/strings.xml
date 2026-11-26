@@ -694,4 +694,16 @@
     <string name="state_ok">طبيعي</string>
     <string name="state_expired">منتهي الصلاحية</string>
     <string name="state_failed">فشل</string>
+    <!-- #208: policy groups page and global-mode node picking -->
+    <string name="library_groups">مجموعات السياسات</string>
+    <string name="groups_offline">اتصل لعرض مجموعات السياسات</string>
+    <string name="groups_none">لا توجد مجموعات سياسات</string>
+    <string name="groups_type_select">يدوي</string>
+    <string name="groups_type_url_test">الأسرع</string>
+    <string name="groups_type_fallback">احتياطي</string>
+    <string name="groups_type_load_balance">موازنة الحمل</string>
+    <string name="groups_type_relay">ترحيل</string>
+    <string name="groups_read_only">تختار هذه المجموعة عقدتها تلقائيًا.</string>
+    <string name="nodes_detail_use_global">استخدام في الوضع الشامل</string>
+    <string name="home_global_browse">تصفح كل العقد</string>
 </resources>

@@ -524,4 +524,16 @@
     <string name="state_ok">Kadaly</string>
     <string name="state_expired">Möhleti geçdi</string>
     <string name="state_failed">Şowsuz</string>
+    <!-- #208: policy groups page and global-mode node picking -->
+    <string name="library_groups">Syýasat toparlary</string>
+    <string name="groups_offline">Syýasat toparlaryny görmek üçin birikiň</string>
+    <string name="groups_none">Syýasat topary ýok</string>
+    <string name="groups_type_select">El bilen</string>
+    <string name="groups_type_url_test">Iň çalt</string>
+    <string name="groups_type_fallback">Ätiýaçlyk</string>
+    <string name="groups_type_load_balance">Ýüki deňlemek</string>
+    <string name="groups_type_relay">Geçiriji</string>
+    <string name="groups_read_only">Bu topar düwüni awtomatik saýlaýar.</string>
+    <string name="nodes_detail_use_global">Global režimde ulan</string>
+    <string name="home_global_browse">Ähli düwünlere göz aýla</string>
 </resources>

@@ -70,11 +70,15 @@ fun BoxScope.SceneSheet(
         }
         val pooled = s.source != SceneSource.SUBSCRIPTION_GROUP
         // §15.c/§15.e: same freshness window as the node list and scans (设置 › 结果保留).
-        val funnel by produceState<NodeFunnel?>(null, s.id, s.testedAt, s.source, s.nodeFilter) {
-            value = if (!pooled) null else runCatching {
+        // #208 bug 3: also re-read while a retest runs and once it ends — a retest writes latencies but does not move
+        // testedAt (the exit-trace time), so keying on testedAt alone kept the pre-scan 已测速 0.
+        val funnel by produceState<NodeFunnel?>(null, s.id, s.testedAt, s.source, s.nodeFilter, retesting) {
+            suspend fun read() = if (!pooled) null else runCatching {
                 val ttl = AppGraph.engine.settings().first().latencyTtlHours.coerceAtLeast(1) * 3_600_000L
                 AppGraph.engine.nodeFunnel(ttl, FUNNEL_THRESHOLD_MS)
             }.getOrNull()
+            value = read()
+            while (retesting) { kotlinx.coroutines.delay(FUNNEL_POLL_MS); value = read() ?: value }
         }
         // Audit #208 U33 (prototype / §15.c, iOS SceneSheet.lede): "检测自 N 个订阅中的 M 个节点" from the funnel; without
         // one (订阅分组, or no data yet) M is the scene's candidate pool.
@@ -141,6 +145,8 @@ fun BoxScope.SceneSheet(
 
 /** Funnel threshold: the prototype's "延迟低于 300 ms" (contract §15.c default). */
 private const val FUNNEL_THRESHOLD_MS = 300
+/** How often the open sheet re-reads the funnel while its scene is being re-tested. */
+private const val FUNNEL_POLL_MS = 2_000L
 
 @Composable
 private fun retestFrequency(s: Settings): String {

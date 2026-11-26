@@ -72,7 +72,11 @@ import kotlin.math.roundToInt
 
 /** Node library (prototype `nodes`): 13,109,802 rows, fixed row height, region rail, index search. */
 @Composable
-fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImport: () -> Unit = {}) {
+fun NodesScreen(
+    vm: NodesViewModel, initialQuery: String, back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImport: () -> Unit = {},
+    /** #208: global mode — the detail sheet offers 「用作全局节点」. */
+    onUseGlobal: ((com.zephyr.engine.NodeSummary) -> Unit)? = null,
+) {
     val c = ZTheme.colors
     val ui by vm.ui.collectAsStateWithLifecycle()
     LaunchedEffect(initialQuery) { vm.setQuery(initialQuery, immediate = true) }
@@ -172,6 +176,7 @@ fun NodesScreen(vm: NodesViewModel, initialQuery: String, back: BackTo = BackTo.
     NodeDetailSheet(
         sel, sel?.let { vm.latency[it.id] }, sel != null && vm.testing[sel.id] == true,
         load = { vm.detail(it) }, onTest = { vm.testOne(it.id) }, onDismiss = { selected = null },
+        onUseGlobal = onUseGlobal?.let { use -> { n -> selected = null; use(n) } },
     )
     }
 }
