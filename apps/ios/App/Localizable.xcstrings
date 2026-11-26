@@ -47046,6 +47046,89 @@
         }
       }
     },
+    "设为当前订阅" : {
+      "comment" : "订阅页：订阅行的无障碍动作，把该订阅设为当前订阅（契约 §22.a）",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعيين كاشتراك حالي"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set as Current Subscription"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Establecer como suscripción actual"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنظیم به‌عنوان اشتراک فعلی"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在のサブスクリプションに設定"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "현재 구독으로 설정"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "လက်ရှိ စာရင်းသွင်းမှုအဖြစ် သတ်မှတ်ရန်"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сделать текущей подпиской"
+          }
+        },
+        "sw" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weka kama Usajili wa Sasa"
+          }
+        },
+        "tk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Häzirki abuna hökmünde belle"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geçerli Abonelik Olarak Ayarla"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "موجودہ سبسکرپشن کے طور پر سیٹ کریں"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đặt làm đăng ký hiện tại"
+          }
+        }
+      }
+    },
     "缺少地理数据" : {
       "localizations" : {
         "ar" : {

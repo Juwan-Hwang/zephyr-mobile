@@ -49,7 +49,7 @@ struct HomeHero: View {
 
     private var failureDetailText: String? {
         guard model.connection.status == .failed else { return nil }
-        return model.connection.error?.failureDetail
+        return model.connection.error?.failureDetail(redact: { model.engine.redactDiagnostic(text: $0) })
     }
 
     private var stateText: some View {
@@ -91,7 +91,7 @@ struct HomeHero: View {
     }
 }
 
-/// 连接失败的原文（ZephyrError.message，折叠空白、截断 240 字）：默认一行，点一下展开到 6 行，再点收起。
+/// 连接失败的原文（ZephyrError.message 经核心 redactDiagnostic 脱敏：折叠空白、URL 脱敏、截断 240 字，契约 §22.b）：默认一行，点一下展开到 6 行，再点收起。
 @MainActor
 struct FailureDetail: View {
     let detail: String

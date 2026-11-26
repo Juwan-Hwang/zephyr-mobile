@@ -136,6 +136,8 @@ final class FilterStubEngine: ZephyrEngine, @unchecked Sendable {
     func updateSubscription(id: String) async throws -> SubscriptionDiff { try await base.updateSubscription(id: id) }
     func updateAll() async throws -> [SubscriptionDiff] { try await base.updateAll() }
     func deleteSubscription(id: String) async throws { try await base.deleteSubscription(id: id) }
+    func setActiveSubscription(id: String) async throws -> [Subscription] { try await base.setActiveSubscription(id: id) }
+    func redactDiagnostic(text: String) -> String { base.redactDiagnostic(text: text) }
     func activeConnections() -> AsyncStream<[ConnectionInfo]> { base.activeConnections() }
     func hostTrace(host: String) async -> HostTraceInfo? { await base.hostTrace(host: host) }
     func hostOverride(host: String) async -> HostOverrideInfo? { await base.hostOverride(host: host) }

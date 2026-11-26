@@ -953,6 +953,23 @@ public final class CoreEngine: ZephyrEngine, @unchecked Sendable {
         await bumpScenes()
     }
 
+    /// 契约 §22.a：设为生效订阅。核心把它移到第一位、落盘并同步第 2 层规则（节点库不重建）；
+    /// 顺序确实变了才重写隧道配置、运行中热重载（同订阅更新，失败按 §16.b③ 保持旧配置）。
+    public func setActiveSubscription(id: String) async throws -> [ZephyrKit.Subscription] {
+        guard let c = core else { return try await fallback.setActiveSubscription(id: id) }
+        let before = await runQuiet { c.subscriptions().first?.id }
+        let list = try await run(.subscriptionNotFound) { try c.setActiveSubscription(id: id) }.map(CoreEngine.sub)
+        guard before != id else { return list }
+        appLog(.info, "生效订阅 → \(list.first?.name ?? id)")
+        await publishSubs()
+        await bumpScenes()
+        if let t = tunnel { await reloadTunnelIfRunning(t) }
+        return list
+    }
+
+    /// 契约 §22.b：首页「错误详情」统一经核心脱敏。
+    public func redactDiagnostic(text: String) -> String { coreRedactDiagnostic(text) }
+
     private func fetchFor(_ id: String, _ c: MobileCore) async throws -> FetchedBody {
         guard let raw = try await run(.subscriptionInvalid, { try c.subscriptionFetchUrl(id: id) }), let url = CoreEngine.httpURL(raw) else {
             throw ZephyrError(code: .subscriptionInvalid, message: "local profile")
@@ -1344,3 +1361,6 @@ final class LockedBox<T>: @unchecked Sendable {
     func get() -> T { lock.lock(); defer { lock.unlock() }; return value }
     func set(_ v: T) { lock.lock(); value = v; lock.unlock() }
 }
+
+/// 文件作用域转发：CoreEngine 自己也有 `redactDiagnostic(text:)`，在类里直接写会解析成方法自身。
+private func coreRedactDiagnostic(_ text: String) -> String { redactDiagnostic(text: text) }

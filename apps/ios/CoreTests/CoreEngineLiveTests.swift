@@ -136,6 +136,60 @@ final class CoreEngineLiveTests: XCTestCase {
         XCTAssertEqual(t.reloads, 1)
     }
 
+    /// 契约 §22.a：两个订阅（不同 YAML）时点选第二个——已连接：配置换成它并热重载一次；再点它不重载；
+    /// 未连接：只重写配置不重载；不存在 → subscription_not_found。
+    func testSetActiveSubscriptionRewritesConfigAndReloads() async throws {
+        let t = FakeTunnel(dir: dir)
+        let e = CoreEngine(dataDir: dir.appendingPathComponent("core"), mockData: false, fetcher: { url in
+            let h = url.host?.split(separator: ".").first.map(String.init) ?? "x"
+            return CoreEngine.FetchedBody(body: """
+            proxies:
+              - {name: "\(h)-node", server: \(h)-srv.example, port: 443, type: vless, uuid: 00000000-0000-0000-0000-000000000001}
+            rules:
+              - DOMAIN-SUFFIX,\(h).test,DIRECT
+              - MATCH,DIRECT
+            """, fileName: "\(h).yaml")
+        }, tunnel: t)
+        let alpha = try await e.importSubscription(source: .url, payload: "https://alpha.example.net/sub")
+        let beta = try await e.importSubscription(source: .url, payload: "https://beta.example.net/sub")
+        try await e.connect()
+        XCTAssertTrue(try String(contentsOf: t.configURL, encoding: .utf8).contains("alpha-srv"), "连接用列表第一个")
+        let reloads0 = t.lock.withLock { t.reloads }
+
+        let list = try await e.setActiveSubscription(id: beta.id)
+        XCTAssertEqual(list.map(\.id), [beta.id, alpha.id])
+        let yaml = try String(contentsOf: t.configURL, encoding: .utf8)
+        XCTAssertTrue(yaml.contains("beta-srv") && !yaml.contains("alpha-srv"), yaml)
+        XCTAssertEqual(t.lock.withLock { t.reloads }, reloads0 + 1, "运行中热重载一次")
+        var subs = e.subscriptions().makeAsyncIterator()
+        let streamed = await subs.next()
+        XCTAssertEqual(streamed?.map(\.id), [beta.id, alpha.id])
+
+        _ = try await e.setActiveSubscription(id: beta.id)
+        XCTAssertEqual(t.lock.withLock { t.reloads }, reloads0 + 1, "已是当前订阅不重载")
+
+        try await e.disconnect()
+        _ = try await e.setActiveSubscription(id: alpha.id)
+        XCTAssertTrue(try String(contentsOf: t.configURL, encoding: .utf8).contains("alpha-srv"), "断开时也重写配置")
+        XCTAssertEqual(t.lock.withLock { t.reloads }, reloads0 + 1, "未连接不重载")
+
+        do { _ = try await e.setActiveSubscription(id: "nope"); XCTFail("应抛") } catch let err as ZephyrError {
+            XCTAssertEqual(err.code, .subscriptionNotFound)
+        }
+    }
+
+    /// 契约 §22.b：错误详情经核心 redactDiagnostic——URL 里的 token / 凭据去掉、空白折叠、超长截断。
+    func testRedactDiagnosticUsesCore() {
+        let (e, _) = make()
+        let r = e.redactDiagnostic(text: "fetch  failed:\n https://user:pw@sub.example.com/api/subscribe?token=SECRET （超时）")
+        XCTAssertFalse(r.contains("SECRET") || r.contains("pw@") || r.contains("subscribe"), r)
+        XCTAssertTrue(r.hasPrefix("fetch failed: https://"), r)
+        XCTAssertEqual(e.redactDiagnostic(text: "geodata missing: GeoSite.dat"), "geodata missing: GeoSite.dat")
+        let long = e.redactDiagnostic(text: String(repeating: "错", count: 300))
+        XCTAssertEqual(long.count, 241)
+        XCTAssertTrue(long.hasSuffix("…"))
+    }
+
     /// REVIEW-Q2 X-P1-6：控制中心 / 小组件由扩展进程直接启动隧道，断开时的配置变更也要落盘，但不重载。
     func testConfigChangeWhileDisconnectedWritesConfigWithoutReload() async throws {
         let (e, t) = make()

@@ -85,6 +85,12 @@ public protocol ZephyrEngine: AnyObject, Sendable {
     func updateSubscription(id: String) async throws -> SubscriptionDiff
     func updateAll() async throws -> [SubscriptionDiff]
     func deleteSubscription(id: String) async throws
+    /// 契约 §22.a：设为生效订阅（移到列表第一位并落盘，其余相对顺序不变），返回调整后的列表。
+    /// 隧道运行中随后用新的第一个订阅重写配置并热重载；不存在 → `subscription_not_found`。
+    func setActiveSubscription(id: String) async throws -> [Subscription]
+    /// 契约 §22.b：首页折叠的「错误详情」显示前的脱敏（折叠空白、URL 走 redactUrl、截断 240 字），
+    /// 真实引擎调用核心 `redactDiagnostic`，平台不各自实现。
+    func redactDiagnostic(text: String) -> String
 
     // MARK: §8 连接、日志、设置
     /// 最多 200 条最新。

@@ -126,6 +126,27 @@ extension MockEngine {
         log(.info, "已删除订阅 \(id)")
     }
 
+    /// 契约 §22.a：同核心语义——移到第一位，其余相对顺序不变；不存在 → subscription_not_found。
+    public func setActiveSubscription(id: String) async throws -> [Subscription] {
+        let list = try withState { s -> [Subscription] in
+            guard let i = s.subscriptions.firstIndex(where: { $0.id == id }) else {
+                throw ZephyrError(code: .subscriptionNotFound, message: "no subscription \(id)")
+            }
+            if i > 0 { s.subscriptions.insert(s.subscriptions.remove(at: i), at: 0) }
+            return s.subscriptions
+        }
+        subsB.send(list)
+        log(.info, "生效订阅 → \(id)")
+        return list
+    }
+
+    /// 契约 §22.b：Mock 不链接核心，只折叠空白、截断 240 字，供预览 / 快照使用；真机走 CoreEngine → 核心 redactDiagnostic。
+    public func redactDiagnostic(text: String) -> String {
+        let folded = text.split(whereSeparator: { $0.isWhitespace }).joined(separator: " ")
+        guard folded.count > 240 else { return folded }
+        return String(folded.prefix(240)) + "…"
+    }
+
     // MARK: §8 连接、日志、设置
 
     func currentConnections() -> [ConnectionInfo] {
