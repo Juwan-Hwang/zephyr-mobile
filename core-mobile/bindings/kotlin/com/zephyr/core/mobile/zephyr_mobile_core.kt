@@ -901,6 +901,10 @@ internal open class UniffiVTableCallbackInterfaceBuildProgress(
 
 
 
+
+
+
+
 // A JNA Library to expose the extern-C FFI definitions.
 // This is an implementation detail which will be called internally by the public API.
 
@@ -1053,6 +1057,8 @@ internal interface UniffiLib : Library {
     ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_seed_kernel_geodata(`ptr`: Pointer,`kernelHome`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_active_subscription(`ptr`: Pointer,`id`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_failover_policy(`ptr`: Pointer,`policy`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
     fun uniffi_zephyr_mobile_core_fn_method_mobilecore_set_global_node(`ptr`: Pointer,`nodeId`: Long,uniffi_out_err: UniffiRustCallStatus, 
@@ -1094,6 +1100,8 @@ internal interface UniffiLib : Library {
     fun uniffi_zephyr_mobile_core_fn_func_is_public_fetch_address(`ip`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Byte
     fun uniffi_zephyr_mobile_core_fn_func_parse_import_payload(`payload`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_zephyr_mobile_core_fn_func_redact_diagnostic(`text`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
     fun ffi_zephyr_mobile_core_rustbuffer_alloc(`size`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
@@ -1215,6 +1223,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_func_parse_import_payload(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_func_redact_diagnostic(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_active_connections(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mihomoclient_close_all_connections(
@@ -1335,6 +1345,8 @@ internal interface UniffiLib : Library {
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_seed_kernel_geodata(
     ): Short
+    fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_active_subscription(
+    ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_failover_policy(
     ): Short
     fun uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_global_node(
@@ -1400,6 +1412,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_func_parse_import_payload() != 49370.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_func_redact_diagnostic() != 44515.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mihomoclient_active_connections() != 8862.toShort()) {
@@ -1580,6 +1595,9 @@ private fun uniffiCheckApiChecksums(lib: UniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_seed_kernel_geodata() != 38773.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_active_subscription() != 6446.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_failover_policy() != 8372.toShort()) {
@@ -2758,6 +2776,12 @@ public interface MobileCoreInterface {
      */
     fun `seedKernelGeodata`(`kernelHome`: kotlin.String): List<kotlin.String>
     
+    /**
+     * 设为生效订阅（契约 §22.a）：移到订阅列表第一位，随后同步第 2 层订阅规则并热加载。
+     * 节点库不重建（各订阅的节点都在库里，顺序不影响查询）。隧道运行中平台随后重写配置并 reloadConfig。
+     */
+    fun `setActiveSubscription`(`id`: kotlin.String): List<Subscription>
+    
     fun `setFailoverPolicy`(`policy`: FailoverPolicy)
     
     /**
@@ -3640,6 +3664,23 @@ open class MobileCore: Disposable, AutoCloseable, MobileCoreInterface {
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_seed_kernel_geodata(
         it, FfiConverterString.lower(`kernelHome`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * 设为生效订阅（契约 §22.a）：移到订阅列表第一位，随后同步第 2 层订阅规则并热加载。
+     * 节点库不重建（各订阅的节点都在库里，顺序不影响查询）。隧道运行中平台随后重写配置并 reloadConfig。
+     */
+    @Throws(MobileException::class)override fun `setActiveSubscription`(`id`: kotlin.String): List<Subscription> {
+            return FfiConverterSequenceTypeSubscription.lift(
+    callWithPointer {
+    uniffiRustCallWithError(MobileException) { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_method_mobilecore_set_active_subscription(
+        it, FfiConverterString.lower(`id`),_status)
 }
     }
     )
@@ -8020,6 +8061,19 @@ public object FfiConverterMapStringString: FfiConverterRustBuffer<Map<kotlin.Str
     uniffiRustCallWithError(MobileException) { _status ->
     UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_func_parse_import_payload(
         FfiConverterString.lower(`payload`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * 折叠空白；`http://` / `https://` 开头的 URL 换成 `redactUrl` 的脱敏形式（去掉 token、路径与凭据）；
+         * 截断到 240 字。返回可直接显示的文本（仍不本地化，只作补充说明，标题照旧按 code 本地化）。
+         */ fun `redactDiagnostic`(`text`: kotlin.String): kotlin.String {
+            return FfiConverterString.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_zephyr_mobile_core_fn_func_redact_diagnostic(
+        FfiConverterString.lower(`text`),_status)
 }
     )
     }

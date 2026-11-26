@@ -8,11 +8,13 @@
 //! - `mock`：原型数据生成器移植（基准与一致性测试）
 //! - `import_payload`：二维码 / 剪贴板导入载荷解析（contract §15）
 //! - `fetch_policy`：订阅拉取的 SSRF 判定（contract §16.i）
+//! - `diagnostic`：错误详情脱敏（contract §22.b）
 
 #![allow(clippy::type_complexity)] // 索引/缓存元组类型集中在少数内部函数，拆别名反而难读
 #[cfg(feature = "uniffi")]
 uniffi::setup_scaffolding!("zephyr_mobile_core");
 
+pub mod diagnostic;
 pub mod diff;
 pub mod engine;
 pub mod error;

@@ -219,6 +219,7 @@ v0.1 追加：`stale_token`（查询句柄已淘汰，UI 重新 queryNodes 即�
 - v0.6（2026-11-21）追加 §18：设计评审执行——`NodeIndex.reachableCount`（可选）与节点页头部判断句、状态文字术语（状态不只靠颜色）、三端（含鸿蒙）列。只追加，不改名。
 - v0.7（2026-11-22）追加 §19：场景漏斗 `sceneFunnel`（首页场景卡迷你漏斗按场景取数，回应 #1 J-1），三端（含鸿蒙）列。只追加，不改名。
 - v0.8（2026-11-25）追加 §20：内核地理数据——`zm_start` 前置检查（有界下载、`geodata missing:` 错误、`zm_set_geodata_timeout`）、`runtimeConfig` 的 `geox-url` 镜像默认值、`seedKernelGeodata`、安装包分发快照。只追加，不改名。
+- v0.10（2026-11-26）追加 §22：`setActiveSubscription`（订阅列表点选设为生效订阅）；U27 修订——折叠的「错误详情」可显示经 `redactDiagnostic` 脱敏的原文。只追加，不改名。
 - v0.5（2026-11-21）追加 §17：鸿蒙（HarmonyOS，角色 D，#241）列——§11 平台层、§16.a②④⑤、§16.f、§16.i④ 的鸿蒙行为，鸿蒙平台差异（无控制中心磁贴、无实况窗、无换图标），导航结构与内部深链的决定。只追加，不改名。
 
 ## 13. v0.1 追加（2026-11-06 14:20，只追加不改名）
@@ -604,7 +605,7 @@ IPv6：fe80::/10, fc00::/7, ff00::/8（::1 本就不进 TUN）
 | `Cancelled` | `cancelled` | UI 不提示 |
 
 - 平台自身的错误：VPN 授权被用户拒绝 → `vpn_permission_denied`（**只有**这一种；iOS `startVPNTunnel` / 保存配置的其他失败 → `internal`，扩展启动失败按扩展写回的 errorCode）；拉取订阅见 §16.i；离线（无可用网络）→ `network_unavailable`。
-- `message` 只进日志，UI 一律按 code 本地化（§0.5）；任何把 `message` 原文显示给用户的地方都按缺陷处理（U27）。
+- `message` 只进日志，UI 一律按 code 本地化（§0.5）；任何把 `message` 原文显示给用户的地方都按缺陷处理（U27）。**v0.10 修订见 §22.b**：折叠的「错误详情」例外。
 
 **② 没有订阅时连接（E07）**
 - 引擎 `connect()` 在订阅列表为空时抛 **`subscription_not_found`**（不再用 `subscription_invalid`：用户没有订阅，不是订阅坏了）。
@@ -999,3 +1000,28 @@ S25 Ultra（Android 16，非 root）上 `zm_start` 后日志 `Start TUN listenin
 ### 21.c 平台
 - 无需改动。core 生成的运行时配置不写 `include-package` / `exclude-package`；平台若将来要做分应用代理，用系统 VPN API（Android `VpnService.Builder.addAllowedApplication` / `addDisallowedApplication`），不要写进 mihomo 的 tun 配置。
 - 升级 mihomo 版本时补丁须能干净打上（`check-patches` 会失败提示），否则先改补丁。
+
+## 22. v0.10 追加（2026-11-26，生效订阅切换 / 错误详情，#1，只追加）
+
+### 22.a `setActiveSubscription`
+回应 #1 真机反馈第 2 条（B 23:07、C 22:01）：用户找不到切换当前订阅的地方。§14 的定义不变——**生效订阅 = 订阅列表第一个**，运行配置、规则页第 2 层同源；本节只补一个调整顺序的接口。
+
+```
+setActiveSubscription(id: String) throws -> [Subscription]   // 移到第一位，返回调整后的列表
+```
+- 核心 `MobileCore.setActiveSubscription(id)`：把该订阅移到列表第一位并落盘，其余订阅相对顺序不变；随后同步第 2 层订阅规则并热加载规则（同 `syncSubscriptionRules`）。已是第一位时不写盘。节点库不重建（各订阅的节点本来都在库里）。
+- 不存在 → `SubscriptionNotFound` → `subscription_not_found`。
+- 平台：订阅列表点选某行即调用；隧道运行中随后用新的第一个订阅重写配置并 `reloadConfig`（失败按 §16.b③）。列表当前行显示「使用中」标记（文案走 glossary）。第一个订阅自动生效、删除生效订阅后回退到下一个，核心已保证，平台不另存「当前订阅 id」。
+- MockEngine：同语义（移到第一位）。
+
+### 22.b 错误详情（U27 修订）
+B 在 #1（11-25 23:50）请 A 定夺：首页可展开的「错误详情」显示 `ZephyrError.message` / 内核日志尾部原文，与 U27 冲突。**定：修改 U27，允许折叠的「错误详情」显示原文，但必须先脱敏。**
+- 标题与正文提示照旧按 code 本地化（§0.5）；原文只出现在默认折叠的「错误详情」里，作为排障补充，不作为用户主要看到的说明。
+- 显示前一律经核心顶层函数：
+```
+redactDiagnostic(text: String) -> String
+```
+  折叠空白；`http://` / `https://` URL 换成 `redactUrl` 的脱敏形式（去掉 token、路径与凭据）；截断到 240 字（超出加 `…`）。三端（含鸿蒙）调用同一函数，不各自实现。
+- 日志页与「分享日志」保持现状（§16.c U19），不受本节影响。
+- 其余位置（Toast、横幅、通知、小组件）显示 `message` 原文仍按缺陷处理。
+
