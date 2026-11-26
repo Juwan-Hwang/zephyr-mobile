@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Preview: without previewLayout / previewImage the picker and the pin dialog fell back to initialLayout, Glance's
+  loading placeholder, which One UI's launcher cannot inflate (「无法添加微件。」). previewLayout (API 31+) is a static
+  RemoteViews-safe layout; previewImage covers older launchers.
+  updatePeriodMillis 30 min (the platform minimum): a safety net that redraws a card left showing 「已连接」 after the
+  process died with the tunnel, since nothing else is running then to push an update.
+-->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/widget_usage_description"
     android:initialLayout="@layout/glance_default_loading_layout"
+    android:previewLayout="@layout/widget_preview_usage"
+    android:previewImage="@drawable/widget_preview_usage_image"
     android:minWidth="250dp"
     android:minHeight="110dp"
     android:targetCellWidth="4"
     android:targetCellHeight="2"
     android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="0"
+    android:updatePeriodMillis="1800000"
     android:widgetCategory="home_screen"
     android:widgetFeatures="configuration_optional" />

@@ -178,6 +178,18 @@ class WidgetScreenshotTest(private val dark: Boolean) {
         paparazzi.snapshot(render(ZephyrWidget.MEDIUM_TALL) { ZephyrWidget().Content(true, title, detail, today, scenes) })
     }
 
+    // Widget fixes: 4×2 on a large phone fills the cell height; with no known scene exit the scene column hides.
+    @Test fun mediumXTall() {
+        val (title, detail, today) = status(on = true)
+        val scenes = runBlocking { engine.scenes().first() }
+        paparazzi.snapshot(render(ZephyrWidget.MEDIUM_XTALL) { ZephyrWidget().Content(true, title, detail, today, scenes) })
+    }
+
+    @Test fun mediumNoExits() {
+        val (title, _, today) = status(on = true)
+        paparazzi.snapshot(render(ZephyrWidget.MEDIUM) { ZephyrWidget().Content(true, title, paparazzi.context.getString(R.string.common_mode_rule), today, emptyList()) })
+    }
+
     @Test fun usage() {
         val u = runBlocking { engine.usageToday() }
         val hourly = u.hourly.let { h -> if (h.size >= 24) h.takeLast(24) else List(24 - h.size) { 0L } + h }

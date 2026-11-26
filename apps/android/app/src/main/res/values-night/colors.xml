@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="zephyr_bg">#FF000000</color>
+    <!-- Static widget previews (picker / pin dialog). Same values as the Glance widgets' day / night colors. -->
+    <color name="widget_preview_bg">#FF141417</color>
+    <color name="widget_preview_t1">#F2FFFFFF</color>
+    <color name="widget_preview_t2">#99FFFFFF</color>
+    <color name="widget_preview_t3">#80FFFFFF</color>
+    <color name="widget_preview_green">#FF30D158</color>
+    <color name="widget_preview_accent">#FF0A84FF</color>
+    <color name="widget_preview_idle">#26FFFFFF</color>
 </resources>

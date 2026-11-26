@@ -45,6 +45,14 @@ import com.zephyr.design.format.ZFormat
 import com.zephyr.engine.ConnectionStatus
 import com.zephyr.engine.Scene
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.glance.layout.fillMaxHeight
 import com.zephyr.app.MainActivity
 import com.zephyr.app.R
 import com.zephyr.engine.ProxyMode
@@ -62,27 +70,41 @@ import androidx.glance.action.actionStartActivity
  * power button connects/disconnects.
  */
 class ZephyrWidget : GlanceAppWidget() {
-    override val sizeMode = SizeMode.Responsive(setOf(SMALL, MEDIUM, SMALL_TALL, MEDIUM_TALL))
+    override val sizeMode = SizeMode.Responsive(setOf(SMALL, MEDIUM, SMALL_TALL, MEDIUM_TALL, SMALL_XTALL, MEDIUM_XTALL))
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         AppGraph.init(context)
+        val first = load(context)
+        provideContent {
+            // Reloaded on every refreshAll(): provideGlance itself runs only once per Glance session (see WidgetRefresh).
+            val tick by WidgetRefresh.tick.collectAsState()
+            var s by remember { mutableStateOf(first) }
+            LaunchedEffect(tick) { s = load(context) }
+            GlanceTheme { Content(s.on, s.title, s.detail, s.today, s.scenes) }
+        }
+    }
+
+    internal data class Snapshot(val on: Boolean, val title: String, val detail: String, val today: Long, val scenes: List<Scene>)
+
+    private suspend fun load(context: Context): Snapshot {
         val e = AppGraph.engine
         val c = e.connectionState().first()
+        val status = WidgetState.effectiveStatus(c.status, com.zephyr.app.vpn.ZephyrVpnService.running)
+        val on = status == ConnectionStatus.CONNECTED
         val scenes = runCatching { e.scenes().first() }.getOrDefault(emptyList())
+        // Live groups only while connected (the core is not running otherwise); a slow controller must not stall the card.
+        val groups = if (on) withTimeoutOrNull(GROUPS_WAIT_MS) { runCatching { e.policyGroups().first() }.getOrNull() } ?: emptyList() else emptyList()
+        val exits = WidgetState.sceneExits(scenes, groups)
         val today = runCatching { e.usageToday().todayBytes }.getOrDefault(0L)
-        val on = c.status == ConnectionStatus.CONNECTED
-        val exit = when (c.mode) {
-            ProxyMode.GLOBAL -> c.globalNodeId?.let { id -> runCatching { e.node(id).summary.name }.getOrNull() }
-            ProxyMode.DIRECT -> null
-            ProxyMode.RULE -> scenes.firstOrNull()?.selected?.name
-        }
+        val global = if (c.mode == ProxyMode.GLOBAL) c.globalNodeId?.let { id -> runCatching { e.node(id).summary.name }.getOrNull() } else null
+        val exit = WidgetState.exitFor(c.mode, global, exits, groups)
         val detail = when {
-            c.status == ConnectionStatus.CONNECTING -> context.getString(R.string.common_status_connecting)
+            status == ConnectionStatus.CONNECTING -> context.getString(R.string.common_status_connecting)
             !on -> context.getString(R.string.common_status_disconnected)
             else -> listOfNotNull(context.getString(c.mode.labelRes), exit).joinToString(" · ")
         }
         val title = if (on) context.getString(R.string.common_status_connected) else context.getString(R.string.app_name)
-        provideContent { GlanceTheme { Content(on, title, detail, today, scenes) } }
+        return Snapshot(on, title, detail, today, exits)
     }
 
     @Composable
@@ -107,7 +129,9 @@ class ZephyrWidget : GlanceAppWidget() {
         Row(
             GlanceModifier.fillMaxSize().background(bg).cornerRadius(24.dp).padding(if (compact) 12.dp else 16.dp).clickable(actionStartActivity<MainActivity>()),
         ) {
-            Column(GlanceModifier.defaultWeight()) {
+            // fillMaxHeight: the weighted spacer below only pushes title/detail down in a column as tall as the cell;
+            // wrapping it left the lower half of a 4×2 card empty (S25 Ultra).
+            Column(GlanceModifier.defaultWeight().fillMaxHeight()) {
                 Row(GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     Box(GlanceModifier.size(8.dp).cornerRadius(4.dp).background(if (on) green else t3)) {}
                     Spacer(GlanceModifier.width(6.dp))
@@ -135,15 +159,18 @@ class ZephyrWidget : GlanceAppWidget() {
                     Text(ctx.getString(R.string.widget_today, tv, tu), style = TextStyle(color = t3, fontSize = 12.sp), maxLines = 1)
                 }
             }
-            if (wide) {
+            // Scenes with an unknown exit are already left out (WidgetState.sceneExits); with none known the column hides.
+            if (wide && scenes.isNotEmpty() && fit.sceneRows > 0) {
                 Spacer(GlanceModifier.width(16.dp))
-                Column(GlanceModifier.defaultWeight()) {
+                Column(GlanceModifier.defaultWeight().fillMaxHeight()) {
                     Text(ctx.getString(R.string.common_scenes), style = TextStyle(color = t3, fontSize = 12.sp))
+                    // Rows spread over the cell height (8 dp minimum gap), the last one level with the left column's bottom line.
                     scenes.take(fit.sceneRows).forEach { s ->
                         Spacer(GlanceModifier.height(8.dp))
+                        Spacer(GlanceModifier.defaultWeight())
                         Row(GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                             Text(ctx.resources.sceneName(s), style = TextStyle(color = t2, fontSize = 13.sp), modifier = GlanceModifier.width(40.dp))
-                            Text("${s.selected.region}  ${s.selected.name}", style = TextStyle(color = t1, fontSize = 13.sp), maxLines = 1, modifier = GlanceModifier.defaultWeight())
+                            Text(listOf(s.selected.region, s.selected.name).filter { it.isNotBlank() }.joinToString("  "), style = TextStyle(color = t1, fontSize = 13.sp), maxLines = 1, modifier = GlanceModifier.defaultWeight())
                             // Review W-P2-3: prototype hs shows the scene's last measured latency ("61 ms"). It is a
                             // snapshot like everything else here, refreshed with the widget, never a live reading.
                             s.selected.latencyMs?.takeIf { it >= 0 }?.let { Text("$it ms", style = TextStyle(color = t3, fontSize = 12.sp), maxLines = 1) }
@@ -159,6 +186,12 @@ class ZephyrWidget : GlanceAppWidget() {
         val MEDIUM = DpSize(250.dp, 110.dp)
         val SMALL_TALL = DpSize(110.dp, 150.dp)
         val MEDIUM_TALL = DpSize(250.dp, 150.dp)
+        /** 2 rows on large phones (S25 Ultra ≈ 190–220 dp): the fit budget uses the real height, not 150. */
+        val SMALL_XTALL = DpSize(110.dp, 190.dp)
+        val MEDIUM_XTALL = DpSize(250.dp, 190.dp)
+
+        /** Live groups for the scene exits are a nicety; the card never waits longer than this for them. */
+        private const val GROUPS_WAIT_MS = 1_500L
 
         /** Below this cell height the status card drops the 「今日」 line (content would clip). */
         val TALL_MIN = 140.dp
@@ -179,7 +212,12 @@ class ZephyrWidget : GlanceAppWidget() {
             return WidgetFit(detail, today, rows)
         }
 
+        /**
+         * Redraws both widgets from the current state. Called on every connection change (connect, disconnect, fail,
+         * pause, service destroyed or revoked, process start) and once a minute while connected.
+         */
         suspend fun refreshAll(ctx: Context) {
+            WidgetRefresh.bump()
             runCatching { ZephyrWidget().updateAll(ctx) }
             runCatching { ZephyrUsageWidget().updateAll(ctx) }
         }
