@@ -9,15 +9,17 @@ final class SetActiveSubscriptionMockTests: XCTestCase {
 
     func testMovesToFrontKeepingOrder() async throws {
         let e = MockEngine(seed: 0, clock: .frozen941)
-        let before = try XCTUnwrap(await first(e.subscriptions())).map(\.id)
+        let initial = await first(e.subscriptions())
+        let before = try XCTUnwrap(initial).map(\.id)
         XCTAssertGreaterThanOrEqual(before.count, 3)
         let target = before[2]
         let list = try await e.setActiveSubscription(id: target)
         XCTAssertEqual(list.map(\.id), [target] + before.filter { $0 != target })
-        let streamed = try XCTUnwrap(await first(e.subscriptions())).map(\.id)
-        XCTAssertEqual(streamed, list.map(\.id), "订阅流推新顺序")
+        let streamed = await first(e.subscriptions())
+        XCTAssertEqual(streamed?.map(\.id), list.map(\.id), "订阅流推新顺序")
         // 已是第一位：顺序不变。
-        XCTAssertEqual(try await e.setActiveSubscription(id: target).map(\.id), list.map(\.id))
+        let again = try await e.setActiveSubscription(id: target)
+        XCTAssertEqual(again.map(\.id), list.map(\.id))
     }
 
     func testMissingIsSubscriptionNotFound() async {
