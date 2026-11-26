@@ -70,12 +70,8 @@ data class HomeUi(
     val slots: Map<String, List<NodeSummary>> = emptyMap(),
     /** Mini funnel per scene row (spec §9.3, contract v0.7 §19.a `sceneFunnel`); missing = not counted, row keeps its text. */
     val funnels: Map<String, com.zephyr.engine.NodeFunnel> = emptyMap(),
-    /** Global mode: the exit now, and the inline "更换节点" proposal when open (prototype `gcf`). */
+    /** Global mode: the exit now. */
     val globalNode: NodeSummary? = null,
-    val globalProposal: NodeSummary? = null,
-    val globalChange: com.zephyr.engine.ExitChange? = null,
-    /** "更换节点" is open: the proposal (when there is one) and 「浏览全部节点」 (iOS GlobalModeCard). */
-    val globalOpen: Boolean = false,
 )
 
 class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewModel() {
@@ -108,6 +104,18 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
     private var toastJob: Job? = null
     private var toastSerial = 0L
 
+    /** Home's 「节点」 row and its sheet (#208: choosing a node is one tap from Home). */
+    val picker = NodePicker(
+        engine, viewModelScope, connection,
+        onSwitched = { name, undo -> showToast(uiText(R.string.home_switched_to, name), null, null, undo) },
+        onError = { what, e ->
+            android.util.Log.w("Zephyr", "node picker failed", e)
+            showToast(errorText(what, (e as? com.zephyr.engine.ZephyrException)?.error?.code), null, null)
+        },
+        currentGlobal = { globalNow() },
+        switchGlobal = { switchGlobal(it) },
+    )
+
     init {
         viewModelScope.launch { _ui.update { it.copy(usage = engine.usageToday()) } }
         // Core switched a dead scene exit to a hot standby: say so, offer the undo (contract §14 场景自动切换).
@@ -121,7 +129,7 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         viewModelScope.launch {
             connection.map { it.mode }.distinctUntilChanged().collectLatest { m ->
                 if (m == ProxyMode.GLOBAL) runCatching { globalNow() }.getOrNull()?.let { n -> _ui.update { it.copy(globalNode = n) } }
-                else _ui.update { it.copy(globalProposal = null, globalOpen = false) }
+
             }
         }
         // Minute clock for the slow rows; the 1 Hz one is [live], and only while the screen collects it.
@@ -238,37 +246,6 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
         showToast(uiText(R.string.home_switched_to, p.node.name), p.scene.id, previous)
     }
 
-    /**
-     * Prototype `#gChange`: toggles the inline proposal (fastest other node), confirmed with "更改为X", plus
-     * 「浏览全部节点」 to pick any node (iOS GlobalModeCard).
-     */
-    fun toggleGlobalChange() = launchCatching(R.string.home_action_load_nodes) {
-        if (_ui.value.globalOpen || _ui.value.globalProposal != null) { _ui.update { it.copy(globalProposal = null, globalOpen = false) }; return@launchCatching }
-        val cur = globalNow()
-        val best = globalAlternatives(cur).firstOrNull()
-        val x = best?.let { b -> runCatching { engine.previewGlobalChange(b.id) }.getOrNull() }
-        _ui.update { it.copy(globalNode = cur, globalProposal = best, globalChange = x, globalOpen = true) }
-    }
-
-    /**
-     * Library nodes another global exit could use, fastest first (iOS `globalAlternatives`): the candidates of every
-     * pooled scene. #208: the live GLOBAL group only lists config names (negative live ids), which setGlobalNode can't
-     * take, so on the real core the old GLOBAL-members-only search never found a node. GLOBAL stays the fallback (mock).
-     */
-    private suspend fun globalAlternatives(cur: NodeSummary?): List<NodeSummary> {
-        val seen = HashSet<Long>()
-        val pooled = scenes.value.ifEmpty { runCatching { engine.scenes().first() }.getOrDefault(emptyList()) }
-            .filter { it.source != com.zephyr.engine.SceneSource.SUBSCRIPTION_GROUP }
-        val all = pooled.flatMap { s -> runCatching { engine.sceneCandidates(s.id, null) }.getOrDefault(emptyList()) }.filter { seen.add(it.id) }
-            .ifEmpty { runCatching { engine.groupMembers(com.zephyr.engine.core.CoreEngine.GLOBAL, 0, 500).rows }.getOrDefault(emptyList()).filter { it.protocol.uppercase() !in NON_NODES } }
-        return all.filter { it.id >= 0 && it.id != cur?.id && it.name != cur?.name && (it.latencyMs ?: 0) >= 0 }.sortedBy { it.latencyMs ?: Int.MAX_VALUE }
-    }
-
-    fun confirmGlobal() = launchCatching(R.string.home_action_switch_node) {
-        val to = _ui.value.globalProposal ?: return@launchCatching
-        switchGlobal(to)
-    }
-
     /** #208: a node picked on the nodes page (detail sheet 「用作全局节点」) becomes the global exit. */
     fun useGlobalNode(node: NodeSummary) = launchCatching(R.string.home_action_switch_node) {
         if (_ui.value.globalNode == null) runCatching { globalNow() }.getOrNull()?.let { n -> _ui.update { it.copy(globalNode = n) } }
@@ -277,17 +254,21 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
     }
 
     private suspend fun switchGlobal(to: NodeSummary) {
-        val from = _ui.value.globalNode
+        val from = _ui.value.globalNode ?: runCatching { globalNow() }.getOrNull()
         engine.setGlobalNode(to.id)
-        _ui.update { it.copy(globalProposal = null, globalOpen = false, globalNode = to) }
+        _ui.update { it.copy(globalNode = to) }
         showToast(uiText(R.string.home_switched_to, to.name), null, null, from?.let { f -> { engine.setGlobalNode(f.id); _ui.update { u -> u.copy(globalNode = f) } } })
     }
 
-    private suspend fun globalNow(): NodeSummary? {
+    /**
+     * The global exit as a library row. Core: its own record; otherwise the connection's globalNodeId; last, the
+     * GLOBAL group's choice (mock only — the live engine leaves GLOBAL out of policyGroups, contract §4).
+     */
+    internal suspend fun globalNow(): NodeSummary? {
         (engine as? com.zephyr.engine.core.CoreEngine)?.globalNode()?.let { return it }
-        val name = engine.policyGroups().first().firstOrNull { it.name == com.zephyr.engine.core.CoreEngine.GLOBAL }?.selected
-        val rows = engine.groupMembers(com.zephyr.engine.core.CoreEngine.GLOBAL, 0, 500).rows
-        return rows.firstOrNull { it.name == name } ?: connection.value.globalNodeId?.let { id -> rows.firstOrNull { it.id == id } }
+        connection.value.globalNodeId?.let { id -> runCatching { engine.node(id) }.getOrNull()?.let { d -> return d.summary.copy(latencyMs = d.latencyMs ?: d.summary.latencyMs) } }
+        val name = engine.policyGroups().first().firstOrNull { it.name == com.zephyr.engine.core.CoreEngine.GLOBAL }?.selected ?: return null
+        return runCatching { engine.groupMembers(com.zephyr.engine.core.CoreEngine.GLOBAL, 0, 500).rows }.getOrNull()?.firstOrNull { it.name == name }
     }
 
     fun cancelPending() = _ui.update { it.copy(pending = null) }
@@ -364,8 +345,6 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
     }
 
     companion object {
-        /** Group/built-in members of GLOBAL that are not exits. */
-        private val NON_NODES = setOf("SELECTOR", "URLTEST", "FALLBACK", "LOADBALANCE", "RELAY", "DIRECT", "REJECT", "REJECTDROP", "PASS", "COMPATIBLE")
         const val SPARK_POINTS = 90
         /** Contract §19.a: home passes `latency.threshold-slow` (200 ms). */
         const val MINI_FUNNEL_THRESHOLD_MS = 200

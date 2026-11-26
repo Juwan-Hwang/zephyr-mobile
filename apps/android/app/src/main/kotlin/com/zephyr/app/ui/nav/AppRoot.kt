@@ -153,7 +153,6 @@ fun AppRoot(onToggle: (Boolean) -> Unit, startOnboarding: Boolean, pendingImport
                             onToday = { nav.navigate(Today) },
                             onSubscriptions = { nav.navigate(Subs(back = BackTo.HOME)) },
                             onScene = { scene = it },
-                            onChangeGlobalNode = { nav.navigate(Nodes(back = BackTo.HOME)) },
                             onActivity = { activity = true },
                         ),
                     )

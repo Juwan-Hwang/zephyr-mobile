@@ -69,8 +69,6 @@
     <string name="home_global_body_any">Ähli trafik bir düwün arkaly geçýär. Ssenariýler togtadyldy.</string>
     <string name="home_global_use_rule">Düzgün režimini ulan</string>
     <string name="home_global_change_node">Düwüni çalyş</string>
-    <string name="home_global_change_note">Ähli programmalar %1$s arkaly çykar.</string>
-    <string name="home_global_change_to">%1$s bilen çalyş</string>
     <plurals name="home_subs_more">
         <item quantity="one">Ýene %1$d abuna</item>
         <item quantity="other">Ýene %1$d abuna</item>
@@ -536,5 +534,8 @@
     <string name="groups_type_relay">Geçiriji</string>
     <string name="groups_read_only">Bu topar düwüni awtomatik saýlaýar.</string>
     <string name="nodes_detail_use_global">Global režimde ulan</string>
-    <string name="home_global_browse">Ähli düwünlere göz aýla</string>
+    <string name="nodes_sort">Tertiple</string>
+    <string name="nodes_sort_default">Adaty</string>
+    <string name="nodes_sort_name">Ady</string>
+    <string name="nodes_sort_too_many">Tertiplemek üçin düwünler gaty köp. Ilki sanawy daraldyň.</string>
 </resources>

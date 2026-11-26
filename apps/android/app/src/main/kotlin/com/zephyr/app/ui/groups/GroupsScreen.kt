@@ -71,32 +71,38 @@ fun GroupsScreen(vm: GroupsViewModel, back: BackTo = BackTo.LIBRARY, onBack: () 
                 }
             }
         }
-        GroupSheet(open, onPick = vm::select, onTest = vm::test, onDismiss = vm::close)
+        val sort by vm.sort.collectAsStateWithLifecycle()
+        GroupSheet(open, sort, onSort = vm::setSort, onPick = vm::select, onTest = vm::test, onDismiss = vm::close)
     }
 }
 
 @Composable
 private fun androidx.compose.foundation.layout.BoxScope.GroupSheet(
     m: GroupsViewModel.Members?,
+    sort: com.zephyr.app.ui.common.NodeSort,
+    onSort: (com.zephyr.app.ui.common.NodeSort) -> Unit,
     onPick: (NodeSummary) -> Unit,
     onTest: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     val c = ZTheme.colors
-    ZSheet(m != null, onDismiss, m?.group?.name ?: "") {
+    ZSheet(
+        m != null, onDismiss, m?.group?.name ?: "",
+        action = m?.let { stringResource(if (it.testing) R.string.home_scene_testing else R.string.nodes_detail_test) },
+        onAction = m?.takeIf { !it.testing && !it.loading }?.let { { onTest() } },
+        header = {
+            if (m != null) {
+                com.zephyr.app.ui.common.NodeSortControl(sort, onSort, Modifier.padding(horizontal = 16.dp))
+                Spacer(Modifier.height(12.dp))
+            }
+        },
+    ) {
         val s = m ?: return@ZSheet
         val pick = PolicyGroupList.selectable(s.group)
         if (!pick) {
             ZText(stringResource(R.string.groups_read_only), Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
             Spacer(Modifier.height(12.dp))
         }
-        ZListGroup {
-            ZSettingsRow(
-                stringResource(if (s.testing) R.string.home_scene_testing else R.string.nodes_detail_test),
-                onClick = if (s.testing || s.loading) null else onTest,
-            )
-        }
-        Spacer(Modifier.height(12.dp))
         ZListGroup {
             if (s.loading) {
                 repeat(3) { i ->
@@ -105,7 +111,7 @@ private fun androidx.compose.foundation.layout.BoxScope.GroupSheet(
                 }
             } else s.rows.forEachIndexed { i, n ->
                 if (i > 0) ZDivider()
-                val current = isCurrent(n, s.group.selected)
+                val current = PolicyGroupList.isCurrent(n, s.group.selected)
                 ZSettingsRow(
                     n.name,
                     onClick = if (pick && !current) ({ onPick(n) }) else null,
@@ -124,10 +130,6 @@ private fun androidx.compose.foundation.layout.BoxScope.GroupSheet(
         Spacer(Modifier.height(12.dp))
     }
 }
-
-/** mihomo names the built-in DIRECT member "DIRECT"; the engine shows it as 直连. */
-private fun isCurrent(n: NodeSummary, selected: String?): Boolean =
-    selected != null && (n.name == selected || (selected == "DIRECT" && n.protocol == "DIRECT"))
 
 private fun typeLabel(t: GroupType): Int = when (t) {
     GroupType.SELECT -> R.string.groups_type_select

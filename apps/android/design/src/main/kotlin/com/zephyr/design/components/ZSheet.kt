@@ -67,6 +67,11 @@ fun BoxScope.ZSheet(
     title: String,
     modifier: Modifier = Modifier,
     trailing: String? = stringResource(R.string.common_done),
+    /** Optional header action left of [trailing] (e.g. 测速); drawn in the accent text colour, disabled when [onAction] is null. */
+    action: String? = null,
+    onAction: (() -> Unit)? = null,
+    /** Content pinned under the title (chips, search, sort) that stays put while the body scrolls. */
+    header: (@Composable ColumnScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val c = ZTheme.colors
@@ -128,11 +133,16 @@ fun BoxScope.ZSheet(
             Row(Modifier.fillMaxWidth().padding(start = 22.dp, end = 10.dp, top = 12.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
                 ZText(title, style = ZTheme.type.headline.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Medium)) // `.sh-top h2` 500
                 Spacer(Modifier.weight(1f))
+                if (action != null) {
+                    val a = if (onAction != null) Modifier.zPressable(onClick = onAction) else Modifier
+                    ZText(action, Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).then(a).padding(12.dp), style = ZTheme.type.body, color = if (onAction != null) c.accentText else c.text3)
+                }
                 if (trailing != null) {
                     ZText(trailing, Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).zPressable(onClick = onDismiss).padding(12.dp), style = ZTheme.type.body, color = c.text2)
                 }
             }
             Spacer(Modifier.height(4.dp))
+            if (header != null) Column(content = header)
             Column(Modifier.weight(1f, fill = false).verticalScroll(androidx.compose.foundation.rememberScrollState()), content = content)
         }
     }

@@ -60,7 +60,7 @@ class RtlScreenshotTest(private val lang: String) {
         val live = HomeLive(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = HomeScreenshotTest.NOW)
         paparazzi.snapshot {
             ZephyrTheme(dark = true, accent = ZAccent.BLUE) {
-                HomeContent(conn, scenes, subs, ui, { live }, HomeScreenshotTest.NO_ACTIONS, HomeScreenshotTest.NO_CB)
+                HomeContent(conn, scenes, subs, ui, { live }, HomeScreenshotTest.NO_ACTIONS, HomeScreenshotTest.NO_CB, picker = HomeScreenshotTest.picker(e, scenes))
             }
         }
     }

@@ -47,7 +47,7 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
         val live = HomeLive(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = NOW)
         paparazzi.snapshot {
             ZephyrTheme(dark = dark, accent = accent) {
-                HomeContent(conn, scenes, subs, ui, { live }, NO_ACTIONS, NO_CB)
+                HomeContent(conn, scenes, subs, ui, { live }, NO_ACTIONS, NO_CB, picker = picker(e, scenes))
             }
         }
     }
@@ -64,7 +64,8 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
         val global = com.zephyr.engine.NodeSummary(id = conn.globalNodeId ?: 0, name = "东京 03", region = "JP", protocol = "vless")
         val ui = HomeUi(now = NOW, usage = usage, globalNode = global)
         val live = HomeLive(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = NOW)
-        paparazzi.snapshot { ZephyrTheme(dark = dark, accent = accent) { HomeContent(conn, scenes, subs, ui, { live }, NO_ACTIONS, NO_CB) } }
+        val picker = com.zephyr.app.ui.home.NodePickerUi(mode = ProxyMode.GLOBAL, label = global.name, latencyMs = 112)
+        paparazzi.snapshot { ZephyrTheme(dark = dark, accent = accent) { HomeContent(conn, scenes, subs, ui, { live }, NO_ACTIONS, NO_CB, picker = picker) } }
     }
 
     /** Prototype 10 (scan): AI scene re-testing, header "正在检测 138/512", row bar at 27 %. */
@@ -80,7 +81,7 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
         val live = HomeLive(traffic = spark.last(), spark = spark.map { it.downBps.toFloat() }, now = NOW)
         paparazzi.snapshot {
             ZephyrTheme(dark = dark, accent = accent) {
-                HomeContent(conn, scenes, subs, ui, { live }, NO_ACTIONS, NO_CB, retesting = setOf(ai), scan = com.zephyr.engine.ScanProgress(138, 512))
+                HomeContent(conn, scenes, subs, ui, { live }, NO_ACTIONS, NO_CB, retesting = setOf(ai), scan = com.zephyr.engine.ScanProgress(138, 512), picker = picker(e, scenes))
             }
         }
     }
@@ -97,7 +98,20 @@ class HomeScreenshotTest(private val dark: Boolean, private val accent: ZAccent,
         /** 2026-11-06 09:41 CST, the prototype's status-bar time. */
         const val NOW = 1_793_929_260_000L
 
-        val NO_ACTIONS = HomeActions({}, {}, {}, {}, {}, {}, {}, {})
+        val NO_ACTIONS = HomeActions({}, {}, {}, {}, {}, {}, {})
+
+        /** #208: the 「节点」 row as the home view model fills it from the mock (main group 节点选择 → 新加坡 02). */
+        fun picker(e: com.zephyr.engine.ZephyrEngine, scenes: List<com.zephyr.engine.Scene>): com.zephyr.app.ui.home.NodePickerUi = runBlocking {
+            val groups = e.policyGroups().first()
+            val main = com.zephyr.app.ui.home.MainGroup.main(groups, e.finalPolicy())
+            val label = main?.let { com.zephyr.app.ui.home.MainGroup.label(com.zephyr.app.ui.home.MainGroup.chain(it, groups)) }
+            com.zephyr.app.ui.home.NodePickerUi(
+                label = label,
+                latencyMs = scenes.firstOrNull { it.selected.name == label }?.selected?.latencyMs,
+                groups = com.zephyr.app.ui.home.MainGroup.selectGroups(groups, null).map { it.name },
+                group = main?.name, selectedName = main?.selected,
+            )
+        }
         val NO_CB = HomeCallbacks({}, { _, _ -> }, {}, {}, {})
 
         @JvmStatic

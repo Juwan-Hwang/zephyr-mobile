@@ -70,8 +70,6 @@
     <string name="home_global_body_any">所有流量均经由同一节点。场景已暂停。</string>
     <string name="home_global_use_rule">使用规则模式</string>
     <string name="home_global_change_node">更换节点</string>
-    <string name="home_global_change_note">所有 App 的出口都将变为%1$s。</string>
-    <string name="home_global_change_to">更改为%1$s</string>
     <plurals name="home_subs_more">
         <item quantity="other">更多 %1$d 个订阅</item>
     </plurals>
@@ -537,5 +535,8 @@
     <string name="groups_type_relay">链式代理</string>
     <string name="groups_read_only">此组自动选择节点。</string>
     <string name="nodes_detail_use_global">用于全局模式</string>
-    <string name="home_global_browse">浏览全部节点</string>
+    <string name="nodes_sort">排序</string>
+    <string name="nodes_sort_default">默认顺序</string>
+    <string name="nodes_sort_name">名称</string>
+    <string name="nodes_sort_too_many">节点过多，缩小范围后可排序</string>
 </resources>

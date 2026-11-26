@@ -66,8 +66,6 @@
     <string name="home_global_body_any">모든 트래픽이 한 노드를 거칩니다. 시나리오는 일시 정지되었습니다.</string>
     <string name="home_global_use_rule">규칙 모드 사용</string>
     <string name="home_global_change_node">노드 변경</string>
-    <string name="home_global_change_note">모든 앱의 출구가 %1$s(으)로 바뀝니다.</string>
-    <string name="home_global_change_to">%1$s(으)로 변경</string>
     <plurals name="home_subs_more">
         <item quantity="other">구독 %1$d개 더 보기</item>
     </plurals>
@@ -502,5 +500,8 @@
     <string name="groups_type_relay">릴레이</string>
     <string name="groups_read_only">이 그룹은 노드를 자동으로 선택합니다.</string>
     <string name="nodes_detail_use_global">글로벌 모드에 사용</string>
-    <string name="home_global_browse">모든 노드 보기</string>
+    <string name="nodes_sort">정렬</string>
+    <string name="nodes_sort_default">기본</string>
+    <string name="nodes_sort_name">이름</string>
+    <string name="nodes_sort_too_many">노드가 너무 많아 정렬할 수 없습니다. 먼저 목록을 좁히세요.</string>
 </resources>

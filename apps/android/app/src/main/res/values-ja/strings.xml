@@ -66,8 +66,6 @@
     <string name="home_global_body_any">すべてのトラフィックが1つのノードを経由します。シーンは一時停止中です。</string>
     <string name="home_global_use_rule">ルールモードを使用</string>
     <string name="home_global_change_node">ノードを変更</string>
-    <string name="home_global_change_note">すべての App の出口が%1$sになります。</string>
-    <string name="home_global_change_to">%1$sに変更</string>
     <plurals name="home_subs_more">
         <item quantity="other">ほか%1$d件のサブスクリプション</item>
     </plurals>
@@ -502,5 +500,8 @@
     <string name="groups_type_relay">リレー</string>
     <string name="groups_read_only">このグループはノードを自動で選びます。</string>
     <string name="nodes_detail_use_global">グローバルモードで使用</string>
-    <string name="home_global_browse">すべてのノードを表示</string>
+    <string name="nodes_sort">並べ替え</string>
+    <string name="nodes_sort_default">デフォルト</string>
+    <string name="nodes_sort_name">名前</string>
+    <string name="nodes_sort_too_many">ノードが多すぎて並べ替えできません。先に絞り込んでください。</string>
 </resources>
