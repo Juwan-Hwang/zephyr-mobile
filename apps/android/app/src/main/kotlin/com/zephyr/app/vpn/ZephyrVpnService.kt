@@ -41,7 +41,8 @@ class ZephyrVpnService : VpnService() {
     @Volatile private var paused = false
     /** §16.a③: a network switch asks the failover probe loop for its next round now. */
     private val probeNow = kotlinx.coroutines.channels.Channel<Unit>(kotlinx.coroutines.channels.Channel.CONFLATED)
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    // Issue #208: a failed job is logged (AppGraph.guard), never the end of the process.
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default + AppGraph.guard + kotlinx.coroutines.CoroutineName("vpn service"))
     private var tun: ParcelFileDescriptor? = null
     private var watcher: Job? = null
     private var widgetTicker: Job? = null
@@ -69,7 +70,21 @@ class ZephyrVpnService : VpnService() {
     }
 
     /** Lifecycle changes (connect / pause / stop) run one at a time, never interleaved. */
-    private fun transition(block: suspend () -> Unit) = scope.launch { lifecycle.withLock { block() } }
+    private fun transition(block: suspend () -> Unit) = scope.launch {
+        lifecycle.withLock {
+            try {
+                block()
+            } catch (c: kotlinx.coroutines.CancellationException) {
+                throw c
+            } catch (t: Exception) {
+                // Issue #208: e.g. establish() refused / a core call threw mid-connect. Tear down and say why, instead of
+                // leaving a half-built tunnel (or, before, crashing the app with it).
+                AppGraph.report("vpn transition", t)
+                runCatching { fail(com.zephyr.engine.ZephyrError(com.zephyr.engine.ErrorCode.CORE_CRASHED, "${t.javaClass.simpleName}: ${t.message}")) }
+                    .onFailure { runCatching { stop() } }
+            }
+        }
+    }
 
     private fun start(auto: Boolean) {
         // Review W-P2-4: the very first "连接中…" post uses the last known accent too, not a hard-coded blue.

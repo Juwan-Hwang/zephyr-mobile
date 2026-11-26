@@ -29,7 +29,14 @@ object AppGraph {
     var network: com.zephyr.app.vpn.NetworkMonitor? = null; private set
     /** False under [override] (screenshot tests / previews), where no SettingsStore exists. */
     val hasSettings: Boolean get() = ::settings.isInitialized
-    val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    /**
+     * Issue #208: a failure in any fire-and-forget job here (toggle from the QS tile, widget, notification) used to
+     * reach the thread's uncaught handler and kill the whole process. [guard] logs it to the logs page instead.
+     */
+    val guard: kotlinx.coroutines.CoroutineExceptionHandler = kotlinx.coroutines.CoroutineExceptionHandler { ctx, t ->
+        report(ctx[kotlinx.coroutines.CoroutineName]?.name ?: "app", t)
+    }
+    val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default + guard)
     @Volatile private var ready = false
 
     /** Demo mode (prototype "2:14:07" state) for store screenshots: build with -Pzephyr.demo=true. */
@@ -57,6 +64,8 @@ object AppGraph {
         val cm = app.getSystemService(android.net.ConnectivityManager::class.java)
         core.online = { cm?.activeNetwork != null }
         engine = core
+        // Issue #208: the crash the previous process recorded (CrashRecord, installed by ZephyrApplication) goes to 日志.
+        CrashRecord(java.io.File(app.filesDir, CrashRecord.FILE_NAME)).takeLine()?.let { core.appLog(com.zephyr.engine.LogLevel.ERROR, it) }
         if (BuildConfig.DEBUG && BuildConfig.CORE_SEED > 0.0) appScope.launch { runCatching { core.seedMockNodes(BuildConfig.CORE_SEED) } }
         settings = SettingsStore(app, engine, appScope)
         network = com.zephyr.app.vpn.NetworkMonitor(app).also { m ->
@@ -89,6 +98,18 @@ object AppGraph {
         }
         Notifications.ensureChannels(app)
         ready = true
+    }
+
+    /**
+     * A failure that must not crash the process (issue #208): logcat (tag Zephyr) and the logs page (日志) get the
+     * same one-line reason. Safe before [init] and in JVM tests.
+     */
+    fun report(where: String, t: Throwable) {
+        if (t is kotlinx.coroutines.CancellationException) return
+        val line = "$where failed: ${t.javaClass.name}: ${t.message}"
+        runCatching { android.util.Log.e("Zephyr", line, t) }
+        val core = if (::engine.isInitialized) engine as? CoreEngine else null
+        runCatching { core?.appLog(com.zephyr.engine.LogLevel.ERROR, line) }
     }
 
     /** For tests / previews: swaps the engine without a Context (no settings/connection). */

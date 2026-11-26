@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -381,9 +382,15 @@ private fun copySensitive(ctx: Context, text: String, copied: String) {
  * and the ongoing notification. Where the launcher / system UI supports it, "添加" asks it to place the widget or tile.
  */
 @Composable
-fun WidgetsScreen(back: BackTo, onBack: () -> Unit) {
+fun WidgetsScreen(
+    back: BackTo,
+    onBack: () -> Unit,
+    // Parameters for screenshot tests (layoutlib has no launcher, so the real answers hide every 添加 button).
+    canPinOverride: Boolean? = null,
+    canAddTile: Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU,
+) {
     val ctx = LocalContext.current
-    val canPin = remember { runCatching { AppWidgetManager.getInstance(ctx).isRequestPinAppWidgetSupported }.getOrDefault(false) }
+    val canPin = canPinOverride ?: remember { canPinWidgets(ctx) }
     PageScaffold(back, stringResource(R.string.library_widgets), onBack) {
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Guide(stringResource(R.string.widgets_home_title), stringResource(R.string.widgets_home_steps)) {
@@ -395,9 +402,10 @@ fun WidgetsScreen(back: BackTo, onBack: () -> Unit) {
                 }
             }
             Guide(stringResource(R.string.widgets_tile_title), stringResource(R.string.widgets_tile_steps)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (canAddTile) {
+                    Spacer(Modifier.height(12.dp))
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                        ZButton(stringResource(R.string.common_add), { requestTile(ctx) }, kind = ZButtonKind.Secondary)
+                        AddButton { requestTile(ctx) }
                     }
                 }
             }
@@ -428,12 +436,27 @@ private fun Widget(name: String, detail: String, canPin: Boolean, onAdd: () -> U
         }
         if (canPin) {
             Spacer(Modifier.width(12.dp))
-            ZButton(stringResource(R.string.common_add), onAdd, kind = ZButtonKind.Secondary)
+            AddButton(onAdd)
         }
     }
 }
 
+/**
+ * The trailing 「添加」 pill, as wide as its label. ZButton's pill fills the width it is offered, and a Row measures
+ * unweighted children before weighted ones, so a bare ZButton took the whole row and squeezed the weighted text
+ * column to ~1 glyph per line (S25 Ultra report). IntrinsicSize.Max bounds it to the label's width.
+ */
+@Composable
+private fun AddButton(onClick: () -> Unit) {
+    ZButton(stringResource(R.string.common_add), onClick, Modifier.width(IntrinsicSize.Max), kind = ZButtonKind.Secondary)
+}
+
+private fun canPinWidgets(ctx: Context): Boolean =
+    runCatching { AppWidgetManager.getInstance(ctx).isRequestPinAppWidgetSupported }.getOrDefault(false)
+
 private fun pinWidget(ctx: Context, receiver: Class<*>) {
+    // Checked again at tap time: the default launcher can change while the page is open.
+    if (!canPinWidgets(ctx)) return
     runCatching { AppWidgetManager.getInstance(ctx).requestPinAppWidget(ComponentName(ctx, receiver), null, null) }
 }
 
