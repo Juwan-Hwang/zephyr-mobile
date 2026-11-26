@@ -86,6 +86,8 @@ fun HomeStatus(
     sceneCount: Int,
     onToggle: (Boolean) -> Unit,
     onMode: (ProxyMode) -> Unit,
+    /** Contract §22.b: the engine's `redactDiagnostic` (core); the default is the no-core fallback. */
+    redact: (String) -> String = com.zephyr.engine.Diagnostics::fallbackRedact,
 ) {
     val c = ZTheme.colors
     val on = connection.status == ConnectionStatus.CONNECTED || connection.status == ConnectionStatus.CONNECTING
@@ -133,12 +135,12 @@ fun HomeStatus(
             )
         }
         // Issue #1 (S25 Ultra): the raw reason, one line by default; tap to expand. Only while the failure shows.
-        val detail = connection.error?.takeIf { connection.status == ConnectionStatus.FAILED }?.let { failureDetail(it) }
+        val detail = connection.error?.takeIf { connection.status == ConnectionStatus.FAILED }?.let { failureDetail(it, redact) }
         if (detail != null) FailureDetail(detail)
     }
 }
 
-/** Expandable "why it failed" line under the failure hint (issue #1): ZephyrError.message, truncated. */
+/** Expandable "why it failed" line under the failure hint (issue #1): ZephyrError.message after core redaction (§22.b). */
 @Composable
 private fun FailureDetail(detail: String) {
     val c = ZTheme.colors
@@ -161,16 +163,15 @@ private fun FailureDetail(detail: String) {
     }
 }
 
-/** Expanded detail line cap; longer messages are cut by [failureDetail] first. */
+/** Expanded detail line cap; the core already cut the text to 240 characters (§22.b). */
 private const val FAILURE_DETAIL_LINES = 6
-internal const val FAILURE_DETAIL_MAX_CHARS = 240
 
-/** The error's own message, whitespace folded and cut to [FAILURE_DETAIL_MAX_CHARS]; null when there is none. */
-internal fun failureDetail(e: com.zephyr.engine.ZephyrError): String? {
-    val m = e.message.trim().replace(Regex("\\s+"), " ")
-    if (m.isEmpty()) return null
-    return if (m.length <= FAILURE_DETAIL_MAX_CHARS) m else m.take(FAILURE_DETAIL_MAX_CHARS - 1).trimEnd() + "…"
-}
+/**
+ * Contract §22.b (U27 revised): the error's own message, shown only after [redact] (core `redactDiagnostic`: whitespace
+ * folded, URLs redacted, cut to 240 characters); the platform does not fold or cut on its own. Null when nothing is left.
+ */
+internal fun failureDetail(e: com.zephyr.engine.ZephyrError, redact: (String) -> String): String? =
+    redact(e.message).trim().takeIf { it.isNotEmpty() }
 
 @Composable
 private fun ModePicker(mode: ProxyMode, onMode: (ProxyMode) -> Unit) {

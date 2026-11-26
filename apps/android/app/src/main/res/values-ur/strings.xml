@@ -403,6 +403,7 @@
     <string name="subs_swipe_delete">حذف کریں</string>
     <string name="subs_error_update">\u2068%1$s\u2069 اپ ڈیٹ نہیں ہو سکا</string>
     <string name="subs_error_delete">\u2068%1$s\u2069 حذف نہیں ہو سکا</string>
+    <string name="subs_error_activate">\u2068%1$s\u2069 پر منتقل نہیں ہو سکا</string>
     <string name="subs_remaining">باقی</string>
     <string name="subs_all_title">تمام سبسکرپشنز</string>
     <plurals name="subs_others">

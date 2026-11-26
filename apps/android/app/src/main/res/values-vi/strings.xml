@@ -354,6 +354,7 @@
     <string name="subs_swipe_delete">Xóa</string>
     <string name="subs_error_update">Không thể cập nhật %1$s</string>
     <string name="subs_error_delete">Không thể xóa %1$s</string>
+    <string name="subs_error_activate">Không thể chuyển sang %1$s</string>
     <string name="subs_remaining">Còn lại</string>
     <string name="subs_all_title">Tất cả đăng ký</string>
     <plurals name="subs_others">

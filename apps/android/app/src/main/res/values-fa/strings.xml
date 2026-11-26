@@ -403,6 +403,7 @@
     <string name="subs_swipe_delete">حذف</string>
     <string name="subs_error_update">\u2068%1$s\u2069 به‌روز نشد</string>
     <string name="subs_error_delete">\u2068%1$s\u2069 حذف نشد</string>
+    <string name="subs_error_activate">تغییر به \u2068%1$s\u2069 انجام نشد</string>
     <string name="subs_remaining">باقی‌مانده</string>
     <string name="subs_all_title">همه اشتراک‌ها</string>
     <plurals name="subs_others">

@@ -354,6 +354,7 @@
     <string name="subs_swipe_delete">ဖျက်ရန်</string>
     <string name="subs_error_update">%1$s ကို အပ်ဒိတ်လုပ်၍ မရပါ</string>
     <string name="subs_error_delete">%1$s ကို ဖျက်၍ မရပါ</string>
+    <string name="subs_error_activate">%1$s သို့ ပြောင်း၍ မရပါ</string>
     <string name="subs_remaining">ကျန်ရှိ</string>
     <string name="subs_all_title">စာရင်းသွင်းမှုများ အားလုံး</string>
     <plurals name="subs_others" tools:ignore="StringFormatMatches">
