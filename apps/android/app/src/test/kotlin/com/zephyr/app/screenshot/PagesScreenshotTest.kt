@@ -57,6 +57,11 @@ class PagesScreenshotTest(private val dark: Boolean) {
     @Test fun trace() = paparazzi.snapshot { ZephyrTheme(dark = dark) { androidx.compose.runtime.CompositionLocalProvider(com.zephyr.app.ui.common.LocalNow provides { HomeScreenshotTest.NOW }) {
         androidx.compose.runtime.CompositionLocalProvider(androidx.compose.ui.platform.LocalInspectionMode provides true) { androidx.compose.foundation.layout.Box(androidx.compose.ui.Modifier.fillMaxSize()) { TraceSheet("claude.ai") {} } } } } }
 
+    /** 小组件与快捷开关 with every 添加 button shown: text column fills the row, pills hug their label (#208 follow-up). */
+    @Test fun widgets() = paparazzi.snapshot { ZephyrTheme(dark = dark) {
+        com.zephyr.app.ui.library.WidgetsScreen(com.zephyr.app.ui.common.BackTo.LIBRARY, onBack = {}, canPinOverride = true, canAddTile = true)
+    } }
+
     /** J-6 (spec §9.6): the scene sheet with its latency tick bar over the mock candidate pool. */
     @Test fun sceneSheet() {
         val scene = kotlinx.coroutines.runBlocking { engine.scenes().first().first() }

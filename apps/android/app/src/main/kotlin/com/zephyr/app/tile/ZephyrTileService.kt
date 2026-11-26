@@ -15,18 +15,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 /** Quick Settings tile: "Zephyr / 规则 · 东京 03" (prototype `and`). Tap toggles; long-press opens the app. */
 class ZephyrTileService : TileService() {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    // Issue #208: AppGraph.guard logs a failed job instead of letting it end the process.
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate + AppGraph.guard + kotlinx.coroutines.CoroutineName("tile"))
     private var job: Job? = null
 
     override fun onStartListening() {
-        AppGraph.init(this)
+        if (!safely("tile init") { AppGraph.init(this) }) return
+        job?.cancel()
         job = scope.launch {
-            combine(AppGraph.engine.connectionState(), AppGraph.engine.scenes()) { c, s -> c to s }.collect { (c, scenes) ->
+            // Issue #208: a core read error (scenes are re-read every few seconds) ends this collection, not the app.
+            combine(AppGraph.engine.connectionState(), AppGraph.engine.scenes()) { c, s -> c to s }
+                .catch { t -> AppGraph.report("tile state", t) }
+                .collect { (c, scenes) ->
                 val tile = qsTile ?: return@collect
                 val on = c.status == ConnectionStatus.CONNECTED || c.status == ConnectionStatus.CONNECTING
                 tile.state = if (on) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
@@ -54,7 +60,10 @@ class ZephyrTileService : TileService() {
 
     override fun onStopListening() { job?.cancel(); job = null }
 
-    override fun onClick() {
+    // Issue #208: anything thrown in onClick runs on the main thread and ended the process.
+    override fun onClick() { safely("tile click") { click() } }
+
+    private fun click() {
         AppGraph.init(this)
         if (AppGraph.connection.permissionIntent() != null) {
             // Needs an Activity to grant VPN permission.
@@ -77,6 +86,9 @@ class ZephyrTileService : TileService() {
     private fun collapseTo(intent: android.content.Intent) = startActivityAndCollapse(intent)
 
     override fun onDestroy() { scope.cancel(); super.onDestroy() }
+
+    /** Runs [block]; a failure goes to logcat and 日志 instead of crashing. Returns whether it completed. */
+    private inline fun safely(what: String, block: () -> Unit): Boolean = try { block(); true } catch (t: RuntimeException) { AppGraph.report(what, t); false }
 
     companion object {
         fun requestRefresh(ctx: Context) = requestListeningState(ctx, ComponentName(ctx, ZephyrTileService::class.java))
