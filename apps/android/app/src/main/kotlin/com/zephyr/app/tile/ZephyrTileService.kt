@@ -32,8 +32,10 @@ class ZephyrTileService : TileService() {
             // Issue #208: a core read error (scenes are re-read every few seconds) ends this collection, not the app.
             combine(AppGraph.engine.connectionState(), AppGraph.engine.scenes()) { c, s -> c to s }
                 .catch { t -> AppGraph.report("tile state", t) }
-                .collect { (c, scenes) ->
+                .collect { (raw, scenes) ->
                 val tile = qsTile ?: return@collect
+                // Same rule as the widget: connected / connecting only while the VPN service actually runs.
+                val c = raw.copy(status = com.zephyr.app.widget.WidgetState.effectiveStatus(raw.status, com.zephyr.app.vpn.ZephyrVpnService.running))
                 val on = c.status == ConnectionStatus.CONNECTED || c.status == ConnectionStatus.CONNECTING
                 tile.state = if (on) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
                 tile.label = getString(R.string.app_name)
@@ -43,7 +45,8 @@ class ZephyrTileService : TileService() {
                 val node = when (c.mode) {
                     ProxyMode.GLOBAL -> c.globalNodeId?.let { id -> runCatching { AppGraph.engine.node(id).summary.name }.getOrNull() }
                     ProxyMode.DIRECT -> null
-                    ProxyMode.RULE -> scenes.firstOrNull()?.selected?.name
+                    // A scene without an exit yet is not named (it read 「未选择」).
+                    ProxyMode.RULE -> com.zephyr.app.widget.WidgetState.ruleExit(com.zephyr.app.widget.WidgetState.sceneExits(scenes, emptyList()), emptyList())
                 }
                 val sub = when (c.status) {
                     ConnectionStatus.CONNECTING -> getString(R.string.common_status_connecting_ellipsis)

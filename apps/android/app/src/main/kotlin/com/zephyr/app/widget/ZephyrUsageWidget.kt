@@ -2,6 +2,12 @@ package com.zephyr.app.widget
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,10 +54,21 @@ class ZephyrUsageWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         AppGraph.init(context)
+        val first = load()
+        provideContent {
+            // Reloaded on every refreshAll(), not only when the Glance session starts (see WidgetRefresh).
+            val tick by WidgetRefresh.tick.collectAsState()
+            var s by remember { mutableStateOf(first) }
+            LaunchedEffect(tick) { s = load() }
+            GlanceTheme { Content(s.first, s.second) }
+        }
+    }
+
+    private suspend fun load(): Pair<Long, List<Long>> {
         val u = runCatching { AppGraph.engine.usageToday() }.getOrNull()
         val today = u?.todayBytes ?: 0L
         val hourly = (u?.hourly ?: emptyList()).let { h -> if (h.size >= 24) h.takeLast(24) else List(24 - h.size) { 0L } + h }
-        provideContent { GlanceTheme { Content(today, hourly) } }
+        return today to hourly
     }
 
     @Composable

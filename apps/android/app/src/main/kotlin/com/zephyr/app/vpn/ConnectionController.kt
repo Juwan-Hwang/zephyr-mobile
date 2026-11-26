@@ -71,7 +71,7 @@ class ConnectionController(private val context: Context, private val engine: Zep
         attempt(
             what = "stop vpn service",
             start = { context.startService(Intent(context, ZephyrVpnService::class.java).setAction(ZephyrVpnService.ACTION_DISCONNECT)) },
-            fallback = { scope.launch { runCatching { engine.disconnect() }; com.zephyr.app.tile.ZephyrTileService.requestRefresh(context) } },
+            fallback = { scope.launch { runCatching { engine.disconnect() }; com.zephyr.app.tile.ZephyrTileService.requestRefresh(context); com.zephyr.app.widget.ZephyrWidget.refreshAll(context) } },
             report = com.zephyr.app.di.AppGraph::report,
         )
     }
@@ -100,7 +100,8 @@ class ConnectionController(private val context: Context, private val engine: Zep
 
     fun toggle() {
         scope.launch(kotlinx.coroutines.CoroutineName("toggle")) {
-            val s = engine.connectionState().first().status
+            // A connected state with no service behind it is a stale one: the widget's power button then connects.
+            val s = com.zephyr.app.widget.WidgetState.effectiveStatus(engine.connectionState().first().status, ZephyrVpnService.running)
             if (s == ConnectionStatus.CONNECTED || s == ConnectionStatus.CONNECTING) disconnect() else connect()
         }
     }

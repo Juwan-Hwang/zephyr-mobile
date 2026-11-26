@@ -374,6 +374,10 @@ class ZephyrVpnService : VpnService() {
         running = false
         scope.cancel()
         tun?.close()
+        // Widget bug (S25 Ultra): however the service ends (system stop, revoke, QS tile, LMK), the tile and widgets are
+        // redrawn from the real state. Not on [scope], which was just cancelled.
+        val app = applicationContext
+        AppGraph.appScope.launch { ZephyrTileService.requestRefresh(app); ZephyrWidget.refreshAll(app) }
         super.onDestroy()
     }
 

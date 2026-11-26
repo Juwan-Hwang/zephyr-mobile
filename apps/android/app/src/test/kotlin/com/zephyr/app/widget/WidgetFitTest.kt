@@ -10,6 +10,8 @@ class WidgetFitTest {
     @Test fun defaultScaleMatchesSnapshotLayouts() {
         assertEquals(WidgetFit(detail = true, today = false, sceneRows = 2), ZephyrWidget.widgetFit(110f, 1f))
         assertEquals(WidgetFit(detail = true, today = true, sceneRows = 3), ZephyrWidget.widgetFit(150f, 1f))
+        // 4×2 on large phones (MEDIUM_XTALL bucket).
+        assertEquals(WidgetFit(detail = true, today = true, sceneRows = 3), ZephyrWidget.widgetFit(ZephyrWidget.MEDIUM_XTALL.height.value, 1f))
     }
 
     @Test fun largeFontDropsDetailInSmallCell() {

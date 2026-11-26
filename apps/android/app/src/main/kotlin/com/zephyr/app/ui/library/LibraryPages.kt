@@ -457,7 +457,11 @@ private fun canPinWidgets(ctx: Context): Boolean =
 private fun pinWidget(ctx: Context, receiver: Class<*>) {
     // Checked again at tap time: the default launcher can change while the page is open.
     if (!canPinWidgets(ctx)) return
-    runCatching { AppWidgetManager.getInstance(ctx).requestPinAppWidget(ComponentName(ctx, receiver), null, null) }
+    // The pin dialog gets the same static preview as the picker (see res/xml/*widget_info.xml): One UI otherwise
+    // tried the Glance loading layout and showed 「无法添加微件。」.
+    val preview = if (receiver == com.zephyr.app.widget.ZephyrUsageWidgetReceiver::class.java) R.layout.widget_preview_usage else R.layout.widget_preview_status
+    val extras = android.os.Bundle().apply { putParcelable(AppWidgetManager.EXTRA_APPWIDGET_PREVIEW, android.widget.RemoteViews(ctx.packageName, preview)) }
+    runCatching { AppWidgetManager.getInstance(ctx).requestPinAppWidget(ComponentName(ctx, receiver), extras, null) }
 }
 
 private fun requestTile(ctx: Context) {
