@@ -15,7 +15,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -403,7 +402,6 @@ fun WidgetsScreen(
             }
             Guide(stringResource(R.string.widgets_tile_title), stringResource(R.string.widgets_tile_steps)) {
                 if (canAddTile) {
-                    Spacer(Modifier.height(12.dp))
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                         AddButton { requestTile(ctx) }
                     }
@@ -448,7 +446,7 @@ private fun Widget(name: String, detail: String, canPin: Boolean, onAdd: () -> U
  */
 @Composable
 private fun AddButton(onClick: () -> Unit) {
-    ZButton(stringResource(R.string.common_add), onClick, Modifier.width(IntrinsicSize.Max), kind = ZButtonKind.Secondary)
+    ZButton(stringResource(R.string.common_add), onClick, kind = ZButtonKind.Secondary)
 }
 
 private fun canPinWidgets(ctx: Context): Boolean =
