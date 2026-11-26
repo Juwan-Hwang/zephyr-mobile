@@ -69,8 +69,6 @@
     <string name="home_global_body_any">Trafiki yote inapitia nodi moja. Mazingira yamesitishwa.</string>
     <string name="home_global_use_rule">Tumia hali ya sheria</string>
     <string name="home_global_change_node">Badilisha nodi</string>
-    <string name="home_global_change_note">Programu zote zitatoka kupitia %1$s.</string>
-    <string name="home_global_change_to">Badilisha hadi %1$s</string>
     <plurals name="home_subs_more">
         <item quantity="one">Usajili %1$d zaidi</item>
         <item quantity="other">Usajili %1$d zaidi</item>
@@ -536,5 +534,8 @@
     <string name="groups_type_relay">Upitishaji</string>
     <string name="groups_read_only">Kikundi hiki huchagua nodi yake chenyewe.</string>
     <string name="nodes_detail_use_global">Tumia kwa hali ya jumla</string>
-    <string name="home_global_browse">Vinjari nodi zote</string>
+    <string name="nodes_sort">Panga</string>
+    <string name="nodes_sort_default">Chaguo-msingi</string>
+    <string name="nodes_sort_name">Jina</string>
+    <string name="nodes_sort_too_many">Nodi ni nyingi mno kupanga. Punguza orodha kwanza.</string>
 </resources>

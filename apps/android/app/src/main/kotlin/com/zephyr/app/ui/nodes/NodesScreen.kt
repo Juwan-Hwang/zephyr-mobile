@@ -79,6 +79,10 @@ fun NodesScreen(
 ) {
     val c = ZTheme.colors
     val ui by vm.ui.collectAsStateWithLifecycle()
+    val sort by vm.sort.collectAsStateWithLifecycle()
+    val sortedList by vm.sorted.collectAsStateWithLifecycle()
+    /** Latency / name order: a flat list without region headers (null = default order, or too many to sort). */
+    val flat = sortedList?.takeIf { !it.tooMany }
     LaunchedEffect(initialQuery) { vm.setQuery(initialQuery, immediate = true) }
     val result = ui.result
     val rowCount = result?.rowCount?.coerceAtMost(Int.MAX_VALUE.toLong())?.toInt() ?: 0
@@ -87,17 +91,18 @@ fun NodesScreen(
     LaunchedEffect(ui.scrollReset) { if (ui.scrollReset > 0) list.scrollToItem(0) }
 
     // Settle → test visible rows (tokens motion.settle-delay).
-    LaunchedEffect(list, result?.token) {
+    LaunchedEffect(list, result?.token, flat) {
         snapshotFlow { list.isScrollInProgress to list.firstVisibleItemIndex }.distinctUntilChanged().collectLatest { (scrolling, _) ->
             if (scrolling) return@collectLatest
             delay(ZMotion.settleDelay.toLong())
             val ids = list.layoutInfo.visibleItemsInfo.mapNotNull { info ->
-                (vm.rowAt(info.index) as? NodeRow.Node)?.let { vm.node(it.ordinal) }?.takeIf { it.latencyMs == null }?.id
+                val n = if (flat != null) flat.rows.getOrNull(info.index) else (vm.rowAt(info.index) as? NodeRow.Node)?.let { vm.node(it.ordinal) }
+                n?.takeIf { it.latencyMs == null }?.id
             }
             vm.testVisible(ids)
         }
     }
-    LaunchedEffect(result?.token) { list.scrollToItem(0) }
+    LaunchedEffect(result?.token, sort) { list.scrollToItem(0) }
 
     val res = LocalResources.current
     var selected by remember { mutableStateOf<com.zephyr.engine.NodeSummary?>(null) }
@@ -127,6 +132,12 @@ fun NodesScreen(
                 items(ui.chips, key = { it.first }) { (code, n) -> ZChip(code, ui.query.trim().equals(code, true), { vm.setQuery(code, true) }, detail = ZFormat.chip(res, n)) }
             }
             Spacer(Modifier.height(10.dp))
+            com.zephyr.app.ui.common.NodeSortControl(sort, vm::setSort, Modifier.padding(horizontal = 16.dp))
+            if (sortedList?.tooMany == true) {
+                Spacer(Modifier.height(6.dp))
+                ZText(stringResource(R.string.nodes_sort_too_many), Modifier.padding(horizontal = 22.dp), style = ZTheme.type.footnote, color = c.text3)
+            }
+            Spacer(Modifier.height(10.dp))
             Box(Modifier.weight(1f).fillMaxWidth()) {
                 if (ui.failed) {
                     // Audit U12: a failed query / page shows an error with "重试" instead of an empty or frozen list.
@@ -135,6 +146,18 @@ fun NodesScreen(
                     ZEmptyState(stringResource(R.string.nodes_empty_title), Modifier.align(Alignment.Center), message = stringResource(R.string.nodes_empty_message), action = stringResource(R.string.nodes_empty_action), onAction = onImport)
                 } else if (result != null && rowCount == 0) {
                     ZEmptyState(stringResource(R.string.common_no_results), Modifier.align(Alignment.Center), message = stringResource(R.string.nodes_no_match, ui.query.trim()))
+                } else if (flat != null) {
+                    if (flat.loading && flat.rows.isEmpty()) {
+                        Column { repeat(6) { NodeRowView(null, emptyList(), null, false) } }
+                    } else LazyColumn(
+                        state = list,
+                        modifier = Modifier.fillMaxSize().semantics { collectionInfo = CollectionInfo(flat.rows.size, 1) },
+                        contentPadding = PaddingValues(bottom = 40.dp),
+                    ) {
+                        items(flat.rows, key = { it.id }) { n ->
+                            NodeRowView(n, result?.highlights.orEmpty(), vm.latency[n.id], vm.testing[n.id] == true, onClick = { selected = n })
+                        }
+                    }
                 } else {
                     val epoch by vm.pageEpoch
                     LaunchedEffect(list, result) {

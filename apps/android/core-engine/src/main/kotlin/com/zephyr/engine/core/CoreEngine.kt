@@ -925,6 +925,8 @@ class CoreEngine(
 
     override suspend fun setGlobalNode(id: NodeId): ExitChange {
         val c = nodes() ?: return if (mockData) fallback.setGlobalNode(id) else throw noSubscription()
+        // Live group members carry negative name ids (LiveNames.idOf); the core addresses the GLOBAL exit by library row.
+        if (id < 0) return setGlobalNode(libraryIdOf(names[id] ?: throw ZephyrException(ErrorCode.NODE_NOT_FOUND, id.toString())))
         val preview = runCatching { previewGlobalChange(id) }.getOrNull()
         val before = withContext(io) { runCatching { c.globalNode() }.getOrNull() }
         val a = withContext(io) { sceneCall { c.setGlobalNode(id.toULong()) } }
@@ -939,6 +941,16 @@ class CoreEngine(
             withContext(io) { liveCall(ErrorMapping.Call.SELECT_IN_GROUP) { l.select(a.group, a.member) } }
         }
         return preview ?: ExitChange(null, "", null, "", null)
+    }
+
+    /** Library row id of a live member name (exact name match); node_not_found when the library has no such node. */
+    private suspend fun libraryIdOf(name: String): NodeId {
+        val q = queryNodes(name)
+        if (q.total > 0) {
+            val rows = nodeRows(q.token, 0, q.total.coerceAtMost(500).toInt()).rows
+            rows.firstOrNull { it.name == name }?.let { return it.id }
+        }
+        throw ZephyrException(ErrorCode.NODE_NOT_FOUND, name)
     }
 
     /** Current global exit as a library row (null before the first choice). */
@@ -1013,6 +1025,16 @@ class CoreEngine(
                 delay(tick)
             }
         }
+
+    /**
+     * The subscription's `MATCH` target as the core's rule set holds it (computed from the active subscription, before
+     * any scene rewrites the runtime config). Read by testing a name no rule can match: only an answer from the final
+     * rule (no layer) counts.
+     */
+    override suspend fun finalPolicy(): String? {
+        val c = rules() ?: return if (mockData) fallback.finalPolicy() else null
+        return withContext(io) { runCatching { c.testRule(FINAL_PROBE) }.getOrNull() }?.takeIf { it.layerIndex == null }?.policy?.takeIf { it.isNotBlank() }
+    }
 
     override suspend fun testGroup(group: String) {
         val r = live() ?: return if (mockData) fallback.testGroup(group) else throw notRunning()
@@ -1300,6 +1322,8 @@ class CoreEngine(
                 a.localProxyEnabled != b.localProxyEnabled || a.localProxyPort != b.localProxyPort || a.localProxyAuth != b.localProxyAuth
 
         const val GLOBAL = "GLOBAL"
+        /** A name no subscription rule matches (`.invalid` is reserved, RFC 2606), so [finalPolicy] reads the MATCH rule. */
+        const val FINAL_PROBE = "zephyr-final-probe.invalid"
 
         /** §16.h: mihomo starts at info, the log page's default segment; debug only while that segment is open. */
         const val LOG_LEVEL_DEFAULT = "info"

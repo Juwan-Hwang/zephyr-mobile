@@ -76,6 +76,11 @@ interface ZephyrEngine {
     suspend fun groupMembers(group: String, offset: Int, limit: Int): NodePage
     suspend fun selectInGroup(group: String, nodeId: NodeId)
     suspend fun testGroup(group: String)
+    /**
+     * Where the subscription's final rule (`MATCH`) sends traffic: a policy group name, `DIRECT`, … Android-local
+     * (Home's node row picks the subscription's main group from it). Null when the engine can't tell.
+     */
+    suspend fun finalPolicy(): String? = null
 
     // 5. Node library
     suspend fun nodeIndex(): NodeIndex

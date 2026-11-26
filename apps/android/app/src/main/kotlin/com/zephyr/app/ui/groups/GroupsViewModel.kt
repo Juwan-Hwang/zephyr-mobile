@@ -35,6 +35,10 @@ object PolicyGroupList {
 
     /** Only select groups take a manual choice; url-test / fallback / load-balance / relay pick their own member. */
     fun selectable(g: PolicyGroup): Boolean = g.type == GroupType.SELECT
+
+    /** mihomo names the built-in DIRECT member "DIRECT"; the engine shows it as 直连. */
+    fun isCurrent(n: NodeSummary, selected: String?): Boolean =
+        selected != null && (n.name == selected || (selected == "DIRECT" && n.protocol == "DIRECT"))
 }
 
 /**
@@ -42,7 +46,13 @@ object PolicyGroupList {
  * testGroup. The groups only exist while the core runs, so the page asks to connect first.
  */
 class GroupsViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewModel() {
-    data class Members(val group: PolicyGroup, val rows: List<NodeSummary>, val loading: Boolean = true, val testing: Boolean = false)
+    /** [raw] in the subscription's order; [rows] in the chosen [sort]. */
+    data class Members(
+        val group: PolicyGroup, val raw: List<NodeSummary>, val loading: Boolean = true, val testing: Boolean = false,
+        val sort: com.zephyr.app.ui.common.NodeSort = com.zephyr.app.ui.common.NodeSort.DEFAULT,
+    ) {
+        val rows: List<NodeSummary> by lazy { com.zephyr.app.ui.common.NodeSorting.sort(raw, sort) }
+    }
 
     val connected: StateFlow<Boolean> = engine.connectionState().map { it.status == ConnectionStatus.CONNECTED }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
@@ -55,8 +65,23 @@ class GroupsViewModel(private val engine: ZephyrEngine = AppGraph.engine) : View
     private val _notices = MutableSharedFlow<UiText>(extraBufferCapacity = 4)
     val notices: SharedFlow<UiText> = _notices.asSharedFlow()
 
+    /** Shared with Home's node sheet and the 节点 library; stored across launches. */
+    val sort: StateFlow<com.zephyr.app.ui.common.NodeSort> = com.zephyr.app.ui.common.NodeSortPref.flow
+        .stateIn(viewModelScope, SharingStarted.Eagerly, com.zephyr.app.ui.common.NodeSort.DEFAULT)
+
+    fun setSort(s: com.zephyr.app.ui.common.NodeSort) {
+        com.zephyr.app.ui.common.NodeSortPref.set(s)
+        _open.update { m -> m?.copy(sort = s) }
+    }
+
+    init {
+        // A stored order that arrives after the list loaded (first read of DataStore) still applies.
+        viewModelScope.launch { sort.collect { s -> _open.update { m -> m?.copy(sort = s) } } }
+    }
+
+
     fun open(g: PolicyGroup) {
-        _open.value = Members(g, emptyList())
+        _open.value = Members(g, emptyList(), sort = sort.value)
         viewModelScope.launch { load(g.name) }
     }
 
@@ -66,7 +91,7 @@ class GroupsViewModel(private val engine: ZephyrEngine = AppGraph.engine) : View
         val rows = try { engine.groupMembers(group, 0, MAX_MEMBERS).rows } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (e: Throwable) {
             _notices.tryEmit(errorText(R.string.home_action_load_nodes, (e as? com.zephyr.engine.ZephyrException)?.error?.code)); emptyList()
         }
-        _open.update { m -> if (m?.group?.name == group) m.copy(rows = rows, loading = false) else m }
+        _open.update { m -> if (m?.group?.name == group) m.copy(raw = rows, loading = false) else m }
     }
 
     fun select(node: NodeSummary) {

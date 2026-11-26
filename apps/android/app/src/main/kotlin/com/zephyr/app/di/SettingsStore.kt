@@ -26,6 +26,10 @@ class SettingsStore(private val context: Context, private val engine: ZephyrEngi
     private val keyScrubHint = stringPreferencesKey("scrub_hint_seen")
     val scrubHintSeen = context.store.data.map { it[keyScrubHint] == "1" }
     suspend fun setScrubHintSeen() { context.store.edit { it[keyScrubHint] = "1" } }
+    /** Node list order (Home node sheet, 策略组 members, 节点 library), shared by all three lists. */
+    private val keyNodeSort = stringPreferencesKey("node_sort")
+    val nodeSort = context.store.data.map { com.zephyr.app.ui.common.NodeSort.parse(it[keyNodeSort]) }.distinctUntilChanged()
+    suspend fun setNodeSort(sort: com.zephyr.app.ui.common.NodeSort) { context.store.edit { it[keyNodeSort] = sort.name } }
 
     /** Completes once the stored settings were replayed into the engine (a cold boot reconnect waits for it). */
     val loaded = kotlinx.coroutines.CompletableDeferred<Unit>()

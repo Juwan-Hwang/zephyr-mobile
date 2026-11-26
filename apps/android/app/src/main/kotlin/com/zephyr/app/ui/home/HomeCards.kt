@@ -33,18 +33,12 @@ import com.zephyr.design.format.ZFormat
 import com.zephyr.design.theme.ZTheme
 import com.zephyr.engine.Subscription
 
-/** Global mode replaces the scenes card (prototype `global`, 689–692): "更换节点" opens an inline confirm. */
+/** Global mode replaces the scenes card (prototype `global`, 689–692). #208: 「更换节点」 opens Home's node sheet. */
 @Composable
 fun GlobalModeCard(
     node: com.zephyr.engine.NodeSummary?,
-    proposal: com.zephyr.engine.NodeSummary?,
-    change: com.zephyr.engine.ExitChange?,
     onUseRule: () -> Unit,
     onChangeNode: () -> Unit,
-    onConfirm: () -> Unit,
-    /** #208: "更换节点" is open (proposal or not); shows 「浏览全部节点」 like iOS GlobalModeCard. */
-    open: Boolean = proposal != null,
-    onBrowse: () -> Unit = {},
 ) {
     val c = ZTheme.colors
     // Review H-P2-15: prototype `.gb` padding 16, `.h` 15, `.k` 13 / 1.5 with 5 px gap; buttons are Compact ZButtons (D-P2-4).
@@ -56,39 +50,6 @@ fun GlobalModeCard(
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             ZButton(stringResource(R.string.home_global_use_rule), onUseRule, Modifier.weight(1f))
             ZButton(stringResource(R.string.home_global_change_node), onChangeNode, Modifier.weight(1f), kind = ZButtonKind.Secondary)
-        }
-        androidx.compose.animation.AnimatedVisibility(open || proposal != null) {
-            Column {
-                val p = proposal
-                if (p != null) {
-                    Spacer(Modifier.height(14.dp))
-                    Column(Modifier.fillMaxWidth().background(c.surface3, ZTheme.shapes.surface).padding(12.dp)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            androidx.compose.foundation.layout.Box(Modifier.size(6.dp).background(c.warning, androidx.compose.foundation.shape.CircleShape))
-                            Spacer(Modifier.width(8.dp))
-                            ZText(stringResource(R.string.common_exit_ip_changes), style = ZTheme.type.footnote)
-                        }
-                        Spacer(Modifier.height(4.dp))
-                        val from = change?.fromIp?.let { "${change.fromRegion} $it" } ?: node?.let { "${it.region} ${it.name}" } ?: stringResource(R.string.common_current)
-                        val to = change?.toIp?.let { "${change.toRegion} $it" } ?: "${p.region} ${p.name}"
-                        ZText("$from → $to", style = ZTheme.type.monoSmall, color = c.text2)
-                    }
-                    Spacer(Modifier.height(8.dp))
-                    ZText(stringResource(R.string.home_global_change_note, p.name), style = ZTheme.type.footnote, color = c.text3)
-                    Spacer(Modifier.height(12.dp))
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        ZButton(stringResource(R.string.home_global_change_to, p.name), onConfirm, Modifier.weight(1f))
-                        ZButton(stringResource(R.string.common_cancel), onChangeNode, Modifier.weight(1f), kind = ZButtonKind.Secondary)
-                    }
-                }
-                // #208 (iOS GlobalModeCard 「浏览全部节点」): any library node, chosen on the nodes page's detail sheet.
-                Spacer(Modifier.height(if (p != null) 4.dp else 8.dp))
-                ZText(
-                    stringResource(R.string.home_global_browse),
-                    Modifier.heightIn(min = 48.dp).zPressable(onClick = onBrowse).padding(vertical = 14.dp),
-                    style = ZTheme.type.footnote, color = c.accentText,
-                )
-            }
         }
     }
 }

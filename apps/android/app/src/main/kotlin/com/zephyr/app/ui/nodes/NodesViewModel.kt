@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 
 /** A virtual row: header of [section] or the [ordinal]-th matched node (0-based across sections). */
 sealed interface NodeRow {
@@ -71,7 +72,49 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
     private var testJob: Job? = null
     private val funnelDirty = kotlinx.coroutines.flow.MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = kotlinx.coroutines.channels.BufferOverflow.DROP_OLDEST)
 
+    /** Shared order (Home node sheet, 策略组, here); stored across launches. */
+    val sort: StateFlow<com.zephyr.app.ui.common.NodeSort> = com.zephyr.app.ui.common.NodeSortPref.flow
+        .stateIn(viewModelScope, kotlinx.coroutines.flow.SharingStarted.Eagerly, com.zephyr.app.ui.common.NodeSort.DEFAULT)
+
+    /**
+     * The list in latency / name order: the whole result is read (≤ [SORT_CAP] rows) and sorted here, shown flat
+     * without region headers. Null in the default order; [Sorted.tooMany] when the result is too large to sort.
+     */
+    @Immutable
+    data class Sorted(val token: Long, val rows: List<NodeSummary>, val loading: Boolean = false, val tooMany: Boolean = false)
+    private val _sorted = MutableStateFlow<Sorted?>(null)
+    val sorted: StateFlow<Sorted?> = _sorted.asStateFlow()
+    private var sortJob: Job? = null
+
+    fun setSort(s: com.zephyr.app.ui.common.NodeSort) = com.zephyr.app.ui.common.NodeSortPref.set(s)
+
+    private fun resort() {
+        sortJob?.cancel()
+        val s = sort.value
+        val r = _ui.value.result
+        if (s == com.zephyr.app.ui.common.NodeSort.DEFAULT || r == null) { _sorted.value = null; return }
+        if (r.total > SORT_CAP) { _sorted.value = Sorted(r.token, emptyList(), tooMany = true); return }
+        _sorted.value = Sorted(r.token, _sorted.value?.takeIf { it.token == r.token }?.rows.orEmpty(), loading = true)
+        sortJob = viewModelScope.launch {
+            try {
+                val all = ArrayList<NodeSummary>(r.total.toInt())
+                var off = 0L
+                while (off < r.total) {
+                    val page = engine.nodeRows(r.token, off, SORT_PAGE).rows
+                    if (page.isEmpty()) break
+                    all += page; off += page.size
+                }
+                val rows = com.zephyr.app.ui.common.NodeSorting.sort(all, s) { latency[it.id] ?: it.latencyMs }
+                _sorted.value = Sorted(r.token, rows)
+            } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (_: Exception) {
+                _sorted.value = null
+                _ui.value = _ui.value.copy(failed = true)
+            }
+        }
+    }
+
     init {
+        viewModelScope.launch { sort.collect { resort() } }
         viewModelScope.launch {
             val idx = runCatching { engine.nodeIndex() }.getOrNull() ?: return@launch
             val chips = idx.sections.filter { it.count > 0 }.sortedByDescending { it.count }.take(8).map { it.region to it.count }
@@ -131,6 +174,7 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
         pages.evictAll(); inflight.clear()
         _ui.value = _ui.value.copy(result = r, failed = false)
         pageEpoch.intValue++
+        resort()
     }
 
     /** Error state's "重试": re-run the current query from scratch. */
@@ -228,6 +272,9 @@ class NodesViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewM
 
     companion object {
         const val PAGE = 200
+        /** Largest result sorted in memory (a search or a region chip narrows a bigger library first). */
+        const val SORT_CAP = 20_000L
+        const val SORT_PAGE = 500
         const val CACHE_PAGES = 24
         /** Re-read the §18.a funnel at most this often while results stream in. */
         const val FUNNEL_REFRESH_MS = 600L

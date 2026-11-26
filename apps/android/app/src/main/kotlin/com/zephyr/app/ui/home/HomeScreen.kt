@@ -62,7 +62,6 @@ data class HomeActions(
     val onToday: () -> Unit,
     val onSubscriptions: () -> Unit,
     val onScene: (Scene) -> Unit,
-    val onChangeGlobalNode: () -> Unit,
     val onActivity: () -> Unit = {},
 )
 
@@ -76,12 +75,27 @@ fun HomeScreen(vm: HomeViewModel, actions: HomeActions) {
     val scan by vm.scan.collectAsStateWithLifecycle()
     val live = vm.live.collectAsStateWithLifecycle()
     val profileNodes by vm.profileNodes.collectAsStateWithLifecycle()
+    val picker by vm.picker.ui.collectAsStateWithLifecycle()
+    val p = vm.picker
     HomeContent(
         conn, scenes, subs, ui, { live.value }, actions,
-        HomeCallbacks({ vm.setMode(it) }, { s, n -> vm.pick(s, n) }, { vm.confirmPending() }, { vm.cancelPending() }, { vm.undo() }, { vm.toggleGlobalChange() }, { vm.confirmGlobal() }, { vm.prefetchSlots(it) }, { vm.prefetchFunnel(it) }, vm::redactDiagnostic),
+        HomeCallbacks({ vm.setMode(it) }, { s, n -> vm.pick(s, n) }, { vm.confirmPending() }, { vm.cancelPending() }, { vm.undo() }, prefetchSlots = { vm.prefetchSlots(it) }, prefetchFunnel = { vm.prefetchFunnel(it) }, redact = vm::redactDiagnostic),
         retesting, scan, profileNodes,
+        picker = picker,
+        pickerCb = PickerCallbacks(p::open, p::close, p::pick, p::test, p::chooseGroup, p::setQuery, p::setSort),
     )
 }
+
+/** Home's node row and sheet ([NodePicker]). */
+data class PickerCallbacks(
+    val open: () -> Unit = {},
+    val close: () -> Unit = {},
+    val pick: (com.zephyr.engine.NodeSummary) -> Unit = {},
+    val test: () -> Unit = {},
+    val group: (String) -> Unit = {},
+    val query: (String) -> Unit = {},
+    val sort: (com.zephyr.app.ui.common.NodeSort) -> Unit = {},
+)
 
 /** VM-side callbacks, split out so screenshot tests can render [HomeContent] from plain data. */
 data class HomeCallbacks(
@@ -90,8 +104,6 @@ data class HomeCallbacks(
     val confirm: () -> Unit,
     val cancel: () -> Unit,
     val undo: () -> Unit,
-    val toggleGlobalChange: () -> Unit = {},
-    val confirmGlobal: () -> Unit = {},
     val prefetchSlots: (Scene) -> Unit = {},
     val prefetchFunnel: (Scene) -> Unit = {},
     /** Contract §22.b: redaction for Home's 错误详情 (engine → core `redactDiagnostic`). */
@@ -113,6 +125,9 @@ fun HomeContent(
     scan: com.zephyr.engine.ScanProgress? = null,
     /** Issue #1: nodes in the imported profiles (rows with no exit yet show this instead of "0 个可用"). */
     profileNodes: Long = subs.sumOf { it.nodeCount },
+    /** #208: the 「节点」 row under the status (and its sheet when open). */
+    picker: NodePickerUi = NodePickerUi(mode = conn.mode),
+    pickerCb: PickerCallbacks = PickerCallbacks(),
 ) {
     val c = ZTheme.colors
     val connected = conn.status == ConnectionStatus.CONNECTED
@@ -126,6 +141,11 @@ fun HomeContent(
             item("status") {
                 Spacer(Modifier.height(24.dp))
                 HomeStatus(conn, live().now, scenes.size, actions.onToggle, cb.setMode, cb.redact)
+            }
+            // #208: choosing a node is the most common action, so it sits right under the mode, connected or not.
+            if (subs.isNotEmpty() && conn.mode != ProxyMode.DIRECT) item("node") {
+                Spacer(Modifier.height(20.dp))
+                HomeNodeRow(picker, pickerCb.open)
             }
             item("traffic") {
                 AnimatedVisibility(connected, enter = expandVertically(ZAnim.slow()) + fadeIn(ZAnim.slow()), exit = shrinkVertically(ZAnim.standard()) + fadeOut(ZAnim.micro())) {
@@ -166,7 +186,7 @@ fun HomeContent(
             }
             item("scenes") {
                 if (conn.mode == ProxyMode.GLOBAL) {
-                    GlobalModeCard(ui.globalNode, ui.globalProposal, ui.globalChange, onUseRule = { cb.setMode(ProxyMode.RULE) }, onChangeNode = cb.toggleGlobalChange, onConfirm = cb.confirmGlobal, open = ui.globalOpen, onBrowse = actions.onChangeGlobalNode)
+                    GlobalModeCard(ui.globalNode, onUseRule = { cb.setMode(ProxyMode.RULE) }, onChangeNode = pickerCb.open)
                 } else {
                     SceneCard(scenes, ui.pending, ui.slots, retesting, scan, cb.pick, cb.prefetchSlots, { cb.confirm() }, cb.cancel, actions.onScene, funnels = ui.funnels, onFunnel = cb.prefetchFunnel, profileNodes = profileNodes)
                 }
@@ -194,5 +214,6 @@ fun HomeContent(
             Spacer(Modifier.width(10.dp))
             ZIconButton(ZIcons.Grid, stringResource(R.string.common_library), actions.onLibrary, filled = true, size = 52.dp)
         }
+        NodePickerSheet(picker, pickerCb.close, pickerCb.pick, pickerCb.test, pickerCb.group, pickerCb.query, pickerCb.sort)
     }
 }
