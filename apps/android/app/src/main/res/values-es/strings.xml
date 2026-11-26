@@ -412,6 +412,7 @@
     <string name="subs_swipe_delete">Eliminar</string>
     <string name="subs_error_update">No se ha podido actualizar %1$s</string>
     <string name="subs_error_delete">No se ha podido eliminar %1$s</string>
+    <string name="subs_error_activate">No se ha podido cambiar a %1$s</string>
     <string name="subs_remaining">Restante</string>
     <string name="subs_all_title">Todas las suscripciones</string>
     <plurals name="subs_others">

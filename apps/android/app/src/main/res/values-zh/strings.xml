@@ -375,6 +375,7 @@
     <string name="subs_swipe_delete">删除</string>
     <string name="subs_error_update">无法更新 %1$s</string>
     <string name="subs_error_delete">无法删除 %1$s</string>
+    <string name="subs_error_activate">无法切换至 %1$s</string>
     <string name="subs_remaining">剩余</string>
     <string name="subs_all_title">全部订阅</string>
     <plurals name="subs_others">

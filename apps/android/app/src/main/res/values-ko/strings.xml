@@ -354,6 +354,7 @@
     <string name="subs_swipe_delete">삭제</string>
     <string name="subs_error_update">%1$s을(를) 업데이트할 수 없음</string>
     <string name="subs_error_delete">%1$s을(를) 삭제할 수 없음</string>
+    <string name="subs_error_activate">%1$s(으)로 전환할 수 없음</string>
     <string name="subs_remaining">남음</string>
     <string name="subs_all_title">전체 구독</string>
     <plurals name="subs_others">

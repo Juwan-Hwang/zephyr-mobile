@@ -447,6 +447,7 @@
     <string name="subs_swipe_delete">Delete</string>
     <string name="subs_error_update">Couldn’t update %1$s</string>
     <string name="subs_error_delete">Couldn’t delete %1$s</string>
+    <string name="subs_error_activate">Couldn’t switch to %1$s</string>
     <string name="subs_remaining">Remaining</string>
     <string name="subs_all_title">All subscriptions</string>
     <plurals name="subs_others">

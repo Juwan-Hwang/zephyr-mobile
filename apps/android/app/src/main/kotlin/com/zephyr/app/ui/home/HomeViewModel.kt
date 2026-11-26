@@ -155,6 +155,9 @@ class HomeViewModel(private val engine: ZephyrEngine = AppGraph.engine) : ViewMo
     val live: StateFlow<HomeLive> = kotlinx.coroutines.flow.combine(clock, trafficLive) { now, (t, sp) -> HomeLive(t, sp, now) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeLive())
 
+    /** Contract §22.b: Home's 错误详情 goes through the engine (core `redactDiagnostic`). */
+    fun redactDiagnostic(text: String): String = engine.redactDiagnostic(text)
+
     fun setMode(mode: ProxyMode) = launchCatching(R.string.home_action_switch_mode) { engine.setMode(mode) }
 
     /**

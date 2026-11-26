@@ -372,6 +372,31 @@ class CoreEngine(
         refreshSubs()
     }
 
+    /**
+     * Contract §22.a: core moves [id] to the front, saves and re-syncs rule layer 2 (node library untouched). Only when
+     * the order changed: subscribers get the new list and a running tunnel rebuilds its config from the new first
+     * subscription and reloads (§16.b ③: not running → the next start reads it; connecting → queued; a failed reload
+     * is `core_crashed`, the new order stays saved).
+     */
+    override suspend fun setActiveSubscription(id: String): List<Subscription> {
+        val c = core ?: return if (mockData) fallback.setActiveSubscription(id) else throw noCore()
+        val (before, list) = withContext(io) {
+            val b = runCatching { c.subscriptions().firstOrNull()?.id }.getOrNull()
+            b to wrap { c.setActiveSubscription(id) }.map(::sub)
+        }
+        if (before == id) return list
+        subsState.value = list
+        invalidateLibrary() // rule layer 2 and the scenes' source changed with the active subscription
+        reloadIfRunning()
+        return list
+    }
+
+    /** Contract §22.b: core `redactDiagnostic`; the Kotlin fallback only when the native library is not loaded. */
+    override fun redactDiagnostic(text: String): String {
+        if (core == null) return com.zephyr.engine.Diagnostics.fallbackRedact(text)
+        return try { com.zephyr.core.mobile.redactDiagnostic(text) } catch (_: Throwable) { com.zephyr.engine.Diagnostics.fallbackRedact(text) }
+    }
+
     // ── Runtime config for the embedded mihomo (TunBridge.Embedded) ─────────────────────────────────
     /**
      * Contract §14.w: the active subscription is the first in the list, the same one core compiles into rule layer 2

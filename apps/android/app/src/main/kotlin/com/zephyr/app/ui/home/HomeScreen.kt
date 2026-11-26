@@ -78,7 +78,7 @@ fun HomeScreen(vm: HomeViewModel, actions: HomeActions) {
     val profileNodes by vm.profileNodes.collectAsStateWithLifecycle()
     HomeContent(
         conn, scenes, subs, ui, { live.value }, actions,
-        HomeCallbacks({ vm.setMode(it) }, { s, n -> vm.pick(s, n) }, { vm.confirmPending() }, { vm.cancelPending() }, { vm.undo() }, { vm.toggleGlobalChange() }, { vm.confirmGlobal() }, { vm.prefetchSlots(it) }, { vm.prefetchFunnel(it) }),
+        HomeCallbacks({ vm.setMode(it) }, { s, n -> vm.pick(s, n) }, { vm.confirmPending() }, { vm.cancelPending() }, { vm.undo() }, { vm.toggleGlobalChange() }, { vm.confirmGlobal() }, { vm.prefetchSlots(it) }, { vm.prefetchFunnel(it) }, vm::redactDiagnostic),
         retesting, scan, profileNodes,
     )
 }
@@ -94,6 +94,8 @@ data class HomeCallbacks(
     val confirmGlobal: () -> Unit = {},
     val prefetchSlots: (Scene) -> Unit = {},
     val prefetchFunnel: (Scene) -> Unit = {},
+    /** Contract §22.b: redaction for Home's 错误详情 (engine → core `redactDiagnostic`). */
+    val redact: (String) -> String = com.zephyr.engine.Diagnostics::fallbackRedact,
 )
 
 @Composable
@@ -123,7 +125,7 @@ fun HomeContent(
             item("top") { Spacer(Modifier.height(12.dp)); HomeTopBar(conn.status, actions.onSettings) }
             item("status") {
                 Spacer(Modifier.height(24.dp))
-                HomeStatus(conn, live().now, scenes.size, actions.onToggle, cb.setMode)
+                HomeStatus(conn, live().now, scenes.size, actions.onToggle, cb.setMode, cb.redact)
             }
             item("traffic") {
                 AnimatedVisibility(connected, enter = expandVertically(ZAnim.slow()) + fadeIn(ZAnim.slow()), exit = shrinkVertically(ZAnim.standard()) + fadeOut(ZAnim.micro())) {

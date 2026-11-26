@@ -383,6 +383,7 @@
     <string name="subs_swipe_delete">Sil</string>
     <string name="subs_error_update">%1$s güncellenemedi</string>
     <string name="subs_error_delete">%1$s silinemedi</string>
+    <string name="subs_error_activate">%1$s seçilemedi</string>
     <string name="subs_remaining">Kalan</string>
     <string name="subs_all_title">Tüm abonelikler</string>
     <plurals name="subs_others">

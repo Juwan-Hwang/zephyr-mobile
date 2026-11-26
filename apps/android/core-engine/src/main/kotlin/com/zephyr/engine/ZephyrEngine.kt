@@ -109,6 +109,18 @@ interface ZephyrEngine {
     suspend fun updateSubscription(id: String): SubscriptionDiff
     suspend fun updateAll(): List<SubscriptionDiff>
     suspend fun deleteSubscription(id: String)
+    /**
+     * Contract §22.a: makes [id] the active subscription — moved to the front of the list and saved, the others keep
+     * their relative order — and returns the new list. While the tunnel runs the config is rebuilt from the new first
+     * subscription and reloaded (only when the order changed). Unknown id → `subscription_not_found`.
+     */
+    suspend fun setActiveSubscription(id: String): List<Subscription>
+    /**
+     * Contract §22.b (U27 revised): text for the collapsed 错误详情 — whitespace folded, http(s) URLs redacted,
+     * cut to 240 characters. The native engine calls core `redactDiagnostic`; this default ([Diagnostics.fallbackRedact])
+     * is only for engines without the core (mock, screenshots, core not loaded).
+     */
+    fun redactDiagnostic(text: String): String = Diagnostics.fallbackRedact(text)
 
     // 8. Connections, logs, settings
     fun activeConnections(): Flow<List<ConnectionInfo>>

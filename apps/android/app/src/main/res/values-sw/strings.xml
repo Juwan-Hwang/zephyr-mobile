@@ -383,6 +383,7 @@
     <string name="subs_swipe_delete">Futa</string>
     <string name="subs_error_update">Imeshindwa kusasisha %1$s</string>
     <string name="subs_error_delete">Imeshindwa kufuta %1$s</string>
+    <string name="subs_error_activate">Imeshindwa kubadilisha hadi %1$s</string>
     <string name="subs_remaining">Imesalia</string>
     <string name="subs_all_title">Usajili wote</string>
     <plurals name="subs_others">

@@ -29,6 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
@@ -52,6 +54,7 @@ import com.zephyr.design.components.ZSettingsRow
 import com.zephyr.design.components.ZSheet
 import com.zephyr.design.components.ZText
 import com.zephyr.design.components.ZToggle
+import com.zephyr.design.components.zPressable
 import com.zephyr.design.format.ZFormat
 import com.zephyr.design.theme.ZTheme
 import com.zephyr.engine.Settings
@@ -91,6 +94,19 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
             .onSuccess { failedUpdates = failedUpdates - s.id }
             .onFailure { failedUpdates = failedUpdates + s.id; error = res.getString(R.string.subs_error_update, s.name) }
         busyId = null
+    }
+    // Contract §22.a: tapping a row makes it the active subscription (moved to the front; a running tunnel reloads).
+    // The "当前" mark follows the engine's list; one switch at a time.
+    val activeId = ActiveSubscription.activeId(subs)
+    var activating by remember { mutableStateOf(false) }
+    fun activate(s: com.zephyr.engine.Subscription) {
+        if (activating || s.id == activeId) return
+        scope.launch {
+            activating = true
+            val r = ActiveSubscription.activate(engine, subs, s)
+            if (r is ActiveSubscription.Outcome.Failed) error = ActiveSubscription.errorText(r.code, s.name).resolve(res)
+            activating = false
+        }
     }
     fun requestUpdate(s: com.zephyr.engine.Subscription) {
         if (busyId != null || updating) return
@@ -199,9 +215,19 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
                         resetKey = subs.size,
                         onClosed = { if (pendingDelete == s.id) pendingDelete = null },
                     ) {
-                    Row(Modifier.fillMaxWidth().semantics(mergeDescendants = true) { stateDescription = stateText }.padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
+                    val active = s.id == activeId
+                    Row(
+                        Modifier.fillMaxWidth()
+                            .zPressable(row = true, role = Role.RadioButton) { activate(s) }
+                            .semantics(mergeDescendants = true) { stateDescription = stateText; selected = active }
+                            .padding(18.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
                         Column(Modifier.weight(1f)) {
-                            ZText(s.name, style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                ZText(s.name, Modifier.weight(1f, fill = false), style = ZTheme.type.headline.copy(fontWeight = ZTheme.type.body.fontWeight))
+                                if (active) { Spacer(Modifier.width(8.dp)); ActiveMark() }
+                            }
                             // §9.1: the line stays t3; only the expiry date is amber-text, led by an amber dot (shape + colour).
                             val countText = pluralStringResource(R.plurals.common_node_count, s.nodeCount.toPluralCount(), ZFormat.grouped(s.nodeCount))
                             // §18.b: failed → red dot + "失败" (replaces the expiry); expired → red dot + "已过期"; ≤ 7 days → amber dot + date.
@@ -263,22 +289,33 @@ fun SubscriptionsScreen(back: BackTo = BackTo.LIBRARY, onBack: () -> Unit, onImp
             Spacer(Modifier.height(48.dp))
         }
     }
-    AllSubscriptionsSheet(showAll, subs, now, onDismiss = { showAll = false })
+    AllSubscriptionsSheet(showAll, subs, now, activeId, onActivate = { activate(it) }, onDismiss = { showAll = false })
     }
 }
 
 /** "全部订阅" (audit U14, iOS SubscriptionsAllView): every subscription with its node count and expiry. */
 @Composable
-private fun androidx.compose.foundation.layout.BoxScope.AllSubscriptionsSheet(visible: Boolean, subs: List<com.zephyr.engine.Subscription>, now: Long, onDismiss: () -> Unit) {
+private fun androidx.compose.foundation.layout.BoxScope.AllSubscriptionsSheet(
+    visible: Boolean,
+    subs: List<com.zephyr.engine.Subscription>,
+    now: Long,
+    activeId: String?,
+    onActivate: (com.zephyr.engine.Subscription) -> Unit,
+    onDismiss: () -> Unit,
+) {
     val c = ZTheme.colors
     val res = LocalResources.current
     ZSheet(visible, onDismiss, stringResource(R.string.subs_all_title)) {
         ZListGroup {
             subs.forEachIndexed { i, s ->
                 if (i > 0) ZDivider()
+                val active = s.id == activeId
                 ZSettingsRow(
                     s.name,
-                    subtitle = pluralStringResource(R.plurals.common_node_count, s.nodeCount.toPluralCount(), ZFormat.grouped(s.nodeCount)) +
+                    // §22.a: tap = make it the active subscription; the active one leads its line with "当前".
+                    modifier = Modifier.semantics { selected = active },
+                    onClick = { onActivate(s) },
+                    subtitle = (if (active) stringResource(R.string.common_current) + " · " else "") + pluralStringResource(R.plurals.common_node_count, s.nodeCount.toPluralCount(), ZFormat.grouped(s.nodeCount)) +
                         (s.expiresAt?.let { " · " + ZFormat.expires(res, it, now, expired = stringResource(R.string.state_expired)) } ?: ""),
                     value = s.remainingBytes?.let(ZFormat::bytesText),
                 )
@@ -291,6 +328,12 @@ private fun androidx.compose.foundation.layout.BoxScope.AllSubscriptionsSheet(vi
             Modifier.padding(horizontal = 22.dp, vertical = 12.dp), style = ZTheme.type.footnote, color = c.text3,
         )
     }
+}
+
+/** §22.a: the active subscription's mark (same accent "当前" as the scene sheet's current node). */
+@Composable
+private fun ActiveMark() {
+    ZText(stringResource(R.string.common_current), style = ZTheme.type.footnote, color = ZTheme.colors.accentText, maxLines = 1)
 }
 
 @Composable

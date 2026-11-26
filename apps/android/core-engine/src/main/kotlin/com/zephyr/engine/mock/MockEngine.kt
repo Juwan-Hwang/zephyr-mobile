@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -469,6 +470,16 @@ class MockEngine(
 
     override suspend fun deleteSubscription(id: String) {
         subscriptionState.update { list -> list.filterNot { it.id == id } }
+    }
+
+    /** Contract §22.a, same as core: move to the front, the rest keep their order; unknown → subscription_not_found. */
+    override suspend fun setActiveSubscription(id: String): List<Subscription> {
+        val list = subscriptionState.updateAndGet { list ->
+            val i = list.indexOfFirst { it.id == id }
+            if (i < 0) throw ZephyrException(ErrorCode.SUBSCRIPTION_NOT_FOUND, "no subscription $id")
+            if (i == 0) list else listOf(list[i]) + list.filterIndexed { j, _ -> j != i }
+        }
+        return list
     }
 
     // ── 8. Connections, logs, settings ───────────────────────────────────────
