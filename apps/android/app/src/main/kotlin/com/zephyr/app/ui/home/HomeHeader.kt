@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
@@ -184,8 +185,11 @@ private fun ModePicker(mode: ProxyMode, onMode: (ProxyMode) -> Unit) {
             ZIcon(ZIcons.ChevronDown, Modifier.then(Modifier), tint = c.text2, size = 14.dp)
         }
         if (open) {
-            Popup(onDismissRequest = { toggle.dismiss() }, properties = PopupProperties(focusable = true)) {
-                ZSurface(Modifier.padding(top = 36.dp).width(200.dp), style = ZSurfaceStyle.Raised, shape = ZTheme.shapes.surface) {
+            // Issue #1: the popup window starts below the trigger (no transparent padding over it), so a second tap on
+            // the trigger is an outside touch → dismiss, then PopupToggle's same-gesture guard keeps it closed.
+            val top = with(LocalDensity.current) { 36.dp.roundToPx() }
+            Popup(popupPositionProvider = remember(top) { BelowAnchor(top) }, onDismissRequest = { toggle.dismiss() }, properties = PopupProperties(focusable = true)) {
+                ZSurface(Modifier.width(200.dp), style = ZSurfaceStyle.Raised, shape = ZTheme.shapes.surface) {
                     Column(Modifier.padding(vertical = 6.dp)) {
                         ProxyMode.entries.forEach { m ->
                             Row(
