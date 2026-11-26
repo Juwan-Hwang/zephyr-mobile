@@ -109,6 +109,21 @@ final class SubscriptionsModel {
 
     func isActive(_ s: Subscription) -> Bool { s.id == activeID }
 
+    /// 正在切换生效订阅（防连点）。
+    private(set) var activating: String?
+
+    /// 契约 §22.a：点选订阅行设为当前订阅。已是当前订阅、或正在切换时不做事；
+    /// 引擎把它移到第一位（隧道运行中随后重写配置并热重载），列表立即按返回值更新，订阅流随后也会推同样的列表。
+    func activate(_ sub: Subscription) async {
+        guard !isActive(sub), activating == nil else { return }
+        activating = sub.id
+        defer { activating = nil }
+        do {
+            subscriptions = try await engine.setActiveSubscription(id: sub.id)
+            toast = ZToastItem(ZL.s("已切换至%@", sub.name))
+        } catch { report(error) }
+    }
+
     /// “8,204 个节点 · 26 天后到期”；当前订阅前加“使用中 · ”；更新中为“正在更新…”；
     /// 上次更新失败为“8,204 个节点 · 失败”（术语 state.failed）。
     func detail(_ s: Subscription) -> String {

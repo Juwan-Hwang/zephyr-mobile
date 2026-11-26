@@ -11,14 +11,15 @@ final class ErrorDetailTests: XCTestCase {
         XCTAssertFalse(ZephyrError(code: .internal, message: "geodata missing: x").isGeodataMissing)
     }
 
-    func testFailureDetailFoldsAndTruncates() {
-        XCTAssertNil(ZephyrError(code: .coreCrashed, message: " \n ").failureDetail)
-        XCTAssertEqual(ZephyrError(code: .coreCrashed, message: "a\n  b\tc").failureDetail, "a b c")
+    /// 契约 §22.b：错误详情只经传入的脱敏函数（真机 = 核心 redactDiagnostic），平台不再自己折叠 / 截断。
+    func testFailureDetailGoesThroughRedactor() {
+        var seen: [String] = []
+        let d = ZephyrError(code: .coreCrashed, message: "fetch https://x/sub?token=S").failureDetail { seen.append($0); return "R" }
+        XCTAssertEqual(seen, ["fetch https://x/sub?token=S"], "原文原样交给脱敏函数")
+        XCTAssertEqual(d, "R", "直接用脱敏结果")
         let long = String(repeating: "x", count: 500)
-        let d = ZephyrError(code: .coreCrashed, message: long).failureDetail
-        XCTAssertEqual(d?.count, ZephyrError.failureDetailMaxChars)
-        XCTAssertTrue(d?.hasSuffix("…") == true)
-        let exact = String(repeating: "y", count: ZephyrError.failureDetailMaxChars)
-        XCTAssertEqual(ZephyrError(code: .coreCrashed, message: exact).failureDetail, exact)
+        XCTAssertEqual(ZephyrError(code: .coreCrashed, message: long).failureDetail { $0 }?.count, 500, "截断由核心负责")
+        XCTAssertNil(ZephyrError(code: .coreCrashed, message: " \n ").failureDetail { $0 })
+        XCTAssertNil(ZephyrError(code: .coreCrashed, message: "x").failureDetail { _ in " " }, "脱敏后为空不显示")
     }
 }
