@@ -68,8 +68,12 @@ grep -q "^Status: ok" /tmp/am.txt || err "启动 Activity 失败"
 sleep 15
 pid=$(adb shell pidof "$PKG" | tr -d '\r' || true)
 if [ -z "$pid" ]; then
-  err "启动 15 秒后进程 $PKG 不在了"
-  adb logcat -d | grep -E "lowmemorykiller: Kill '$PKG'" && echo "::warning::进程是被 lowmemorykiller 杀的（模拟器内存不足，属基础设施问题，不是 .so 加载失败）"
+  # 被 lowmemorykiller 杀属模拟器内存问题：.so 已在上面逐个 dlopen 通过，下面的 logcat 检查仍会抓加载错误，这里只告警不判失败
+  if adb logcat -d | grep -E "lowmemorykiller: Kill '$PKG'"; then
+    echo "::warning::进程是被 lowmemorykiller 杀的（模拟器内存不足，属基础设施问题，不是 .so 加载失败），不判失败"
+  else
+    err "启动 15 秒后进程 $PKG 不在了"
+  fi
 fi
 adb logcat -d > /tmp/logcat.txt || true
 # 只看本 App：进程内日志 + 提到包名的系统日志（排除系统自带 App 的 nativeloader 噪音）
