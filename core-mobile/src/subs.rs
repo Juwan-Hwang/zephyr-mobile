@@ -286,6 +286,18 @@ impl SubStore {
         self.save()
     }
 
+    /// 设为生效订阅（契约 §22.a）：把该订阅移到列表第一位并落盘，其余订阅相对顺序不变。
+    /// 已是第一位时不写盘。返回调整后的列表。
+    pub fn set_active(&mut self, id: &str) -> Result<Vec<Subscription>, MobileError> {
+        let i = self.find(id)?;
+        if i != 0 {
+            let e = self.entries.remove(i);
+            self.entries.insert(0, e);
+            self.save()?;
+        }
+        Ok(self.list())
+    }
+
     /// 改自动更新间隔（小时，0 = 手动更新；契约 §15 导入码同范围 0–720）。
     pub fn set_auto_update(&mut self, id: &str, hours: i32) -> Result<Subscription, MobileError> {
         if !(0..=MAX_AUTO_UPDATE_HOURS).contains(&hours) {
@@ -429,5 +441,21 @@ mod tests {
         let later = 100 * 3_600_000;
         assert_eq!(s.due(later), vec![remote.id.clone()], "本地订阅无 url，永不到期");
         assert!(!SubStore::open(d.path()).unwrap().due(later).contains(&local.id), "重开后同样排除");
+    }
+    #[test]
+    fn set_active_moves_to_front_and_persists() {
+        let d = tempfile::tempdir().unwrap();
+        let mut s = SubStore::open(d.path()).unwrap();
+        let mk = |n: &str, h: &str| y(&[(n, h, 443)], &["MATCH,P"]);
+        let a = s.import("A".into(), None, &f(mk("a", "a.example"), 1), 0).unwrap();
+        let b = s.import("B".into(), None, &f(mk("b", "b.example"), 1), 0).unwrap();
+        let c = s.import("C".into(), None, &f(mk("c", "c.example"), 1), 0).unwrap();
+        let ids = |v: Vec<Subscription>| v.into_iter().map(|x| x.id).collect::<Vec<_>>();
+        assert_eq!(ids(s.set_active(&c.id).unwrap()), vec![c.id.clone(), a.id.clone(), b.id.clone()], "其余相对顺序不变");
+        assert_eq!(ids(SubStore::open(d.path()).unwrap().list()), vec![c.id.clone(), a.id.clone(), b.id.clone()], "落盘");
+        assert_eq!(ids(s.set_active(&c.id).unwrap())[0], c.id, "已是第一位：不变");
+        assert!(matches!(s.set_active("nope"), Err(MobileError::SubscriptionNotFound(_))));
+        s.delete(&c.id).unwrap();
+        assert_eq!(s.list()[0].id, a.id, "删除生效订阅后回退到下一个");
     }
 }

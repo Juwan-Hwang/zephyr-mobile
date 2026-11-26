@@ -478,6 +478,14 @@ impl MobileCore {
         self.sync_subscription_rules()
     }
 
+    /// 设为生效订阅（契约 §22.a）：移到订阅列表第一位，随后同步第 2 层订阅规则并热加载。
+    /// 节点库不重建（各订阅的节点都在库里，顺序不影响查询）。隧道运行中平台随后重写配置并 reloadConfig。
+    pub fn set_active_subscription(&self, id: String) -> Result<Vec<Subscription>, MobileError> {
+        let list = self.subs.lock().set_active(&id)?;
+        self.sync_subscription_rules()?;
+        Ok(list)
+    }
+
     /// 规则页第 2 层"订阅规则"：生效订阅（列表第一个，与运行配置一致）的 rules 编译进 rules/001.zr，
     /// MATCH 的去向作为最终策略；没有订阅时删除该层、最终策略回到 DIRECT。随后热加载全部层。
     pub fn sync_subscription_rules(&self) -> Result<(), MobileError> {
@@ -734,6 +742,28 @@ mod tests {
         assert_eq!(core.node_index().unwrap().total, 0);
         assert!(core.import_subscription("bad".into(), None, f("proxies: []".into()), 0, None).is_err());
         assert_eq!(core.subscriptions().len(), 0);
+    }
+
+    #[test]
+    fn set_active_subscription_switches_rule_layer() {
+        let d = tempfile::tempdir().unwrap();
+        let core = MobileCore::new(d.path().to_string_lossy().into()).unwrap();
+        let body = |h: &str, rule: &str| {
+            format!("proxies:\n  - {{name: \"{h}\", server: {h}.example, port: 443, type: trojan}}\nrules:\n  - {rule}\n  - MATCH,DIRECT\n")
+        };
+        let f = |b: String| FetchedSubscription { body: b, userinfo: None, now_millis: 1 };
+        let a = core.import_subscription("Alpha".into(), None, f(body("a", "DOMAIN,a.com,DIRECT")), 0, None).unwrap();
+        let b = core.import_subscription("Beta".into(), None, f(body("b", "DOMAIN,b.com,DIRECT")), 0, None).unwrap();
+        let layer2 = |c: &MobileCore| c.rule_stats().layers.into_iter().find(|l| l.kind == LayerKind::Subscription).map(|l| l.name);
+        assert_eq!(layer2(&core).as_deref(), Some("Alpha"), "生效订阅 = 列表第一个");
+        let list = core.set_active_subscription(b.id.clone()).unwrap();
+        assert_eq!(list.iter().map(|s| s.id.clone()).collect::<Vec<_>>(), vec![b.id.clone(), a.id.clone()]);
+        assert_eq!(layer2(&core).as_deref(), Some("Beta"), "第 2 层跟着切换");
+        assert_eq!(core.node_index().unwrap().total, 2, "节点库不变");
+        drop(core);
+        let core = MobileCore::new(d.path().to_string_lossy().into()).unwrap();
+        assert_eq!(core.subscriptions()[0].id, b.id, "重开后仍是 Beta");
+        assert!(matches!(core.set_active_subscription("nope".into()), Err(MobileError::SubscriptionNotFound(_))));
     }
 
     #[test]

@@ -1078,6 +1078,12 @@ public protocol MobileCoreProtocol : AnyObject {
      */
     func seedKernelGeodata(kernelHome: String) throws  -> [String]
     
+    /**
+     * 设为生效订阅（契约 §22.a）：移到订阅列表第一位，随后同步第 2 层订阅规则并热加载。
+     * 节点库不重建（各订阅的节点都在库里，顺序不影响查询）。隧道运行中平台随后重写配置并 reloadConfig。
+     */
+    func setActiveSubscription(id: String) throws  -> [Subscription]
+    
     func setFailoverPolicy(policy: FailoverPolicy) throws 
     
     /**
@@ -1748,6 +1754,18 @@ open func seedKernelGeodata(kernelHome: String)throws  -> [String] {
     return try  FfiConverterSequenceString.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
     uniffi_zephyr_mobile_core_fn_method_mobilecore_seed_kernel_geodata(self.uniffiClonePointer(),
         FfiConverterString.lower(kernelHome),$0
+    )
+})
+}
+    
+    /**
+     * 设为生效订阅（契约 §22.a）：移到订阅列表第一位，随后同步第 2 层订阅规则并热加载。
+     * 节点库不重建（各订阅的节点都在库里，顺序不影响查询）。隧道运行中平台随后重写配置并 reloadConfig。
+     */
+open func setActiveSubscription(id: String)throws  -> [Subscription] {
+    return try  FfiConverterSequenceTypeSubscription.lift(try rustCallWithError(FfiConverterTypeMobileError.lift) {
+    uniffi_zephyr_mobile_core_fn_method_mobilecore_set_active_subscription(self.uniffiClonePointer(),
+        FfiConverterString.lower(id),$0
     )
 })
 }
@@ -8482,6 +8500,17 @@ public func parseImportPayload(payload: String)throws  -> ImportPayload {
     )
 })
 }
+/**
+ * 折叠空白；`http://` / `https://` 开头的 URL 换成 `redactUrl` 的脱敏形式（去掉 token、路径与凭据）；
+ * 截断到 240 字。返回可直接显示的文本（仍不本地化，只作补充说明，标题照旧按 code 本地化）。
+ */
+public func redactDiagnostic(text: String) -> String {
+    return try!  FfiConverterString.lift(try! rustCall() {
+    uniffi_zephyr_mobile_core_fn_func_redact_diagnostic(
+        FfiConverterString.lower(text),$0
+    )
+})
+}
 
 private enum InitializationResult {
     case ok
@@ -8508,6 +8537,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_func_parse_import_payload() != 49370) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_func_redact_diagnostic() != 44515) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mihomoclient_active_connections() != 8862) {
@@ -8688,6 +8720,9 @@ private var initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_seed_kernel_geodata() != 38773) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_active_subscription() != 6446) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_zephyr_mobile_core_checksum_method_mobilecore_set_failover_policy() != 8372) {
