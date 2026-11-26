@@ -137,12 +137,12 @@ jobs:
   ios26:
     # J-4：iOS 26 Liquid Glass 快照录图 / 校验线。macos-15（Xcode 16）只编译 ZGlass 的回退分支，玻璃只能在这里看到。
     # 只跑 scheme ZephyrGlass（宿主 ZephyrGlassHost + ZephyrGlassSnapshotTests，#311），scheme Zephyr 的 142 张基线不在这里跑。
-    # 校验暂不阻塞（continue-on-error）：iOS 26 基线入库并稳定后再去掉。
+    # 校验阻塞合并（B 确认 #321 PR 与 main 10bd48f 连续两次真绿）；录图模式（record_ios26_snapshots）仍不阻塞。
     needs: detect
     if: ${{ inputs.record_ios26_snapshots || needs.detect.outputs.ios == 'true' }}
     runs-on: macos-26
     timeout-minutes: 90
-    continue-on-error: ${{ !inputs.record_ios26_snapshots }}
+    continue-on-error: ${{ inputs.record_ios26_snapshots == true }}
     env:
       SIM: iPhone 17
     steps:
