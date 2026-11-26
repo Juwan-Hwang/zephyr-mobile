@@ -490,4 +490,16 @@
     <string name="state_ok">Bình thường</string>
     <string name="state_expired">Đã hết hạn</string>
     <string name="state_failed">Thất bại</string>
+    <!-- #208: policy groups page and global-mode node picking -->
+    <string name="library_groups">Nhóm chính sách</string>
+    <string name="groups_offline">Kết nối để xem nhóm chính sách</string>
+    <string name="groups_none">Không có nhóm chính sách</string>
+    <string name="groups_type_select">Thủ công</string>
+    <string name="groups_type_url_test">Nhanh nhất</string>
+    <string name="groups_type_fallback">Dự phòng</string>
+    <string name="groups_type_load_balance">Cân bằng tải</string>
+    <string name="groups_type_relay">Chuyển tiếp</string>
+    <string name="groups_read_only">Nhóm này tự chọn nút.</string>
+    <string name="nodes_detail_use_global">Dùng cho chế độ toàn cục</string>
+    <string name="home_global_browse">Duyệt tất cả nút</string>
 </resources>

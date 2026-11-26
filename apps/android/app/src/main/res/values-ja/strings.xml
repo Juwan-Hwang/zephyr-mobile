@@ -490,4 +490,16 @@
     <string name="state_ok">正常</string>
     <string name="state_expired">期限切れ</string>
     <string name="state_failed">失敗</string>
+    <!-- #208: policy groups page and global-mode node picking -->
+    <string name="library_groups">ポリシーグループ</string>
+    <string name="groups_offline">接続するとポリシーグループを表示できます</string>
+    <string name="groups_none">ポリシーグループはありません</string>
+    <string name="groups_type_select">手動</string>
+    <string name="groups_type_url_test">最速</string>
+    <string name="groups_type_fallback">フォールバック</string>
+    <string name="groups_type_load_balance">負荷分散</string>
+    <string name="groups_type_relay">リレー</string>
+    <string name="groups_read_only">このグループはノードを自動で選びます。</string>
+    <string name="nodes_detail_use_global">グローバルモードで使用</string>
+    <string name="home_global_browse">すべてのノードを表示</string>
 </resources>

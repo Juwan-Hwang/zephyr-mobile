@@ -490,4 +490,16 @@
     <string name="state_ok">정상</string>
     <string name="state_expired">만료됨</string>
     <string name="state_failed">실패</string>
+    <!-- #208: policy groups page and global-mode node picking -->
+    <string name="library_groups">정책 그룹</string>
+    <string name="groups_offline">연결하면 정책 그룹을 볼 수 있습니다</string>
+    <string name="groups_none">정책 그룹 없음</string>
+    <string name="groups_type_select">수동</string>
+    <string name="groups_type_url_test">가장 빠름</string>
+    <string name="groups_type_fallback">대체</string>
+    <string name="groups_type_load_balance">부하 분산</string>
+    <string name="groups_type_relay">릴레이</string>
+    <string name="groups_read_only">이 그룹은 노드를 자동으로 선택합니다.</string>
+    <string name="nodes_detail_use_global">글로벌 모드에 사용</string>
+    <string name="home_global_browse">모든 노드 보기</string>
 </resources>

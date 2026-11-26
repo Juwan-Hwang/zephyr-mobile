@@ -524,4 +524,16 @@
     <string name="state_ok">Kawaida</string>
     <string name="state_expired">Imekwisha</string>
     <string name="state_failed">Imeshindwa</string>
+    <!-- #208: policy groups page and global-mode node picking -->
+    <string name="library_groups">Vikundi vya sera</string>
+    <string name="groups_offline">Unganisha ili kuona vikundi vya sera</string>
+    <string name="groups_none">Hakuna vikundi vya sera</string>
+    <string name="groups_type_select">Mwenyewe</string>
+    <string name="groups_type_url_test">Kasi zaidi</string>
+    <string name="groups_type_fallback">Mbadala</string>
+    <string name="groups_type_load_balance">Kusawazisha mzigo</string>
+    <string name="groups_type_relay">Upitishaji</string>
+    <string name="groups_read_only">Kikundi hiki huchagua nodi yake chenyewe.</string>
+    <string name="nodes_detail_use_global">Tumia kwa hali ya jumla</string>
+    <string name="home_global_browse">Vinjari nodi zote</string>
 </resources>

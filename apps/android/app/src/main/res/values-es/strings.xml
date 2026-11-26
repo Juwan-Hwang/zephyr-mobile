@@ -558,4 +558,16 @@
     <string name="state_ok">Normal</string>
     <string name="state_expired">Vencida</string>
     <string name="state_failed">Error</string>
+    <!-- #208: policy groups page and global-mode node picking -->
+    <string name="library_groups">Grupos de políticas</string>
+    <string name="groups_offline">Conéctate para ver los grupos de políticas</string>
+    <string name="groups_none">No hay grupos de políticas</string>
+    <string name="groups_type_select">Manual</string>
+    <string name="groups_type_url_test">Más rápido</string>
+    <string name="groups_type_fallback">Respaldo</string>
+    <string name="groups_type_load_balance">Balanceo de carga</string>
+    <string name="groups_type_relay">Encadenado</string>
+    <string name="groups_read_only">Este grupo elige su nodo automáticamente.</string>
+    <string name="nodes_detail_use_global">Usar en modo global</string>
+    <string name="home_global_browse">Ver todos los nodos</string>
 </resources>

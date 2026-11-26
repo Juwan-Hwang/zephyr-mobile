@@ -30,7 +30,7 @@ import com.zephyr.design.components.ZStatTile
 import com.zephyr.design.format.ZFormat
 import com.zephyr.engine.Settings
 
-enum class LibraryDest { Nodes, Subscriptions, Rules, Scenes, Settings, Widgets, TrustedWifi, LocalProxy }
+enum class LibraryDest { Nodes, Subscriptions, Rules, Scenes, Groups, Settings, Widgets, TrustedWifi, LocalProxy }
 
 /** Library sheet (prototype `libSheet`): 4 stat tiles + shortcuts. */
 @Composable
@@ -57,6 +57,9 @@ fun BoxScope.LibrarySheet(visible: Boolean, onDismiss: () -> Unit, onOpen: (Libr
         }
         Spacer(Modifier.height(20.dp))
         ZListGroup(level = ZSurfaceLevel.S1, shape = RoundedCornerShape(18.dp)) {
+            // #208: the subscription's own policy groups (contract §4), to pick a node in a select group.
+            ZSettingsRow(stringResource(R.string.library_groups), chevron = true, onClick = { onOpen(LibraryDest.Groups) })
+            ZDivider()
             ZSettingsRow(stringResource(R.string.library_widgets), chevron = true, onClick = { onOpen(LibraryDest.Widgets) })
             ZDivider()
             ZSettingsRow(stringResource(R.string.settings_trusted_wifi), value = settings.trustedWifi.firstOrNull() ?: stringResource(R.string.common_none), chevron = true, onClick = { onOpen(LibraryDest.TrustedWifi) })

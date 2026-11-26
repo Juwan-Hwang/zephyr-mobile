@@ -558,4 +558,16 @@
     <string name="state_ok">ٹھیک</string>
     <string name="state_expired">میعاد ختم</string>
     <string name="state_failed">ناکام</string>
+    <!-- #208: policy groups page and global-mode node picking -->
+    <string name="library_groups">پالیسی گروپس</string>
+    <string name="groups_offline">پالیسی گروپس دیکھنے کے لیے کنیکٹ کریں</string>
+    <string name="groups_none">کوئی پالیسی گروپ نہیں</string>
+    <string name="groups_type_select">دستی</string>
+    <string name="groups_type_url_test">تیز ترین</string>
+    <string name="groups_type_fallback">متبادل</string>
+    <string name="groups_type_load_balance">لوڈ بیلنس</string>
+    <string name="groups_type_relay">ریلے</string>
+    <string name="groups_read_only">یہ گروپ اپنا نوڈ خود منتخب کرتا ہے۔</string>
+    <string name="nodes_detail_use_global">گلوبل موڈ میں استعمال کریں</string>
+    <string name="home_global_browse">تمام نوڈز دیکھیں</string>
 </resources>

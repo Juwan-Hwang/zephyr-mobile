@@ -592,4 +592,16 @@
     <string name="state_ok">В норме</string>
     <string name="state_expired">Срок истёк</string>
     <string name="state_failed">Ошибка</string>
+    <!-- #208: policy groups page and global-mode node picking -->
+    <string name="library_groups">Группы политик</string>
+    <string name="groups_offline">Подключитесь, чтобы увидеть группы политик</string>
+    <string name="groups_none">Нет групп политик</string>
+    <string name="groups_type_select">Вручную</string>
+    <string name="groups_type_url_test">Самый быстрый</string>
+    <string name="groups_type_fallback">Резерв</string>
+    <string name="groups_type_load_balance">Балансировка</string>
+    <string name="groups_type_relay">Цепочка</string>
+    <string name="groups_read_only">Эта группа выбирает узел автоматически.</string>
+    <string name="nodes_detail_use_global">Использовать в глобальном режиме</string>
+    <string name="home_global_browse">Просмотреть все узлы</string>
 </resources>
