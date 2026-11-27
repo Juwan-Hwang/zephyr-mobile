@@ -358,7 +358,7 @@ enum class Appearance {
 data class DnsSettings(
     val fakeIp: Boolean = true,
     val nameservers: List<String> = listOf("https://dns.alidns.com/dns-query", "https://doh.pub/dns-query"),
-    val fallback: List<String> = listOf("https://1.1.1.1/dns-query"),
+    val fallback: List<String> = emptyList(),
     val ipv6: Boolean = false,
 )
 
