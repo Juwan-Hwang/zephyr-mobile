@@ -426,7 +426,13 @@ class CoreEngine(
             controllerSocket = controllerSocket, findProcess = true, logLevel = LOG_LEVEL_DEFAULT, // §16.h
             localProxy = com.zephyr.core.mobile.LocalProxy(proxyPort(settings).toUShort(), proxyAuth(settings)),
         )
-        return withContext(io) { wrap { c.runtimeConfig(id, opts) } }
+        return withContext(io) {
+            wrap { c.runtimeConfig(id, opts) }.also {
+                // §23.c: tell the user's log which DNS/hosts/sniffer keys the subscription keeps (names only).
+                runCatching { c.runtimeConfigNotes(id) }.getOrNull()?.takeIf { n -> n.isNotEmpty() }
+                    ?.let { n -> android.util.Log.i("Zephyr", "runtime config keeps subscription keys: ${n.joinToString(", ")}") }
+            }
+        }
     }
 
     /**
