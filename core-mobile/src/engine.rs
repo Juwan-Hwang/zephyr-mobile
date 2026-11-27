@@ -472,6 +472,14 @@ impl MobileCore {
         crate::runtime_config::build_runtime_config_with(&body, &options, &plan)
     }
 
+    /// 该订阅里被运行配置原样保留的解析 / 嗅探相关键（契约 §23.c），只有键名。平台在 start / reload 时打一行 info 日志。
+    pub fn runtime_config_notes(&self, subscription_id: String) -> Result<Vec<String>, MobileError> {
+        let s = self.subs.lock();
+        let e = &s.entries[s.find(&subscription_id)?];
+        let body = s.body(e.slot).ok_or_else(|| MobileError::SubscriptionNotFound(subscription_id.clone()))?;
+        Ok(crate::runtime_config::retained_subscription_keys(&body))
+    }
+
     pub fn delete_subscription(&self, id: String) -> Result<(), MobileError> {
         self.subs.lock().delete(&id)?;
         self.rebuild_from_subscriptions(None)?;

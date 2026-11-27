@@ -75,6 +75,77 @@ pub struct LocalProxy {
 /// 内核启动前缺地理数据才会用到，且 mihomo-mobile 有界下载（默认 15 秒）；推荐做法仍是随安装包分发（docs/geodata.md）。
 pub const GEOX_MIRROR: &str = "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release";
 
+/// 契约 v0.10 及以前的默认 DNS fallback。大陆直连不可达（mihomo 直连拨号 fallback，非 CN 结果要等它超时），
+/// v0.11 起默认改为空；已存设置恰好等于这个旧默认时按空处理（§23.a），平台不必各自迁移。
+pub const LEGACY_DEFAULT_FALLBACK: &[&str] = &["https://1.1.1.1/dns-query"];
+
+/// 生效的 fallback：恰好等于旧默认 → 空。
+pub fn effective_fallback(v: &[String]) -> &[String] {
+    if v.len() == LEGACY_DEFAULT_FALLBACK.len() && v.iter().zip(LEGACY_DEFAULT_FALLBACK).all(|(a, b)| a.trim() == *b) {
+        &[]
+    } else {
+        v
+    }
+}
+
+/// Android 上 PROCESS-NAME / PROCESS-PATH 拿不到进程信息（SELinux 拒 NETLINK_INET_DIAG 与 /proc/net，
+/// 且未配 include/exclude-package 时不读包列表，§21），strict 只会让每条连接白白查一次。核心在 Android 上一律 off（§23.b）。
+fn find_process_mode(requested: bool) -> &'static str {
+    if requested && !cfg!(target_os = "android") {
+        "strict"
+    } else {
+        "off"
+    }
+}
+
+/// 订阅里被运行配置原样保留、且会影响解析或直连目的地的键（§23.c）。平台在 start / reload 时打一行 info 日志，便于排障。
+/// 只列键名和开关，不输出取值（可能含内网地址）。
+pub fn retained_subscription_keys(subscription_yaml: &str) -> Vec<String> {
+    let Ok(Value::Mapping(m)) = serde_yaml::from_str::<Value>(subscription_yaml) else { return vec![] };
+    let mut out = vec![];
+    if let Some(Value::Mapping(dns)) = m.get(s("dns")) {
+        for k in [
+            "default-nameserver",
+            "direct-nameserver",
+            "direct-nameserver-follow-policy",
+            "nameserver-policy",
+            "proxy-server-nameserver",
+            "fallback-filter",
+            "respect-rules",
+            "fake-ip-filter",
+            "use-hosts",
+            "use-system-hosts",
+        ] {
+            if dns.get(s(k)).is_some_and(|v| !v.is_null()) {
+                out.push(format!("dns.{k}"));
+            }
+        }
+    }
+    if m.get(s("hosts")).is_some_and(|v| !v.is_null()) {
+        out.push("hosts".into());
+    }
+    if let Some(Value::Mapping(sn)) = m.get(s("sniffer")) {
+        let enabled = sn.get(s("enable")).and_then(|v| v.as_bool()).unwrap_or(false);
+        out.push(format!("sniffer(enable={enabled})"));
+        if enabled {
+            let mut over = sn.get(s("override-destination")).and_then(|v| v.as_bool()).unwrap_or(false);
+            if let Some(Value::Mapping(sniff)) = sn.get(s("sniff")) {
+                for (proto, cfg) in sniff {
+                    let o = cfg.get("override-destination").and_then(|v| v.as_bool()).unwrap_or(over);
+                    if o {
+                        out.push(format!("sniffer.{}.override-destination", proto.as_str().unwrap_or("?")));
+                    }
+                }
+                over = false;
+            }
+            if over {
+                out.push("sniffer.override-destination".into());
+            }
+        }
+    }
+    out
+}
+
 fn s(v: &str) -> Value {
     Value::String(v.into())
 }
@@ -102,7 +173,7 @@ fn overlay(o: &RuntimeOptions) -> Value {
     m.insert(s("allow-lan"), Value::Bool(false));
     m.insert(s("unified-delay"), Value::Bool(true));
     m.insert(s("tcp-concurrent"), Value::Bool(true));
-    m.insert(s("find-process-mode"), s(if o.find_process { "strict" } else { "off" }));
+    m.insert(s("find-process-mode"), s(find_process_mode(o.find_process)));
     // 本地监听端口全部关掉：流量只从 TUN 进
     for k in ["port", "socks-port", "mixed-port", "redir-port", "tproxy-port"] {
         m.insert(s(k), Value::Null);
@@ -132,7 +203,8 @@ fn overlay(o: &RuntimeOptions) -> Value {
         dns.insert(s("fake-ip-range"), s("198.18.0.1/16"));
     }
     dns.insert(s("nameserver"), list(&o.dns.nameservers));
-    dns.insert(s("fallback"), if o.dns.fallback.is_empty() { Value::Null } else { list(&o.dns.fallback) });
+    let fallback = effective_fallback(&o.dns.fallback);
+    dns.insert(s("fallback"), if fallback.is_empty() { Value::Null } else { list(fallback) });
     m.insert(s("dns"), Value::Mapping(dns));
 
     let mut tun = Mapping::new();
@@ -353,6 +425,37 @@ mod tests {
         assert_eq!(v["tun"]["enable"].as_bool(), Some(false));
         assert!(!build_runtime_config("proxies: []\n", &opts(None)).unwrap().contains("null"));
         assert_eq!(v["rules"][0].as_str(), Some("MATCH,DIRECT"));
+    }
+
+    #[test]
+    fn legacy_default_fallback_dropped() {
+        let mut o = opts(Some(3));
+        o.dns.fallback = vec!["https://1.1.1.1/dns-query".into()];
+        let v: Value = serde_yaml::from_str(&build_runtime_config(SUB, &o).unwrap()).unwrap();
+        assert!(v["dns"].get("fallback").is_none(), "旧默认按空处理");
+        o.dns.fallback = vec!["https://1.1.1.1/dns-query#🚀 节点".into()];
+        let v: Value = serde_yaml::from_str(&build_runtime_config(SUB, &o).unwrap()).unwrap();
+        assert_eq!(v["dns"]["fallback"][0].as_str(), Some("https://1.1.1.1/dns-query#🚀 节点"), "用户自己改过的保留");
+    }
+
+    #[test]
+    fn find_process_requested() {
+        let mut o = opts(Some(3));
+        o.find_process = true;
+        let v: Value = serde_yaml::from_str(&build_runtime_config(SUB, &o).unwrap()).unwrap();
+        let want = if cfg!(target_os = "android") { "off" } else { "strict" };
+        assert_eq!(v["find-process-mode"].as_str(), Some(want));
+    }
+
+    #[test]
+    fn retained_keys_listed_without_values() {
+        let sub = format!("{SUB}hosts: {{a.lan: 10.0.0.2}}\nsniffer:\n  enable: true\n  sniff:\n    HTTP: {{ports: [80], override-destination: true}}\n    TLS: {{ports: [443]}}\n");
+        let sub = sub.replace("  fallback: [8.8.8.8]\n", "  fallback: [8.8.8.8]\n  direct-nameserver: [223.5.5.5]\n");
+        let keys = retained_subscription_keys(&sub);
+        assert_eq!(keys, vec!["dns.direct-nameserver", "dns.nameserver-policy", "hosts", "sniffer(enable=true)", "sniffer.HTTP.override-destination"]);
+        assert!(keys.iter().all(|k| !k.contains("10.0") && !k.contains("223.")));
+        assert!(retained_subscription_keys("proxies: []\n").is_empty());
+        assert!(retained_subscription_keys("::: not yaml").is_empty());
     }
 
     #[test]

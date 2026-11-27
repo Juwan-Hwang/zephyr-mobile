@@ -219,6 +219,7 @@ v0.1 追加：`stale_token`（查询句柄已淘汰，UI 重新 queryNodes 即�
 - v0.6（2026-11-21）追加 §18：设计评审执行——`NodeIndex.reachableCount`（可选）与节点页头部判断句、状态文字术语（状态不只靠颜色）、三端（含鸿蒙）列。只追加，不改名。
 - v0.7（2026-11-22）追加 §19：场景漏斗 `sceneFunnel`（首页场景卡迷你漏斗按场景取数，回应 #1 J-1），三端（含鸿蒙）列。只追加，不改名。
 - v0.8（2026-11-25）追加 §20：内核地理数据——`zm_start` 前置检查（有界下载、`geodata missing:` 错误、`zm_set_geodata_timeout`）、`runtimeConfig` 的 `geox-url` 镜像默认值、`seedKernelGeodata`、安装包分发快照。只追加，不改名。
+- v0.11（2026-11-27）追加 §23：默认 DNS fallback 改为空（旧默认按空处理）；Android 上进程识别一律关；`runtimeConfigNotes`（订阅保留的解析 / 嗅探键，排障日志用）。只追加，不改名。
 - v0.10（2026-11-26）追加 §22：`setActiveSubscription`（订阅列表点选设为生效订阅）；U27 修订——折叠的「错误详情」可显示经 `redactDiagnostic` 脱敏的原文。只追加，不改名。
 - v0.5（2026-11-21）追加 §17：鸿蒙（HarmonyOS，角色 D，#241）列——§11 平台层、§16.a②④⑤、§16.f、§16.i④ 的鸿蒙行为，鸿蒙平台差异（无控制中心磁贴、无实况窗、无换图标），导航结构与内部深链的决定。只追加，不改名。
 
@@ -239,7 +240,7 @@ record DnsSettings { fakeIp: Bool, nameservers: [String], fallback: [String], ip
 enum TunStack { system, gvisor, mixed }
 record TunSettings { stack: TunStack, mtu: Int32, ipv6: Bool, strictRoute: Bool }
 ```
-默认值（Mock 与首次启动一致）：`DnsSettings(fakeIp: true, nameservers: ["https://dns.alidns.com/dns-query", "https://doh.pub/dns-query"], fallback: ["https://1.1.1.1/dns-query"], ipv6: false)`，`TunSettings(stack: gvisor, mtu: 9000, ipv6: false, strictRoute: true)`。iOS NE 默认 gvisor；Android 同。
+默认值（Mock 与首次启动一致）：`DnsSettings(fakeIp: true, nameservers: ["https://dns.alidns.com/dns-query", "https://doh.pub/dns-query"], fallback: [], ipv6: false)`（v0.11 起 fallback 默认空，见 §23.a），`TunSettings(stack: gvisor, mtu: 9000, ipv6: false, strictRoute: true)`。iOS NE 默认 gvisor；Android 同。
 
 ### 规则测试与 IPv6
 - 输入 IPv6 字面量（含 `[...]`）按 IP 处理：域名层（1–5）跳过，只走 IP 层（IP-CIDR6/GEOIP）与 MATCH。fixtures 无样本；Mock 落到 MATCH 即正确。
@@ -1024,4 +1025,22 @@ redactDiagnostic(text: String) -> String
   折叠空白；`http://` / `https://` URL 换成 `redactUrl` 的脱敏形式（去掉 token、路径与凭据）；截断到 240 字（超出加 `…`）。三端（含鸿蒙）调用同一函数，不各自实现。
 - 日志页与「分享日志」保持现状（§16.c U19），不受本节影响。
 - 其余位置（Toast、横幅、通知、小组件）显示 `message` 原文仍按缺陷处理。
+
+## 23. v0.11 追加（2026-11-27，S25 微信 / QQ 直连排障，#1 C 18:40 / 19:08，只追加）
+
+### 23.a 默认 DNS fallback 改为空
+旧默认 `fallback: ["https://1.1.1.1/dns-query"]` 由 mihomo 直连拨号，大陆不可达；非 CN 或空结果要等它超时，走代理的 UDP（QUIC）因本地解析超时失败、境外 GEOIP 匹配首包变慢（C 日志 18:31:14 / 27 / 37）。
+- §13 默认值改为 `fallback: []`。三端与 MockEngine 同步改默认值。
+- 迁移由核心做：`DnsSettings.fallback` **恰好等于**旧默认（单项 `https://1.1.1.1/dns-query`）时，运行配置按空处理（核心 `LEGACY_DEFAULT_FALLBACK` / `effective_fallback`）。平台不必各自迁移已存设置；设置页显示可以照旧，下次保存时写成空即可。用户自己改过的值（含 `#组名` 经代理写法）原样使用。
+- 订阅自带 `nameserver` / `fallback` 仍被 Zephyr 设置整段替换（不变）；是否改为「订阅写了就不覆盖」另议，本节不改。
+
+### 23.b Android 上进程识别一律关
+Android 普通应用拿不到连接所属进程（SELinux 拒 NETLINK_INET_DIAG 与 /proc/net；未配 include/exclude-package 时不读包列表，§21），`PROCESS-NAME` / `PROCESS-PATH` 本来就不会命中，`strict` 只会让每条连接白白查一次。核心在 Android 构建上无论 `RuntimeOptions.findProcess` 传什么都写 `find-process-mode: off`；iOS 照旧由平台传 false。规则页对 PROCESS 规则的展示不变。
+
+### 23.c `runtimeConfigNotes`
+```
+runtimeConfigNotes(subscriptionId: String) throws -> [String]
+```
+返回该订阅里被运行配置**原样保留**、会影响解析或直连目的地的键名：`dns.default-nameserver`、`dns.direct-nameserver`、`dns.direct-nameserver-follow-policy`、`dns.nameserver-policy`、`dns.proxy-server-nameserver`、`dns.fallback-filter`、`dns.respect-rules`、`dns.fake-ip-filter`、`dns.use-hosts`、`dns.use-system-hosts`、`hosts`、`sniffer(enable=…)`、`sniffer.<协议>.override-destination`。只有键名和开关，不含取值。不存在 → `subscription_not_found`。
+- 平台：`start` / `reloadConfig` 前调用一次，非空时打一行 info 日志 `runtime config keeps subscription keys: …`；不进 UI。
 
