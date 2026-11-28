@@ -1,0 +1,1592 @@
+{
+  "string": [
+    {
+      "name": "activity_back",
+      "value": "‹ Conexiones recientes"
+    },
+    {
+      "name": "activity_close_host_a11y",
+      "value": "Cerrar las conexiones a %1$s"
+    },
+    {
+      "name": "activity_close_none",
+      "value": "No hay conexiones activas"
+    },
+    {
+      "name": "activity_empty",
+      "value": "Al conectarte, aquí aparecerán los dominios visitados recientemente."
+    },
+    {
+      "name": "activity_host_a11y",
+      "value": "Detalles de conexión de %1$s"
+    },
+    {
+      "name": "activity_no_app_note",
+      "value": "Aún no se sabe qué app abrió cada conexión, así que solo se muestran los dominios."
+    },
+    {
+      "name": "activity_title",
+      "value": "Conexiones recientes"
+    },
+    {
+      "name": "command_action_open",
+      "value": "Abrir"
+    },
+    {
+      "name": "command_action_test",
+      "value": "Probar"
+    },
+    {
+      "name": "command_chip_action",
+      "value": "Acción"
+    },
+    {
+      "name": "command_chip_region",
+      "value": "Región"
+    },
+    {
+      "name": "command_chip_scene",
+      "value": "Escenario"
+    },
+    {
+      "name": "command_chip_scope",
+      "value": "Alcance"
+    },
+    {
+      "name": "command_chip_service",
+      "value": "Servicio"
+    },
+    {
+      "name": "command_direct_note",
+      "value": "El tráfico de %1$s no pasará por el proxy."
+    },
+    {
+      "name": "command_direct_title",
+      "value": "Conectar %1$s directamente"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "Pulsa Intro para ejecutar"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "Prueba de reglas"
+    },
+    {
+      "name": "command_no_nodes_available",
+      "value": "No hay nodos disponibles"
+    },
+    {
+      "name": "command_placeholder",
+      "value": "Buscar o introducir comando"
+    },
+    {
+      "name": "command_plan_exit_title",
+      "value": "%1$s usa nodos de %2$s"
+    },
+    {
+      "name": "command_plan_fallback_pause",
+      "value": "Si no hay ningún nodo de %1$s disponible, %2$s se pausará."
+    },
+    {
+      "name": "command_plan_fallback_scene",
+      "value": "Si no hay ningún nodo de %1$s disponible, se usarán otros nodos del escenario."
+    },
+    {
+      "name": "command_plan_no_nodes",
+      "value": "No hay nodos de %2$s en %1$s."
+    },
+    {
+      "name": "command_plan_releases_pin",
+      "value": "%1$s dejará de usar su salida fija %2$s."
+    },
+    {
+      "name": "command_region_de",
+      "value": "Alemania"
+    },
+    {
+      "name": "command_region_gb",
+      "value": "Reino Unido"
+    },
+    {
+      "name": "command_region_hk",
+      "value": "Hong Kong"
+    },
+    {
+      "name": "command_region_jp",
+      "value": "Japón"
+    },
+    {
+      "name": "command_region_kr",
+      "value": "Corea"
+    },
+    {
+      "name": "command_region_sg",
+      "value": "Singapur"
+    },
+    {
+      "name": "command_region_tw",
+      "value": "Taiwán"
+    },
+    {
+      "name": "command_region_us",
+      "value": "EE. UU."
+    },
+    {
+      "name": "command_scene_ai",
+      "value": "el escenario AI"
+    },
+    {
+      "name": "command_scene_named",
+      "value": "el escenario %1$s"
+    },
+    {
+      "name": "command_section_command",
+      "value": "Comandos"
+    },
+    {
+      "name": "command_section_suggestions",
+      "value": "Sugerencias"
+    },
+    {
+      "name": "command_see_all_nodes",
+      "value": "Ver los %1$s en la biblioteca de nodos"
+    },
+    {
+      "name": "command_show_all",
+      "value": "Mostrar todo (%1$s)"
+    },
+    {
+      "name": "command_test_rule",
+      "value": "¿Por dónde va %1$s?"
+    },
+    {
+      "name": "command_uhd_auto_note",
+      "value": "A partir de ahora, el cambio automático solo elegirá nodos 4K."
+    },
+    {
+      "name": "command_uhd_clear_note",
+      "value": "El escenario %1$s solo usa nodos 4K. Se volverán a usar todos los nodos; el nodo actual se mantiene."
+    },
+    {
+      "name": "command_uhd_fastest",
+      "value": "el nodo 4K más rápido"
+    },
+    {
+      "name": "command_uhd_none",
+      "value": "Ningún nodo admite 4K."
+    },
+    {
+      "name": "command_uhd_title_all",
+      "value": "%1$s: todos los nodos"
+    },
+    {
+      "name": "command_uhd_title_only",
+      "value": "%1$s: solo nodos 4K"
+    },
+    {
+      "name": "command_zephyr_only",
+      "value": "Solo se aplica en Zephyr. La configuración de tu suscripción no cambia."
+    },
+    {
+      "name": "common_add",
+      "value": "Añadir"
+    },
+    {
+      "name": "common_adding",
+      "value": "Añadiendo…"
+    },
+    {
+      "name": "common_back_to",
+      "value": "Volver a %1$s"
+    },
+    {
+      "name": "common_cancel",
+      "value": "Cancelar"
+    },
+    {
+      "name": "common_change",
+      "value": "Cambiar"
+    },
+    {
+      "name": "common_clear",
+      "value": "Borrar"
+    },
+    {
+      "name": "common_close",
+      "value": "Cerrar"
+    },
+    {
+      "name": "common_connect",
+      "value": "Conectar"
+    },
+    {
+      "name": "common_current",
+      "value": "Actual"
+    },
+    {
+      "name": "common_direct",
+      "value": "Directo"
+    },
+    {
+      "name": "common_done",
+      "value": "Listo"
+    },
+    {
+      "name": "common_exit_ip_changes",
+      "value": "La IP de salida cambiará"
+    },
+    {
+      "name": "common_expiry_date",
+      "value": "Caduca el %1$s"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "Caducada"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "Caduca hoy"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "Caduca mañana"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "Caduca el %1$s"
+    },
+    {
+      "name": "common_home",
+      "value": "Inicio"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "Midiendo latencia"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "Latencia: tiempo de espera agotado"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "Latencia sin medir"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "Tiempo agotado"
+    },
+    {
+      "name": "common_library",
+      "value": "Biblioteca"
+    },
+    {
+      "name": "common_list_separator",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "common_local_data_note",
+      "value": "Las suscripciones y los datos de tráfico solo se guardan en este dispositivo."
+    },
+    {
+      "name": "common_local_network",
+      "value": "Red de este dispositivo"
+    },
+    {
+      "name": "common_mode_direct_hint",
+      "value": "Omitir el proxy"
+    },
+    {
+      "name": "common_mode_global_hint",
+      "value": "Todo el tráfico por un nodo"
+    },
+    {
+      "name": "common_mode_rule_hint",
+      "value": "Según el escenario"
+    },
+    {
+      "name": "common_open_settings",
+      "value": "Abrir ajustes"
+    },
+    {
+      "name": "common_pair_and",
+      "value": "%1$s y %2$s"
+    },
+    {
+      "name": "common_retesting",
+      "value": "Probando…"
+    },
+    {
+      "name": "common_scene_ai",
+      "value": "AI"
+    },
+    {
+      "name": "common_scene_other",
+      "value": "Otros"
+    },
+    {
+      "name": "common_scene_video",
+      "value": "Vídeo"
+    },
+    {
+      "name": "common_share",
+      "value": "Compartir"
+    },
+    {
+      "name": "common_source_auto",
+      "value": "Selección de Zephyr"
+    },
+    {
+      "name": "common_source_group",
+      "value": "Grupo de la suscripción"
+    },
+    {
+      "name": "common_status_connected",
+      "value": "Conectado"
+    },
+    {
+      "name": "common_status_connecting_ellipsis",
+      "value": "Conectando…"
+    },
+    {
+      "name": "common_status_disconnecting",
+      "value": "Desconectando"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "Ahora mismo"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "ahora mismo"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "Descarga %1$s %2$s por segundo, subida %3$s %4$s por segundo"
+    },
+    {
+      "name": "common_try_again",
+      "value": "Reintentar"
+    },
+    {
+      "name": "common_updating",
+      "value": "Actualizando…"
+    },
+    {
+      "name": "connect_no_subscription",
+      "value": "Aún no hay ninguna suscripción"
+    },
+    {
+      "name": "home_action_load_nodes",
+      "value": "cargar los nodos"
+    },
+    {
+      "name": "home_action_preview_exit",
+      "value": "previsualizar la salida"
+    },
+    {
+      "name": "home_action_retest",
+      "value": "volver a probar"
+    },
+    {
+      "name": "home_action_switch_exit",
+      "value": "cambiar la salida"
+    },
+    {
+      "name": "home_action_switch_mode",
+      "value": "cambiar de modo"
+    },
+    {
+      "name": "home_action_switch_node",
+      "value": "cambiar de nodo"
+    },
+    {
+      "name": "home_action_switch_source",
+      "value": "cambiar el origen"
+    },
+    {
+      "name": "home_action_undo",
+      "value": "deshacer"
+    },
+    {
+      "name": "home_apply_failed",
+      "value": "No se ha podido aplicar: %1$s"
+    },
+    {
+      "name": "home_confirm_apps",
+      "value": "¿Cambiar la IP de salida de %1$s?"
+    },
+    {
+      "name": "home_confirm_scene",
+      "value": "¿Cambiar la IP de salida del escenario %1$s?"
+    },
+    {
+      "name": "home_confirm_unchanged",
+      "value": "%1$s no cambia."
+    },
+    {
+      "name": "home_error_failed",
+      "value": "No se ha podido %1$s"
+    },
+    {
+      "name": "home_error_node_gone",
+      "value": "No se ha podido %1$s: el nodo ya no existe"
+    },
+    {
+      "name": "home_error_not_connected",
+      "value": "Conéctate primero para %1$s"
+    },
+    {
+      "name": "home_failover_none",
+      "value": "La salida de %1$s no responde. La IP de salida no cambiará automáticamente."
+    },
+    {
+      "name": "home_failover_switched",
+      "value": "La salida de %1$s ha cambiado automáticamente a %2$s"
+    },
+    {
+      "name": "home_failure_core",
+      "value": "No se ha podido iniciar el núcleo"
+    },
+    {
+      "name": "home_failure_network",
+      "value": "Red no disponible"
+    },
+    {
+      "name": "home_failure_no_subscription",
+      "value": "Primero añade una suscripción"
+    },
+    {
+      "name": "home_failure_vpn_permission",
+      "value": "Se necesita permiso de VPN"
+    },
+    {
+      "name": "home_global_body",
+      "value": "Todo el tráfico pasa por %1$s. Los escenarios están en pausa."
+    },
+    {
+      "name": "home_global_body_any",
+      "value": "Todo el tráfico pasa por un solo nodo. Los escenarios están en pausa."
+    },
+    {
+      "name": "home_global_change_node",
+      "value": "Cambiar nodo"
+    },
+    {
+      "name": "home_global_change_note",
+      "value": "Todas las apps saldrán por %1$s."
+    },
+    {
+      "name": "home_global_change_to",
+      "value": "Cambiar a %1$s"
+    },
+    {
+      "name": "home_global_use_rule",
+      "value": "Usar modo regla"
+    },
+    {
+      "name": "home_mini_funnel_a11y",
+      "value": "Accesibles: %1$s, por debajo de 200 milisegundos: %2$s"
+    },
+    {
+      "name": "home_now_all_nodes",
+      "value": "%1$s vuelve a usar todos los nodos"
+    },
+    {
+      "name": "home_now_direct",
+      "value": "%1$s ahora se conecta directamente"
+    },
+    {
+      "name": "home_now_uhd_only",
+      "value": "%1$s ahora usa solo nodos 4K"
+    },
+    {
+      "name": "home_now_uses",
+      "value": "%1$s ahora usa %2$s"
+    },
+    {
+      "name": "home_now_uses_uhd",
+      "value": "%1$s ahora usa %2$s (solo 4K)"
+    },
+    {
+      "name": "home_pin_line",
+      "value": "%1$s: %2$s"
+    },
+    {
+      "name": "home_scan_progress",
+      "value": "Probando %1$d/%2$d"
+    },
+    {
+      "name": "home_scan_running",
+      "value": "Probando…"
+    },
+    {
+      "name": "home_scene_details_a11y",
+      "value": "Detalles del escenario %1$s"
+    },
+    {
+      "name": "home_scene_next_region",
+      "value": "Región siguiente: %1$s"
+    },
+    {
+      "name": "home_scene_prev_region",
+      "value": "Región anterior: %1$s"
+    },
+    {
+      "name": "home_scene_services_down",
+      "value": "%1$s no disponible"
+    },
+    {
+      "name": "home_scene_services_ok",
+      "value": "%1$s OK"
+    },
+    {
+      "name": "home_scenes_tested",
+      "value": "Probado %1$s"
+    },
+    {
+      "name": "home_scrub_hint",
+      "value": "Desliza a la izquierda o a la derecha para cambiar de región"
+    },
+    {
+      "name": "home_spark_a11y",
+      "value": "Velocidad de descarga de los últimos 90 segundos"
+    },
+    {
+      "name": "home_switched_to",
+      "value": "Cambiado a %1$s"
+    },
+    {
+      "name": "home_today_usage",
+      "value": "Hoy %1$s"
+    },
+    {
+      "name": "library_widgets",
+      "value": "Widgets y ajustes rápidos"
+    },
+    {
+      "name": "licenses_intro",
+      "value": "El código propio de Zephyr tiene licencia MIT. La app incluye mihomo (GPL-3.0), por lo que se distribuye en conjunto bajo GPL-3.0. Código fuente correspondiente: %1$s, etiqueta %2$s."
+    },
+    {
+      "name": "licenses_section_app",
+      "value": "Licencia de Zephyr"
+    },
+    {
+      "name": "licenses_section_notices",
+      "value": "Avisos de terceros"
+    },
+    {
+      "name": "licenses_section_texts",
+      "value": "Textos de licencias"
+    },
+    {
+      "name": "licenses_unavailable",
+      "value": "Faltan los archivos de licencia en esta compilación."
+    },
+    {
+      "name": "local_proxy_apply_failed",
+      "value": "No se ha podido aplicar el cambio"
+    },
+    {
+      "name": "local_proxy_auth_footer",
+      "value": "Si está activado, conectarse al puerto local requiere un nombre de usuario y una contraseña, lo que impide que otras apps usen el proxy sin permiso."
+    },
+    {
+      "name": "local_proxy_conceal",
+      "value": "Ocultar contraseña"
+    },
+    {
+      "name": "local_proxy_concealed",
+      "value": "Contraseña oculta"
+    },
+    {
+      "name": "local_proxy_copied",
+      "value": "Copiado"
+    },
+    {
+      "name": "local_proxy_copy_http",
+      "value": "Copiar URL del proxy HTTP"
+    },
+    {
+      "name": "local_proxy_copy_socks",
+      "value": "Copiar URL del proxy SOCKS5"
+    },
+    {
+      "name": "local_proxy_credential_row",
+      "value": "Contraseña"
+    },
+    {
+      "name": "local_proxy_credentials",
+      "value": "Credenciales"
+    },
+    {
+      "name": "local_proxy_footer",
+      "value": "Si está activado, Zephyr solo escucha en 127.0.0.1, así que otros dispositivos de tu red no podrán conectarse."
+    },
+    {
+      "name": "local_proxy_port",
+      "value": "Puerto"
+    },
+    {
+      "name": "local_proxy_port_footer",
+      "value": "Otras apps pueden usar las reglas y los escenarios de Zephyr a través de este puerto en 127.0.0.1."
+    },
+    {
+      "name": "local_proxy_port_invalid",
+      "value": "Introduce un puerto entre %1$d y %2$d"
+    },
+    {
+      "name": "local_proxy_regenerate",
+      "value": "Generar nueva contraseña"
+    },
+    {
+      "name": "local_proxy_regenerate_footer",
+      "value": "Al generarla, la contraseña anterior deja de funcionar al instante; las apps que hayas configurado necesitarán la nueva."
+    },
+    {
+      "name": "local_proxy_regenerated",
+      "value": "Se ha generado una nueva contraseña"
+    },
+    {
+      "name": "local_proxy_reveal",
+      "value": "Mostrar contraseña"
+    },
+    {
+      "name": "local_proxy_security",
+      "value": "Seguridad"
+    },
+    {
+      "name": "local_proxy_user_row",
+      "value": "Nombre de usuario"
+    },
+    {
+      "name": "logs_clear",
+      "value": "Borrar"
+    },
+    {
+      "name": "logs_empty",
+      "value": "Aún no hay registros"
+    },
+    {
+      "name": "logs_line_a11y",
+      "value": "%1$s %2$s %3$s"
+    },
+    {
+      "name": "logs_pause",
+      "value": "Pausar"
+    },
+    {
+      "name": "logs_resume",
+      "value": "Reanudar"
+    },
+    {
+      "name": "nodes_detail_latency",
+      "value": "Latencia"
+    },
+    {
+      "name": "nodes_detail_protocol",
+      "value": "Protocolo"
+    },
+    {
+      "name": "nodes_detail_route",
+      "value": "Ruta"
+    },
+    {
+      "name": "nodes_detail_server",
+      "value": "Servidor"
+    },
+    {
+      "name": "nodes_detail_test",
+      "value": "Probar latencia"
+    },
+    {
+      "name": "nodes_empty_action",
+      "value": "Importar suscripción"
+    },
+    {
+      "name": "nodes_empty_message",
+      "value": "Importa una suscripción y sus nodos aparecerán aquí"
+    },
+    {
+      "name": "nodes_empty_title",
+      "value": "Aún no hay nodos"
+    },
+    {
+      "name": "nodes_error_title",
+      "value": "No se pudieron cargar los nodos"
+    },
+    {
+      "name": "nodes_judgement",
+      "value": "%1$s accesibles · %2$s probados"
+    },
+    {
+      "name": "nodes_jump_to",
+      "value": "Ir a %1$s"
+    },
+    {
+      "name": "nodes_no_match",
+      "value": "Ningún nodo coincide con «%1$s»"
+    },
+    {
+      "name": "nodes_search_placeholder",
+      "value": "Región, ciudad o ruta"
+    },
+    {
+      "name": "nodes_search_stats",
+      "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "Sin probar aún: los nodos visibles se prueban al dejar de desplazarte"
+    },
+    {
+      "name": "notif_action_global",
+      "value": "Modo global"
+    },
+    {
+      "name": "notif_action_rule",
+      "value": "Modo regla"
+    },
+    {
+      "name": "notif_channel_alerts",
+      "value": "Avisos de suscripción"
+    },
+    {
+      "name": "notif_channel_alerts_desc",
+      "value": "Caducidad de la suscripción y pocos datos"
+    },
+    {
+      "name": "notif_channel_vpn",
+      "value": "Estado de la conexión"
+    },
+    {
+      "name": "notif_channel_vpn_desc",
+      "value": "Muestra la velocidad y los escenarios mientras estás conectado"
+    },
+    {
+      "name": "notif_expiry_text",
+      "value": "Quedan %1$s"
+    },
+    {
+      "name": "notif_expiry_title",
+      "value": "%1$s caduca el %2$s"
+    },
+    {
+      "name": "notif_paused_trusted",
+      "value": "Desconectado en la red Wi‑Fi de confianza «%1$s». Se reconectará automáticamente al salir."
+    },
+    {
+      "name": "notif_route_global",
+      "value": "Global · %1$s"
+    },
+    {
+      "name": "notif_route_global_any",
+      "value": "Todo el tráfico por un nodo"
+    },
+    {
+      "name": "onboarding_cancel_import_a11y",
+      "value": "Cancelar importación"
+    },
+    {
+      "name": "onboarding_change_later",
+      "value": "Puedes cambiarlo cuando quieras en Ajustes."
+    },
+    {
+      "name": "onboarding_choose_mode",
+      "value": "Elige un modo"
+    },
+    {
+      "name": "onboarding_continue",
+      "value": "Continuar"
+    },
+    {
+      "name": "onboarding_optimized",
+      "value": "Optimizado"
+    },
+    {
+      "name": "onboarding_optimized_desc",
+      "value": "Prueba los nodos a diario con Wi‑Fi. AI y Vídeo solo usan los nodos que superan la prueba. Unos 3 MB cada vez."
+    },
+    {
+      "name": "onboarding_simple",
+      "value": "Sencillo"
+    },
+    {
+      "name": "onboarding_simple_desc",
+      "value": "Usa los grupos de tu suscripción. Los nodos no disponibles se gestionan automáticamente."
+    },
+    {
+      "name": "rules_add_override_a11y",
+      "value": "Añadir sobrescritura para un dominio"
+    },
+    {
+      "name": "rules_blocked",
+      "value": "Bloqueado"
+    },
+    {
+      "name": "rules_kind_ip",
+      "value": "IP"
+    },
+    {
+      "name": "rules_kind_other",
+      "value": "Otros"
+    },
+    {
+      "name": "rules_match_order",
+      "value": "Orden de coincidencia"
+    },
+    {
+      "name": "rules_note",
+      "value": "Los conjuntos de reglas se compilan en el dispositivo en un índice de solo lectura y se leen del disco cuando hace falta. Las sobrescrituras se mantienen al actualizar las suscripciones."
+    },
+    {
+      "name": "rules_other_traffic",
+      "value": "Resto del tráfico"
+    },
+    {
+      "name": "rules_step_layer",
+      "value": "Capa %1$d · %2$s"
+    },
+    {
+      "name": "rules_step_request",
+      "value": "Solicitud"
+    },
+    {
+      "name": "rules_step_result",
+      "value": "Resultado"
+    },
+    {
+      "name": "rules_step_scene",
+      "value": "Escenario · %1$s"
+    },
+    {
+      "name": "rules_test_hint",
+      "value": "Introduce un dominio o una dirección IP para ver la regla y la salida que coinciden."
+    },
+    {
+      "name": "rules_test_placeholder",
+      "value": "Probar un dominio o IP"
+    },
+    {
+      "name": "rules_took",
+      "value": "Tardó %1$s"
+    },
+    {
+      "name": "rules_top_to_bottom",
+      "value": "De arriba abajo"
+    },
+    {
+      "name": "scene_ask",
+      "value": "Preguntar"
+    },
+    {
+      "name": "scene_auto_switch",
+      "value": "Cambiar automáticamente"
+    },
+    {
+      "name": "scene_funnel_tested",
+      "value": "Probados"
+    },
+    {
+      "name": "scene_funnel_under",
+      "value": "Menos de %1$d ms"
+    },
+    {
+      "name": "scene_node_scope",
+      "value": "Alcance de nodos"
+    },
+    {
+      "name": "scene_note",
+      "value": "La selección solo se guarda en Zephyr. La configuración de tu suscripción no cambia."
+    },
+    {
+      "name": "scene_note_tested",
+      "value": "%1$s Última prueba: %2$s."
+    },
+    {
+      "name": "scene_pinned_for",
+      "value": "Fijado para %1$s"
+    },
+    {
+      "name": "scene_pinned_value",
+      "value": "%1$s (fijado)"
+    },
+    {
+      "name": "scene_test_daily",
+      "value": "A diario"
+    },
+    {
+      "name": "scene_test_frequency",
+      "value": "Frecuencia de prueba"
+    },
+    {
+      "name": "scene_test_wifi_only",
+      "value": "%1$s (solo Wi‑Fi)"
+    },
+    {
+      "name": "scene_tested_from_pool",
+      "value": "%2$s nodos probados de %1$d suscripciones"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "%1$s candidatos, %2$s por debajo de 200 milisegundos, %3$s con tiempo agotado"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "Tiempo agotado: %1$s"
+    },
+    {
+      "name": "scene_uhd_only",
+      "value": "Solo nodos 4K"
+    },
+    {
+      "name": "scene_when_unavailable",
+      "value": "Si un nodo no está disponible"
+    },
+    {
+      "name": "settings_accent_blue",
+      "value": "Azul"
+    },
+    {
+      "name": "settings_accent_green",
+      "value": "Verde"
+    },
+    {
+      "name": "settings_accent_orange",
+      "value": "Naranja"
+    },
+    {
+      "name": "settings_accent_pink",
+      "value": "Rosa"
+    },
+    {
+      "name": "settings_keep_results",
+      "value": "Conservar resultados"
+    },
+    {
+      "name": "settings_licenses",
+      "value": "Licencias de código abierto"
+    },
+    {
+      "name": "settings_local_data_note",
+      "value": "Las suscripciones, los nodos y los datos de tráfico solo se guardan en este dispositivo."
+    },
+    {
+      "name": "settings_on_demand",
+      "value": "Conexión a petición"
+    },
+    {
+      "name": "settings_save_failed",
+      "value": "No se ha podido guardar el ajuste"
+    },
+    {
+      "name": "settings_section_about",
+      "value": "Acerca de"
+    },
+    {
+      "name": "settings_section_connection",
+      "value": "Conexión"
+    },
+    {
+      "name": "settings_section_privacy",
+      "value": "Privacidad"
+    },
+    {
+      "name": "settings_section_storage",
+      "value": "Almacenamiento"
+    },
+    {
+      "name": "settings_section_testing",
+      "value": "Pruebas"
+    },
+    {
+      "name": "settings_share_diagnostics",
+      "value": "Compartir datos de diagnóstico"
+    },
+    {
+      "name": "settings_source_code",
+      "value": "Código fuente"
+    },
+    {
+      "name": "settings_storage_detail",
+      "value": "Nodos %1$s · Reglas %2$s · Libre %3$s"
+    },
+    {
+      "name": "settings_storage_title",
+      "value": "Nodos y reglas"
+    },
+    {
+      "name": "settings_test_wifi_only",
+      "value": "Probar velocidad solo con Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi",
+      "value": "Redes Wi‑Fi de confianza"
+    },
+    {
+      "name": "settings_trusted_wifi_always_on",
+      "value": "Gestionado por «VPN siempre activada» del sistema"
+    },
+    {
+      "name": "settings_trusted_wifi_hint",
+      "value": "Desconectar automáticamente al unirse"
+    },
+    {
+      "name": "settings_trusted_wifi_location",
+      "value": "Permite el acceso a la ubicación para reconocer las redes Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi_location_off",
+      "value": "Activa la ubicación del sistema para reconocer las redes Wi‑Fi"
+    },
+    {
+      "name": "subs_add",
+      "value": "Añadir suscripción"
+    },
+    {
+      "name": "subs_all_title",
+      "value": "Todas las suscripciones"
+    },
+    {
+      "name": "subs_deleted",
+      "value": "%1$s eliminada"
+    },
+    {
+      "name": "subs_diff_updated",
+      "value": "%1$s actualizada"
+    },
+    {
+      "name": "subs_diff_updating",
+      "value": "Actualizando %1$s…"
+    },
+    {
+      "name": "subs_error_clipboard_empty",
+      "value": "El portapapeles está vacío"
+    },
+    {
+      "name": "subs_error_delete",
+      "value": "No se ha podido eliminar %1$s"
+    },
+    {
+      "name": "subs_error_fetch",
+      "value": "No se ha podido descargar la suscripción. Revisa el enlace o la red."
+    },
+    {
+      "name": "subs_error_import_version",
+      "value": "Este código de importación requiere una versión más reciente de Zephyr"
+    },
+    {
+      "name": "subs_error_invalid_file",
+      "value": "No es un archivo de configuración válido"
+    },
+    {
+      "name": "subs_error_invalid_link",
+      "value": "No es un enlace de suscripción válido"
+    },
+    {
+      "name": "subs_error_read_file",
+      "value": "No se ha podido leer este archivo"
+    },
+    {
+      "name": "subs_error_update",
+      "value": "No se ha podido actualizar %1$s"
+    },
+    {
+      "name": "subs_error_update_all",
+      "value": "No se han podido actualizar las suscripciones"
+    },
+    {
+      "name": "subs_hint_desktop",
+      "value": "En el ordenador, abre Ajustes › Sincronizar con el teléfono en Zephyr para ver el código QR"
+    },
+    {
+      "name": "subs_import_desktop",
+      "value": "Importar desde Zephyr en el ordenador"
+    },
+    {
+      "name": "subs_import_desktop_source",
+      "value": "Zephyr para escritorio"
+    },
+    {
+      "name": "subs_import_insecure",
+      "value": "Este enlace no está cifrado (http); su contenido podría leerse o alterarse."
+    },
+    {
+      "name": "subs_import_source",
+      "value": "Origen: %1$s"
+    },
+    {
+      "name": "subs_import_trust",
+      "value": "Continúa solo si confías en este proveedor."
+    },
+    {
+      "name": "subs_overrides_kept",
+      "value": "Sobrescrituras conservadas"
+    },
+    {
+      "name": "subs_paste_clipboard",
+      "value": "Pegar del portapapeles"
+    },
+    {
+      "name": "subs_paste_link",
+      "value": "Pegar enlace"
+    },
+    {
+      "name": "subs_paste_placeholder",
+      "value": "Pegar un enlace de suscripción"
+    },
+    {
+      "name": "subs_remaining",
+      "value": "Restante"
+    },
+    {
+      "name": "subs_review_note",
+      "value": "Al actualizar se sustituyen los nodos y las reglas de la suscripción. Las sobrescrituras y las selecciones de escenarios de Zephyr no cambian."
+    },
+    {
+      "name": "subs_review_one",
+      "value": "Se actualizará %1$s"
+    },
+    {
+      "name": "subs_rule_changes",
+      "value": "Cambios en las reglas"
+    },
+    {
+      "name": "subs_scan_camera_needed",
+      "value": "Se necesita acceso a la cámara para escanear"
+    },
+    {
+      "name": "subs_scan_no_camera",
+      "value": "No hay ninguna cámara disponible en este dispositivo"
+    },
+    {
+      "name": "subs_scan_prompt",
+      "value": "Coloca el código QR de la suscripción dentro del marco para escanearlo automáticamente."
+    },
+    {
+      "name": "subs_scan_qr",
+      "value": "Escanear código QR"
+    },
+    {
+      "name": "subs_scenes_retested",
+      "value": "Escenarios probados de nuevo"
+    },
+    {
+      "name": "subs_section_data",
+      "value": "Datos"
+    },
+    {
+      "name": "subs_section_update",
+      "value": "Actualizaciones"
+    },
+    {
+      "name": "subs_show_changes",
+      "value": "Mostrar cambios antes de actualizar"
+    },
+    {
+      "name": "subs_swipe_confirm_delete",
+      "value": "Confirmar"
+    },
+    {
+      "name": "subs_swipe_updating",
+      "value": "Actualizando"
+    },
+    {
+      "name": "subs_this_month",
+      "value": "Este mes"
+    },
+    {
+      "name": "subs_update_all",
+      "value": "Actualizar todo ahora"
+    },
+    {
+      "name": "subs_update_wifi_only",
+      "value": "Actualizar solo con Wi‑Fi"
+    },
+    {
+      "name": "term_accent",
+      "value": "Color de realce"
+    },
+    {
+      "name": "term_all",
+      "value": "Todos"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Apariencia"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Oscuro"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Claro"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Sistema"
+    },
+    {
+      "name": "term_apply",
+      "value": "Aplicar"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Actualizaciones automáticas"
+    },
+    {
+      "name": "term_delete",
+      "value": "Eliminar"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Diagnóstico"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Desconectar"
+    },
+    {
+      "name": "term_domain",
+      "value": "Dominio"
+    },
+    {
+      "name": "term_exit",
+      "value": "Salida"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "IP de salida"
+    },
+    {
+      "name": "term_import",
+      "value": "Importar"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Importar desde archivo"
+    },
+    {
+      "name": "term_latency",
+      "value": "Latencia"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Puerto de proxy local"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Depuración"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Error"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Info"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Aviso"
+    },
+    {
+      "name": "term_logs",
+      "value": "Registros"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Directo"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Global"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Modo global"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Regla"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Sin resultados"
+    },
+    {
+      "name": "term_node",
+      "value": "Nodo"
+    },
+    {
+      "name": "term_nodes",
+      "value": "Nodos"
+    },
+    {
+      "name": "term_none",
+      "value": "Ninguno"
+    },
+    {
+      "name": "term_off",
+      "value": "No"
+    },
+    {
+      "name": "term_on",
+      "value": "Sí"
+    },
+    {
+      "name": "term_override",
+      "value": "Sobrescritura"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proxy"
+    },
+    {
+      "name": "term_reachable",
+      "value": "Accesibles"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Solicitar contraseña"
+    },
+    {
+      "name": "term_rule",
+      "value": "Regla"
+    },
+    {
+      "name": "term_rules",
+      "value": "Reglas"
+    },
+    {
+      "name": "term_scene",
+      "value": "Escenario"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Escenarios"
+    },
+    {
+      "name": "term_settings",
+      "value": "Ajustes"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Vencida"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Vence pronto"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Error"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Normal"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Lento"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Tiempo agotado"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Sin probar"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Conectando"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "No conectado"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Error de conexión"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Suscripción"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Suscripciones"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Cambiar modo"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Volver a probar"
+    },
+    {
+      "name": "term_tested",
+      "value": "Probados"
+    },
+    {
+      "name": "term_testing",
+      "value": "Probando"
+    },
+    {
+      "name": "term_today",
+      "value": "Hoy"
+    },
+    {
+      "name": "term_undo",
+      "value": "Deshacer"
+    },
+    {
+      "name": "term_update",
+      "value": "Actualizar"
+    },
+    {
+      "name": "tile_a11y",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "today_date_pattern",
+      "value": "EEEE, d 'de' MMMM"
+    },
+    {
+      "name": "today_fastest",
+      "value": "ms mínimo"
+    },
+    {
+      "name": "today_pattern_note",
+      "value": "El patrón se genera a partir del tráfico de hoy y no incluye nombres de nodos ni direcciones IP."
+    },
+    {
+      "name": "today_save_failed",
+      "value": "No se ha podido guardar la imagen"
+    },
+    {
+      "name": "today_save_image",
+      "value": "Guardar imagen"
+    },
+    {
+      "name": "today_saved",
+      "value": "Guardada en la galería"
+    },
+    {
+      "name": "today_storage_permission",
+      "value": "Se necesita permiso de almacenamiento para guardar la imagen"
+    },
+    {
+      "name": "today_style_dawn",
+      "value": "Amanecer"
+    },
+    {
+      "name": "today_style_mist",
+      "value": "Bruma"
+    },
+    {
+      "name": "today_style_night",
+      "value": "Noche"
+    },
+    {
+      "name": "trace_always_apply",
+      "value": "Aplicar siempre"
+    },
+    {
+      "name": "trace_always_apply_hint",
+      "value": "Si está desactivado, solo cambia esta conexión"
+    },
+    {
+      "name": "trace_from",
+      "value": "De %1$s"
+    },
+    {
+      "name": "trace_option_unchanged",
+      "value": "Sin cambios"
+    },
+    {
+      "name": "trace_override_cleared",
+      "value": "Se ha borrado la sobrescritura de ruta de %1$s"
+    },
+    {
+      "name": "trace_override_direct",
+      "value": "%1$s ahora se conecta directamente"
+    },
+    {
+      "name": "trace_override_error",
+      "value": "No se ha podido cambiar la ruta. Inténtalo de nuevo."
+    },
+    {
+      "name": "trace_override_scene",
+      "value": "%1$s ahora usa %2$s"
+    },
+    {
+      "name": "trace_step_rule",
+      "value": "Regla"
+    },
+    {
+      "name": "trace_this_connection",
+      "value": "Esta conexión"
+    },
+    {
+      "name": "trace_via",
+      "value": "Vía %1$s"
+    },
+    {
+      "name": "trusted_wifi_add_hint",
+      "value": "Añadir nombre de red Wi‑Fi"
+    },
+    {
+      "name": "trusted_wifi_disconnect",
+      "value": "Desconectar en estas redes Wi‑Fi"
+    },
+    {
+      "name": "trusted_wifi_footer",
+      "value": "En redes de confianza, como en casa o en el trabajo, Zephyr se desconecta automáticamente y vuelve a conectarse a petición cuando te vas."
+    },
+    {
+      "name": "trusted_wifi_networks",
+      "value": "Redes"
+    },
+    {
+      "name": "widget_description",
+      "value": "Estado de la conexión, velocidad y escenarios"
+    },
+    {
+      "name": "widget_label",
+      "value": "Estado de Zephyr"
+    },
+    {
+      "name": "widget_today",
+      "value": "Hoy %1$s %2$s"
+    },
+    {
+      "name": "widget_usage_description",
+      "value": "Tráfico de hoy, desglosado en 24 horas"
+    },
+    {
+      "name": "widget_usage_label",
+      "value": "Uso de Zephyr hoy"
+    },
+    {
+      "name": "widgets_home_steps",
+      "value": "Mantén pulsado un espacio vacío de la pantalla de inicio › Widgets › Zephyr y arrastra uno a la pantalla."
+    },
+    {
+      "name": "widgets_home_title",
+      "value": "Widgets de la pantalla de inicio"
+    },
+    {
+      "name": "widgets_tile_steps",
+      "value": "Desliza dos veces hacia abajo desde la parte superior › Editar › arrastra Zephyr a Ajustes rápidos. Tócalo para conectar o desconectar."
+    },
+    {
+      "name": "widgets_tile_title",
+      "value": "Icono de Ajustes rápidos"
+    }
+  ]
+}

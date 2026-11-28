@@ -1,0 +1,11 @@
+const { RecentHostsModel, CloseOutcome } = await import('../.out/rt/app/RecentHostsModel.ts');
+const { MockEngine } = await import('../.out/rt/engine/MockEngine.ts');
+const { EventStream } = await import('../.out/rt/engine/Stream.ts');
+let bad=0;const ok=(c,m)=>{if(!c){bad++;console.log('FAIL',m)}};
+const e=new MockEngine({latencyScale:0});
+ok((await RecentHostsModel.closeHost(e,'claude.ai',100)).outcome===CloseOutcome.NONE,'none');
+await e.connect();const r=await RecentHostsModel.closeHost(e,'claude.ai',100);ok(r.outcome===CloseOutcome.CLOSED&&r.count===1,'closed '+JSON.stringify(r));
+const silent={activeConnections:()=>new EventStream(),closeConnection:async()=>{}};const t0=Date.now();ok((await RecentHostsModel.closeHost(silent,'x',50)).outcome===CloseOutcome.NONE&&Date.now()-t0>=45,'timeout');
+const failing={activeConnections:()=>{const s=new EventStream();s.onActive=()=>s.emit([{id:'1',host:'h'},{id:'2',host:'h'},{id:'3',host:'z'}]);return s},closeConnection:async(id)=>{if(id==='2')throw new Error('x')}};
+const p=await RecentHostsModel.closeHost(failing,'h',50);ok(p.outcome===CloseOutcome.PARTIAL&&p.count===1,'partial');
+console.log(bad?'recent FAIL':'recent ok');process.exit(bad?1:0);

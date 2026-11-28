@@ -1,0 +1,1592 @@
+{
+  "string": [
+    {
+      "name": "activity_back",
+      "value": "‹ 最近の接続"
+    },
+    {
+      "name": "activity_close_host_a11y",
+      "value": "%1$sへの接続を閉じる"
+    },
+    {
+      "name": "activity_close_none",
+      "value": "アクティブな接続はありません"
+    },
+    {
+      "name": "activity_empty",
+      "value": "接続すると、最近アクセスしたドメインがここに表示されます。"
+    },
+    {
+      "name": "activity_host_a11y",
+      "value": "%1$sの接続の詳細"
+    },
+    {
+      "name": "activity_no_app_note",
+      "value": "接続元の App はまだ取得できないため、ドメインのみ表示しています。"
+    },
+    {
+      "name": "activity_title",
+      "value": "最近の接続"
+    },
+    {
+      "name": "command_action_open",
+      "value": "開く"
+    },
+    {
+      "name": "command_action_test",
+      "value": "テスト"
+    },
+    {
+      "name": "command_chip_action",
+      "value": "操作"
+    },
+    {
+      "name": "command_chip_region",
+      "value": "地域"
+    },
+    {
+      "name": "command_chip_scene",
+      "value": "シーン"
+    },
+    {
+      "name": "command_chip_scope",
+      "value": "範囲"
+    },
+    {
+      "name": "command_chip_service",
+      "value": "サービス"
+    },
+    {
+      "name": "command_direct_note",
+      "value": "%1$sのトラフィックはプロキシを経由しなくなります。"
+    },
+    {
+      "name": "command_direct_title",
+      "value": "%1$sをダイレクト接続"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "Enter キーで実行"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "ルールテスト"
+    },
+    {
+      "name": "command_no_nodes_available",
+      "value": "利用できるノードがありません"
+    },
+    {
+      "name": "command_placeholder",
+      "value": "検索またはコマンドを入力"
+    },
+    {
+      "name": "command_plan_exit_title",
+      "value": "%1$s：%2$sのノードを使用"
+    },
+    {
+      "name": "command_plan_fallback_pause",
+      "value": "%1$sのノードがすべて利用できない場合、%2$sは一時停止します。"
+    },
+    {
+      "name": "command_plan_fallback_scene",
+      "value": "%1$sのノードがすべて利用できない場合は、シーン内のほかのノードを使用します。"
+    },
+    {
+      "name": "command_plan_no_nodes",
+      "value": "%1$sに%2$sのノードはありません。"
+    },
+    {
+      "name": "command_plan_releases_pin",
+      "value": "%1$sは固定の出口 %2$s を使わなくなります。"
+    },
+    {
+      "name": "command_region_de",
+      "value": "ドイツ"
+    },
+    {
+      "name": "command_region_gb",
+      "value": "英国"
+    },
+    {
+      "name": "command_region_hk",
+      "value": "香港"
+    },
+    {
+      "name": "command_region_jp",
+      "value": "日本"
+    },
+    {
+      "name": "command_region_kr",
+      "value": "韓国"
+    },
+    {
+      "name": "command_region_sg",
+      "value": "シンガポール"
+    },
+    {
+      "name": "command_region_tw",
+      "value": "台湾"
+    },
+    {
+      "name": "command_region_us",
+      "value": "米国"
+    },
+    {
+      "name": "command_scene_ai",
+      "value": "AI シーン"
+    },
+    {
+      "name": "command_scene_named",
+      "value": "%1$sシーン"
+    },
+    {
+      "name": "command_section_command",
+      "value": "コマンド"
+    },
+    {
+      "name": "command_section_suggestions",
+      "value": "提案"
+    },
+    {
+      "name": "command_see_all_nodes",
+      "value": "ノードライブラリで%1$s個すべてを表示"
+    },
+    {
+      "name": "command_show_all",
+      "value": "すべて表示（%1$s 件）"
+    },
+    {
+      "name": "command_test_rule",
+      "value": "%1$sの経路は？"
+    },
+    {
+      "name": "command_uhd_auto_note",
+      "value": "今後、自動切り替えは 4K ノードからのみ選択します。"
+    },
+    {
+      "name": "command_uhd_clear_note",
+      "value": "%1$sシーンは現在 4K ノードのみを使用しています。すべてのノードの使用に戻します。現在のノードはそのままです。"
+    },
+    {
+      "name": "command_uhd_fastest",
+      "value": "最速の 4K ノード"
+    },
+    {
+      "name": "command_uhd_none",
+      "value": "4K に対応したノードはありません。"
+    },
+    {
+      "name": "command_uhd_title_all",
+      "value": "%1$s：すべてのノード"
+    },
+    {
+      "name": "command_uhd_title_only",
+      "value": "%1$s：4K ノードのみ"
+    },
+    {
+      "name": "command_zephyr_only",
+      "value": "Zephyr 内でのみ有効です。サブスクリプションの構成は変更されません。"
+    },
+    {
+      "name": "common_add",
+      "value": "追加"
+    },
+    {
+      "name": "common_adding",
+      "value": "追加中…"
+    },
+    {
+      "name": "common_back_to",
+      "value": "%1$sに戻る"
+    },
+    {
+      "name": "common_cancel",
+      "value": "キャンセル"
+    },
+    {
+      "name": "common_change",
+      "value": "変更"
+    },
+    {
+      "name": "common_clear",
+      "value": "消去"
+    },
+    {
+      "name": "common_close",
+      "value": "閉じる"
+    },
+    {
+      "name": "common_connect",
+      "value": "接続"
+    },
+    {
+      "name": "common_current",
+      "value": "使用中"
+    },
+    {
+      "name": "common_direct",
+      "value": "ダイレクト"
+    },
+    {
+      "name": "common_done",
+      "value": "完了"
+    },
+    {
+      "name": "common_exit_ip_changes",
+      "value": "出口 IP が変更されます"
+    },
+    {
+      "name": "common_expiry_date",
+      "value": "有効期限：%1$s"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "期限切れ"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "今日で期限切れ"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "明日で期限切れ"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "%1$s曜日に期限切れ"
+    },
+    {
+      "name": "common_home",
+      "value": "ホーム"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "レイテンシを測定中"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "レイテンシ タイムアウト"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "レイテンシ未測定"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "タイムアウト"
+    },
+    {
+      "name": "common_library",
+      "value": "ライブラリ"
+    },
+    {
+      "name": "common_list_separator",
+      "value": "%1$s、%2$s"
+    },
+    {
+      "name": "common_local_data_note",
+      "value": "サブスクリプションとトラフィックのデータは、このデバイスにのみ保存されます。"
+    },
+    {
+      "name": "common_local_network",
+      "value": "このデバイスのネットワーク"
+    },
+    {
+      "name": "common_mode_direct_hint",
+      "value": "プロキシを経由しない"
+    },
+    {
+      "name": "common_mode_global_hint",
+      "value": "すべてを1つのノード経由で"
+    },
+    {
+      "name": "common_mode_rule_hint",
+      "value": "シーンごとに振り分け"
+    },
+    {
+      "name": "common_open_settings",
+      "value": "設定を開く"
+    },
+    {
+      "name": "common_pair_and",
+      "value": "%1$sと%2$s"
+    },
+    {
+      "name": "common_retesting",
+      "value": "テスト中…"
+    },
+    {
+      "name": "common_scene_ai",
+      "value": "AI"
+    },
+    {
+      "name": "common_scene_other",
+      "value": "その他"
+    },
+    {
+      "name": "common_scene_video",
+      "value": "ビデオ"
+    },
+    {
+      "name": "common_share",
+      "value": "共有"
+    },
+    {
+      "name": "common_source_auto",
+      "value": "Zephyr おすすめ"
+    },
+    {
+      "name": "common_source_group",
+      "value": "サブスクリプショングループ"
+    },
+    {
+      "name": "common_status_connected",
+      "value": "接続済み"
+    },
+    {
+      "name": "common_status_connecting_ellipsis",
+      "value": "接続中…"
+    },
+    {
+      "name": "common_status_disconnecting",
+      "value": "切断中"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "たった今"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "たった今"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "ダウンロード 毎秒 %1$s %2$s、アップロード 毎秒 %3$s %4$s"
+    },
+    {
+      "name": "common_try_again",
+      "value": "もう一度お試しください"
+    },
+    {
+      "name": "common_updating",
+      "value": "更新中…"
+    },
+    {
+      "name": "connect_no_subscription",
+      "value": "サブスクリプションがまだありません"
+    },
+    {
+      "name": "home_action_load_nodes",
+      "value": "ノードの読み込み"
+    },
+    {
+      "name": "home_action_preview_exit",
+      "value": "出口のプレビュー"
+    },
+    {
+      "name": "home_action_retest",
+      "value": "再テスト"
+    },
+    {
+      "name": "home_action_switch_exit",
+      "value": "出口の切り替え"
+    },
+    {
+      "name": "home_action_switch_mode",
+      "value": "モードの切り替え"
+    },
+    {
+      "name": "home_action_switch_node",
+      "value": "ノードの切り替え"
+    },
+    {
+      "name": "home_action_switch_source",
+      "value": "ソースの切り替え"
+    },
+    {
+      "name": "home_action_undo",
+      "value": "取り消し"
+    },
+    {
+      "name": "home_apply_failed",
+      "value": "適用できませんでした：%1$s"
+    },
+    {
+      "name": "home_confirm_apps",
+      "value": "%1$sの出口 IP を変更しますか？"
+    },
+    {
+      "name": "home_confirm_scene",
+      "value": "%1$sシーンの出口 IP を変更しますか？"
+    },
+    {
+      "name": "home_confirm_unchanged",
+      "value": "%1$sは変わりません。"
+    },
+    {
+      "name": "home_error_failed",
+      "value": "%1$sに失敗しました"
+    },
+    {
+      "name": "home_error_node_gone",
+      "value": "%1$sに失敗しました：ノードがもう存在しません"
+    },
+    {
+      "name": "home_error_not_connected",
+      "value": "%1$sには接続が必要です"
+    },
+    {
+      "name": "home_failover_none",
+      "value": "%1$sの出口が応答しません。出口 IP は自動では変わりません。"
+    },
+    {
+      "name": "home_failover_switched",
+      "value": "%1$sの出口を%2$sに自動で切り替えました"
+    },
+    {
+      "name": "home_failure_core",
+      "value": "コアを起動できませんでした"
+    },
+    {
+      "name": "home_failure_network",
+      "value": "ネットワークを利用できません"
+    },
+    {
+      "name": "home_failure_no_subscription",
+      "value": "先にサブスクリプションを追加してください"
+    },
+    {
+      "name": "home_failure_vpn_permission",
+      "value": "VPN の許可が必要です"
+    },
+    {
+      "name": "home_global_body",
+      "value": "すべてのトラフィックが%1$sを経由します。シーンは一時停止中です。"
+    },
+    {
+      "name": "home_global_body_any",
+      "value": "すべてのトラフィックが1つのノードを経由します。シーンは一時停止中です。"
+    },
+    {
+      "name": "home_global_change_node",
+      "value": "ノードを変更"
+    },
+    {
+      "name": "home_global_change_note",
+      "value": "すべての App の出口が%1$sになります。"
+    },
+    {
+      "name": "home_global_change_to",
+      "value": "%1$sに変更"
+    },
+    {
+      "name": "home_global_use_rule",
+      "value": "ルールモードを使用"
+    },
+    {
+      "name": "home_mini_funnel_a11y",
+      "value": "接続可能 %1$s、200 ミリ秒未満 %2$s"
+    },
+    {
+      "name": "home_now_all_nodes",
+      "value": "%1$s：すべてのノードに戻しました"
+    },
+    {
+      "name": "home_now_direct",
+      "value": "%1$sはダイレクト接続になりました"
+    },
+    {
+      "name": "home_now_uhd_only",
+      "value": "%1$sは 4K ノードのみを使用中"
+    },
+    {
+      "name": "home_now_uses",
+      "value": "%1$sは%2$sを使用中"
+    },
+    {
+      "name": "home_now_uses_uhd",
+      "value": "%1$sは%2$sを使用中（4K のみ）"
+    },
+    {
+      "name": "home_pin_line",
+      "value": "%1$s：%2$s"
+    },
+    {
+      "name": "home_scan_progress",
+      "value": "テスト中 %1$d/%2$d"
+    },
+    {
+      "name": "home_scan_running",
+      "value": "テスト中…"
+    },
+    {
+      "name": "home_scene_details_a11y",
+      "value": "%1$sシーンの詳細"
+    },
+    {
+      "name": "home_scene_next_region",
+      "value": "次の地域：%1$s"
+    },
+    {
+      "name": "home_scene_prev_region",
+      "value": "前の地域：%1$s"
+    },
+    {
+      "name": "home_scene_services_down",
+      "value": "%1$sは利用不可"
+    },
+    {
+      "name": "home_scene_services_ok",
+      "value": "%1$sは正常"
+    },
+    {
+      "name": "home_scenes_tested",
+      "value": "テスト：%1$s"
+    },
+    {
+      "name": "home_scrub_hint",
+      "value": "左右にスワイプして地域を切り替え"
+    },
+    {
+      "name": "home_spark_a11y",
+      "value": "ダウンロード速度（直近90秒）"
+    },
+    {
+      "name": "home_switched_to",
+      "value": "%1$sに切り替えました"
+    },
+    {
+      "name": "home_today_usage",
+      "value": "今日 %1$s"
+    },
+    {
+      "name": "library_widgets",
+      "value": "ウィジェットとクイック設定"
+    },
+    {
+      "name": "licenses_intro",
+      "value": "Zephyr 独自のコードは MIT ライセンスです。本アプリは mihomo（GPL-3.0）を含むため、アプリ全体は GPL-3.0 で配布されます。対応するソース：%1$s、タグ %2$s。"
+    },
+    {
+      "name": "licenses_section_app",
+      "value": "Zephyr のライセンス"
+    },
+    {
+      "name": "licenses_section_notices",
+      "value": "サードパーティ通知"
+    },
+    {
+      "name": "licenses_section_texts",
+      "value": "ライセンス全文"
+    },
+    {
+      "name": "licenses_unavailable",
+      "value": "このビルドにはライセンスファイルがありません。"
+    },
+    {
+      "name": "local_proxy_apply_failed",
+      "value": "変更を適用できませんでした"
+    },
+    {
+      "name": "local_proxy_auth_footer",
+      "value": "オンにすると、ローカルポートへの接続にユーザ名とパスワードが必要になり、ほかの App が許可なくプロキシを使用するのを防げます。"
+    },
+    {
+      "name": "local_proxy_conceal",
+      "value": "パスワードを隠す"
+    },
+    {
+      "name": "local_proxy_concealed",
+      "value": "パスワードは非表示"
+    },
+    {
+      "name": "local_proxy_copied",
+      "value": "コピーしました"
+    },
+    {
+      "name": "local_proxy_copy_http",
+      "value": "HTTP プロキシ URL をコピー"
+    },
+    {
+      "name": "local_proxy_copy_socks",
+      "value": "SOCKS5 プロキシ URL をコピー"
+    },
+    {
+      "name": "local_proxy_credential_row",
+      "value": "パスワード"
+    },
+    {
+      "name": "local_proxy_credentials",
+      "value": "接続情報"
+    },
+    {
+      "name": "local_proxy_footer",
+      "value": "オンにすると、Zephyr は 127.0.0.1 のみで待ち受けるため、ネットワーク上のほかのデバイスからは接続できません。"
+    },
+    {
+      "name": "local_proxy_port",
+      "value": "ポート"
+    },
+    {
+      "name": "local_proxy_port_footer",
+      "value": "ほかの App は、127.0.0.1 のこのポートを通じて Zephyr のルールとシーンを使用できます。"
+    },
+    {
+      "name": "local_proxy_port_invalid",
+      "value": "%1$d〜%2$d のポート番号を入力してください"
+    },
+    {
+      "name": "local_proxy_regenerate",
+      "value": "パスワードを再生成"
+    },
+    {
+      "name": "local_proxy_regenerate_footer",
+      "value": "再生成すると古いパスワードはすぐに使えなくなります。設定済みのアプリには新しいパスワードを入力してください。"
+    },
+    {
+      "name": "local_proxy_regenerated",
+      "value": "新しいパスワードを生成しました"
+    },
+    {
+      "name": "local_proxy_reveal",
+      "value": "パスワードを表示"
+    },
+    {
+      "name": "local_proxy_security",
+      "value": "セキュリティ"
+    },
+    {
+      "name": "local_proxy_user_row",
+      "value": "ユーザー名"
+    },
+    {
+      "name": "logs_clear",
+      "value": "消去"
+    },
+    {
+      "name": "logs_empty",
+      "value": "ログはまだありません"
+    },
+    {
+      "name": "logs_line_a11y",
+      "value": "%1$s %2$s %3$s"
+    },
+    {
+      "name": "logs_pause",
+      "value": "一時停止"
+    },
+    {
+      "name": "logs_resume",
+      "value": "再開"
+    },
+    {
+      "name": "nodes_detail_latency",
+      "value": "レイテンシ"
+    },
+    {
+      "name": "nodes_detail_protocol",
+      "value": "プロトコル"
+    },
+    {
+      "name": "nodes_detail_route",
+      "value": "回線"
+    },
+    {
+      "name": "nodes_detail_server",
+      "value": "サーバー"
+    },
+    {
+      "name": "nodes_detail_test",
+      "value": "速度テスト"
+    },
+    {
+      "name": "nodes_empty_action",
+      "value": "サブスクリプションをインポート"
+    },
+    {
+      "name": "nodes_empty_message",
+      "value": "サブスクリプションをインポートすると、ノードがここに表示されます"
+    },
+    {
+      "name": "nodes_empty_title",
+      "value": "ノードはまだありません"
+    },
+    {
+      "name": "nodes_error_title",
+      "value": "ノードを読み込めませんでした"
+    },
+    {
+      "name": "nodes_judgement",
+      "value": "%1$s 接続可能 · %2$s テスト済み"
+    },
+    {
+      "name": "nodes_jump_to",
+      "value": "%1$sへ移動"
+    },
+    {
+      "name": "nodes_no_match",
+      "value": "「%1$s」に一致するノードはありません"
+    },
+    {
+      "name": "nodes_search_placeholder",
+      "value": "地域、都市、またはルート"
+    },
+    {
+      "name": "nodes_search_stats",
+      "value": "%1$s件 · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "未テスト — スクロールを止めると表示中のノードを自動でテストします"
+    },
+    {
+      "name": "notif_action_global",
+      "value": "グローバルモード"
+    },
+    {
+      "name": "notif_action_rule",
+      "value": "ルールモード"
+    },
+    {
+      "name": "notif_channel_alerts",
+      "value": "サブスクリプションの通知"
+    },
+    {
+      "name": "notif_channel_alerts_desc",
+      "value": "サブスクリプションの期限とデータ残量"
+    },
+    {
+      "name": "notif_channel_vpn",
+      "value": "接続状態"
+    },
+    {
+      "name": "notif_channel_vpn_desc",
+      "value": "接続中は速度とシーンを常に表示します"
+    },
+    {
+      "name": "notif_expiry_text",
+      "value": "残り %1$s"
+    },
+    {
+      "name": "notif_expiry_title",
+      "value": "%1$sの有効期限は%2$sです"
+    },
+    {
+      "name": "notif_paused_trusted",
+      "value": "信頼済み Wi‑Fi「%1$s」で切断しました。離れると自動で再接続します。"
+    },
+    {
+      "name": "notif_route_global",
+      "value": "グローバル · %1$s"
+    },
+    {
+      "name": "notif_route_global_any",
+      "value": "すべてを1つのノード経由で"
+    },
+    {
+      "name": "onboarding_cancel_import_a11y",
+      "value": "インポートをキャンセル"
+    },
+    {
+      "name": "onboarding_change_later",
+      "value": "「設定」でいつでも変更できます。"
+    },
+    {
+      "name": "onboarding_choose_mode",
+      "value": "使い方を選択"
+    },
+    {
+      "name": "onboarding_continue",
+      "value": "続ける"
+    },
+    {
+      "name": "onboarding_optimized",
+      "value": "おすすめ"
+    },
+    {
+      "name": "onboarding_optimized_desc",
+      "value": "毎日 Wi‑Fi 接続時にノードをテストします。AI とビデオでは、テストに合格したノードのみを使用します。1回あたり約 3 MB。"
+    },
+    {
+      "name": "onboarding_simple",
+      "value": "シンプル"
+    },
+    {
+      "name": "onboarding_simple_desc",
+      "value": "サブスクリプションのグループを使用します。利用できないノードは自動的に処理されます。"
+    },
+    {
+      "name": "rules_add_override_a11y",
+      "value": "ドメインのオーバーライドを追加"
+    },
+    {
+      "name": "rules_blocked",
+      "value": "ブロック済み"
+    },
+    {
+      "name": "rules_kind_ip",
+      "value": "IP"
+    },
+    {
+      "name": "rules_kind_other",
+      "value": "その他"
+    },
+    {
+      "name": "rules_match_order",
+      "value": "照合順序"
+    },
+    {
+      "name": "rules_note",
+      "value": "ルールセットはデバイス上で読み取り専用のインデックスにコンパイルされ、必要に応じてディスクから読み込まれます。サブスクリプションを更新しても、オーバーライドは変わりません。"
+    },
+    {
+      "name": "rules_other_traffic",
+      "value": "その他のトラフィック"
+    },
+    {
+      "name": "rules_step_layer",
+      "value": "レイヤー %1$d · %2$s"
+    },
+    {
+      "name": "rules_step_request",
+      "value": "リクエスト"
+    },
+    {
+      "name": "rules_step_result",
+      "value": "結果"
+    },
+    {
+      "name": "rules_step_scene",
+      "value": "シーン · %1$s"
+    },
+    {
+      "name": "rules_test_hint",
+      "value": "ドメインまたは IP アドレスを入力すると、一致するルールと出口が表示されます。"
+    },
+    {
+      "name": "rules_test_placeholder",
+      "value": "ドメインまたは IP をテスト"
+    },
+    {
+      "name": "rules_took",
+      "value": "所要時間 %1$s"
+    },
+    {
+      "name": "rules_top_to_bottom",
+      "value": "上から順に"
+    },
+    {
+      "name": "scene_ask",
+      "value": "確認する"
+    },
+    {
+      "name": "scene_auto_switch",
+      "value": "自動で切り替え"
+    },
+    {
+      "name": "scene_funnel_tested",
+      "value": "測定済み"
+    },
+    {
+      "name": "scene_funnel_under",
+      "value": "%1$d ms 未満"
+    },
+    {
+      "name": "scene_node_scope",
+      "value": "ノードの範囲"
+    },
+    {
+      "name": "scene_note",
+      "value": "おすすめの結果は Zephyr 内にのみ保存されます。サブスクリプションの構成は変更されません。"
+    },
+    {
+      "name": "scene_note_tested",
+      "value": "%1$s最終テスト：%2$s。"
+    },
+    {
+      "name": "scene_pinned_for",
+      "value": "%1$sで固定"
+    },
+    {
+      "name": "scene_pinned_value",
+      "value": "%1$s（固定）"
+    },
+    {
+      "name": "scene_test_daily",
+      "value": "毎日"
+    },
+    {
+      "name": "scene_test_frequency",
+      "value": "テスト頻度"
+    },
+    {
+      "name": "scene_test_wifi_only",
+      "value": "%1$s（Wi‑Fi のみ）"
+    },
+    {
+      "name": "scene_tested_from_pool",
+      "value": "%1$d件のサブスクリプションから%2$s個のノードをテスト"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "候補 %1$s 件、200 ミリ秒未満 %2$s 件、タイムアウト %3$s 件"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "タイムアウト %1$s"
+    },
+    {
+      "name": "scene_uhd_only",
+      "value": "4K ノードのみ"
+    },
+    {
+      "name": "scene_when_unavailable",
+      "value": "ノードが利用できないとき"
+    },
+    {
+      "name": "settings_accent_blue",
+      "value": "ブルー"
+    },
+    {
+      "name": "settings_accent_green",
+      "value": "グリーン"
+    },
+    {
+      "name": "settings_accent_orange",
+      "value": "オレンジ"
+    },
+    {
+      "name": "settings_accent_pink",
+      "value": "ピンク"
+    },
+    {
+      "name": "settings_keep_results",
+      "value": "結果を保持"
+    },
+    {
+      "name": "settings_licenses",
+      "value": "オープンソースライセンス"
+    },
+    {
+      "name": "settings_local_data_note",
+      "value": "サブスクリプション、ノード、トラフィックのデータは、このデバイスにのみ保存されます。"
+    },
+    {
+      "name": "settings_on_demand",
+      "value": "オンデマンド接続"
+    },
+    {
+      "name": "settings_save_failed",
+      "value": "設定を保存できませんでした"
+    },
+    {
+      "name": "settings_section_about",
+      "value": "情報"
+    },
+    {
+      "name": "settings_section_connection",
+      "value": "接続"
+    },
+    {
+      "name": "settings_section_privacy",
+      "value": "プライバシー"
+    },
+    {
+      "name": "settings_section_storage",
+      "value": "ストレージ"
+    },
+    {
+      "name": "settings_section_testing",
+      "value": "テスト"
+    },
+    {
+      "name": "settings_share_diagnostics",
+      "value": "診断データを共有"
+    },
+    {
+      "name": "settings_source_code",
+      "value": "ソースコード"
+    },
+    {
+      "name": "settings_storage_detail",
+      "value": "ノード %1$s · ルール %2$s · 空き %3$s"
+    },
+    {
+      "name": "settings_storage_title",
+      "value": "ノードとルール"
+    },
+    {
+      "name": "settings_test_wifi_only",
+      "value": "Wi‑Fi 接続時のみ速度テスト"
+    },
+    {
+      "name": "settings_trusted_wifi",
+      "value": "信頼済み Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi_always_on",
+      "value": "システムの「常時接続 VPN」で管理されています"
+    },
+    {
+      "name": "settings_trusted_wifi_hint",
+      "value": "接続したら自動的に切断"
+    },
+    {
+      "name": "settings_trusted_wifi_location",
+      "value": "Wi‑Fi 名を識別するには位置情報へのアクセスを許可"
+    },
+    {
+      "name": "settings_trusted_wifi_location_off",
+      "value": "Wi‑Fi 名を識別するにはシステムの位置情報をオンにしてください"
+    },
+    {
+      "name": "subs_add",
+      "value": "サブスクリプションを追加"
+    },
+    {
+      "name": "subs_all_title",
+      "value": "すべてのサブスクリプション"
+    },
+    {
+      "name": "subs_deleted",
+      "value": "%1$sを削除しました"
+    },
+    {
+      "name": "subs_diff_updated",
+      "value": "%1$sを更新しました"
+    },
+    {
+      "name": "subs_diff_updating",
+      "value": "%1$sを更新中…"
+    },
+    {
+      "name": "subs_error_clipboard_empty",
+      "value": "クリップボードが空です"
+    },
+    {
+      "name": "subs_error_delete",
+      "value": "%1$sを削除できませんでした"
+    },
+    {
+      "name": "subs_error_fetch",
+      "value": "このサブスクリプションをダウンロードできませんでした。リンクまたはネットワークを確認してください。"
+    },
+    {
+      "name": "subs_error_import_version",
+      "value": "このインポートコードには新しいバージョンの Zephyr が必要です"
+    },
+    {
+      "name": "subs_error_invalid_file",
+      "value": "有効な設定ファイルではありません"
+    },
+    {
+      "name": "subs_error_invalid_link",
+      "value": "有効なサブスクリプションのリンクではありません"
+    },
+    {
+      "name": "subs_error_read_file",
+      "value": "このファイルを読み込めませんでした"
+    },
+    {
+      "name": "subs_error_update",
+      "value": "%1$sを更新できませんでした"
+    },
+    {
+      "name": "subs_error_update_all",
+      "value": "サブスクリプションを更新できませんでした"
+    },
+    {
+      "name": "subs_hint_desktop",
+      "value": "コンピュータの Zephyr で「設定 › スマートフォンに同期」を開くと QR コードが表示されます"
+    },
+    {
+      "name": "subs_import_desktop",
+      "value": "コンピュータ上の Zephyr からインポート"
+    },
+    {
+      "name": "subs_import_desktop_source",
+      "value": "Zephyr デスクトップ"
+    },
+    {
+      "name": "subs_import_insecure",
+      "value": "このリンクは暗号化されていない（http）ため、内容が盗聴または改ざんされる可能性があります。"
+    },
+    {
+      "name": "subs_import_source",
+      "value": "ソース：%1$s"
+    },
+    {
+      "name": "subs_import_trust",
+      "value": "信頼できるプロバイダの場合のみ続けてください。"
+    },
+    {
+      "name": "subs_overrides_kept",
+      "value": "オーバーライドを保持しました"
+    },
+    {
+      "name": "subs_paste_clipboard",
+      "value": "クリップボードからペースト"
+    },
+    {
+      "name": "subs_paste_link",
+      "value": "リンクをペースト"
+    },
+    {
+      "name": "subs_paste_placeholder",
+      "value": "サブスクリプションのリンクをペースト"
+    },
+    {
+      "name": "subs_remaining",
+      "value": "残り"
+    },
+    {
+      "name": "subs_review_note",
+      "value": "更新すると、サブスクリプションのノードとルールが置き換えられます。Zephyr のオーバーライドとシーンの選択は変わりません。"
+    },
+    {
+      "name": "subs_review_one",
+      "value": "%1$sを更新します"
+    },
+    {
+      "name": "subs_rule_changes",
+      "value": "ルールの変更"
+    },
+    {
+      "name": "subs_scan_camera_needed",
+      "value": "スキャンするにはカメラへのアクセスが必要です"
+    },
+    {
+      "name": "subs_scan_no_camera",
+      "value": "このデバイスで使用できるカメラがありません"
+    },
+    {
+      "name": "subs_scan_prompt",
+      "value": "サブスクリプションの QR コードを枠内に合わせると、自動的に読み取られます。"
+    },
+    {
+      "name": "subs_scan_qr",
+      "value": "QR コードをスキャン"
+    },
+    {
+      "name": "subs_scenes_retested",
+      "value": "シーンプールを再テストしました"
+    },
+    {
+      "name": "subs_section_data",
+      "value": "データ"
+    },
+    {
+      "name": "subs_section_update",
+      "value": "更新"
+    },
+    {
+      "name": "subs_show_changes",
+      "value": "更新前に変更内容を表示"
+    },
+    {
+      "name": "subs_swipe_confirm_delete",
+      "value": "削除を確認"
+    },
+    {
+      "name": "subs_swipe_updating",
+      "value": "更新中"
+    },
+    {
+      "name": "subs_this_month",
+      "value": "今月"
+    },
+    {
+      "name": "subs_update_all",
+      "value": "今すぐすべて更新"
+    },
+    {
+      "name": "subs_update_wifi_only",
+      "value": "Wi‑Fi 接続時のみ更新"
+    },
+    {
+      "name": "term_accent",
+      "value": "アクセントカラー"
+    },
+    {
+      "name": "term_all",
+      "value": "すべて"
+    },
+    {
+      "name": "term_appearance",
+      "value": "外観"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "ダーク"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "ライト"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "システム"
+    },
+    {
+      "name": "term_apply",
+      "value": "適用"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "自動更新"
+    },
+    {
+      "name": "term_delete",
+      "value": "削除"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "診断"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "切断"
+    },
+    {
+      "name": "term_domain",
+      "value": "ドメイン"
+    },
+    {
+      "name": "term_exit",
+      "value": "出口"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "出口 IP"
+    },
+    {
+      "name": "term_import",
+      "value": "インポート"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "ファイルからインポート"
+    },
+    {
+      "name": "term_latency",
+      "value": "レイテンシ"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "ローカルプロキシポート"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "デバッグ"
+    },
+    {
+      "name": "term_log_error",
+      "value": "エラー"
+    },
+    {
+      "name": "term_log_info",
+      "value": "情報"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "警告"
+    },
+    {
+      "name": "term_logs",
+      "value": "ログ"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "ダイレクト"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "グローバル"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "グローバルモード"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "ルール"
+    },
+    {
+      "name": "term_no_results",
+      "value": "結果なし"
+    },
+    {
+      "name": "term_node",
+      "value": "ノード"
+    },
+    {
+      "name": "term_nodes",
+      "value": "ノード"
+    },
+    {
+      "name": "term_none",
+      "value": "なし"
+    },
+    {
+      "name": "term_off",
+      "value": "オフ"
+    },
+    {
+      "name": "term_on",
+      "value": "オン"
+    },
+    {
+      "name": "term_override",
+      "value": "オーバーライド"
+    },
+    {
+      "name": "term_proxy",
+      "value": "プロキシ"
+    },
+    {
+      "name": "term_reachable",
+      "value": "接続可能"
+    },
+    {
+      "name": "term_require_password",
+      "value": "パスワードを要求"
+    },
+    {
+      "name": "term_rule",
+      "value": "ルール"
+    },
+    {
+      "name": "term_rules",
+      "value": "ルール"
+    },
+    {
+      "name": "term_scene",
+      "value": "シーン"
+    },
+    {
+      "name": "term_scenes",
+      "value": "シーン"
+    },
+    {
+      "name": "term_settings",
+      "value": "設定"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "期限切れ"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "期限間近"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "失敗"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "正常"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "低速"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "タイムアウト"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "未測定"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "接続中"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "未接続"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "接続できませんでした"
+    },
+    {
+      "name": "term_subscription",
+      "value": "サブスクリプション"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "サブスクリプション"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "モードを切り替え"
+    },
+    {
+      "name": "term_test_again",
+      "value": "再テスト"
+    },
+    {
+      "name": "term_tested",
+      "value": "測定済み"
+    },
+    {
+      "name": "term_testing",
+      "value": "テスト中"
+    },
+    {
+      "name": "term_today",
+      "value": "今日"
+    },
+    {
+      "name": "term_undo",
+      "value": "取り消す"
+    },
+    {
+      "name": "term_update",
+      "value": "更新"
+    },
+    {
+      "name": "tile_a11y",
+      "value": "%1$s、%2$s"
+    },
+    {
+      "name": "today_date_pattern",
+      "value": "M月d日 EEEE"
+    },
+    {
+      "name": "today_fastest",
+      "value": "ms 最速"
+    },
+    {
+      "name": "today_pattern_note",
+      "value": "パターンは今日のトラフィックから生成され、ノード名や IP アドレスは含まれません。"
+    },
+    {
+      "name": "today_save_failed",
+      "value": "画像を保存できませんでした"
+    },
+    {
+      "name": "today_save_image",
+      "value": "画像を保存"
+    },
+    {
+      "name": "today_saved",
+      "value": "ギャラリーに保存しました"
+    },
+    {
+      "name": "today_storage_permission",
+      "value": "画像を保存するにはストレージへのアクセス許可が必要です"
+    },
+    {
+      "name": "today_style_dawn",
+      "value": "夜明け"
+    },
+    {
+      "name": "today_style_mist",
+      "value": "霧"
+    },
+    {
+      "name": "today_style_night",
+      "value": "夜"
+    },
+    {
+      "name": "trace_always_apply",
+      "value": "常に適用"
+    },
+    {
+      "name": "trace_always_apply_hint",
+      "value": "オフの場合、この接続のみ変更されます"
+    },
+    {
+      "name": "trace_from",
+      "value": "%1$sから"
+    },
+    {
+      "name": "trace_option_unchanged",
+      "value": "変更なし"
+    },
+    {
+      "name": "trace_override_cleared",
+      "value": "%1$s のルートオーバーライドを解除しました"
+    },
+    {
+      "name": "trace_override_direct",
+      "value": "%1$sはダイレクト接続に変更"
+    },
+    {
+      "name": "trace_override_error",
+      "value": "ルートを変更できませんでした。もう一度お試しください。"
+    },
+    {
+      "name": "trace_override_scene",
+      "value": "%1$sは%2$s経由に変更"
+    },
+    {
+      "name": "trace_step_rule",
+      "value": "ルール"
+    },
+    {
+      "name": "trace_this_connection",
+      "value": "この接続"
+    },
+    {
+      "name": "trace_via",
+      "value": "%1$s経由"
+    },
+    {
+      "name": "trusted_wifi_add_hint",
+      "value": "Wi‑Fi 名を追加"
+    },
+    {
+      "name": "trusted_wifi_disconnect",
+      "value": "これらの Wi‑Fi に接続したら切断"
+    },
+    {
+      "name": "trusted_wifi_footer",
+      "value": "自宅や職場など信頼できるネットワークでは Zephyr が自動的に切断され、離れるとオンデマンドで再接続されます。"
+    },
+    {
+      "name": "trusted_wifi_networks",
+      "value": "ネットワーク"
+    },
+    {
+      "name": "widget_description",
+      "value": "接続状態、速度、シーン"
+    },
+    {
+      "name": "widget_label",
+      "value": "Zephyr ステータス"
+    },
+    {
+      "name": "widget_today",
+      "value": "今日 %1$s %2$s"
+    },
+    {
+      "name": "widget_usage_description",
+      "value": "今日のトラフィックと 24時間の内訳"
+    },
+    {
+      "name": "widget_usage_label",
+      "value": "Zephyr 今日の使用量"
+    },
+    {
+      "name": "widgets_home_steps",
+      "value": "ホーム画面の空いている場所を長押し › ウィジェット › Zephyr を選び、ホーム画面にドラッグします。"
+    },
+    {
+      "name": "widgets_home_title",
+      "value": "ホーム画面ウィジェット"
+    },
+    {
+      "name": "widgets_tile_steps",
+      "value": "画面上部から2回下にスワイプ › 編集 › Zephyr をクイック設定にドラッグします。タップで接続・切断できます。"
+    },
+    {
+      "name": "widgets_tile_title",
+      "value": "クイック設定タイル"
+    }
+  ]
+}

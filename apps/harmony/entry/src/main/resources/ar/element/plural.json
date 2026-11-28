@@ -1,0 +1,990 @@
+{
+  "plural": [
+    {
+      "name": "common_node_count",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "\\u2068%1$s\\u2069 عقدة"
+        },
+        {
+          "quantity": "one",
+          "value": "عقدة واحدة"
+        },
+        {
+          "quantity": "two",
+          "value": "عقدتان"
+        },
+        {
+          "quantity": "few",
+          "value": "\\u2068%1$s\\u2069 عقد"
+        },
+        {
+          "quantity": "many",
+          "value": "\\u2068%1$s\\u2069 عقدة"
+        },
+        {
+          "quantity": "other",
+          "value": "\\u2068%1$s\\u2069 عقدة"
+        }
+      ]
+    },
+    {
+      "name": "common_available_count",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "%1$d عقدة متاحة"
+        },
+        {
+          "quantity": "one",
+          "value": "عقدة واحدة متاحة"
+        },
+        {
+          "quantity": "two",
+          "value": "عقدتان متاحتان"
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d عقد متاحة"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d عقدة متاحة"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d عقدة متاحة"
+        }
+      ]
+    },
+    {
+      "name": "common_region_count",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "%1$d منطقة"
+        },
+        {
+          "quantity": "one",
+          "value": "منطقة واحدة"
+        },
+        {
+          "quantity": "two",
+          "value": "منطقتان"
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d مناطق"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d منطقة"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d منطقة"
+        }
+      ]
+    },
+    {
+      "name": "home_subs_more",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "%1$d اشتراك إضافي"
+        },
+        {
+          "quantity": "one",
+          "value": "اشتراك إضافي واحد"
+        },
+        {
+          "quantity": "two",
+          "value": "اشتراكان إضافيان"
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d اشتراكات إضافية"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d اشتراكًا إضافيًا"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d اشتراك إضافي"
+        }
+      ]
+    },
+    {
+      "name": "home_scene_count",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "%1$d مشهد"
+        },
+        {
+          "quantity": "one",
+          "value": "مشهد واحد"
+        },
+        {
+          "quantity": "two",
+          "value": "مشهدان"
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d مشاهد"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d مشهدًا"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d مشهد"
+        }
+      ]
+    },
+    {
+      "name": "scene_available_unit",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "عقدة متاحة"
+        },
+        {
+          "quantity": "one",
+          "value": "عقدة متاحة"
+        },
+        {
+          "quantity": "two",
+          "value": "عقدتان متاحتان"
+        },
+        {
+          "quantity": "few",
+          "value": "عقد متاحة"
+        },
+        {
+          "quantity": "many",
+          "value": "عقدة متاحة"
+        },
+        {
+          "quantity": "other",
+          "value": "عقدة متاحة"
+        }
+      ]
+    },
+    {
+      "name": "scene_tested_from",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "اختُبرت من %1$d اشتراك"
+        },
+        {
+          "quantity": "one",
+          "value": "اختُبرت من اشتراك واحد"
+        },
+        {
+          "quantity": "two",
+          "value": "اختُبرت من اشتراكين"
+        },
+        {
+          "quantity": "few",
+          "value": "اختُبرت من %1$d اشتراكات"
+        },
+        {
+          "quantity": "many",
+          "value": "اختُبرت من %1$d اشتراكًا"
+        },
+        {
+          "quantity": "other",
+          "value": "اختُبرت من %1$d اشتراك"
+        }
+      ]
+    },
+    {
+      "name": "scene_test_every_hours",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "كل %1$d ساعة"
+        },
+        {
+          "quantity": "one",
+          "value": "كل ساعة"
+        },
+        {
+          "quantity": "two",
+          "value": "كل ساعتين"
+        },
+        {
+          "quantity": "few",
+          "value": "كل %1$d ساعات"
+        },
+        {
+          "quantity": "many",
+          "value": "كل %1$d ساعة"
+        },
+        {
+          "quantity": "other",
+          "value": "كل %1$d ساعة"
+        }
+      ]
+    },
+    {
+      "name": "command_plan_exit_available",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "%1$d عقدة متاحة. سيُستخدم \\u2068%2$s\\u2069."
+        },
+        {
+          "quantity": "one",
+          "value": "عقدة واحدة متاحة. سيُستخدم \\u2068%2$s\\u2069."
+        },
+        {
+          "quantity": "two",
+          "value": "عقدتان متاحتان. سيُستخدم \\u2068%2$s\\u2069."
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d عقد متاحة. سيُستخدم \\u2068%2$s\\u2069."
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d عقدة متاحة. سيُستخدم \\u2068%2$s\\u2069."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d عقدة متاحة. سيُستخدم \\u2068%2$s\\u2069."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_untested",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "لم تُختبر %1$d عقدة 4K بعد. أعد اختبار المشهد بعد التطبيق."
+        },
+        {
+          "quantity": "one",
+          "value": "لم تُختبر بعد %1$d من عقد 4K. أعد اختبار المشهد بعد التطبيق."
+        },
+        {
+          "quantity": "two",
+          "value": "لم تُختبر عقدتا 4K بعد. أعد اختبار المشهد بعد التطبيق."
+        },
+        {
+          "quantity": "few",
+          "value": "لم تُختبر %1$d عقد 4K بعد. أعد اختبار المشهد بعد التطبيق."
+        },
+        {
+          "quantity": "many",
+          "value": "لم تُختبر %1$d عقدة 4K بعد. أعد اختبار المشهد بعد التطبيق."
+        },
+        {
+          "quantity": "other",
+          "value": "لم تُختبر %1$d عقدة 4K بعد. أعد اختبار المشهد بعد التطبيق."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_keep",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "%2$d من %1$d تدعم 4K، وتبقى العقدة الحالية."
+        },
+        {
+          "quantity": "one",
+          "value": "%2$d من %1$d تدعم 4K، وتبقى العقدة الحالية."
+        },
+        {
+          "quantity": "two",
+          "value": "%2$d من %1$d تدعم 4K، وتبقى العقدة الحالية."
+        },
+        {
+          "quantity": "few",
+          "value": "%2$d من %1$d تدعم 4K، وتبقى العقدة الحالية."
+        },
+        {
+          "quantity": "many",
+          "value": "%2$d من %1$d تدعم 4K، وتبقى العقدة الحالية."
+        },
+        {
+          "quantity": "other",
+          "value": "%2$d من %1$d تدعم 4K، وتبقى العقدة الحالية."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_switch",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "%2$d من %1$d تدعم 4K، وسيُستخدم \\u2068%3$s\\u2069."
+        },
+        {
+          "quantity": "one",
+          "value": "%2$d من %1$d تدعم 4K، وسيُستخدم \\u2068%3$s\\u2069."
+        },
+        {
+          "quantity": "two",
+          "value": "%2$d من %1$d تدعم 4K، وسيُستخدم \\u2068%3$s\\u2069."
+        },
+        {
+          "quantity": "few",
+          "value": "%2$d من %1$d تدعم 4K، وسيُستخدم \\u2068%3$s\\u2069."
+        },
+        {
+          "quantity": "many",
+          "value": "%2$d من %1$d تدعم 4K، وسيُستخدم \\u2068%3$s\\u2069."
+        },
+        {
+          "quantity": "other",
+          "value": "%2$d من %1$d تدعم 4K، وسيُستخدم \\u2068%3$s\\u2069."
+        }
+      ]
+    },
+    {
+      "name": "activity_closed",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "تم إغلاق %1$d اتصال"
+        },
+        {
+          "quantity": "one",
+          "value": "تم إغلاق اتصال واحد"
+        },
+        {
+          "quantity": "two",
+          "value": "تم إغلاق اتصالين"
+        },
+        {
+          "quantity": "few",
+          "value": "تم إغلاق %1$d اتصالات"
+        },
+        {
+          "quantity": "many",
+          "value": "تم إغلاق %1$d اتصالًا"
+        },
+        {
+          "quantity": "other",
+          "value": "تم إغلاق %1$d اتصال"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_failed",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "تعذّر إغلاق الاتصالات"
+        },
+        {
+          "quantity": "one",
+          "value": "تعذّر إغلاق الاتصال"
+        },
+        {
+          "quantity": "two",
+          "value": "تعذّر إغلاق الاتصالين"
+        },
+        {
+          "quantity": "few",
+          "value": "تعذّر إغلاق الاتصالات"
+        },
+        {
+          "quantity": "many",
+          "value": "تعذّر إغلاق الاتصالات"
+        },
+        {
+          "quantity": "other",
+          "value": "تعذّر إغلاق الاتصالات"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_partial",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "تعذّر إغلاق %1$d اتصال"
+        },
+        {
+          "quantity": "one",
+          "value": "تعذّر إغلاق اتصال واحد"
+        },
+        {
+          "quantity": "two",
+          "value": "تعذّر إغلاق اتصالين"
+        },
+        {
+          "quantity": "few",
+          "value": "تعذّر إغلاق %1$d اتصالات"
+        },
+        {
+          "quantity": "many",
+          "value": "تعذّر إغلاق %1$d اتصالًا"
+        },
+        {
+          "quantity": "other",
+          "value": "تعذّر إغلاق %1$d اتصال"
+        }
+      ]
+    },
+    {
+      "name": "trace_connections",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "%1$d اتصال"
+        },
+        {
+          "quantity": "one",
+          "value": "اتصال واحد"
+        },
+        {
+          "quantity": "two",
+          "value": "اتصالان"
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d اتصالات"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d اتصالًا"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d اتصال"
+        }
+      ]
+    },
+    {
+      "name": "trace_exit_stable",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "لم يتغيّر منذ %1$d يوم"
+        },
+        {
+          "quantity": "one",
+          "value": "لم يتغيّر منذ يوم"
+        },
+        {
+          "quantity": "two",
+          "value": "لم يتغيّر منذ يومين"
+        },
+        {
+          "quantity": "few",
+          "value": "لم يتغيّر منذ %1$d أيام"
+        },
+        {
+          "quantity": "many",
+          "value": "لم يتغيّر منذ %1$d يومًا"
+        },
+        {
+          "quantity": "other",
+          "value": "لم يتغيّر منذ %1$d يوم"
+        }
+      ]
+    },
+    {
+      "name": "nodes_total_unit",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "عقدة"
+        },
+        {
+          "quantity": "one",
+          "value": "عقدة"
+        },
+        {
+          "quantity": "two",
+          "value": "عقدتان"
+        },
+        {
+          "quantity": "few",
+          "value": "عقد"
+        },
+        {
+          "quantity": "many",
+          "value": "عقدة"
+        },
+        {
+          "quantity": "other",
+          "value": "عقدة"
+        }
+      ]
+    },
+    {
+      "name": "nodes_from_subs",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "من %1$d اشتراك"
+        },
+        {
+          "quantity": "one",
+          "value": "من اشتراك واحد"
+        },
+        {
+          "quantity": "two",
+          "value": "من اشتراكين"
+        },
+        {
+          "quantity": "few",
+          "value": "من %1$d اشتراكات"
+        },
+        {
+          "quantity": "many",
+          "value": "من %1$d اشتراكًا"
+        },
+        {
+          "quantity": "other",
+          "value": "من %1$d اشتراك"
+        }
+      ]
+    },
+    {
+      "name": "rules_total_unit",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "قاعدة"
+        },
+        {
+          "quantity": "one",
+          "value": "قاعدة"
+        },
+        {
+          "quantity": "two",
+          "value": "قاعدتان"
+        },
+        {
+          "quantity": "few",
+          "value": "قواعد"
+        },
+        {
+          "quantity": "many",
+          "value": "قاعدة"
+        },
+        {
+          "quantity": "other",
+          "value": "قاعدة"
+        }
+      ]
+    },
+    {
+      "name": "rules_summary",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "%1$d طبقة · مُجمَّعة · \\u2068%2$s\\u2069 على القرص"
+        },
+        {
+          "quantity": "one",
+          "value": "طبقة واحدة · مُجمَّعة · \\u2068%2$s\\u2069 على القرص"
+        },
+        {
+          "quantity": "two",
+          "value": "طبقتان · مُجمَّعة · \\u2068%2$s\\u2069 على القرص"
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d طبقات · مُجمَّعة · \\u2068%2$s\\u2069 على القرص"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d طبقة · مُجمَّعة · \\u2068%2$s\\u2069 على القرص"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d طبقة · مُجمَّعة · \\u2068%2$s\\u2069 على القرص"
+        }
+      ]
+    },
+    {
+      "name": "subs_added",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "تمت إضافة \\u2068%1$s\\u2069 (\\u2068%2$s\\u2069 عقدة)"
+        },
+        {
+          "quantity": "one",
+          "value": "تمت إضافة \\u2068%1$s\\u2069 (عقدة واحدة)"
+        },
+        {
+          "quantity": "two",
+          "value": "تمت إضافة \\u2068%1$s\\u2069 (عقدتان)"
+        },
+        {
+          "quantity": "few",
+          "value": "تمت إضافة \\u2068%1$s\\u2069 (\\u2068%2$s\\u2069 عقد)"
+        },
+        {
+          "quantity": "many",
+          "value": "تمت إضافة \\u2068%1$s\\u2069 (\\u2068%2$s\\u2069 عقدة)"
+        },
+        {
+          "quantity": "other",
+          "value": "تمت إضافة \\u2068%1$s\\u2069 (\\u2068%2$s\\u2069 عقدة)"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_confirm_title",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "استيراد %1$d اشتراك؟"
+        },
+        {
+          "quantity": "one",
+          "value": "استيراد اشتراك واحد؟"
+        },
+        {
+          "quantity": "two",
+          "value": "استيراد اشتراكين؟"
+        },
+        {
+          "quantity": "few",
+          "value": "استيراد %1$d اشتراكات؟"
+        },
+        {
+          "quantity": "many",
+          "value": "استيراد %1$d اشتراكًا؟"
+        },
+        {
+          "quantity": "other",
+          "value": "استيراد %1$d اشتراك؟"
+        }
+      ]
+    },
+    {
+      "name": "subs_added_many",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "تمت إضافة %1$d اشتراك"
+        },
+        {
+          "quantity": "one",
+          "value": "تمت إضافة اشتراك واحد"
+        },
+        {
+          "quantity": "two",
+          "value": "تمت إضافة اشتراكين"
+        },
+        {
+          "quantity": "few",
+          "value": "تمت إضافة %1$d اشتراكات"
+        },
+        {
+          "quantity": "many",
+          "value": "تمت إضافة %1$d اشتراكًا"
+        },
+        {
+          "quantity": "other",
+          "value": "تمت إضافة %1$d اشتراك"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_some_failed",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "تعذّرت إضافة %1$d"
+        },
+        {
+          "quantity": "one",
+          "value": "تعذّرت إضافة %1$d"
+        },
+        {
+          "quantity": "two",
+          "value": "تعذّرت إضافة %1$d"
+        },
+        {
+          "quantity": "few",
+          "value": "تعذّرت إضافة %1$d"
+        },
+        {
+          "quantity": "many",
+          "value": "تعذّرت إضافة %1$d"
+        },
+        {
+          "quantity": "other",
+          "value": "تعذّرت إضافة %1$d"
+        }
+      ]
+    },
+    {
+      "name": "subs_review_all",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "سيتم تحديث كل الاشتراكات (\\u2068%1$s\\u2069)"
+        },
+        {
+          "quantity": "one",
+          "value": "سيتم تحديث كل الاشتراكات (\\u2068%1$s\\u2069)"
+        },
+        {
+          "quantity": "two",
+          "value": "سيتم تحديث كل الاشتراكات (\\u2068%1$s\\u2069)"
+        },
+        {
+          "quantity": "few",
+          "value": "سيتم تحديث كل الاشتراكات (\\u2068%1$s\\u2069)"
+        },
+        {
+          "quantity": "many",
+          "value": "سيتم تحديث كل الاشتراكات (\\u2068%1$s\\u2069)"
+        },
+        {
+          "quantity": "other",
+          "value": "سيتم تحديث كل الاشتراكات (\\u2068%1$s\\u2069)"
+        }
+      ]
+    },
+    {
+      "name": "subs_updated_count",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "تم تحديث %1$d اشتراك"
+        },
+        {
+          "quantity": "one",
+          "value": "تم تحديث اشتراك واحد"
+        },
+        {
+          "quantity": "two",
+          "value": "تم تحديث اشتراكين"
+        },
+        {
+          "quantity": "few",
+          "value": "تم تحديث %1$d اشتراكات"
+        },
+        {
+          "quantity": "many",
+          "value": "تم تحديث %1$d اشتراكًا"
+        },
+        {
+          "quantity": "other",
+          "value": "تم تحديث %1$d اشتراك"
+        }
+      ]
+    },
+    {
+      "name": "subs_total_unit",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "اشتراك"
+        },
+        {
+          "quantity": "one",
+          "value": "اشتراك"
+        },
+        {
+          "quantity": "two",
+          "value": "اشتراكان"
+        },
+        {
+          "quantity": "few",
+          "value": "اشتراكات"
+        },
+        {
+          "quantity": "many",
+          "value": "اشتراكًا"
+        },
+        {
+          "quantity": "other",
+          "value": "اشتراك"
+        }
+      ]
+    },
+    {
+      "name": "subs_update_every",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "يُحدَّث كل %1$d ساعة"
+        },
+        {
+          "quantity": "one",
+          "value": "يُحدَّث كل ساعة"
+        },
+        {
+          "quantity": "two",
+          "value": "يُحدَّث كل ساعتين"
+        },
+        {
+          "quantity": "few",
+          "value": "يُحدَّث كل %1$d ساعات"
+        },
+        {
+          "quantity": "many",
+          "value": "يُحدَّث كل %1$d ساعة"
+        },
+        {
+          "quantity": "other",
+          "value": "يُحدَّث كل %1$d ساعة"
+        }
+      ]
+    },
+    {
+      "name": "subs_others",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "%1$d اشتراك آخر"
+        },
+        {
+          "quantity": "one",
+          "value": "اشتراك آخر"
+        },
+        {
+          "quantity": "two",
+          "value": "اشتراكان آخران"
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d اشتراكات أخرى"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d اشتراكًا آخر"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d اشتراك آخر"
+        }
+      ]
+    },
+    {
+      "name": "subs_every_hours",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "كل %1$d ساعة"
+        },
+        {
+          "quantity": "one",
+          "value": "كل ساعة"
+        },
+        {
+          "quantity": "two",
+          "value": "كل ساعتين"
+        },
+        {
+          "quantity": "few",
+          "value": "كل %1$d ساعات"
+        },
+        {
+          "quantity": "many",
+          "value": "كل %1$d ساعة"
+        },
+        {
+          "quantity": "other",
+          "value": "كل %1$d ساعة"
+        }
+      ]
+    },
+    {
+      "name": "settings_hours",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "%1$d ساعة"
+        },
+        {
+          "quantity": "one",
+          "value": "ساعة واحدة"
+        },
+        {
+          "quantity": "two",
+          "value": "ساعتان"
+        },
+        {
+          "quantity": "few",
+          "value": "%1$d ساعات"
+        },
+        {
+          "quantity": "many",
+          "value": "%1$d ساعة"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d ساعة"
+        }
+      ]
+    },
+    {
+      "name": "today_regions",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "منطقة"
+        },
+        {
+          "quantity": "one",
+          "value": "منطقة"
+        },
+        {
+          "quantity": "two",
+          "value": "منطقتان"
+        },
+        {
+          "quantity": "few",
+          "value": "مناطق"
+        },
+        {
+          "quantity": "many",
+          "value": "منطقة"
+        },
+        {
+          "quantity": "other",
+          "value": "منطقة"
+        }
+      ]
+    },
+    {
+      "name": "today_hours_online",
+      "value": [
+        {
+          "quantity": "zero",
+          "value": "ساعة اتصال"
+        },
+        {
+          "quantity": "one",
+          "value": "ساعة اتصال"
+        },
+        {
+          "quantity": "two",
+          "value": "ساعتا اتصال"
+        },
+        {
+          "quantity": "few",
+          "value": "ساعات اتصال"
+        },
+        {
+          "quantity": "many",
+          "value": "ساعة اتصال"
+        },
+        {
+          "quantity": "other",
+          "value": "ساعة اتصال"
+        }
+      ]
+    }
+  ]
+}

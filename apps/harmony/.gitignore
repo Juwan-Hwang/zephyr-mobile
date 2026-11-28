@@ -1,0 +1,21 @@
+/node_modules
+/oh_modules
+/local.properties
+/.idea
+**/build
+/.hvigor
+.cxx
+/.clangd
+/.clang-format
+/.clang-tidy
+**/.test
+/.appanalyzer
+# 本机签名材料（DevEco 自动签名写在 build-profile.json5 的 signingConfigs 里，提交前请还原为空数组）
+*.p12
+*.p7b
+*.cer
+*.csr
+# 预编译原生库由 tools/build-*.sh 产出，不入库
+/entry/libs/**/*.so
+# 开源许可原文由构建从仓库根复制（tools/build-hmos.sh / entry/hvigorfile.ts）
+/entry/src/main/resources/rawfile/licenses/

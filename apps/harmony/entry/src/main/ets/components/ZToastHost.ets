@@ -1,0 +1,127 @@
+import { LengthMetrics } from '@kit.ArkUI';
+/*
+ * 吐司宿主：由根页面挂进 OverlayManager 浮层（窗口根，盖在 Navigation / 子页之上；失败时退回根 Stack），显示 AppServices.toasts 的当前吐司（§16.e⑥）。
+ * - 出现时朗读文案（有撤销时连同“撤销”）；吐司获得读屏焦点期间不消失（ToastCenter.setFocused）。
+ * - 撤销按钮用强调色，只执行撤销（ToastCenter.undoCurrent）；点文案关闭（提交）。整行不挂点按，以免抢走撤销。
+ * - 卡片 hitTestBehavior 必须是 Default（Block 会屏蔽子节点：撤销点不到）。点按 / 撤销 / 提交都打 hilog（ZToastHost、ToastCenter）。
+ */
+import { accessibility } from '@kit.AccessibilityKit';
+import { hilog } from '@kit.PerformanceAnalysisKit';
+import { AppServices } from '../app/AppServices';
+import { ToastState } from '../app/ToastCenter';
+import { ZTheme } from '../common/Theme';
+import { Subscription as StreamSub } from '../engine/Stream';
+import { ZTerm } from '../generated/ZTerms';
+
+/** UiTest 用的组件 id（ohosTest ToastUi.test 按 id 找“撤销”）。 */
+export const TOAST_UNDO_ID: string = 'zephyr.toast.undo';
+export const TOAST_MESSAGE_ID: string = 'zephyr.toast.message';
+
+@ComponentV2
+export struct ZToastHost {
+  /** 吐司离宿主底边的距离（vp）。 */
+  @Param bottom: number = 72;
+  @Local toast: ToastState | undefined = undefined;
+  @Local theme: ZTheme = ZTheme.shared();
+  private sub: StreamSub | undefined = undefined;
+
+  aboutToAppear(): void {
+    this.sub = AppServices.get().toasts.current.subscribe((t: ToastState | undefined) => {
+      this.toast = t;
+      if (t !== undefined) {
+        hilog.info(0x5A50, 'ZToastHost', 'show #%{public}d undoable=%{public}s', t.serial, String(t.undoable));
+        this.announce(t);
+      }
+    });
+  }
+
+  aboutToDisappear(): void {
+    if (this.sub !== undefined) {
+      this.sub.cancel();
+      this.sub = undefined;
+    }
+  }
+
+  private announce(t: ToastState): void {
+    try {
+      const ctx = this.getUIContext().getHostContext();
+      if (ctx === undefined || !accessibility.isScreenReaderOpenSync()) {
+        return;
+      }
+      let text = t.message;
+      if (t.undoable) {
+        text += ' ' + ctx.resourceManager.getStringSync(ZTerm.undo.id);
+      }
+      const ev = new accessibility.EventInfo({
+        type: 'announceForAccessibility',
+        bundleName: ctx.applicationInfo.name,
+        triggerAction: 'common',
+        textAnnouncedForAccessibility: text
+      } as accessibility.EventInfo);
+      accessibility.sendAccessibilityEvent(ev).catch(() => {});
+    } catch (e) {
+      // 朗读失败不影响吐司本身。
+    }
+  }
+
+  build() {
+    Column() {
+      if (this.toast !== undefined) {
+        Row({ space: 12 }) {
+          // 点文案关闭（提交）；不再挂在整行上，免得行级点按抢在“撤销”之前把吐司提交掉（真机：点撤销只关闭不撤销）。
+          Text(this.toast.message)
+            .fontSize(15)
+            .fontColor($r('app.color.screen_on_primary'))
+            .layoutWeight(1)
+            .maxLines(2)
+            .textOverflow({ overflow: TextOverflow.Ellipsis })
+            .constraintSize({ minHeight: 48 })
+            .id(TOAST_MESSAGE_ID)
+            .onClick(() => {
+              const t = this.toast;
+              hilog.info(0x5A50, 'ZToastHost', 'message tapped -> dismiss');
+              if (t !== undefined) {
+                AppServices.get().toasts.dismiss(t.serial);
+              }
+            })
+          if (this.toast.undoable) {
+            Text(ZTerm.undo)
+              .fontSize(15)
+              .fontWeight(FontWeight.Medium)
+              .fontColor(this.theme.accentColor())
+              .padding({ left: 8, right: 8, top: 10, bottom: 10 })
+              .accessibilityRole(AccessibilityRoleType.BUTTON)
+              .id(TOAST_UNDO_ID)
+              .onClick(() => {
+                // 撤销“当前”吐司：不用本组件缓存的 serial（浮层里的 @Local 可能滞后于 ToastCenter）。
+                hilog.info(0x5A50, 'ZToastHost', 'undo tapped');
+                const done = AppServices.get().toasts.undoCurrent();
+                hilog.info(0x5A50, 'ZToastHost', 'undo ran=%{public}s', String(done));
+              })
+          }
+        }
+        .width('100%')
+        .constraintSize({ minHeight: 48 })
+        .padding({ start: LengthMetrics.vp(16), end: LengthMetrics.vp(8) })
+        .borderRadius(14)
+        .backgroundColor($r('app.color.screen_primary'))
+        .shadow({ radius: 12, color: '#33000000', offsetY: 4 })
+        // 卡片挡住下面的页面（点内边距不漏给底下），但不挂点按手势。必须是 Default：HitTestMode.Block 会连子节点一起屏蔽
+        // （SDK：“Self respond … but block hit test of children”），“撤销”和文案都收不到点按，窗口到期照常删除——
+        // 这正是真机上“点撤销没恢复”的原因（scene-ready.hap，Mate 90）。
+        .hitTestBehavior(HitTestMode.Default)
+        .onAccessibilityFocus((focused: boolean) => {
+          const t = this.toast;
+          if (t !== undefined) {
+            AppServices.get().toasts.setFocused(t.serial, focused);
+          }
+        })
+        .transition(TransitionEffect.OPACITY.combine(TransitionEffect.translate({ y: 16 })).animation({ duration: 200 }))
+      }
+    }
+    .width('100%')
+    .padding({ left: 16, right: 16, bottom: this.toast !== undefined ? this.bottom : 0 })
+    // 自身不吃触摸（没有吐司时不挡首页底栏 / 页面）；吐司卡片本身照常可点，且不会把点按漏给下面的页面。
+    .hitTestBehavior(HitTestMode.None)
+  }
+}

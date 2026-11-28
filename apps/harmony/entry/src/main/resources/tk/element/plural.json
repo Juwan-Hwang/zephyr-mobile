@@ -1,0 +1,446 @@
+{
+  "plural": [
+    {
+      "name": "common_node_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$s düwün"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$s düwün"
+        }
+      ]
+    },
+    {
+      "name": "common_available_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d elýeterli"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d elýeterli"
+        }
+      ]
+    },
+    {
+      "name": "common_region_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d sebit"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d sebit"
+        }
+      ]
+    },
+    {
+      "name": "home_subs_more",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Ýene %1$d abuna"
+        },
+        {
+          "quantity": "other",
+          "value": "Ýene %1$d abuna"
+        }
+      ]
+    },
+    {
+      "name": "home_scene_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d ssenariý"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d ssenariý"
+        }
+      ]
+    },
+    {
+      "name": "scene_available_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "elýeterli düwün"
+        },
+        {
+          "quantity": "other",
+          "value": "elýeterli düwün"
+        }
+      ]
+    },
+    {
+      "name": "scene_tested_from",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d abunadan barlandy"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d abunadan barlandy"
+        }
+      ]
+    },
+    {
+      "name": "scene_test_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Her sagat"
+        },
+        {
+          "quantity": "other",
+          "value": "Her %1$d sagat"
+        }
+      ]
+    },
+    {
+      "name": "command_plan_exit_available",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d elýeterli. %2$s ulanylar."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d elýeterli. %2$s ulanylar."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_untested",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d 4K düwün entek barlanmady. Ulanandan soň ssenariýni täzeden barlaň."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d 4K düwün entek barlanmady. Ulanandan soň ssenariýni täzeden barlaň."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_keep",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d düwüniň %2$d-si 4K goldaýar; häzirki düwün üýtgemez."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d düwüniň %2$d-si 4K goldaýar; häzirki düwün üýtgemez."
+        }
+      ]
+    },
+    {
+      "name": "command_uhd_matching_switch",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d düwüniň %2$d-si 4K goldaýar; %3$s ulanylar."
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d düwüniň %2$d-si 4K goldaýar; %3$s ulanylar."
+        }
+      ]
+    },
+    {
+      "name": "activity_closed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d birikme ýapyldy"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d birikme ýapyldy"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Birikmäni ýapyp bolmady"
+        },
+        {
+          "quantity": "other",
+          "value": "Birikmeleri ýapyp bolmady"
+        }
+      ]
+    },
+    {
+      "name": "activity_close_partial",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d birikmäni ýapyp bolmady"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d birikmäni ýapyp bolmady"
+        }
+      ]
+    },
+    {
+      "name": "trace_connections",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d birikme"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d birikme"
+        }
+      ]
+    },
+    {
+      "name": "trace_exit_stable",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d gün bäri üýtgemedi"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d gün bäri üýtgemedi"
+        }
+      ]
+    },
+    {
+      "name": "nodes_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "düwün"
+        },
+        {
+          "quantity": "other",
+          "value": "düwün"
+        }
+      ]
+    },
+    {
+      "name": "nodes_from_subs",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d abunadan"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d abunadan"
+        }
+      ]
+    },
+    {
+      "name": "rules_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "düzgün"
+        },
+        {
+          "quantity": "other",
+          "value": "düzgün"
+        }
+      ]
+    },
+    {
+      "name": "rules_summary",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d gatlak · kompilirlendi · diskde %2$s"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d gatlak · kompilirlendi · diskde %2$s"
+        }
+      ]
+    },
+    {
+      "name": "subs_added",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$s goşuldy (%2$s düwün)"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$s goşuldy (%2$s düwün)"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_confirm_title",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d abuna import edilsinmi?"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d abuna import edilsinmi?"
+        }
+      ]
+    },
+    {
+      "name": "subs_added_many",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d abuna goşuldy"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d abuna goşuldy"
+        }
+      ]
+    },
+    {
+      "name": "subs_import_some_failed",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d sanysy goşulmady"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d sanysy goşulmady"
+        }
+      ]
+    },
+    {
+      "name": "subs_review_all",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Ähli %1$s abuna täzelener"
+        },
+        {
+          "quantity": "other",
+          "value": "Ähli %1$s abuna täzelener"
+        }
+      ]
+    },
+    {
+      "name": "subs_updated_count",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d abuna täzelendi"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d abuna täzelendi"
+        }
+      ]
+    },
+    {
+      "name": "subs_total_unit",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "abuna"
+        },
+        {
+          "quantity": "other",
+          "value": "abuna"
+        }
+      ]
+    },
+    {
+      "name": "subs_update_every",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "her %1$d sagatda täzelenýär"
+        },
+        {
+          "quantity": "other",
+          "value": "her %1$d sagatda täzelenýär"
+        }
+      ]
+    },
+    {
+      "name": "subs_others",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Ýene %1$d"
+        },
+        {
+          "quantity": "other",
+          "value": "Ýene %1$d"
+        }
+      ]
+    },
+    {
+      "name": "subs_every_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "Her %1$d sagatda"
+        },
+        {
+          "quantity": "other",
+          "value": "Her %1$d sagatda"
+        }
+      ]
+    },
+    {
+      "name": "settings_hours",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "%1$d sagat"
+        },
+        {
+          "quantity": "other",
+          "value": "%1$d sagat"
+        }
+      ]
+    },
+    {
+      "name": "today_regions",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "sebit"
+        },
+        {
+          "quantity": "other",
+          "value": "sebit"
+        }
+      ]
+    },
+    {
+      "name": "today_hours_online",
+      "value": [
+        {
+          "quantity": "one",
+          "value": "sagat onlaýn"
+        },
+        {
+          "quantity": "other",
+          "value": "sagat onlaýn"
+        }
+      ]
+    }
+  ]
+}

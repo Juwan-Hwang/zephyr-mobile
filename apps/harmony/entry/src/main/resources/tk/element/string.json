@@ -1,0 +1,1592 @@
+{
+  "string": [
+    {
+      "name": "activity_back",
+      "value": "‹ Soňky birikmeler"
+    },
+    {
+      "name": "activity_close_host_a11y",
+      "value": "%1$s birikmelerini ýap"
+    },
+    {
+      "name": "activity_close_none",
+      "value": "Işjeň birikme ýok"
+    },
+    {
+      "name": "activity_empty",
+      "value": "Birikeniňizden soň, ýakynda açylan domenler şu ýerde görüner."
+    },
+    {
+      "name": "activity_host_a11y",
+      "value": "%1$s birikme jikme-jiklikleri"
+    },
+    {
+      "name": "activity_no_app_note",
+      "value": "Birikmäni haýsy programmanyň açandygy entek belli däl, şonuň üçin diňe domenler görkezilýär."
+    },
+    {
+      "name": "activity_title",
+      "value": "Soňky birikmeler"
+    },
+    {
+      "name": "command_action_open",
+      "value": "Aç"
+    },
+    {
+      "name": "command_action_test",
+      "value": "Barla"
+    },
+    {
+      "name": "command_chip_action",
+      "value": "Hereket"
+    },
+    {
+      "name": "command_chip_region",
+      "value": "Sebit"
+    },
+    {
+      "name": "command_chip_scene",
+      "value": "Ssenariý"
+    },
+    {
+      "name": "command_chip_scope",
+      "value": "Çäk"
+    },
+    {
+      "name": "command_chip_service",
+      "value": "Hyzmat"
+    },
+    {
+      "name": "command_direct_note",
+      "value": "%1$s trafigi proksiden geçmez."
+    },
+    {
+      "name": "command_direct_title",
+      "value": "%1$s üçin göni birikme"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "Ýerine ýetirmek üçin Enter basyň"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "Düzgün barlagy"
+    },
+    {
+      "name": "command_no_nodes_available",
+      "value": "Elýeterli düwün ýok"
+    },
+    {
+      "name": "command_placeholder",
+      "value": "Gözle ýa-da buýruk ýaz"
+    },
+    {
+      "name": "command_plan_exit_title",
+      "value": "%1$s %2$s düwünlerini ulanýar"
+    },
+    {
+      "name": "command_plan_fallback_pause",
+      "value": "Elýeterli %1$s düwüni bolmasa, %2$s togtadylar."
+    },
+    {
+      "name": "command_plan_fallback_scene",
+      "value": "Elýeterli %1$s düwüni bolmasa, ssenariýdäki beýleki düwünler ulanylar."
+    },
+    {
+      "name": "command_plan_no_nodes",
+      "value": "%1$s içinde %2$s düwüni ýok."
+    },
+    {
+      "name": "command_plan_releases_pin",
+      "value": "%1$s indi berkidilen %2$s çykyşyny ulanmaz."
+    },
+    {
+      "name": "command_region_de",
+      "value": "Germaniýa"
+    },
+    {
+      "name": "command_region_gb",
+      "value": "Beýik Britaniýa"
+    },
+    {
+      "name": "command_region_hk",
+      "value": "Gonkong"
+    },
+    {
+      "name": "command_region_jp",
+      "value": "Ýaponiýa"
+    },
+    {
+      "name": "command_region_kr",
+      "value": "Koreýa"
+    },
+    {
+      "name": "command_region_sg",
+      "value": "Singapur"
+    },
+    {
+      "name": "command_region_tw",
+      "value": "Taýwan"
+    },
+    {
+      "name": "command_region_us",
+      "value": "ABŞ"
+    },
+    {
+      "name": "command_scene_ai",
+      "value": "AI ssenariýsi"
+    },
+    {
+      "name": "command_scene_named",
+      "value": "%1$s ssenariýsi"
+    },
+    {
+      "name": "command_section_command",
+      "value": "Buýruklar"
+    },
+    {
+      "name": "command_section_suggestions",
+      "value": "Teklipler"
+    },
+    {
+      "name": "command_see_all_nodes",
+      "value": "Düwün kitaphanasynda ähli %1$s düwüni gör"
+    },
+    {
+      "name": "command_show_all",
+      "value": "Hemmesini görkez (%1$s)"
+    },
+    {
+      "name": "command_test_rule",
+      "value": "%1$s nireden geçýär?"
+    },
+    {
+      "name": "command_uhd_auto_note",
+      "value": "Mundan beýläk awtomatik çalşyk diňe 4K düwünlerden saýlar."
+    },
+    {
+      "name": "command_uhd_clear_note",
+      "value": "%1$s ssenariýsi diňe 4K düwünleri ulanýar. Ýene ähli düwünler ulanylar; häzirki düwün üýtgemez."
+    },
+    {
+      "name": "command_uhd_fastest",
+      "value": "iň çalt 4K düwün"
+    },
+    {
+      "name": "command_uhd_none",
+      "value": "4K goldaýan düwün ýok."
+    },
+    {
+      "name": "command_uhd_title_all",
+      "value": "%1$s: ähli düwünler"
+    },
+    {
+      "name": "command_uhd_title_only",
+      "value": "%1$s: diňe 4K düwünler"
+    },
+    {
+      "name": "command_zephyr_only",
+      "value": "Diňe Zephyr-de güýje girýär. Abunaňyzyň konfigurasiýasy üýtgemeýär."
+    },
+    {
+      "name": "common_add",
+      "value": "Goş"
+    },
+    {
+      "name": "common_adding",
+      "value": "Goşulýar…"
+    },
+    {
+      "name": "common_back_to",
+      "value": "%1$s sahypasyna dolan"
+    },
+    {
+      "name": "common_cancel",
+      "value": "Ýatyr"
+    },
+    {
+      "name": "common_change",
+      "value": "Üýtget"
+    },
+    {
+      "name": "common_clear",
+      "value": "Arassala"
+    },
+    {
+      "name": "common_close",
+      "value": "Ýap"
+    },
+    {
+      "name": "common_connect",
+      "value": "Birikdir"
+    },
+    {
+      "name": "common_current",
+      "value": "Häzirki"
+    },
+    {
+      "name": "common_direct",
+      "value": "Göni"
+    },
+    {
+      "name": "common_done",
+      "value": "Taýýar"
+    },
+    {
+      "name": "common_exit_ip_changes",
+      "value": "Çykyş IP-si üýtgär"
+    },
+    {
+      "name": "common_expiry_date",
+      "value": "Möhleti: %1$s"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "Möhleti geçdi"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "Şu gün gutarýar"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "Ertir gutarýar"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "%1$s güni gutarýar"
+    },
+    {
+      "name": "common_home",
+      "value": "Baş sahypa"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "Gijikme barlanýar"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "Gijikme: wagt gutardy"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "Gijikme barlanmady"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "Wagt gutardy"
+    },
+    {
+      "name": "common_library",
+      "value": "Kitaphana"
+    },
+    {
+      "name": "common_list_separator",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "common_local_data_note",
+      "value": "Abunalar we trafik maglumatlary diňe şu enjamda saklanýar."
+    },
+    {
+      "name": "common_local_network",
+      "value": "Bu enjamyň tory"
+    },
+    {
+      "name": "common_mode_direct_hint",
+      "value": "Proksisiz"
+    },
+    {
+      "name": "common_mode_global_hint",
+      "value": "Ähli trafik bir düwünden"
+    },
+    {
+      "name": "common_mode_rule_hint",
+      "value": "Ssenariý boýunça ugrukdyr"
+    },
+    {
+      "name": "common_open_settings",
+      "value": "Sazlamalary aç"
+    },
+    {
+      "name": "common_pair_and",
+      "value": "%1$s we %2$s"
+    },
+    {
+      "name": "common_retesting",
+      "value": "Barlanýar…"
+    },
+    {
+      "name": "common_scene_ai",
+      "value": "AI"
+    },
+    {
+      "name": "common_scene_other",
+      "value": "Beýleki"
+    },
+    {
+      "name": "common_scene_video",
+      "value": "Wideo"
+    },
+    {
+      "name": "common_share",
+      "value": "Paýlaş"
+    },
+    {
+      "name": "common_source_auto",
+      "value": "Zephyr saýlawy"
+    },
+    {
+      "name": "common_source_group",
+      "value": "Abuna topary"
+    },
+    {
+      "name": "common_status_connected",
+      "value": "Birikdirildi"
+    },
+    {
+      "name": "common_status_connecting_ellipsis",
+      "value": "Birikdirilýär…"
+    },
+    {
+      "name": "common_status_disconnecting",
+      "value": "Birikme kesilýär"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "Ýaňy"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "ýaňy"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "Ýükleme sekuntda %1$s %2$s, iberme sekuntda %3$s %4$s"
+    },
+    {
+      "name": "common_try_again",
+      "value": "Täzeden synanyş"
+    },
+    {
+      "name": "common_updating",
+      "value": "Täzelenýär…"
+    },
+    {
+      "name": "connect_no_subscription",
+      "value": "Entek abunalyk ýok"
+    },
+    {
+      "name": "home_action_load_nodes",
+      "value": "Düwünleri ýüklemek"
+    },
+    {
+      "name": "home_action_preview_exit",
+      "value": "Çykyşy öňünden görmek"
+    },
+    {
+      "name": "home_action_retest",
+      "value": "Gaýtadan barlamak"
+    },
+    {
+      "name": "home_action_switch_exit",
+      "value": "Çykyşy çalyşmak"
+    },
+    {
+      "name": "home_action_switch_mode",
+      "value": "Režimi çalyşmak"
+    },
+    {
+      "name": "home_action_switch_node",
+      "value": "Düwüni çalyşmak"
+    },
+    {
+      "name": "home_action_switch_source",
+      "value": "Çeşmäni çalyşmak"
+    },
+    {
+      "name": "home_action_undo",
+      "value": "Yzyna almak"
+    },
+    {
+      "name": "home_apply_failed",
+      "value": "Ulanyp bolmady: %1$s"
+    },
+    {
+      "name": "home_confirm_apps",
+      "value": "%1$s üçin çykyş IP-si üýtgedilsinmi?"
+    },
+    {
+      "name": "home_confirm_scene",
+      "value": "%1$s ssenariýsiniň çykyş IP-si üýtgedilsinmi?"
+    },
+    {
+      "name": "home_confirm_unchanged",
+      "value": "%1$s üýtgemez."
+    },
+    {
+      "name": "home_error_failed",
+      "value": "%1$s şowsuz boldy"
+    },
+    {
+      "name": "home_error_node_gone",
+      "value": "%1$s şowsuz boldy: düwün indi ýok"
+    },
+    {
+      "name": "home_error_not_connected",
+      "value": "%1$s üçin ilki birikdiriň"
+    },
+    {
+      "name": "home_failover_none",
+      "value": "%1$s çykyşy jogap bermeýär. Çykyş IP-si awtomatik üýtgemez."
+    },
+    {
+      "name": "home_failover_switched",
+      "value": "%1$s çykyşy awtomatik %2$s düwünine geçdi"
+    },
+    {
+      "name": "home_failure_core",
+      "value": "Ýadro işe girizilmedi"
+    },
+    {
+      "name": "home_failure_network",
+      "value": "Tor elýeterli däl"
+    },
+    {
+      "name": "home_failure_no_subscription",
+      "value": "Ilki abuna goşuň"
+    },
+    {
+      "name": "home_failure_vpn_permission",
+      "value": "VPN rugsady gerek"
+    },
+    {
+      "name": "home_global_body",
+      "value": "Ähli trafik %1$s arkaly geçýär. Ssenariýler togtadyldy."
+    },
+    {
+      "name": "home_global_body_any",
+      "value": "Ähli trafik bir düwün arkaly geçýär. Ssenariýler togtadyldy."
+    },
+    {
+      "name": "home_global_change_node",
+      "value": "Düwüni çalyş"
+    },
+    {
+      "name": "home_global_change_note",
+      "value": "Ähli programmalar %1$s arkaly çykar."
+    },
+    {
+      "name": "home_global_change_to",
+      "value": "%1$s bilen çalyş"
+    },
+    {
+      "name": "home_global_use_rule",
+      "value": "Düzgün režimini ulan"
+    },
+    {
+      "name": "home_mini_funnel_a11y",
+      "value": "Elýeterli %1$s, 200 millisekuntdan az %2$s"
+    },
+    {
+      "name": "home_now_all_nodes",
+      "value": "%1$s: ýene ähli düwünler"
+    },
+    {
+      "name": "home_now_direct",
+      "value": "%1$s indi göni birikýär"
+    },
+    {
+      "name": "home_now_uhd_only",
+      "value": "%1$s indi diňe 4K düwünleri ulanýar"
+    },
+    {
+      "name": "home_now_uses",
+      "value": "%1$s indi %2$s ulanýar"
+    },
+    {
+      "name": "home_now_uses_uhd",
+      "value": "%1$s indi %2$s ulanýar (diňe 4K)"
+    },
+    {
+      "name": "home_pin_line",
+      "value": "%1$s: %2$s"
+    },
+    {
+      "name": "home_scan_progress",
+      "value": "Barlanýar %1$d/%2$d"
+    },
+    {
+      "name": "home_scan_running",
+      "value": "Barlanýar…"
+    },
+    {
+      "name": "home_scene_details_a11y",
+      "value": "%1$s ssenariýsiniň jikme-jiklikleri"
+    },
+    {
+      "name": "home_scene_next_region",
+      "value": "Indiki sebit: %1$s"
+    },
+    {
+      "name": "home_scene_prev_region",
+      "value": "Öňki sebit: %1$s"
+    },
+    {
+      "name": "home_scene_services_down",
+      "value": "%1$s elýeterli däl"
+    },
+    {
+      "name": "home_scene_services_ok",
+      "value": "%1$s kadaly"
+    },
+    {
+      "name": "home_scenes_tested",
+      "value": "Barlandy: %1$s"
+    },
+    {
+      "name": "home_scrub_hint",
+      "value": "Sebiti çalyşmak üçin çepe ýa-da saga süýşüriň"
+    },
+    {
+      "name": "home_spark_a11y",
+      "value": "Ýükleme tizligi, soňky 90 sekunt"
+    },
+    {
+      "name": "home_switched_to",
+      "value": "%1$s düwünine geçildi"
+    },
+    {
+      "name": "home_today_usage",
+      "value": "Şu gün %1$s"
+    },
+    {
+      "name": "library_widgets",
+      "value": "Widjetler we Çalt sazlamalar"
+    },
+    {
+      "name": "licenses_intro",
+      "value": "Zephyr-iň öz kody MIT ygtyýarnamasy bilen. Programma mihomo (GPL-3.0) öz içine alýar, şonuň üçin programma tutuşlygyna GPL-3.0 boýunça ýaýradylýar. Degişli çeşme kody: %1$s, bellik %2$s."
+    },
+    {
+      "name": "licenses_section_app",
+      "value": "Zephyr ygtyýarnamasy"
+    },
+    {
+      "name": "licenses_section_notices",
+      "value": "Üçünji tarap bildirişleri"
+    },
+    {
+      "name": "licenses_section_texts",
+      "value": "Ygtyýarnama tekstleri"
+    },
+    {
+      "name": "licenses_unavailable",
+      "value": "Bu gurluşda ygtyýarnama faýllary ýok."
+    },
+    {
+      "name": "local_proxy_apply_failed",
+      "value": "Üýtgeşme ulanylmady"
+    },
+    {
+      "name": "local_proxy_auth_footer",
+      "value": "Açyk bolsa, ýerli porta birikmek üçin ulanyjy ady we parol gerek bolar. Bu beýleki programmalaryň proksini rugsatsyz ulanmagynyň öňüni alýar."
+    },
+    {
+      "name": "local_proxy_conceal",
+      "value": "Paroly gizle"
+    },
+    {
+      "name": "local_proxy_concealed",
+      "value": "Parol gizlenen"
+    },
+    {
+      "name": "local_proxy_copied",
+      "value": "Göçürildi"
+    },
+    {
+      "name": "local_proxy_copy_http",
+      "value": "HTTP proksi salgysyny göçür"
+    },
+    {
+      "name": "local_proxy_copy_socks",
+      "value": "SOCKS5 proksi salgysyny göçür"
+    },
+    {
+      "name": "local_proxy_credential_row",
+      "value": "Parol"
+    },
+    {
+      "name": "local_proxy_credentials",
+      "value": "Birikme maglumatlary"
+    },
+    {
+      "name": "local_proxy_footer",
+      "value": "Açyk bolsa, Zephyr diňe 127.0.0.1-i diňleýär, şonuň üçin toruňyzdaky beýleki enjamlar birigip bilmeýär."
+    },
+    {
+      "name": "local_proxy_port",
+      "value": "Port"
+    },
+    {
+      "name": "local_proxy_port_footer",
+      "value": "Beýleki programmalar 127.0.0.1-däki şu port arkaly Zephyr-iň düzgünlerini we ssenariýlerini ulanyp bilýär."
+    },
+    {
+      "name": "local_proxy_port_invalid",
+      "value": "%1$d bilen %2$d aralygyndaky porty giriziň"
+    },
+    {
+      "name": "local_proxy_regenerate",
+      "value": "Täze parol döret"
+    },
+    {
+      "name": "local_proxy_regenerate_footer",
+      "value": "Täzeden döredeniňizden soň köne parol derrew işlemesini bes edýär; sazlan programmalaryňyza täzesi gerek bolar."
+    },
+    {
+      "name": "local_proxy_regenerated",
+      "value": "Täze parol döredildi"
+    },
+    {
+      "name": "local_proxy_reveal",
+      "value": "Paroly görkez"
+    },
+    {
+      "name": "local_proxy_security",
+      "value": "Howpsuzlyk"
+    },
+    {
+      "name": "local_proxy_user_row",
+      "value": "Ulanyjy ady"
+    },
+    {
+      "name": "logs_clear",
+      "value": "Arassala"
+    },
+    {
+      "name": "logs_empty",
+      "value": "Entek günnama ýok"
+    },
+    {
+      "name": "logs_line_a11y",
+      "value": "%1$s %2$s %3$s"
+    },
+    {
+      "name": "logs_pause",
+      "value": "Togtat"
+    },
+    {
+      "name": "logs_resume",
+      "value": "Dowam et"
+    },
+    {
+      "name": "nodes_detail_latency",
+      "value": "Gijikme"
+    },
+    {
+      "name": "nodes_detail_protocol",
+      "value": "Protokol"
+    },
+    {
+      "name": "nodes_detail_route",
+      "value": "Ugur"
+    },
+    {
+      "name": "nodes_detail_server",
+      "value": "Serwer"
+    },
+    {
+      "name": "nodes_detail_test",
+      "value": "Gijikmäni barla"
+    },
+    {
+      "name": "nodes_empty_action",
+      "value": "Abuna import et"
+    },
+    {
+      "name": "nodes_empty_message",
+      "value": "Abuna import ediň, onuň düwünleri şu ýerde görüner"
+    },
+    {
+      "name": "nodes_empty_title",
+      "value": "Entek düwün ýok"
+    },
+    {
+      "name": "nodes_error_title",
+      "value": "Düwünler ýüklenmedi"
+    },
+    {
+      "name": "nodes_judgement",
+      "value": "%1$s elýeterli · %2$s barlandy"
+    },
+    {
+      "name": "nodes_jump_to",
+      "value": "%1$s bölümine geç"
+    },
+    {
+      "name": "nodes_no_match",
+      "value": "“%1$s” bilen gabat gelýän düwün ýok"
+    },
+    {
+      "name": "nodes_search_placeholder",
+      "value": "Sebit, şäher ýa-da ugur"
+    },
+    {
+      "name": "nodes_search_stats",
+      "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "Entek barlanmady — aýlamagy bes edeniňizde görünýän düwünler barlanýar"
+    },
+    {
+      "name": "notif_action_global",
+      "value": "Global režim"
+    },
+    {
+      "name": "notif_action_rule",
+      "value": "Düzgün režimi"
+    },
+    {
+      "name": "notif_channel_alerts",
+      "value": "Abuna duýduryşlary"
+    },
+    {
+      "name": "notif_channel_alerts_desc",
+      "value": "Abunanyň möhleti we az galan trafik"
+    },
+    {
+      "name": "notif_channel_vpn",
+      "value": "Birikme ýagdaýy"
+    },
+    {
+      "name": "notif_channel_vpn_desc",
+      "value": "Birikilende tizligi we ssenariýleri görkezýär"
+    },
+    {
+      "name": "notif_expiry_text",
+      "value": "%1$s galdy"
+    },
+    {
+      "name": "notif_expiry_title",
+      "value": "%1$s: möhleti %2$s gutarýar"
+    },
+    {
+      "name": "notif_paused_trusted",
+      "value": "Ynamly Wi‑Fi «%1$s» ulgamynda baglanyşyk kesildi. Çykanyňyzda awtomatik täzeden birigýär."
+    },
+    {
+      "name": "notif_route_global",
+      "value": "Global · %1$s"
+    },
+    {
+      "name": "notif_route_global_any",
+      "value": "Ähli trafik bir düwünden"
+    },
+    {
+      "name": "onboarding_cancel_import_a11y",
+      "value": "Importy ýatyr"
+    },
+    {
+      "name": "onboarding_change_later",
+      "value": "Muny islän wagtyňyz Sazlamalarda üýtgedip bilersiňiz."
+    },
+    {
+      "name": "onboarding_choose_mode",
+      "value": "Režim saýlaň"
+    },
+    {
+      "name": "onboarding_continue",
+      "value": "Dowam et"
+    },
+    {
+      "name": "onboarding_optimized",
+      "value": "Optimal"
+    },
+    {
+      "name": "onboarding_optimized_desc",
+      "value": "Düwünleri her gün Wi‑Fi arkaly barlaýar. AI we Wideo diňe barlagdan geçen düwünleri ulanýar. Her gezek takmynan 3 MB."
+    },
+    {
+      "name": "onboarding_simple",
+      "value": "Ýönekeý"
+    },
+    {
+      "name": "onboarding_simple_desc",
+      "value": "Abunaňyzdaky toparlary ulanýar. Elýeterli bolmadyk düwünler awtomatik dolandyrylýar."
+    },
+    {
+      "name": "rules_add_override_a11y",
+      "value": "Domen üçin aýratyn düzgün goş"
+    },
+    {
+      "name": "rules_blocked",
+      "value": "Petiklendi"
+    },
+    {
+      "name": "rules_kind_ip",
+      "value": "IP"
+    },
+    {
+      "name": "rules_kind_other",
+      "value": "Beýleki"
+    },
+    {
+      "name": "rules_match_order",
+      "value": "Gabat gelme tertibi"
+    },
+    {
+      "name": "rules_note",
+      "value": "Düzgün toplumlary enjamda diňe okalýan indekse kompilirlenýär we zerur bolanda diskden okalýar. Abunalar täzelenende aýratyn düzgünler saklanýar."
+    },
+    {
+      "name": "rules_other_traffic",
+      "value": "Galan ähli trafik"
+    },
+    {
+      "name": "rules_step_layer",
+      "value": "Gatlak %1$d · %2$s"
+    },
+    {
+      "name": "rules_step_request",
+      "value": "Haýyş"
+    },
+    {
+      "name": "rules_step_result",
+      "value": "Netije"
+    },
+    {
+      "name": "rules_step_scene",
+      "value": "Ssenariý · %1$s"
+    },
+    {
+      "name": "rules_test_hint",
+      "value": "Gabat gelýän düzgüni we çykyşy görmek üçin domen ýa-da IP salgysyny giriziň."
+    },
+    {
+      "name": "rules_test_placeholder",
+      "value": "Domeni ýa-da IP-ni barla"
+    },
+    {
+      "name": "rules_took",
+      "value": "Wagt: %1$s"
+    },
+    {
+      "name": "rules_top_to_bottom",
+      "value": "Ýokardan aşak"
+    },
+    {
+      "name": "scene_ask",
+      "value": "Sora"
+    },
+    {
+      "name": "scene_auto_switch",
+      "value": "Awtomatik çalyş"
+    },
+    {
+      "name": "scene_funnel_tested",
+      "value": "Barlanan"
+    },
+    {
+      "name": "scene_funnel_under",
+      "value": "%1$d ms-den az"
+    },
+    {
+      "name": "scene_node_scope",
+      "value": "Düwün çägi"
+    },
+    {
+      "name": "scene_note",
+      "value": "Saýlananlar diňe Zephyr-de saklanýar. Abunaňyzyň konfigurasiýasy üýtgemeýär."
+    },
+    {
+      "name": "scene_note_tested",
+      "value": "%1$s Soňky barlag: %2$s."
+    },
+    {
+      "name": "scene_pinned_for",
+      "value": "%1$s üçin berkidildi"
+    },
+    {
+      "name": "scene_pinned_value",
+      "value": "%1$s (berkidilen)"
+    },
+    {
+      "name": "scene_test_daily",
+      "value": "Her gün"
+    },
+    {
+      "name": "scene_test_frequency",
+      "value": "Barlag ýygylygy"
+    },
+    {
+      "name": "scene_test_wifi_only",
+      "value": "%1$s (diňe Wi‑Fi)"
+    },
+    {
+      "name": "scene_tested_from_pool",
+      "value": "%1$d abunadan %2$s düwün barlandy"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "%1$s dalaşgär, %2$s sany 200 millisekuntdan az, %3$s sany wagt gutardy"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "Wagt gutardy: %1$s"
+    },
+    {
+      "name": "scene_uhd_only",
+      "value": "Diňe 4K düwünler"
+    },
+    {
+      "name": "scene_when_unavailable",
+      "value": "Düwün elýeterli bolmasa"
+    },
+    {
+      "name": "settings_accent_blue",
+      "value": "Gök"
+    },
+    {
+      "name": "settings_accent_green",
+      "value": "Ýaşyl"
+    },
+    {
+      "name": "settings_accent_orange",
+      "value": "Mämişi"
+    },
+    {
+      "name": "settings_accent_pink",
+      "value": "Gülgüne"
+    },
+    {
+      "name": "settings_keep_results",
+      "value": "Netijeleri sakla"
+    },
+    {
+      "name": "settings_licenses",
+      "value": "Açyk çeşme ygtyýarnamalary"
+    },
+    {
+      "name": "settings_local_data_note",
+      "value": "Abunalar, düwünler we trafik maglumatlary diňe şu enjamda saklanýar."
+    },
+    {
+      "name": "settings_on_demand",
+      "value": "Zerur bolanda birikdir"
+    },
+    {
+      "name": "settings_save_failed",
+      "value": "Sazlamany ýatda saklap bolmady"
+    },
+    {
+      "name": "settings_section_about",
+      "value": "Barada"
+    },
+    {
+      "name": "settings_section_connection",
+      "value": "Birikme"
+    },
+    {
+      "name": "settings_section_privacy",
+      "value": "Gizlinlik"
+    },
+    {
+      "name": "settings_section_storage",
+      "value": "Ýat"
+    },
+    {
+      "name": "settings_section_testing",
+      "value": "Barlag"
+    },
+    {
+      "name": "settings_share_diagnostics",
+      "value": "Diagnostika maglumatlaryny paýlaş"
+    },
+    {
+      "name": "settings_source_code",
+      "value": "Çeşme kody"
+    },
+    {
+      "name": "settings_storage_detail",
+      "value": "Düwünler %1$s · Düzgünler %2$s · Boş %3$s"
+    },
+    {
+      "name": "settings_storage_title",
+      "value": "Düwünler we düzgünler"
+    },
+    {
+      "name": "settings_test_wifi_only",
+      "value": "Tizligi diňe Wi‑Fi arkaly barla"
+    },
+    {
+      "name": "settings_trusted_wifi",
+      "value": "Ynamdar Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi_always_on",
+      "value": "Ulgamyň «Hemişe açyk VPN» sazlamasy dolandyrýar"
+    },
+    {
+      "name": "settings_trusted_wifi_hint",
+      "value": "Bu tora goşulanda birikmäni awtomatik kes"
+    },
+    {
+      "name": "settings_trusted_wifi_location",
+      "value": "Wi‑Fi atlaryny tanamak üçin ýerleşiş rugsadyny beriň"
+    },
+    {
+      "name": "settings_trusted_wifi_location_off",
+      "value": "Wi‑Fi atlaryny tanamak üçin ulgamyň ýerleşişini açyň"
+    },
+    {
+      "name": "subs_add",
+      "value": "Abuna goş"
+    },
+    {
+      "name": "subs_all_title",
+      "value": "Ähli abunalar"
+    },
+    {
+      "name": "subs_deleted",
+      "value": "%1$s pozuldy"
+    },
+    {
+      "name": "subs_diff_updated",
+      "value": "%1$s täzelendi"
+    },
+    {
+      "name": "subs_diff_updating",
+      "value": "%1$s täzelenýär…"
+    },
+    {
+      "name": "subs_error_clipboard_empty",
+      "value": "Bufer boş"
+    },
+    {
+      "name": "subs_error_delete",
+      "value": "%1$s pozup bolmady"
+    },
+    {
+      "name": "subs_error_fetch",
+      "value": "Bu abunany ýükläp bolmady. Salgyny ýa-da tory barlaň."
+    },
+    {
+      "name": "subs_error_import_version",
+      "value": "Bu import kody üçin Zephyr-iň täze wersiýasy gerek"
+    },
+    {
+      "name": "subs_error_invalid_file",
+      "value": "Bu dogry konfigurasiýa faýly däl"
+    },
+    {
+      "name": "subs_error_invalid_link",
+      "value": "Bu dogry abuna salgysy däl"
+    },
+    {
+      "name": "subs_error_read_file",
+      "value": "Bu faýly okap bolmady"
+    },
+    {
+      "name": "subs_error_update",
+      "value": "%1$s täzeläp bolmady"
+    },
+    {
+      "name": "subs_error_update_all",
+      "value": "Abunalary täzeläp bolmady"
+    },
+    {
+      "name": "subs_hint_desktop",
+      "value": "QR kody görkezmek üçin kompýuterde Zephyr-iň Sazlamalar › Telefona sinhronla bölümini açyň"
+    },
+    {
+      "name": "subs_import_desktop",
+      "value": "Kompýuterdäki Zephyr-den import et"
+    },
+    {
+      "name": "subs_import_desktop_source",
+      "value": "Zephyr Desktop"
+    },
+    {
+      "name": "subs_import_insecure",
+      "value": "Bu salgy şifrlenmedik (http); mazmuny okalyp ýa-da üýtgedilip bilner."
+    },
+    {
+      "name": "subs_import_source",
+      "value": "Çeşme: %1$s"
+    },
+    {
+      "name": "subs_import_trust",
+      "value": "Diňe bu üpjün edijä ynanýan bolsaňyz dowam ediň."
+    },
+    {
+      "name": "subs_overrides_kept",
+      "value": "Aýratyn düzgünler saklandy"
+    },
+    {
+      "name": "subs_paste_clipboard",
+      "value": "Buferden goý"
+    },
+    {
+      "name": "subs_paste_link",
+      "value": "Salgyny goý"
+    },
+    {
+      "name": "subs_paste_placeholder",
+      "value": "Abuna salgysyny goýuň"
+    },
+    {
+      "name": "subs_remaining",
+      "value": "Galan"
+    },
+    {
+      "name": "subs_review_note",
+      "value": "Täzelemek abunanyň düwünlerini we düzgünlerini çalyşýar. Zephyr-iň aýratyn düzgünleri we ssenariý saýlawlary üýtgemeýär."
+    },
+    {
+      "name": "subs_review_one",
+      "value": "%1$s täzelener"
+    },
+    {
+      "name": "subs_rule_changes",
+      "value": "Düzgün üýtgeşmeleri"
+    },
+    {
+      "name": "subs_scan_camera_needed",
+      "value": "Skanirlemek üçin kamera rugsady gerek"
+    },
+    {
+      "name": "subs_scan_no_camera",
+      "value": "Bu enjamda elýeterli kamera ýok"
+    },
+    {
+      "name": "subs_scan_prompt",
+      "value": "Awtomatik skanirlemek üçin abunanyň QR koduny çarçuwanyň içinde ýerleşdiriň."
+    },
+    {
+      "name": "subs_scan_qr",
+      "value": "QR koduny skanirle"
+    },
+    {
+      "name": "subs_scenes_retested",
+      "value": "Ssenariý toplumlary gaýtadan barlandy"
+    },
+    {
+      "name": "subs_section_data",
+      "value": "Trafik"
+    },
+    {
+      "name": "subs_section_update",
+      "value": "Täzelemeler"
+    },
+    {
+      "name": "subs_show_changes",
+      "value": "Ilki üýtgeşmeleri görkez"
+    },
+    {
+      "name": "subs_swipe_confirm_delete",
+      "value": "Pozmagy tassykla"
+    },
+    {
+      "name": "subs_swipe_updating",
+      "value": "Täzelenýär"
+    },
+    {
+      "name": "subs_this_month",
+      "value": "Şu aý"
+    },
+    {
+      "name": "subs_update_all",
+      "value": "Hemmesini häzir täzele"
+    },
+    {
+      "name": "subs_update_wifi_only",
+      "value": "Diňe Wi‑Fi arkaly täzele"
+    },
+    {
+      "name": "term_accent",
+      "value": "Aksent reňki"
+    },
+    {
+      "name": "term_all",
+      "value": "Ählisi"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Daşky görnüş"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Garaňky"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Ýagty"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Ulgam"
+    },
+    {
+      "name": "term_apply",
+      "value": "Ulan"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Awtomatik täzelenme"
+    },
+    {
+      "name": "term_delete",
+      "value": "Poz"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Diagnostika"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Birikmäni kes"
+    },
+    {
+      "name": "term_domain",
+      "value": "Domen"
+    },
+    {
+      "name": "term_exit",
+      "value": "Çykyş"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "Çykyş IP-si"
+    },
+    {
+      "name": "term_import",
+      "value": "Import et"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Faýldan import et"
+    },
+    {
+      "name": "term_latency",
+      "value": "Gijikme"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Ýerli proksi porty"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Düzediş"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Ýalňyşlyk"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Maglumat"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Duýduryş"
+    },
+    {
+      "name": "term_logs",
+      "value": "Günnamalar"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Göni"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Global"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Global režim"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Düzgün"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Netije ýok"
+    },
+    {
+      "name": "term_node",
+      "value": "Düwün"
+    },
+    {
+      "name": "term_nodes",
+      "value": "Düwünler"
+    },
+    {
+      "name": "term_none",
+      "value": "Ýok"
+    },
+    {
+      "name": "term_off",
+      "value": "Öçük"
+    },
+    {
+      "name": "term_on",
+      "value": "Açyk"
+    },
+    {
+      "name": "term_override",
+      "value": "Aýratyn düzgün"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proksi"
+    },
+    {
+      "name": "term_reachable",
+      "value": "Elýeterli"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Parol talap et"
+    },
+    {
+      "name": "term_rule",
+      "value": "Düzgün"
+    },
+    {
+      "name": "term_rules",
+      "value": "Düzgünler"
+    },
+    {
+      "name": "term_scene",
+      "value": "Ssenariý"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Ssenariýler"
+    },
+    {
+      "name": "term_settings",
+      "value": "Sazlamalar"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Möhleti geçdi"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Möhleti golaýar"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Şowsuz"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Kadaly"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Haýal"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Wagt gutardy"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Barlanmadyk"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Birikdirilýär"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Birikdirilmedi"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Birikme şowsuz"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Abuna"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Abunalar"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Režimi çalyş"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Gaýtadan barla"
+    },
+    {
+      "name": "term_tested",
+      "value": "Barlandy"
+    },
+    {
+      "name": "term_testing",
+      "value": "Barlanýar"
+    },
+    {
+      "name": "term_today",
+      "value": "Şu gün"
+    },
+    {
+      "name": "term_undo",
+      "value": "Yzyna al"
+    },
+    {
+      "name": "term_update",
+      "value": "Täzele"
+    },
+    {
+      "name": "tile_a11y",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "today_date_pattern",
+      "value": "d MMMM, EEEE"
+    },
+    {
+      "name": "today_fastest",
+      "value": "ms iň çalt"
+    },
+    {
+      "name": "today_pattern_note",
+      "value": "Nagyş şu günki trafikden döredilýär we düwün atlaryny ýa-da IP salgylaryny öz içine almaýar."
+    },
+    {
+      "name": "today_save_failed",
+      "value": "Suraty saklap bolmady"
+    },
+    {
+      "name": "today_save_image",
+      "value": "Suraty sakla"
+    },
+    {
+      "name": "today_saved",
+      "value": "Galereýa saklandy"
+    },
+    {
+      "name": "today_storage_permission",
+      "value": "Suraty saklamak üçin ýat rugsady gerek"
+    },
+    {
+      "name": "today_style_dawn",
+      "value": "Daň"
+    },
+    {
+      "name": "today_style_mist",
+      "value": "Duman"
+    },
+    {
+      "name": "today_style_night",
+      "value": "Gije"
+    },
+    {
+      "name": "trace_always_apply",
+      "value": "Hemişe ulan"
+    },
+    {
+      "name": "trace_always_apply_hint",
+      "value": "Öçük bolsa, diňe şu birikme üýtgeýär"
+    },
+    {
+      "name": "trace_from",
+      "value": "Çeşme: %1$s"
+    },
+    {
+      "name": "trace_option_unchanged",
+      "value": "Üýtgeşiksiz"
+    },
+    {
+      "name": "trace_override_cleared",
+      "value": "%1$s üçin aýratyn ugur düzgüni aýryldy"
+    },
+    {
+      "name": "trace_override_direct",
+      "value": "%1$s indi göni birigýär"
+    },
+    {
+      "name": "trace_override_error",
+      "value": "Ugry üýtgedip bolmady. Gaýtadan synanyşyň."
+    },
+    {
+      "name": "trace_override_scene",
+      "value": "%1$s indi %2$s ulanýar"
+    },
+    {
+      "name": "trace_step_rule",
+      "value": "Düzgün"
+    },
+    {
+      "name": "trace_this_connection",
+      "value": "Şu birikme"
+    },
+    {
+      "name": "trace_via",
+      "value": "%1$s arkaly"
+    },
+    {
+      "name": "trusted_wifi_add_hint",
+      "value": "Wi‑Fi adyny goş"
+    },
+    {
+      "name": "trusted_wifi_disconnect",
+      "value": "Şu Wi‑Fi torlarynda birikmäni kes"
+    },
+    {
+      "name": "trusted_wifi_footer",
+      "value": "Öý ýa-da iş ýaly ynamdar torlarda Zephyr birikmäni awtomatik kesýär we siz gideniňizde zerur bolanda gaýtadan birigýär."
+    },
+    {
+      "name": "trusted_wifi_networks",
+      "value": "Torlar"
+    },
+    {
+      "name": "widget_description",
+      "value": "Birikme ýagdaýy, tizlik we ssenariýler"
+    },
+    {
+      "name": "widget_label",
+      "value": "Zephyr ýagdaýy"
+    },
+    {
+      "name": "widget_today",
+      "value": "Şu gün %1$s %2$s"
+    },
+    {
+      "name": "widget_usage_description",
+      "value": "Şu günki trafik we 24 sagatlyk paýlanyş"
+    },
+    {
+      "name": "widget_usage_label",
+      "value": "Zephyr: şu günki ulanyş"
+    },
+    {
+      "name": "widgets_home_steps",
+      "value": "Baş ekranyň boş ýerine basyp saklaň › Widjetler › Zephyr, soňra birini baş ekrana süýräň."
+    },
+    {
+      "name": "widgets_home_title",
+      "value": "Baş ekran widjetleri"
+    },
+    {
+      "name": "widgets_tile_steps",
+      "value": "Ekranyň ýokarsyndan iki gezek aşak süýşüriň › Üýtget › Zephyr-i çalt sazlamalara süýräň. Birikmek ýa-da birikmäni kesmek üçin oňa basyň."
+    },
+    {
+      "name": "widgets_tile_title",
+      "value": "Çalt sazlamalar plitkasy"
+    }
+  ]
+}

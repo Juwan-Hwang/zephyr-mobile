@@ -1,0 +1,9 @@
+{
+  "modelVersion": "6.0.0",
+  "name": "zephyr-harmony",
+  "version": "1.0.0",
+  "description": "Zephyr for HarmonyOS NEXT (ArkTS / ArkUI, Stage model).",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}

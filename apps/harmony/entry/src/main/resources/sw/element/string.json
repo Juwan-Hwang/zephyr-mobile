@@ -1,0 +1,1592 @@
+{
+  "string": [
+    {
+      "name": "activity_back",
+      "value": "‹ Miunganisho ya hivi karibuni"
+    },
+    {
+      "name": "activity_close_host_a11y",
+      "value": "Funga miunganisho ya %1$s"
+    },
+    {
+      "name": "activity_close_none",
+      "value": "Hakuna miunganisho inayoendelea"
+    },
+    {
+      "name": "activity_empty",
+      "value": "Ukishaunganisha, vikoa ulivyotembelea hivi karibuni vitaonekana hapa."
+    },
+    {
+      "name": "activity_host_a11y",
+      "value": "Maelezo ya muunganisho wa %1$s"
+    },
+    {
+      "name": "activity_no_app_note",
+      "value": "Programu iliyoanzisha kila muunganisho bado haijulikani, kwa hivyo vikoa pekee vinaonyeshwa."
+    },
+    {
+      "name": "activity_title",
+      "value": "Miunganisho ya hivi karibuni"
+    },
+    {
+      "name": "command_action_open",
+      "value": "Fungua"
+    },
+    {
+      "name": "command_action_test",
+      "value": "Jaribu"
+    },
+    {
+      "name": "command_chip_action",
+      "value": "Kitendo"
+    },
+    {
+      "name": "command_chip_region",
+      "value": "Eneo"
+    },
+    {
+      "name": "command_chip_scene",
+      "value": "Mazingira"
+    },
+    {
+      "name": "command_chip_scope",
+      "value": "Wigo"
+    },
+    {
+      "name": "command_chip_service",
+      "value": "Huduma"
+    },
+    {
+      "name": "command_direct_note",
+      "value": "Trafiki ya %1$s haitapitia proksi."
+    },
+    {
+      "name": "command_direct_title",
+      "value": "Unganisha %1$s moja kwa moja"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "Bonyeza Enter ili kutekeleza"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "Jaribio la kanuni"
+    },
+    {
+      "name": "command_no_nodes_available",
+      "value": "Hakuna nodi zinazopatikana"
+    },
+    {
+      "name": "command_placeholder",
+      "value": "Tafuta au weka amri"
+    },
+    {
+      "name": "command_plan_exit_title",
+      "value": "%1$s inatumia nodi za %2$s"
+    },
+    {
+      "name": "command_plan_fallback_pause",
+      "value": "Ikiwa hakuna nodi ya %1$s inayopatikana, %2$s itasitishwa."
+    },
+    {
+      "name": "command_plan_fallback_scene",
+      "value": "Ikiwa hakuna nodi ya %1$s inayopatikana, nodi nyingine za mazingira zitatumika."
+    },
+    {
+      "name": "command_plan_no_nodes",
+      "value": "Hakuna nodi za %2$s katika %1$s."
+    },
+    {
+      "name": "command_plan_releases_pin",
+      "value": "%1$s haitatumia tena njia yake ya kutoka iliyobanwa, %2$s."
+    },
+    {
+      "name": "command_region_de",
+      "value": "Ujerumani"
+    },
+    {
+      "name": "command_region_gb",
+      "value": "Uingereza"
+    },
+    {
+      "name": "command_region_hk",
+      "value": "Hong Kong"
+    },
+    {
+      "name": "command_region_jp",
+      "value": "Japani"
+    },
+    {
+      "name": "command_region_kr",
+      "value": "Korea"
+    },
+    {
+      "name": "command_region_sg",
+      "value": "Singapuri"
+    },
+    {
+      "name": "command_region_tw",
+      "value": "Taiwani"
+    },
+    {
+      "name": "command_region_us",
+      "value": "Marekani"
+    },
+    {
+      "name": "command_scene_ai",
+      "value": "mazingira ya AI"
+    },
+    {
+      "name": "command_scene_named",
+      "value": "mazingira ya %1$s"
+    },
+    {
+      "name": "command_section_command",
+      "value": "Amri"
+    },
+    {
+      "name": "command_section_suggestions",
+      "value": "Mapendekezo"
+    },
+    {
+      "name": "command_see_all_nodes",
+      "value": "Ona nodi zote %1$s kwenye maktaba ya nodi"
+    },
+    {
+      "name": "command_show_all",
+      "value": "Onyesha zote (%1$s)"
+    },
+    {
+      "name": "command_test_rule",
+      "value": "%1$s inapita wapi?"
+    },
+    {
+      "name": "command_uhd_auto_note",
+      "value": "Kuanzia sasa, ubadilishaji wa kiotomatiki utachagua kati ya nodi za 4K pekee."
+    },
+    {
+      "name": "command_uhd_clear_note",
+      "value": "Mazingira ya %1$s yanatumia nodi za 4K pekee. Nodi zote zitatumika tena; nodi ya sasa inabaki."
+    },
+    {
+      "name": "command_uhd_fastest",
+      "value": "nodi ya 4K yenye kasi zaidi"
+    },
+    {
+      "name": "command_uhd_none",
+      "value": "Hakuna nodi inayoauni 4K."
+    },
+    {
+      "name": "command_uhd_title_all",
+      "value": "%1$s: nodi zote"
+    },
+    {
+      "name": "command_uhd_title_only",
+      "value": "%1$s: nodi za 4K pekee"
+    },
+    {
+      "name": "command_zephyr_only",
+      "value": "Inatumika ndani ya Zephyr pekee. Usanidi wa usajili wako haubadilishwi."
+    },
+    {
+      "name": "common_add",
+      "value": "Ongeza"
+    },
+    {
+      "name": "common_adding",
+      "value": "Inaongeza…"
+    },
+    {
+      "name": "common_back_to",
+      "value": "Rudi kwenye %1$s"
+    },
+    {
+      "name": "common_cancel",
+      "value": "Ghairi"
+    },
+    {
+      "name": "common_change",
+      "value": "Badilisha"
+    },
+    {
+      "name": "common_clear",
+      "value": "Futa"
+    },
+    {
+      "name": "common_close",
+      "value": "Funga"
+    },
+    {
+      "name": "common_connect",
+      "value": "Unganisha"
+    },
+    {
+      "name": "common_current",
+      "value": "Inayotumika"
+    },
+    {
+      "name": "common_direct",
+      "value": "Moja kwa moja"
+    },
+    {
+      "name": "common_done",
+      "value": "Nimemaliza"
+    },
+    {
+      "name": "common_exit_ip_changes",
+      "value": "IP ya kutoka itabadilika"
+    },
+    {
+      "name": "common_expiry_date",
+      "value": "Inaisha %1$s"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "Muda umeisha"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "Inaisha leo"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "Inaisha kesho"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "Inaisha %1$s"
+    },
+    {
+      "name": "common_home",
+      "value": "Mwanzo"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "Inapima kuchelewa"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "Kuchelewa: muda umeisha"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "Kuchelewa hakujapimwa"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "Muda umeisha"
+    },
+    {
+      "name": "common_library",
+      "value": "Maktaba"
+    },
+    {
+      "name": "common_list_separator",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "common_local_data_note",
+      "value": "Usajili na data ya trafiki huhifadhiwa kwenye kifaa hiki pekee."
+    },
+    {
+      "name": "common_local_network",
+      "value": "Mtandao wa kifaa hiki"
+    },
+    {
+      "name": "common_mode_direct_hint",
+      "value": "Bila kupitia proksi"
+    },
+    {
+      "name": "common_mode_global_hint",
+      "value": "Trafiki yote kupitia nodi moja"
+    },
+    {
+      "name": "common_mode_rule_hint",
+      "value": "Elekeza kulingana na mazingira"
+    },
+    {
+      "name": "common_open_settings",
+      "value": "Fungua Mipangilio"
+    },
+    {
+      "name": "common_pair_and",
+      "value": "%1$s na %2$s"
+    },
+    {
+      "name": "common_retesting",
+      "value": "Inapima…"
+    },
+    {
+      "name": "common_scene_ai",
+      "value": "AI"
+    },
+    {
+      "name": "common_scene_other",
+      "value": "Nyingine"
+    },
+    {
+      "name": "common_scene_video",
+      "value": "Video"
+    },
+    {
+      "name": "common_share",
+      "value": "Shiriki"
+    },
+    {
+      "name": "common_source_auto",
+      "value": "Chaguo za Zephyr"
+    },
+    {
+      "name": "common_source_group",
+      "value": "Kundi la usajili"
+    },
+    {
+      "name": "common_status_connected",
+      "value": "Imeunganishwa"
+    },
+    {
+      "name": "common_status_connecting_ellipsis",
+      "value": "Inaunganisha…"
+    },
+    {
+      "name": "common_status_disconnecting",
+      "value": "Inatenganisha"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "Sasa hivi"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "sasa hivi"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "Kupakua %1$s %2$s kwa sekunde, kupakia %3$s %4$s kwa sekunde"
+    },
+    {
+      "name": "common_try_again",
+      "value": "Jaribu tena"
+    },
+    {
+      "name": "common_updating",
+      "value": "Inasasisha…"
+    },
+    {
+      "name": "connect_no_subscription",
+      "value": "Bado hakuna usajili"
+    },
+    {
+      "name": "home_action_load_nodes",
+      "value": "kupakia nodi"
+    },
+    {
+      "name": "home_action_preview_exit",
+      "value": "kuhakiki njia ya kutoka"
+    },
+    {
+      "name": "home_action_retest",
+      "value": "kupima upya"
+    },
+    {
+      "name": "home_action_switch_exit",
+      "value": "kubadilisha njia ya kutoka"
+    },
+    {
+      "name": "home_action_switch_mode",
+      "value": "kubadilisha hali"
+    },
+    {
+      "name": "home_action_switch_node",
+      "value": "kubadilisha nodi"
+    },
+    {
+      "name": "home_action_switch_source",
+      "value": "kubadilisha chanzo"
+    },
+    {
+      "name": "home_action_undo",
+      "value": "kutendua"
+    },
+    {
+      "name": "home_apply_failed",
+      "value": "Imeshindwa kutumia: %1$s"
+    },
+    {
+      "name": "home_confirm_apps",
+      "value": "Ubadilishe IP ya kutoka ya %1$s?"
+    },
+    {
+      "name": "home_confirm_scene",
+      "value": "Ubadilishe IP ya kutoka ya mazingira ya %1$s?"
+    },
+    {
+      "name": "home_confirm_unchanged",
+      "value": "%1$s haitabadilika."
+    },
+    {
+      "name": "home_error_failed",
+      "value": "Imeshindwa %1$s"
+    },
+    {
+      "name": "home_error_node_gone",
+      "value": "Imeshindwa %1$s: nodi haipo tena"
+    },
+    {
+      "name": "home_error_not_connected",
+      "value": "Unganisha kwanza kabla ya %1$s"
+    },
+    {
+      "name": "home_failover_none",
+      "value": "Njia ya kutoka ya %1$s haijibu. IP ya kutoka haitabadilika kiotomatiki."
+    },
+    {
+      "name": "home_failover_switched",
+      "value": "Njia ya kutoka ya %1$s imebadilishwa kiotomatiki hadi %2$s"
+    },
+    {
+      "name": "home_failure_core",
+      "value": "Kiini kimeshindwa kuanza"
+    },
+    {
+      "name": "home_failure_network",
+      "value": "Mtandao haupatikani"
+    },
+    {
+      "name": "home_failure_no_subscription",
+      "value": "Ongeza usajili kwanza"
+    },
+    {
+      "name": "home_failure_vpn_permission",
+      "value": "Ruhusa ya VPN inahitajika"
+    },
+    {
+      "name": "home_global_body",
+      "value": "Trafiki yote inapitia %1$s. Mazingira yamesitishwa."
+    },
+    {
+      "name": "home_global_body_any",
+      "value": "Trafiki yote inapitia nodi moja. Mazingira yamesitishwa."
+    },
+    {
+      "name": "home_global_change_node",
+      "value": "Badilisha nodi"
+    },
+    {
+      "name": "home_global_change_note",
+      "value": "Programu zote zitatoka kupitia %1$s."
+    },
+    {
+      "name": "home_global_change_to",
+      "value": "Badilisha hadi %1$s"
+    },
+    {
+      "name": "home_global_use_rule",
+      "value": "Tumia hali ya sheria"
+    },
+    {
+      "name": "home_mini_funnel_a11y",
+      "value": "Zinafikika %1$s, chini ya milisekunde 200 %2$s"
+    },
+    {
+      "name": "home_now_all_nodes",
+      "value": "%1$s sasa inatumia nodi zote"
+    },
+    {
+      "name": "home_now_direct",
+      "value": "%1$s sasa inaunganisha moja kwa moja"
+    },
+    {
+      "name": "home_now_uhd_only",
+      "value": "%1$s sasa inatumia nodi za 4K pekee"
+    },
+    {
+      "name": "home_now_uses",
+      "value": "%1$s sasa inatumia %2$s"
+    },
+    {
+      "name": "home_now_uses_uhd",
+      "value": "%1$s sasa inatumia %2$s (4K pekee)"
+    },
+    {
+      "name": "home_pin_line",
+      "value": "%1$s: %2$s"
+    },
+    {
+      "name": "home_scan_progress",
+      "value": "Inapima %1$d/%2$d"
+    },
+    {
+      "name": "home_scan_running",
+      "value": "Inapima…"
+    },
+    {
+      "name": "home_scene_details_a11y",
+      "value": "Maelezo ya mazingira ya %1$s"
+    },
+    {
+      "name": "home_scene_next_region",
+      "value": "Eneo linalofuata: %1$s"
+    },
+    {
+      "name": "home_scene_prev_region",
+      "value": "Eneo lililotangulia: %1$s"
+    },
+    {
+      "name": "home_scene_services_down",
+      "value": "%1$s haipatikani"
+    },
+    {
+      "name": "home_scene_services_ok",
+      "value": "%1$s iko sawa"
+    },
+    {
+      "name": "home_scenes_tested",
+      "value": "Imepimwa %1$s"
+    },
+    {
+      "name": "home_scrub_hint",
+      "value": "Telezesha kushoto au kulia kubadilisha eneo"
+    },
+    {
+      "name": "home_spark_a11y",
+      "value": "Kasi ya kupakua, sekunde 90 zilizopita"
+    },
+    {
+      "name": "home_switched_to",
+      "value": "Imebadilishwa hadi %1$s"
+    },
+    {
+      "name": "home_today_usage",
+      "value": "Leo %1$s"
+    },
+    {
+      "name": "library_widgets",
+      "value": "Wijeti na Mipangilio ya Haraka"
+    },
+    {
+      "name": "licenses_intro",
+      "value": "Msimbo wa Zephyr wenyewe uko chini ya leseni ya MIT. Programu hii inajumuisha mihomo (GPL-3.0), kwa hivyo programu nzima inasambazwa chini ya GPL-3.0. Msimbo chanzo husika: %1$s, lebo %2$s."
+    },
+    {
+      "name": "licenses_section_app",
+      "value": "Leseni ya Zephyr"
+    },
+    {
+      "name": "licenses_section_notices",
+      "value": "Taarifa za wahusika wengine"
+    },
+    {
+      "name": "licenses_section_texts",
+      "value": "Maandishi ya leseni"
+    },
+    {
+      "name": "licenses_unavailable",
+      "value": "Faili za leseni hazipo katika toleo hili."
+    },
+    {
+      "name": "local_proxy_apply_failed",
+      "value": "Imeshindwa kutumia mabadiliko"
+    },
+    {
+      "name": "local_proxy_auth_footer",
+      "value": "Ikiwashwa, kuunganisha kwenye mlango wa ndani kunahitaji jina la mtumiaji na nenosiri, hivyo programu nyingine haziwezi kutumia proksi bila ruhusa."
+    },
+    {
+      "name": "local_proxy_conceal",
+      "value": "Ficha nenosiri"
+    },
+    {
+      "name": "local_proxy_concealed",
+      "value": "Nenosiri limefichwa"
+    },
+    {
+      "name": "local_proxy_copied",
+      "value": "Imenakiliwa"
+    },
+    {
+      "name": "local_proxy_copy_http",
+      "value": "Nakili URL ya proksi ya HTTP"
+    },
+    {
+      "name": "local_proxy_copy_socks",
+      "value": "Nakili URL ya proksi ya SOCKS5"
+    },
+    {
+      "name": "local_proxy_credential_row",
+      "value": "Nenosiri"
+    },
+    {
+      "name": "local_proxy_credentials",
+      "value": "Taarifa za kuingia"
+    },
+    {
+      "name": "local_proxy_footer",
+      "value": "Ikiwashwa, Zephyr husikiliza kwenye 127.0.0.1 pekee, kwa hivyo vifaa vingine kwenye mtandao wako haviwezi kuunganisha."
+    },
+    {
+      "name": "local_proxy_port",
+      "value": "Mlango"
+    },
+    {
+      "name": "local_proxy_port_footer",
+      "value": "Programu nyingine zinaweza kutumia sheria na mazingira ya Zephyr kupitia mlango huu kwenye 127.0.0.1."
+    },
+    {
+      "name": "local_proxy_port_invalid",
+      "value": "Weka mlango kati ya %1$d na %2$d"
+    },
+    {
+      "name": "local_proxy_regenerate",
+      "value": "Tengeneza nenosiri jipya"
+    },
+    {
+      "name": "local_proxy_regenerate_footer",
+      "value": "Ukitengeneza jipya, nenosiri la zamani linaacha kufanya kazi mara moja; programu ulizoweka zitahitaji jipya."
+    },
+    {
+      "name": "local_proxy_regenerated",
+      "value": "Nenosiri jipya limetengenezwa"
+    },
+    {
+      "name": "local_proxy_reveal",
+      "value": "Onyesha nenosiri"
+    },
+    {
+      "name": "local_proxy_security",
+      "value": "Usalama"
+    },
+    {
+      "name": "local_proxy_user_row",
+      "value": "Jina la mtumiaji"
+    },
+    {
+      "name": "logs_clear",
+      "value": "Futa yote"
+    },
+    {
+      "name": "logs_empty",
+      "value": "Bado hakuna kumbukumbu"
+    },
+    {
+      "name": "logs_line_a11y",
+      "value": "%1$s %2$s %3$s"
+    },
+    {
+      "name": "logs_pause",
+      "value": "Sitisha"
+    },
+    {
+      "name": "logs_resume",
+      "value": "Endelea"
+    },
+    {
+      "name": "nodes_detail_latency",
+      "value": "Kuchelewa"
+    },
+    {
+      "name": "nodes_detail_protocol",
+      "value": "Itifaki"
+    },
+    {
+      "name": "nodes_detail_route",
+      "value": "Njia"
+    },
+    {
+      "name": "nodes_detail_server",
+      "value": "Seva"
+    },
+    {
+      "name": "nodes_detail_test",
+      "value": "Pima kuchelewa"
+    },
+    {
+      "name": "nodes_empty_action",
+      "value": "Leta usajili"
+    },
+    {
+      "name": "nodes_empty_message",
+      "value": "Leta usajili na nodi zake zitaonekana hapa"
+    },
+    {
+      "name": "nodes_empty_title",
+      "value": "Bado hakuna nodi"
+    },
+    {
+      "name": "nodes_error_title",
+      "value": "Imeshindwa kupakia nodi"
+    },
+    {
+      "name": "nodes_judgement",
+      "value": "%1$s zinafikika · %2$s zimepimwa"
+    },
+    {
+      "name": "nodes_jump_to",
+      "value": "Nenda kwenye %1$s"
+    },
+    {
+      "name": "nodes_no_match",
+      "value": "Hakuna nodi zinazolingana na “%1$s”"
+    },
+    {
+      "name": "nodes_search_placeholder",
+      "value": "Eneo, jiji au njia"
+    },
+    {
+      "name": "nodes_search_stats",
+      "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "Bado hazijapimwa — nodi zinazoonekana hupimwa unapoacha kusogeza"
+    },
+    {
+      "name": "notif_action_global",
+      "value": "Hali ya Jumla"
+    },
+    {
+      "name": "notif_action_rule",
+      "value": "Hali ya Sheria"
+    },
+    {
+      "name": "notif_channel_alerts",
+      "value": "Arifa za usajili"
+    },
+    {
+      "name": "notif_channel_alerts_desc",
+      "value": "Muda wa usajili kuisha na data kupungua"
+    },
+    {
+      "name": "notif_channel_vpn",
+      "value": "Hali ya muunganisho"
+    },
+    {
+      "name": "notif_channel_vpn_desc",
+      "value": "Huonyesha kasi na mazingira ukiwa umeunganishwa"
+    },
+    {
+      "name": "notif_expiry_text",
+      "value": "Zimesalia %1$s"
+    },
+    {
+      "name": "notif_expiry_title",
+      "value": "%1$s itaisha %2$s"
+    },
+    {
+      "name": "notif_paused_trusted",
+      "value": "Imekatwa kwenye Wi‑Fi inayoaminika «%1$s». Itaunganisha tena kiotomatiki ukiondoka."
+    },
+    {
+      "name": "notif_route_global",
+      "value": "Jumla · %1$s"
+    },
+    {
+      "name": "notif_route_global_any",
+      "value": "Trafiki yote kupitia nodi moja"
+    },
+    {
+      "name": "onboarding_cancel_import_a11y",
+      "value": "Ghairi kuleta"
+    },
+    {
+      "name": "onboarding_change_later",
+      "value": "Unaweza kubadilisha hili wakati wowote katika Mipangilio."
+    },
+    {
+      "name": "onboarding_choose_mode",
+      "value": "Chagua jinsi ya kutumia"
+    },
+    {
+      "name": "onboarding_continue",
+      "value": "Endelea"
+    },
+    {
+      "name": "onboarding_optimized",
+      "value": "Chaguo bora"
+    },
+    {
+      "name": "onboarding_optimized_desc",
+      "value": "Hupima nodi kila siku kupitia Wi‑Fi. AI na Video hutumia nodi zilizofaulu pekee. Takriban 3 MB kila mara."
+    },
+    {
+      "name": "onboarding_simple",
+      "value": "Rahisi"
+    },
+    {
+      "name": "onboarding_simple_desc",
+      "value": "Hutumia makundi ya usajili wako. Nodi zisizopatikana hushughulikiwa kiotomatiki."
+    },
+    {
+      "name": "rules_add_override_a11y",
+      "value": "Ongeza ubatilishaji wa kikoa"
+    },
+    {
+      "name": "rules_blocked",
+      "value": "Imezuiwa"
+    },
+    {
+      "name": "rules_kind_ip",
+      "value": "IP"
+    },
+    {
+      "name": "rules_kind_other",
+      "value": "Nyingine"
+    },
+    {
+      "name": "rules_match_order",
+      "value": "Mpangilio wa kulinganisha"
+    },
+    {
+      "name": "rules_note",
+      "value": "Seti za sheria hukusanywa kwenye kifaa kuwa faharasa ya kusoma tu na husomwa kutoka kwenye diski inapohitajika. Ubatilishaji haubadiliki usajili unaposasishwa."
+    },
+    {
+      "name": "rules_other_traffic",
+      "value": "Trafiki nyingine yote"
+    },
+    {
+      "name": "rules_step_layer",
+      "value": "Tabaka %1$d · %2$s"
+    },
+    {
+      "name": "rules_step_request",
+      "value": "Ombi"
+    },
+    {
+      "name": "rules_step_result",
+      "value": "Matokeo"
+    },
+    {
+      "name": "rules_step_scene",
+      "value": "Mazingira · %1$s"
+    },
+    {
+      "name": "rules_test_hint",
+      "value": "Weka kikoa au anwani ya IP ili kuona sheria na njia ya kutoka inayolingana."
+    },
+    {
+      "name": "rules_test_placeholder",
+      "value": "Jaribu kikoa au IP"
+    },
+    {
+      "name": "rules_took",
+      "value": "Ilichukua %1$s"
+    },
+    {
+      "name": "rules_top_to_bottom",
+      "value": "Juu hadi chini"
+    },
+    {
+      "name": "scene_ask",
+      "value": "Uliza"
+    },
+    {
+      "name": "scene_auto_switch",
+      "value": "Badilisha kiotomatiki"
+    },
+    {
+      "name": "scene_funnel_tested",
+      "value": "Zilizopimwa"
+    },
+    {
+      "name": "scene_funnel_under",
+      "value": "Chini ya %1$d ms"
+    },
+    {
+      "name": "scene_node_scope",
+      "value": "Wigo wa nodi"
+    },
+    {
+      "name": "scene_note",
+      "value": "Chaguo huhifadhiwa ndani ya Zephyr pekee. Usanidi wa usajili wako haubadilishwi."
+    },
+    {
+      "name": "scene_note_tested",
+      "value": "%1$s Ilipimwa mara ya mwisho %2$s."
+    },
+    {
+      "name": "scene_pinned_for",
+      "value": "Imebanwa kwa %1$s"
+    },
+    {
+      "name": "scene_pinned_value",
+      "value": "%1$s (imebanwa)"
+    },
+    {
+      "name": "scene_test_daily",
+      "value": "Kila siku"
+    },
+    {
+      "name": "scene_test_frequency",
+      "value": "Marudio ya upimaji"
+    },
+    {
+      "name": "scene_test_wifi_only",
+      "value": "%1$s (Wi‑Fi pekee)"
+    },
+    {
+      "name": "scene_tested_from_pool",
+      "value": "Nodi %2$s kutoka usajili %1$d zimepimwa"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "Wagombea %1$s, %2$s chini ya milisekunde 200, %3$s muda umeisha"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "Muda umeisha: %1$s"
+    },
+    {
+      "name": "scene_uhd_only",
+      "value": "Nodi za 4K pekee"
+    },
+    {
+      "name": "scene_when_unavailable",
+      "value": "Nodi isipopatikana"
+    },
+    {
+      "name": "settings_accent_blue",
+      "value": "Bluu"
+    },
+    {
+      "name": "settings_accent_green",
+      "value": "Kijani"
+    },
+    {
+      "name": "settings_accent_orange",
+      "value": "Chungwa"
+    },
+    {
+      "name": "settings_accent_pink",
+      "value": "Waridi"
+    },
+    {
+      "name": "settings_keep_results",
+      "value": "Hifadhi matokeo"
+    },
+    {
+      "name": "settings_licenses",
+      "value": "Leseni za programu huria"
+    },
+    {
+      "name": "settings_local_data_note",
+      "value": "Usajili, nodi na data ya trafiki huhifadhiwa kwenye kifaa hiki pekee."
+    },
+    {
+      "name": "settings_on_demand",
+      "value": "Unganisha inapohitajika"
+    },
+    {
+      "name": "settings_save_failed",
+      "value": "Imeshindwa kuhifadhi mpangilio"
+    },
+    {
+      "name": "settings_section_about",
+      "value": "Kuhusu"
+    },
+    {
+      "name": "settings_section_connection",
+      "value": "Muunganisho"
+    },
+    {
+      "name": "settings_section_privacy",
+      "value": "Faragha"
+    },
+    {
+      "name": "settings_section_storage",
+      "value": "Hifadhi"
+    },
+    {
+      "name": "settings_section_testing",
+      "value": "Upimaji"
+    },
+    {
+      "name": "settings_share_diagnostics",
+      "value": "Shiriki data ya uchunguzi"
+    },
+    {
+      "name": "settings_source_code",
+      "value": "Msimbo chanzo"
+    },
+    {
+      "name": "settings_storage_detail",
+      "value": "Nodi %1$s · Sheria %2$s · Nafasi %3$s"
+    },
+    {
+      "name": "settings_storage_title",
+      "value": "Nodi na sheria"
+    },
+    {
+      "name": "settings_test_wifi_only",
+      "value": "Pima kasi kupitia Wi‑Fi pekee"
+    },
+    {
+      "name": "settings_trusted_wifi",
+      "value": "Wi‑Fi unazoziamini"
+    },
+    {
+      "name": "settings_trusted_wifi_always_on",
+      "value": "Inasimamiwa na «VPN inayowashwa kila wakati» ya mfumo"
+    },
+    {
+      "name": "settings_trusted_wifi_hint",
+      "value": "Tenganisha kiotomatiki ukijiunga"
+    },
+    {
+      "name": "settings_trusted_wifi_location",
+      "value": "Ruhusu ufikiaji wa mahali ili kutambua majina ya Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi_location_off",
+      "value": "Washa mahali pa mfumo ili kutambua majina ya Wi‑Fi"
+    },
+    {
+      "name": "subs_add",
+      "value": "Ongeza usajili"
+    },
+    {
+      "name": "subs_all_title",
+      "value": "Usajili wote"
+    },
+    {
+      "name": "subs_deleted",
+      "value": "%1$s imefutwa"
+    },
+    {
+      "name": "subs_diff_updated",
+      "value": "%1$s imesasishwa"
+    },
+    {
+      "name": "subs_diff_updating",
+      "value": "Inasasisha %1$s…"
+    },
+    {
+      "name": "subs_error_clipboard_empty",
+      "value": "Ubao wa kunakili hauna kitu"
+    },
+    {
+      "name": "subs_error_delete",
+      "value": "Imeshindwa kufuta %1$s"
+    },
+    {
+      "name": "subs_error_fetch",
+      "value": "Imeshindwa kupakua usajili huu. Kagua kiungo au mtandao wako."
+    },
+    {
+      "name": "subs_error_import_version",
+      "value": "Msimbo huu wa kuleta unahitaji toleo jipya la Zephyr"
+    },
+    {
+      "name": "subs_error_invalid_file",
+      "value": "Hili si faili sahihi la usanidi"
+    },
+    {
+      "name": "subs_error_invalid_link",
+      "value": "Hiki si kiungo sahihi cha usajili"
+    },
+    {
+      "name": "subs_error_read_file",
+      "value": "Imeshindwa kusoma faili hili"
+    },
+    {
+      "name": "subs_error_update",
+      "value": "Imeshindwa kusasisha %1$s"
+    },
+    {
+      "name": "subs_error_update_all",
+      "value": "Imeshindwa kusasisha usajili"
+    },
+    {
+      "name": "subs_hint_desktop",
+      "value": "Kwenye kompyuta, fungua Mipangilio › Sawazisha na Simu katika Zephyr ili kuonyesha msimbo wa QR"
+    },
+    {
+      "name": "subs_import_desktop",
+      "value": "Leta kutoka Zephyr kwenye kompyuta"
+    },
+    {
+      "name": "subs_import_desktop_source",
+      "value": "Zephyr ya Kompyuta"
+    },
+    {
+      "name": "subs_import_insecure",
+      "value": "Kiungo hiki hakijasimbwa (http); maudhui yake yanaweza kusomwa au kubadilishwa."
+    },
+    {
+      "name": "subs_import_source",
+      "value": "Chanzo: %1$s"
+    },
+    {
+      "name": "subs_import_trust",
+      "value": "Endelea tu ikiwa unamwamini mtoa huduma huyu."
+    },
+    {
+      "name": "subs_overrides_kept",
+      "value": "Ubatilishaji umehifadhiwa"
+    },
+    {
+      "name": "subs_paste_clipboard",
+      "value": "Bandika kutoka ubao wa kunakili"
+    },
+    {
+      "name": "subs_paste_link",
+      "value": "Bandika kiungo"
+    },
+    {
+      "name": "subs_paste_placeholder",
+      "value": "Bandika kiungo cha usajili"
+    },
+    {
+      "name": "subs_remaining",
+      "value": "Imesalia"
+    },
+    {
+      "name": "subs_review_note",
+      "value": "Kusasisha hubadilisha nodi na sheria za usajili. Ubatilishaji na chaguo za mazingira za Zephyr hazibadiliki."
+    },
+    {
+      "name": "subs_review_one",
+      "value": "%1$s itasasishwa"
+    },
+    {
+      "name": "subs_rule_changes",
+      "value": "Mabadiliko ya sheria"
+    },
+    {
+      "name": "subs_scan_camera_needed",
+      "value": "Ruhusa ya kamera inahitajika ili kuchanganua"
+    },
+    {
+      "name": "subs_scan_no_camera",
+      "value": "Hakuna kamera inayopatikana kwenye kifaa hiki"
+    },
+    {
+      "name": "subs_scan_prompt",
+      "value": "Weka msimbo wa QR wa usajili ndani ya fremu ili uchanganuliwe kiotomatiki."
+    },
+    {
+      "name": "subs_scan_qr",
+      "value": "Changanua msimbo wa QR"
+    },
+    {
+      "name": "subs_scenes_retested",
+      "value": "Makundi ya mazingira yamepimwa upya"
+    },
+    {
+      "name": "subs_section_data",
+      "value": "Data"
+    },
+    {
+      "name": "subs_section_update",
+      "value": "Masasisho"
+    },
+    {
+      "name": "subs_show_changes",
+      "value": "Onyesha mabadiliko kwanza"
+    },
+    {
+      "name": "subs_swipe_confirm_delete",
+      "value": "Thibitisha"
+    },
+    {
+      "name": "subs_swipe_updating",
+      "value": "Inasasisha"
+    },
+    {
+      "name": "subs_this_month",
+      "value": "Mwezi huu"
+    },
+    {
+      "name": "subs_update_all",
+      "value": "Sasisha zote sasa"
+    },
+    {
+      "name": "subs_update_wifi_only",
+      "value": "Sasisha kupitia Wi‑Fi pekee"
+    },
+    {
+      "name": "term_accent",
+      "value": "Rangi ya msisitizo"
+    },
+    {
+      "name": "term_all",
+      "value": "Zote"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Mwonekano"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Giza"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Mwanga"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Mfumo"
+    },
+    {
+      "name": "term_apply",
+      "value": "Tumia"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Masasisho ya kiotomatiki"
+    },
+    {
+      "name": "term_delete",
+      "value": "Futa"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Uchunguzi"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Tenganisha"
+    },
+    {
+      "name": "term_domain",
+      "value": "Kikoa"
+    },
+    {
+      "name": "term_exit",
+      "value": "Njia ya kutoka"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "IP ya kutoka"
+    },
+    {
+      "name": "term_import",
+      "value": "Leta"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Leta kutoka faili"
+    },
+    {
+      "name": "term_latency",
+      "value": "Kuchelewa"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Mlango wa proksi ya ndani"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Utatuzi"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Hitilafu"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Taarifa"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Onyo"
+    },
+    {
+      "name": "term_logs",
+      "value": "Kumbukumbu"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Moja kwa moja"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Jumla"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Hali ya Jumla"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Sheria"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Hakuna matokeo"
+    },
+    {
+      "name": "term_node",
+      "value": "Nodi"
+    },
+    {
+      "name": "term_nodes",
+      "value": "Nodi"
+    },
+    {
+      "name": "term_none",
+      "value": "Hakuna"
+    },
+    {
+      "name": "term_off",
+      "value": "Imezimwa"
+    },
+    {
+      "name": "term_on",
+      "value": "Imewashwa"
+    },
+    {
+      "name": "term_override",
+      "value": "Ubatilishaji"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proksi"
+    },
+    {
+      "name": "term_reachable",
+      "value": "Zinafikika"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Hitaji nenosiri"
+    },
+    {
+      "name": "term_rule",
+      "value": "Sheria"
+    },
+    {
+      "name": "term_rules",
+      "value": "Sheria"
+    },
+    {
+      "name": "term_scene",
+      "value": "Mazingira"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Mazingira"
+    },
+    {
+      "name": "term_settings",
+      "value": "Mipangilio"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Imekwisha"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Inakaribia kuisha"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Imeshindwa"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Kawaida"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Polepole"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Muda umeisha"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Haijapimwa"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Inaunganisha"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Haijaunganishwa"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Muunganisho umeshindwa"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Usajili"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Usajili"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Badilisha hali"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Pima tena"
+    },
+    {
+      "name": "term_tested",
+      "value": "Zimepimwa"
+    },
+    {
+      "name": "term_testing",
+      "value": "Inapima"
+    },
+    {
+      "name": "term_today",
+      "value": "Leo"
+    },
+    {
+      "name": "term_undo",
+      "value": "Tendua"
+    },
+    {
+      "name": "term_update",
+      "value": "Sasisha"
+    },
+    {
+      "name": "tile_a11y",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "today_date_pattern",
+      "value": "EEEE, d MMMM"
+    },
+    {
+      "name": "today_fastest",
+      "value": "ms kasi zaidi"
+    },
+    {
+      "name": "today_pattern_note",
+      "value": "Mchoro umetokana na trafiki ya leo na hauna majina ya nodi wala anwani za IP."
+    },
+    {
+      "name": "today_save_failed",
+      "value": "Imeshindwa kuhifadhi picha"
+    },
+    {
+      "name": "today_save_image",
+      "value": "Hifadhi picha"
+    },
+    {
+      "name": "today_saved",
+      "value": "Imehifadhiwa kwenye matunzio"
+    },
+    {
+      "name": "today_storage_permission",
+      "value": "Ruhusa ya hifadhi inahitajika ili kuhifadhi picha"
+    },
+    {
+      "name": "today_style_dawn",
+      "value": "Alfajiri"
+    },
+    {
+      "name": "today_style_mist",
+      "value": "Ukungu"
+    },
+    {
+      "name": "today_style_night",
+      "value": "Usiku"
+    },
+    {
+      "name": "trace_always_apply",
+      "value": "Tumia kila wakati"
+    },
+    {
+      "name": "trace_always_apply_hint",
+      "value": "Ikizimwa, muunganisho huu pekee ndio hubadilika"
+    },
+    {
+      "name": "trace_from",
+      "value": "Kutoka %1$s"
+    },
+    {
+      "name": "trace_option_unchanged",
+      "value": "Hakuna mabadiliko"
+    },
+    {
+      "name": "trace_override_cleared",
+      "value": "Ubatilishaji wa njia wa %1$s umefutwa"
+    },
+    {
+      "name": "trace_override_direct",
+      "value": "%1$s sasa inaunganishwa moja kwa moja"
+    },
+    {
+      "name": "trace_override_error",
+      "value": "Imeshindwa kubadilisha njia. Jaribu tena."
+    },
+    {
+      "name": "trace_override_scene",
+      "value": "%1$s sasa inatumia %2$s"
+    },
+    {
+      "name": "trace_step_rule",
+      "value": "Sheria"
+    },
+    {
+      "name": "trace_this_connection",
+      "value": "Muunganisho huu"
+    },
+    {
+      "name": "trace_via",
+      "value": "Kupitia %1$s"
+    },
+    {
+      "name": "trusted_wifi_add_hint",
+      "value": "Ongeza jina la Wi‑Fi"
+    },
+    {
+      "name": "trusted_wifi_disconnect",
+      "value": "Tenganisha kwenye Wi‑Fi hizi"
+    },
+    {
+      "name": "trusted_wifi_footer",
+      "value": "Kwenye mitandao inayoaminika kama nyumbani au kazini, Zephyr hujitenganisha kiotomatiki na kuunganisha tena inapohitajika ukiondoka."
+    },
+    {
+      "name": "trusted_wifi_networks",
+      "value": "Mitandao"
+    },
+    {
+      "name": "widget_description",
+      "value": "Hali ya muunganisho, kasi na mazingira"
+    },
+    {
+      "name": "widget_label",
+      "value": "Hali ya Zephyr"
+    },
+    {
+      "name": "widget_today",
+      "value": "Leo %1$s %2$s"
+    },
+    {
+      "name": "widget_usage_description",
+      "value": "Trafiki ya leo na mgawanyo wa saa 24"
+    },
+    {
+      "name": "widget_usage_label",
+      "value": "Matumizi ya Zephyr leo"
+    },
+    {
+      "name": "widgets_home_steps",
+      "value": "Gusa na ushikilie sehemu tupu kwenye skrini ya kwanza › Wijeti › Zephyr, kisha buruta mojawapo kwenye skrini."
+    },
+    {
+      "name": "widgets_home_title",
+      "value": "Wijeti za skrini ya kwanza"
+    },
+    {
+      "name": "widgets_tile_steps",
+      "value": "Telezesha chini mara mbili kutoka juu ya skrini › Hariri › buruta Zephyr kwenye Mipangilio ya Haraka. Igonge ili kuunganisha au kutenganisha."
+    },
+    {
+      "name": "widgets_tile_title",
+      "value": "Kigae cha Mipangilio ya Haraka"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+const { CommandApplier, GHOST_TAP_MS } = await import('../.out/rt/app/CommandApplier.ts');
+const { CommandPlanner } = await import('../.out/rt/app/CommandPlanner.ts');
+const { ToastCenter } = await import('../.out/rt/app/ToastCenter.ts');
+const { MockEngine } = await import('../.out/rt/engine/MockEngine.ts');
+let bad=0;const ok=(c,m)=>{if(!c){bad++;console.log('FAIL',m)}};
+const e=new MockEngine({latencyScale:0});const pl=new CommandPlanner(e);const c=new ToastCenter(()=>false,{set:()=>1,clear(){}});
+const v=()=>e.scenes().value.find(s=>s.kind==='video');const b=v().selected.id;
+const p=await pl.planText('视频走日本');const order=[];c.current.subscribe(t=>t&&order.push('toast'));
+const r=CommandApplier.run(pl,p,c,{success:'ok',failed:'f'},()=>order.push('close'));ok(order.join()==='close','close first sync '+order);
+ok(await r,'ok');ok(order.join()==='close,toast','then toast');ok(v().selected.region==='JP','jp');ok(c.undoCurrent(),'undo');await new Promise(r=>setTimeout(r,20));ok(v().selected.id===b,'restored');
+ok(CommandApplier.suppressesTap(1000,1000+GHOST_TAP_MS-1)&&!CommandApplier.suppressesTap(1000,1000+GHOST_TAP_MS)&&!CommandApplier.suppressesTap(0,5),'ghost');
+console.log(bad?'apply FAIL':'apply ok');process.exit(bad?1:0);

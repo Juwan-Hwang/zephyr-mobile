@@ -1,0 +1,1592 @@
+{
+  "string": [
+    {
+      "name": "activity_back",
+      "value": "‹ حالیہ کنکشنز"
+    },
+    {
+      "name": "activity_close_host_a11y",
+      "value": "\\u2068%1$s\\u2069 کے کنکشنز بند کریں"
+    },
+    {
+      "name": "activity_close_none",
+      "value": "کوئی فعال کنکشن نہیں"
+    },
+    {
+      "name": "activity_empty",
+      "value": "منسلک ہونے کے بعد حال ہی میں دیکھے گئے ڈومینز یہاں نظر آئیں گے۔"
+    },
+    {
+      "name": "activity_host_a11y",
+      "value": "\\u2068%1$s\\u2069 کنکشن کی تفصیلات"
+    },
+    {
+      "name": "activity_no_app_note",
+      "value": "ابھی معلوم نہیں کہ ہر کنکشن کس ایپ نے بنایا، اس لیے صرف ڈومینز دکھائے جا رہے ہیں۔"
+    },
+    {
+      "name": "activity_title",
+      "value": "حالیہ کنکشنز"
+    },
+    {
+      "name": "command_action_open",
+      "value": "کھولیں"
+    },
+    {
+      "name": "command_action_test",
+      "value": "جانچیں"
+    },
+    {
+      "name": "command_chip_action",
+      "value": "عمل"
+    },
+    {
+      "name": "command_chip_region",
+      "value": "علاقہ"
+    },
+    {
+      "name": "command_chip_scene",
+      "value": "منظر"
+    },
+    {
+      "name": "command_chip_scope",
+      "value": "دائرہ"
+    },
+    {
+      "name": "command_chip_service",
+      "value": "سروس"
+    },
+    {
+      "name": "command_direct_note",
+      "value": "\\u2068%1$s\\u2069 کا ٹریفک پراکسی سے نہیں گزرے گا۔"
+    },
+    {
+      "name": "command_direct_title",
+      "value": "\\u2068%1$s\\u2069 کو براہ راست منسلک کریں"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "چلانے کے لیے Enter دبائیں"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "اصول کی جانچ"
+    },
+    {
+      "name": "command_no_nodes_available",
+      "value": "کوئی نوڈ دستیاب نہیں"
+    },
+    {
+      "name": "command_placeholder",
+      "value": "تلاش کریں یا کمانڈ درج کریں"
+    },
+    {
+      "name": "command_plan_exit_title",
+      "value": "\\u2068%1$s\\u2069، \\u2068%2$s\\u2069 کے نوڈز استعمال کرتا ہے"
+    },
+    {
+      "name": "command_plan_fallback_pause",
+      "value": "اگر \\u2068%1$s\\u2069 کا کوئی نوڈ دستیاب نہ ہو تو \\u2068%2$s\\u2069 رک جائے گا۔"
+    },
+    {
+      "name": "command_plan_fallback_scene",
+      "value": "اگر \\u2068%1$s\\u2069 کا کوئی نوڈ دستیاب نہ ہو تو منظر کے دوسرے نوڈز استعمال ہوں گے۔"
+    },
+    {
+      "name": "command_plan_no_nodes",
+      "value": "\\u2068%1$s\\u2069 میں \\u2068%2$s\\u2069 کا کوئی نوڈ نہیں۔"
+    },
+    {
+      "name": "command_plan_releases_pin",
+      "value": "\\u2068%1$s\\u2069 اپنا مقررہ ایگزٹ \\u2068%2$s\\u2069 استعمال کرنا بند کر دے گا۔"
+    },
+    {
+      "name": "command_region_de",
+      "value": "جرمنی"
+    },
+    {
+      "name": "command_region_gb",
+      "value": "برطانیہ"
+    },
+    {
+      "name": "command_region_hk",
+      "value": "ہانگ کانگ"
+    },
+    {
+      "name": "command_region_jp",
+      "value": "جاپان"
+    },
+    {
+      "name": "command_region_kr",
+      "value": "کوریا"
+    },
+    {
+      "name": "command_region_sg",
+      "value": "سنگاپور"
+    },
+    {
+      "name": "command_region_tw",
+      "value": "تائیوان"
+    },
+    {
+      "name": "command_region_us",
+      "value": "امریکہ"
+    },
+    {
+      "name": "command_scene_ai",
+      "value": "مصنوعی ذہانت کا منظر"
+    },
+    {
+      "name": "command_scene_named",
+      "value": "\\u2068%1$s\\u2069 منظر"
+    },
+    {
+      "name": "command_section_command",
+      "value": "کمانڈز"
+    },
+    {
+      "name": "command_section_suggestions",
+      "value": "تجاویز"
+    },
+    {
+      "name": "command_see_all_nodes",
+      "value": "نوڈ لائبریری میں تمام \\u2068%1$s\\u2069 دیکھیں"
+    },
+    {
+      "name": "command_show_all",
+      "value": "سب دکھائیں (%1$s)"
+    },
+    {
+      "name": "command_test_rule",
+      "value": "\\u2068%1$s\\u2069 کہاں جاتا ہے؟"
+    },
+    {
+      "name": "command_uhd_auto_note",
+      "value": "اب سے خودکار تبدیلی صرف 4K نوڈز میں سے انتخاب کرے گی۔"
+    },
+    {
+      "name": "command_uhd_clear_note",
+      "value": "\\u2068%1$s\\u2069 منظر صرف 4K نوڈز استعمال کرتا ہے۔ دوبارہ تمام نوڈز استعمال ہوں گے؛ موجودہ نوڈ برقرار رہے گا۔"
+    },
+    {
+      "name": "command_uhd_fastest",
+      "value": "تیز ترین 4K نوڈ"
+    },
+    {
+      "name": "command_uhd_none",
+      "value": "کوئی نوڈ 4K سپورٹ نہیں کرتا۔"
+    },
+    {
+      "name": "command_uhd_title_all",
+      "value": "\\u2068%1$s\\u2069: تمام نوڈز"
+    },
+    {
+      "name": "command_uhd_title_only",
+      "value": "\\u2068%1$s\\u2069: صرف 4K نوڈز"
+    },
+    {
+      "name": "command_zephyr_only",
+      "value": "صرف Zephyr میں لاگو ہوتا ہے۔ آپ کی سبسکرپشن کی کنفیگریشن تبدیل نہیں ہوتی۔"
+    },
+    {
+      "name": "common_add",
+      "value": "شامل کریں"
+    },
+    {
+      "name": "common_adding",
+      "value": "شامل کیا جا رہا ہے…"
+    },
+    {
+      "name": "common_back_to",
+      "value": "\\u2068%1$s\\u2069 پر واپس جائیں"
+    },
+    {
+      "name": "common_cancel",
+      "value": "منسوخ کریں"
+    },
+    {
+      "name": "common_change",
+      "value": "تبدیل کریں"
+    },
+    {
+      "name": "common_clear",
+      "value": "صاف کریں"
+    },
+    {
+      "name": "common_close",
+      "value": "بند کریں"
+    },
+    {
+      "name": "common_connect",
+      "value": "منسلک کریں"
+    },
+    {
+      "name": "common_current",
+      "value": "موجودہ"
+    },
+    {
+      "name": "common_direct",
+      "value": "براہ راست"
+    },
+    {
+      "name": "common_done",
+      "value": "ہو گیا"
+    },
+    {
+      "name": "common_exit_ip_changes",
+      "value": "ایگزٹ IP بدل جائے گا"
+    },
+    {
+      "name": "common_expiry_date",
+      "value": "میعاد: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "میعاد ختم"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "میعاد آج ختم ہوگی"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "میعاد کل ختم ہوگی"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "میعاد \\u2068%1$s\\u2069 کو ختم ہوگی"
+    },
+    {
+      "name": "common_home",
+      "value": "صفحہ اول"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "تاخیر ٹیسٹ ہو رہی ہے"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "تاخیر: ٹائم آؤٹ"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "تاخیر ٹیسٹ نہیں ہوئی"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "ٹائم آؤٹ"
+    },
+    {
+      "name": "common_library",
+      "value": "لائبریری"
+    },
+    {
+      "name": "common_list_separator",
+      "value": "\\u2068%1$s\\u2069، \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "common_local_data_note",
+      "value": "سبسکرپشنز اور ٹریفک ڈیٹا صرف اسی ڈیوائس پر محفوظ ہوتے ہیں۔"
+    },
+    {
+      "name": "common_local_network",
+      "value": "اس ڈیوائس کا نیٹ ورک"
+    },
+    {
+      "name": "common_mode_direct_hint",
+      "value": "پراکسی کے بغیر"
+    },
+    {
+      "name": "common_mode_global_hint",
+      "value": "تمام ٹریفک ایک نوڈ سے"
+    },
+    {
+      "name": "common_mode_rule_hint",
+      "value": "منظر کے مطابق روٹنگ"
+    },
+    {
+      "name": "common_open_settings",
+      "value": "ترتیبات کھولیں"
+    },
+    {
+      "name": "common_pair_and",
+      "value": "\\u2068%1$s\\u2069 اور \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "common_retesting",
+      "value": "ٹیسٹ جاری…"
+    },
+    {
+      "name": "common_scene_ai",
+      "value": "مصنوعی ذہانت"
+    },
+    {
+      "name": "common_scene_other",
+      "value": "دیگر"
+    },
+    {
+      "name": "common_scene_video",
+      "value": "ویڈیو"
+    },
+    {
+      "name": "common_share",
+      "value": "شیئر کریں"
+    },
+    {
+      "name": "common_source_auto",
+      "value": "Zephyr کا انتخاب"
+    },
+    {
+      "name": "common_source_group",
+      "value": "سبسکرپشن گروپ"
+    },
+    {
+      "name": "common_status_connected",
+      "value": "منسلک"
+    },
+    {
+      "name": "common_status_connecting_ellipsis",
+      "value": "منسلک ہو رہا ہے…"
+    },
+    {
+      "name": "common_status_disconnecting",
+      "value": "منقطع ہو رہا ہے"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "ابھی ابھی"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "ابھی ابھی"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "ڈاؤن لوڈ \\u2066%1$s %2$s\\u2069 فی سیکنڈ، اپ لوڈ \\u2066%3$s %4$s\\u2069 فی سیکنڈ"
+    },
+    {
+      "name": "common_try_again",
+      "value": "دوبارہ کوشش کریں"
+    },
+    {
+      "name": "common_updating",
+      "value": "اپ ڈیٹ ہو رہا ہے…"
+    },
+    {
+      "name": "connect_no_subscription",
+      "value": "ابھی کوئی سبسکرپشن نہیں"
+    },
+    {
+      "name": "home_action_load_nodes",
+      "value": "نوڈز لوڈ کرنے"
+    },
+    {
+      "name": "home_action_preview_exit",
+      "value": "ایگزٹ کا پیش منظر"
+    },
+    {
+      "name": "home_action_retest",
+      "value": "دوبارہ ٹیسٹ"
+    },
+    {
+      "name": "home_action_switch_exit",
+      "value": "ایگزٹ کی تبدیلی"
+    },
+    {
+      "name": "home_action_switch_mode",
+      "value": "موڈ کی تبدیلی"
+    },
+    {
+      "name": "home_action_switch_node",
+      "value": "نوڈ کی تبدیلی"
+    },
+    {
+      "name": "home_action_switch_source",
+      "value": "سورس کی تبدیلی"
+    },
+    {
+      "name": "home_action_undo",
+      "value": "واپسی"
+    },
+    {
+      "name": "home_apply_failed",
+      "value": "لاگو نہیں ہو سکا: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_confirm_apps",
+      "value": "\\u2068%1$s\\u2069 کا ایگزٹ IP تبدیل کریں؟"
+    },
+    {
+      "name": "home_confirm_scene",
+      "value": "\\u2068%1$s\\u2069 منظر کا ایگزٹ IP تبدیل کریں؟"
+    },
+    {
+      "name": "home_confirm_unchanged",
+      "value": "\\u2068%1$s\\u2069 ویسا ہی رہے گا۔"
+    },
+    {
+      "name": "home_error_failed",
+      "value": "\\u2068%1$s\\u2069 میں ناکامی"
+    },
+    {
+      "name": "home_error_node_gone",
+      "value": "\\u2068%1$s\\u2069 میں ناکامی: نوڈ اب موجود نہیں"
+    },
+    {
+      "name": "home_error_not_connected",
+      "value": "\\u2068%1$s\\u2069 کے لیے پہلے منسلک ہوں"
+    },
+    {
+      "name": "home_failover_none",
+      "value": "\\u2068%1$s\\u2069 کا ایگزٹ جواب نہیں دے رہا۔ ایگزٹ IP خود بخود نہیں بدلے گا۔"
+    },
+    {
+      "name": "home_failover_switched",
+      "value": "\\u2068%1$s\\u2069 کا ایگزٹ خود بخود \\u2068%2$s\\u2069 پر بدل گیا"
+    },
+    {
+      "name": "home_failure_core",
+      "value": "کور شروع نہیں ہو سکا"
+    },
+    {
+      "name": "home_failure_network",
+      "value": "نیٹ ورک دستیاب نہیں"
+    },
+    {
+      "name": "home_failure_no_subscription",
+      "value": "پہلے ایک سبسکرپشن شامل کریں"
+    },
+    {
+      "name": "home_failure_vpn_permission",
+      "value": "VPN کی اجازت درکار ہے"
+    },
+    {
+      "name": "home_global_body",
+      "value": "تمام ٹریفک \\u2068%1$s\\u2069 سے گزرتا ہے۔ مناظر موقوف ہیں۔"
+    },
+    {
+      "name": "home_global_body_any",
+      "value": "تمام ٹریفک ایک ہی نوڈ سے گزرتا ہے۔ مناظر موقوف ہیں۔"
+    },
+    {
+      "name": "home_global_change_node",
+      "value": "نوڈ تبدیل کریں"
+    },
+    {
+      "name": "home_global_change_note",
+      "value": "تمام ایپس \\u2068%1$s\\u2069 سے باہر جائیں گی۔"
+    },
+    {
+      "name": "home_global_change_to",
+      "value": "\\u2068%1$s\\u2069 پر تبدیل کریں"
+    },
+    {
+      "name": "home_global_use_rule",
+      "value": "قاعدہ موڈ استعمال کریں"
+    },
+    {
+      "name": "home_mini_funnel_a11y",
+      "value": "قابلِ رسائی %1$s، 200 ملی سیکنڈ سے کم %2$s"
+    },
+    {
+      "name": "home_now_all_nodes",
+      "value": "\\u2068%1$s\\u2069: دوبارہ تمام نوڈز"
+    },
+    {
+      "name": "home_now_direct",
+      "value": "\\u2068%1$s\\u2069 اب براہ راست منسلک ہوتا ہے"
+    },
+    {
+      "name": "home_now_uhd_only",
+      "value": "\\u2068%1$s\\u2069 اب صرف 4K نوڈز استعمال کر رہا ہے"
+    },
+    {
+      "name": "home_now_uses",
+      "value": "\\u2068%1$s\\u2069 اب \\u2068%2$s\\u2069 استعمال کر رہا ہے"
+    },
+    {
+      "name": "home_now_uses_uhd",
+      "value": "\\u2068%1$s\\u2069 اب \\u2068%2$s\\u2069 استعمال کر رہا ہے (صرف 4K)"
+    },
+    {
+      "name": "home_pin_line",
+      "value": "\\u2068%1$s\\u2069: \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "home_scan_progress",
+      "value": "ٹیسٹ جاری \\u2066%1$d/%2$d\\u2069"
+    },
+    {
+      "name": "home_scan_running",
+      "value": "ٹیسٹ جاری…"
+    },
+    {
+      "name": "home_scene_details_a11y",
+      "value": "\\u2068%1$s\\u2069 منظر کی تفصیلات"
+    },
+    {
+      "name": "home_scene_next_region",
+      "value": "اگلا علاقہ: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_scene_prev_region",
+      "value": "پچھلا علاقہ: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "home_scene_services_down",
+      "value": "\\u2068%1$s\\u2069 دستیاب نہیں"
+    },
+    {
+      "name": "home_scene_services_ok",
+      "value": "\\u2068%1$s\\u2069 دستیاب"
+    },
+    {
+      "name": "home_scenes_tested",
+      "value": "\\u2068%1$s\\u2069 ٹیسٹ کیا گیا"
+    },
+    {
+      "name": "home_scrub_hint",
+      "value": "علاقہ بدلنے کے لیے دائیں یا بائیں سوائپ کریں"
+    },
+    {
+      "name": "home_spark_a11y",
+      "value": "پچھلے 90 سیکنڈ میں ڈاؤن لوڈ کی رفتار"
+    },
+    {
+      "name": "home_switched_to",
+      "value": "\\u2068%1$s\\u2069 پر منتقل ہو گیا"
+    },
+    {
+      "name": "home_today_usage",
+      "value": "آج \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "library_widgets",
+      "value": "ویجیٹس اور فوری ترتیبات"
+    },
+    {
+      "name": "licenses_intro",
+      "value": "Zephyr کا اپنا کوڈ MIT لائسنس کے تحت ہے۔ ایپ میں mihomo ‏(GPL-3.0) شامل ہے، اس لیے پوری ایپ GPL-3.0 کے تحت تقسیم کی جاتی ہے۔ متعلقہ سورس: %1$s، ٹیگ %2$s۔"
+    },
+    {
+      "name": "licenses_section_app",
+      "value": "Zephyr لائسنس"
+    },
+    {
+      "name": "licenses_section_notices",
+      "value": "تیسرے فریق کے نوٹس"
+    },
+    {
+      "name": "licenses_section_texts",
+      "value": "لائسنس کے متن"
+    },
+    {
+      "name": "licenses_unavailable",
+      "value": "اس بلڈ میں لائسنس فائلیں موجود نہیں۔"
+    },
+    {
+      "name": "local_proxy_apply_failed",
+      "value": "تبدیلی لاگو نہیں ہو سکی"
+    },
+    {
+      "name": "local_proxy_auth_footer",
+      "value": "آن ہونے پر لوکل پورٹ سے منسلک ہونے کے لیے صارف نام اور پاس ورڈ درکار ہوگا، تاکہ دوسری ایپس اجازت کے بغیر پراکسی استعمال نہ کر سکیں۔"
+    },
+    {
+      "name": "local_proxy_conceal",
+      "value": "پاس ورڈ چھپائیں"
+    },
+    {
+      "name": "local_proxy_concealed",
+      "value": "پاس ورڈ چھپا ہوا ہے"
+    },
+    {
+      "name": "local_proxy_copied",
+      "value": "کاپی ہو گیا"
+    },
+    {
+      "name": "local_proxy_copy_http",
+      "value": "HTTP پراکسی URL کاپی کریں"
+    },
+    {
+      "name": "local_proxy_copy_socks",
+      "value": "SOCKS5 پراکسی URL کاپی کریں"
+    },
+    {
+      "name": "local_proxy_credential_row",
+      "value": "پاس ورڈ"
+    },
+    {
+      "name": "local_proxy_credentials",
+      "value": "کنکشن کی معلومات"
+    },
+    {
+      "name": "local_proxy_footer",
+      "value": "آن ہونے پر Zephyr صرف 127.0.0.1 پر سنتا ہے، اس لیے آپ کے نیٹ ورک کے دوسرے ڈیوائسز منسلک نہیں ہو سکتے۔"
+    },
+    {
+      "name": "local_proxy_port",
+      "value": "پورٹ"
+    },
+    {
+      "name": "local_proxy_port_footer",
+      "value": "دوسری ایپس 127.0.0.1 پر اس پورٹ کے ذریعے Zephyr کے قواعد اور مناظر استعمال کر سکتی ہیں۔"
+    },
+    {
+      "name": "local_proxy_port_invalid",
+      "value": "%1$d سے %2$d تک کا پورٹ درج کریں"
+    },
+    {
+      "name": "local_proxy_regenerate",
+      "value": "نیا پاس ورڈ بنائیں"
+    },
+    {
+      "name": "local_proxy_regenerate_footer",
+      "value": "نیا بنانے کے بعد پرانا پاس ورڈ فوراً کام کرنا بند کر دیتا ہے؛ جن ایپس کو آپ نے سیٹ کیا ہے انہیں نیا پاس ورڈ درکار ہوگا۔"
+    },
+    {
+      "name": "local_proxy_regenerated",
+      "value": "نیا پاس ورڈ بن گیا"
+    },
+    {
+      "name": "local_proxy_reveal",
+      "value": "پاس ورڈ دکھائیں"
+    },
+    {
+      "name": "local_proxy_security",
+      "value": "سیکیورٹی"
+    },
+    {
+      "name": "local_proxy_user_row",
+      "value": "صارف نام"
+    },
+    {
+      "name": "logs_clear",
+      "value": "صاف کریں"
+    },
+    {
+      "name": "logs_empty",
+      "value": "ابھی کوئی لاگ نہیں"
+    },
+    {
+      "name": "logs_line_a11y",
+      "value": "%1$s %2$s %3$s"
+    },
+    {
+      "name": "logs_pause",
+      "value": "روکیں"
+    },
+    {
+      "name": "logs_resume",
+      "value": "جاری رکھیں"
+    },
+    {
+      "name": "nodes_detail_latency",
+      "value": "تاخیر"
+    },
+    {
+      "name": "nodes_detail_protocol",
+      "value": "پروٹوکول"
+    },
+    {
+      "name": "nodes_detail_route",
+      "value": "روٹ"
+    },
+    {
+      "name": "nodes_detail_server",
+      "value": "سرور"
+    },
+    {
+      "name": "nodes_detail_test",
+      "value": "تاخیر ٹیسٹ کریں"
+    },
+    {
+      "name": "nodes_empty_action",
+      "value": "سبسکرپشن امپورٹ کریں"
+    },
+    {
+      "name": "nodes_empty_message",
+      "value": "سبسکرپشن امپورٹ کریں، اس کے نوڈز یہاں نظر آئیں گے"
+    },
+    {
+      "name": "nodes_empty_title",
+      "value": "ابھی کوئی نوڈ نہیں"
+    },
+    {
+      "name": "nodes_error_title",
+      "value": "نوڈز لوڈ نہیں ہو سکے"
+    },
+    {
+      "name": "nodes_judgement",
+      "value": "\\u2068%1$s\\u2069 قابلِ رسائی · \\u2068%2$s\\u2069 جانچے گئے"
+    },
+    {
+      "name": "nodes_jump_to",
+      "value": "\\u2068%1$s\\u2069 پر جائیں"
+    },
+    {
+      "name": "nodes_no_match",
+      "value": "“\\u2068%1$s\\u2069” سے کوئی نوڈ میل نہیں کھاتا"
+    },
+    {
+      "name": "nodes_search_placeholder",
+      "value": "علاقہ، شہر یا روٹ"
+    },
+    {
+      "name": "nodes_search_stats",
+      "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "ابھی ٹیسٹ نہیں ہوا — اسکرول روکنے پر نظر آنے والے نوڈز ٹیسٹ ہوتے ہیں"
+    },
+    {
+      "name": "notif_action_global",
+      "value": "گلوبل موڈ"
+    },
+    {
+      "name": "notif_action_rule",
+      "value": "قاعدہ موڈ"
+    },
+    {
+      "name": "notif_channel_alerts",
+      "value": "سبسکرپشن الرٹس"
+    },
+    {
+      "name": "notif_channel_alerts_desc",
+      "value": "سبسکرپشن کی میعاد اور کم ڈیٹا"
+    },
+    {
+      "name": "notif_channel_vpn",
+      "value": "کنکشن کی حالت"
+    },
+    {
+      "name": "notif_channel_vpn_desc",
+      "value": "منسلک ہونے پر رفتار اور مناظر دکھاتا ہے"
+    },
+    {
+      "name": "notif_expiry_text",
+      "value": "\\u2068%1$s\\u2069 باقی"
+    },
+    {
+      "name": "notif_expiry_title",
+      "value": "\\u2068%1$s\\u2069 کی میعاد \\u2068%2$s\\u2069 کو ختم ہوگی"
+    },
+    {
+      "name": "notif_paused_trusted",
+      "value": "قابلِ اعتماد Wi‑Fi «%1$s» پر منقطع کیا گیا۔ وہاں سے نکلنے پر خودکار طور پر دوبارہ جڑ جائے گا۔"
+    },
+    {
+      "name": "notif_route_global",
+      "value": "گلوبل · \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "notif_route_global_any",
+      "value": "تمام ٹریفک ایک نوڈ سے"
+    },
+    {
+      "name": "onboarding_cancel_import_a11y",
+      "value": "امپورٹ منسوخ کریں"
+    },
+    {
+      "name": "onboarding_change_later",
+      "value": "آپ اسے کسی بھی وقت ترتیبات میں بدل سکتے ہیں۔"
+    },
+    {
+      "name": "onboarding_choose_mode",
+      "value": "ایک موڈ منتخب کریں"
+    },
+    {
+      "name": "onboarding_continue",
+      "value": "جاری رکھیں"
+    },
+    {
+      "name": "onboarding_optimized",
+      "value": "آپٹمائزڈ"
+    },
+    {
+      "name": "onboarding_optimized_desc",
+      "value": "روزانہ Wi‑Fi پر نوڈز ٹیسٹ کرتا ہے۔ مصنوعی ذہانت اور ویڈیو صرف کامیاب نوڈز استعمال کرتے ہیں۔ ہر بار تقریباً 3 MB۔"
+    },
+    {
+      "name": "onboarding_simple",
+      "value": "سادہ"
+    },
+    {
+      "name": "onboarding_simple_desc",
+      "value": "آپ کی سبسکرپشن کے گروپس استعمال کرتا ہے۔ غیر دستیاب نوڈز خود بخود سنبھالے جاتے ہیں۔"
+    },
+    {
+      "name": "rules_add_override_a11y",
+      "value": "ڈومین کے لیے اوور رائیڈ شامل کریں"
+    },
+    {
+      "name": "rules_blocked",
+      "value": "بلاک شدہ"
+    },
+    {
+      "name": "rules_kind_ip",
+      "value": "IP"
+    },
+    {
+      "name": "rules_kind_other",
+      "value": "دیگر"
+    },
+    {
+      "name": "rules_match_order",
+      "value": "میچ کی ترتیب"
+    },
+    {
+      "name": "rules_note",
+      "value": "قواعد کے سیٹ ڈیوائس پر صرف پڑھنے کے قابل انڈیکس میں کمپائل ہوتے ہیں اور ضرورت کے مطابق ڈسک سے پڑھے جاتے ہیں۔ سبسکرپشنز اپ ڈیٹ ہونے پر اوور رائیڈز برقرار رہتے ہیں۔"
+    },
+    {
+      "name": "rules_other_traffic",
+      "value": "باقی تمام ٹریفک"
+    },
+    {
+      "name": "rules_step_layer",
+      "value": "پرت %1$d · \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "rules_step_request",
+      "value": "درخواست"
+    },
+    {
+      "name": "rules_step_result",
+      "value": "نتیجہ"
+    },
+    {
+      "name": "rules_step_scene",
+      "value": "منظر · \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "rules_test_hint",
+      "value": "مماثل قاعدہ اور ایگزٹ دیکھنے کے لیے ڈومین یا IP ایڈریس درج کریں۔"
+    },
+    {
+      "name": "rules_test_placeholder",
+      "value": "ڈومین یا IP ٹیسٹ کریں"
+    },
+    {
+      "name": "rules_took",
+      "value": "وقت: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "rules_top_to_bottom",
+      "value": "اوپر سے نیچے"
+    },
+    {
+      "name": "scene_ask",
+      "value": "پوچھیں"
+    },
+    {
+      "name": "scene_auto_switch",
+      "value": "خودکار تبدیلی"
+    },
+    {
+      "name": "scene_funnel_tested",
+      "value": "ٹیسٹ شدہ"
+    },
+    {
+      "name": "scene_funnel_under",
+      "value": "%1$d ms سے کم"
+    },
+    {
+      "name": "scene_node_scope",
+      "value": "نوڈز کا دائرہ"
+    },
+    {
+      "name": "scene_note",
+      "value": "انتخاب صرف Zephyr میں محفوظ ہوتے ہیں۔ آپ کی سبسکرپشن کی کنفیگریشن تبدیل نہیں ہوتی۔"
+    },
+    {
+      "name": "scene_note_tested",
+      "value": "\\u2068%1$s\\u2069 آخری ٹیسٹ: \\u2068%2$s\\u2069۔"
+    },
+    {
+      "name": "scene_pinned_for",
+      "value": "\\u2068%1$s\\u2069 کے لیے پن شدہ"
+    },
+    {
+      "name": "scene_pinned_value",
+      "value": "\\u2068%1$s\\u2069 (پن شدہ)"
+    },
+    {
+      "name": "scene_test_daily",
+      "value": "روزانہ"
+    },
+    {
+      "name": "scene_test_frequency",
+      "value": "ٹیسٹ کی تعدد"
+    },
+    {
+      "name": "scene_test_wifi_only",
+      "value": "%1$s (صرف Wi‑Fi)"
+    },
+    {
+      "name": "scene_tested_from_pool",
+      "value": "%1$d سبسکرپشنز کے %2$s نوڈز ٹیسٹ کیے گئے"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "%1$s امیدوار، %2$s 200 ملی سیکنڈ سے کم، %3$s کا وقت ختم"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "وقت ختم: %1$s"
+    },
+    {
+      "name": "scene_uhd_only",
+      "value": "صرف 4K نوڈز"
+    },
+    {
+      "name": "scene_when_unavailable",
+      "value": "جب نوڈ دستیاب نہ ہو"
+    },
+    {
+      "name": "settings_accent_blue",
+      "value": "نیلا"
+    },
+    {
+      "name": "settings_accent_green",
+      "value": "سبز"
+    },
+    {
+      "name": "settings_accent_orange",
+      "value": "نارنجی"
+    },
+    {
+      "name": "settings_accent_pink",
+      "value": "گلابی"
+    },
+    {
+      "name": "settings_keep_results",
+      "value": "نتائج محفوظ رکھیں"
+    },
+    {
+      "name": "settings_licenses",
+      "value": "اوپن سورس لائسنس"
+    },
+    {
+      "name": "settings_local_data_note",
+      "value": "سبسکرپشنز، نوڈز اور ٹریفک ڈیٹا صرف اسی ڈیوائس پر محفوظ ہوتے ہیں۔"
+    },
+    {
+      "name": "settings_on_demand",
+      "value": "ضرورت پر منسلک کریں"
+    },
+    {
+      "name": "settings_save_failed",
+      "value": "ترتیب محفوظ نہیں ہو سکی"
+    },
+    {
+      "name": "settings_section_about",
+      "value": "بارے میں"
+    },
+    {
+      "name": "settings_section_connection",
+      "value": "کنکشن"
+    },
+    {
+      "name": "settings_section_privacy",
+      "value": "رازداری"
+    },
+    {
+      "name": "settings_section_storage",
+      "value": "اسٹوریج"
+    },
+    {
+      "name": "settings_section_testing",
+      "value": "ٹیسٹنگ"
+    },
+    {
+      "name": "settings_share_diagnostics",
+      "value": "تشخیصی ڈیٹا شیئر کریں"
+    },
+    {
+      "name": "settings_source_code",
+      "value": "سورس کوڈ"
+    },
+    {
+      "name": "settings_storage_detail",
+      "value": "نوڈز \\u2068%1$s\\u2069 · قواعد \\u2068%2$s\\u2069 · دستیاب \\u2068%3$s\\u2069"
+    },
+    {
+      "name": "settings_storage_title",
+      "value": "نوڈز اور قواعد"
+    },
+    {
+      "name": "settings_test_wifi_only",
+      "value": "صرف Wi‑Fi پر اسپیڈ ٹیسٹ"
+    },
+    {
+      "name": "settings_trusted_wifi",
+      "value": "قابلِ اعتماد Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi_always_on",
+      "value": "سسٹم کے «ہمیشہ آن VPN» کے زیرِ انتظام"
+    },
+    {
+      "name": "settings_trusted_wifi_hint",
+      "value": "ان سے جڑنے پر خود بخود منقطع ہو جائے"
+    },
+    {
+      "name": "settings_trusted_wifi_location",
+      "value": "Wi‑Fi کے نام پہچاننے کے لیے مقام تک رسائی کی اجازت دیں"
+    },
+    {
+      "name": "settings_trusted_wifi_location_off",
+      "value": "Wi‑Fi کے نام پہچاننے کے لیے سسٹم کا مقام آن کریں"
+    },
+    {
+      "name": "subs_add",
+      "value": "سبسکرپشن شامل کریں"
+    },
+    {
+      "name": "subs_all_title",
+      "value": "تمام سبسکرپشنز"
+    },
+    {
+      "name": "subs_deleted",
+      "value": "\\u2068%1$s\\u2069 حذف ہو گیا"
+    },
+    {
+      "name": "subs_diff_updated",
+      "value": "\\u2068%1$s\\u2069 اپ ڈیٹ ہو گیا"
+    },
+    {
+      "name": "subs_diff_updating",
+      "value": "\\u2068%1$s\\u2069 اپ ڈیٹ ہو رہا ہے…"
+    },
+    {
+      "name": "subs_error_clipboard_empty",
+      "value": "کلپ بورڈ خالی ہے"
+    },
+    {
+      "name": "subs_error_delete",
+      "value": "\\u2068%1$s\\u2069 حذف نہیں ہو سکا"
+    },
+    {
+      "name": "subs_error_fetch",
+      "value": "یہ سبسکرپشن ڈاؤن لوڈ نہیں ہو سکی۔ لنک یا نیٹ ورک چیک کریں۔"
+    },
+    {
+      "name": "subs_error_import_version",
+      "value": "اس امپورٹ کوڈ کے لیے Zephyr کا نیا ورژن درکار ہے"
+    },
+    {
+      "name": "subs_error_invalid_file",
+      "value": "یہ درست کنفیگریشن فائل نہیں"
+    },
+    {
+      "name": "subs_error_invalid_link",
+      "value": "یہ درست سبسکرپشن لنک نہیں"
+    },
+    {
+      "name": "subs_error_read_file",
+      "value": "یہ فائل پڑھی نہیں جا سکی"
+    },
+    {
+      "name": "subs_error_update",
+      "value": "\\u2068%1$s\\u2069 اپ ڈیٹ نہیں ہو سکا"
+    },
+    {
+      "name": "subs_error_update_all",
+      "value": "سبسکرپشنز اپ ڈیٹ نہیں ہو سکیں"
+    },
+    {
+      "name": "subs_hint_desktop",
+      "value": "اپنے کمپیوٹر پر Zephyr میں ترتیبات › فون سے سنک کریں کھولیں تاکہ QR کوڈ دکھائی دے"
+    },
+    {
+      "name": "subs_import_desktop",
+      "value": "اپنے کمپیوٹر پر Zephyr سے امپورٹ کریں"
+    },
+    {
+      "name": "subs_import_desktop_source",
+      "value": "Zephyr ڈیسک ٹاپ"
+    },
+    {
+      "name": "subs_import_insecure",
+      "value": "یہ لنک انکرپٹڈ نہیں (http)؛ اس کا مواد پڑھا یا تبدیل کیا جا سکتا ہے۔"
+    },
+    {
+      "name": "subs_import_source",
+      "value": "ماخذ: \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "subs_import_trust",
+      "value": "صرف اسی صورت جاری رکھیں جب آپ اس فراہم کنندہ پر بھروسہ کرتے ہوں۔"
+    },
+    {
+      "name": "subs_overrides_kept",
+      "value": "اوور رائیڈز برقرار رکھے گئے"
+    },
+    {
+      "name": "subs_paste_clipboard",
+      "value": "کلپ بورڈ سے پیسٹ کریں"
+    },
+    {
+      "name": "subs_paste_link",
+      "value": "لنک پیسٹ کریں"
+    },
+    {
+      "name": "subs_paste_placeholder",
+      "value": "سبسکرپشن لنک پیسٹ کریں"
+    },
+    {
+      "name": "subs_remaining",
+      "value": "باقی"
+    },
+    {
+      "name": "subs_review_note",
+      "value": "اپ ڈیٹ کرنے سے سبسکرپشن کے نوڈز اور قواعد بدل جاتے ہیں۔ Zephyr کے اوور رائیڈز اور منظر کے انتخاب برقرار رہتے ہیں۔"
+    },
+    {
+      "name": "subs_review_one",
+      "value": "\\u2068%1$s\\u2069 اپ ڈیٹ ہوگا"
+    },
+    {
+      "name": "subs_rule_changes",
+      "value": "قواعد میں تبدیلیاں"
+    },
+    {
+      "name": "subs_scan_camera_needed",
+      "value": "اسکین کرنے کے لیے کیمرے تک رسائی درکار ہے"
+    },
+    {
+      "name": "subs_scan_no_camera",
+      "value": "اس ڈیوائس پر کوئی کیمرہ دستیاب نہیں"
+    },
+    {
+      "name": "subs_scan_prompt",
+      "value": "خود بخود اسکین کرنے کے لیے سبسکرپشن کا QR کوڈ فریم میں رکھیں۔"
+    },
+    {
+      "name": "subs_scan_qr",
+      "value": "QR کوڈ اسکین کریں"
+    },
+    {
+      "name": "subs_scenes_retested",
+      "value": "منظر پولز دوبارہ ٹیسٹ کیے گئے"
+    },
+    {
+      "name": "subs_section_data",
+      "value": "ڈیٹا"
+    },
+    {
+      "name": "subs_section_update",
+      "value": "اپ ڈیٹ"
+    },
+    {
+      "name": "subs_show_changes",
+      "value": "اپ ڈیٹ سے پہلے تبدیلیاں دکھائیں"
+    },
+    {
+      "name": "subs_swipe_confirm_delete",
+      "value": "حذف کی تصدیق"
+    },
+    {
+      "name": "subs_swipe_updating",
+      "value": "اپ ڈیٹ…"
+    },
+    {
+      "name": "subs_this_month",
+      "value": "اس مہینے"
+    },
+    {
+      "name": "subs_update_all",
+      "value": "ابھی سب اپ ڈیٹ کریں"
+    },
+    {
+      "name": "subs_update_wifi_only",
+      "value": "صرف Wi‑Fi پر اپ ڈیٹ کریں"
+    },
+    {
+      "name": "term_accent",
+      "value": "نمایاں رنگ"
+    },
+    {
+      "name": "term_all",
+      "value": "سب"
+    },
+    {
+      "name": "term_appearance",
+      "value": "ظاہری شکل"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "تاریک"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "روشن"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "سسٹم"
+    },
+    {
+      "name": "term_apply",
+      "value": "لاگو کریں"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "خودکار اپ ڈیٹس"
+    },
+    {
+      "name": "term_delete",
+      "value": "حذف کریں"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "تشخیص"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "منقطع کریں"
+    },
+    {
+      "name": "term_domain",
+      "value": "ڈومین"
+    },
+    {
+      "name": "term_exit",
+      "value": "ایگزٹ"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "ایگزٹ IP"
+    },
+    {
+      "name": "term_import",
+      "value": "امپورٹ"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "فائل سے امپورٹ کریں"
+    },
+    {
+      "name": "term_latency",
+      "value": "تاخیر"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "مقامی پراکسی پورٹ"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "ڈیبگ"
+    },
+    {
+      "name": "term_log_error",
+      "value": "خرابی"
+    },
+    {
+      "name": "term_log_info",
+      "value": "معلومات"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "انتباہ"
+    },
+    {
+      "name": "term_logs",
+      "value": "لاگز"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "براہ راست"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "گلوبل"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "گلوبل موڈ"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "قاعدہ"
+    },
+    {
+      "name": "term_no_results",
+      "value": "کوئی نتیجہ نہیں"
+    },
+    {
+      "name": "term_node",
+      "value": "نوڈ"
+    },
+    {
+      "name": "term_nodes",
+      "value": "نوڈز"
+    },
+    {
+      "name": "term_none",
+      "value": "کوئی نہیں"
+    },
+    {
+      "name": "term_off",
+      "value": "آف"
+    },
+    {
+      "name": "term_on",
+      "value": "آن"
+    },
+    {
+      "name": "term_override",
+      "value": "اوور رائیڈ"
+    },
+    {
+      "name": "term_proxy",
+      "value": "پراکسی"
+    },
+    {
+      "name": "term_reachable",
+      "value": "قابلِ رسائی"
+    },
+    {
+      "name": "term_require_password",
+      "value": "پاس ورڈ درکار"
+    },
+    {
+      "name": "term_rule",
+      "value": "قاعدہ"
+    },
+    {
+      "name": "term_rules",
+      "value": "قواعد"
+    },
+    {
+      "name": "term_scene",
+      "value": "منظر"
+    },
+    {
+      "name": "term_scenes",
+      "value": "مناظر"
+    },
+    {
+      "name": "term_settings",
+      "value": "ترتیبات"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "میعاد ختم"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "جلد ختم ہو رہا ہے"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "ناکام"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "ٹھیک"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "سست"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "وقت ختم"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "غیر جانچ شدہ"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "منسلک ہو رہا ہے"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "غیر منسلک"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "کنکشن ناکام"
+    },
+    {
+      "name": "term_subscription",
+      "value": "سبسکرپشن"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "سبسکرپشنز"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "موڈ تبدیل کریں"
+    },
+    {
+      "name": "term_test_again",
+      "value": "دوبارہ ٹیسٹ کریں"
+    },
+    {
+      "name": "term_tested",
+      "value": "جانچے گئے"
+    },
+    {
+      "name": "term_testing",
+      "value": "ٹیسٹ جاری"
+    },
+    {
+      "name": "term_today",
+      "value": "آج"
+    },
+    {
+      "name": "term_undo",
+      "value": "واپس کریں"
+    },
+    {
+      "name": "term_update",
+      "value": "اپ ڈیٹ"
+    },
+    {
+      "name": "tile_a11y",
+      "value": "\\u2068%1$s\\u2069، \\u2068%2$s\\u2069"
+    },
+    {
+      "name": "today_date_pattern",
+      "value": "EEEE، d MMMM"
+    },
+    {
+      "name": "today_fastest",
+      "value": "تیز ترین (ms)"
+    },
+    {
+      "name": "today_pattern_note",
+      "value": "یہ پیٹرن آج کے ٹریفک سے بنتا ہے اور اس میں نوڈ کے نام یا IP ایڈریس شامل نہیں۔"
+    },
+    {
+      "name": "today_save_failed",
+      "value": "تصویر محفوظ نہیں ہو سکی"
+    },
+    {
+      "name": "today_save_image",
+      "value": "تصویر محفوظ کریں"
+    },
+    {
+      "name": "today_saved",
+      "value": "گیلری میں محفوظ ہو گئی"
+    },
+    {
+      "name": "today_storage_permission",
+      "value": "تصویر محفوظ کرنے کے لیے اسٹوریج کی اجازت درکار ہے"
+    },
+    {
+      "name": "today_style_dawn",
+      "value": "سحر"
+    },
+    {
+      "name": "today_style_mist",
+      "value": "دھند"
+    },
+    {
+      "name": "today_style_night",
+      "value": "رات"
+    },
+    {
+      "name": "trace_always_apply",
+      "value": "ہمیشہ لاگو کریں"
+    },
+    {
+      "name": "trace_always_apply_hint",
+      "value": "آف ہونے پر صرف یہ کنکشن تبدیل ہوگا"
+    },
+    {
+      "name": "trace_from",
+      "value": "\\u2068%1$s\\u2069 سے"
+    },
+    {
+      "name": "trace_option_unchanged",
+      "value": "کوئی تبدیلی نہیں"
+    },
+    {
+      "name": "trace_override_cleared",
+      "value": "\\u2068%1$s\\u2069 کا روٹ اوور رائیڈ صاف کر دیا گیا"
+    },
+    {
+      "name": "trace_override_direct",
+      "value": "\\u2068%1$s\\u2069 اب براہ راست منسلک ہوتا ہے"
+    },
+    {
+      "name": "trace_override_error",
+      "value": "روٹ تبدیل نہیں ہو سکا۔ دوبارہ کوشش کریں۔"
+    },
+    {
+      "name": "trace_override_scene",
+      "value": "\\u2068%1$s\\u2069 اب \\u2068%2$s\\u2069 استعمال کرتا ہے"
+    },
+    {
+      "name": "trace_step_rule",
+      "value": "قاعدہ"
+    },
+    {
+      "name": "trace_this_connection",
+      "value": "یہ کنکشن"
+    },
+    {
+      "name": "trace_via",
+      "value": "بذریعہ \\u2068%1$s\\u2069"
+    },
+    {
+      "name": "trusted_wifi_add_hint",
+      "value": "Wi‑Fi کا نام شامل کریں"
+    },
+    {
+      "name": "trusted_wifi_disconnect",
+      "value": "ان Wi‑Fi نیٹ ورکس پر منقطع کریں"
+    },
+    {
+      "name": "trusted_wifi_footer",
+      "value": "گھر یا دفتر جیسے قابلِ اعتماد نیٹ ورکس پر Zephyr خود بخود منقطع ہو جاتا ہے اور وہاں سے جانے پر ضرورت کے مطابق دوبارہ منسلک ہو جاتا ہے۔"
+    },
+    {
+      "name": "trusted_wifi_networks",
+      "value": "نیٹ ورکس"
+    },
+    {
+      "name": "widget_description",
+      "value": "کنکشن کی حالت، رفتار اور مناظر"
+    },
+    {
+      "name": "widget_label",
+      "value": "Zephyr کی حالت"
+    },
+    {
+      "name": "widget_today",
+      "value": "آج \\u2066%1$s %2$s\\u2069"
+    },
+    {
+      "name": "widget_usage_description",
+      "value": "آج کا ٹریفک اور 24 گھنٹوں کی تقسیم"
+    },
+    {
+      "name": "widget_usage_label",
+      "value": "Zephyr کا آج کا استعمال"
+    },
+    {
+      "name": "widgets_home_steps",
+      "value": "ہوم اسکرین پر خالی جگہ کو دبا کر رکھیں › ویجٹس › Zephyr، پھر کسی ایک کو ہوم اسکرین پر گھسیٹیں۔"
+    },
+    {
+      "name": "widgets_home_title",
+      "value": "ہوم اسکرین ویجٹس"
+    },
+    {
+      "name": "widgets_tile_steps",
+      "value": "اسکرین کے اوپر سے دو بار نیچے سوائپ کریں › ترمیم › Zephyr کو فوری ترتیبات میں گھسیٹیں۔ منسلک یا منقطع کرنے کے لیے اسے تھپتھپائیں۔"
+    },
+    {
+      "name": "widgets_tile_title",
+      "value": "فوری ترتیبات ٹائل"
+    }
+  ]
+}

@@ -1,0 +1,391 @@
+import { LengthMetrics } from '@kit.ArkUI';
+/*
+ * 设置（对照 Android ui/settings SettingsScreen，简化）：
+ * - 连接：代理模式（engine.setMode）、按需连接、局域网不经代理（§16.a① 恒开、不可关闭，只作说明）；
+ * - 检测：仅 Wi‑Fi 测速；
+ * - 诊断：日志级别（AppServices.logs，与日志页共用）、日志页、共享诊断数据；
+ * - 存储：节点 / 规则 / 可用；
+ * - 外观：跟随系统 / 深色 / 浅色 + 强调色 4 种（§16.c，立即生效：EntryAbility 跟随设置流改色）；
+ * - 关于：版本、引擎（演示 / 内置内核）、开源许可（占位页）。
+ * 设置一律“读当前 → 改一项 → AppServices.settings.update 全量写回并落盘”；写失败时开关随状态流回弹并提示。
+ * 暂未移植：受信任 Wi‑Fi、本地代理端口、DNS / TUN 高级项（v1 不展示）。
+ */
+import { bundleManager, common } from '@kit.AbilityKit';
+import { SettingsCodec } from '../engine/SettingsCodec';
+import { AppServices } from '../app/AppServices';
+import { Onboarding } from '../app/Onboarding';
+import { SOURCE_URL } from '../app/Licenses';
+import { MockEngine } from '../engine/MockEngine';
+import { SceneFailoverNotice } from '../engine/Model';
+import { Format } from '../common/Format';
+import { Labels } from '../common/Labels';
+import { ZNavRow } from '../components/ZNavRow';
+import { ZSection } from '../components/ZSection';
+import { ZToggleRow } from '../components/ZToggleRow';
+import { ZChoiceRow } from '../components/ZChoiceRow';
+import { accentDark, accentLight, ZTheme } from '../common/Theme';
+import { Accent, Appearance, ConnectionState, copySettings, LogLevel, ProxyMode, Settings, StorageInfo } from '../engine/Model';
+import { Subscription as StreamSub } from '../engine/Stream';
+import { ZTerm } from '../generated/ZTerms';
+
+const LEVELS: LogLevel[] = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARNING, LogLevel.ERROR];
+const APPEARANCES: Appearance[] = [Appearance.SYSTEM, Appearance.DARK, Appearance.LIGHT];
+const TTL_OPTIONS: number[] = SettingsCodec.LATENCY_TTL_OPTIONS;
+
+const ACCENTS: Accent[] = [Accent.BLUE, Accent.GREEN, Accent.ORANGE, Accent.PINK];
+
+type SettingsPatch = (s: Settings) => void;
+
+@ComponentV2
+export struct SettingsView {
+  @Event onOpenLogs: () => void = () => {};
+  @Event onOpenLicenses: () => void = () => {};
+  @Event onOpenTrustedWifi: () => void = () => {};
+  @Event onOpenLocalProxy: () => void = () => {};
+
+  @Local mode: ProxyMode = ProxyMode.RULE;
+  @Local onDemand: boolean = true;
+  @Local testOnWifiOnly: boolean = true;
+  @Local latencyTtlHours: number = 24;
+  @Local shareDiagnostics: boolean = false;
+  @Local appearance: Appearance = Appearance.SYSTEM;
+  @Local accent: Accent = Accent.BLUE;
+  @Local theme: ZTheme = ZTheme.shared();
+  @Local logLevel: LogLevel = LogLevel.INFO;
+  @Local storage: StorageInfo | undefined = undefined;
+  @Local version: string = '';
+  @Local trustedWifi: string[] = [];
+  @Local localProxyEnabled: boolean = false;
+  @Local localProxyPort: number = 7890;
+  @Local localProxyAuth: boolean = true;
+
+  private subs: StreamSub[] = [];
+
+  aboutToAppear(): void {
+    const svc = AppServices.get();
+    this.subs.push(svc.engine.settings().subscribe((s: Settings) => {
+      this.onDemand = s.onDemand;
+      this.testOnWifiOnly = s.testOnWifiOnly;
+      this.latencyTtlHours = s.latencyTtlHours;
+      this.shareDiagnostics = s.shareDiagnostics;
+      this.appearance = s.appearance;
+      this.accent = s.accent;
+      this.trustedWifi = s.trustedWifi.slice();
+      this.localProxyEnabled = s.localProxyEnabled;
+      this.localProxyPort = s.localProxyPort;
+      this.localProxyAuth = s.localProxyAuth;
+    }));
+    this.subs.push(svc.engine.connectionState().subscribe((c: ConnectionState) => {
+      this.mode = c.mode;
+    }));
+    this.subs.push(svc.logs.level.subscribe((l: LogLevel) => {
+      this.logLevel = l;
+    }));
+    svc.engine.storage().then((s: StorageInfo) => {
+      this.storage = s;
+    }).catch(() => {});
+    try {
+      const info = bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT);
+      this.version = info.versionName;
+    } catch (e) {
+      this.version = '';
+    }
+  }
+
+  aboutToDisappear(): void {
+    for (const s of this.subs) {
+      s.cancel();
+    }
+    this.subs = [];
+  }
+
+  private patch(f: SettingsPatch): void {
+    const svc = AppServices.get();
+    const engine = svc.engine;
+    const next = copySettings(engine.settings().value);
+    f(next);
+    svc.settings.update(next).catch(() => {
+      this.getUIContext().getPromptAction().showToast({ message: $r('app.string.settings_save_failed') });
+      // 回弹：重新读一次当前值。
+      const cur = engine.settings().value;
+      this.onDemand = cur.onDemand;
+      this.testOnWifiOnly = cur.testOnWifiOnly;
+      this.latencyTtlHours = cur.latencyTtlHours;
+      this.shareDiagnostics = cur.shareDiagnostics;
+      this.appearance = cur.appearance;
+      this.accent = cur.accent;
+    });
+  }
+
+  /** 同 Android：127.0.0.1:端口，开了认证再加“ · 需要密码”。 */
+  private localProxySubtitle(): string {
+    const base = '127.0.0.1:' + String(this.localProxyPort);
+    if (!this.localProxyAuth) {
+      return base;
+    }
+    try {
+      const ctx = this.getUIContext().getHostContext();
+      return ctx !== undefined ? base + ' · ' + ctx.resourceManager.getStringSync(ZTerm.requirePassword.id) : base;
+    } catch (e) {
+      return base;
+    }
+  }
+
+  private storageText(): ResourceStr {
+    const s = this.storage;
+    if (s === undefined) {
+      return '';
+    }
+    return $r('app.string.settings_storage_detail', Format.bytesText(s.nodesBytes), Format.bytesText(s.rulesBytes),
+      Format.bytesText(s.freeBytes));
+  }
+
+  private accentName(a: Accent): Resource {
+    switch (a) {
+      case Accent.GREEN:
+        return $r('app.string.settings_accent_green');
+      case Accent.ORANGE:
+        return $r('app.string.settings_accent_orange');
+      case Accent.PINK:
+        return $r('app.string.settings_accent_pink');
+      default:
+        return $r('app.string.settings_accent_blue');
+    }
+  }
+
+  /** 28vp 色点在 44vp 点按区内，选中描边 screen_t1；读屏按单选按钮朗读颜色名。 */
+  @Builder
+  accentDot(a: Accent) {
+    Stack() {
+      Circle()
+        .width(28)
+        .height(28)
+        .fill(this.theme.isDark ? accentDark(a) : accentLight(a))
+        .stroke(this.accent === a ? $r('app.color.screen_t1') : Color.Transparent)
+        .strokeWidth(2)
+    }
+    .width(44)
+    .height(44)
+    .accessibilityText(this.accentName(a))
+    .accessibilitySelected(this.accent === a)
+    .onClick(() => {
+      if (this.accent !== a) {
+        this.accent = a;
+        this.patch((s: Settings) => {
+          s.accent = a;
+        });
+      }
+    })
+  }
+
+  private simulateFailover(): void {
+    const svc = AppServices.get();
+    const engine = svc.engine;
+    if (!(engine instanceof MockEngine)) {
+      return;
+    }
+    engine.simulateFailover().then((n: SceneFailoverNotice | undefined) => {
+      if (n === undefined) {
+        try {
+          svc.toasts.show(this.getUIContext().getHostContext()!.resourceManager
+            .getStringSync($r('app.string.hm_settings_mock_failover_offline').id));
+        } catch (e) {
+          // 资源取不到时静默
+        }
+      }
+    }).catch(() => {});
+  }
+
+  private openSource(): void {
+    try {
+      const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
+      ctx.openLink(SOURCE_URL, { appLinkingOnly: false }).catch(() => {});
+    } catch (e) {
+      // 没有可打开链接的应用：忽略
+    }
+  }
+
+  /** 存储条（同 Android StorageBar）：节点（强调色）/ 规则（t3）/ 剩余（底色）。 */
+  @Builder
+  storageBar() {
+    Row() {
+      if (this.storage !== undefined && this.storage.nodesBytes > 0) {
+        Row().height('100%').layoutWeight(this.storage.nodesBytes).backgroundColor(this.theme.accentColor())
+      }
+      if (this.storage !== undefined && this.storage.rulesBytes > 0) {
+        Row().height('100%').layoutWeight(this.storage.rulesBytes).backgroundColor($r('app.color.screen_t3'))
+      }
+      if (this.storage !== undefined && this.storage.freeBytes > 0) {
+        Row().height('100%').layoutWeight(this.storage.freeBytes)
+      }
+    }
+    .width('100%')
+    .height(6)
+    .borderRadius(3)
+    .clip(true)
+    .backgroundColor($r('app.color.screen_s4'))
+  }
+
+  private engineLabel(): Resource {
+    return AppServices.get().engine.kind === 'mock' ? $r('app.string.hm_settings_engine_mock')
+      : $r('app.string.hm_settings_engine_native');
+  }
+
+  build() {
+    Scroll() {
+      // 标题由外层 ZPageHeader 给（Index 路由 settings）。
+      Column({ space: 20 }) {
+        ZSection({ header: $r('app.string.settings_section_connection'), footer: $r('app.string.hm_settings_lan_bypass_footer') }) {
+          ZToggleRow({
+            title: $r('app.string.settings_on_demand'),
+            isOn: this.onDemand,
+            onChange: (on: boolean) => {
+              this.onDemand = on;
+              this.patch((s: Settings) => {
+                s.onDemand = on;
+              });
+            }
+          })
+          ZNavRow({
+            title: $r('app.string.settings_trusted_wifi'),
+            subtitle: $r('app.string.settings_trusted_wifi_hint'),
+            value: this.trustedWifi.length > 0 ? this.trustedWifi.join(', ') : ZTerm.none,
+            onTap: () => this.onOpenTrustedWifi()
+          })
+          ZNavRow({
+            title: ZTerm.localProxyPort,
+            subtitle: this.localProxySubtitle(),
+            value: this.localProxyEnabled ? ZTerm.on : ZTerm.off,
+            onTap: () => this.onOpenLocalProxy()
+          })
+          ZToggleRow({ title: $r('app.string.hm_settings_lan_bypass'), isOn: true, isEnabled: false, divider: false })
+        }
+
+        ZSection({ header: $r('app.string.settings_section_testing') }) {
+          ZToggleRow({
+            title: $r('app.string.settings_test_wifi_only'),
+            isOn: this.testOnWifiOnly,
+            onChange: (on: boolean) => {
+              this.testOnWifiOnly = on;
+              this.patch((s: Settings) => {
+                s.testOnWifiOnly = on;
+              });
+            }
+          })
+          ZChoiceRow({
+            title: $r('app.string.settings_keep_results'),
+            options: TTL_OPTIONS.map((h: number): ResourceStr => $r('app.plural.settings_hours', h, h)),
+            selected: TTL_OPTIONS.indexOf(this.latencyTtlHours),
+            divider: false,
+            onSelect: (i: number) => {
+              const h = TTL_OPTIONS[i];
+              this.latencyTtlHours = h;
+              this.patch((s: Settings) => {
+                s.latencyTtlHours = h;
+              });
+            }
+          })
+        }
+
+        ZSection({ header: $r('app.string.settings_section_storage') }) {
+          Column({ space: 10 }) {
+            Text($r('app.string.settings_storage_title'))
+              .fontSize(16)
+              .fontColor($r('app.color.screen_t1'))
+            this.storageBar()
+            Text(this.storageText())
+              .fontSize(13)
+              .fontColor($r('app.color.screen_t3'))
+          }
+          .width('100%')
+          .alignItems(HorizontalAlign.Start)
+          .padding({ left: 20, right: 20, top: 16, bottom: 16 })
+        }
+
+        ZSection({ header: ZTerm.appearance }) {
+          ZChoiceRow({
+            title: ZTerm.appearance,
+            options: [ZTerm.appearanceSystem, ZTerm.appearanceDark, ZTerm.appearanceLight],
+            selected: APPEARANCES.indexOf(this.appearance),
+            divider: false,
+            onSelect: (i: number) => {
+              const a = APPEARANCES[i];
+              this.appearance = a;
+              this.patch((s: Settings) => {
+                s.appearance = a;
+              });
+            }
+          })
+          Divider().strokeWidth(1).color($r('app.color.screen_hl')).margin({ start: LengthMetrics.vp(20) })
+          Row() {
+            Text(ZTerm.accent)
+              .fontSize(16)
+              .fontColor($r('app.color.screen_t1'))
+              .layoutWeight(1)
+            ForEach(ACCENTS, (a: Accent) => {
+              this.accentDot(a)
+            }, (a: Accent) => a as string)
+          }
+          .width('100%')
+          .constraintSize({ minHeight: 56 })
+          .padding({ start: LengthMetrics.vp(20), end: LengthMetrics.vp(10), top: LengthMetrics.vp(4), bottom: LengthMetrics.vp(4) })
+        }
+
+        ZSection({ header: $r('app.string.settings_section_privacy') }) {
+          ZToggleRow({
+            title: $r('app.string.settings_share_diagnostics'),
+            isOn: this.shareDiagnostics,
+            divider: false,
+            onChange: (on: boolean) => {
+              this.shareDiagnostics = on;
+              this.patch((s: Settings) => {
+                s.shareDiagnostics = on;
+              });
+            }
+          })
+        }
+
+        ZSection({ header: ZTerm.diagnostics }) {
+          ZChoiceRow({
+            title: $r('app.string.hm_settings_log_level'),
+            options: [Labels.logLevel(LogLevel.DEBUG), Labels.logLevel(LogLevel.INFO), Labels.logLevel(LogLevel.WARNING),
+              Labels.logLevel(LogLevel.ERROR)],
+            selected: LEVELS.indexOf(this.logLevel),
+            onSelect: (i: number) => AppServices.get().logs.setLevel(LEVELS[i])
+          })
+          ZNavRow({ title: ZTerm.logs, divider: false, onTap: () => this.onOpenLogs() })
+        }
+
+        ZSection({ header: $r('app.string.settings_section_about'), footer: $r('app.string.settings_local_data_note') }) {
+          ZNavRow({ title: $r('app.string.hm_settings_version'), value: this.version, chevron: false })
+          ZNavRow({ title: $r('app.string.hm_settings_engine'), value: this.engineLabel(), chevron: false })
+          if (AppServices.get().engine.kind === 'mock') {
+            // 仅演示引擎：触发一次场景故障切换，供首页「已切换」卡片和撤销在真机 / 云调试上验证（M1-6）。
+            ZNavRow({ title: $r('app.string.hm_settings_mock_failover'), onTap: () => this.simulateFailover() })
+            ZNavRow({
+              title: $r('app.string.hm_settings_mock_onboarding'),
+              onTap: () => {
+                Onboarding.request.value = Onboarding.request.value + 1;
+              }
+            })
+          }
+          ZNavRow({ title: $r('app.string.settings_licenses'), onTap: () => this.onOpenLicenses() })
+          ZNavRow({
+            title: $r('app.string.settings_source_code'),
+            value: SOURCE_URL.substring('https://'.length),
+            divider: false,
+            onTap: () => this.openSource()
+          })
+        }
+      }
+      .width('100%')
+      .padding({ left: 16, right: 16, top: 8, bottom: 32 })
+      .alignItems(HorizontalAlign.Start)
+    }
+    .width('100%')
+    .height('100%')
+    .align(Alignment.Top)
+    .scrollBar(BarState.Off)
+    .backgroundColor($r('app.color.screen_bg'))
+  }
+}

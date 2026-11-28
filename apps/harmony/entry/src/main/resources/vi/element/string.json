@@ -1,0 +1,1592 @@
+{
+  "string": [
+    {
+      "name": "activity_back",
+      "value": "‹ Kết nối gần đây"
+    },
+    {
+      "name": "activity_close_host_a11y",
+      "value": "Đóng các kết nối tới %1$s"
+    },
+    {
+      "name": "activity_close_none",
+      "value": "Không có kết nối đang hoạt động"
+    },
+    {
+      "name": "activity_empty",
+      "value": "Sau khi kết nối, các tên miền truy cập gần đây sẽ hiện ở đây."
+    },
+    {
+      "name": "activity_host_a11y",
+      "value": "Chi tiết kết nối của %1$s"
+    },
+    {
+      "name": "activity_no_app_note",
+      "value": "Chưa biết ứng dụng nào tạo từng kết nối, nên chỉ hiện tên miền."
+    },
+    {
+      "name": "activity_title",
+      "value": "Kết nối gần đây"
+    },
+    {
+      "name": "command_action_open",
+      "value": "Mở"
+    },
+    {
+      "name": "command_action_test",
+      "value": "Kiểm tra"
+    },
+    {
+      "name": "command_chip_action",
+      "value": "Thao tác"
+    },
+    {
+      "name": "command_chip_region",
+      "value": "Khu vực"
+    },
+    {
+      "name": "command_chip_scene",
+      "value": "Ngữ cảnh"
+    },
+    {
+      "name": "command_chip_scope",
+      "value": "Phạm vi"
+    },
+    {
+      "name": "command_chip_service",
+      "value": "Dịch vụ"
+    },
+    {
+      "name": "command_direct_note",
+      "value": "Lưu lượng của %1$s sẽ không qua proxy."
+    },
+    {
+      "name": "command_direct_title",
+      "value": "Kết nối trực tiếp %1$s"
+    },
+    {
+      "name": "command_enter_hint",
+      "value": "Nhấn Enter để thực hiện"
+    },
+    {
+      "name": "command_group_rule_test",
+      "value": "Kiểm tra quy tắc"
+    },
+    {
+      "name": "command_no_nodes_available",
+      "value": "Không có nút khả dụng"
+    },
+    {
+      "name": "command_placeholder",
+      "value": "Tìm kiếm hoặc nhập lệnh"
+    },
+    {
+      "name": "command_plan_exit_title",
+      "value": "%1$s dùng nút %2$s"
+    },
+    {
+      "name": "command_plan_fallback_pause",
+      "value": "Nếu không có nút %1$s khả dụng, %2$s sẽ tạm dừng."
+    },
+    {
+      "name": "command_plan_fallback_scene",
+      "value": "Nếu không có nút %1$s khả dụng, các nút khác trong ngữ cảnh sẽ được dùng."
+    },
+    {
+      "name": "command_plan_no_nodes",
+      "value": "Không có nút %2$s trong %1$s."
+    },
+    {
+      "name": "command_plan_releases_pin",
+      "value": "%1$s sẽ ngừng dùng đầu ra cố định %2$s."
+    },
+    {
+      "name": "command_region_de",
+      "value": "Đức"
+    },
+    {
+      "name": "command_region_gb",
+      "value": "Anh"
+    },
+    {
+      "name": "command_region_hk",
+      "value": "Hồng Kông"
+    },
+    {
+      "name": "command_region_jp",
+      "value": "Nhật Bản"
+    },
+    {
+      "name": "command_region_kr",
+      "value": "Hàn Quốc"
+    },
+    {
+      "name": "command_region_sg",
+      "value": "Singapore"
+    },
+    {
+      "name": "command_region_tw",
+      "value": "Đài Loan"
+    },
+    {
+      "name": "command_region_us",
+      "value": "Mỹ"
+    },
+    {
+      "name": "command_scene_ai",
+      "value": "ngữ cảnh AI"
+    },
+    {
+      "name": "command_scene_named",
+      "value": "ngữ cảnh %1$s"
+    },
+    {
+      "name": "command_section_command",
+      "value": "Lệnh"
+    },
+    {
+      "name": "command_section_suggestions",
+      "value": "Gợi ý"
+    },
+    {
+      "name": "command_see_all_nodes",
+      "value": "Xem cả %1$s nút trong thư viện nút"
+    },
+    {
+      "name": "command_show_all",
+      "value": "Hiện tất cả (%1$s)"
+    },
+    {
+      "name": "command_test_rule",
+      "value": "%1$s đi qua đâu?"
+    },
+    {
+      "name": "command_uhd_auto_note",
+      "value": "Từ nay, tự động chuyển chỉ chọn trong các nút 4K."
+    },
+    {
+      "name": "command_uhd_clear_note",
+      "value": "Ngữ cảnh %1$s đang chỉ dùng nút 4K. Sẽ dùng lại tất cả nút; nút hiện tại giữ nguyên."
+    },
+    {
+      "name": "command_uhd_fastest",
+      "value": "nút 4K nhanh nhất"
+    },
+    {
+      "name": "command_uhd_none",
+      "value": "Không có nút nào hỗ trợ 4K."
+    },
+    {
+      "name": "command_uhd_title_all",
+      "value": "%1$s: tất cả nút"
+    },
+    {
+      "name": "command_uhd_title_only",
+      "value": "%1$s: chỉ nút 4K"
+    },
+    {
+      "name": "command_zephyr_only",
+      "value": "Chỉ áp dụng trong Zephyr. Cấu hình gói đăng ký không thay đổi."
+    },
+    {
+      "name": "common_add",
+      "value": "Thêm"
+    },
+    {
+      "name": "common_adding",
+      "value": "Đang thêm…"
+    },
+    {
+      "name": "common_back_to",
+      "value": "Quay lại %1$s"
+    },
+    {
+      "name": "common_cancel",
+      "value": "Hủy"
+    },
+    {
+      "name": "common_change",
+      "value": "Thay đổi"
+    },
+    {
+      "name": "common_clear",
+      "value": "Xóa"
+    },
+    {
+      "name": "common_close",
+      "value": "Đóng"
+    },
+    {
+      "name": "common_connect",
+      "value": "Kết nối"
+    },
+    {
+      "name": "common_current",
+      "value": "Đang dùng"
+    },
+    {
+      "name": "common_direct",
+      "value": "Trực tiếp"
+    },
+    {
+      "name": "common_done",
+      "value": "Xong"
+    },
+    {
+      "name": "common_exit_ip_changes",
+      "value": "IP đầu ra sẽ thay đổi"
+    },
+    {
+      "name": "common_expiry_date",
+      "value": "Hết hạn %1$s"
+    },
+    {
+      "name": "common_expiry_expired",
+      "value": "Đã hết hạn"
+    },
+    {
+      "name": "common_expiry_today",
+      "value": "Hết hạn hôm nay"
+    },
+    {
+      "name": "common_expiry_tomorrow",
+      "value": "Hết hạn ngày mai"
+    },
+    {
+      "name": "common_expiry_weekday",
+      "value": "Hết hạn vào %1$s"
+    },
+    {
+      "name": "common_home",
+      "value": "Trang chủ"
+    },
+    {
+      "name": "common_latency_a11y_testing",
+      "value": "Đang kiểm tra độ trễ"
+    },
+    {
+      "name": "common_latency_a11y_timeout",
+      "value": "Độ trễ: hết thời gian chờ"
+    },
+    {
+      "name": "common_latency_a11y_untested",
+      "value": "Chưa kiểm tra độ trễ"
+    },
+    {
+      "name": "common_latency_timeout",
+      "value": "Hết thời gian"
+    },
+    {
+      "name": "common_library",
+      "value": "Thư viện"
+    },
+    {
+      "name": "common_list_separator",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "common_local_data_note",
+      "value": "Đăng ký và dữ liệu lưu lượng chỉ được lưu trên thiết bị này."
+    },
+    {
+      "name": "common_local_network",
+      "value": "Mạng của thiết bị này"
+    },
+    {
+      "name": "common_mode_direct_hint",
+      "value": "Không qua proxy"
+    },
+    {
+      "name": "common_mode_global_hint",
+      "value": "Mọi lưu lượng qua một nút"
+    },
+    {
+      "name": "common_mode_rule_hint",
+      "value": "Định tuyến theo ngữ cảnh"
+    },
+    {
+      "name": "common_open_settings",
+      "value": "Mở Cài đặt"
+    },
+    {
+      "name": "common_pair_and",
+      "value": "%1$s và %2$s"
+    },
+    {
+      "name": "common_retesting",
+      "value": "Đang kiểm tra…"
+    },
+    {
+      "name": "common_scene_ai",
+      "value": "AI"
+    },
+    {
+      "name": "common_scene_other",
+      "value": "Khác"
+    },
+    {
+      "name": "common_scene_video",
+      "value": "Video"
+    },
+    {
+      "name": "common_share",
+      "value": "Chia sẻ"
+    },
+    {
+      "name": "common_source_auto",
+      "value": "Zephyr chọn lọc"
+    },
+    {
+      "name": "common_source_group",
+      "value": "Nhóm đăng ký"
+    },
+    {
+      "name": "common_status_connected",
+      "value": "Đã kết nối"
+    },
+    {
+      "name": "common_status_connecting_ellipsis",
+      "value": "Đang kết nối…"
+    },
+    {
+      "name": "common_status_disconnecting",
+      "value": "Đang ngắt kết nối"
+    },
+    {
+      "name": "common_time_just_now",
+      "value": "Vừa xong"
+    },
+    {
+      "name": "common_time_just_now_inline",
+      "value": "vừa xong"
+    },
+    {
+      "name": "common_traffic_a11y",
+      "value": "Tải xuống %1$s %2$s mỗi giây, tải lên %3$s %4$s mỗi giây"
+    },
+    {
+      "name": "common_try_again",
+      "value": "Thử lại"
+    },
+    {
+      "name": "common_updating",
+      "value": "Đang cập nhật…"
+    },
+    {
+      "name": "connect_no_subscription",
+      "value": "Chưa có gói đăng ký nào"
+    },
+    {
+      "name": "home_action_load_nodes",
+      "value": "tải nút"
+    },
+    {
+      "name": "home_action_preview_exit",
+      "value": "xem trước đầu ra"
+    },
+    {
+      "name": "home_action_retest",
+      "value": "kiểm tra lại"
+    },
+    {
+      "name": "home_action_switch_exit",
+      "value": "chuyển đầu ra"
+    },
+    {
+      "name": "home_action_switch_mode",
+      "value": "đổi chế độ"
+    },
+    {
+      "name": "home_action_switch_node",
+      "value": "chuyển nút"
+    },
+    {
+      "name": "home_action_switch_source",
+      "value": "chuyển nguồn"
+    },
+    {
+      "name": "home_action_undo",
+      "value": "hoàn tác"
+    },
+    {
+      "name": "home_apply_failed",
+      "value": "Không thể áp dụng: %1$s"
+    },
+    {
+      "name": "home_confirm_apps",
+      "value": "Đổi IP đầu ra cho %1$s?"
+    },
+    {
+      "name": "home_confirm_scene",
+      "value": "Đổi IP đầu ra cho ngữ cảnh %1$s?"
+    },
+    {
+      "name": "home_confirm_unchanged",
+      "value": "%1$s giữ nguyên."
+    },
+    {
+      "name": "home_error_failed",
+      "value": "Không thể %1$s"
+    },
+    {
+      "name": "home_error_node_gone",
+      "value": "Không thể %1$s: nút không còn tồn tại"
+    },
+    {
+      "name": "home_error_not_connected",
+      "value": "Hãy kết nối trước để %1$s"
+    },
+    {
+      "name": "home_failover_none",
+      "value": "Đầu ra %1$s không phản hồi. IP đầu ra sẽ không tự động thay đổi."
+    },
+    {
+      "name": "home_failover_switched",
+      "value": "Đầu ra %1$s đã tự động chuyển sang %2$s"
+    },
+    {
+      "name": "home_failure_core",
+      "value": "Không khởi động được lõi"
+    },
+    {
+      "name": "home_failure_network",
+      "value": "Mạng không khả dụng"
+    },
+    {
+      "name": "home_failure_no_subscription",
+      "value": "Hãy thêm một gói đăng ký trước"
+    },
+    {
+      "name": "home_failure_vpn_permission",
+      "value": "Cần quyền VPN"
+    },
+    {
+      "name": "home_global_body",
+      "value": "Mọi lưu lượng đi qua %1$s. Ngữ cảnh đã tạm dừng."
+    },
+    {
+      "name": "home_global_body_any",
+      "value": "Mọi lưu lượng đi qua một nút. Ngữ cảnh đã tạm dừng."
+    },
+    {
+      "name": "home_global_change_node",
+      "value": "Đổi nút"
+    },
+    {
+      "name": "home_global_change_note",
+      "value": "Mọi ứng dụng sẽ ra mạng qua %1$s."
+    },
+    {
+      "name": "home_global_change_to",
+      "value": "Đổi sang %1$s"
+    },
+    {
+      "name": "home_global_use_rule",
+      "value": "Dùng chế độ quy tắc"
+    },
+    {
+      "name": "home_mini_funnel_a11y",
+      "value": "Kết nối được %1$s, dưới 200 mili giây %2$s"
+    },
+    {
+      "name": "home_now_all_nodes",
+      "value": "%1$s: dùng lại tất cả nút"
+    },
+    {
+      "name": "home_now_direct",
+      "value": "%1$s giờ kết nối trực tiếp"
+    },
+    {
+      "name": "home_now_uhd_only",
+      "value": "%1$s giờ chỉ dùng nút 4K"
+    },
+    {
+      "name": "home_now_uses",
+      "value": "%1$s giờ dùng %2$s"
+    },
+    {
+      "name": "home_now_uses_uhd",
+      "value": "%1$s giờ dùng %2$s (chỉ 4K)"
+    },
+    {
+      "name": "home_pin_line",
+      "value": "%1$s: %2$s"
+    },
+    {
+      "name": "home_scan_progress",
+      "value": "Đang kiểm tra %1$d/%2$d"
+    },
+    {
+      "name": "home_scan_running",
+      "value": "Đang kiểm tra…"
+    },
+    {
+      "name": "home_scene_details_a11y",
+      "value": "Chi tiết ngữ cảnh %1$s"
+    },
+    {
+      "name": "home_scene_next_region",
+      "value": "Khu vực tiếp theo: %1$s"
+    },
+    {
+      "name": "home_scene_prev_region",
+      "value": "Khu vực trước: %1$s"
+    },
+    {
+      "name": "home_scene_services_down",
+      "value": "%1$s không khả dụng"
+    },
+    {
+      "name": "home_scene_services_ok",
+      "value": "%1$s bình thường"
+    },
+    {
+      "name": "home_scenes_tested",
+      "value": "Đã kiểm tra %1$s"
+    },
+    {
+      "name": "home_scrub_hint",
+      "value": "Vuốt sang trái hoặc phải để đổi khu vực"
+    },
+    {
+      "name": "home_spark_a11y",
+      "value": "Tốc độ tải xuống trong 90 giây qua"
+    },
+    {
+      "name": "home_switched_to",
+      "value": "Đã chuyển sang %1$s"
+    },
+    {
+      "name": "home_today_usage",
+      "value": "Hôm nay %1$s"
+    },
+    {
+      "name": "library_widgets",
+      "value": "Tiện ích và Cài đặt nhanh"
+    },
+    {
+      "name": "licenses_intro",
+      "value": "Mã riêng của Zephyr được cấp phép MIT. Ứng dụng có chứa mihomo (GPL-3.0), nên toàn bộ ứng dụng được phân phối theo GPL-3.0. Mã nguồn tương ứng: %1$s, tag %2$s."
+    },
+    {
+      "name": "licenses_section_app",
+      "value": "Giấy phép Zephyr"
+    },
+    {
+      "name": "licenses_section_notices",
+      "value": "Thông báo bên thứ ba"
+    },
+    {
+      "name": "licenses_section_texts",
+      "value": "Toàn văn giấy phép"
+    },
+    {
+      "name": "licenses_unavailable",
+      "value": "Bản dựng này thiếu tệp giấy phép."
+    },
+    {
+      "name": "local_proxy_apply_failed",
+      "value": "Không thể áp dụng thay đổi"
+    },
+    {
+      "name": "local_proxy_auth_footer",
+      "value": "Khi bật, kết nối tới cổng cục bộ cần tên người dùng và mật khẩu, giúp ngăn ứng dụng khác dùng proxy khi chưa được phép."
+    },
+    {
+      "name": "local_proxy_conceal",
+      "value": "Ẩn mật khẩu"
+    },
+    {
+      "name": "local_proxy_concealed",
+      "value": "Đã ẩn mật khẩu"
+    },
+    {
+      "name": "local_proxy_copied",
+      "value": "Đã sao chép"
+    },
+    {
+      "name": "local_proxy_copy_http",
+      "value": "Sao chép URL proxy HTTP"
+    },
+    {
+      "name": "local_proxy_copy_socks",
+      "value": "Sao chép URL proxy SOCKS5"
+    },
+    {
+      "name": "local_proxy_credential_row",
+      "value": "Mật khẩu"
+    },
+    {
+      "name": "local_proxy_credentials",
+      "value": "Thông tin đăng nhập"
+    },
+    {
+      "name": "local_proxy_footer",
+      "value": "Khi bật, Zephyr chỉ lắng nghe trên 127.0.0.1, nên các thiết bị khác trong mạng không thể kết nối."
+    },
+    {
+      "name": "local_proxy_port",
+      "value": "Cổng"
+    },
+    {
+      "name": "local_proxy_port_footer",
+      "value": "Ứng dụng khác có thể dùng quy tắc và ngữ cảnh của Zephyr qua cổng này trên 127.0.0.1."
+    },
+    {
+      "name": "local_proxy_port_invalid",
+      "value": "Nhập cổng từ %1$d đến %2$d"
+    },
+    {
+      "name": "local_proxy_regenerate",
+      "value": "Tạo lại mật khẩu"
+    },
+    {
+      "name": "local_proxy_regenerate_footer",
+      "value": "Sau khi tạo lại, mật khẩu cũ ngừng hoạt động ngay; các ứng dụng bạn đã thiết lập cần mật khẩu mới."
+    },
+    {
+      "name": "local_proxy_regenerated",
+      "value": "Đã tạo mật khẩu mới"
+    },
+    {
+      "name": "local_proxy_reveal",
+      "value": "Hiện mật khẩu"
+    },
+    {
+      "name": "local_proxy_security",
+      "value": "Bảo mật"
+    },
+    {
+      "name": "local_proxy_user_row",
+      "value": "Tên người dùng"
+    },
+    {
+      "name": "logs_clear",
+      "value": "Xóa"
+    },
+    {
+      "name": "logs_empty",
+      "value": "Chưa có nhật ký"
+    },
+    {
+      "name": "logs_line_a11y",
+      "value": "%1$s %2$s %3$s"
+    },
+    {
+      "name": "logs_pause",
+      "value": "Tạm dừng"
+    },
+    {
+      "name": "logs_resume",
+      "value": "Tiếp tục"
+    },
+    {
+      "name": "nodes_detail_latency",
+      "value": "Độ trễ"
+    },
+    {
+      "name": "nodes_detail_protocol",
+      "value": "Giao thức"
+    },
+    {
+      "name": "nodes_detail_route",
+      "value": "Tuyến"
+    },
+    {
+      "name": "nodes_detail_server",
+      "value": "Máy chủ"
+    },
+    {
+      "name": "nodes_detail_test",
+      "value": "Kiểm tra độ trễ"
+    },
+    {
+      "name": "nodes_empty_action",
+      "value": "Nhập gói đăng ký"
+    },
+    {
+      "name": "nodes_empty_message",
+      "value": "Nhập một gói đăng ký và các nút của nó sẽ hiện ở đây"
+    },
+    {
+      "name": "nodes_empty_title",
+      "value": "Chưa có nút"
+    },
+    {
+      "name": "nodes_error_title",
+      "value": "Không tải được nút"
+    },
+    {
+      "name": "nodes_judgement",
+      "value": "Kết nối được %1$s · Đã kiểm tra %2$s"
+    },
+    {
+      "name": "nodes_jump_to",
+      "value": "Đến %1$s"
+    },
+    {
+      "name": "nodes_no_match",
+      "value": "Không có nút nào khớp với “%1$s”"
+    },
+    {
+      "name": "nodes_search_placeholder",
+      "value": "Khu vực, thành phố hoặc tuyến"
+    },
+    {
+      "name": "nodes_search_stats",
+      "value": "%1$s · %2$s"
+    },
+    {
+      "name": "nodes_untested_hint",
+      "value": "Chưa kiểm tra — các nút đang hiển thị sẽ được kiểm tra khi bạn ngừng cuộn"
+    },
+    {
+      "name": "notif_action_global",
+      "value": "Chế độ toàn cục"
+    },
+    {
+      "name": "notif_action_rule",
+      "value": "Chế độ quy tắc"
+    },
+    {
+      "name": "notif_channel_alerts",
+      "value": "Cảnh báo gói đăng ký"
+    },
+    {
+      "name": "notif_channel_alerts_desc",
+      "value": "Gói đăng ký sắp hết hạn và sắp hết dữ liệu"
+    },
+    {
+      "name": "notif_channel_vpn",
+      "value": "Trạng thái kết nối"
+    },
+    {
+      "name": "notif_channel_vpn_desc",
+      "value": "Hiện tốc độ và ngữ cảnh khi đang kết nối"
+    },
+    {
+      "name": "notif_expiry_text",
+      "value": "Còn %1$s"
+    },
+    {
+      "name": "notif_expiry_title",
+      "value": "%1$s hết hạn vào %2$s"
+    },
+    {
+      "name": "notif_paused_trusted",
+      "value": "Đã ngắt kết nối trên Wi‑Fi tin cậy “%1$s”. Sẽ tự kết nối lại khi bạn rời đi."
+    },
+    {
+      "name": "notif_route_global",
+      "value": "Toàn cục · %1$s"
+    },
+    {
+      "name": "notif_route_global_any",
+      "value": "Mọi lưu lượng qua một nút"
+    },
+    {
+      "name": "onboarding_cancel_import_a11y",
+      "value": "Hủy nhập"
+    },
+    {
+      "name": "onboarding_change_later",
+      "value": "Bạn có thể thay đổi bất cứ lúc nào trong Cài đặt."
+    },
+    {
+      "name": "onboarding_choose_mode",
+      "value": "Chọn chế độ"
+    },
+    {
+      "name": "onboarding_continue",
+      "value": "Tiếp tục"
+    },
+    {
+      "name": "onboarding_optimized",
+      "value": "Tối ưu"
+    },
+    {
+      "name": "onboarding_optimized_desc",
+      "value": "Kiểm tra nút hằng ngày qua Wi‑Fi. AI và Video chỉ dùng các nút đạt yêu cầu. Khoảng 3 MB mỗi lần."
+    },
+    {
+      "name": "onboarding_simple",
+      "value": "Đơn giản"
+    },
+    {
+      "name": "onboarding_simple_desc",
+      "value": "Dùng các nhóm do đăng ký cung cấp. Nút không khả dụng được xử lý tự động."
+    },
+    {
+      "name": "rules_add_override_a11y",
+      "value": "Thêm ghi đè cho tên miền"
+    },
+    {
+      "name": "rules_blocked",
+      "value": "Đã chặn"
+    },
+    {
+      "name": "rules_kind_ip",
+      "value": "IP"
+    },
+    {
+      "name": "rules_kind_other",
+      "value": "Khác"
+    },
+    {
+      "name": "rules_match_order",
+      "value": "Thứ tự khớp"
+    },
+    {
+      "name": "rules_note",
+      "value": "Bộ quy tắc được biên dịch trên thiết bị thành chỉ mục chỉ đọc và đọc từ ổ đĩa khi cần. Ghi đè giữ nguyên khi đăng ký cập nhật."
+    },
+    {
+      "name": "rules_other_traffic",
+      "value": "Mọi lưu lượng còn lại"
+    },
+    {
+      "name": "rules_step_layer",
+      "value": "Lớp %1$d · %2$s"
+    },
+    {
+      "name": "rules_step_request",
+      "value": "Yêu cầu"
+    },
+    {
+      "name": "rules_step_result",
+      "value": "Kết quả"
+    },
+    {
+      "name": "rules_step_scene",
+      "value": "Ngữ cảnh · %1$s"
+    },
+    {
+      "name": "rules_test_hint",
+      "value": "Nhập tên miền hoặc địa chỉ IP để xem quy tắc và đầu ra phù hợp."
+    },
+    {
+      "name": "rules_test_placeholder",
+      "value": "Kiểm tra tên miền hoặc IP"
+    },
+    {
+      "name": "rules_took",
+      "value": "Mất %1$s"
+    },
+    {
+      "name": "rules_top_to_bottom",
+      "value": "Từ trên xuống dưới"
+    },
+    {
+      "name": "scene_ask",
+      "value": "Hỏi"
+    },
+    {
+      "name": "scene_auto_switch",
+      "value": "Tự động chuyển"
+    },
+    {
+      "name": "scene_funnel_tested",
+      "value": "Đã kiểm tra"
+    },
+    {
+      "name": "scene_funnel_under",
+      "value": "Dưới %1$d ms"
+    },
+    {
+      "name": "scene_node_scope",
+      "value": "Phạm vi nút"
+    },
+    {
+      "name": "scene_note",
+      "value": "Kết quả chọn lọc chỉ được lưu trong Zephyr. Cấu hình đăng ký không thay đổi."
+    },
+    {
+      "name": "scene_note_tested",
+      "value": "%1$s Kiểm tra lần cuối %2$s."
+    },
+    {
+      "name": "scene_pinned_for",
+      "value": "Đã ghim cho %1$s"
+    },
+    {
+      "name": "scene_pinned_value",
+      "value": "%1$s (đã ghim)"
+    },
+    {
+      "name": "scene_test_daily",
+      "value": "Hằng ngày"
+    },
+    {
+      "name": "scene_test_frequency",
+      "value": "Tần suất kiểm tra"
+    },
+    {
+      "name": "scene_test_wifi_only",
+      "value": "%1$s (chỉ Wi‑Fi)"
+    },
+    {
+      "name": "scene_tested_from_pool",
+      "value": "Đã kiểm tra %2$s nút từ %1$d đăng ký"
+    },
+    {
+      "name": "scene_tickbar_a11y",
+      "value": "%1$s ứng viên, %2$s dưới 200 mili giây, %3$s hết thời gian"
+    },
+    {
+      "name": "scene_tickbar_timeouts",
+      "value": "Hết thời gian: %1$s"
+    },
+    {
+      "name": "scene_uhd_only",
+      "value": "Chỉ nút 4K"
+    },
+    {
+      "name": "scene_when_unavailable",
+      "value": "Khi nút không khả dụng"
+    },
+    {
+      "name": "settings_accent_blue",
+      "value": "Xanh dương"
+    },
+    {
+      "name": "settings_accent_green",
+      "value": "Xanh lá"
+    },
+    {
+      "name": "settings_accent_orange",
+      "value": "Cam"
+    },
+    {
+      "name": "settings_accent_pink",
+      "value": "Hồng"
+    },
+    {
+      "name": "settings_keep_results",
+      "value": "Lưu giữ kết quả"
+    },
+    {
+      "name": "settings_licenses",
+      "value": "Giấy phép mã nguồn mở"
+    },
+    {
+      "name": "settings_local_data_note",
+      "value": "Đăng ký, nút và dữ liệu lưu lượng chỉ được lưu trên thiết bị này."
+    },
+    {
+      "name": "settings_on_demand",
+      "value": "Kết nối theo yêu cầu"
+    },
+    {
+      "name": "settings_save_failed",
+      "value": "Không thể lưu cài đặt"
+    },
+    {
+      "name": "settings_section_about",
+      "value": "Giới thiệu"
+    },
+    {
+      "name": "settings_section_connection",
+      "value": "Kết nối"
+    },
+    {
+      "name": "settings_section_privacy",
+      "value": "Quyền riêng tư"
+    },
+    {
+      "name": "settings_section_storage",
+      "value": "Dung lượng"
+    },
+    {
+      "name": "settings_section_testing",
+      "value": "Kiểm tra"
+    },
+    {
+      "name": "settings_share_diagnostics",
+      "value": "Chia sẻ dữ liệu chẩn đoán"
+    },
+    {
+      "name": "settings_source_code",
+      "value": "Mã nguồn"
+    },
+    {
+      "name": "settings_storage_detail",
+      "value": "Nút %1$s · Quy tắc %2$s · Còn trống %3$s"
+    },
+    {
+      "name": "settings_storage_title",
+      "value": "Nút và quy tắc"
+    },
+    {
+      "name": "settings_test_wifi_only",
+      "value": "Chỉ đo tốc độ qua Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi",
+      "value": "Wi‑Fi tin cậy"
+    },
+    {
+      "name": "settings_trusted_wifi_always_on",
+      "value": "Do «VPN luôn bật» của hệ thống quản lý"
+    },
+    {
+      "name": "settings_trusted_wifi_hint",
+      "value": "Tự động ngắt kết nối khi tham gia"
+    },
+    {
+      "name": "settings_trusted_wifi_location",
+      "value": "Cho phép truy cập vị trí để nhận diện tên Wi‑Fi"
+    },
+    {
+      "name": "settings_trusted_wifi_location_off",
+      "value": "Bật vị trí hệ thống để nhận diện tên Wi‑Fi"
+    },
+    {
+      "name": "subs_add",
+      "value": "Thêm đăng ký"
+    },
+    {
+      "name": "subs_all_title",
+      "value": "Tất cả đăng ký"
+    },
+    {
+      "name": "subs_deleted",
+      "value": "Đã xóa %1$s"
+    },
+    {
+      "name": "subs_diff_updated",
+      "value": "Đã cập nhật %1$s"
+    },
+    {
+      "name": "subs_diff_updating",
+      "value": "Đang cập nhật %1$s…"
+    },
+    {
+      "name": "subs_error_clipboard_empty",
+      "value": "Bộ nhớ tạm đang trống"
+    },
+    {
+      "name": "subs_error_delete",
+      "value": "Không thể xóa %1$s"
+    },
+    {
+      "name": "subs_error_fetch",
+      "value": "Không thể tải gói đăng ký này. Hãy kiểm tra liên kết hoặc mạng."
+    },
+    {
+      "name": "subs_error_import_version",
+      "value": "Mã nhập này cần phiên bản Zephyr mới hơn"
+    },
+    {
+      "name": "subs_error_invalid_file",
+      "value": "Đây không phải tệp cấu hình hợp lệ"
+    },
+    {
+      "name": "subs_error_invalid_link",
+      "value": "Đây không phải liên kết đăng ký hợp lệ"
+    },
+    {
+      "name": "subs_error_read_file",
+      "value": "Không thể đọc tệp này"
+    },
+    {
+      "name": "subs_error_update",
+      "value": "Không thể cập nhật %1$s"
+    },
+    {
+      "name": "subs_error_update_all",
+      "value": "Không thể cập nhật đăng ký"
+    },
+    {
+      "name": "subs_hint_desktop",
+      "value": "Trên máy tính, mở Cài đặt › Đồng bộ với điện thoại trong Zephyr để hiện mã QR"
+    },
+    {
+      "name": "subs_import_desktop",
+      "value": "Nhập từ Zephyr trên máy tính"
+    },
+    {
+      "name": "subs_import_desktop_source",
+      "value": "Zephyr cho máy tính"
+    },
+    {
+      "name": "subs_import_insecure",
+      "value": "Liên kết này không được mã hóa (http); nội dung có thể bị đọc trộm hoặc sửa đổi."
+    },
+    {
+      "name": "subs_import_source",
+      "value": "Nguồn: %1$s"
+    },
+    {
+      "name": "subs_import_trust",
+      "value": "Chỉ tiếp tục nếu bạn tin tưởng nhà cung cấp này."
+    },
+    {
+      "name": "subs_overrides_kept",
+      "value": "Đã giữ lại ghi đè"
+    },
+    {
+      "name": "subs_paste_clipboard",
+      "value": "Dán từ bộ nhớ tạm"
+    },
+    {
+      "name": "subs_paste_link",
+      "value": "Dán liên kết"
+    },
+    {
+      "name": "subs_paste_placeholder",
+      "value": "Dán liên kết gói đăng ký"
+    },
+    {
+      "name": "subs_remaining",
+      "value": "Còn lại"
+    },
+    {
+      "name": "subs_review_note",
+      "value": "Cập nhật sẽ thay thế nút và quy tắc trong đăng ký. Ghi đè và lựa chọn ngữ cảnh của Zephyr vẫn giữ nguyên."
+    },
+    {
+      "name": "subs_review_one",
+      "value": "%1$s sẽ được cập nhật"
+    },
+    {
+      "name": "subs_rule_changes",
+      "value": "Thay đổi quy tắc"
+    },
+    {
+      "name": "subs_scan_camera_needed",
+      "value": "Cần quyền truy cập camera để quét mã"
+    },
+    {
+      "name": "subs_scan_no_camera",
+      "value": "Thiết bị này không có camera khả dụng"
+    },
+    {
+      "name": "subs_scan_prompt",
+      "value": "Đặt mã QR đăng ký vào trong khung để tự động nhận diện."
+    },
+    {
+      "name": "subs_scan_qr",
+      "value": "Quét mã QR"
+    },
+    {
+      "name": "subs_scenes_retested",
+      "value": "Đã kiểm tra lại nhóm nút của ngữ cảnh"
+    },
+    {
+      "name": "subs_section_data",
+      "value": "Dữ liệu"
+    },
+    {
+      "name": "subs_section_update",
+      "value": "Cập nhật"
+    },
+    {
+      "name": "subs_show_changes",
+      "value": "Hiện thay đổi trước khi cập nhật"
+    },
+    {
+      "name": "subs_swipe_confirm_delete",
+      "value": "Xác nhận xóa"
+    },
+    {
+      "name": "subs_swipe_updating",
+      "value": "Đang cập nhật"
+    },
+    {
+      "name": "subs_this_month",
+      "value": "Tháng này"
+    },
+    {
+      "name": "subs_update_all",
+      "value": "Cập nhật tất cả ngay"
+    },
+    {
+      "name": "subs_update_wifi_only",
+      "value": "Chỉ cập nhật qua Wi‑Fi"
+    },
+    {
+      "name": "term_accent",
+      "value": "Màu nhấn"
+    },
+    {
+      "name": "term_all",
+      "value": "Tất cả"
+    },
+    {
+      "name": "term_appearance",
+      "value": "Giao diện"
+    },
+    {
+      "name": "term_appearance_dark",
+      "value": "Tối"
+    },
+    {
+      "name": "term_appearance_light",
+      "value": "Sáng"
+    },
+    {
+      "name": "term_appearance_system",
+      "value": "Hệ thống"
+    },
+    {
+      "name": "term_apply",
+      "value": "Áp dụng"
+    },
+    {
+      "name": "term_auto_update",
+      "value": "Tự động cập nhật"
+    },
+    {
+      "name": "term_delete",
+      "value": "Xóa"
+    },
+    {
+      "name": "term_diagnostics",
+      "value": "Chẩn đoán"
+    },
+    {
+      "name": "term_disconnect",
+      "value": "Ngắt kết nối"
+    },
+    {
+      "name": "term_domain",
+      "value": "Tên miền"
+    },
+    {
+      "name": "term_exit",
+      "value": "Đầu ra"
+    },
+    {
+      "name": "term_exit_ip",
+      "value": "IP đầu ra"
+    },
+    {
+      "name": "term_import",
+      "value": "Nhập"
+    },
+    {
+      "name": "term_import_from_file",
+      "value": "Nhập từ tệp"
+    },
+    {
+      "name": "term_latency",
+      "value": "Độ trễ"
+    },
+    {
+      "name": "term_local_proxy_port",
+      "value": "Cổng proxy cục bộ"
+    },
+    {
+      "name": "term_log_debug",
+      "value": "Gỡ lỗi"
+    },
+    {
+      "name": "term_log_error",
+      "value": "Lỗi"
+    },
+    {
+      "name": "term_log_info",
+      "value": "Thông tin"
+    },
+    {
+      "name": "term_log_warning",
+      "value": "Cảnh báo"
+    },
+    {
+      "name": "term_logs",
+      "value": "Nhật ký"
+    },
+    {
+      "name": "term_mode_direct",
+      "value": "Trực tiếp"
+    },
+    {
+      "name": "term_mode_global",
+      "value": "Toàn cục"
+    },
+    {
+      "name": "term_mode_global_title",
+      "value": "Chế độ toàn cục"
+    },
+    {
+      "name": "term_mode_rule",
+      "value": "Quy tắc"
+    },
+    {
+      "name": "term_no_results",
+      "value": "Không có kết quả"
+    },
+    {
+      "name": "term_node",
+      "value": "Nút"
+    },
+    {
+      "name": "term_nodes",
+      "value": "Nút"
+    },
+    {
+      "name": "term_none",
+      "value": "Không có"
+    },
+    {
+      "name": "term_off",
+      "value": "Tắt"
+    },
+    {
+      "name": "term_on",
+      "value": "Bật"
+    },
+    {
+      "name": "term_override",
+      "value": "Ghi đè"
+    },
+    {
+      "name": "term_proxy",
+      "value": "Proxy"
+    },
+    {
+      "name": "term_reachable",
+      "value": "Kết nối được"
+    },
+    {
+      "name": "term_require_password",
+      "value": "Yêu cầu mật khẩu"
+    },
+    {
+      "name": "term_rule",
+      "value": "Quy tắc"
+    },
+    {
+      "name": "term_rules",
+      "value": "Quy tắc"
+    },
+    {
+      "name": "term_scene",
+      "value": "Ngữ cảnh"
+    },
+    {
+      "name": "term_scenes",
+      "value": "Ngữ cảnh"
+    },
+    {
+      "name": "term_settings",
+      "value": "Cài đặt"
+    },
+    {
+      "name": "term_state_expired",
+      "value": "Đã hết hạn"
+    },
+    {
+      "name": "term_state_expiring",
+      "value": "Sắp hết hạn"
+    },
+    {
+      "name": "term_state_failed",
+      "value": "Thất bại"
+    },
+    {
+      "name": "term_state_ok",
+      "value": "Bình thường"
+    },
+    {
+      "name": "term_state_slow",
+      "value": "Chậm"
+    },
+    {
+      "name": "term_state_timeout",
+      "value": "Hết thời gian chờ"
+    },
+    {
+      "name": "term_state_untested",
+      "value": "Chưa kiểm tra"
+    },
+    {
+      "name": "term_status_connecting",
+      "value": "Đang kết nối"
+    },
+    {
+      "name": "term_status_disconnected",
+      "value": "Chưa kết nối"
+    },
+    {
+      "name": "term_status_failed",
+      "value": "Kết nối không thành công"
+    },
+    {
+      "name": "term_subscription",
+      "value": "Đăng ký"
+    },
+    {
+      "name": "term_subscriptions",
+      "value": "Đăng ký"
+    },
+    {
+      "name": "term_switch_mode",
+      "value": "Đổi chế độ"
+    },
+    {
+      "name": "term_test_again",
+      "value": "Kiểm tra lại"
+    },
+    {
+      "name": "term_tested",
+      "value": "Đã kiểm tra"
+    },
+    {
+      "name": "term_testing",
+      "value": "Đang kiểm tra"
+    },
+    {
+      "name": "term_today",
+      "value": "Hôm nay"
+    },
+    {
+      "name": "term_undo",
+      "value": "Hoàn tác"
+    },
+    {
+      "name": "term_update",
+      "value": "Cập nhật"
+    },
+    {
+      "name": "tile_a11y",
+      "value": "%1$s, %2$s"
+    },
+    {
+      "name": "today_date_pattern",
+      "value": "EEEE, 'ngày' d 'tháng' M"
+    },
+    {
+      "name": "today_fastest",
+      "value": "ms nhanh nhất"
+    },
+    {
+      "name": "today_pattern_note",
+      "value": "Họa tiết được tạo từ lưu lượng hôm nay, không chứa tên nút hay địa chỉ IP."
+    },
+    {
+      "name": "today_save_failed",
+      "value": "Không thể lưu hình ảnh"
+    },
+    {
+      "name": "today_save_image",
+      "value": "Lưu hình ảnh"
+    },
+    {
+      "name": "today_saved",
+      "value": "Đã lưu vào thư viện ảnh"
+    },
+    {
+      "name": "today_storage_permission",
+      "value": "Cần quyền bộ nhớ để lưu hình ảnh"
+    },
+    {
+      "name": "today_style_dawn",
+      "value": "Bình minh"
+    },
+    {
+      "name": "today_style_mist",
+      "value": "Sương mù"
+    },
+    {
+      "name": "today_style_night",
+      "value": "Đêm"
+    },
+    {
+      "name": "trace_always_apply",
+      "value": "Luôn áp dụng"
+    },
+    {
+      "name": "trace_always_apply_hint",
+      "value": "Khi tắt, chỉ thay đổi kết nối này"
+    },
+    {
+      "name": "trace_from",
+      "value": "Từ %1$s"
+    },
+    {
+      "name": "trace_option_unchanged",
+      "value": "Không đổi"
+    },
+    {
+      "name": "trace_override_cleared",
+      "value": "Đã xóa ghi đè tuyến cho %1$s"
+    },
+    {
+      "name": "trace_override_direct",
+      "value": "%1$s giờ kết nối trực tiếp"
+    },
+    {
+      "name": "trace_override_error",
+      "value": "Không thể thay đổi tuyến. Hãy thử lại."
+    },
+    {
+      "name": "trace_override_scene",
+      "value": "%1$s giờ dùng %2$s"
+    },
+    {
+      "name": "trace_step_rule",
+      "value": "Quy tắc"
+    },
+    {
+      "name": "trace_this_connection",
+      "value": "Kết nối này"
+    },
+    {
+      "name": "trace_via",
+      "value": "Qua %1$s"
+    },
+    {
+      "name": "trusted_wifi_add_hint",
+      "value": "Thêm tên Wi‑Fi"
+    },
+    {
+      "name": "trusted_wifi_disconnect",
+      "value": "Ngắt kết nối khi dùng các Wi‑Fi này"
+    },
+    {
+      "name": "trusted_wifi_footer",
+      "value": "Trên mạng tin cậy như ở nhà hoặc nơi làm việc, Zephyr tự động ngắt kết nối và kết nối lại khi cần sau khi bạn rời đi."
+    },
+    {
+      "name": "trusted_wifi_networks",
+      "value": "Mạng"
+    },
+    {
+      "name": "widget_description",
+      "value": "Trạng thái kết nối, tốc độ và ngữ cảnh"
+    },
+    {
+      "name": "widget_label",
+      "value": "Trạng thái Zephyr"
+    },
+    {
+      "name": "widget_today",
+      "value": "Hôm nay %1$s %2$s"
+    },
+    {
+      "name": "widget_usage_description",
+      "value": "Lưu lượng hôm nay và phân bổ theo 24 giờ"
+    },
+    {
+      "name": "widget_usage_label",
+      "value": "Mức dùng Zephyr hôm nay"
+    },
+    {
+      "name": "widgets_home_steps",
+      "value": "Chạm và giữ vào chỗ trống trên màn hình chính › Tiện ích › Zephyr, rồi kéo một tiện ích ra màn hình chính."
+    },
+    {
+      "name": "widgets_home_title",
+      "value": "Tiện ích màn hình chính"
+    },
+    {
+      "name": "widgets_tile_steps",
+      "value": "Vuốt xuống hai lần từ đầu màn hình › Chỉnh sửa › kéo Zephyr vào Cài đặt nhanh. Chạm để kết nối hoặc ngắt kết nối."
+    },
+    {
+      "name": "widgets_tile_title",
+      "value": "Ô Cài đặt nhanh"
+    }
+  ]
+}

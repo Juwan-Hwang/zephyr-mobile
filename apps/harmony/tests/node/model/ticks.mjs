@@ -1,0 +1,11 @@
+const { LatencyTicks } = await import('../.out/rt/app/LatencyTicks.ts');
+let bad=0; const ok=(c,m)=>{ if(!c){ bad++; console.log('FAIL',m); } };
+const ms=[38,64,92,120,150,188,210,260,407,720,-1,-1,undefined];
+const nodes=ms.map((m,i)=>({id:i,name:'n'+i,region:'JP',protocol:'',latencyMs:m}));
+const s=LatencyTicks.summarize(nodes,2);
+ok(s.ticks.length===10&&s.timeouts===2&&s.underThreshold===6&&s.total===13,'counts');
+ok(s.ticks[s.ticks.length-1].id===2&&s.ticks[s.ticks.length-1].selected,'selected last');
+ok(s.ticks.find(t=>t.ms===210).slow&&!s.ticks.find(t=>t.ms===188).slow,'slow');
+ok(LatencyTicks.x(0,301)===0.5&&LatencyTicks.x(600,301)===300.5&&LatencyTicks.x(9999,301)===300.5&&LatencyTicks.x(300,301)===150.5,'x');
+ok(LatencyTicks.summarize([],undefined).ticks.length===0,'empty');
+console.log(bad?'FAILED '+bad:'ticks OK'); process.exit(bad?1:0);
